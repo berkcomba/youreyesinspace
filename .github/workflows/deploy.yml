@@ -1,0 +1,77 @@
+name: CI / Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  check:
+    name: Typecheck & build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run build
+      - name: Docker image builds (nginx config is valid)
+        run: |
+          docker build --build-arg BUILD_ID=ci -t yeits:ci .
+          cid=$(docker run -d -p 8080:8080 yeits:ci)
+          for i in $(seq 1 20); do curl -fsS http://localhost:8080/_health && break; sleep 1; done
+          curl -fsS -o /dev/null -w '%{http_code}\n' http://localhost:8080/ | grep -q 200
+          curl -sI http://localhost:8080/ | grep -qi 'content-security-policy'
+          docker rm -f "$cid"
+
+  deploy:
+    name: Deploy to Cloud Run
+    needs: check
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://youreyesinspace.com
+    permissions:
+      contents: read
+      id-token: write # OIDC token for Workload Identity Federation (no JSON keys)
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Build (Cloud Build) and deploy (Cloud Run)
+        env:
+          GCP_PROJECT: ${{ vars.GCP_PROJECT }}
+          GCP_REGION: ${{ vars.GCP_REGION || 'europe-west1' }}
+          SERVICE: ${{ vars.CLOUD_RUN_SERVICE || 'youreyesinthespace' }}
+          # optional: shared secret checked by nginx (X-Origin-Auth) when Cloudflare fronts the service
+          ORIGIN_AUTH_SECRET: ${{ secrets.ORIGIN_AUTH_SECRET }}
+        run: ./deploy/cloudrun-deploy.sh
+
+      - name: Smoke test
+        env:
+          GCP_PROJECT: ${{ vars.GCP_PROJECT }}
+          GCP_REGION: ${{ vars.GCP_REGION || 'europe-west1' }}
+          SERVICE: ${{ vars.CLOUD_RUN_SERVICE || 'youreyesinthespace' }}
+        run: |
+          url=$(gcloud run services describe "$SERVICE" --project="$GCP_PROJECT" --region="$GCP_REGION" --format='value(status.url)')
+          curl -fsS "$url/_health"
+          echo "OK: $url"

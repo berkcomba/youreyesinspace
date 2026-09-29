@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#04060c" />
+    <title>Your Eyes In Space</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+  </head>
+  <body>
+    <canvas id="scene"></canvas>
+    <canvas id="overlay"></canvas>
+
+    <div id="ui">
+      <!-- Top bar -->
+      <header id="topbar">
+        <div class="brand">
+          <img class="brand-mark" src="/logo-white.png" alt="Your Eyes In Space" />
+          <span class="brand-name">YOUR EYES IN SPACE</span>
+          <span id="brand-sub" class="brand-sub">Güneş Sistemi</span>
+        </div>
+        <div id="search" class="panel-inline">
+          <input id="search-input" type="text" placeholder="Ara… (Titan, Sirius, Andromeda)" autocomplete="off" spellcheck="false" />
+          <ul id="search-results" hidden></ul>
+        </div>
+        <div class="topbar-right">
+          <div id="places" class="dropdown">
+            <button id="btn-places" class="text-btn" title="Seçili hedefe otomatik uçuş" aria-haspopup="listbox" aria-expanded="false">Görmeye değecek yerler ▾</button>
+            <div id="places-menu" class="dropdown-menu" role="listbox" hidden></div>
+          </div>
+          <button id="btn-roam" class="text-btn" title="Serbest dolaşım: fare ile bak, WASD ile uç (V)">Serbest dolaşım</button>
+          <button id="btn-help" class="icon-btn" title="Yardım (F1)">?</button>
+          <button id="btn-settings" class="icon-btn" title="Ayarlar">⚙</button>
+        </div>
+      </header>
+
+      <!-- Left: info panel -->
+      <aside id="info" class="panel" hidden>
+        <div class="info-head">
+          <div>
+            <div id="info-type" class="info-type"></div>
+            <h2 id="info-name"></h2>
+            <div id="info-parent" class="info-parent"></div>
+          </div>
+          <button id="info-close" class="icon-btn small" title="Kapat (Esc)">✕</button>
+        </div>
+        <div class="info-actions">
+          <button id="act-goto" title="Nesneye uç (G)">Git</button>
+          <button id="act-center" title="Nesneye bak (C)">Ortala</button>
+          <button id="act-follow" title="Yörünge/takip modu (F)">Takip</button>
+        </div>
+        <dl id="info-body" class="info-grid"></dl>
+        <p id="info-desc" class="info-desc"></p>
+      </aside>
+
+      <!-- Right: settings -->
+      <aside id="settings" class="panel" hidden>
+        <div class="panel-title">Ayarlar</div>
+        <div id="settings-body"></div>
+      </aside>
+
+      <!-- Bottom: time & nav -->
+      <footer id="bottombar">
+        <div class="time-block">
+          <div id="time-date" class="time-date">—</div>
+          <div class="time-controls">
+            <button id="t-rev" title="Geri hızlandır (J)">◀◀</button>
+            <button id="t-slow" title="Yavaşlat">−</button>
+            <button id="t-pause" title="Duraklat (K)">❚❚</button>
+            <button id="t-fast" title="Hızlandır">+</button>
+            <button id="t-fwd" title="İleri hızlandır (L)">▶▶</button>
+            <button id="t-now" title="Gerçek zamana dön (\\)">Şimdi</button>
+            <span id="time-rate" class="time-rate">1×</span>
+          </div>
+        </div>
+        <div class="nav-block">
+          <div class="nav-row"><span class="k">Mod</span><span id="nav-mode">Serbest</span></div>
+          <div class="nav-row"><span class="k">Referans</span><span id="nav-ref">—</span></div>
+          <div class="nav-row"><span class="k">Hız</span><span id="nav-speed">—</span></div>
+          <div class="nav-row"><span class="k">Yükseklik</span><span id="nav-alt">—</span></div>
+          <div class="nav-row"><span class="k">FPS</span><span id="nav-fps">—</span></div>
+        </div>
+      </footer>
+      <div id="imagery-credit" hidden></div>
+      <a id="copyright" href="https://github.com/berkcomba/youreyesinspace" target="_blank" rel="noopener noreferrer">© 2026 BigBrains · Açık kaynak (MIT)</a>
+
+      <!-- Help -->
+      <div id="help" class="modal" hidden>
+        <div class="modal-card">
+          <div class="panel-title">Kontroller <button id="help-close" class="icon-btn small">✕</button></div>
+          <div class="help-grid">
+            <div><kbd>Sol tık + sürükle</kbd> Bak / yörünge</div>
+            <div><kbd>V</kbd> Serbest dolaşım (fare kilitli, sürüklemeden bak) &nbsp; <kbd>Esc</kbd> Çık</div>
+            <div><kbd>W A S D</kbd> Hareket &nbsp; <kbd>R F</kbd> Yukarı/aşağı &nbsp; <kbd>Q E</kbd> Yatış</div>
+            <div><kbd>Tekerlek</kbd> Hız (serbest) / mesafe (takip)</div>
+            <div><kbd>Shift</kbd> 10× hız &nbsp; <kbd>Ctrl</kbd> 0.1× hız</div>
+            <div><kbd>Tık</kbd> Seç &nbsp; <kbd>Çift tık</kbd> Seç ve git</div>
+            <div><kbd>G</kbd> Git &nbsp; <kbd>C</kbd> Ortala &nbsp; <kbd>T</kbd> Takip modu</div>
+            <div><kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd> Zaman geri / durdur / ileri &nbsp; <kbd>\</kbd> Şimdi</div>
+            <div><kbd>O</kbd> Yörüngeler &nbsp; <kbd>N</kbd> Etiketler &nbsp; <kbd>;</kbd> Izgara</div>
+            <div><kbd>1–9, 0</kbd> Gezegenlere git &nbsp; <kbd>H</kbd> Dünya</div>
+            <div><kbd>Yıldıza tık</kbd> Seç &nbsp; <kbd>G</kbd> Yıldızlar arası uçuş &nbsp; <kbd>Home</kbd> Güneş Sistemi</div>
+            <div><kbd>Galaksiye tık</kbd> Seç &nbsp; <kbd>G</kbd> Galaksiler arası uçuş &nbsp; <kbd>M</kbd> Samanyolu'na dışarıdan bak</div>
+            <div><kbd>Ara</kbd> Sirius, HIP 71683, Andromeda, M87… (109 000 gerçek yıldız, 55 gerçek galaksi + prosedürel evren)</div>
+            <div><kbd>Tab</kbd> Arayüzü gizle &nbsp; <kbd>P</kbd> Ekran görüntüsü &nbsp; <kbd>Esc</kbd> Seçimi bırak</div>
+            <div><kbd>Görmeye değecek yerler</kbd> Uzay araçları (Voyager, JWST, ISS…), gezegenler, yıldızlar ve galaksilere tek tıkla uçuş</div>
+          </div>
+          <div class="help-credits">
+            <div class="panel-title small">Veri kaynakları ve lisanslar</div>
+            <p>
+              Yıldız kataloğu: <a href="https://github.com/astronexus/HYG-Database" target="_blank" rel="noopener noreferrer">HYG Database v3</a> (David Nash, Astronexus) —
+              <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>; Hipparcos, Yale BSC ve Gliese kataloglarından derlenmiştir.
+              Gezegen yörünge elemanları: NASA/JPL (Standish, Keplerian Elements). Uzay aracı konumları: JPL Horizons (yaklaşık, 2025 başı).
+              Uzay aracı 3B modelleri: <a href="https://nasa3d.arc.nasa.gov/" target="_blank" rel="noopener noreferrer">NASA 3D Resources</a> (kamu malı).
+              Yüzey görüntüleri: Dünya — <a href="https://www.earthdata.nasa.gov/engage/open-data-services-software/earthdata-developer-portal/gibs-api" target="_blank" rel="noopener noreferrer">NASA GIBS</a> (Blue Marble Next Generation, VIIRS Black Marble);
+              Ay — <a href="https://trek.nasa.gov/moon/" target="_blank" rel="noopener noreferrer">NASA Moon Trek</a> (LRO WAC mozaiği); Mars — <a href="https://trek.nasa.gov/mars/" target="_blank" rel="noopener noreferrer">NASA Mars Trek</a> (Viking MDIM 2.1). Tümü NASA kamu malıdır ve doğrudan NASA sunucularından akıtılır.
+              Galaksi kataloğu: NED / literatür değerleri. Prosedürel yıldızlar, galaksiler ve kozmik ağ deterministik olarak üretilir; gerçek kataloglarla karıştırılmamalıdır.
+            </p>
+            <p>Your Eyes In Space bir <a href="https://bigbrains.com.tr" target="_blank" rel="noopener noreferrer">BigBrains</a> ürünüdür. Kod <a href="https://github.com/berkcomba/youreyesinspace" target="_blank" rel="noopener noreferrer">GitHub</a>'da MIT lisansıyla açık kaynaktır; isim ve logo BigBrains markasıdır. © 2026</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="toast" hidden></div>
+    </div>
+
+    <div id="loader">
+      <div class="loader-mark"></div>
+      <div class="loader-text">Evren hazırlanıyor…</div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

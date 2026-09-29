@@ -1,0 +1,17 @@
+# Cloud Build config used by deploy/cloudrun-deploy.sh (passes BUILD_ID into the Docker build).
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - --build-arg
+      - BUILD_ID=${_BUILD_ID}
+      - -t
+      - ${_IMAGE}
+      - .
+images:
+  - ${_IMAGE}
+substitutions:
+  _IMAGE: ''
+  _BUILD_ID: dev
+options:
+  logging: CLOUD_LOGGING_ONLY

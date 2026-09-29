@@ -1,0 +1,44 @@
+# Third-party notices
+
+The source code of Your Eyes In Space is MIT-licensed (see `LICENSE`). The project bundles or
+streams the following third-party material, each under its own terms.
+
+## Data
+
+| Item | Files | Source | Licence |
+|---|---|---|---|
+| Star catalogue (derived) | `public/data/stars.bin`, `public/data/star-names.json` | [HYG Database v3](https://github.com/astronexus/HYG-Database) by David Nash (Astronexus), compiled from Hipparcos, Yale BSC and Gliese | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) — the derived binary is redistributed under the same licence; build with `scripts/build-stars.mjs` |
+| Planetary orbital elements | `src/data/solarSystem.ts` | NASA/JPL, E. M. Standish, *Keplerian Elements for Approximate Positions of the Major Planets* | Public domain (US Government work) |
+| Spacecraft state vectors | `src/data/spacecraft.ts` | [JPL Horizons](https://ssd.jpl.nasa.gov/horizons/) (approximate, early 2025) | Public domain |
+| Galaxy catalogue | `src/galaxy/galaxies.ts` | NED / literature values | Facts; no copyright claimed |
+
+Procedural stars, galaxies and the cosmic web are generated deterministically and are not real
+catalogue objects.
+
+## 3D models
+
+`public/models/*.glb` (Voyager, Pioneer, Parker Solar Probe, Hubble, ISS, JWST, Perseverance,
+Juno) come from [NASA 3D Resources](https://nasa3d.arc.nasa.gov/) and are Draco-compressed
+copies. NASA material is generally not copyrighted, but the
+[NASA media usage guidelines](https://www.nasa.gov/nasa-brand-center/images-and-media/) apply:
+the NASA insignia and name must not be used in a way that implies endorsement.
+
+## Streamed imagery (not bundled)
+
+Loaded at runtime directly from NASA servers; see `src/data/imagery.ts`.
+
+* Earth — [NASA GIBS](https://www.earthdata.nasa.gov/engage/open-data-services-software/earthdata-developer-portal/gibs-api):
+  *Blue Marble Next Generation* and *VIIRS Black Marble* — public domain.
+* Moon — [NASA Moon Trek](https://trek.nasa.gov/moon/): *LRO WAC Global Mosaic* — public domain.
+* Mars — [NASA Mars Trek](https://trek.nasa.gov/mars/): *Viking MDIM 2.1 Colour Mosaic* — public domain.
+
+## Software dependencies
+
+* [three.js](https://threejs.org/) — MIT
+* [Vite](https://vite.dev/), [TypeScript](https://www.typescriptlang.org/) — MIT / Apache-2.0 (build-time only)
+* Production image: nginx (2-clause BSD), Node.js (MIT) — build-time only
+
+## Trademarks
+
+"Your Eyes In Space", the eye-and-orbit logo and "BigBrains" are trademarks of BigBrains
+(https://bigbrains.com.tr). Forks must use their own name and logo.

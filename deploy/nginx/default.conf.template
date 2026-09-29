@@ -1,0 +1,75 @@
+# Rendered by the nginx image entrypoint (envsubst): ${PORT}, ${ORIGIN_AUTH_SECRET}
+
+# Requests that do not carry the shared secret set by the Cloudflare transform rule are
+# rejected (403) when ORIGIN_AUTH_SECRET is non-empty. Leave the variable empty to disable.
+map "${ORIGIN_AUTH_SECRET}" $origin_secret_required {
+  default 1;
+  ""      0;
+}
+map $http_x_origin_auth $origin_auth_ok {
+  default                  0;
+  "${ORIGIN_AUTH_SECRET}"  1;
+}
+
+server {
+  listen ${PORT} default_server;
+  listen [::]:${PORT} default_server;
+  server_name _;
+
+  root /usr/share/nginx/html;
+  index index.html;
+
+  include /etc/nginx/snippets/security-headers.conf;
+
+  # Cloud Run / Cloudflare health probe — allowed without the origin secret
+  location = /_health {
+    access_log off;
+    add_header Content-Type text/plain;
+    add_header Cache-Control "no-store";
+    return 200 "ok\n";
+  }
+
+  # Block everything but simple reads; the app has no API surface.
+  if ($request_method !~ ^(GET|HEAD|OPTIONS)$) { return 405; }
+
+  # Origin protection (see Dockerfile / deploy/cloudflare.md)
+  set $origin_block 0;
+  if ($origin_secret_required = 1) { set $origin_block 1; }
+  if ($origin_auth_ok = 1)         { set $origin_block 0; }
+  if ($uri = /_health)             { set $origin_block 0; }
+  if ($origin_block = 1)           { return 403; }
+
+  # Hidden files / source maps must never be served
+  location ~ /\. { deny all; return 404; }
+  location ~ \.map$ { deny all; return 404; }
+
+  # Vite output: content-hashed → cache forever
+  location ^~ /assets/ {
+    include /etc/nginx/snippets/security-headers.conf;
+    add_header Cache-Control "public, max-age=31536000, immutable";
+    try_files $uri =404;
+  }
+
+  # Large static data (HYG binary catalogue, glTF models). Not content-hashed,
+  # but every URL carries ?v=<BUILD_ID>, so an immutable cache is safe.
+  location ~ ^/(data|models)/ {
+    include /etc/nginx/snippets/security-headers.conf;
+    add_header Cache-Control "public, max-age=31536000, immutable";
+    add_header Accept-Ranges bytes;
+    try_files $uri =404;
+  }
+
+  # Icons / logos: a day
+  location ~* \.(png|ico|svg|webp|jpg)$ {
+    include /etc/nginx/snippets/security-headers.conf;
+    add_header Cache-Control "public, max-age=86400";
+    try_files $uri =404;
+  }
+
+  # HTML shell: always revalidate so a new deploy is picked up immediately
+  location / {
+    include /etc/nginx/snippets/security-headers.conf;
+    add_header Cache-Control "no-cache";
+    try_files $uri $uri/ /index.html;
+  }
+}
