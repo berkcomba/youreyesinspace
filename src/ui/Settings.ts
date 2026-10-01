@@ -17,6 +17,8 @@ export interface Settings {
   belts: boolean;
   milkyWay: boolean;
   bloom: boolean;
+  /** render resolution relative to the (capped) device pixel ratio */
+  renderScale: number;
   fov: number;
   exposure: number;
   mouseSensitivity: number;
@@ -41,6 +43,7 @@ export const DEFAULT_SETTINGS: Settings = {
   belts: true,
   milkyWay: true,
   bloom: true,
+  renderScale: 1,
   fov: 50,
   exposure: 1.0,
   mouseSensitivity: 1.0,

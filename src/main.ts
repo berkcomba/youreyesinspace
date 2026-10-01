@@ -104,8 +104,9 @@ class App implements UIHost {
     this.loadSystemRenderables(this.universe.current);
     this.universe.onSystemChange((sys) => this.loadSystemRenderables(sys));
 
-    this.overlay.resize(this.engine.width, this.engine.height, this.engine.pixelRatio);
-    window.addEventListener('resize', () => this.overlay.resize(this.engine.width, this.engine.height, this.engine.pixelRatio));
+    this.resizeOverlay();
+    window.addEventListener('resize', () => this.resizeOverlay());
+    window.visualViewport?.addEventListener('resize', () => { this.engine.resize(); this.resizeOverlay(); });
 
     // Initial view: Earth, with the Moon in frame
     const earth = this.universe.get('earth')!;
@@ -118,7 +119,7 @@ class App implements UIHost {
     this.input.onKey = (code, e) => this.onKey(code, e);
     this.input.onLockChange = (locked) => this.onLockChange(locked);
     sceneCanvas.addEventListener('pointermove', (e) => {
-      if (this.input.dragging || this.input.locked) { this.overlay.hoverId = null; return; }
+      if (e.pointerType !== 'mouse' || this.input.dragging || this.input.locked) { this.overlay.hoverId = null; return; }
       const b = this.overlay.pick(e.clientX, e.clientY, 16);
       this.overlay.hoverId = b?.id ?? null;
       sceneCanvas.style.cursor = b ? 'pointer' : 'default';
@@ -131,6 +132,11 @@ class App implements UIHost {
     this.applySettings();
     requestAnimationFrame(this.frame);
     document.getElementById('loader')?.classList.add('done');
+  }
+
+  /** The 2D overlay always draws at device resolution (crisp text), whatever the 3D render scale. */
+  private resizeOverlay(): void {
+    this.overlay.resize(this.engine.width, this.engine.height, Math.min(window.devicePixelRatio || 1, 2));
   }
 
   /** (Re)build every per-system renderable when the current frame changes. */
@@ -335,6 +341,8 @@ class App implements UIHost {
     saveSettings(s);
     this.engine.setFov(s.fov);
     this.engine.bloom.enabled = s.bloom;
+    this.engine.setRenderScale(s.renderScale);
+    this.resizeOverlay();
     this.engine.renderer.toneMappingExposure = s.exposure;
     this.overlay.showLabels = s.labels;
     this.overlay.showMarkers = s.markers;
@@ -359,7 +367,9 @@ class App implements UIHost {
 
   /* ---------------- Input ---------------- */
   private onClick(x: number, y: number, dbl: boolean): void {
-    const b = this.overlay.pick(x, y);
+    // fingers are less precise than a mouse pointer
+    const tol = this.input.coarse ? 2 : 1;
+    const b = this.overlay.pick(x, y, 22 * tol);
     if (b) {
       this.select(b);
       if (dbl) this.goTo(b);
@@ -367,19 +377,19 @@ class App implements UIHost {
     }
     const eng = this.engine;
     const u = this.universe;
-    const star = this.starPoints.pick(x, y, eng.camera, eng.width, eng.height, u.current.catalogIndex);
+    const star = this.starPoints.pick(x, y, eng.camera, eng.width, eng.height, u.current.catalogIndex, 14 * tol);
     if (star !== null) {
       this.selectStar(`c${star}`);
       if (dbl) this.goToStar(`c${star}`);
       return;
     }
-    const proc = this.procPoints.pick(x, y, eng.camera, eng.width, eng.height, u.current.starId);
+    const proc = this.procPoints.pick(x, y, eng.camera, eng.width, eng.height, u.current.starId, 14 * tol);
     if (proc !== null) {
       this.selectStar(proc);
       if (dbl) this.goToStar(proc);
       return;
     }
-    const lm = this.landmarkSprites.pick(x, y, eng.camera, eng.width, eng.height);
+    const lm = this.landmarkSprites.pick(x, y, eng.camera, eng.width, eng.height, 14 * tol);
     if (lm !== null) {
       this.selectLandmark(lm);
       if (dbl) this.goToLandmark(lm);
@@ -387,7 +397,7 @@ class App implements UIHost {
     }
     const fovRad = eng.camera.fov * DEG;
     const pxPerRad = eng.height / 2 / Math.tan(fovRad / 2);
-    const gal = this.galaxySprites.pick(x, y, eng.camera, eng.width, eng.height, pxPerRad, this.galaxyBoost, u.currentGalaxy ?? -1);
+    const gal = this.galaxySprites.pick(x, y, eng.camera, eng.width, eng.height, pxPerRad, this.galaxyBoost, u.currentGalaxy ?? -1, 14 * tol);
     if (gal !== null) {
       this.selectGalaxy(gal);
       if (dbl) this.goToGalaxy(gal);

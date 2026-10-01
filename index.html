@@ -2,7 +2,10 @@
 <html lang="tr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="theme-color" content="#04060c" />
     <title>Your Eyes In Space</title>
     <link rel="icon" type="image/png" href="/favicon.png" />
@@ -21,12 +24,12 @@
           <span id="brand-sub" class="brand-sub">Güneş Sistemi</span>
         </div>
         <div id="search" class="panel-inline">
-          <input id="search-input" type="text" placeholder="Ara… (Titan, Sirius, Andromeda)" autocomplete="off" spellcheck="false" />
+          <input id="search-input" type="search" placeholder="Ara… (Titan, Sirius, Andromeda)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="go" />
           <ul id="search-results" hidden></ul>
         </div>
         <div class="topbar-right">
           <div id="places" class="dropdown">
-            <button id="btn-places" class="text-btn" title="Seçili hedefe otomatik uçuş" aria-haspopup="listbox" aria-expanded="false">Görmeye değecek yerler ▾</button>
+            <button id="btn-places" class="text-btn" title="Seçili hedefe otomatik uçuş" aria-haspopup="listbox" aria-expanded="false"><span class="long">Görmeye değecek yerler</span><span class="short">Yerler</span> ▾</button>
             <div id="places-menu" class="dropdown-menu" role="listbox" hidden></div>
           </div>
           <button id="btn-roam" class="text-btn" title="Serbest dolaşım: fare ile bak, WASD ile uç (V)">Serbest dolaşım</button>
@@ -43,7 +46,10 @@
             <h2 id="info-name"></h2>
             <div id="info-parent" class="info-parent"></div>
           </div>
-          <button id="info-close" class="icon-btn small" title="Kapat (Esc)">✕</button>
+          <div class="info-head-btns">
+            <button id="info-expand" class="icon-btn small" title="Ayrıntıları aç/kapat">⌄</button>
+            <button id="info-close" class="icon-btn small" title="Kapat (Esc)">✕</button>
+          </div>
         </div>
         <div class="info-actions">
           <button id="act-goto" title="Nesneye uç (G)">Git</button>
@@ -88,8 +94,16 @@
       <!-- Help -->
       <div id="help" class="modal" hidden>
         <div class="modal-card">
-          <div class="panel-title">Kontroller <button id="help-close" class="icon-btn small">✕</button></div>
-          <div class="help-grid">
+          <div class="panel-title">Kontroller <button id="help-close" class="icon-btn small" title="Kapat">✕</button></div>
+          <div class="help-grid help-touch">
+            <div><kbd>Tek parmak</kbd> Bak / yörüngede dön</div>
+            <div><kbd>İki parmak aç-kapa</kbd> Yaklaş-uzaklaş (takip) · ileri-geri uç (serbest)</div>
+            <div><kbd>İki parmak sürükle</kbd> Yana / yukarı kay</div>
+            <div><kbd>Dokun</kbd> Seç &nbsp; <kbd>Çift dokun</kbd> Seç ve git</div>
+            <div><kbd>Git</kbd> Seçili hedefe otopilot &nbsp; <kbd>Takip</kbd> Yörünge modu</div>
+            <div><kbd>Ara</kbd> ve <kbd>Yerler</kbd> menüsüyle tek dokunuşla uçuş</div>
+          </div>
+          <div class="help-grid help-desktop">
             <div><kbd>Sol tık + sürükle</kbd> Bak / yörünge</div>
             <div><kbd>V</kbd> Serbest dolaşım (fare kilitli, sürüklemeden bak) &nbsp; <kbd>Esc</kbd> Çık</div>
             <div><kbd>W A S D</kbd> Hareket &nbsp; <kbd>R F</kbd> Yukarı/aşağı &nbsp; <kbd>Q E</kbd> Yatış</div>

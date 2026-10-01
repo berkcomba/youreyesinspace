@@ -94,6 +94,7 @@ const SETTING_DEFS: SettingDef[] = [
   { key: 'imagery', label: 'Uydu görüntüleri (NASA)', kind: 'bool' },
   { key: 'bloom', label: 'Bloom (parıltı)', kind: 'bool' },
   { key: 'exposure', label: 'Pozlama', kind: 'range', min: 0.3, max: 2.5, step: 0.05 },
+  { key: 'renderScale', label: 'Render çözünürlüğü', kind: 'range', min: 0.5, max: 1, step: 0.05 },
   { key: 'fov', label: 'Görüş açısı', kind: 'range', min: 20, max: 110, step: 1, group: 'Kamera' },
   { key: 'mouseSensitivity', label: 'Fare hassasiyeti', kind: 'range', min: 0.2, max: 3, step: 0.1 },
   { key: 'invertY', label: 'Y eksenini ters çevir', kind: 'bool' },
@@ -135,7 +136,10 @@ export class UI {
     $('help-close').addEventListener('click', () => this.toggleHelp(false));
     this.help.addEventListener('click', (e) => { if (e.target === this.help) this.toggleHelp(false); });
     $('btn-settings').addEventListener('click', () => this.toggleSettings());
-    $('info-close').addEventListener('click', () => { host.select(null); host.selectStar(null); host.selectGalaxy(null); });
+    // phones: the info sheet starts folded (name + actions) so the view stays visible
+    if (window.matchMedia('(max-width: 700px)').matches) this.info.classList.add('collapsed');
+    $('info-expand').addEventListener('click', () => this.info.classList.toggle('collapsed'));
+    $('info-close').addEventListener('click', () => { host.select(null); host.selectStar(null); host.selectGalaxy(null); host.selectLandmark(null); });
   }
 
   /* ---------------- Time ---------------- */

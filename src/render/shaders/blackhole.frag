@@ -12,6 +12,7 @@ uniform float uDiskBright;  // 0 = no disk
 uniform float uRegionAngle; // rays within this angle of the hole are ray-traced; outside: weak-field lens
 uniform float uTime;
 uniform float uSeed;
+uniform float uQuality;     // 1 = full ray march; < 1 = fewer, longer steps (mobile)
 
 varying vec2 vUv;
 
@@ -101,8 +102,10 @@ void main() {
   bool captured = false;
   bool escaped = false;
 
+  float maxSteps = 260.0 * uQuality;
   for (int i = 0; i < 260; i++) {
-    float h = mix(0.12, 0.03, smoothstep(0.0, 0.7, s.x));
+    if (float(i) >= maxSteps) break;
+    float h = mix(0.12, 0.03, smoothstep(0.0, 0.7, s.x)) / uQuality;
     vec2 sn = rk4(s, h);
     float phiN = phi + h;
     if (sn.x > 1.0) { captured = true; break; }

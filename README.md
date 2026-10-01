@@ -27,6 +27,8 @@ of the observable universe. Turkish UI.*
 - **Kamera** — serbest uçuş, yörünge, takip, otopilot, fare kilitli serbest dolaşım; floating origin
   + logaritmik derinlik (1 m'den 10¹³ km'ye).
 - **UI** — arama, bilgi paneli, zaman kontrolü, "Görmeye değecek yerler" menüsü, ayarlar, `F1` yardım.
+- **Mobil** — dokunmatik kontroller (tek parmak bak/yörünge, iki parmak yaklaş/uç ve kay, dokun/çift dokun),
+  telefon düzeni (alt sayfa paneller, güvenli alan), mobilde otomatik düşük render ölçeği.
 
 ## Geliştirme
 

@@ -200,8 +200,9 @@ export class CameraController {
       this.refLastPos.copy(this.reference.position);
     }
 
-    const { dx, dy, wheel } = input.flush();
+    const { dx, dy, wheel, pinch, panX, panY } = input.flush();
     const ySign = this.invertY ? -1 : 1;
+    const touching = pinch !== 0 || panX !== 0 || panY !== 0;
 
     // 2. Autopilot
     if (this.autopilot) {
@@ -237,7 +238,7 @@ export class CameraController {
         _q.setFromRotationMatrix(_m);
         this.quaternion.copy(ap.q0).slerp(_q, s);
       }
-      if (ap.t >= ap.duration || dx !== 0 || dy !== 0 || input.down('KeyW') || input.down('KeyS')) {
+      if (ap.t >= ap.duration || dx !== 0 || dy !== 0 || touching || input.down('KeyW') || input.down('KeyS')) {
         if (ap.kind === 'goto' && tgt) {
           this.mode = 'orbit';
           this.setReference(tgt);
@@ -262,9 +263,10 @@ export class CameraController {
           offset.applyQuaternion(_q);
           this.quaternion.premultiply(_q);
         }
-        if (wheel !== 0) {
+        if (wheel !== 0 || pinch !== 0) {
           const minD = tgt.radius * 1.02;
-          const f = Math.exp(wheel * 0.0012);
+          // wheel down / fingers together ⇒ farther
+          const f = Math.exp(wheel * 0.0012 - pinch);
           const len = Math.max(minD, offset.length() * f);
           offset.setLength(len);
         }
@@ -330,6 +332,13 @@ export class CameraController {
         // inertia
         const k = 1 - Math.exp(-dt * 6);
         this.velocity.lerp(move, k);
+        // touch: pinch flies forward/back, two-finger drag slides the same way the fingers move
+        // (fly metaphor, like one-finger look). Impulses decay through the same inertia
+        // (∫v·e^(-6t) = v/6), so a doubling pinch (ln 2) travels ≈ 0.45·base
+        if (touching) {
+          const impulse = _v2.set(panX / 160, -panY / 160, -pinch).multiplyScalar(base * 4).applyQuaternion(this.quaternion);
+          this.velocity.add(impulse);
+        }
         if (this.velocity.lengthSq() < 1e-12) this.velocity.set(0, 0, 0);
         this.position.addScaledVector(this.velocity, dt);
         this.speed = this.velocity.length();

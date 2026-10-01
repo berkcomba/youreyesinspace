@@ -1,16 +1,30 @@
-/** Low-level keyboard/mouse state for the 3D view. */
+/** Low-level keyboard / mouse / touch state for the 3D view. */
 export class Input {
   readonly keys = new Set<string>();
-  /** accumulated mouse drag since last frame (pixels) */
+  /** accumulated one-finger / mouse drag since last frame (pixels) */
   dragX = 0;
   dragY = 0;
   /** accumulated wheel delta since last frame */
   wheel = 0;
+  /** accumulated two-finger pinch since last frame: ln(d1/d0), > 0 when fingers spread */
+  pinch = 0;
+  /** accumulated two-finger pan (centroid movement, pixels) since last frame */
+  panX = 0;
+  panY = 0;
   dragging = false;
+  /** last pointer was a finger (coarse pointer): larger pick tolerances, no hover */
+  coarse = false;
   private downX = 0;
   private downY = 0;
   private moved = false;
   private lastClickTime = 0;
+  private lastClickX = 0;
+  private lastClickY = 0;
+  /** active pointers (multi-touch) */
+  private readonly pointers = new Map<number, { x: number; y: number }>();
+  private pinchDist = 0;
+  private pinchCx = 0;
+  private pinchCy = 0;
 
   onClick: ((x: number, y: number, double: boolean) => void) | null = null;
   onKey: ((code: string, e: KeyboardEvent) => void) | null = null;
@@ -18,8 +32,10 @@ export class Input {
   onLockChange: ((locked: boolean) => void) | null = null;
 
   constructor(private readonly el: HTMLElement) {
+    el.style.touchAction = 'none';
     el.addEventListener('pointerdown', this.onPointerDown);
     window.addEventListener('pointerup', this.onPointerUp);
+    window.addEventListener('pointercancel', this.onPointerUp);
     window.addEventListener('pointermove', this.onPointerMove);
     el.addEventListener('wheel', this.onWheel, { passive: false });
     el.addEventListener('contextmenu', (e) => e.preventDefault());
@@ -56,11 +72,20 @@ export class Input {
     return !!a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || (a as HTMLElement).isContentEditable);
   }
 
+  private get tapSlop(): number {
+    return this.coarse ? 10 : 4;
+  }
+
+  private beginPinch(): void {
+    const [a, b] = [...this.pointers.values()];
+    this.pinchDist = Math.max(1, Math.hypot(b.x - a.x, b.y - a.y));
+    this.pinchCx = (a.x + b.x) / 2;
+    this.pinchCy = (a.y + b.y) / 2;
+  }
+
   private onPointerDown = (e: PointerEvent) => {
-    if (e.button !== 0 && e.button !== 2) return;
-    this.moved = false;
-    this.downX = e.clientX;
-    this.downY = e.clientY;
+    if (e.pointerType === 'mouse' && e.button !== 0 && e.button !== 2) return;
+    this.coarse = e.pointerType === 'touch';
     if (this.locked) {
       // captured pointer: a press is a click on the crosshair, never a drag
       if (e.button === 0) {
@@ -72,9 +97,19 @@ export class Input {
       }
       return;
     }
-    this.dragging = true;
-    (document.activeElement as HTMLElement | null)?.blur?.();
-    this.el.setPointerCapture(e.pointerId);
+    this.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    try { this.el.setPointerCapture(e.pointerId); } catch { /* synthetic events */ }
+    if (this.pointers.size === 1) {
+      this.moved = false;
+      this.downX = e.clientX;
+      this.downY = e.clientY;
+      this.dragging = true;
+      (document.activeElement as HTMLElement | null)?.blur?.();
+    } else {
+      // second finger: the gesture becomes a pinch/pan, never a tap
+      this.moved = true;
+      if (this.pointers.size === 2) this.beginPinch();
+    }
   };
 
   private onPointerMove = (e: PointerEvent) => {
@@ -83,24 +118,52 @@ export class Input {
       this.dragY += e.movementY;
       return;
     }
+    const p = this.pointers.get(e.pointerId);
+    if (!p) return;
+    const prevX = p.x, prevY = p.y;
+    p.x = e.clientX;
+    p.y = e.clientY;
+    if (this.pointers.size >= 2) {
+      const [a, b] = [...this.pointers.values()];
+      const dist = Math.max(1, Math.hypot(b.x - a.x, b.y - a.y));
+      const cx = (a.x + b.x) / 2, cy = (a.y + b.y) / 2;
+      this.pinch += Math.log(dist / this.pinchDist);
+      this.panX += cx - this.pinchCx;
+      this.panY += cy - this.pinchCy;
+      this.pinchDist = dist;
+      this.pinchCx = cx;
+      this.pinchCy = cy;
+      return;
+    }
     if (!this.dragging) return;
     const dx = e.clientX - this.downX;
     const dy = e.clientY - this.downY;
-    if (!this.moved && Math.hypot(dx, dy) > 4) this.moved = true;
+    if (!this.moved && Math.hypot(dx, dy) > this.tapSlop) this.moved = true;
     if (this.moved) {
-      this.dragX += e.movementX;
-      this.dragY += e.movementY;
+      // movementX/Y is unreliable for touch on some browsers: use our own deltas
+      this.dragX += e.clientX - prevX;
+      this.dragY += e.clientY - prevY;
     }
   };
 
   private onPointerUp = (e: PointerEvent) => {
-    if (!this.dragging) return;
-    this.dragging = false;
+    if (!this.pointers.has(e.pointerId)) return;
+    this.pointers.delete(e.pointerId);
     try { this.el.releasePointerCapture(e.pointerId); } catch { /* ignore */ }
-    if (!this.moved && e.button === 0) {
+    if (this.pointers.size >= 2) { this.beginPinch(); return; }
+    if (this.pointers.size === 1) {
+      // back to one finger: continue as a drag from the remaining finger, no tap on release
+      this.moved = true;
+      return;
+    }
+    this.dragging = false;
+    if (!this.moved && e.type === 'pointerup' && (e.pointerType !== 'mouse' || e.button === 0)) {
       const now = performance.now();
-      const dbl = now - this.lastClickTime < 320;
+      const near = Math.hypot(e.clientX - this.lastClickX, e.clientY - this.lastClickY) < (this.coarse ? 40 : 12);
+      const dbl = now - this.lastClickTime < 320 && near;
       this.lastClickTime = dbl ? 0 : now;
+      this.lastClickX = e.clientX;
+      this.lastClickY = e.clientY;
       this.onClick?.(e.clientX, e.clientY, dbl);
     }
   };
@@ -123,11 +186,14 @@ export class Input {
   };
 
   /** Consume per-frame accumulators. */
-  flush(): { dx: number; dy: number; wheel: number } {
-    const r = { dx: this.dragX, dy: this.dragY, wheel: this.wheel };
+  flush(): { dx: number; dy: number; wheel: number; pinch: number; panX: number; panY: number } {
+    const r = { dx: this.dragX, dy: this.dragY, wheel: this.wheel, pinch: this.pinch, panX: this.panX, panY: this.panY };
     this.dragX = 0;
     this.dragY = 0;
     this.wheel = 0;
+    this.pinch = 0;
+    this.panX = 0;
+    this.panY = 0;
     return r;
   }
 

@@ -21,6 +21,10 @@ export class Engine {
   height = 1;
   pixelRatio = 1;
   useComposer = true;
+  /** user render-resolution scale (1 = device pixels, capped) */
+  renderScale = 1;
+  /** coarse-pointer devices (phones/tablets): cheaper defaults */
+  readonly mobile = window.matchMedia('(pointer: coarse)').matches;
 
   constructor(canvas: HTMLCanvasElement) {
     this.renderer = new WebGLRenderer({
@@ -42,6 +46,7 @@ export class Engine {
     this.composer = new EffectComposer(this.renderer);
     this.composer.addPass(new RenderPass(this.scene, this.camera));
     this.blackHole = new BlackHolePass();
+    this.blackHole.quality = this.mobile ? 0.5 : 1;
     this.composer.addPass(this.blackHole);
     this.bloom = new UnrealBloomPass(new Vector2(1, 1), 0.35, 0.4, 0.92);
     this.composer.addPass(this.bloom);
@@ -54,13 +59,21 @@ export class Engine {
   resize(): void {
     this.width = window.innerWidth;
     this.height = window.innerHeight;
-    this.pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+    // phones have DPR 3 and small GPUs: cap lower than on desktop, then apply the user's scale
+    const cap = this.mobile ? 1.5 : 2;
+    this.pixelRatio = Math.max(0.5, Math.min(window.devicePixelRatio || 1, cap) * this.renderScale);
     this.renderer.setPixelRatio(this.pixelRatio);
     this.renderer.setSize(this.width, this.height, false);
     this.composer.setPixelRatio(this.pixelRatio);
     this.composer.setSize(this.width, this.height);
     this.camera.aspect = this.width / this.height;
     this.camera.updateProjectionMatrix();
+  }
+
+  setRenderScale(scale: number): void {
+    if (scale === this.renderScale) return;
+    this.renderScale = scale;
+    this.resize();
   }
 
   setFov(deg: number): void {

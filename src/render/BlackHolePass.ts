@@ -26,12 +26,17 @@ export class BlackHolePass extends ShaderPass {
         uRegionAngle: { value: 0 },
         uTime: { value: 0 },
         uSeed: { value: 1 },
+        uQuality: { value: 1 },
       },
       vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position, 1.0); }`,
       fragmentShader: Shaders.blackholeFrag,
     });
     this.enabled = false;
   }
+
+  /** Ray-march quality: 1 = full (260 RK4 steps), 0.5 = half the steps at twice the step size (mobile). */
+  get quality(): number { return this.uniforms.uQuality.value as number; }
+  set quality(q: number) { this.uniforms.uQuality.value = Math.min(1, Math.max(0.25, q)); }
 
   /**
    * Point the pass at a black hole. `relPos` is the hole's camera-relative position (km).
