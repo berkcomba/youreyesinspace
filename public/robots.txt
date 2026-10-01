@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /data/
+Disallow: /models/
+
+Sitemap: https://youreyesinspace.com/sitemap.xml
