@@ -6,7 +6,7 @@ import { Universe, catalogIndexOf, type StarId } from './core/Universe';
 import type { StarSystem } from './core/StarSystem';
 import type { CelestialBody } from './core/CelestialBody';
 import { StarCatalog } from './data/StarCatalog';
-import { BodyRenderer } from './render/BodyRenderer';
+import { BodyRenderer, type BodyView } from './render/BodyRenderer';
 import { BodyPoints } from './render/BodyPoints';
 import { OrbitLines } from './render/OrbitLines';
 import { StarPoints } from './render/StarPoints';
@@ -17,6 +17,7 @@ import { FarUniverse, localFade } from './galaxy/FarUniverse';
 import { Belts } from './render/Belts';
 import { SkyGrid } from './render/SkyGrid';
 import { Overlay, type StarSelectionScreen } from './render/Overlay';
+import type { NamedStarScreen } from './render/StarPoints';
 import { Input } from './input/Input';
 import { CameraController } from './camera/CameraController';
 import { UI, type UIHost } from './ui/UI';
@@ -237,6 +238,35 @@ class App implements UIHost {
     } else {
       this.ui.showToast('Serbest dolaşım kapatıldı');
     }
+  }
+
+  /** Fly to a black hole: switch to its system's frame first, then autopilot to the hole itself. */
+  goToBlackHole(id: string): void {
+    const u = this.universe;
+    const bh = u.blackHole(id);
+    if (!bh) { this.ui.showToast('Kara delik bulunamadı'); return; }
+    if (bh.systemStarId !== u.current.starId) {
+      const delta = u.switchTo(bh.systemStarId, this.time.jd, this.time.t);
+      this.camera.shiftFrame(delta, u.star);
+    }
+    const body = u.get(bh.entry.bodyId);
+    if (!body) { this.ui.showToast('Kara delik bulunamadı'); return; }
+    this.select(body);
+    this.camera.goTo(body, u.star.position);
+    const dist = body.position.distanceTo(this.camera.position);
+    this.ui.showToast(`${body.name} kara deliğine uçuluyor… (${fmtLightYears(dist)})`, 2600);
+  }
+
+  /** Point the camera at a black hole (no travel). */
+  centerBlackHole(id: string): void {
+    const u = this.universe;
+    const bh = u.blackHole(id);
+    if (!bh) return;
+    const body = bh.systemStarId === u.current.starId ? u.get(bh.entry.bodyId) : null;
+    if (body) { this.center(body); return; }
+    this.selectStar(bh.systemStarId);
+    const dir = u.starRelative(bh.systemStarId, this.camera.position).normalize();
+    this.camera.centerOnDirection(dir);
   }
 
   goToBodyId(id: string): void {
@@ -501,6 +531,7 @@ class App implements UIHost {
       atmospheres: s.atmospheres, clouds: s.clouds, rings: s.rings, shadows: s.shadows, imagery: s.imagery,
     });
     this.ui.setImageryCredit(this.bodies.imageryCredit);
+    this.updateLensing(fovRad);
     this.points.setPixelRatio(eng.pixelRatio);
     this.points.update(star.position, camPos, this.starLuminosity);
     this.starPoints.setPixelRatio(eng.pixelRatio);
@@ -545,10 +576,44 @@ class App implements UIHost {
     const namedStars = this.procPoints.namedStars.length
       ? this.starPoints.namedStars.concat(this.procPoints.namedStars)
       : this.starPoints.namedStars;
-    this.overlay.draw(this.bodies.views, eng.camera, this.selected, namedStars, starSel, this.uiVisible, s.galaxies ? this.galaxySprites.named : []);
+    this.overlay.draw(this.bodies.views, eng.camera, this.selected, namedStars, starSel, this.uiVisible, s.galaxies ? this.galaxySprites.named : [], this.blackHoleMarkers(camPos));
     const selDist = this.selected ? this.bodies.byId.get(this.selected.id)?.distance ?? 0 : 0;
     this.ui.update(now, dt, selDist);
   };
+
+  /** Hand the most prominent black hole in the current system to the lensing pass. */
+  private updateLensing(fovRad: number): void {
+    const eng = this.engine;
+    let best: BodyView | null = null;
+    let bestScore = 0;
+    for (const v of this.bodies.views) {
+      if (v.body.data.type !== 'blackhole') continue;
+      // Einstein angle ∝ sqrt(r_s / D)
+      const score = Math.sqrt(v.body.radius / Math.max(v.distance, 1e-3));
+      if (score > bestScore) { bestScore = score; best = v; }
+    }
+    if (!best) { eng.blackHole.enabled = false; return; }
+    eng.blackHole.target(best.body, best.relPos, this.camera.quaternion, fovRad, eng.camera.aspect, eng.height, this.time.t / 3600);
+  }
+
+  /** Sky markers for black holes that live in other systems (the current one is a body). */
+  private blackHoleMarkers(camPos: Vector3): NamedStarScreen[] {
+    const u = this.universe;
+    const out = this.bhMarkers;
+    out.length = 0;
+    for (let i = 0; i < u.blackHoles.length; i++) {
+      const bh = u.blackHoles[i];
+      if (bh.systemStarId === u.current.starId) continue;
+      let m = this.bhMarkerPool[i];
+      if (!m) { m = { index: -1, name: bh.entry.name, dir: new Vector3(), mag: 0 }; this.bhMarkerPool[i] = m; }
+      u.starRelative(bh.systemStarId, camPos, m.dir).normalize();
+      out.push(m);
+    }
+    return out;
+  }
+
+  private readonly bhMarkers: NamedStarScreen[] = [];
+  private readonly bhMarkerPool: NamedStarScreen[] = [];
 
   private saveScreenshot(): void {
     try {

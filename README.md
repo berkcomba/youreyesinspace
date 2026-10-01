@@ -18,6 +18,9 @@ of the observable universe. Turkish UI.*
 - **Yıldızlar** — HYG kataloğundan 109 000 gerçek yıldız; prosedürel gezegen sistemleri; yıldızlar
   arası uçuş, uçulabilir Samanyolu.
 - **Galaksiler** — 55 gerçek galaksi + 13,8 Gpc'ye kadar prosedürel kozmik ağ; LOD zinciri.
+- **Kara delikler** — Sagittarius A* (S2/S38/S55 yörüngeleriyle), M87*, Cygnus X-1, Gaia BH1,
+  V404 Cygni, A0620-00; ekran uzayında gerçek zamanlı Schwarzschild ışın izleme (null jeodezikler),
+  Doppler ışımalı ve kütleçekimsel kırmızıya kaymalı akreasyon diski, gölge ve Einstein halkası.
 - **Kamera** — serbest uçuş, yörünge, takip, otopilot, fare kilitli serbest dolaşım; floating origin
   + logaritmik derinlik (1 m'den 10¹³ km'ye).
 - **UI** — arama, bilgi paneli, zaman kontrolü, "Görmeye değecek yerler" menüsü, ayarlar, `F1` yardım.
@@ -56,10 +59,10 @@ verilir; repoya yazılmaz.
 ```
 src/core      Engine (renderer, post-process), Universe, StarSystem, CelestialBody, TimeSystem
 src/math      Kepler çözücü, referans çerçeveleri (ekliptik ↔ sahne)
-src/data      Güneş Sistemi + uzay aracı verisi, HYG katalog okuyucu, görüntü sağlayıcıları
+src/data      Güneş Sistemi + uzay aracı + kara delik verisi, HYG katalog okuyucu, görüntü sağlayıcıları
 src/gen       Prosedürel yıldız sistemi üretici
 src/galaxy    Galaksi kataloğu/modeli, prosedürel yıldızlar, uzak evren katmanları
-src/render    Gövde/karo/yıldız/galaksi/yörünge render'ları ve GLSL shader'lar
+src/render    Gövde/karo/yıldız/galaksi/yörünge render'ları, kara delik mercekleme geçişi ve GLSL shader'lar
 src/camera    Kamera kontrolcüsü (modlar, otopilot, hız ölçekleme)
 src/ui        HUD, paneller, ayarlar, arama, yerler menüsü
 ```

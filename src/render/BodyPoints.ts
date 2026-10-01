@@ -72,6 +72,20 @@ export class BodyPoints {
         this.size[i] = 0;
         continue;
       }
+      if (b.data.appearance.kind === 'blackhole') {
+        // the accretion disk as an unresolved point (the lensing pass takes over once resolvable)
+        const dCam = Math.max(v.distance, 1);
+        const mag = b.data.appearance.diskAbsMag + 5 * Math.log10(dCam / (10 * 3.0857e13));
+        const size = Math.max(1.1, Math.min(7.5, 6.8 - 0.55 * mag));
+        const gone = 1 - Math.min(1, Math.max(0, (mag - 11) / 4));
+        const discFade = 1 - Math.min(1, Math.max(0, (v.apparentRadiusPx * 6 - 1.0) / 3.0));
+        this.size[i] = size;
+        this.alpha[i] = gone * discFade;
+        const T = b.data.appearance.disk.temperature;
+        const warm = T < 8000 ? 1 : 0.85, cool = T > 12000 ? 1 : 0.85;
+        this.col[i * 3] = warm; this.col[i * 3 + 1] = 0.9; this.col[i * 3 + 2] = cool;
+        continue;
+      }
       const dSun = Math.max(b.position.distanceTo(sunPos), 1);
       const dCam = Math.max(v.distance, 1);
       const albedo = b.data.albedo ?? 0.3;

@@ -2,10 +2,11 @@
  * "Görmeye değecek yerler" – curated destinations for the topbar dropdown.
  * body: Solar-System body id · star: HYG proper name (resolved through the catalogue search)
  * galaxy: substring of the galaxy catalogue name · index 0 = Milky Way overview.
+ * blackhole: universal black-hole id (see data/blackholes.ts).
  */
 export interface Place {
   label: string;
-  kind: 'body' | 'star' | 'galaxy';
+  kind: 'body' | 'star' | 'galaxy' | 'blackhole';
   ref: string;
   note?: string;
 }
@@ -31,6 +32,17 @@ export const PLACES: PlaceGroup[] = [
       { label: 'Juno', kind: 'body', ref: 'juno', note: 'Jüpiter kutup yörüngesi' },
       { label: 'Perseverance', kind: 'body', ref: 'perseverance', note: 'Mars – Jezero Krateri' },
       { label: 'Curiosity', kind: 'body', ref: 'curiosity', note: 'Mars – Gale Krateri' },
+    ],
+  },
+  {
+    title: 'Kara delikler',
+    items: [
+      { label: 'Sagittarius A*', kind: 'blackhole', ref: 'b0', note: 'Samanyolu merkezi · 4,3 milyon M☉' },
+      { label: 'Cygnus X-1', kind: 'blackhole', ref: 'cygx1', note: 'İlk keşfedilen kara delik' },
+      { label: 'Gaia BH1', kind: 'blackhole', ref: 'b2', note: 'En yakın bilinen · uykuda' },
+      { label: 'V404 Cygni', kind: 'blackhole', ref: 'b3', note: 'X-ışını novası' },
+      { label: 'A0620-00', kind: 'blackhole', ref: 'b4', note: 'Tekboynuz\'da sessiz çift' },
+      { label: 'M87*', kind: 'blackhole', ref: 'b1', note: 'İlk fotoğraflanan · 6,5 milyar M☉' },
     ],
   },
   {

@@ -87,4 +87,12 @@ export const TYPE_LABELS: Record<string, string> = {
   comet: 'Kuyruklu Yıldız',
   barycenter: 'Kütle Merkezi',
   spacecraft: 'Uzay Aracı',
+  blackhole: 'Kara Delik',
 };
+
+/** Mass in solar masses, e.g. "9,6 M☉" or "4,3 milyon M☉" */
+export function fmtSolarMass(m: number): string {
+  if (m >= 1e9) return `${(m / 1e9).toLocaleString('tr-TR', { maximumFractionDigits: 1 })} milyar M☉`;
+  if (m >= 1e6) return `${(m / 1e6).toLocaleString('tr-TR', { maximumFractionDigits: 2 })} milyon M☉`;
+  return `${m.toLocaleString('tr-TR', { maximumFractionDigits: 1 })} M☉`;
+}

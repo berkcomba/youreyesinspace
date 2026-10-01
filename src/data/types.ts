@@ -1,4 +1,4 @@
-export type BodyType = 'star' | 'planet' | 'dwarf' | 'moon' | 'asteroid' | 'comet' | 'barycenter' | 'spacecraft';
+export type BodyType = 'star' | 'planet' | 'dwarf' | 'moon' | 'asteroid' | 'comet' | 'barycenter' | 'spacecraft' | 'blackhole';
 
 /**
  * JPL "approximate elements" style: mean elements at J2000 + secular rates per Julian century.
@@ -106,6 +106,19 @@ export type Appearance =
       seed: number;
       /** model is a stand-in for a different vehicle (no free model available) */
       representative?: boolean;
+    }
+  | {
+      /**
+       * Black hole: `radius` of the body is the Schwarzschild radius. Rendered entirely by the
+       * gravitational-lensing post-process (geodesic ray tracing + accretion disk); the disk
+       * normal is the body's pole.
+       */
+      kind: 'blackhole';
+      seed: number;
+      /** accretion disk, radii in Schwarzschild radii (0 brightness = dormant, no disk) */
+      disk: { inner: number; outer: number; temperature: number; brightness: number };
+      /** absolute magnitude of the disk glow for the distant point sprite */
+      diskAbsMag: number;
     };
 
 export interface Atmosphere {

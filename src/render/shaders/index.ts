@@ -23,12 +23,14 @@ import galaxyVert from './galaxy.vert?raw';
 import galaxyFrag from './galaxy.frag?raw';
 import tileVert from './tile.vert?raw';
 import tileFrag from './tile.frag?raw';
+import blackholeFrag from './blackhole.frag?raw';
 
 /** Compose shader sources with shared chunks. */
 export const Shaders = {
   surfaceVert: common + '\n' + surfaceVert,
   tileVert,
   tileFrag: common + '\n' + lighting + '\n' + tileFrag,
+  blackholeFrag: common + '\n' + blackholeFrag,
   terrestrialFrag: common + '\n' + lighting + '\n' + terrestrialFrag,
   gasgiantFrag: common + '\n' + lighting + '\n' + gasgiantFrag,
   starFrag: common + '\n' + starFrag,

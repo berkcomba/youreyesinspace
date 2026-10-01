@@ -132,6 +132,11 @@ export class BodyView {
       this.group.frustumCulled = false;
       return;
     }
+    if (a.kind === 'blackhole') {
+      // drawn by the screen-space lensing pass (BlackHolePass); nothing in the scene graph
+      this.group.visible = false;
+      return;
+    }
     if (a.kind === 'star') {
       this.surfaceMat = new ShaderMaterial({
         vertexShader: Shaders.surfaceVert,
@@ -393,6 +398,10 @@ export class BodyView {
     if (b.data.type === 'spacecraft') {
       if (this.apparentRadiusPx > 0.2) this.requestModel();
       if (this.ground) this.ground.visible = dist < 12; // km
+      return;
+    }
+    if (b.data.type === 'blackhole') {
+      this.group.visible = false;
       return;
     }
 

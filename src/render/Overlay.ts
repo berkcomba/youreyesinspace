@@ -31,6 +31,7 @@ const TYPE_COLORS: Record<string, string> = {
   comet: 'rgba(210, 170, 255, 0.9)',
   barycenter: 'rgba(255,255,255,0.7)',
   spacecraft: 'rgba(120, 255, 235, 0.95)',
+  blackhole: 'rgba(225, 130, 255, 0.95)',
 };
 
 const _v = new Vector3();
@@ -69,6 +70,7 @@ export class Overlay {
     views: BodyView[], camera: PerspectiveCamera, selected: CelestialBody | null,
     namedStars: NamedStarScreen[], selectedStar: StarSelectionScreen | null, uiVisible: boolean,
     namedGalaxies: NamedStarScreen[] = [],
+    blackHoles: NamedStarScreen[] = [],
   ): ScreenItem[] {
     const ctx = this.ctx;
     const W = this.width, H = this.height;
@@ -152,6 +154,32 @@ export class Overlay {
       ctx.font = '500 12px Inter, ui-sans-serif, system-ui, sans-serif';
     }
 
+    // Black holes in other systems: ring marker + name
+    if (this.showMarkers && blackHoles.length) {
+      for (const s of blackHoles) {
+        if (selectedStar && selectedStar.name === s.name) continue;
+        if (occluders.length && occluded(s.dir)) continue;
+        _v.copy(s.dir).multiplyScalar(1e11).project(camera);
+        if (_v.z > 1 || _v.z < -1) continue;
+        const x = (_v.x * 0.5 + 0.5) * W;
+        const y = (-_v.y * 0.5 + 0.5) * H;
+        if (x < 0 || x > W || y < 0 || y > H) continue;
+        ctx.strokeStyle = TYPE_COLORS.blackhole;
+        ctx.globalAlpha = 0.8;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, Math.PI * 2);
+        ctx.moveTo(x + 1.5, y);
+        ctx.arc(x, y, 1.5, 0, Math.PI * 2);
+        ctx.stroke();
+        if (this.showLabels) {
+          ctx.fillStyle = TYPE_COLORS.blackhole;
+          ctx.fillText(s.name, x + 10, y - 6);
+        }
+        ctx.globalAlpha = 1;
+      }
+    }
+
     // Selected catalogue star / galaxy: reticle + name
     if (selectedStar) {
       _v.copy(selectedStar.dir).multiplyScalar(1e11).project(camera);
@@ -231,6 +259,13 @@ export class Overlay {
           ctx.stroke();
         } else if (b.data.type === 'star') {
           // no marker on the sun
+        } else if (b.data.type === 'blackhole') {
+          // ring with a dot
+          ctx.beginPath();
+          ctx.arc(it.x, it.y, 6, 0, Math.PI * 2);
+          ctx.moveTo(it.x + 1.5, it.y);
+          ctx.arc(it.x, it.y, 1.5, 0, Math.PI * 2);
+          ctx.stroke();
         } else if (b.data.type === 'spacecraft') {
           // diamond
           ctx.beginPath();

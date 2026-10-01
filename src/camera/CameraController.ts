@@ -94,6 +94,8 @@ export class CameraController {
     if (body.data.rings) dist1 = Math.max(dist1, body.data.rings.outer * 2.2);
     if (body.data.type === 'star') dist1 = body.radius * 6;
     if (body.data.type === 'spacecraft') dist1 = body.radius * 4.5;
+    const bhDisk = body.data.appearance.kind === 'blackhole' && body.data.appearance.disk.brightness > 0 ? body.data.appearance.disk.outer : 0;
+    if (body.data.type === 'blackhole') dist1 = body.radius * Math.max(28, bhDisk * 3.4);
     let dir1: Vector3;
     if (r0.length() < body.radius * 1.5) {
       dir1 = r0.lengthSq() > 0 ? r0.clone().normalize() : new Vector3(0, 0.3, 1).normalize();
@@ -111,6 +113,13 @@ export class CameraController {
       }
       // slightly above the orbital plane for a nicer composition
       dir1.addScaledVector(body.pole, 0.18).normalize();
+      // black holes: arrive ~14° above the accretion-disk plane (the classic lensed-disk view)
+      if (body.data.type === 'blackhole' && bhDisk > 0) {
+        const inPlane = _v2.copy(dir1).addScaledVector(body.pole, -dir1.dot(body.pole));
+        if (inPlane.lengthSq() < 1e-6) inPlane.set(1, 0, 0).addScaledVector(body.pole, -body.pole.x);
+        inPlane.normalize();
+        dir1.copy(inPlane).multiplyScalar(Math.cos(0.25)).addScaledVector(body.pole, Math.sin(0.25)).normalize();
+      }
     }
     const ratio = Math.max(r0.length(), 1) / dist1;
     const duration = 2.2 + Math.min(4.5, Math.max(0, Math.log10(ratio)) * 0.9);

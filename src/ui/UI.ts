@@ -5,12 +5,12 @@ import type { CameraController } from '../camera/CameraController';
 import type { StarPoints } from '../render/StarPoints';
 import type { GalaxySprites } from '../render/GalaxySprites';
 import { AU_KM, LIGHT_YEAR_KM, PARSEC_KM, RAD } from '../core/constants';
-import { LUM_CLASS_DESC } from '../astro/stellar';
+import { LUM_CLASS_DESC, SUN_MASS_KG } from '../astro/stellar';
 import { GALAXY_TYPE_LABEL } from '../galaxy/GalaxyModel';
 import { catalogIndexOf, type StarId } from '../core/Universe';
 import type { Settings } from './Settings';
 import {
-  fmtDeg, fmtDistance, fmtDuration, fmtLightYears, fmtMass, fmtRadius, fmtSpeed, fmtTemp, TYPE_LABELS,
+  fmtDeg, fmtDistance, fmtSolarMass, fmtDuration, fmtLightYears, fmtMass, fmtRadius, fmtSpeed, fmtTemp, TYPE_LABELS,
 } from './format';
 import { PLACES } from './places';
 
@@ -40,6 +40,9 @@ export interface UIHost {
   toggleFollow(): void;
   /** fly to a Solar-System body by id (switching back to the Solar System frame if needed) */
   goToBodyId(id: string): void;
+  /** fly to a black hole by universal id (`b0`, `cygx1`, …), switching frames if needed */
+  goToBlackHole(id: string): void;
+  centerBlackHole(id: string): void;
   /** free roam: pointer-locked mouse look + WASD flight */
   toggleFreeRoam(): void;
   readonly freeRoam: boolean;
@@ -185,6 +188,7 @@ export class UI {
         // skip destinations this build cannot resolve
         if (p.kind === 'galaxy' && resolveGalaxy(p.ref) === null) continue;
         if (p.kind === 'star' && u.catalog.search(p.ref, 1).length === 0) continue;
+        if (p.kind === 'blackhole' && !u.blackHole(p.ref)) continue;
         const item = document.createElement('div');
         item.className = 'dropdown-item';
         item.setAttribute('role', 'option');
@@ -192,6 +196,7 @@ export class UI {
         item.addEventListener('click', () => {
           this.togglePlaces(false);
           if (p.kind === 'body') h.goToBodyId(p.ref);
+          else if (p.kind === 'blackhole') h.goToBlackHole(p.ref);
           else if (p.kind === 'star') {
             const hits = u.catalog.search(p.ref, 1);
             if (hits.length) h.goToStar(`c${hits[0]}`);
@@ -247,6 +252,15 @@ export class UI {
         li.addEventListener('click', () => { this.pickStar(`c${i}`); });
         list.appendChild(li);
       }
+      // Black holes (other systems)
+      const bhs = u.searchBlackHoles(q, 5).filter((b) => b.systemStarId !== u.current.starId);
+      for (const b of bhs) {
+        const li = document.createElement('li');
+        const dist = fmtLightYears(b.positionPc.length() * PARSEC_KM);
+        li.innerHTML = `<span>${b.entry.name}</span><span class="t">Kara Delik · ${fmtSolarMass(b.entry.massSolar)} · ${dist}</span>`;
+        li.addEventListener('click', () => { this.host.goToBlackHole(b.entry.id); this.closeSearch(); });
+        list.appendChild(li);
+      }
       // Galaxies
       const gals = u.galaxies.search(q, 6);
       for (const i of gals) {
@@ -256,7 +270,7 @@ export class UI {
         li.addEventListener('click', () => { this.host.selectGalaxy(i); this.host.goToGalaxy(i); this.closeSearch(); });
         list.appendChild(li);
       }
-      list.hidden = hits.length + stars.length + gals.length === 0;
+      list.hidden = hits.length + stars.length + bhs.length + gals.length === 0;
     };
     input.addEventListener('input', render);
     input.addEventListener('focus', render);
@@ -495,11 +509,12 @@ export class UI {
     const u = this.host.universe;
     const s = u.starInfo(id);
     const ci = catalogIndexOf(id);
-    const isProc = ci < 0;
+    const isBH = u.blackHole(id) !== undefined;
+    const isProc = ci < 0 && !isBH;
     this.infoName.textContent = s.name;
-    this.infoType.textContent = 'Yıldız · ' + (s.isWhiteDwarf ? 'Beyaz cüce' : LUM_CLASS_DESC[s.lumClass] ?? '');
-    const galName = isProc ? u.galaxies.name(u.galaxyOfStar(id)) : '';
-    this.infoParent.textContent = isProc ? `Prosedürel yıldız · ${galName}` : s.names?.constellation ? `${s.names.constellation} takımyıldızı` : 'Yıldız kataloğu (HYG)';
+    this.infoType.textContent = isBH ? 'Kara delik sistemi' : 'Yıldız · ' + (s.isWhiteDwarf ? 'Beyaz cüce' : LUM_CLASS_DESC[s.lumClass] ?? '');
+    const galName = ci < 0 ? u.galaxies.name(u.galaxyOfStar(id)) : '';
+    this.infoParent.textContent = isBH ? `Gerçek nesne · ${galName}` : isProc ? `Prosedürel yıldız · ${galName}` : s.names?.constellation ? `${s.names.constellation} takımyıldızı` : 'Yıldız kataloğu (HYG)';
 
     const rel = u.starRelative(id, this.host.camera.position);
     const camDist = rel.length();
@@ -548,6 +563,10 @@ export class UI {
     const rows: Array<[string, string] | 'sep'> = [];
     if (b.data.type === 'spacecraft') {
       this.renderSpacecraftInfo(b, camDist, rows);
+      return;
+    }
+    if (b.data.type === 'blackhole') {
+      this.renderBlackHoleInfo(b, camDist, rows);
       return;
     }
     rows.push(['Kameraya uzaklık', fmtDistance(camDist)]);
@@ -600,6 +619,46 @@ export class UI {
       .map((r) => (r === 'sep' ? '<div class="sep"></div>' : `<dt>${r[0]}</dt><dd>${r[1]}</dd>`))
       .join('');
     this.infoDesc.textContent = b.data.description ?? '';
+  }
+
+  private renderBlackHoleInfo(b: CelestialBody, camDist: number, rows: Array<[string, string] | 'sep'>): void {
+    const rs = b.radius;
+    const mSun = b.data.mass / SUN_MASS_KG;
+    this.infoParent.textContent = b.parent ? `${b.parent.name} ile çift sistem` : 'Sistem merkezi';
+    rows.push(['Kameraya uzaklık', fmtDistance(camDist)]);
+    rows.push(['Olay ufkuna uzaklık', `${fmtDistance(Math.max(0, camDist - rs))} (${(camDist / rs).toFixed(1)} r_s)`]);
+    rows.push('sep');
+    rows.push(['Kütle', fmtSolarMass(mSun)]);
+    rows.push(['Schwarzschild yarıçapı', fmtDistance(rs)]);
+    rows.push(['Foton küresi', `${fmtDistance(rs * 1.5)} (1,5 r_s)`]);
+    rows.push(['ISCO (en iç kararlı yörünge)', `${fmtDistance(rs * 3)} (3 r_s)`]);
+    rows.push(['Gölge çapı', `${fmtDistance(rs * 5.196)} (√27 r_s)`]);
+    const hawking = 6.17e-8 / mSun;
+    rows.push(['Hawking sıcaklığı', hawking >= 1e-3 ? `${hawking.toExponential(2)} K` : `${hawking.toExponential(1)} K`]);
+    const evap = 2.1e67 * mSun ** 3;
+    rows.push(['Buharlaşma süresi', `${evap.toExponential(1)} yıl`]);
+    if (b.data.appearance.kind === 'blackhole') {
+      const d = b.data.appearance.disk;
+      rows.push(['Akreasyon diski', d.brightness > 0 ? `${d.inner}–${d.outer} r_s · ~${d.temperature.toLocaleString('tr-TR')} K` : 'Yok (uykuda)']);
+    }
+    rows.push('sep');
+    if (b.resolved && b.parent) {
+      const r = b.resolved;
+      rows.push(['Yörünge periyodu', b.periodDisplay()]);
+      rows.push(['Yarı-büyük eksen', `${(r.a / AU_KM).toFixed(3)} AU`]);
+      rows.push(['Dış merkezlik', r.e.toFixed(3)]);
+      rows.push(['Anlık yörünge hızı', `${b.orbitalSpeed.toFixed(1)} km/s`]);
+      rows.push('sep');
+    } else if (b.children.length) {
+      rows.push(['Yörüngedeki yıldızlar', b.children.map((c) => c.name).join(', ')]);
+      rows.push('sep');
+    }
+    if (b.data.facts) for (const [k, v] of Object.entries(b.data.facts)) if (k !== 'Kütle') rows.push([k, v]);
+    rows.push(['Işık gecikmesi', fmtDuration(camDist / 299_792.458)]);
+    this.infoBody.innerHTML = rows
+      .map((r) => (r === 'sep' ? '<div class="sep"></div>' : `<dt>${r[0]}</dt><dd>${r[1]}</dd>`))
+      .join('');
+    this.infoDesc.textContent = `${b.data.description ?? ''} Görüntü: Schwarzschild metriğinde ışık yollarının (null jeodezikler) ekran uzayında gerçek zamanlı izlenmesi; diskte Doppler ışıması ve kütleçekimsel kırmızıya kayma uygulanır.`;
   }
 
   private renderSpacecraftInfo(b: CelestialBody, camDist: number, rows: Array<[string, string] | 'sep'>): void {
