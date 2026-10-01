@@ -12,6 +12,7 @@ import { OrbitLines } from './render/OrbitLines';
 import { StarPoints } from './render/StarPoints';
 import { ProcStarPoints } from './render/ProcStarPoints';
 import { GalaxySprites } from './render/GalaxySprites';
+import { LandmarkSprites } from './render/LandmarkSprites';
 import { GalaxyCloud } from './render/GalaxyCloud';
 import { FarUniverse, localFade } from './galaxy/FarUniverse';
 import { Belts } from './render/Belts';
@@ -51,6 +52,9 @@ class App implements UIHost {
   selected: CelestialBody | null = null;
   selectedStar: StarId | null = null;
   selectedGalaxy: number | null = null;
+  /** selected deep-sky landmark (index into universe.landmarks) when nothing else is selected */
+  selectedLandmark: number | null = null;
+  readonly landmarkSprites: LandmarkSprites;
   uiVisible = true;
   private wantScreenshot = false;
   private last = performance.now();
@@ -78,6 +82,7 @@ class App implements UIHost {
     this.universe.update(this.time.jd, this.time.t);
 
     this.galaxySprites = new GalaxySprites(this.universe.galaxies, scene, this.maxPointPx);
+    this.landmarkSprites = new LandmarkSprites(this.universe.landmarks, scene);
     this.farUniverse = new FarUniverse();
     this.farSprites = this.farUniverse.tiers.map((t) => {
       const s = new GalaxySprites(t, scene, this.maxPointPx, t.spec.boostMag);
@@ -142,17 +147,49 @@ class App implements UIHost {
   /* ---------------- UIHost ---------------- */
   select(b: CelestialBody | null): void {
     this.selected = b;
-    if (b) { this.selectedStar = null; this.selectedGalaxy = null; }
+    if (b) { this.selectedStar = null; this.selectedGalaxy = null; this.selectedLandmark = null; }
   }
 
   selectStar(id: StarId | null): void {
     this.selectedStar = id;
-    if (id !== null) { this.selected = null; this.selectedGalaxy = null; }
+    if (id !== null) { this.selected = null; this.selectedGalaxy = null; this.selectedLandmark = null; }
   }
 
   selectGalaxy(i: number | null): void {
     this.selectedGalaxy = i;
-    if (i !== null) { this.selected = null; this.selectedStar = null; }
+    if (i !== null) { this.selected = null; this.selectedStar = null; this.selectedLandmark = null; }
+  }
+
+  selectLandmark(i: number | null): void {
+    // star-type landmarks are real systems: select them as stars
+    const sysId = i !== null ? this.universe.landmarks[i].systemId : null;
+    if (sysId !== null) { this.selectStar(sysId); return; }
+    this.selectedLandmark = i;
+    if (i !== null) { this.selected = null; this.selectedStar = null; this.selectedGalaxy = null; }
+  }
+
+  /** Fly to a nebula / cluster / remnant (or into a landmark star's system). */
+  goToLandmark(i: number): void {
+    const u = this.universe;
+    const l = u.landmarks[i];
+    if (l.systemId !== null) { this.goToStar(l.systemId); return; }
+    this.selectLandmark(i);
+    const centre = u.landmarkRelative(i, new Vector3(0, 0, 0));
+    const R = l.def.radiusPc * PARSEC_KM;
+    const fromCam = new Vector3().copy(this.camera.position).sub(centre).normalize();
+    // stop where the object fills a good part of the view (sprites fade when we are inside)
+    const arrive = l.def.kind === 'remnant' ? R * 5 : R * 3.2;
+    this.camera.goToPoint(centre, arrive, fromCam);
+    const dist = new Vector3().copy(centre).sub(this.camera.position).length();
+    this.ui.showToast(`${l.def.name} hedefine uçuluyor… (${fmtLightYears(dist)})`, 2600);
+  }
+
+  centerLandmark(i: number): void {
+    const l = this.universe.landmarks[i];
+    if (l.systemId !== null) { this.centerStar(l.systemId); return; }
+    this.selectLandmark(i);
+    const dir = this.universe.landmarkRelative(i, this.camera.position).normalize();
+    this.camera.centerOnDirection(dir);
   }
 
   goTo(b: CelestialBody): void {
@@ -342,6 +379,12 @@ class App implements UIHost {
       if (dbl) this.goToStar(proc);
       return;
     }
+    const lm = this.landmarkSprites.pick(x, y, eng.camera, eng.width, eng.height);
+    if (lm !== null) {
+      this.selectLandmark(lm);
+      if (dbl) this.goToLandmark(lm);
+      return;
+    }
     const fovRad = eng.camera.fov * DEG;
     const pxPerRad = eng.height / 2 / Math.tan(fovRad / 2);
     const gal = this.galaxySprites.pick(x, y, eng.camera, eng.width, eng.height, pxPerRad, this.galaxyBoost, u.currentGalaxy ?? -1);
@@ -359,11 +402,13 @@ class App implements UIHost {
         if (sel) this.goTo(sel);
         else if (this.selectedStar !== null) this.goToStar(this.selectedStar);
         else if (this.selectedGalaxy !== null) this.goToGalaxy(this.selectedGalaxy);
+        else if (this.selectedLandmark !== null) this.goToLandmark(this.selectedLandmark);
         break;
       case 'KeyC':
         if (sel) this.center(sel);
         else if (this.selectedStar !== null) this.centerStar(this.selectedStar);
         else if (this.selectedGalaxy !== null) this.centerGalaxy(this.selectedGalaxy);
+        else if (this.selectedLandmark !== null) this.centerLandmark(this.selectedLandmark);
         break;
       case 'KeyT': this.toggleFollow(); break;
       case 'KeyV': this.toggleFreeRoam(); break;
@@ -379,7 +424,7 @@ class App implements UIHost {
         break;
       case 'Escape':
         if (this.camera.autopilot) this.camera.autopilot = null;
-        else { this.select(null); this.selectStar(null); this.selectGalaxy(null); }
+        else { this.select(null); this.selectStar(null); this.selectGalaxy(null); this.selectLandmark(null); }
         this.ui.toggleHelp(false);
         break;
       case 'KeyJ': this.time.reverseWarp(); break;
@@ -539,6 +584,7 @@ class App implements UIHost {
     this.procPoints.update(this.camPc, eng.pixelRatio, this.universe.current.starId, dt);
     for (const c of this.clouds.values()) c.update(this.camPc, pxPerRad, eng.pixelRatio, s.milkyWay);
     this.galaxySprites.update(this.camPc, pxPerRad, eng.pixelRatio, this.galaxyBoost, this.universe.currentGalaxy ?? -1);
+    this.landmarkSprites.update(this.camPc, pxPerRad, this.universe.current.starId, (gi) => this.galaxySprites.apparent(gi).ratio);
     // LOD hand-over between the detailed local volume and the aggregated far-universe tiers
     const dSunPc = this.camPc.length();
     this.galaxySprites.setFade(localFade(dSunPc));
@@ -572,11 +618,18 @@ class App implements UIHost {
       this.starSel.kind = 'galaxy';
       this.starSel.radiusPx = Math.min(this.galaxySprites.apparent(i).angRad * pxPerRad, eng.height);
       starSel = this.starSel;
+    } else if (this.selectedLandmark !== null) {
+      const i = this.selectedLandmark;
+      this.starSel.name = this.universe.landmarks[i].def.name;
+      this.landmarkSprites.direction(i, this.starSel.dir);
+      this.starSel.kind = 'landmark';
+      this.starSel.radiusPx = Math.min(this.landmarkSprites.angularRadius(i) * pxPerRad, eng.height);
+      starSel = this.starSel;
     }
     const namedStars = this.procPoints.namedStars.length
       ? this.starPoints.namedStars.concat(this.procPoints.namedStars)
       : this.starPoints.namedStars;
-    this.overlay.draw(this.bodies.views, eng.camera, this.selected, namedStars, starSel, this.uiVisible, s.galaxies ? this.galaxySprites.named : [], this.blackHoleMarkers(camPos));
+    this.overlay.draw(this.bodies.views, eng.camera, this.selected, namedStars, starSel, this.uiVisible, s.galaxies ? this.galaxySprites.named : [], this.blackHoleMarkers(camPos), this.landmarkSprites.named);
     const selDist = this.selected ? this.bodies.byId.get(this.selected.id)?.distance ?? 0 : 0;
     this.ui.update(now, dt, selDist);
   };

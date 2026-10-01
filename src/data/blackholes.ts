@@ -88,7 +88,7 @@ function blackHoleBody(o: BlackHoleBodyOpts): BodyData {
 }
 
 /** Hand-made companion / S-star body (no procedural planets) */
-function starBody(id: string, name: string, massSolar: number, radiusSolar: number, temperature: number, description: string, facts: Record<string, string>, extra: Partial<BodyData> = {}): BodyData {
+export function starBody(id: string, name: string, massSolar: number, radiusSolar: number, temperature: number, description: string, facts: Record<string, string>, extra: Partial<BodyData> = {}): BodyData {
   return {
     id, name, type: 'star',
     radius: radiusSolar * SUN_RADIUS_KM,
@@ -104,7 +104,7 @@ function starBody(id: string, name: string, massSolar: number, radiusSolar: numb
 }
 
 /** Minimal StarInfo for a system whose primary is not in the HYG catalogue */
-function syntheticInfo(name: string, positionPc: Vector3, massSolar: number, radiusSolar: number, temperature: number, luminosity: number, spectral: string): StarInfo {
+export function syntheticInfo(name: string, positionPc: Vector3, massSolar: number, radiusSolar: number, temperature: number, luminosity: number, spectral: string): StarInfo {
   const absMag = 4.83 - 2.5 * Math.log10(Math.max(luminosity, 1e-9));
   const d = positionPc.length();
   return {
@@ -142,6 +142,8 @@ export interface BlackHoleEntry {
 export interface PositionContext {
   milkyWayCenterPc: () => Vector3;
   galaxyPositionPc: (nameSubstring: string) => { index: number; position: Vector3 } | null;
+  /** 3D point of a sky position inside a galaxy: sightline ∩ galaxy disc plane (pc) */
+  galaxyPlanePoint: (nameSubstring: string, ra: number, dec: number) => Vector3;
 }
 
 const SGR_A: PoleRaDec = { ra: 266.4168, dec: -29.0078 };
@@ -158,6 +160,49 @@ function sStar(id: string, name: string, massSolar: number, radiusSolar: number,
       parent: 'sgra',
       orbit: { kind: 'simple', a: aKm, e, i: el.i, node: el.node, argPeri: el.argPeri, M0: 0, epoch: decimalYearJd(tPeri), period: periodYr * YEAR_D, frame: 'ecliptic' },
     });
+}
+
+/** Stellar-mass black hole with a luminous companion in another galaxy (X-ray binary) */
+function xrayBinary(o: {
+  id: string; name: string; galaxy: string; ra: number; dec: number; massSolar: number; summary: string;
+  companion: { name: string; massSolar: number; radiusSolar: number; temperature: number; spectral: string; luminosity: number };
+  periodDays: number; inc: number; node: number; disk: Disk; diskAbsMag: number; description: string; facts: Record<string, string>; discovered?: string;
+}): BlackHoleEntry {
+  const c = o.companion;
+  return {
+    id: o.id, name: o.name, massSolar: o.massSolar, bodyId: o.id,
+    host: { kind: 'system', positionPc: (ctx) => ctx.galaxyPlanePoint(o.galaxy, o.ra, o.dec) },
+    galaxy: (ctx) => ctx.galaxyPositionPc(o.galaxy)?.index ?? 0,
+    summary: o.summary,
+    info: (p) => syntheticInfo(o.name, p, c.massSolar, c.radiusSolar, c.temperature, c.luminosity, c.spectral),
+    bodies: () => [
+      starBody(`${o.id}-star`, c.name, c.massSolar, c.radiusSolar, c.temperature,
+        `${o.name} kara deliğinin yoldaş yıldızı; Roche lobundan taşan gaz kara deliğin akreasyon diskini besler.`,
+        { 'Tayf': c.spectral, 'Kütle': `~${c.massSolar} M☉` }),
+      blackHoleBody({
+        id: o.id, name: o.name, massSolar: o.massSolar, parent: `${o.id}-star`,
+        pole: { ra: o.ra, dec: o.dec + 60 > 90 ? o.dec - 60 : o.dec + 60 },
+        disk: o.disk, diskAbsMag: o.diskAbsMag,
+        orbit: {
+          kind: 'simple', a: semiMajorKm(o.periodDays, (c.massSolar + o.massSolar) * SUN_MASS_KG), e: 0, i: o.inc, node: o.node, argPeri: 0, M0: 0,
+          epoch: EPOCH_2020, period: o.periodDays, frame: 'ecliptic',
+        },
+        description: o.description, facts: o.facts, discovered: o.discovered,
+      }),
+    ],
+  };
+}
+
+/** Supermassive black hole at the centre of a catalogue galaxy */
+function galaxyCore(o: { id: string; name: string; galaxy: string; massSolar: number; pole: PoleRaDec; disk: Disk; diskAbsMag: number; summary: string; description: string; facts: Record<string, string>; discovered?: string }): BlackHoleEntry {
+  return {
+    id: o.id, name: o.name, massSolar: o.massSolar, bodyId: o.id,
+    host: { kind: 'system', positionPc: (ctx) => ctx.galaxyPositionPc(o.galaxy)?.position ?? new Vector3() },
+    galaxy: (ctx) => ctx.galaxyPositionPc(o.galaxy)?.index ?? 0,
+    summary: o.summary,
+    info: (p) => syntheticInfo(o.name, p, o.massSolar, 0, 1, 1e-4, 'SMBH'),
+    bodies: () => [blackHoleBody({ id: o.id, name: o.name, massSolar: o.massSolar, pole: o.pole, disk: o.disk, diskAbsMag: o.diskAbsMag, description: o.description, facts: o.facts, discovered: o.discovered })],
+  };
 }
 
 export const BLACK_HOLES: BlackHoleEntry[] = [
@@ -332,4 +377,69 @@ export const BLACK_HOLES: BlackHoleEntry[] = [
       }),
     ],
   },
+  xrayBinary({
+    id: 'lmcx1', name: 'LMC X-1', galaxy: 'Büyük Macellan', ra: 84.9117, dec: -69.7433, massSolar: 10.9,
+    summary: 'Büyük Macellan Bulutu\'nda ilk galaksi dışı kara delik',
+    companion: { name: 'LMC X-1 yoldaşı (O7 III)', massSolar: 31.8, radiusSolar: 17, temperature: 33_000, spectral: 'O7 III', luminosity: 3e5 },
+    periodDays: 3.9092, inc: 36.4, node: 120, disk: { inner: 3, outer: 26, temperature: 28_000, brightness: 1.4 }, diskAbsMag: -4,
+    description: '1969\'da keşfedilen, Büyük Macellan Bulutu\'ndaki sürekli parlak X-ışını çifti; Samanyolu dışında kütlesi ölçülen ilk kara deliklerden. Dev O yıldızından rüzgârla beslenen diski neredeyse hep "yumuşak" (termal) hâlde kalır.',
+    discovered: '1969 (Uhuru öncesi roket uçuşları)',
+    facts: { 'Kütle': '10,9 M☉', 'Yoldaş': 'O7 III, ~32 M☉', 'Yörünge periyodu': '3,91 gün', 'Uzaklık': '48 kpc (LMC)', 'Dönüş': 'a* ≈ 0,92' },
+  }),
+  xrayBinary({
+    id: 'lmcx3', name: 'LMC X-3', galaxy: 'Büyük Macellan', ra: 84.7358, dec: -64.0836, massSolar: 6.98,
+    summary: 'LMC\'de B yıldızıyla çift, dönüşü yavaş kara delik',
+    companion: { name: 'LMC X-3 yoldaşı (B3 V)', massSolar: 3.63, radiusSolar: 4.3, temperature: 18_000, spectral: 'B3 V', luminosity: 1800 },
+    periodDays: 1.7049, inc: 69.2, node: 20, disk: { inner: 3, outer: 24, temperature: 20_000, brightness: 1.0 }, diskAbsMag: -2,
+    description: 'Büyük Macellan Bulutu\'nun kuzeyinde, Roche lobunu taşıran B yıldızından beslenen kara delik. Diski Samanyolu\'ndaki benzerlerine göre şaşırtıcı derecede kararlı; kara delik dönüşü ölçülen ilk nesnelerden (a* ≈ 0,25).',
+    discovered: '1971 (Uhuru)',
+    facts: { 'Kütle': '6,98 M☉', 'Yoldaş': 'B3 V, ~3,6 M☉', 'Yörünge periyodu': '1,70 gün', 'Uzaklık': '48 kpc (LMC)' },
+  }),
+  xrayBinary({
+    id: 'm33x7', name: 'M33 X-7', galaxy: 'M33', ra: 23.392, dec: 30.537, massSolar: 15.65,
+    summary: 'Üçgen Galaksisi\'nde tutulmalı dev X-ışını çifti',
+    companion: { name: 'M33 X-7 yoldaşı (O7-8 III)', massSolar: 70, radiusSolar: 19.6, temperature: 35_000, spectral: 'O7-8 III', luminosity: 5e5 },
+    periodDays: 3.4530, inc: 74.6, node: 200, disk: { inner: 3, outer: 26, temperature: 30_000, brightness: 1.5 }, diskAbsMag: -4,
+    description: 'Üçgen Galaksisi\'nde (M33) 70 güneş kütleli dev bir yıldızın etrafında 3,45 günde dönen, yoldaşının arkasında düzenli olarak tutulan kara delik. Tutulmalar yörünge eğikliğini sabitlediği için kütlesi (15,65 M☉) sıra dışı bir kesinlikle ölçülmüştür.',
+    discovered: '2007 (Orosz ve ark., Chandra + Gemini)',
+    facts: { 'Kütle': '15,65 M☉', 'Yoldaş': 'O7-8 III, ~70 M☉', 'Yörünge periyodu': '3,45 gün (tutulmalı)', 'Uzaklık': '840 kpc (M33)' },
+  }),
+  galaxyCore({
+    id: 'm31star', name: 'M31*', galaxy: 'Andromeda', massSolar: 1.4e8, pole: { ra: 100, dec: 15 },
+    disk: { inner: 3, outer: 12, temperature: 5000, brightness: 0.12 }, diskAbsMag: 2,
+    summary: 'Andromeda\'nın merkezindeki uykulu dev (140 milyon M☉)',
+    description: 'Andromeda Galaksisi\'nin çekirdeğindeki 140 milyon güneş kütleli kara delik; Sgr A*\'dan 30 kat daha ağır ama o da neredeyse hiç beslenmiyor. Çevresinde Hubble\'ın keşfettiği eksantrik yaşlı yıldız diski (P1/P2 çift çekirdek) ve mavi genç yıldızlardan oluşan P3 kümesi döner.',
+    discovered: '1988 (çift çekirdek, Lauer & Dressler), 2005 (kütle, Bender ve ark.)',
+    facts: { 'Kütle': '1,4 × 10⁸ M☉', 'Uzaklık': '765 kpc', 'Durum': 'Çok düşük akreasyon (L ≈ 10⁻¹⁰ L_Edd)' },
+  }),
+  galaxyCore({
+    id: 'cenastar', name: 'Centaurus A*', galaxy: 'Centaurus A', massSolar: 5.5e7, pole: { ra: 201.4, dec: 2 },
+    disk: { inner: 3, outer: 18, temperature: 8000, brightness: 1.1 }, diskAbsMag: -9,
+    summary: 'En yakın aktif galaksi çekirdeği; dev radyo jetleri',
+    description: 'Centaurus A\'nın tozlu merkezinde saklı 55 milyon güneş kütleli aktif kara delik. Her iki yöne fırlattığı jetler gökyüzünde Ay\'ın 20 katı genişliğinde radyo lobları oluşturur; 2021\'de EHT jetin kaynağını kara delik ölçeğinde görüntüledi.',
+    discovered: '1949 (radyo kaynağı)',
+    facts: { 'Kütle': '5,5 × 10⁷ M☉', 'Uzaklık': '3,8 Mpc', 'Jet': '~1 Mpc radyo lobları', 'Durum': 'Aktif (radyo galaksisi)' },
+  }),
+  galaxyCore({
+    id: 'm104star', name: 'Sombrero kara deliği', galaxy: 'Sombrero', massSolar: 1.0e9, pole: { ra: 190, dec: 78 },
+    disk: { inner: 3, outer: 12, temperature: 6000, brightness: 0.25 }, diskAbsMag: -3,
+    summary: 'Sombrero Galaksisi\'nin merkezi · 1 milyar M☉',
+    description: 'Sombrero Galaksisi\'nin (M104) dev şişkinliğinin ortasında, Samanyolu merkezindekinden 230 kat daha ağır bir kara delik. Düşük parlaklıklı bir aktif çekirdek (LINER) olarak hafifçe besleniyor.',
+    facts: { 'Kütle': '~1 × 10⁹ M☉', 'Uzaklık': '9,6 Mpc', 'Durum': 'Düşük parlaklıklı AGN' },
+  }),
+  galaxyCore({
+    id: 'm106star', name: 'M106 kara deliği', galaxy: 'M106', massSolar: 4.0e7, pole: { ra: 185, dec: 20 },
+    disk: { inner: 3, outer: 20, temperature: 7000, brightness: 0.8 }, diskAbsMag: -7,
+    summary: 'Su maserleriyle en hassas ölçülen kara delik kütlesi',
+    description: 'M106 (NGC 4258) merkezindeki kara deliğin etrafında, Kepler yasalarına kusursuz uyan su maseri bulutları döner. Bu disk hem kara deliğin kütlesini (40 milyon M☉) hem de galaksinin uzaklığını geometrik olarak verir; kozmik mesafe merdiveninin çapasıdır.',
+    discovered: '1995 (Miyoshi ve ark., VLBA maser diski)',
+    facts: { 'Kütle': '4,0 × 10⁷ M☉', 'Uzaklık': '7,2 Mpc (maser geometrisi)', 'Durum': 'Seyfert 2 / LINER' },
+  }),
+  galaxyCore({
+    id: 'm81star', name: 'M81*', galaxy: 'Bode', massSolar: 7.0e7, pole: { ra: 150, dec: 30 },
+    disk: { inner: 3, outer: 14, temperature: 6500, brightness: 0.5 }, diskAbsMag: -5,
+    summary: 'Bode Galaksisi\'nin düşük parlaklıklı çekirdeği',
+    description: 'M81\'in merkezindeki 70 milyon güneş kütleli kara delik; en yakın ve en iyi incelenen düşük parlaklıklı aktif çekirdeklerden biri, Sgr A* ile parlak kuasarlar arasında bir köprü.',
+    facts: { 'Kütle': '7 × 10⁷ M☉', 'Uzaklık': '3,6 Mpc', 'Durum': 'Düşük parlaklıklı AGN' },
+  }),
 ];

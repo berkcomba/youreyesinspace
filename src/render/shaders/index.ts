@@ -24,6 +24,8 @@ import galaxyFrag from './galaxy.frag?raw';
 import tileVert from './tile.vert?raw';
 import tileFrag from './tile.frag?raw';
 import blackholeFrag from './blackhole.frag?raw';
+import landmarkVert from './landmark.vert?raw';
+import landmarkFrag from './landmark.frag?raw';
 
 /** Compose shader sources with shared chunks. */
 export const Shaders = {
@@ -31,6 +33,8 @@ export const Shaders = {
   tileVert,
   tileFrag: common + '\n' + lighting + '\n' + tileFrag,
   blackholeFrag: common + '\n' + blackholeFrag,
+  landmarkVert,
+  landmarkFrag: common + '\n' + landmarkFrag,
   terrestrialFrag: common + '\n' + lighting + '\n' + terrestrialFrag,
   gasgiantFrag: common + '\n' + lighting + '\n' + gasgiantFrag,
   starFrag: common + '\n' + starFrag,

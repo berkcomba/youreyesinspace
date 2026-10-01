@@ -18,9 +18,12 @@ of the observable universe. Turkish UI.*
 - **Yıldızlar** — HYG kataloğundan 109 000 gerçek yıldız; prosedürel gezegen sistemleri; yıldızlar
   arası uçuş, uçulabilir Samanyolu.
 - **Galaksiler** — 55 gerçek galaksi + 13,8 Gpc'ye kadar prosedürel kozmik ağ; LOD zinciri.
-- **Kara delikler** — Sagittarius A* (S2/S38/S55 yörüngeleriyle), M87*, Cygnus X-1, Gaia BH1,
-  V404 Cygni, A0620-00; ekran uzayında gerçek zamanlı Schwarzschild ışın izleme (null jeodezikler),
+- **Kara delikler** — Sagittarius A* (S2/S38/S55 yörüngeleriyle), M87*, M31*, Centaurus A*, Cygnus X-1,
+  Gaia BH1, V404 Cygni, A0620-00, LMC X-1/X-3, M33 X-7 ve diğerleri; ekran uzayında gerçek zamanlı Schwarzschild ışın izleme (null jeodezikler),
   Doppler ışımalı ve kütleçekimsel kırmızıya kaymalı akreasyon diski, gölge ve Einstein halkası.
+- **Derin gökyüzü yer imleri** — Orion, Karina, Tarantula ve NGC 604 bulutsuları; Ülker, Omega Centauri,
+  Mayall II kümeleri; Yengeç, SN 1987A, Cas A kalıntıları; Eta Carinae, R136a1, WOH G64 gibi rekor
+  yıldızlar — Samanyolu'nda ve komşu galaksilerde gerçek konumlarında, uçulabilir.
 - **Kamera** — serbest uçuş, yörünge, takip, otopilot, fare kilitli serbest dolaşım; floating origin
   + logaritmik derinlik (1 m'den 10¹³ km'ye).
 - **UI** — arama, bilgi paneli, zaman kontrolü, "Görmeye değecek yerler" menüsü, ayarlar, `F1` yardım.
@@ -59,7 +62,7 @@ verilir; repoya yazılmaz.
 ```
 src/core      Engine (renderer, post-process), Universe, StarSystem, CelestialBody, TimeSystem
 src/math      Kepler çözücü, referans çerçeveleri (ekliptik ↔ sahne)
-src/data      Güneş Sistemi + uzay aracı + kara delik verisi, HYG katalog okuyucu, görüntü sağlayıcıları
+src/data      Güneş Sistemi, uzay aracı, kara delik ve derin gökyüzü verisi, HYG katalog okuyucu, görüntü sağlayıcıları
 src/gen       Prosedürel yıldız sistemi üretici
 src/galaxy    Galaksi kataloğu/modeli, prosedürel yıldızlar, uzak evren katmanları
 src/render    Gövde/karo/yıldız/galaksi/yörünge render'ları, kara delik mercekleme geçişi ve GLSL shader'lar

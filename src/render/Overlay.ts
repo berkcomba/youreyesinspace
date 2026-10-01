@@ -2,13 +2,14 @@ import { Vector3, type PerspectiveCamera } from 'three';
 import type { CelestialBody } from '../core/CelestialBody';
 import type { BodyView } from './BodyRenderer';
 import type { NamedStarScreen } from './StarPoints';
+import type { LandmarkScreen } from './LandmarkSprites';
 
 export interface StarSelectionScreen {
   name: string;
   /** unit direction from camera */
   dir: Vector3;
-  /** 'star' (default) or 'galaxy' – changes the reticle colour/size */
-  kind?: 'star' | 'galaxy';
+  /** 'star' (default), 'galaxy' or 'landmark' – changes the reticle colour/size */
+  kind?: 'star' | 'galaxy' | 'landmark';
   /** apparent radius in px (galaxies) so the reticle hugs the object */
   radiusPx?: number;
 }
@@ -32,6 +33,13 @@ const TYPE_COLORS: Record<string, string> = {
   barycenter: 'rgba(255,255,255,0.7)',
   spacecraft: 'rgba(120, 255, 235, 0.95)',
   blackhole: 'rgba(225, 130, 255, 0.95)',
+};
+
+const LANDMARK_COLORS: Record<string, string> = {
+  nebula: 'rgba(255, 150, 175, 0.9)',
+  cluster: 'rgba(255, 235, 190, 0.9)',
+  remnant: 'rgba(170, 240, 235, 0.9)',
+  star: 'rgba(225, 230, 255, 0.9)',
 };
 
 const _v = new Vector3();
@@ -71,6 +79,7 @@ export class Overlay {
     namedStars: NamedStarScreen[], selectedStar: StarSelectionScreen | null, uiVisible: boolean,
     namedGalaxies: NamedStarScreen[] = [],
     blackHoles: NamedStarScreen[] = [],
+    landmarks: LandmarkScreen[] = [],
   ): ScreenItem[] {
     const ctx = this.ctx;
     const W = this.width, H = this.height;
@@ -113,8 +122,8 @@ export class Overlay {
     // Star names (behind everything). Brightest first; later labels skip occupied spots.
     // Landmarks (the Sun and famous stars, far from home) are shown with the markers even when
     // star names are off: they are the only way to find the way around the galaxy.
-    const landmarks = this.showMarkers && !this.showStarNames && namedStars.some((s) => s.landmark);
-    if (this.showStarNames || landmarks) {
+    const anyLandmarkStar = this.showMarkers && !this.showStarNames && namedStars.some((s) => s.landmark);
+    if (this.showStarNames || anyLandmarkStar) {
       ctx.font = '400 11px Inter, ui-sans-serif, system-ui, sans-serif';
       const taken: Array<{ x: number; y: number; w: number }> = [];
       const sortedStars = [...namedStars].sort((a, b) => (a.index === 0 ? -99 : a.mag) - (b.index === 0 ? -99 : b.mag));
@@ -167,6 +176,48 @@ export class Overlay {
       ctx.font = '500 12px Inter, ui-sans-serif, system-ui, sans-serif';
     }
 
+    // Deep-sky landmarks (nebulae, clusters, remnants, record stars): dashed ring + name
+    if ((this.showMarkers || this.showLabels) && landmarks.length) {
+      ctx.font = '400 11px Inter, ui-sans-serif, system-ui, sans-serif';
+      const taken: Array<{ x: number; y: number; w: number }> = [];
+      for (const s of landmarks) {
+        if (selectedStar && selectedStar.kind === 'landmark' && selectedStar.name === s.name) continue;
+        if (occluders.length && occluded(s.dir)) continue;
+        _v.copy(s.dir).multiplyScalar(1e11).project(camera);
+        if (_v.z > 1 || _v.z < -1) continue;
+        const x = (_v.x * 0.5 + 0.5) * W;
+        const y = (-_v.y * 0.5 + 0.5) * H;
+        if (x < -20 || x > W + 20 || y < -20 || y > H + 20) continue;
+        const r = Math.min(Math.max(6, s.radiusPx), Math.max(W, H));
+        if (r > H * 0.6) continue; // we're inside / on top of it
+        const color = LANDMARK_COLORS[s.kind] ?? 'white';
+        if (this.showMarkers) {
+          ctx.strokeStyle = color;
+          ctx.globalAlpha = 0.75;
+          ctx.lineWidth = 1;
+          ctx.setLineDash(s.kind === 'star' ? [] : [3, 3]);
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.globalAlpha = 1;
+        }
+        if (this.showLabels) {
+          const w = ctx.measureText(s.name).width + 10;
+          const lx = x + r * 0.71 + 6, ly = y - r * 0.71 - 6;
+          let clash = false;
+          for (const t of taken) {
+            if (Math.abs(t.y - ly) < 14 && lx < t.x + t.w && lx + w > t.x) { clash = true; break; }
+          }
+          if (clash) continue;
+          taken.push({ x: lx, y: ly, w });
+          ctx.fillStyle = color;
+          ctx.fillText(s.name, lx, ly);
+        }
+      }
+      ctx.font = '500 12px Inter, ui-sans-serif, system-ui, sans-serif';
+    }
+
     // Black holes in other systems: ring marker + name
     if (this.showMarkers && blackHoles.length) {
       for (const s of blackHoles) {
@@ -202,7 +253,7 @@ export class Overlay {
         if (x > -40 && x < W + 40 && y > -40 && y < H + 40) {
           const isGal = selectedStar.kind === 'galaxy';
           const r = Math.min(Math.max(H, W), Math.max(12, (selectedStar.radiusPx ?? 0) + 8)), g = r * 0.45;
-          ctx.strokeStyle = isGal ? 'rgba(215, 190, 255, 0.95)' : 'rgba(255, 220, 150, 0.95)';
+          ctx.strokeStyle = isGal ? 'rgba(215, 190, 255, 0.95)' : selectedStar.kind === 'landmark' ? 'rgba(255, 170, 190, 0.95)' : 'rgba(255, 220, 150, 0.95)';
           ctx.lineWidth = 1.5;
           ctx.beginPath();
           for (const [sx, sy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) {

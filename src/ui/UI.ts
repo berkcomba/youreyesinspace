@@ -4,6 +4,8 @@ import type { Universe } from '../core/Universe';
 import type { CameraController } from '../camera/CameraController';
 import type { StarPoints } from '../render/StarPoints';
 import type { GalaxySprites } from '../render/GalaxySprites';
+import type { LandmarkSprites } from '../render/LandmarkSprites';
+import { LANDMARK_KIND_LABEL } from '../data/landmarks';
 import { AU_KM, LIGHT_YEAR_KM, PARSEC_KM, RAD } from '../core/constants';
 import { LUM_CLASS_DESC, SUN_MASS_KG } from '../astro/stellar';
 import { GALAXY_TYPE_LABEL } from '../galaxy/GalaxyModel';
@@ -21,14 +23,20 @@ export interface UIHost {
   settings: Settings;
   starPoints: StarPoints;
   galaxySprites: GalaxySprites;
+  landmarkSprites: LandmarkSprites;
   readonly selected: CelestialBody | null;
   /** selected star (universal id) when no body is selected */
   readonly selectedStar: StarId | null;
   /** selected galaxy (index) when nothing else is selected */
   readonly selectedGalaxy: number | null;
+  /** selected deep-sky landmark (index) when nothing else is selected */
+  readonly selectedLandmark: number | null;
   select(b: CelestialBody | null): void;
   selectStar(id: StarId | null): void;
   selectGalaxy(i: number | null): void;
+  selectLandmark(i: number | null): void;
+  goToLandmark(i: number): void;
+  centerLandmark(i: number): void;
   goTo(b: CelestialBody): void;
   goToStar(id: StarId): void;
   goToGalaxy(i: number): void;
@@ -189,6 +197,7 @@ export class UI {
         if (p.kind === 'galaxy' && resolveGalaxy(p.ref) === null) continue;
         if (p.kind === 'star' && u.catalog.search(p.ref, 1).length === 0) continue;
         if (p.kind === 'blackhole' && !u.blackHole(p.ref)) continue;
+        if (p.kind === 'landmark' && !u.landmark(p.ref)) continue;
         const item = document.createElement('div');
         item.className = 'dropdown-item';
         item.setAttribute('role', 'option');
@@ -197,6 +206,7 @@ export class UI {
           this.togglePlaces(false);
           if (p.kind === 'body') h.goToBodyId(p.ref);
           else if (p.kind === 'blackhole') h.goToBlackHole(p.ref);
+          else if (p.kind === 'landmark') h.goToLandmark(u.landmarks.indexOf(u.landmark(p.ref)!));
           else if (p.kind === 'star') {
             const hits = u.catalog.search(p.ref, 1);
             if (hits.length) h.goToStar(`c${hits[0]}`);
@@ -261,6 +271,16 @@ export class UI {
         li.addEventListener('click', () => { this.host.goToBlackHole(b.entry.id); this.closeSearch(); });
         list.appendChild(li);
       }
+      // Deep-sky landmarks
+      const lms = u.searchLandmarks(q, 5);
+      for (const i of lms) {
+        const l = u.landmarks[i];
+        const li = document.createElement('li');
+        const where = l.galaxy === 0 ? 'Samanyolu' : u.galaxies.name(l.galaxy);
+        li.innerHTML = `<span>${l.def.name}</span><span class="t">${LANDMARK_KIND_LABEL[l.def.kind].split(' /')[0]} · ${where} · ${fmtLightYears(l.positionPc.length() * PARSEC_KM)}</span>`;
+        li.addEventListener('click', () => { this.host.goToLandmark(i); this.closeSearch(); });
+        list.appendChild(li);
+      }
       // Galaxies
       const gals = u.galaxies.search(q, 6);
       for (const i of gals) {
@@ -270,7 +290,7 @@ export class UI {
         li.addEventListener('click', () => { this.host.selectGalaxy(i); this.host.goToGalaxy(i); this.closeSearch(); });
         list.appendChild(li);
       }
-      list.hidden = hits.length + stars.length + bhs.length + gals.length === 0;
+      list.hidden = hits.length + stars.length + bhs.length + lms.length + gals.length === 0;
     };
     input.addEventListener('input', render);
     input.addEventListener('focus', render);
@@ -467,6 +487,12 @@ export class UI {
         this.lastInfoUpdate = now;
         this.renderGalaxyInfo(this.host.selectedGalaxy);
       }
+    } else if (this.host.selectedLandmark !== null) {
+      this.info.hidden = false;
+      if (now - this.lastInfoUpdate > 250) {
+        this.lastInfoUpdate = now;
+        this.renderLandmarkInfo(this.host.selectedLandmark);
+      }
     } else {
       this.info.hidden = true;
     }
@@ -505,16 +531,44 @@ export class UI {
     this.infoDesc.textContent = g.model(i).p.description ?? '';
   }
 
+  private renderLandmarkInfo(i: number): void {
+    const u = this.host.universe;
+    const l = u.landmarks[i];
+    const d = l.def;
+    this.infoName.textContent = d.name;
+    this.infoType.textContent = LANDMARK_KIND_LABEL[d.kind];
+    this.infoParent.textContent = l.galaxy === 0 ? 'Samanyolu · gerçek nesne' : `${u.galaxies.name(l.galaxy)} · gerçek nesne`;
+    const rel = u.landmarkRelative(i, this.host.camera.position);
+    const camDist = rel.length();
+    const rows: Array<[string, string] | 'sep'> = [];
+    rows.push(['Uzaklık', `${fmtLightYears(camDist)} (${fmtDistance(camDist)})`]);
+    rows.push(['Görünür yarıçap', fmtDeg(this.host.landmarkSprites.angularRadius(i) * RAD, 2)]);
+    const appMag = d.absMag + 5 * Math.log10(Math.max(camDist / PARSEC_KM, 1e-7)) - 5;
+    rows.push(['Kadir (buradan)', appMag.toFixed(1)]);
+    rows.push('sep');
+    rows.push(['Güneş\'e uzaklık', fmtLightYears(l.positionPc.length() * PARSEC_KM)]);
+    rows.push(['Yarıçap (görsel)', fmtLightYears(d.radiusPc * PARSEC_KM)]);
+    rows.push(['Mutlak kadir', d.absMag.toFixed(1)]);
+    rows.push('sep');
+    for (const [k, v] of Object.entries(d.facts)) rows.push([k, v]);
+    rows.push(['Işık gecikmesi', fmtDuration(camDist / 299_792.458)]);
+    this.infoBody.innerHTML = rows
+      .map((r) => (r === 'sep' ? '<div class="sep"></div>' : `<dt>${r[0]}</dt><dd>${r[1]}</dd>`))
+      .join('');
+    this.infoDesc.textContent = `${d.description} (Görsel: gerçek konum ve boyutta prosedürel bir temsil; fotoğraf değildir.)`;
+  }
+
   private renderStarInfo(id: StarId): void {
     const u = this.host.universe;
     const s = u.starInfo(id);
     const ci = catalogIndexOf(id);
     const isBH = u.blackHole(id) !== undefined;
-    const isProc = ci < 0 && !isBH;
+    const isExtra = u.extraSystem(id) !== undefined;
+    const isProc = ci < 0 && !isExtra;
     this.infoName.textContent = s.name;
     this.infoType.textContent = isBH ? 'Kara delik sistemi' : 'Yıldız · ' + (s.isWhiteDwarf ? 'Beyaz cüce' : LUM_CLASS_DESC[s.lumClass] ?? '');
     const galName = ci < 0 ? u.galaxies.name(u.galaxyOfStar(id)) : '';
-    this.infoParent.textContent = isBH ? `Gerçek nesne · ${galName}` : isProc ? `Prosedürel yıldız · ${galName}` : s.names?.constellation ? `${s.names.constellation} takımyıldızı` : 'Yıldız kataloğu (HYG)';
+    this.infoParent.textContent = isExtra ? `Gerçek nesne · ${galName}` : isProc ? `Prosedürel yıldız · ${galName}` : s.names?.constellation ? `${s.names.constellation} takımyıldızı` : 'Yıldız kataloğu (HYG)';
 
     const rel = u.starRelative(id, this.host.camera.position);
     const camDist = rel.length();
