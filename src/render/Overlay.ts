@@ -111,11 +111,16 @@ export class Overlay {
     ctx.textBaseline = 'middle';
 
     // Star names (behind everything). Brightest first; later labels skip occupied spots.
-    if (this.showStarNames) {
+    // Landmarks (the Sun and famous stars, far from home) are shown with the markers even when
+    // star names are off: they are the only way to find the way around the galaxy.
+    const landmarks = this.showMarkers && !this.showStarNames && namedStars.some((s) => s.landmark);
+    if (this.showStarNames || landmarks) {
       ctx.font = '400 11px Inter, ui-sans-serif, system-ui, sans-serif';
       const taken: Array<{ x: number; y: number; w: number }> = [];
       const sortedStars = [...namedStars].sort((a, b) => (a.index === 0 ? -99 : a.mag) - (b.index === 0 ? -99 : b.mag));
       for (const s of sortedStars) {
+        if (!this.showStarNames && !s.landmark) continue;
+        if (selectedStar && selectedStar.kind === 'star' && selectedStar.name === s.name) continue;
         if (occluders.length && occluded(s.dir)) continue;
         _v.copy(s.dir).multiplyScalar(1e11).project(camera);
         if (_v.z > 1 || _v.z < -1) continue;
@@ -130,8 +135,16 @@ export class Overlay {
         if (clash) continue;
         taken.push({ x: x + 7, y, w });
         // fade the faintest labels so dense fields don't turn into a wall of text
-        const fade = s.index === 0 ? 1 : Math.max(0.45, Math.min(1, 1 - (s.mag - 1.5) / 4));
+        const fade = s.index === 0 || s.landmark ? 1 : Math.max(0.45, Math.min(1, 1 - (s.mag - 1.5) / 4));
         ctx.fillStyle = s.index === 0 ? 'rgba(255, 225, 160, 0.85)' : s.index < 0 ? `rgba(195, 208, 235, ${0.7 * fade})` : `rgba(205, 215, 235, ${0.75 * fade})`;
+        if (s.landmark) {
+          // the star itself is invisible from here: give the label a small ring to point at
+          ctx.strokeStyle = s.index === 0 ? 'rgba(255, 225, 160, 0.85)' : 'rgba(205, 215, 235, 0.7)';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.arc(x, y, 3.5, 0, Math.PI * 2);
+          ctx.stroke();
+        }
         ctx.fillText(s.name, x + 7, y - 7);
       }
       ctx.font = '500 12px Inter, ui-sans-serif, system-ui, sans-serif';

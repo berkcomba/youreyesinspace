@@ -13,7 +13,14 @@ export interface NamedStarScreen {
   dir: Vector3;
   /** apparent magnitude from the camera */
   mag: number;
+  /** navigation landmark: shown (and pickable) even when far too faint to see from here */
+  landmark?: boolean;
 }
+
+/** camera distance from the Sun (pc) beyond which famous stars are labelled as landmarks */
+const LANDMARK_DIST_PC = 40;
+/** famous stars that are not among the naked-eye brightest but everyone looks for */
+const EXTRA_LANDMARKS = ['Polaris', 'Proxima Centauri', 'Barnard\'s Star', 'Mizar', 'Algol', 'Castor', 'Mira', 'Alcor', 'Alnilam', 'Wolf 359', 'Kapteyn\'s Star', 'Tau Ceti'];
 
 const _rel = new Vector3();
 const _proj = new Vector3();
@@ -26,6 +33,9 @@ const _proj = new Vector3();
 export class StarPoints {
   readonly points: Points;
   readonly namedStars: NamedStarScreen[] = [];
+  /** catalogue indices of the landmark stars (Sun first) */
+  readonly landmarks: number[] = [0];
+  private far = false;
   private readonly mat: ShaderMaterial;
   private readonly camPc = new Vector3();
 
@@ -61,6 +71,13 @@ export class StarPoints {
       blending: AdditiveBlending,
       depthWrite: false,
     });
+    // landmarks: the ~25 brightest named stars as seen from Earth plus a few famous faint ones
+    for (const i of catalog.namedIndices) if (i !== 0 && catalog.mags[i] < 1.65) this.landmarks.push(i);
+    for (const name of EXTRA_LANDMARKS) {
+      const hit = catalog.search(name, 1)[0];
+      if (hit !== undefined && hit !== 0 && !this.landmarks.includes(hit)) this.landmarks.push(hit);
+    }
+
     this.points = new Points(geo, this.mat);
     this.points.frustumCulled = false;
     this.points.renderOrder = -10;
@@ -108,7 +125,16 @@ export class StarPoints {
     }
     if (hideIndex !== 0) {
       // Always offer the Sun as a label so the way home is obvious
-      this.namedStars.push({ index: 0, name: 'Güneş', dir: this.direction(0), mag: this.apparentMag(0) });
+      this.namedStars.push({ index: 0, name: 'Güneş', dir: this.direction(0), mag: this.apparentMag(0), landmark: true });
+    }
+    // Far from home the whole catalogue is too faint to label; keep the famous stars findable
+    this.far = camPc.length() > LANDMARK_DIST_PC;
+    if (this.far) {
+      for (const i of this.landmarks) {
+        if (i === 0 || i === hideIndex) continue;
+        if (this.namedStars.some((n) => n.index === i)) continue;
+        this.namedStars.push({ index: i, name: this.catalog.nameOf(i), dir: this.direction(i), mag: this.catalog.mags[i] + 2.5, landmark: true });
+      }
     }
   }
 
@@ -132,6 +158,20 @@ export class StarPoints {
       // prefer brighter stars when several overlap
       const score = dist + m * 0.8;
       if (score < bestScore) { bestScore = score; best = i; }
+    }
+    if (best < 0 && this.far) {
+      // landmarks are pickable regardless of brightness
+      for (const i of this.landmarks) {
+        if (i === hideIndex) continue;
+        _rel.set(p[i * 3] - this.camPc.x, p[i * 3 + 1] - this.camPc.y, p[i * 3 + 2] - this.camPc.z);
+        _proj.copy(_rel).multiplyScalar(1e11 / _rel.length()).project(camera);
+        if (_proj.z > 1 || _proj.z < -1) continue;
+        const sx = (_proj.x * 0.5 + 0.5) * W;
+        const sy = (-_proj.y * 0.5 + 0.5) * H;
+        const dist = Math.hypot(sx - x, sy - y);
+        if (dist > maxPx + 4 || dist >= bestScore) continue;
+        bestScore = dist; best = i;
+      }
     }
     return best >= 0 ? best : null;
   }
