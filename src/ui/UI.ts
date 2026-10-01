@@ -166,11 +166,13 @@ export class UI {
       if (h.selected) h.goTo(h.selected);
       else if (h.selectedStar !== null) h.goToStar(h.selectedStar);
       else if (h.selectedGalaxy !== null) h.goToGalaxy(h.selectedGalaxy);
+      else if (h.selectedLandmark !== null) h.goToLandmark(h.selectedLandmark);
     });
     $('act-center').addEventListener('click', () => {
       if (h.selected) h.center(h.selected);
       else if (h.selectedStar !== null) h.centerStar(h.selectedStar);
       else if (h.selectedGalaxy !== null) h.centerGalaxy(h.selectedGalaxy);
+      else if (h.selectedLandmark !== null) h.centerLandmark(h.selectedLandmark);
     });
     this.followBtn.addEventListener('click', () => h.toggleFollow());
   }
