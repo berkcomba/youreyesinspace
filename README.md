@@ -24,6 +24,10 @@ of the observable universe. Turkish UI.*
 - **Derin gökyüzü yer imleri** — Orion, Karina, Tarantula ve NGC 604 bulutsuları; Ülker, Omega Centauri,
   Mayall II kümeleri; Yengeç, SN 1987A, Cas A kalıntıları; Eta Carinae, R136a1, WOH G64 gibi rekor
   yıldızlar — Samanyolu'nda ve komşu galaksilerde gerçek konumlarında, uçulabilir.
+- **Pulsarlar** — Yengeç ve Vela pulsarları, ilk pulsar PSR B1919+21, ilk ötegezegenlerin yıldızı
+  PSR B1257+12 (Draugr, Poltergeist, Phobetor ile), en hızlı pulsar J1748-2446ad (716 Hz),
+  Hulse–Taylor çift nötron yıldızı, Geminga, J0437-4715 ve SGR 1806-20 magnetarı; gerçek periyotlarıyla
+  dönen, manyetik eksen boyunca ışın konileri süpüren ve bakış doğrultusunu kestiğinde parlayan nötron yıldızları.
 - **Kamera** — serbest uçuş, yörünge, takip, otopilot, fare kilitli serbest dolaşım; floating origin
   + logaritmik derinlik (1 m'den 10¹³ km'ye).
 - **UI** — arama, bilgi paneli, zaman kontrolü, "Görmeye değecek yerler" menüsü, ayarlar, `F1` yardım.

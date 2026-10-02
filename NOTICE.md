@@ -12,6 +12,7 @@ streams the following third-party material, each under its own terms.
 | Spacecraft state vectors | `src/data/spacecraft.ts` | [JPL Horizons](https://ssd.jpl.nasa.gov/horizons/) (approximate, early 2025) | Public domain |
 | Galaxy catalogue | `src/galaxy/galaxies.ts` | NED / literature values | Facts; no copyright claimed |
 | Deep-sky landmarks (positions, distances, sizes, magnitudes) | `src/data/landmarks.ts` | Literature / SIMBAD / NED values | Facts; no copyright claimed |
+| Pulsars (periods, distances, ages, fields, companions) | `src/data/pulsars.ts` | ATNF Pulsar Catalogue (Manchester et al. 2005) / literature | Facts; no copyright claimed |
 | Black holes (masses, distances, S-star and binary orbital elements) | `src/data/blackholes.ts` | Literature values: GRAVITY Collaboration (S2), Gillessen et al. (S-stars), EHT Collaboration (Sgr A*, M87*), Miller-Jones et al. (Cygnus X-1), El-Badry et al. (Gaia BH1), Miller-Jones et al. (V404 Cygni), Cantrell et al. (A0620-00) | Facts; no copyright claimed |
 
 Procedural stars, galaxies and the cosmic web are generated deterministically and are not real

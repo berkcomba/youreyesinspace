@@ -67,7 +67,7 @@ export class BodyPoints {
       this.pos[i * 3 + 1] = rp.y;
       this.pos[i * 3 + 2] = rp.z;
 
-      if (b.data.type === 'star' || b.data.type === 'spacecraft') {
+      if (b.data.type === 'star' || b.data.type === 'spacecraft' || b.data.type === 'pulsar') {
         this.alpha[i] = 0;
         this.size[i] = 0;
         continue;

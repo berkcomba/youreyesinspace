@@ -94,6 +94,8 @@ export class CameraController {
     if (body.data.rings) dist1 = Math.max(dist1, body.data.rings.outer * 2.2);
     if (body.data.type === 'star') dist1 = body.radius * 6;
     if (body.data.type === 'spacecraft') dist1 = body.radius * 4.5;
+    // pulsars: far enough to see the sweeping beams
+    if (body.data.appearance.kind === 'pulsar') dist1 = body.radius * (body.data.appearance.quiet ? 8 : Math.max(30, body.data.appearance.beamLength * 0.9));
     const bhDisk = body.data.appearance.kind === 'blackhole' && body.data.appearance.disk.brightness > 0 ? body.data.appearance.disk.outer : 0;
     if (body.data.type === 'blackhole') dist1 = body.radius * Math.max(28, bhDisk * 3.4);
     let dir1: Vector3;

@@ -3,7 +3,7 @@ import type { StarCatalog, StarInfo } from '../data/StarCatalog';
 import { PLANET_HOTKEYS, SOLAR_BELTS, SOLAR_SYSTEM } from '../data/solarSystem';
 import { generateSystem } from '../gen/SystemGenerator';
 import { BLACK_HOLES, type BlackHoleEntry } from '../data/blackholes';
-import { LANDMARKS, landmarkStarBodies, landmarkStarInfo, type LandmarkDef } from '../data/landmarks';
+import { LANDMARKS, isSystemLandmark, landmarkStarBodies, landmarkStarInfo, type LandmarkDef } from '../data/landmarks';
 import { raDecToScene } from '../math/frames';
 import type { BodyData } from '../data/types';
 import { GalaxyIndex } from '../galaxy/galaxies';
@@ -116,7 +116,7 @@ export class Universe {
       if (gi === null) return;
       const pos = def.distancePc !== undefined ? raDecToScene(def.ra, def.dec).multiplyScalar(def.distancePc) : this.galaxyPlanePoint(gi, def.ra, def.dec);
       let systemId: StarId | null = null;
-      if (def.star) {
+      if (isSystemLandmark(def)) {
         systemId = `l${n}`;
         this.extraSystems.set(systemId, { id: systemId, name: def.name, positionPc: pos, galaxy: gi, info: landmarkStarInfo(def, pos), bodies: () => landmarkStarBodies(def) });
       }

@@ -11,7 +11,7 @@ export function schwarzschildKm(massSolar: number): number {
 }
 
 /** Semi-major axis (km) from period (days) and total mass (kg) */
-function semiMajorKm(periodDays: number, totalMassKg: number): number {
+export function semiMajorKm(periodDays: number, totalMassKg: number): number {
   const T = periodDays * DAY_S;
   return Math.cbrt((G * totalMassKg * T * T) / (4 * Math.PI * Math.PI)) / 1e3;
 }
@@ -47,7 +47,7 @@ function skyElementsToEcliptic(ra: number, dec: number, i: number, Omega: number
 }
 
 /** JD of a decimal year */
-function decimalYearJd(y: number): number {
+export function decimalYearJd(y: number): number {
   const year = Math.floor(y);
   const jan1 = Date.UTC(year, 0, 1) / 86_400_000 + 2_440_587.5;
   return jan1 + (y - year) * YEAR_D;

@@ -1,4 +1,4 @@
-export type BodyType = 'star' | 'planet' | 'dwarf' | 'moon' | 'asteroid' | 'comet' | 'barycenter' | 'spacecraft' | 'blackhole';
+export type BodyType = 'star' | 'planet' | 'dwarf' | 'moon' | 'asteroid' | 'comet' | 'barycenter' | 'spacecraft' | 'blackhole' | 'pulsar';
 
 /**
  * JPL "approximate elements" style: mean elements at J2000 + secular rates per Julian century.
@@ -119,6 +119,24 @@ export type Appearance =
       disk: { inner: number; outer: number; temperature: number; brightness: number };
       /** absolute magnitude of the disk glow for the distant point sprite */
       diskAbsMag: number;
+    }
+  | {
+      /**
+       * Pulsar / neutron star: a ~10 km star with two radio/X-ray beams along a magnetic axis
+       * that is tilted from the spin axis (`pole`); the body's `rotationPeriod` is the pulse period.
+       */
+      kind: 'pulsar';
+      seed: number;
+      /** angle between magnetic and spin axis (deg) */
+      magneticTilt: number;
+      /** half opening angle of each beam cone (deg) */
+      beamHalfAngle: number;
+      /** beam length in body radii */
+      beamLength: number;
+      /** beam tint (linear RGB) */
+      beamColor: [number, number, number];
+      /** no radio beams drawn (radio-quiet companion, magnetar in quiescence …) */
+      quiet?: boolean;
     };
 
 export interface Atmosphere {

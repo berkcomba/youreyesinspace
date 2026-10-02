@@ -88,6 +88,7 @@ export const TYPE_LABELS: Record<string, string> = {
   barycenter: 'Kütle Merkezi',
   spacecraft: 'Uzay Aracı',
   blackhole: 'Kara Delik',
+  pulsar: 'Pulsar / Nötron Yıldızı',
 };
 
 /** Mass in solar masses, e.g. "9,6 M☉" or "4,3 milyon M☉" */

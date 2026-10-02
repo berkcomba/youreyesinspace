@@ -12,9 +12,14 @@ import { GALAXY_TYPE_LABEL } from '../galaxy/GalaxyModel';
 import { catalogIndexOf, type StarId } from '../core/Universe';
 import type { Settings } from './Settings';
 import {
-  fmtDeg, fmtDistance, fmtSolarMass, fmtDuration, fmtLightYears, fmtMass, fmtRadius, fmtSpeed, fmtTemp, TYPE_LABELS,
+  fmtDeg, fmtDistance, fmtSolarMass, fmtDuration, fmtLightYears, fmtMass, fmtRadius, fmtSci, fmtSpeed, fmtTemp, TYPE_LABELS,
 } from './format';
 import { PLACES } from './places';
+
+/** body types that act as the light source / primary of a system */
+function isPrimaryType(t: string): boolean {
+  return t === 'star' || t === 'pulsar' || t === 'blackhole';
+}
 
 export interface UIHost {
   universe: Universe;
@@ -629,6 +634,10 @@ export class UI {
       this.renderBlackHoleInfo(b, camDist, rows);
       return;
     }
+    if (b.data.type === 'pulsar') {
+      this.renderPulsarInfo(b, camDist, rows);
+      return;
+    }
     rows.push(['Kameraya uzaklık', fmtDistance(camDist)]);
     rows.push(['Yüzeye uzaklık', fmtDistance(Math.max(0, camDist - b.radius))]);
     rows.push('sep');
@@ -645,15 +654,15 @@ export class UI {
     if (b.resolved && b.parent) {
       const r = b.resolved;
       rows.push(['Yörünge periyodu', b.periodDisplay()]);
-      rows.push(['Yarı-büyük eksen', b.parent.data.type === 'star' ? `${(r.a / AU_KM).toFixed(4)} AU` : fmtDistance(r.a)]);
+      rows.push(['Yarı-büyük eksen', isPrimaryType(b.parent.data.type) ? `${(r.a / AU_KM).toFixed(4)} AU` : fmtDistance(r.a)]);
       rows.push(['Dış merkezlik', r.e.toFixed(4)]);
       rows.push(['Eğiklik', fmtDeg(r.i * RAD)]);
       rows.push(['Düğüm boylamı', fmtDeg(((r.node * RAD) % 360 + 360) % 360)]);
-      rows.push(['Perihelion', b.parent.data.type === 'star' ? `${((r.a * (1 - r.e)) / AU_KM).toFixed(4)} AU` : fmtDistance(r.a * (1 - r.e))]);
-      rows.push(['Aphelion', b.parent.data.type === 'star' ? `${((r.a * (1 + r.e)) / AU_KM).toFixed(4)} AU` : fmtDistance(r.a * (1 + r.e))]);
+      rows.push(['Perihelion', isPrimaryType(b.parent.data.type) ? `${((r.a * (1 - r.e)) / AU_KM).toFixed(4)} AU` : fmtDistance(r.a * (1 - r.e))]);
+      rows.push(['Aphelion', isPrimaryType(b.parent.data.type) ? `${((r.a * (1 + r.e)) / AU_KM).toFixed(4)} AU` : fmtDistance(r.a * (1 + r.e))]);
       rows.push(['Anlık yörünge hızı', `${b.orbitalSpeed.toFixed(3)} km/s`]);
       rows.push([`${b.parent.name}'a uzaklık`, fmtDistance(b.localPosition.length())]);
-      if (b.parent.data.type !== 'star') rows.push([`${star.name}'e uzaklık`, `${(b.distanceToStar / AU_KM).toFixed(4)} AU`]);
+      if (!isPrimaryType(b.parent.data.type)) rows.push([`${star.name}'e uzaklık`, `${(b.distanceToStar / AU_KM).toFixed(4)} AU`]);
       rows.push(['Etki küresi (SOI)', fmtDistance(b.soiRadius)]);
       rows.push('sep');
     }
@@ -719,6 +728,48 @@ export class UI {
       .map((r) => (r === 'sep' ? '<div class="sep"></div>' : `<dt>${r[0]}</dt><dd>${r[1]}</dd>`))
       .join('');
     this.infoDesc.textContent = `${b.data.description ?? ''} Görüntü: Schwarzschild metriğinde ışık yollarının (null jeodezikler) ekran uzayında gerçek zamanlı izlenmesi; diskte Doppler ışıması ve kütleçekimsel kırmızıya kayma uygulanır.`;
+  }
+
+  private renderPulsarInfo(b: CelestialBody, camDist: number, rows: Array<[string, string] | 'sep'>): void {
+    const a = b.data.appearance.kind === 'pulsar' ? b.data.appearance : null;
+    const P = b.rotationPeriodS; // s
+    const mSun = b.data.mass / SUN_MASS_KG;
+    this.infoParent.textContent = b.parent ? `${b.parent.name} ile çift sistem` : 'Sistem merkezi';
+    rows.push(['Kameraya uzaklık', fmtDistance(camDist)]);
+    rows.push(['Yüzeye uzaklık', fmtDistance(Math.max(0, camDist - b.radius))]);
+    rows.push('sep');
+    const periodTxt = P >= 1 ? `${P.toFixed(4)} s` : `${(P * 1e3).toFixed(3)} ms`;
+    rows.push(['Dönme periyodu', `${periodTxt} (${(1 / P).toFixed(P >= 1 ? 3 : 1)} Hz)`]);
+    const vEq = (2 * Math.PI * b.radius) / P;
+    rows.push(['Ekvator hızı', `${vEq.toLocaleString('tr-TR', { maximumFractionDigits: 0 })} km/s (%${(vEq / 299_792.458 * 100).toFixed(1)} c)`]);
+    if (a) rows.push(['Manyetik eksen eğikliği', a.quiet ? '— (ışın yok)' : fmtDeg(a.magneticTilt, 0)]);
+    rows.push('sep');
+    rows.push(['Kütle', fmtSolarMass(mSun)]);
+    rows.push(['Yarıçap', `${b.radius.toFixed(0)} km`]);
+    rows.push(['Yoğunluk', fmtSci(b.density * 1e3, 'kg/m³')]);
+    rows.push(['Yüzey çekimi', fmtSci(b.surfaceGravity / 9.80665, 'g')]);
+    rows.push(['Kaçış hızı', `${b.escapeVelocity.toLocaleString('tr-TR', { maximumFractionDigits: 0 })} km/s (%${(b.escapeVelocity / 299_792.458 * 100).toFixed(0)} c)`]);
+    const rs = (2 * 6.674e-11 * b.data.mass) / (299_792_458 ** 2) / 1e3;
+    rows.push(['Schwarzschild yarıçapı', `${rs.toFixed(2)} km (R / r_s = ${(b.radius / rs).toFixed(1)})`]);
+    if (b.data.temperature) rows.push(['Yüzey sıcaklığı', `${(b.data.temperature / 1e6).toFixed(1)} milyon K`]);
+    rows.push('sep');
+    if (b.resolved && b.parent) {
+      const r = b.resolved;
+      rows.push(['Yörünge periyodu', b.periodDisplay()]);
+      rows.push(['Yarı-büyük eksen', fmtDistance(r.a)]);
+      rows.push(['Dış merkezlik', r.e.toFixed(3)]);
+      rows.push(['Anlık yörünge hızı', `${b.orbitalSpeed.toFixed(1)} km/s`]);
+      rows.push('sep');
+    } else if (b.children.length) {
+      rows.push(['Yörüngedekiler', b.children.map((c) => c.name).join(', ')]);
+      rows.push('sep');
+    }
+    if (b.data.facts) for (const [k, v] of Object.entries(b.data.facts)) if (k !== 'Kütle' && k !== 'Periyot') rows.push([k, v]);
+    rows.push(['Işık gecikmesi', fmtDuration(camDist / 299_792.458)]);
+    this.infoBody.innerHTML = rows
+      .map((r) => (r === 'sep' ? '<div class="sep"></div>' : `<dt>${r[0]}</dt><dd>${r[1]}</dd>`))
+      .join('');
+    this.infoDesc.textContent = `${b.data.description ?? ''} Görüntü: dönme ekseninden eğik manyetik eksen boyunca iki ışın konisi; koni her dönüşte bakış doğrultusunu süpürdüğünde parlaklık atar (deniz feneri etkisi). Işın geometrisi temsilîdir.`;
   }
 
   private renderSpacecraftInfo(b: CelestialBody, camDist: number, rows: Array<[string, string] | 'sep'>): void {

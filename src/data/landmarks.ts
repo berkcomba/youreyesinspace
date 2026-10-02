@@ -2,19 +2,21 @@ import type { Vector3 } from 'three';
 import type { BodyData } from './types';
 import type { StarInfo } from './StarCatalog';
 import { starBody, syntheticInfo } from './blackholes';
+import { PULSARS, pulsarBodies, pulsarInfo, type PulsarParams } from './pulsars';
 
 /**
  * Real, named deep-sky landmarks: nebulae, clusters, supernova remnants and a few record-holding
  * stars — in the Milky Way and in the nearby galaxies. Nebulae/clusters/remnants are drawn as
  * sprites and are destinations; stars become visitable systems (`l{n}` ids).
  */
-export type LandmarkKind = 'nebula' | 'cluster' | 'remnant' | 'star';
+export type LandmarkKind = 'nebula' | 'cluster' | 'remnant' | 'star' | 'pulsar';
 
 export const LANDMARK_KIND_LABEL: Record<LandmarkKind, string> = {
   nebula: 'Bulutsu',
   cluster: 'Yıldız kümesi',
   remnant: 'Süpernova / gezegenimsi bulutsu kalıntısı',
   star: 'Yıldız',
+  pulsar: 'Pulsar / nötron yıldızı',
 };
 
 export interface LandmarkStar {
@@ -46,6 +48,13 @@ export interface LandmarkDef {
   facts: Record<string, string>;
   /** physical parameters when `kind === 'star'` (makes the landmark a visitable system) */
   star?: LandmarkStar;
+  /** physical parameters when `kind === 'pulsar'` (visitable system, see data/pulsars.ts) */
+  pulsar?: PulsarParams;
+}
+
+/** landmark is a visitable system (`l{n}` id) */
+export function isSystemLandmark(def: LandmarkDef): boolean {
+  return def.star !== undefined || def.pulsar !== undefined;
 }
 
 /** Sky position → sprite colour presets */
@@ -227,16 +236,19 @@ export const LANDMARKS: LandmarkDef[] = [
     description: 'Üçgen Galaksisi\'nde 1 500 ışık yılı genişliğinde, Orion Bulutsusu\'ndan 100 kat daha büyük bir yıldız doğumevi; 200\'den fazla sıcak dev yıldızın oyduğu dev bir gaz kabarcığı. Tarantula ile birlikte Yerel Grup\'un en büyük bulutsularından biridir.',
     facts: { 'Uzaklık': '840 kpc (M33)', 'Çap': '~1 500 ışık yılı', 'Görünür kadir': '12', 'Kütleli yıldız': '200+' },
   },
+  ...PULSARS,
 ];
 
 /* ---------------- helpers for star-type landmarks ---------------- */
 
 export function landmarkStarBodies(def: LandmarkDef): BodyData[] {
+  if (def.pulsar) return pulsarBodies(def);
   const s = def.star!;
   return [starBody(def.id, def.name, s.massSolar, s.radiusSolar, s.temperature, def.description, { ...def.facts, 'Tayf': s.spectral })];
 }
 
 export function landmarkStarInfo(def: LandmarkDef, positionPc: Vector3): StarInfo {
+  if (def.pulsar) return pulsarInfo(def, positionPc);
   const s = def.star!;
   return syntheticInfo(def.name, positionPc, s.massSolar, s.radiusSolar, s.temperature, s.luminosity, s.spectral);
 }

@@ -63,7 +63,7 @@ export class StarSystem {
   /** Photosphere temperature of the primary (K) */
   get starTemperature(): number {
     const a = this.star.data.appearance;
-    return a.kind === 'star' ? a.temperature : 5772;
+    return a.kind === 'star' ? a.temperature : a.kind === 'pulsar' ? 28_000 : 5772;
   }
 
   update(jd: number, tSeconds: number): void {

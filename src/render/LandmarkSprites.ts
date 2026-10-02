@@ -9,7 +9,7 @@ import { Shaders } from './shaders';
 
 const _rel = new Vector3();
 const _proj = new Vector3();
-const KIND_CODE = { nebula: 0, cluster: 1, remnant: 2, star: 3 } as const;
+const KIND_CODE = { nebula: 0, cluster: 1, remnant: 2, star: 3, pulsar: 4 } as const;
 
 /** Screen-space info for a landmark label/marker */
 export interface LandmarkScreen {
@@ -68,6 +68,7 @@ export class LandmarkSprites {
         uPxPerRad: { value: 1000 },
         uK: { value: 1 },
         uHideIndex: { value: -1 },
+        uTime: { value: 0 },
       },
       transparent: true,
       blending: AdditiveBlending,
@@ -118,6 +119,7 @@ export class LandmarkSprites {
       this.named.push(m);
     }
     u.uHideIndex.value = hide;
+    u.uTime.value = (performance.now() * 1e-3) % 1000;
   }
 
   /** Landmark nearest to a screen point (px) among the currently labelled ones */

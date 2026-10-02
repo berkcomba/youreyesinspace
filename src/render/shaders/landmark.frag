@@ -5,6 +5,7 @@ varying vec3 vColor;
 varying float vAlpha;
 varying float vKind;
 varying float vSeed;
+uniform float uTime;
 
 void main() {
   #include <logdepthbuf_fragment>
@@ -34,10 +35,17 @@ void main() {
     float ring = exp(-pow((r - 0.78) / 0.17, 2.0)) * (0.5 + 0.8 * n);
     float fill = exp(-r * r * 2.2) * 0.22;
     a = (ring + fill) * smoothstep(1.5, 0.95, r);
-  } else {
+  } else if (vKind < 3.5) {
     // star: compact gaussian point
     float rr = length(p);
     a = exp(-rr * rr * 7.0) + 0.15 * exp(-rr * 2.5);
+  } else {
+    // pulsar: gaussian point with a sharp periodic flash and a faint cross-shaped glint
+    float rr = length(p);
+    float phase = fract(uTime * (0.9 + 0.35 * fract(vSeed * 0.731)) + vSeed);
+    float flash = exp(-phase * 14.0) + 0.35 * exp(-fract(phase + 0.5) * 20.0);
+    float cross = exp(-abs(p.x) * 9.0) * exp(-abs(p.y) * 1.2) + exp(-abs(p.y) * 9.0) * exp(-abs(p.x) * 1.2);
+    a = (exp(-rr * rr * 7.0) + 0.15 * exp(-rr * 2.5)) * (0.55 + 0.9 * flash) + cross * 0.22 * flash;
   }
   a *= vAlpha;
   gl_FragColor = vec4(col * a, 1.0);

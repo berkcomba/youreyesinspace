@@ -50,6 +50,20 @@ export const PLACES: PlaceGroup[] = [
     ],
   },
   {
+    title: 'Pulsarlar',
+    items: [
+      { label: 'Yengeç Pulsarı', kind: 'landmark', ref: 'l-crabpsr', note: '1054 süpernovası · 30 Hz' },
+      { label: 'Vela Pulsarı', kind: 'landmark', ref: 'l-vela', note: 'Glitch yapan pulsar' },
+      { label: 'PSR B1919+21', kind: 'landmark', ref: 'l-b1919', note: 'İlk pulsar · Bell Burnell, 1967' },
+      { label: 'PSR B1257+12 (Lich)', kind: 'landmark', ref: 'l-lich', note: 'İlk ötegezegenler' },
+      { label: 'PSR J1748-2446ad', kind: 'landmark', ref: 'l-j1748', note: 'En hızlı · 716 Hz' },
+      { label: 'Hulse–Taylor Çifti', kind: 'landmark', ref: 'l-hulsetaylor', note: 'Kütleçekim dalgası kanıtı' },
+      { label: 'Geminga', kind: 'landmark', ref: 'l-geminga', note: 'Radyo-sessiz gama pulsarı' },
+      { label: 'PSR J0437-4715', kind: 'landmark', ref: 'l-j0437', note: 'En yakın milisaniye pulsarı' },
+      { label: 'SGR 1806−20', kind: 'landmark', ref: 'l-sgr1806', note: 'Magnetar · 2004 dev patlaması' },
+    ],
+  },
+  {
     title: 'Bulutsular, kümeler ve rekor yıldızlar',
     items: [
       { label: 'Orion Bulutsusu (M42)', kind: 'landmark', ref: 'l-m42', note: 'En yakın yıldız fabrikası' },

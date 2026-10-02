@@ -40,6 +40,7 @@ const LANDMARK_COLORS: Record<string, string> = {
   cluster: 'rgba(255, 235, 190, 0.9)',
   remnant: 'rgba(170, 240, 235, 0.9)',
   star: 'rgba(225, 230, 255, 0.9)',
+  pulsar: 'rgba(150, 230, 255, 0.95)',
 };
 
 const _v = new Vector3();
@@ -195,7 +196,7 @@ export class Overlay {
           ctx.strokeStyle = color;
           ctx.globalAlpha = 0.75;
           ctx.lineWidth = 1;
-          ctx.setLineDash(s.kind === 'star' ? [] : [3, 3]);
+          ctx.setLineDash(s.kind === 'star' || s.kind === 'pulsar' ? [] : [3, 3]);
           ctx.beginPath();
           ctx.arc(x, y, r, 0, Math.PI * 2);
           ctx.stroke();

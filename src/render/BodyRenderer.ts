@@ -1,5 +1,5 @@
 import {
-  AdditiveBlending, AmbientLight, BackSide, Box3, CircleGeometry, Color, DirectionalLight, DoubleSide, FrontSide, Group, Mesh,
+  AdditiveBlending, AmbientLight, BackSide, Box3, CircleGeometry, Color, CylinderGeometry, DirectionalLight, DoubleSide, FrontSide, Group, Mesh,
   MeshStandardMaterial, NormalBlending, PlaneGeometry, RingGeometry, Scene, ShaderMaterial, Sphere, SphereGeometry, Vector3, Vector4,
   type Camera, type IUniform, type Quaternion,
 } from 'three';
@@ -24,6 +24,7 @@ export interface RenderSettings {
 
 const _v = new Vector3();
 const _n = new Vector3();
+const _v2 = new Vector3();
 
 type Uniforms = Record<string, IUniform>;
 
@@ -98,6 +99,11 @@ export class BodyView {
   ringsMat?: ShaderMaterial;
   corona?: Mesh;
   coronaMat?: ShaderMaterial;
+  /** pulsar: the two beam cones (child of `group`, so they spin with the star) */
+  beams?: Group;
+  beamMat?: ShaderMaterial;
+  /** pulsar: unit magnetic axis in group-local space */
+  private magAxis?: Vector3;
   occluders: CelestialBody[] = [];
   /** apparent radius in pixels, updated each frame */
   apparentRadiusPx = 0;
@@ -137,15 +143,18 @@ export class BodyView {
       this.group.visible = false;
       return;
     }
-    if (a.kind === 'star') {
+    if (a.kind === 'star' || a.kind === 'pulsar') {
+      // neutron stars: million-kelvin surface → render as a blue-white star
+      const T = a.kind === 'star' ? a.temperature : 28_000;
       this.surfaceMat = new ShaderMaterial({
         vertexShader: Shaders.surfaceVert,
         fragmentShader: Shaders.starFrag,
-        uniforms: { ...baseUniforms, uTemperature: { value: a.temperature }, uIntensity: { value: 0.75 } },
+        uniforms: { ...baseUniforms, uTemperature: { value: T }, uIntensity: { value: a.kind === 'pulsar' ? 1.8 : 0.75 } },
       });
       // Corona billboard, tinted by the photosphere temperature
-      const [cr, cg, cb] = temperatureToRgb(a.temperature);
-      const warm = new Color(cr, cg, cb).lerp(new Color(1.0, 0.85, 0.6), a.temperature > 5000 && a.temperature < 6500 ? 0.6 : 0.15);
+      const [cr, cg, cb] = temperatureToRgb(T);
+      const warm = new Color(cr, cg, cb).lerp(new Color(1.0, 0.85, 0.6), T > 5000 && T < 6500 ? 0.6 : 0.15);
+      if (a.kind === 'pulsar') warm.lerp(new Color(a.beamColor[0], a.beamColor[1], a.beamColor[2]), 0.5);
       this.coronaMat = new ShaderMaterial({
         vertexShader: Shaders.billboardVert,
         fragmentShader: Shaders.coronaFrag,
@@ -163,6 +172,7 @@ export class BodyView {
       this.corona = new Mesh(new PlaneGeometry(2, 2), this.coronaMat);
       this.corona.renderOrder = 5;
       this.corona.frustumCulled = false;
+      if (a.kind === 'pulsar' && !a.quiet) this.buildBeams(a.magneticTilt, a.beamHalfAngle, a.beamLength, a.beamColor);
     } else if (a.kind === 'gas') {
       const bands = a.bands.slice(0, 6).map(vec3);
       while (bands.length < 6) bands.push(bands[bands.length - 1].clone());
@@ -318,7 +328,8 @@ export class BodyView {
   computeOccluders(): void {
     const b = this.body;
     const angSize = (x: CelestialBody) => (x.resolved ? x.radius / x.resolved.a : 0);
-    if (b.parent && b.parent.data.type !== 'star') {
+    const primary = b.parent?.data.type;
+    if (b.parent && primary !== 'star' && primary !== 'pulsar' && primary !== 'blackhole') {
       const sibs = b.parent.children.filter((s) => s !== b).sort((p, q) => angSize(q) - angSize(p)).slice(0, 3);
       this.occluders = [b.parent, ...sibs];
     } else {
@@ -327,12 +338,40 @@ export class BodyView {
   }
 
   /** Release GPU resources owned by this view (the sphere geometry is shared and kept). */
+  /** Two additive radiation cones along the (tilted) magnetic axis; they spin with `group`. */
+  private buildBeams(tiltDeg: number, halfAngleDeg: number, lengthRadii: number, color: [number, number, number]): void {
+    const R = this.body.radius;
+    const L = R * lengthRadii;
+    const rFar = L * Math.tan(halfAngleDeg * DEG);
+    this.beamMat = new ShaderMaterial({
+      vertexShader: Shaders.beamVert,
+      fragmentShader: Shaders.beamFrag,
+      uniforms: { uTime: { value: 0 }, uColor: { value: new Vector3(color[0], color[1], color[2]) }, uIntensity: { value: 1 } },
+      transparent: true,
+      blending: AdditiveBlending,
+      depthWrite: false,
+      side: DoubleSide,
+    });
+    // cone with its apex at the star: wide "top" at y = L, narrow "bottom" at y = 0
+    const geo = new CylinderGeometry(rFar, R * 0.35, L, 40, 24, true).translate(0, L / 2, 0);
+    this.beams = new Group();
+    this.magAxis = new Vector3(Math.sin(tiltDeg * DEG), Math.cos(tiltDeg * DEG), 0);
+    const tilt = tiltDeg * DEG;
+    const up = new Mesh(geo, this.beamMat);
+    up.rotation.z = -tilt;
+    const down = new Mesh(geo, this.beamMat);
+    down.rotation.z = Math.PI - tilt;
+    for (const m of [up, down]) { m.frustumCulled = false; m.renderOrder = 4; this.beams.add(m); }
+    this.group.add(this.beams);
+  }
+
   dispose(scene: Scene): void {
     scene.remove(this.group);
     if (this.atmosphere) scene.remove(this.atmosphere);
     if (this.corona) { scene.remove(this.corona); this.corona.geometry.dispose(); }
     if (this.rings) this.rings.geometry.dispose();
-    for (const m of [this.surfaceMat, this.cloudsMat, this.atmosphereMat, this.ringsMat, this.coronaMat]) m?.dispose();
+    for (const m of [this.surfaceMat, this.cloudsMat, this.atmosphereMat, this.ringsMat, this.coronaMat, this.beamMat]) m?.dispose();
+    if (this.beams) for (const m of this.beams.children) (m as Mesh).geometry.dispose();
     if (this.ground) { this.ground.geometry.dispose(); (this.ground.material as MeshStandardMaterial).dispose(); }
     this.tiles?.dispose();
     // model geometries/materials stay in the shared cache
@@ -391,7 +430,7 @@ export class BodyView {
     this.apparentRadiusPx = (b.radius / Math.max(dist, 1e-6)) * pxPerRad;
 
     // Hide mesh when sub-pixel (the point layer draws it), keep for the star always
-    this.meshVisible = this.apparentRadiusPx > 0.35 || b.data.type === 'star';
+    this.meshVisible = this.apparentRadiusPx > 0.35 || b.data.type === 'star' || b.data.type === 'pulsar';
     this.group.visible = this.meshVisible;
     this.group.position.copy(this.relPos);
     this.group.quaternion.copy(b.rotation);
@@ -491,12 +530,27 @@ export class BodyView {
       }
     }
 
+    // Pulsar: brightness pulse when a beam sweeps across the line of sight
+    let pulse = 0;
+    if (this.beams && this.magAxis && this.beamMat && b.data.appearance.kind === 'pulsar') {
+      _n.copy(this.magAxis).applyQuaternion(b.rotation);
+      const cosA = Math.abs(_n.dot(_v2.copy(this.relPos).normalize()));
+      const half = Math.max(1, b.data.appearance.beamHalfAngle) * DEG;
+      const ang = Math.acos(Math.min(1, cosA));
+      pulse = Math.exp(-(ang * ang) / (half * half * 0.5));
+      // beams are a close-range effect; fade them out as the star shrinks to a point
+      const k = Math.min(1, Math.max(0, (this.apparentRadiusPx * 40 - 0.5) / 6));
+      this.beams.visible = k > 0.01 && settings.atmospheres;
+      this.beamMat.uniforms.uTime.value = time;
+      this.beamMat.uniforms.uIntensity.value = k;
+    }
+
     if (this.corona && this.coronaMat) {
       // Apparent magnitude of the star from here: beyond a few light-years it must shrink and
       // fade like any other star instead of staying a 70 px glow.
       const T = b.data.temperature ?? 5772;
       const lum = Math.pow(b.radius / 695_700, 2) * Math.pow(T / 5772, 4);
-      const absMag = 4.83 - 2.5 * Math.log10(Math.max(lum, 1e-8));
+      const absMag = 4.83 - 2.5 * Math.log10(Math.max(lum, 1e-8)) - 2.2 * pulse;
       const m = absMag + 5 * Math.log10(Math.max(dist / PARSEC_KM, 1e-9)) - 5;
       const t = Math.min(1, Math.max(0, (m + 6) / 14.5));
       // Keep the glow at least ~70 px wide while the star is overwhelmingly bright
@@ -510,7 +564,7 @@ export class BodyView {
       this.coronaMat.uniforms.uCoreRadius.value = Math.min(0.5, (b.radius / size) * 0.98);
       // Near the star the disc dominates; far away the glow reads as a bright star
       const far = Math.min(1, Math.max(0, (dist / b.radius - 20) / 400));
-      this.coronaMat.uniforms.uIntensity.value = (0.35 + 1.4 * far) * Math.pow(1 - t, 1.5);
+      this.coronaMat.uniforms.uIntensity.value = (0.35 + 1.4 * far) * Math.pow(1 - t, 1.5) * (1 + 1.5 * pulse);
     }
   }
 }
