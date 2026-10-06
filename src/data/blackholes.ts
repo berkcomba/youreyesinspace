@@ -2,6 +2,7 @@ import { Vector3 } from 'three';
 import { AU_KM, C_KM_S, DAY_S, DEG, G, OBLIQUITY_J2000, RAD, YEAR_D } from '../core/constants';
 import { SUN_MASS_KG, SUN_RADIUS_KM } from '../astro/stellar';
 import { raDecToEclipticMath, raDecToScene } from '../math/frames';
+import { _, fixed, fmtNum } from '../i18n';
 import type { StarInfo } from './StarCatalog';
 import type { BodyData, PoleRaDec, SimpleElements } from './types';
 
@@ -155,7 +156,7 @@ function sStar(id: string, name: string, massSolar: number, radiusSolar: number,
   const aKm = aArcsec * 8178 * AU_KM; // 1″ at 8.178 kpc = 8178 AU
   return starBody(id, name, massSolar, radiusSolar, temperature,
     `${note} Yörünge elemanları GRAVITY/VLT ve Keck astrometrisinden (gökyüzü düzlemi → ekliptik dönüşümü ile).`,
-    { 'Yörünge periyodu': `${periodYr.toFixed(2)} yıl`, 'Dış merkezlik': e.toFixed(3), 'Pericentre geçişi': `${tPeri.toFixed(2)}` },
+    { 'Yörünge periyodu': _('{n} yıl', { n: fixed(periodYr, 2) }), 'Dış merkezlik': fixed(e, 3), 'Pericentre geçişi': fmtNum(tPeri, { useGrouping: false, minimumFractionDigits: 2, maximumFractionDigits: 2 }) },
     {
       parent: 'sgra',
       orbit: { kind: 'simple', a: aKm, e, i: el.i, node: el.node, argPeri: el.argPeri, M0: 0, epoch: decimalYearJd(tPeri), period: periodYr * YEAR_D, frame: 'ecliptic' },

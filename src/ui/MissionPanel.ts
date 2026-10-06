@@ -7,6 +7,7 @@ import type { TimeSystem } from '../core/TimeSystem';
 import type { StarId, Universe } from '../core/Universe';
 import { SHIPS, isFtl, shipById, type ShipDef } from '../data/ships';
 import { fmtDistance, fmtDuration, fmtLightYears, fmtSpeed } from './format';
+import { _, fixed, fmtNum } from '../i18n';
 
 export interface MissionPanelHost {
   universe: Universe;
@@ -111,13 +112,13 @@ export class MissionPanel {
 
   private buildShips(): void {
     const real = document.createElement('optgroup');
-    real.label = 'Gerçek araçlar';
+    real.label = _('Gerçek araçlar');
     const fiction = document.createElement('optgroup');
-    fiction.label = 'Bilim kurgu (warp / hiper sürüş)';
+    fiction.label = _('Bilim kurgu (warp / hiper sürüş)');
     for (const s of SHIPS) {
       const o = document.createElement('option');
       o.value = s.id;
-      o.textContent = s.name;
+      o.textContent = _(s.name);
       (s.origin === 'real' ? real : fiction).appendChild(o);
     }
     this.shipSel.append(real, fiction);
@@ -152,7 +153,7 @@ export class MissionPanel {
     this.targetSel.innerHTML = '';
 
     const local = document.createElement('optgroup');
-    local.label = `${sys.star.name} sistemi`;
+    local.label = _('{name} sistemi', { name: sys.star.name });
     const localT = local.cloneNode() as HTMLOptGroupElement;
     for (const b of bodies) {
       const o = document.createElement('option');
@@ -164,7 +165,7 @@ export class MissionPanel {
     // the star itself can be a destination (close solar pass)
     const starOpt = document.createElement('option');
     starOpt.value = sys.star.id;
-    starOpt.textContent = `${sys.star.name} (yakın geçiş)`;
+    starOpt.textContent = `${sys.star.name} ${_('(yakın geçiş)')}`;
     localT.appendChild(starOpt);
     this.originSel.appendChild(local);
     this.targetSel.appendChild(localT);
@@ -180,7 +181,7 @@ export class MissionPanel {
       group.appendChild(o);
     };
     const gStars = document.createElement('optgroup');
-    gStars.label = 'Yıldızlar (yalnızca FTL)';
+    gStars.label = _('Yıldızlar (yalnızca FTL)');
     const seen = new Set<string>();
     for (const name of STAR_TARGETS) {
       const idx = u.catalog.search(name, 1)[0];
@@ -191,7 +192,7 @@ export class MissionPanel {
       far(gStars, { key: `star:${id}`, label: `${u.starName(id)} · ${fmtLightYears(u.starPositionPc(id).length() * PARSEC_KM)}`, make: () => this.starTarget(id) });
     }
     const gExotic = document.createElement('optgroup');
-    gExotic.label = 'Kara delikler & pulsarlar (FTL)';
+    gExotic.label = _('Kara delikler & pulsarlar (FTL)');
     for (const bh of u.blackHoles) {
       if (!bh.info || bh.systemStarId === sys.starId) continue;
       const id = bh.systemStarId;
@@ -203,16 +204,16 @@ export class MissionPanel {
       far(gExotic, { key: `star:${id}`, label: `${lm.def.name} · ${fmtLightYears(lm.positionPc.length() * PARSEC_KM)}`, make: () => this.starTarget(id) });
     }
     const gGal = document.createElement('optgroup');
-    gGal.label = 'Galaksiler (FTL)';
+    gGal.label = _('Galaksiler (FTL)');
     for (const name of GALAXY_TARGETS) {
       let i = -1;
-      for (let k = 1; k < u.galaxies.catalogCount; k++) if (u.galaxies.name(k).includes(name)) { i = k; break; }
+      for (let k = 1; k < u.galaxies.catalogCount; k++) if (u.galaxies.rawName(k).includes(name)) { i = k; break; }
       if (i < 1) continue;
       const pos = u.galaxies.position(i).multiplyScalar(PARSEC_KM);
       far(gGal, { key: `gal:${i}`, label: u.galaxies.name(i), make: () => ({ kind: 'point', name: u.galaxies.name(i), positionKm: pos }) });
     }
     const gLm = document.createElement('optgroup');
-    gLm.label = 'Bulutsular & kümeler (FTL)';
+    gLm.label = _('Bulutsular & kümeler (FTL)');
     let nLm = 0;
     for (let i = 0; i < u.landmarks.length && nLm < 10; i++) {
       const lm = u.landmarks[i];
@@ -224,7 +225,7 @@ export class MissionPanel {
     this.targetSel.append(gStars, gExotic, gGal, gLm);
 
     // flyby bodies: planets of this system
-    this.flybySel.innerHTML = '<option value="">Yok (doğrudan)</option>';
+    this.flybySel.innerHTML = `<option value="">${_('Yok (doğrudan)')}</option>`;
     for (const b of bodies) {
       if (b.data.type !== 'planet') continue;
       const o = document.createElement('option');
@@ -268,14 +269,14 @@ export class MissionPanel {
     const h = this.host;
     const u = h.universe;
     if (h.selected) {
-      if (h.selected.data.type === 'spacecraft') { h.showToast('Uzay aracı hedef olamaz'); return; }
+      if (h.selected.data.type === 'spacecraft') { h.showToast(_('Uzay aracı hedef olamaz')); return; }
       if (this.targetOptionExists(h.selected.id)) { this.targetSel.value = h.selected.id; this.invalidate(); return; }
     }
     const addFar = (opt: FarOption) => {
       if (!this.farOptions.has(opt.key)) {
         this.farOptions.set(opt.key, opt);
         let g = this.targetSel.querySelector<HTMLOptGroupElement>('optgroup[data-sel]');
-        if (!g) { g = document.createElement('optgroup'); g.label = 'Seçilen (FTL)'; g.dataset.sel = '1'; this.targetSel.appendChild(g); }
+        if (!g) { g = document.createElement('optgroup'); g.label = _('Seçilen (FTL)'); g.dataset.sel = '1'; this.targetSel.appendChild(g); }
         const o = document.createElement('option');
         o.value = opt.key; o.textContent = opt.label; o.className = 'far';
         g.appendChild(o);
@@ -286,7 +287,7 @@ export class MissionPanel {
     };
     if (h.selectedStar) {
       const id = h.selectedStar;
-      if (id === u.current.starId) { h.showToast('Zaten bu sistemdesiniz'); return; }
+      if (id === u.current.starId) { h.showToast(_('Zaten bu sistemdesiniz')); return; }
       addFar({ key: `star:${id}`, label: u.starName(id), make: () => this.starTarget(id) });
       return;
     }
@@ -304,7 +305,7 @@ export class MissionPanel {
       addFar({ key: `lm:${i}`, label: lm.def.name, make: () => ({ kind: 'point', name: lm.def.name, positionKm: pos }) });
       return;
     }
-    h.showToast('Önce bir hedef seçin (gezegen, yıldız, galaksi…)');
+    h.showToast(_('Önce bir hedef seçin (gezegen, yıldız, galaksi…)'));
   }
 
   /* ------------------------------------------------------------------- ship */
@@ -315,20 +316,20 @@ export class MissionPanel {
     const s = this.ship;
     const p = s.propulsion;
     const ftl = isFtl(s);
-    this.shipInfo.textContent = `${s.tagline} · ${s.lengthM} m · ${p.kind === 'impulsive' ? `Δv bütçesi ${p.dvBudget.toFixed(1)} km/s${p.lowThrust ? ' (iyon, yaklaşık)' : ''}` : p.kind === 'brachistochrone' ? `sürekli ivme, azami ${p.maxC} c` : p.kind === 'warp' ? `itki ${p.impulseC} c · warp` : `${p.hyperLabel} · ${p.sublightC} c alt-ışık`}`;
+    this.shipInfo.textContent = `${_(s.tagline)} · ${s.lengthM} m · ${p.kind === 'impulsive' ? `${_('Δv bütçesi')} ${fixed(p.dvBudget, 1)} km/s${p.lowThrust ? ' ' + _('(iyon, yaklaşık)') : ''}` : p.kind === 'brachistochrone' ? _('sürekli ivme, azami {c} c', { c: p.maxC }) : p.kind === 'warp' ? _('itki {c} c · warp', { c: p.impulseC }) : `${_(p.hyperLabel)} · ${_('{c} c alt-ışık', { c: p.sublightC })}`}`;
     // speed / mode select
     this.speedSel.innerHTML = '';
     const add = (v: string, label: string) => { const o = document.createElement('option'); o.value = v; o.textContent = label; this.speedSel.appendChild(o); };
     if (p.kind === 'warp') {
-      add('-1', `İtki sürüşü (${p.impulseC} c)`);
-      p.warpFactors.forEach((w, i) => add(String(i), `${w.label} · ${w.c >= 10 ? w.c.toLocaleString('tr-TR') : w.c} c`));
+      add('-1', _('İtki sürüşü ({c} c)', { c: p.impulseC }));
+      p.warpFactors.forEach((w, i) => add(String(i), `${_(w.label)} · ${w.c >= 10 ? fmtNum(w.c) : w.c} c`));
       this.speedSel.value = String(Math.min(5, p.warpFactors.length - 1));
     } else if (p.kind === 'hyperdrive') {
-      add('sub', `Alt-ışık (${p.sublightC} c)`);
-      add('hyper', `${p.hyperLabel} (~${p.hyperC.toExponential(0).replace('e+', '×10^')} c)`);
+      add('sub', _('Alt-ışık ({c} c)', { c: p.sublightC }));
+      add('hyper', `${_(p.hyperLabel)} (~${p.hyperC.toExponential(0).replace('e+', '×10^')} c)`);
       this.speedSel.value = 'hyper';
     } else if (p.kind === 'brachistochrone') {
-      for (const g of p.accelsG) add(String(g), `${g} g sürekli ivme`);
+      for (const g of p.accelsG) add(String(g), _('{g} g sürekli ivme', { g }));
       this.speedSel.value = String(p.accelsG[Math.min(1, p.accelsG.length - 1)]);
     }
     $('m-speed-row').hidden = p.kind === 'impulsive';
@@ -366,7 +367,7 @@ export class MissionPanel {
     let targetId: string | null = tv;
     if (this.farOptions.has(tv)) {
       far = this.farOptions.get(tv)!.make();
-      if (!far) { this.host.showToast('Hedef sistem oluşturulamadı'); return null; }
+      if (!far) { this.host.showToast(_('Hedef sistem oluşturulamadı')); return null; }
       targetId = null;
     }
     const sv = this.speedSel.value;
@@ -390,11 +391,11 @@ export class MissionPanel {
     const req = this.request();
     if (!req) return;
     const sys = this.host.universe.current;
-    if (req.targetId === req.originId) { this.host.showToast('Kalkış ve hedef aynı'); return; }
-    if (req.flybyId && (req.flybyId === req.originId || req.flybyId === req.targetId)) { this.host.showToast('Sapan gezegeni kalkış/hedef olamaz'); return; }
+    if (req.targetId === req.originId) { this.host.showToast(_('Kalkış ve hedef aynı')); return; }
+    if (req.flybyId && (req.flybyId === req.originId || req.flybyId === req.targetId)) { this.host.showToast(_('Sapan gezegeni kalkış/hedef olamaz')); return; }
     if (!this.eph) this.eph = new Ephemeris(sys);
     this.computeBtn.disabled = true;
-    this.computeBtn.textContent = 'Hesaplanıyor…';
+    this.computeBtn.textContent = _('Hesaplanıyor…');
     // let the button repaint before the (possibly 100+ ms) search
     requestAnimationFrame(() => {
       const t0 = performance.now();
@@ -403,10 +404,10 @@ export class MissionPanel {
         plan = planMission(req, sys, this.eph!);
       } catch (e) {
         console.error(e);
-        plan = { ...planMission({ ...req, far: null, targetId: req.originId }, sys, this.eph!), ok: false, error: `Hesaplama hatası: ${(e as Error).message}` };
+        plan = { ...planMission({ ...req, far: null, targetId: req.originId }, sys, this.eph!), ok: false, error: `${_('Hesaplama hatası')}: ${(e as Error).message}` };
       }
       this.computeBtn.disabled = false;
-      this.computeBtn.textContent = 'Hesapla';
+      this.computeBtn.textContent = _('Hesapla');
       this.plan = plan.ok ? plan : null;
       this.renderPlan(plan, performance.now() - t0);
       this.launchBtn.disabled = !plan.ok;
@@ -418,22 +419,22 @@ export class MissionPanel {
     r.hidden = false;
     r.innerHTML = '';
     if (!plan.ok) {
-      r.innerHTML = `<div class="m-error">${esc(plan.error ?? 'Rota bulunamadı')}</div>`;
+      r.innerHTML = `<div class="m-error">${esc(plan.error ?? _('Rota bulunamadı'))}</div>`;
       return;
     }
     const rows: Array<[string, string, string?]> = [];
-    const kms = (v: number) => `${v.toFixed(2)} km/s`;
+    const kms = (v: number) => `${fixed(v, 2)} km/s`;
     const ftl = isFtl(plan.ship) || plan.ship.propulsion.kind === 'brachistochrone';
     const title = document.createElement('div');
     title.className = 'm-route';
-    title.innerHTML = `<b>${esc(plan.originName)}</b> → <b>${esc(plan.targetName)}</b>${plan.flyby ? ` <span class="muted">(${esc(plan.flyby.bodyName)} sapanı ile)</span>` : ''}`;
+    title.innerHTML = `<b>${esc(plan.originName)}</b> → <b>${esc(plan.targetName)}</b>${plan.flyby ? ` <span class="muted">${esc(_('({name} sapanı ile)', { name: plan.flyby.bodyName }))}</span>` : ''}`;
     r.appendChild(title);
 
     rows.push(['Kalkış', jdStr(plan.departureJd)]);
     rows.push(['Varış', jdStr(plan.arrivalJd)]);
     rows.push(['Süre', fmtDuration(plan.durationS)]);
-    rows.push(['Yol', plan.distanceKm > LIGHT_YEAR_KM * 0.05 ? fmtLightYears(plan.distanceKm) : `${(plan.distanceKm / AU_KM).toFixed(3)} AU (${(plan.distanceKm / 1e6).toLocaleString('tr-TR', { maximumFractionDigits: 1 })} milyon km)`]);
-    rows.push(['Azami hız', plan.maxSpeedKms >= C_KM_S * 0.05 ? `${(plan.maxSpeedKms / C_KM_S).toLocaleString('tr-TR', { maximumFractionDigits: 2 })} c` : fmtSpeed(plan.maxSpeedKms)]);
+    rows.push(['Yol', plan.distanceKm > LIGHT_YEAR_KM * 0.05 ? fmtLightYears(plan.distanceKm) : `${fixed((plan.distanceKm / AU_KM), 3)} AU (${_('{n} milyon km', { n: fmtNum(plan.distanceKm / 1e6, { maximumFractionDigits: 1 }) })})`]);
+    rows.push(['Azami hız', plan.maxSpeedKms >= C_KM_S * 0.05 ? `${fmtNum(plan.maxSpeedKms / C_KM_S, { maximumFractionDigits: 2 })} c` : fmtSpeed(plan.maxSpeedKms)]);
     if (ftl) {
       const light = plan.distanceKm / C_KM_S;
       rows.push(['Işığın aynı yolu alması', fmtDuration(light)]);
@@ -441,31 +442,31 @@ export class MissionPanel {
     } else {
       rows.push(['sep', '']);
       rows.push(['Δv fırlatma (300 km park)', kms(plan.dvLaunch)]);
-      if (plan.flyby) rows.push([`Δv sapan düzeltmesi`, kms(plan.dvFlyby)]);
-      rows.push([`Δv varış (${plan.request.arrival === 'orbit' ? 'yakalama' : 'geçiş'})`, kms(plan.dvArrival)]);
+      if (plan.flyby) rows.push(['Δv sapan düzeltmesi', kms(plan.dvFlyby)]);
+      rows.push([plan.request.arrival === 'orbit' ? _('Δv varış (yakalama)') : _('Δv varış (geçiş)'), kms(plan.dvArrival)]);
       rows.push(['Δv toplam / bütçe', `${kms(plan.dvTotal)} / ${Number.isFinite(plan.budget) ? kms(plan.budget) : '—'}`, plan.feasible ? 'ok' : 'bad']);
       rows.push(['v∞ kalkış / varış', `${kms(plan.vInfDep)} / ${kms(plan.vInfArr)}`]);
       if (plan.flyby) {
         rows.push(['sep', '']);
-        rows.push([`${plan.flyby.bodyName} geçişi`, jdStr(plan.flyby.jd)]);
+        rows.push([_('{name} geçişi', { name: plan.flyby.bodyName }), jdStr(plan.flyby.jd)]);
         rows.push(['Geçiş irtifası', fmtDistance(plan.flyby.altitudeKm)]);
-        rows.push(['Sapma açısı / v∞', `${plan.flyby.turnDeg.toFixed(1)}° / ${kms(plan.flyby.vInf)}`]);
+        rows.push(['Sapma açısı / v∞', `${fixed(plan.flyby.turnDeg, 1)}° / ${kms(plan.flyby.vInf)}`]);
       }
     }
     const dl = document.createElement('dl');
     dl.className = 'info-grid';
     for (const [k, v, cls] of rows) {
       if (k === 'sep') { const s = document.createElement('div'); s.className = 'sep'; dl.appendChild(s); continue; }
-      const dt = document.createElement('dt'); dt.textContent = k;
-      const dd = document.createElement('dd'); dd.textContent = v; if (cls) dd.className = cls;
+      const dt = document.createElement('dt'); dt.textContent = _(k);
+      const dd = document.createElement('dd'); dd.textContent = _(v); if (cls) dd.className = cls;
       dl.append(dt, dd);
     }
     r.appendChild(dl);
     const verdict = document.createElement('div');
     verdict.className = `m-verdict ${plan.feasible ? 'ok' : 'bad'}`;
     verdict.textContent = plan.feasible
-      ? (ftl ? 'Rota hazır.' : 'Rota araç bütçesi içinde.')
-      : 'Δv bütçesi yetersiz – yine de fırlatabilirsiniz (hayali yakıt) ya da sapan/pencere deneyin.';
+      ? (ftl ? _('Rota hazır.') : _('Rota araç bütçesi içinde.'))
+      : _('Δv bütçesi yetersiz – yine de fırlatabilirsiniz (hayali yakıt) ya da sapan/pencere deneyin.');
     r.appendChild(verdict);
     if (plan.notes.length) {
       const ul = document.createElement('ul');
@@ -475,7 +476,7 @@ export class MissionPanel {
     }
     const foot = document.createElement('div');
     foot.className = 'm-foot muted';
-    foot.textContent = `${plan.phases.length} evre · ${ms.toFixed(0)} ms`;
+    foot.textContent = `${_('{n} evre', { n: plan.phases.length })} · ${fixed(ms, 0)} ms`;
     r.appendChild(foot);
   }
 
@@ -507,7 +508,7 @@ export class MissionPanel {
     if (!ms.list.length) return;
     const h = document.createElement('div');
     h.className = 'panel-title small';
-    h.textContent = 'Aktif görevler';
+    h.textContent = _('Aktif görevler');
     this.active.appendChild(h);
     for (const m of ms.list) {
       const row = document.createElement('div');
@@ -518,11 +519,11 @@ export class MissionPanel {
       const btns = document.createElement('div');
       btns.className = 'm-mission-btns';
       const follow = document.createElement('button');
-      follow.textContent = ms.followed === m ? 'Takipte' : 'Takip';
+      follow.textContent = ms.followed === m ? _('Takipte') : _('Takip');
       follow.classList.toggle('active', ms.followed === m);
       follow.addEventListener('click', () => { this.host.followMission(m); this.renderActive(true); });
       const cancel = document.createElement('button');
-      cancel.textContent = 'Kaldır';
+      cancel.textContent = _('Kaldır');
       cancel.addEventListener('click', () => { this.host.cancelMission(m); this.renderActive(true); });
       btns.append(follow, cancel);
       row.append(info, btns);
@@ -532,9 +533,9 @@ export class MissionPanel {
 
   private etaText(m: ActiveMission, jd: number): string {
     const eta = (m.plan.arrivalJd - jd) * DAY_S;
-    if (jd < m.plan.departureJd) return `kalkışa ${fmtDuration((m.plan.departureJd - jd) * DAY_S)}`;
-    if (eta > 0) return `varışa ${fmtDuration(eta)}`;
-    return 'varıldı';
+    if (jd < m.plan.departureJd) return _('kalkışa {t}', { t: fmtDuration((m.plan.departureJd - jd) * DAY_S) });
+    if (eta > 0) return _('varışa {t}', { t: fmtDuration(eta) });
+    return _('varıldı');
   }
 }
 

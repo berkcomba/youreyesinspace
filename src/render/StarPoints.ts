@@ -1,3 +1,4 @@
+import { _ } from '../i18n';
 import {
   AdditiveBlending, BufferAttribute, BufferGeometry, Points, Scene, ShaderMaterial, Vector3, type PerspectiveCamera,
 } from 'three';
@@ -125,7 +126,7 @@ export class StarPoints {
     }
     if (hideIndex !== 0) {
       // Always offer the Sun as a label so the way home is obvious
-      this.namedStars.push({ index: 0, name: 'Güneş', dir: this.direction(0), mag: this.apparentMag(0), landmark: true });
+      this.namedStars.push({ index: 0, name: _('Güneş'), dir: this.direction(0), mag: this.apparentMag(0), landmark: true });
     }
     // Far from home the whole catalogue is too faint to label; keep the famous stars findable
     this.far = camPc.length() > LANDMARK_DIST_PC;

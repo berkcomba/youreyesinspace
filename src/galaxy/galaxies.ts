@@ -1,4 +1,5 @@
 import { Matrix3, Vector3 } from 'three';
+import { _ } from '../i18n';
 import { raDecToScene } from '../math/frames';
 import { Rng, hashSeed } from '../gen/SystemGenerator';
 import { GalaxyModel, type GalaxyParams, type GalaxyType } from './GalaxyModel';
@@ -291,10 +292,17 @@ export class GalaxyIndex {
     this.count = i;
   }
 
-  name(i: number): string {
+  /** untranslated (source) name — use for matching catalogue references */
+  rawName(i: number): string {
     if (i === 0) return 'Samanyolu';
     if (i < this.catalogCount) return CATALOG[i - 1].name;
     return `Galaksi YE-${(this.seed[i] % 0xffffff).toString(16).toUpperCase().padStart(6, '0')}`;
+  }
+
+  name(i: number): string {
+    if (i >= this.catalogCount) return _('Galaksi YE-{code}', { code: (this.seed[i] % 0xffffff).toString(16).toUpperCase().padStart(6, '0') });
+    if (i === 0) return _('Samanyolu');
+    return _(this.rawName(i));
   }
 
   typeOf(i: number): GalaxyType { return TYPE_BY_CODE[this.type[i]]; }
@@ -330,8 +338,8 @@ export class GalaxyIndex {
       pitchDeg: i === 0 ? 14 : 10 + rng.next() * 14,
       axisRatio: this.axisRatio[i],
       description: i === 0
-        ? 'Ev galaksimiz: ~13 milyar yıllık, 100–400 milyar yıldızlı çubuklu sarmal. Güneş, merkezden ~8.2 kpc uzakta Orion Kolu\'nda yer alır.'
-        : i < this.catalogCount ? CATALOG[i - 1].desc : 'Prosedürel olarak üretilmiş galaksi; konumu kozmik ağ yoğunluk modelinden, yapısı Hubble tipinden türetildi.',
+        ? _('Ev galaksimiz: ~13 milyar yıllık, 100–400 milyar yıldızlı çubuklu sarmal. Güneş, merkezden ~8.2 kpc uzakta Orion Kolu\'nda yer alır.')
+        : i < this.catalogCount ? (CATALOG[i - 1].desc ? _(CATALOG[i - 1].desc!) : undefined) : _('Prosedürel olarak üretilmiş galaksi; konumu kozmik ağ yoğunluk modelinden, yapısı Hubble tipinden türetildi.'),
       catalog: i < this.catalogCount,
       distancePc: this.distancePc(i),
     };
@@ -373,7 +381,7 @@ export class GalaxyIndex {
     if (!q) return [];
     const hits: number[] = [];
     for (let i = 0; i < this.catalogCount; i++) {
-      if (this.name(i).toLowerCase().includes(q)) hits.push(i);
+      if (this.name(i).toLowerCase().includes(q) || this.rawName(i).toLowerCase().includes(q)) hits.push(i);
     }
     const m = /^ye-([0-9a-f]{6})$/i.exec(q);
     if (m) {

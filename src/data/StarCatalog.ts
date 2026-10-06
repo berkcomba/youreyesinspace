@@ -1,4 +1,5 @@
 import { Vector3 } from 'three';
+import { _ } from '../i18n';
 import { PARSEC_KM } from '../core/constants';
 import {
   absoluteMagnitude, bvToTemperature, luminosityFromAbsMag, massFromLuminosity, radiusFromLuminosity,
@@ -128,7 +129,7 @@ export class StarCatalog {
 
   /** Display name: proper → Bayer → Gliese → HIP → catalogue index */
   nameOf(i: number): string {
-    if (i === 0) return 'Güneş';
+    if (i === 0) return _('Güneş');
     const n = this.names.get(i);
     if (n?.proper) return n.proper;
     if (n?.bayer) return n.bayer;

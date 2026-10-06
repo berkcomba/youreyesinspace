@@ -1,4 +1,5 @@
 import { Vector3 } from 'three';
+import { _ } from '../i18n';
 import { evaluatePhase, phaseAt, type FrameLookup, type MissionPlan, type Phase } from '../astro/mission';
 import type { BodyData } from '../data/types';
 import type { CelestialBody } from './CelestialBody';
@@ -54,7 +55,7 @@ export class Missions {
     const sameShip = this.list.filter((m) => m.plan.ship.id === plan.ship.id).length;
     const m: ActiveMission = {
       id: `mission-${this.seq}`,
-      name: sameShip ? `${plan.ship.name} (${sameShip + 1})` : plan.ship.name,
+      name: sameShip ? `${_(plan.ship.name)} (${sameShip + 1})` : _(plan.ship.name),
       plan, body: null, bodySystem: null, phase: null, autoRate: false,
     };
     this.list.push(m);
@@ -110,7 +111,7 @@ export class Missions {
       }
       return ok;
     };
-    const facts: Record<string, string> = { 'Görev': `${plan.originName} → ${plan.targetName}`, ...ship.facts };
+    const facts: Record<string, string> = { [_('Görev')]: `${plan.originName} → ${plan.targetName}`, ...ship.facts };
     const data: BodyData = {
       id: m.id, name: m.name, type: 'spacecraft', parent: sys.star.id,
       radius: ship.radiusKm, mass: ship.massKg, albedo: 0.4,

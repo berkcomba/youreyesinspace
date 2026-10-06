@@ -1,4 +1,5 @@
 import { Rng, hashSeed } from '../gen/SystemGenerator';
+import { _ } from '../i18n';
 import { TYPE_CODE, vnoise, type GalaxySource } from './galaxies';
 
 const MPC = 1e6;
@@ -266,7 +267,8 @@ export class FarTier implements GalaxySource {
   /* ------------------------------------------------------------------ */
 
   name(i: number): string {
-    return `${this.spec.label.replace(/leri$/, '')} YE-${(this.seed[i] % 0xffffff).toString(16).toUpperCase().padStart(6, '0')}`;
+    const kind = this.spec.label === 'Galaksi kümeleri' ? _('Galaksi kümesi') : _('Süperküme kompleksi');
+    return `${kind} YE-${(this.seed[i] % 0xffffff).toString(16).toUpperCase().padStart(6, '0')}`;
   }
 
   /** Visibility of the whole tier for a camera `dSun` pc from the Sun */

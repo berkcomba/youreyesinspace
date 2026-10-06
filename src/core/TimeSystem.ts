@@ -1,4 +1,5 @@
 import { DAY_S, J2000_JD } from './constants';
+import { _ } from '../i18n';
 
 const RATE_STEPS = [
   1, 2, 5, 10, 30, 60, 300, 900, 3600, 3600 * 6, DAY_S, DAY_S * 3, DAY_S * 7, DAY_S * 30,
@@ -130,15 +131,15 @@ export class TimeSystem {
   }
 
   rateLabel(): string {
-    if (this.paused) return 'Duraklatıldı';
+    if (this.paused) return _('Duraklatıldı');
     const r = this.rate;
     const sign = this.direction < 0 ? '−' : '';
     const f = (x: number) => (Number.isInteger(x) ? `${x}` : x.toPrecision(3));
     if (r < 60) return `${sign}${f(r)}× (${f(r)} s/s)`;
-    if (r < 3600) return `${sign}${f(r / 60)} dk/s`;
-    if (r < DAY_S) return `${sign}${f(r / 3600)} sa/s`;
-    if (r < DAY_S * 365.25) return `${sign}${f(r / DAY_S)} gün/s`;
-    return `${sign}${f(r / (DAY_S * 365.25))} yıl/s`;
+    if (r < 3600) return sign + _('{n} dk/s', { n: f(r / 60) });
+    if (r < DAY_S) return sign + _('{n} sa/s', { n: f(r / 3600) });
+    if (r < DAY_S * 365.25) return sign + _('{n} gün/s', { n: f(r / DAY_S) });
+    return sign + _('{n} yıl/s', { n: f(r / (DAY_S * 365.25)) });
   }
 
   static dateToJD(d: Date): number {

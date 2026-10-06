@@ -1,4 +1,5 @@
 import { Matrix3, Matrix4, Quaternion, Vector3 } from 'three';
+import { _, fixed } from '../i18n';
 import type { BodyData } from '../data/types';
 import { basisFromPole, poleToScene } from '../math/frames';
 import {
@@ -68,7 +69,7 @@ export class CelestialBody {
   }
 
   get name(): string {
-    return this.data.name;
+    return _(this.data.name);
   }
 
   get radius(): number {
@@ -249,16 +250,16 @@ export class CelestialBody {
   get siderealDayDisplay(): string {
     const h = this.displayRotationHours;
     if (h === 0) return '—';
-    if (h < 48) return `${h.toFixed(2)} sa`;
-    return `${(h / 24).toFixed(2)} gün`;
+    if (h < 48) return _('{n} sa', { n: fixed(h, 2) });
+    return _('{n} gün', { n: fixed((h / 24), 2) });
   }
 
   periodDisplay(): string {
     const d = this.periodDays;
     if (!d) return '—';
-    if (d < 1) return `${(d * 24).toFixed(2)} sa`;
-    if (d < 1000) return `${d.toFixed(2)} gün`;
-    return `${(d / 365.25).toFixed(2)} yıl`;
+    if (d < 1) return _('{n} sa', { n: fixed((d * 24), 2) });
+    if (d < 1000) return _('{n} gün', { n: fixed(d, 2) });
+    return _('{n} yıl', { n: fixed((d / 365.25), 2) });
   }
 
   /** Equilibrium temperature estimate (K) from star luminosity and albedo */

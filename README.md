@@ -40,6 +40,9 @@ of the observable universe. Turkish UI.*
 - **UI** — arama, bilgi paneli, zaman kontrolü, "Görmeye değecek yerler" menüsü, ayarlar, `F1` yardım.
 - **Mobil** — dokunmatik kontroller (tek parmak bak/yörünge, iki parmak yaklaş/uç ve kay, dokun/çift dokun),
   telefon düzeni (alt sayfa paneller, güvenli alan), mobilde otomatik düşük render ölçeği.
+- **Çok dilli** — Türkçe, İngilizce, Almanca, İspanyolca, Fransızca. Arayüz, bilgi panelleri,
+  görev planlayıcı ve tüm gövde/yer imi açıklamaları çevrilidir; dil tarayıcıdan algılanır,
+  ayarlardan ya da `?lang=en` gibi bir URL parametresiyle değiştirilir.
 
 ## Geliştirme
 
@@ -54,6 +57,15 @@ Yıldız kataloğunu yeniden üretmek için (HYG CSV gerekir):
 
 ```bash
 node scripts/build-stars.mjs /path/to/hygdata_v41.csv
+```
+
+Çeviriler: kaynak dil Türkçe; `_('…')` çağrıları, `data-i18n*` öznitelikleri ve veri dosyalarındaki
+görünen alanlar anahtar olarak kullanılır. Sözlükler `src/i18n/locales/<dil>/{ui,data}.json`
+içindedir. Eksik/kullanılmayan anahtarları bulmak için:
+
+```bash
+node scripts/i18n-check.mjs            # rapor (eksik varsa exit 1)
+node scripts/i18n-check.mjs --missing de   # bir dil için eksik anahtarları listele
 ```
 
 ## Dağıtım

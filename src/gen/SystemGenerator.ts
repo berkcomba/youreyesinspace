@@ -3,6 +3,7 @@ import { fmtDistance, fmtLightYears } from '../ui/format';
 import type { StarInfo } from '../data/StarCatalog';
 import type { Appearance, Atmosphere, BodyData, Clouds, Rings, SimpleElements } from '../data/types';
 import { LUM_CLASS_DESC } from '../astro/stellar';
+import { _, fixed, localeTag } from '../i18n';
 
 /* ------------------------------------------------------------------ */
 /*  Deterministic PRNG                                                 */
@@ -225,7 +226,7 @@ function makePlanet(
       appearance: gasAppearance(rng, T, false, id),
       atmosphere: { color: T > 600 ? [0.6, 0.55, 0.7] : T > 130 ? rng.tint([0.95, 0.88, 0.75]) : rng.tint([0.7, 0.85, 1.0]), height: 0.012, density: 0.45 },
       rings, temperature: T,
-      description: `${CLASS_LABEL[cls]}. ${(massJ).toFixed(2)} Jüpiter kütlesinde; ${describeTemp(T)}.`,
+      description: `${_(CLASS_LABEL[cls])}. ${_('{m} Jüpiter kütlesinde', { m: fixed(massJ, 2) })}; ${describeTemp(T)}.`,
       facts: { 'Sınıf': CLASS_LABEL[cls], 'Kaynak': 'Prosedürel (tahmini)' },
     };
     bodies.push(data);
@@ -243,7 +244,7 @@ function makePlanet(
       atmosphere: { color: rng.tint([0.55, 0.75, 1.0]), height: 0.02, density: 0.5 },
       rings: rng.chance(0.3) ? makeRings(rng, radius, true) : undefined,
       temperature: T,
-      description: `${CLASS_LABEL[cls]}. ${massE.toFixed(1)} Dünya kütlesinde, metan katkılı hidrojen-helyum atmosferi; ${describeTemp(T)}.`,
+      description: `${_(CLASS_LABEL[cls])}. ${_('{m} Dünya kütlesinde, metan katkılı hidrojen-helyum atmosferi', { m: fixed(massE, 1) })}; ${describeTemp(T)}.`,
       facts: { 'Sınıf': CLASS_LABEL[cls], 'Kaynak': 'Prosedürel (tahmini)' },
     };
     bodies.push(data);
@@ -274,7 +275,7 @@ function makePlanet(
       rotationPeriod: tidallyLocked ? 'sync' : rng.logRange(9, 900) * (rng.chance(0.1) ? -1 : 1),
       tilt, orbit: orbit(rng, aKm, gmStar, 0.18, 3.5, 'parentEquator'),
       appearance, atmosphere, clouds, temperature: T,
-      description: `${CLASS_LABEL[cls]}. ${massE.toFixed(2)} Dünya kütlesinde; ${describeTemp(T)}${tidallyLocked ? '; yıldızına gelgitle kilitli' : ''}.`,
+      description: `${_(CLASS_LABEL[cls])}. ${_('{m} Dünya kütlesinde', { m: fixed(massE, 2) })}; ${describeTemp(T)}${tidallyLocked ? `; ${_('yıldızına gelgitle kilitli')}` : ''}.`,
       facts: { 'Sınıf': CLASS_LABEL[cls], 'Kaynak': 'Prosedürel (tahmini)' },
     };
     bodies.push(data);
@@ -284,12 +285,12 @@ function makePlanet(
 }
 
 function describeTemp(T: number): string {
-  if (T > 1500) return 'yüzeyi erimiş kaya sıcaklığında';
-  if (T > 700) return 'kavurucu sıcak';
-  if (T > 330) return 'çok sıcak';
-  if (T > 235) return 'ılıman sıcaklıkta';
-  if (T > 140) return 'soğuk';
-  return 'dondurucu soğuk';
+  if (T > 1500) return _('yüzeyi erimiş kaya sıcaklığında');
+  if (T > 700) return _('kavurucu sıcak');
+  if (T > 330) return _('çok sıcak');
+  if (T > 235) return _('ılıman sıcaklıkta');
+  if (T > 140) return _('soğuk');
+  return _('dondurucu soğuk');
 }
 
 /* ------------------------------------------------------------------ */
@@ -425,7 +426,7 @@ function makeMoons(
         M0: rng.range(0, 360), epoch: J2000_JD, period, frame: 'parentEquator',
       },
       appearance,
-      description: `${planet.name} gezegeninin ${j + 1}. uydusu. ${volcanic ? 'Gelgit ısıtmasıyla volkanik olarak aktif.' : icy ? 'Buzlu, kraterli yüzey.' : 'Kraterli kaya yüzeyi.'}`,
+      description: `${_('{name} gezegeninin {n}. uydusu.', { name: _(planet.name), n: j + 1 })} ${volcanic ? _('Gelgit ısıtmasıyla volkanik olarak aktif.') : icy ? _('Buzlu, kraterli yüzey.') : _('Kraterli kaya yüzeyi.')}`,
       facts: { 'Kaynak': 'Prosedürel (tahmini)' },
     });
     a *= rng.range(1.5, 2.4);
@@ -437,23 +438,24 @@ function makeMoons(
 /* ------------------------------------------------------------------ */
 
 function starDescription(s: StarInfo): string {
-  const cls = s.isWhiteDwarf ? 'beyaz cüce' : (LUM_CLASS_DESC[s.lumClass] ?? 'yıldız').toLowerCase();
-  const parts = [`${s.catalogSpectral || s.spectral} sınıfı ${cls}`];
-  parts.push(`Güneş'e uzaklığı ${fmtLightYears(s.distancePc * PARSEC_KM)} (${fmtDistance(s.distancePc * PARSEC_KM)})`);
-  if (s.names?.constellation) parts.push(`${s.names.constellation} takımyıldızında`);
+  const lumDesc = LUM_CLASS_DESC[s.lumClass];
+  const cls = s.isWhiteDwarf ? _('beyaz cüce') : (lumDesc ? _(lumDesc) : _('yıldız')).toLocaleLowerCase(localeTag());
+  const parts = [_('{sp} sınıfı {cls}', { sp: s.catalogSpectral || s.spectral, cls })];
+  parts.push(_("Güneş'e uzaklığı {ly} ({km})", { ly: fmtLightYears(s.distancePc * PARSEC_KM), km: fmtDistance(s.distancePc * PARSEC_KM) }));
+  if (s.names?.constellation) parts.push(_('{name} takımyıldızında', { name: s.names.constellation }));
   const tail = s.procedural
-    ? 'Yıldız ve gezegen sistemi, galaksi modelinden deterministik olarak prosedürel üretilmiştir.'
-    : 'Gezegen sistemi gerçek yıldız verilerinden (HYG) türetilerek prosedürel olarak üretilmiştir.';
+    ? _('Yıldız ve gezegen sistemi, galaksi modelinden deterministik olarak prosedürel üretilmiştir.')
+    : _('Gezegen sistemi gerçek yıldız verilerinden (HYG) türetilerek prosedürel olarak üretilmiştir.');
   return parts.join('. ') + '. ' + tail;
 }
 
 function starFacts(s: StarInfo): Record<string, string> {
   const f: Record<string, string> = {
     'Spektral sınıf': s.catalogSpectral || s.spectral,
-    'Görünür kadir': s.mag.toFixed(2),
-    'Mutlak kadir': s.absMag.toFixed(2),
+    'Görünür kadir': fixed(s.mag, 2),
+    'Mutlak kadir': fixed(s.absMag, 2),
     'Parlaklık': `${fmtLum(s.luminosity)} L☉`,
-    'B−V': s.bv.toFixed(2),
+    'B−V': fixed(s.bv, 2),
   };
   if (s.hip) f['Hipparcos'] = `HIP ${s.hip}`;
   if (s.names?.bayer) f['Bayer/Flamsteed'] = s.names.bayer;
@@ -462,8 +464,8 @@ function starFacts(s: StarInfo): Record<string, string> {
 }
 
 function fmtLum(l: number): string {
-  if (l >= 100) return l.toFixed(0);
-  if (l >= 1) return l.toFixed(2);
-  if (l >= 0.001) return l.toFixed(4);
+  if (l >= 100) return fixed(l, 0);
+  if (l >= 1) return fixed(l, 2);
+  if (l >= 0.001) return fixed(l, 4);
   return l.toExponential(2);
 }

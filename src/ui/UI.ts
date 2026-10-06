@@ -1,6 +1,7 @@
 import type { CelestialBody } from '../core/CelestialBody';
 import { MissionPanel, type MissionPanelHost } from './MissionPanel';
 import { phaseLabel } from '../astro/mission';
+import { _, fixed, fmtNum, LOCALES, currentLocale, setLocale, type Locale } from '../i18n';
 import type { TimeSystem } from '../core/TimeSystem';
 import type { Universe } from '../core/Universe';
 import type { CameraController } from '../camera/CameraController';
@@ -14,7 +15,7 @@ import { GALAXY_TYPE_LABEL } from '../galaxy/GalaxyModel';
 import { catalogIndexOf, type StarId } from '../core/Universe';
 import type { Settings } from './Settings';
 import {
-  fmtDeg, fmtDistance, fmtSolarMass, fmtDuration, fmtLightYears, fmtMass, fmtRadius, fmtSci, fmtSpeed, fmtTemp, TYPE_LABELS,
+  fmtDeg, fmtDistance, fmtSolarMass, fmtDuration, fmtLightYears, fmtMass, fmtRadius, fmtSci, fmtSpeed, fmtTemp, TYPE_LABELS, typeLabel,
 } from './format';
 import { PLACES } from './places';
 
@@ -107,6 +108,13 @@ const SETTING_DEFS: SettingDef[] = [
   { key: 'invertY', label: 'Y eksenini ters çevir', kind: 'bool' },
 ];
 
+/** Info-grid rows → HTML; labels and plain-text values are run through the dictionary */
+function rowsHtml(rows: Array<[string, string] | 'sep'>): string {
+  return rows
+    .map((r) => (r === 'sep' ? '<div class="sep"></div>' : `<dt>${_(r[0])}</dt><dd>${_(r[1])}</dd>`))
+    .join('');
+}
+
 export class UI {
   private readonly info = $('info');
   private readonly infoName = $('info-name');
@@ -160,17 +168,17 @@ export class UI {
     $('t-pause').addEventListener('click', () => t.togglePause());
     $('t-fast').addEventListener('click', () => t.faster());
     $('t-fwd').addEventListener('click', () => t.forwardWarp());
-    $('t-now').addEventListener('click', () => { t.setNow(); this.showToast('Gerçek zamana dönüldü'); });
+    $('t-now').addEventListener('click', () => { t.setNow(); this.showToast(_('Gerçek zamana dönüldü')); });
     $('time-date').addEventListener('click', () => {
       const cur = t.date.toISOString().slice(0, 16);
-      const v = window.prompt('Tarih/saat (UTC, ISO 8601):', cur);
+      const v = window.prompt(_('Tarih/saat (UTC, ISO 8601):'), cur);
       if (!v) return;
       const d = new Date(v.endsWith('Z') ? v : v + 'Z');
       if (Number.isFinite(d.getTime())) t.setDate(d);
-      else this.showToast('Geçersiz tarih');
+      else this.showToast(_('Geçersiz tarih'));
     });
     $('time-date').style.cursor = 'pointer';
-    $('time-date').title = 'Tarih ayarlamak için tıkla';
+    $('time-date').title = _('Tarih ayarlamak için tıkla');
   }
 
   /* ---------------- Actions ---------------- */
@@ -200,13 +208,13 @@ export class UI {
     const resolveGalaxy = (ref: string): number | null => {
       if (ref.startsWith('#')) return parseInt(ref.slice(1), 10);
       const g = u.galaxies;
-      for (let i = 1; i < g.catalogCount; i++) if (g.name(i).includes(ref)) return i;
+      for (let i = 1; i < g.catalogCount; i++) if (g.rawName(i).includes(ref)) return i;
       return null;
     };
     for (const group of PLACES) {
       const head = document.createElement('div');
       head.className = 'dropdown-group';
-      head.textContent = group.title;
+      head.textContent = _(group.title);
       menu.appendChild(head);
       for (const p of group.items) {
         // skip destinations this build cannot resolve
@@ -217,7 +225,7 @@ export class UI {
         const item = document.createElement('div');
         item.className = 'dropdown-item';
         item.setAttribute('role', 'option');
-        item.innerHTML = `<span>${p.label}</span>${p.note ? `<span class="n">${p.note}</span>` : ''}`;
+        item.innerHTML = `<span>${_(p.label)}</span>${p.note ? `<span class="n">${_(p.note)}</span>` : ''}`;
         item.addEventListener('click', () => {
           this.togglePlaces(false);
           if (p.kind === 'body') h.goToBodyId(p.ref);
@@ -256,15 +264,15 @@ export class UI {
       list.innerHTML = '';
       this.searchIndex = -1;
       if (!q) { list.hidden = true; return; }
-      const norm = (s: string) => s.toLowerCase().replace(/ü/g, 'u').replace(/ö/g, 'o').replace(/ı/g, 'i').replace(/ş/g, 's').replace(/ç/g, 'c').replace(/ğ/g, 'g');
+      const norm = (s: string) => s.toLowerCase().replace(/ı/g, 'i').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
       const nq = norm(q);
       const u = this.host.universe;
       const hits = u.bodies
-        .filter((b) => norm(b.name).includes(nq) || b.id.includes(nq) || (TYPE_LABELS[b.data.type] ?? '').toLowerCase().includes(q))
+        .filter((b) => norm(b.name).includes(nq) || norm(b.data.name).includes(nq) || b.id.includes(nq) || norm(typeLabel(b.data.type)).includes(nq) || (TYPE_LABELS[b.data.type] ?? '').toLowerCase().includes(q))
         .slice(0, 8);
       for (const b of hits) {
         const li = document.createElement('li');
-        li.innerHTML = `<span>${b.name}</span><span class="t">${TYPE_LABELS[b.data.type] ?? b.data.type}${b.parent ? ' · ' + b.parent.name : ''}</span>`;
+        li.innerHTML = `<span>${b.name}</span><span class="t">${typeLabel(b.data.type)}${b.parent ? ' · ' + b.parent.name : ''}</span>`;
         li.addEventListener('click', () => { this.pick(b); });
         list.appendChild(li);
       }
@@ -274,7 +282,7 @@ export class UI {
         const li = document.createElement('li');
         const spect = u.catalog.catalogSpectral(i);
         const ly = u.catalog.distancePc(i) * 3.26156;
-        li.innerHTML = `<span>${u.catalog.nameOf(i)}</span><span class="t">Yıldız${spect ? ' · ' + spect : ''} · ${ly.toFixed(1)} ly</span>`;
+        li.innerHTML = `<span>${u.catalog.nameOf(i)}</span><span class="t">${_('Yıldız')}${spect ? ' · ' + spect : ''} · ${fixed(ly, 1)} ly</span>`;
         li.addEventListener('click', () => { this.pickStar(`c${i}`); });
         list.appendChild(li);
       }
@@ -283,7 +291,7 @@ export class UI {
       for (const b of bhs) {
         const li = document.createElement('li');
         const dist = fmtLightYears(b.positionPc.length() * PARSEC_KM);
-        li.innerHTML = `<span>${b.entry.name}</span><span class="t">Kara Delik · ${fmtSolarMass(b.entry.massSolar)} · ${dist}</span>`;
+        li.innerHTML = `<span>${b.entry.name}</span><span class="t">${_('Kara Delik')} · ${fmtSolarMass(b.entry.massSolar)} · ${dist}</span>`;
         li.addEventListener('click', () => { this.host.goToBlackHole(b.entry.id); this.closeSearch(); });
         list.appendChild(li);
       }
@@ -292,8 +300,8 @@ export class UI {
       for (const i of lms) {
         const l = u.landmarks[i];
         const li = document.createElement('li');
-        const where = l.galaxy === 0 ? 'Samanyolu' : u.galaxies.name(l.galaxy);
-        li.innerHTML = `<span>${l.def.name}</span><span class="t">${LANDMARK_KIND_LABEL[l.def.kind].split(' /')[0]} · ${where} · ${fmtLightYears(l.positionPc.length() * PARSEC_KM)}</span>`;
+        const where = u.galaxies.name(l.galaxy);
+        li.innerHTML = `<span>${l.def.name}</span><span class="t">${_(LANDMARK_KIND_LABEL[l.def.kind]).split(' /')[0]} · ${where} · ${fmtLightYears(l.positionPc.length() * PARSEC_KM)}</span>`;
         li.addEventListener('click', () => { this.host.goToLandmark(i); this.closeSearch(); });
         list.appendChild(li);
       }
@@ -302,7 +310,7 @@ export class UI {
       for (const i of gals) {
         const li = document.createElement('li');
         const dist = fmtLightYears(u.galaxies.distancePc(i) * PARSEC_KM);
-        li.innerHTML = `<span>${u.galaxies.name(i)}</span><span class="t">Galaksi · ${GALAXY_TYPE_LABEL[u.galaxies.typeOf(i)]} · ${dist}</span>`;
+        li.innerHTML = `<span>${u.galaxies.name(i)}</span><span class="t">${_('Galaksi')} · ${_(GALAXY_TYPE_LABEL[u.galaxies.typeOf(i)])} · ${dist}</span>`;
         li.addEventListener('click', () => { this.host.selectGalaxy(i); this.host.goToGalaxy(i); this.closeSearch(); });
         list.appendChild(li);
       }
@@ -354,17 +362,36 @@ export class UI {
     const body = $('settings-body');
     body.innerHTML = '';
     const s = this.host.settings;
+    // language
+    const langRow = document.createElement('div');
+    langRow.className = 'setting-row';
+    const langLabel = document.createElement('label');
+    langLabel.textContent = _('Dil');
+    langLabel.htmlFor = 'set-lang';
+    const langSel = document.createElement('select');
+    langSel.id = 'set-lang';
+    langSel.className = 'lang-select';
+    for (const l of LOCALES) {
+      const o = document.createElement('option');
+      o.value = l.code;
+      o.textContent = l.label;
+      o.selected = l.code === currentLocale();
+      langSel.appendChild(o);
+    }
+    langSel.addEventListener('change', () => setLocale(langSel.value as Locale));
+    langRow.append(langLabel, langSel);
+    body.appendChild(langRow);
     for (const def of SETTING_DEFS) {
       if (def.group) {
         const g = document.createElement('div');
         g.className = 'setting-group';
-        g.textContent = def.group;
+        g.textContent = _(def.group);
         body.appendChild(g);
       }
       const row = document.createElement('div');
       row.className = 'setting-row';
       const label = document.createElement('label');
-      label.textContent = def.label;
+      label.textContent = _(def.label);
       const id = `set-${def.key}`;
       label.htmlFor = id;
       row.appendChild(label);
@@ -429,7 +456,7 @@ export class UI {
     if (text === this.creditText) return;
     this.creditText = text;
     this.creditEl.hidden = text === null;
-    if (text !== null) this.creditEl.textContent = text;
+    if (text !== null) this.creditEl.textContent = _(text);
   }
 
   toggleMission(force?: boolean): void {
@@ -473,12 +500,12 @@ export class UI {
     this.pauseBtn.textContent = time.paused ? '▶' : '❚❚';
     this.pauseBtn.classList.toggle('active', time.paused);
 
-    $('nav-mode').textContent = camera.autopilot ? 'Otopilot' : camera.mode === 'orbit' ? 'Takip / Yörünge' : this.host.freeRoam ? 'Serbest dolaşım' : 'Serbest uçuş';
+    $('nav-mode').textContent = camera.autopilot ? _('Otopilot') : camera.mode === 'orbit' ? _('Takip / Yörünge') : this.host.freeRoam ? _('Serbest dolaşım') : _('Serbest uçuş');
     this.roamBtn.classList.toggle('active', this.host.freeRoam);
     $('nav-ref').textContent = camera.reference?.name ?? '—';
     $('nav-speed').textContent = camera.mode === 'free' ? `${fmtSpeed(camera.speed)}  (×${camera.speedMultiplier.toPrecision(2)})` : '—';
     $('nav-alt').textContent = camera.nearest ? `${fmtDistance(camera.altitude)} · ${camera.nearest.name}` : '—';
-    $('nav-fps').textContent = this.fps.toFixed(0);
+    $('nav-fps').textContent = fixed(this.fps, 0);
     this.missionPanel.update(now);
 
     this.followBtn.classList.toggle('active', camera.mode === 'orbit' && camera.target === selected);
@@ -486,10 +513,10 @@ export class UI {
 
     const u = this.host.universe;
     const sys = u.current;
-    const sysLabel = sys.catalogIndex === 0 ? 'Güneş Sistemi' : `${sys.star.name} sistemi`;
+    const sysLabel = sys.catalogIndex === 0 ? _('Güneş Sistemi') : _('{name} sistemi', { name: sys.star.name });
     const gal = u.currentGalaxy;
     const dSunPc = this.host.camera.position.length() / PARSEC_KM;
-    const scaleLabel = dSunPc > 3.0e9 ? 'Gözlemlenebilir evren' : dSunPc > 3.0e8 ? 'Süperküme ölçeği' : 'Galaksiler arası uzay';
+    const scaleLabel = dSunPc > 3.0e9 ? _('Gözlemlenebilir evren') : dSunPc > 3.0e8 ? _('Süperküme ölçeği') : _('Galaksiler arası uzay');
     const label = gal === null ? `${scaleLabel} · ${sysLabel}` : gal === 0 ? sysLabel : `${u.galaxies.name(gal)} · ${sysLabel}`;
     if (this.brandSub.textContent !== label) this.brandSub.textContent = label;
 
@@ -527,8 +554,8 @@ export class UI {
     const g = u.galaxies;
     const type = g.typeOf(i);
     this.infoName.textContent = g.name(i);
-    this.infoType.textContent = `Galaksi · ${GALAXY_TYPE_LABEL[type]}`;
-    this.infoParent.textContent = i === 0 ? 'Ev galaksimiz' : i < g.catalogCount ? 'Gerçek galaksi kataloğu' : 'Prosedürel kozmik ağ';
+    this.infoType.textContent = `${_('Galaksi')} · ${_(GALAXY_TYPE_LABEL[type])}`;
+    this.infoParent.textContent = i === 0 ? _('Ev galaksimiz') : i < g.catalogCount ? _('Gerçek galaksi kataloğu') : _('Prosedürel kozmik ağ');
 
     const rel = u.galaxyRelative(i, this.host.camera.position);
     const camDist = rel.length();
@@ -538,20 +565,18 @@ export class UI {
     const lum = Math.pow(10, (4.83 - absMag) / 2.5);
     const rows: Array<[string, string] | 'sep'> = [];
     rows.push(['Uzaklık', `${fmtLightYears(camDist)} (${fmtDistance(camDist)})`]);
-    rows.push(['Kadir (buradan)', this.host.galaxySprites.apparentMag(i).toFixed(1)]);
+    rows.push(['Kadir (buradan)', fixed(this.host.galaxySprites.apparentMag(i), 1)]);
     rows.push(['Görünür yarıçap', fmtDeg(this.host.galaxySprites.apparent(i).angRad * RAD, 2)]);
     rows.push('sep');
-    rows.push(['Güneş\'e uzaklık', `${fmtLightYears(distSunKm)} (${(g.distancePc(i) / 1e6).toFixed(3)} Mpc)`]);
-    rows.push(['Hubble tipi', GALAXY_TYPE_LABEL[type]]);
-    rows.push(['Çap', `${((R * 2) / 1000).toFixed(1)} kpc (${fmtLightYears(R * 2 * PARSEC_KM)})`]);
-    rows.push(['Mutlak kadir', absMag.toFixed(1)]);
+    rows.push(['Güneş\'e uzaklık', `${fmtLightYears(distSunKm)} (${fixed((g.distancePc(i) / 1e6), 3)} Mpc)`]);
+    rows.push(['Hubble tipi', _(GALAXY_TYPE_LABEL[type])]);
+    rows.push(['Çap', `${fixed(((R * 2) / 1000), 1)} kpc (${fmtLightYears(R * 2 * PARSEC_KM)})`]);
+    rows.push(['Mutlak kadir', fixed(absMag, 1)]);
     rows.push(['Parlaklık', `${lum.toExponential(2)} L☉`]);
     rows.push(['Yıldız sayısı (tahmini)', `~${(lum * 3).toExponential(1).replace('e+', '×10^')}`]);
     if (i < g.catalogCount && i !== 0) rows.push(['Kaynak', 'Messier / NGC (yaklaşık parametreler)']);
     rows.push(['Işık gecikmesi', fmtDuration(camDist / 299_792.458)]);
-    this.infoBody.innerHTML = rows
-      .map((r) => (r === 'sep' ? '<div class="sep"></div>' : `<dt>${r[0]}</dt><dd>${r[1]}</dd>`))
-      .join('');
+    this.infoBody.innerHTML = rowsHtml(rows);
     this.infoDesc.textContent = g.model(i).p.description ?? '';
   }
 
@@ -560,26 +585,24 @@ export class UI {
     const l = u.landmarks[i];
     const d = l.def;
     this.infoName.textContent = d.name;
-    this.infoType.textContent = LANDMARK_KIND_LABEL[d.kind];
-    this.infoParent.textContent = l.galaxy === 0 ? 'Samanyolu · gerçek nesne' : `${u.galaxies.name(l.galaxy)} · gerçek nesne`;
+    this.infoType.textContent = _(LANDMARK_KIND_LABEL[d.kind]);
+    this.infoParent.textContent = `${u.galaxies.name(l.galaxy)} · ${_('gerçek nesne')}`;
     const rel = u.landmarkRelative(i, this.host.camera.position);
     const camDist = rel.length();
     const rows: Array<[string, string] | 'sep'> = [];
     rows.push(['Uzaklık', `${fmtLightYears(camDist)} (${fmtDistance(camDist)})`]);
     rows.push(['Görünür yarıçap', fmtDeg(this.host.landmarkSprites.angularRadius(i) * RAD, 2)]);
     const appMag = d.absMag + 5 * Math.log10(Math.max(camDist / PARSEC_KM, 1e-7)) - 5;
-    rows.push(['Kadir (buradan)', appMag.toFixed(1)]);
+    rows.push(['Kadir (buradan)', fixed(appMag, 1)]);
     rows.push('sep');
     rows.push(['Güneş\'e uzaklık', fmtLightYears(l.positionPc.length() * PARSEC_KM)]);
     rows.push(['Yarıçap (görsel)', fmtLightYears(d.radiusPc * PARSEC_KM)]);
-    rows.push(['Mutlak kadir', d.absMag.toFixed(1)]);
+    rows.push(['Mutlak kadir', fixed(d.absMag, 1)]);
     rows.push('sep');
     for (const [k, v] of Object.entries(d.facts)) rows.push([k, v]);
     rows.push(['Işık gecikmesi', fmtDuration(camDist / 299_792.458)]);
-    this.infoBody.innerHTML = rows
-      .map((r) => (r === 'sep' ? '<div class="sep"></div>' : `<dt>${r[0]}</dt><dd>${r[1]}</dd>`))
-      .join('');
-    this.infoDesc.textContent = `${d.description} (Görsel: gerçek konum ve boyutta prosedürel bir temsil; fotoğraf değildir.)`;
+    this.infoBody.innerHTML = rowsHtml(rows);
+    this.infoDesc.textContent = `${d.description} ${_('(Görsel: gerçek konum ve boyutta prosedürel bir temsil; fotoğraf değildir.)')}`;
   }
 
   private renderStarInfo(id: StarId): void {
@@ -590,27 +613,27 @@ export class UI {
     const isExtra = u.extraSystem(id) !== undefined;
     const isProc = ci < 0 && !isExtra;
     this.infoName.textContent = s.name;
-    this.infoType.textContent = isBH ? 'Kara delik sistemi' : 'Yıldız · ' + (s.isWhiteDwarf ? 'Beyaz cüce' : LUM_CLASS_DESC[s.lumClass] ?? '');
+    this.infoType.textContent = isBH ? _('Kara delik sistemi') : _('Yıldız') + ' · ' + (s.isWhiteDwarf ? _('Beyaz cüce') : _(LUM_CLASS_DESC[s.lumClass] ?? ''));
     const galName = ci < 0 ? u.galaxies.name(u.galaxyOfStar(id)) : '';
-    this.infoParent.textContent = isExtra ? `Gerçek nesne · ${galName}` : isProc ? `Prosedürel yıldız · ${galName}` : s.names?.constellation ? `${s.names.constellation} takımyıldızı` : 'Yıldız kataloğu (HYG)';
+    this.infoParent.textContent = isExtra ? `${_('Gerçek nesne')} · ${galName}` : isProc ? `${_('Prosedürel yıldız')} · ${galName}` : s.names?.constellation ? _('{name} takımyıldızı', { name: s.names.constellation }) : _('Yıldız kataloğu (HYG)');
 
     const rel = u.starRelative(id, this.host.camera.position);
     const camDist = rel.length();
     const rows: Array<[string, string] | 'sep'> = [];
     rows.push(['Uzaklık', fmtDistance(camDist)]);
     const appMag = this.host.starApparentMag(id) ?? (s.absMag + 5 * Math.log10(Math.max(camDist / PARSEC_KM, 1e-7)) - 5);
-    rows.push(['Kadir (buradan)', appMag.toFixed(2)]);
+    rows.push(['Kadir (buradan)', fixed(appMag, 2)]);
     rows.push('sep');
-    rows.push(['Güneş\'e uzaklık', isProc ? fmtLightYears(s.distancePc * PARSEC_KM) : `${(s.distancePc * PARSEC_KM / LIGHT_YEAR_KM).toFixed(2)} ly (${s.distancePc.toFixed(2)} pc)`]);
+    rows.push(['Güneş\'e uzaklık', isProc ? fmtLightYears(s.distancePc * PARSEC_KM) : `${fixed((s.distancePc * PARSEC_KM / LIGHT_YEAR_KM), 2)} ly (${fixed(s.distancePc, 2)} pc)`]);
     rows.push(['Spektral sınıf', s.catalogSpectral || s.spectral]);
-    if (!isProc) rows.push(['Kadir (Dünya\'dan)', s.mag.toFixed(2)]);
-    rows.push(['Mutlak kadir', s.absMag.toFixed(2)]);
-    rows.push(['B−V renk', s.bv.toFixed(2)]);
+    if (!isProc) rows.push(['Kadir (Dünya\'dan)', fixed(s.mag, 2)]);
+    rows.push(['Mutlak kadir', fixed(s.absMag, 2)]);
+    rows.push(['B−V renk', fixed(s.bv, 2)]);
     rows.push('sep');
-    rows.push(['Sıcaklık*', `${s.temperature.toFixed(0)} K`]);
-    rows.push(['Parlaklık*', `${s.luminosity >= 1 ? s.luminosity.toFixed(2) : s.luminosity.toPrecision(3)} L☉`]);
-    rows.push(['Yarıçap*', `${s.radiusSolar.toFixed(2)} R☉`]);
-    rows.push(['Kütle*', `${s.massSolar.toFixed(2)} M☉`]);
+    rows.push(['Sıcaklık*', `${fixed(s.temperature, 0)} K`]);
+    rows.push(['Parlaklık*', `${s.luminosity >= 1 ? fixed(s.luminosity, 2) : s.luminosity.toPrecision(3)} L☉`]);
+    rows.push(['Yarıçap*', `${fixed(s.radiusSolar, 2)} R☉`]);
+    rows.push(['Kütle*', `${fixed(s.massSolar, 2)} M☉`]);
     if (s.hip) rows.push(['Hipparcos', `HIP ${s.hip}`]);
     if (s.names?.bayer) rows.push(['Bayer / Flamsteed', s.names.bayer]);
     if (s.names?.gliese) rows.push(['Gliese', s.names.gliese]);
@@ -618,16 +641,14 @@ export class UI {
     const sys = u.system(id);
     const planets = sys.bodies.filter((b) => b.data.type === 'planet' || b.data.type === 'dwarf').length;
     const moons = sys.bodies.filter((b) => b.data.type === 'moon').length;
-    rows.push(['Gezegenler', planets ? `${planets}${moons ? ` (+${moons} uydu)` : ''}` : 'Yok']);
-    if (sys.belts.length) rows.push(['Kuşaklar', sys.belts.map((b) => b.name).join(', ')]);
+    rows.push(['Gezegenler', planets ? `${planets}${moons ? ` ${_('(+{n} uydu)', { n: moons })}` : ''}` : 'Yok']);
+    if (sys.belts.length) rows.push(['Kuşaklar', sys.belts.map((b) => _(b.name)).join(', ')]);
     rows.push(['Işık gecikmesi', fmtDuration(camDist / 299_792.458)]);
 
-    this.infoBody.innerHTML = rows
-      .map((r) => (r === 'sep' ? '<div class="sep"></div>' : `<dt>${r[0]}</dt><dd>${r[1]}</dd>`))
-      .join('');
+    this.infoBody.innerHTML = rowsHtml(rows);
     this.infoDesc.textContent = isProc
-      ? `${sys.star.data.description ?? ''} (* Bu yıldız ${galName} galaksisinin yoğunluk modelinden deterministik olarak üretilmiştir; kimliği kalıcıdır, aynı yere dönünce aynı yıldızı bulursunuz.)`
-      : `${sys.star.data.description ?? ''} (* Kadir, uzaklık ve B−V renginden türetilen tahminler.)`;
+      ? `${_(sys.star.data.description ?? '')} ${_('(* Bu yıldız {galaxy} galaksisinin yoğunluk modelinden deterministik olarak üretilmiştir; kimliği kalıcıdır, aynı yere dönünce aynı yıldızı bulursunuz.)', { galaxy: galName })}`
+      : `${_(sys.star.data.description ?? '')} ${_('(* Kadir, uzaklık ve B−V renginden türetilen tahminler.)')}`;
   }
 
   private renderInfo(b: CelestialBody, camDist: number): void {
@@ -635,8 +656,8 @@ export class UI {
     const star = u.star;
     const starTemp = u.current.starTemperature;
     this.infoName.textContent = b.name;
-    this.infoType.textContent = TYPE_LABELS[b.data.type] ?? b.data.type;
-    this.infoParent.textContent = b.parent ? `${b.parent.name} sisteminde` : 'Sistem merkezi';
+    this.infoType.textContent = typeLabel(b.data.type);
+    this.infoParent.textContent = b.parent ? _('{name} sisteminde', { name: b.parent.name }) : _('Sistem merkezi');
 
     const rows: Array<[string, string] | 'sep'> = [];
     if (b.data.type === 'spacecraft') {
@@ -655,31 +676,31 @@ export class UI {
     rows.push(['Yüzeye uzaklık', fmtDistance(Math.max(0, camDist - b.radius))]);
     rows.push('sep');
     rows.push(['Ortalama yarıçap', fmtRadius(b.radius, b.data.type !== 'star')]);
-    if (b.data.flattening) rows.push(['Basıklık', b.data.flattening.toFixed(4)]);
+    if (b.data.flattening) rows.push(['Basıklık', fixed(b.data.flattening, 4)]);
     rows.push(['Kütle', fmtMass(b.data.mass)]);
-    rows.push(['Yoğunluk', `${b.density.toFixed(2)} g/cm³`]);
-    rows.push(['Yüzey çekimi', `${b.surfaceGravity.toFixed(2)} m/s² (${(b.surfaceGravity / 9.80665).toFixed(2)} g)`]);
-    rows.push(['Kaçış hızı', `${b.escapeVelocity.toFixed(2)} km/s`]);
-    if (b.data.albedo !== undefined) rows.push(['Albedo', b.data.albedo.toFixed(2)]);
+    rows.push(['Yoğunluk', `${fixed(b.density, 2)} g/cm³`]);
+    rows.push(['Yüzey çekimi', `${fixed(b.surfaceGravity, 2)} m/s² (${fixed((b.surfaceGravity / 9.80665), 2)} g)`]);
+    rows.push(['Kaçış hızı', `${fixed(b.escapeVelocity, 2)} km/s`]);
+    if (b.data.albedo !== undefined) rows.push(['Albedo', fixed(b.data.albedo, 2)]);
     const temp = b.data.temperature ?? (b.parent ? b.equilibriumTemperature(star.radius, starTemp) : 0);
     rows.push([b.data.temperature ? 'Yüzey sıcaklığı' : 'Denge sıcaklığı', fmtTemp(temp)]);
     rows.push('sep');
     if (b.resolved && b.parent) {
       const r = b.resolved;
       rows.push(['Yörünge periyodu', b.periodDisplay()]);
-      rows.push(['Yarı-büyük eksen', isPrimaryType(b.parent.data.type) ? `${(r.a / AU_KM).toFixed(4)} AU` : fmtDistance(r.a)]);
-      rows.push(['Dış merkezlik', r.e.toFixed(4)]);
+      rows.push(['Yarı-büyük eksen', isPrimaryType(b.parent.data.type) ? `${fixed((r.a / AU_KM), 4)} AU` : fmtDistance(r.a)]);
+      rows.push(['Dış merkezlik', fixed(r.e, 4)]);
       rows.push(['Eğiklik', fmtDeg(r.i * RAD)]);
       rows.push(['Düğüm boylamı', fmtDeg(((r.node * RAD) % 360 + 360) % 360)]);
-      rows.push(['Perihelion', isPrimaryType(b.parent.data.type) ? `${((r.a * (1 - r.e)) / AU_KM).toFixed(4)} AU` : fmtDistance(r.a * (1 - r.e))]);
-      rows.push(['Aphelion', isPrimaryType(b.parent.data.type) ? `${((r.a * (1 + r.e)) / AU_KM).toFixed(4)} AU` : fmtDistance(r.a * (1 + r.e))]);
-      rows.push(['Anlık yörünge hızı', `${b.orbitalSpeed.toFixed(3)} km/s`]);
-      rows.push([`${b.parent.name}'a uzaklık`, fmtDistance(b.localPosition.length())]);
-      if (!isPrimaryType(b.parent.data.type)) rows.push([`${star.name}'e uzaklık`, `${(b.distanceToStar / AU_KM).toFixed(4)} AU`]);
+      rows.push(['Perihelion', isPrimaryType(b.parent.data.type) ? `${fixed(((r.a * (1 - r.e)) / AU_KM), 4)} AU` : fmtDistance(r.a * (1 - r.e))]);
+      rows.push(['Aphelion', isPrimaryType(b.parent.data.type) ? `${fixed(((r.a * (1 + r.e)) / AU_KM), 4)} AU` : fmtDistance(r.a * (1 + r.e))]);
+      rows.push(['Anlık yörünge hızı', `${fixed(b.orbitalSpeed, 3)} km/s`]);
+      rows.push([_("{name}'a uzaklık", { name: b.parent.name }), fmtDistance(b.localPosition.length())]);
+      if (!isPrimaryType(b.parent.data.type)) rows.push([_("{name}'a uzaklık", { name: star.name }), `${fixed((b.distanceToStar / AU_KM), 4)} AU`]);
       rows.push(['Etki küresi (SOI)', fmtDistance(b.soiRadius)]);
       rows.push('sep');
     }
-    rows.push(['Yıldız günü', b.data.rotationPeriod === 'sync' ? `${b.siderealDayDisplay} (kilitli)` : b.siderealDayDisplay]);
+    rows.push(['Yıldız günü', b.data.rotationPeriod === 'sync' ? `${b.siderealDayDisplay} ${_('(kilitli)')}` : b.siderealDayDisplay]);
     if (typeof b.data.rotationPeriod === 'number' && b.data.rotationPeriod < 0) rows.push(['Dönüş', 'Retrograd']);
     if (b.parent) {
       const tilt = Math.acos(Math.min(1, Math.max(-1, b.pole.dot(b.orbitNormal)))) * RAD;
@@ -697,39 +718,37 @@ export class UI {
       rows.push(['Işık gecikmesi', fmtDuration(lightTime)]);
     }
 
-    this.infoBody.innerHTML = rows
-      .map((r) => (r === 'sep' ? '<div class="sep"></div>' : `<dt>${r[0]}</dt><dd>${r[1]}</dd>`))
-      .join('');
-    this.infoDesc.textContent = b.data.description ?? '';
+    this.infoBody.innerHTML = rowsHtml(rows);
+    this.infoDesc.textContent = _(b.data.description ?? '');
   }
 
   private renderBlackHoleInfo(b: CelestialBody, camDist: number, rows: Array<[string, string] | 'sep'>): void {
     const rs = b.radius;
     const mSun = b.data.mass / SUN_MASS_KG;
-    this.infoParent.textContent = b.parent ? `${b.parent.name} ile çift sistem` : 'Sistem merkezi';
+    this.infoParent.textContent = b.parent ? _('{name} ile çift sistem', { name: b.parent.name }) : _('Sistem merkezi');
     rows.push(['Kameraya uzaklık', fmtDistance(camDist)]);
-    rows.push(['Olay ufkuna uzaklık', `${fmtDistance(Math.max(0, camDist - rs))} (${(camDist / rs).toFixed(1)} r_s)`]);
+    rows.push(['Olay ufkuna uzaklık', `${fmtDistance(Math.max(0, camDist - rs))} (${fixed((camDist / rs), 1)} r_s)`]);
     rows.push('sep');
     rows.push(['Kütle', fmtSolarMass(mSun)]);
     rows.push(['Schwarzschild yarıçapı', fmtDistance(rs)]);
-    rows.push(['Foton küresi', `${fmtDistance(rs * 1.5)} (1,5 r_s)`]);
+    rows.push(['Foton küresi', `${fmtDistance(rs * 1.5)} (${fmtNum(1.5)} r_s)`]);
     rows.push(['ISCO (en iç kararlı yörünge)', `${fmtDistance(rs * 3)} (3 r_s)`]);
     rows.push(['Gölge çapı', `${fmtDistance(rs * 5.196)} (√27 r_s)`]);
     const hawking = 6.17e-8 / mSun;
     rows.push(['Hawking sıcaklığı', hawking >= 1e-3 ? `${hawking.toExponential(2)} K` : `${hawking.toExponential(1)} K`]);
     const evap = 2.1e67 * mSun ** 3;
-    rows.push(['Buharlaşma süresi', `${evap.toExponential(1)} yıl`]);
+    rows.push(['Buharlaşma süresi', _('{n} yıl', { n: evap.toExponential(1) })]);
     if (b.data.appearance.kind === 'blackhole') {
       const d = b.data.appearance.disk;
-      rows.push(['Akreasyon diski', d.brightness > 0 ? `${d.inner}–${d.outer} r_s · ~${d.temperature.toLocaleString('tr-TR')} K` : 'Yok (uykuda)']);
+      rows.push(['Akreasyon diski', d.brightness > 0 ? `${d.inner}–${d.outer} r_s · ~${fmtNum(d.temperature)} K` : 'Yok (uykuda)']);
     }
     rows.push('sep');
     if (b.resolved && b.parent) {
       const r = b.resolved;
       rows.push(['Yörünge periyodu', b.periodDisplay()]);
-      rows.push(['Yarı-büyük eksen', `${(r.a / AU_KM).toFixed(3)} AU`]);
-      rows.push(['Dış merkezlik', r.e.toFixed(3)]);
-      rows.push(['Anlık yörünge hızı', `${b.orbitalSpeed.toFixed(1)} km/s`]);
+      rows.push(['Yarı-büyük eksen', `${fixed((r.a / AU_KM), 3)} AU`]);
+      rows.push(['Dış merkezlik', fixed(r.e, 3)]);
+      rows.push(['Anlık yörünge hızı', `${fixed(b.orbitalSpeed, 1)} km/s`]);
       rows.push('sep');
     } else if (b.children.length) {
       rows.push(['Yörüngedeki yıldızlar', b.children.map((c) => c.name).join(', ')]);
@@ -737,41 +756,39 @@ export class UI {
     }
     if (b.data.facts) for (const [k, v] of Object.entries(b.data.facts)) if (k !== 'Kütle') rows.push([k, v]);
     rows.push(['Işık gecikmesi', fmtDuration(camDist / 299_792.458)]);
-    this.infoBody.innerHTML = rows
-      .map((r) => (r === 'sep' ? '<div class="sep"></div>' : `<dt>${r[0]}</dt><dd>${r[1]}</dd>`))
-      .join('');
-    this.infoDesc.textContent = `${b.data.description ?? ''} Görüntü: Schwarzschild metriğinde ışık yollarının (null jeodezikler) ekran uzayında gerçek zamanlı izlenmesi; diskte Doppler ışıması ve kütleçekimsel kırmızıya kayma uygulanır.`;
+    this.infoBody.innerHTML = rowsHtml(rows);
+    this.infoDesc.textContent = `${_(b.data.description ?? '')} ${_('Görüntü: Schwarzschild metriğinde ışık yollarının (null jeodezikler) ekran uzayında gerçek zamanlı izlenmesi; diskte Doppler ışıması ve kütleçekimsel kırmızıya kayma uygulanır.')}`;
   }
 
   private renderPulsarInfo(b: CelestialBody, camDist: number, rows: Array<[string, string] | 'sep'>): void {
     const a = b.data.appearance.kind === 'pulsar' ? b.data.appearance : null;
     const P = b.rotationPeriodS; // s
     const mSun = b.data.mass / SUN_MASS_KG;
-    this.infoParent.textContent = b.parent ? `${b.parent.name} ile çift sistem` : 'Sistem merkezi';
+    this.infoParent.textContent = b.parent ? _('{name} ile çift sistem', { name: b.parent.name }) : _('Sistem merkezi');
     rows.push(['Kameraya uzaklık', fmtDistance(camDist)]);
     rows.push(['Yüzeye uzaklık', fmtDistance(Math.max(0, camDist - b.radius))]);
     rows.push('sep');
-    const periodTxt = P >= 1 ? `${P.toFixed(4)} s` : `${(P * 1e3).toFixed(3)} ms`;
-    rows.push(['Dönme periyodu', `${periodTxt} (${(1 / P).toFixed(P >= 1 ? 3 : 1)} Hz)`]);
+    const periodTxt = P >= 1 ? `${fixed(P, 4)} s` : `${fixed((P * 1e3), 3)} ms`;
+    rows.push(['Dönme periyodu', `${periodTxt} (${fixed((1 / P), P >= 1 ? 3 : 1)} Hz)`]);
     const vEq = (2 * Math.PI * b.radius) / P;
-    rows.push(['Ekvator hızı', `${vEq.toLocaleString('tr-TR', { maximumFractionDigits: 0 })} km/s (%${(vEq / 299_792.458 * 100).toFixed(1)} c)`]);
+    rows.push(['Ekvator hızı', `${fmtNum(vEq, { maximumFractionDigits: 0 })} km/s (${_('%{n} c', { n: fixed(vEq / 299_792.458 * 100, 1) })})`]);
     if (a) rows.push(['Manyetik eksen eğikliği', a.quiet ? '— (ışın yok)' : fmtDeg(a.magneticTilt, 0)]);
     rows.push('sep');
     rows.push(['Kütle', fmtSolarMass(mSun)]);
-    rows.push(['Yarıçap', `${b.radius.toFixed(0)} km`]);
+    rows.push(['Yarıçap', `${fixed(b.radius, 0)} km`]);
     rows.push(['Yoğunluk', fmtSci(b.density * 1e3, 'kg/m³')]);
     rows.push(['Yüzey çekimi', fmtSci(b.surfaceGravity / 9.80665, 'g')]);
-    rows.push(['Kaçış hızı', `${b.escapeVelocity.toLocaleString('tr-TR', { maximumFractionDigits: 0 })} km/s (%${(b.escapeVelocity / 299_792.458 * 100).toFixed(0)} c)`]);
+    rows.push(['Kaçış hızı', `${fmtNum(b.escapeVelocity, { maximumFractionDigits: 0 })} km/s (${_('%{n} c', { n: fixed(b.escapeVelocity / 299_792.458 * 100, 0) })})`]);
     const rs = (2 * 6.674e-11 * b.data.mass) / (299_792_458 ** 2) / 1e3;
-    rows.push(['Schwarzschild yarıçapı', `${rs.toFixed(2)} km (R / r_s = ${(b.radius / rs).toFixed(1)})`]);
-    if (b.data.temperature) rows.push(['Yüzey sıcaklığı', `${(b.data.temperature / 1e6).toFixed(1)} milyon K`]);
+    rows.push(['Schwarzschild yarıçapı', `${fixed(rs, 2)} km (R / r_s = ${fixed((b.radius / rs), 1)})`]);
+    if (b.data.temperature) rows.push(['Yüzey sıcaklığı', _('{n} milyon K', { n: fixed((b.data.temperature / 1e6), 1) })]);
     rows.push('sep');
     if (b.resolved && b.parent) {
       const r = b.resolved;
       rows.push(['Yörünge periyodu', b.periodDisplay()]);
       rows.push(['Yarı-büyük eksen', fmtDistance(r.a)]);
-      rows.push(['Dış merkezlik', r.e.toFixed(3)]);
-      rows.push(['Anlık yörünge hızı', `${b.orbitalSpeed.toFixed(1)} km/s`]);
+      rows.push(['Dış merkezlik', fixed(r.e, 3)]);
+      rows.push(['Anlık yörünge hızı', `${fixed(b.orbitalSpeed, 1)} km/s`]);
       rows.push('sep');
     } else if (b.children.length) {
       rows.push(['Yörüngedekiler', b.children.map((c) => c.name).join(', ')]);
@@ -779,10 +796,8 @@ export class UI {
     }
     if (b.data.facts) for (const [k, v] of Object.entries(b.data.facts)) if (k !== 'Kütle' && k !== 'Periyot') rows.push([k, v]);
     rows.push(['Işık gecikmesi', fmtDuration(camDist / 299_792.458)]);
-    this.infoBody.innerHTML = rows
-      .map((r) => (r === 'sep' ? '<div class="sep"></div>' : `<dt>${r[0]}</dt><dd>${r[1]}</dd>`))
-      .join('');
-    this.infoDesc.textContent = `${b.data.description ?? ''} Görüntü: dönme ekseninden eğik manyetik eksen boyunca iki ışın konisi; koni her dönüşte bakış doğrultusunu süpürdüğünde parlaklık atar (deniz feneri etkisi). Işın geometrisi temsilîdir.`;
+    this.infoBody.innerHTML = rowsHtml(rows);
+    this.infoDesc.textContent = `${_(b.data.description ?? '')} ${_('Görüntü: dönme ekseninden eğik manyetik eksen boyunca iki ışın konisi; koni her dönüşte bakış doğrultusunu süpürdüğünde parlaklık atar (deniz feneri etkisi). Işın geometrisi temsilîdir.')}`;
   }
 
   private renderSpacecraftInfo(b: CelestialBody, camDist: number, rows: Array<[string, string] | 'sep'>): void {
@@ -791,70 +806,66 @@ export class UI {
     const earth = u.current.byId.get('earth');
     const o = b.data.orbit;
     const mission = o?.kind === 'trajectory' ? this.host.missions.byBody(b) : undefined;
-    this.infoParent.textContent = o?.kind === 'surface' ? `${b.parent!.name} yüzeyinde`
-      : o?.kind === 'lagrange' ? `${star.name}–${b.parent!.name} ${o.point} noktası`
-      : o?.kind === 'linear' ? 'Yıldızlararası / hiperbolik yörünge'
-      : mission ? `Görev: ${mission.plan.originName} → ${mission.plan.targetName}`
-      : b.parent ? `${b.parent.name} yörüngesinde` : '';
+    this.infoParent.textContent = o?.kind === 'surface' ? _('{name} yüzeyinde', { name: b.parent!.name })
+      : o?.kind === 'lagrange' ? _('{a}–{b} {point} noktası', { a: star.name, b: b.parent!.name, point: o.point })
+      : o?.kind === 'linear' ? _('Yıldızlararası / hiperbolik yörünge')
+      : mission ? `${_('Görev')}: ${mission.plan.originName} → ${mission.plan.targetName}`
+      : b.parent ? _('{name} yörüngesinde', { name: b.parent.name }) : '';
     if (mission) {
       rows.push(['Evre', mission.phase ? phaseLabel(mission.phase, mission.plan) : '—']);
       const jd = this.host.time.jd;
       const eta = (mission.plan.arrivalJd - jd) * 86400;
-      rows.push(['Varış', eta > 0 ? `${fmtDuration(eta)} sonra` : 'varıldı']);
-      rows.push([`Hız (${star.name} referansı)`, fmtSpeed(b.orbitalSpeed)]);
+      rows.push(['Varış', eta > 0 ? _('{t} sonra', { t: fmtDuration(eta) }) : 'varıldı']);
+      rows.push([_('Hız ({name} referansı)', { name: star.name }), fmtSpeed(b.orbitalSpeed)]);
       rows.push(['Kameraya uzaklık', fmtDistance(camDist)]);
       rows.push('sep');
       rows.push(['Yol / süre', `${fmtDistance(mission.plan.distanceKm)} · ${fmtDuration(mission.plan.durationS)}`]);
-      if (Number.isFinite(mission.plan.budget)) rows.push(['Δv toplam / bütçe', `${mission.plan.dvTotal.toFixed(2)} / ${mission.plan.budget.toFixed(2)} km/s`]);
+      if (Number.isFinite(mission.plan.budget)) rows.push(['Δv toplam / bütçe', `${fixed(mission.plan.dvTotal, 2)} / ${fixed(mission.plan.budget, 2)} km/s`]);
       if (b.data.facts) {
         rows.push('sep');
         for (const [k, v] of Object.entries(b.data.facts)) rows.push([k, v]);
       }
-      this.infoBody.innerHTML = rows
-        .map((r) => (r === 'sep' ? '<div class="sep"></div>' : `<dt>${r[0]}</dt><dd>${r[1]}</dd>`))
-        .join('');
+      this.infoBody.innerHTML = rowsHtml(rows);
       const model = mission.plan.ship.model;
-      this.infoDesc.textContent = `${b.data.description ?? ''} ${model.kind === 'glb' ? `3B model: NASA 3D Resources${model.representative ? ' (temsilî)' : ''}.` : 'Model özgün, şematik bir temsildir.'} Rota patched-conic yaklaşımıyla hesaplanmıştır.`;
+      this.infoDesc.textContent = `${_(b.data.description ?? '')} ${model.kind === 'glb' ? `${_('3B model: NASA 3D Resources')}${model.representative ? ' ' + _('(temsilî)') : ''}.` : _('Model özgün, şematik bir temsildir.')} ${_('Rota patched-conic yaklaşımıyla hesaplanmıştır.')}`;
       return;
     }
 
     rows.push(['Kameraya uzaklık', fmtDistance(camDist)]);
     rows.push('sep');
     const au = (km: number) => km > AU_KM * 0.05
-      ? `${(km / AU_KM).toFixed(km > AU_KM ? 2 : 4)} AU`
-      : `${fmtDistance(km)} (${(km / AU_KM).toFixed(4)} AU)`;
-    rows.push([`${star.name}'e uzaklık`, au(b.distanceToStar)]);
+      ? `${fixed((km / AU_KM), km > AU_KM ? 2 : 4)} AU`
+      : `${fmtDistance(km)} (${fixed((km / AU_KM), 4)} AU)`;
+    rows.push([_("{name}'a uzaklık", { name: star.name }), au(b.distanceToStar)]);
     if (earth && b !== earth) {
       const dEarth = b.position.distanceTo(earth.position);
       rows.push(['Dünya\'ya uzaklık', au(dEarth)]);
       rows.push(['Işık gecikmesi (Dünya)', fmtDuration(dEarth / 299_792.458)]);
     }
     if (o?.kind === 'linear') {
-      rows.push([`${star.name}'e göre hız`, `${b.orbitalSpeed.toFixed(2)} km/s (${(b.orbitalSpeed * 3600).toFixed(0)} km/sa)`]);
+      rows.push([_('Hız ({name} referansı)', { name: star.name }), `${fixed(b.orbitalSpeed, 2)} km/s (${fixed((b.orbitalSpeed * 3600), 0)} ${_('km/sa')})`]);
       rows.push(['Yörünge', 'Bağlı değil – Güneş Sistemi\'ni terk ediyor']);
     } else if (o?.kind === 'surface') {
-      rows.push(['Konum', `${Math.abs(o.lat).toFixed(4)}° ${o.lat >= 0 ? 'K' : 'G'}, ${Math.abs(o.lon).toFixed(4)}° ${o.lon >= 0 ? 'D' : 'B'}`]);
+      rows.push(['Konum', `${fixed(Math.abs(o.lat), 4)}° ${o.lat >= 0 ? _('K') : _('G')}, ${fixed(Math.abs(o.lon), 4)}° ${o.lon >= 0 ? _('D') : _('B')}`]);
     } else if (b.parent && b.resolved) {
       const r = b.resolved;
       rows.push(['Yörünge periyodu', b.periodDisplay()]);
-      if (b.parent !== star) rows.push([`${b.parent.name}'a uzaklık`, fmtDistance(b.localPosition.length())]);
+      if (b.parent !== star) rows.push([_("{name}'a uzaklık", { name: b.parent.name }), fmtDistance(b.localPosition.length())]);
       rows.push(['Periapsis / apoapsis', `${fmtDistance(r.a * (1 - r.e))} / ${fmtDistance(r.a * (1 + r.e))}`]);
       rows.push(['Eğiklik', fmtDeg(r.i * RAD)]);
-      rows.push(['Anlık yörünge hızı', `${b.orbitalSpeed.toFixed(2)} km/s`]);
+      rows.push(['Anlık yörünge hızı', `${fixed(b.orbitalSpeed, 2)} km/s`]);
     } else if (b.parent) {
-      rows.push([`${b.parent.name}'a uzaklık`, fmtDistance(b.localPosition.length())]);
+      rows.push([_("{name}'a uzaklık", { name: b.parent.name }), fmtDistance(b.localPosition.length())]);
     }
     rows.push('sep');
-    rows.push(['Kütle', b.data.mass >= 1000 ? `${(b.data.mass / 1000).toLocaleString('tr-TR', { maximumFractionDigits: 1 })} ton` : `${b.data.mass} kg`]);
-    rows.push(['Boyut (yarıçap)', `${(b.radius * 1000).toFixed(1)} m`]);
+    rows.push(['Kütle', b.data.mass >= 1000 ? `${fmtNum(b.data.mass / 1000, { maximumFractionDigits: 1 })} ${_('ton')}` : `${b.data.mass} kg`]);
+    rows.push(['Boyut (yarıçap)', `${fixed((b.radius * 1000), 1)} m`]);
     if (b.data.facts) {
       rows.push('sep');
       for (const [k, v] of Object.entries(b.data.facts)) rows.push([k, v]);
     }
-    this.infoBody.innerHTML = rows
-      .map((r) => (r === 'sep' ? '<div class="sep"></div>' : `<dt>${r[0]}</dt><dd>${r[1]}</dd>`))
-      .join('');
+    this.infoBody.innerHTML = rowsHtml(rows);
     const rep = b.data.appearance.kind === 'spacecraft' && b.data.appearance.representative;
-    this.infoDesc.textContent = `${b.data.description ?? ''} Konum, 2025 başı JPL Horizons verilerinden yaklaşık olarak türetilmiştir; 3B model: NASA 3D Resources${rep ? ' (temsilî)' : ''}.`;
+    this.infoDesc.textContent = `${_(b.data.description ?? '')} ${_('Konum, 2025 başı JPL Horizons verilerinden yaklaşık olarak türetilmiştir;')} ${_('3B model: NASA 3D Resources')}${rep ? ' ' + _('(temsilî)') : ''}.`;
   }
 }

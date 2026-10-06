@@ -10,6 +10,7 @@ import { GalaxyIndex } from '../galaxy/galaxies';
 import { milkyWayCenterPc } from '../galaxy/frames';
 import { ProcStars } from '../galaxy/ProcStars';
 import { PARSEC_KM } from './constants';
+import { _ } from '../i18n';
 import type { CelestialBody } from './CelestialBody';
 import { StarSystem } from './StarSystem';
 
@@ -84,7 +85,7 @@ export class Universe {
     this.galaxies = new GalaxyIndex();
     this.procStars = new ProcStars(this.galaxies);
     const findGalaxy = (q: string): number | null => {
-      for (let i = 1; i < this.galaxies.catalogCount; i++) if (this.galaxies.name(i).includes(q)) return i;
+      for (let i = 1; i < this.galaxies.catalogCount; i++) if (this.galaxies.rawName(i).includes(q)) return i;
       return null;
     };
     const ctx = {
@@ -98,7 +99,9 @@ export class Universe {
         return i === null ? new Vector3() : this.galaxyPlanePoint(i, ra, dec);
       },
     };
-    for (const entry of BLACK_HOLES) {
+    for (const raw of BLACK_HOLES) {
+      // display strings are translated once here; the data files stay in the source language
+      const entry: BlackHoleEntry = { ...raw, name: _(raw.name), summary: _(raw.summary) };
       if (entry.host.kind === 'catalog') {
         const hit = catalog.search(entry.host.starRef, 1)[0];
         if (hit === undefined) continue;
@@ -106,12 +109,14 @@ export class Universe {
       } else {
         const pos = entry.host.positionPc(ctx);
         const galaxy = entry.galaxy?.(ctx) ?? 0;
-        const info = entry.info?.(pos) ?? null;
+        const rawInfo = entry.info?.(pos) ?? null;
+        const info = rawInfo ? { ...rawInfo, name: _(rawInfo.name) } : null;
         this.blackHoles.push({ entry, systemStarId: entry.id, positionPc: pos, galaxy, info });
         if (info && entry.bodies) this.extraSystems.set(entry.id, { id: entry.id, name: entry.name, positionPc: pos, galaxy, info, bodies: entry.bodies });
       }
     }
-    LANDMARKS.forEach((def, n) => {
+    LANDMARKS.forEach((raw, n) => {
+      const def: LandmarkDef = { ...raw, name: _(raw.name), summary: _(raw.summary), description: _(raw.description) };
       const gi = def.galaxy === null ? 0 : findGalaxy(def.galaxy);
       if (gi === null) return;
       const pos = def.distancePc !== undefined ? raDecToScene(def.ra, def.dec).multiplyScalar(def.distancePc) : this.galaxyPlanePoint(gi, def.ra, def.dec);

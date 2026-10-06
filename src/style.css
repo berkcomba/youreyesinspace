@@ -234,6 +234,12 @@ button.active { background: rgba(82, 215, 255, 0.18); border-color: var(--accent
 .switch input:checked + span::before { transform: translateX(16px); background: #fff; }
 input[type=range] { width: 120px; accent-color: var(--accent); }
 
+.lang-select {
+  font: inherit; font-size: 12px; color: var(--text); background: rgba(20, 32, 56, 0.7);
+  border: 1px solid var(--panel-border); border-radius: 7px; padding: 4px 8px;
+}
+.lang-select option { background: #0d1626; color: var(--text); }
+
 /* ---------- Mission planner ---------- */
 #mission { top: 68px; right: 16px; width: 360px; max-height: calc(100vh - 220px); overflow-y: auto; }
 #mission .panel-title { margin-bottom: 6px; }

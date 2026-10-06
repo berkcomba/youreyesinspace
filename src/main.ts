@@ -26,6 +26,7 @@ import { loadSettings, saveSettings, type Settings } from './ui/Settings';
 import { DEG, PARSEC_KM } from './core/constants';
 import { starLightColor } from './astro/stellar';
 import { fmtDuration, fmtLightYears } from './ui/format';
+import { _, applyDom, initI18n } from './i18n';
 import { Missions, type ActiveMission } from './core/Missions';
 import { TrajectoryLines } from './render/TrajectoryLines';
 import type { MissionPlan } from './astro/mission';
@@ -202,7 +203,7 @@ class App implements UIHost {
     const arrive = l.def.kind === 'remnant' ? R * 5 : R * 3.2;
     this.camera.goToPoint(centre, arrive, fromCam);
     const dist = new Vector3().copy(centre).sub(this.camera.position).length();
-    this.ui.showToast(`${l.def.name} hedefine uçuluyor… (${fmtLightYears(dist)})`, 2600);
+    this.ui.showToast(_('{name} hedefine uçuluyor… ({dist})', { name: l.def.name, dist: fmtLightYears(dist) }), 2600);
   }
 
   centerLandmark(i: number): void {
@@ -216,7 +217,7 @@ class App implements UIHost {
   goTo(b: CelestialBody): void {
     this.select(b);
     this.camera.goTo(b, this.universe.star.position);
-    this.ui.showToast(`${b.name} hedefine uçuluyor…`);
+    this.ui.showToast(_('{name} hedefine uçuluyor…', { name: b.name }));
   }
 
   /** Interstellar travel: switch the reference frame to the target system, then autopilot to its star. */
@@ -230,7 +231,7 @@ class App implements UIHost {
     this.camera.shiftFrame(delta, u.star);
     this.select(u.star);
     this.camera.goTo(u.star, u.star.position);
-    this.ui.showToast(`${u.star.name} sistemine uçuluyor… (${fmtLightYears(delta.length())})`, 2600);
+    this.ui.showToast(_('{name} sistemine uçuluyor… ({dist})', { name: u.star.name, dist: fmtLightYears(delta.length()) }), 2600);
   }
 
   /** Intergalactic travel: fly to a vantage point ~2.5 radii from the galaxy centre, above its disc. */
@@ -246,7 +247,7 @@ class App implements UIHost {
     const approach = fromCam.lerp(normal, 0.55).normalize();
     this.camera.goToPoint(centre, R * 2.6, approach);
     const dist = new Vector3().copy(centre).sub(this.camera.position).length();
-    this.ui.showToast(`${g.name(i)} galaksisine uçuluyor… (${fmtLightYears(dist)})`, 2600);
+    this.ui.showToast(_('{name} galaksisine uçuluyor… ({dist})', { name: g.name(i), dist: fmtLightYears(dist) }), 2600);
   }
 
   center(b: CelestialBody): void {
@@ -292,9 +293,9 @@ class App implements UIHost {
   private onLockChange(locked: boolean): void {
     this.overlay.crosshair = locked;
     if (locked) {
-      this.ui.showToast('Serbest dolaşım: fare ile bak · W A S D uç · R F yukarı/aşağı · Q E yatış · tekerlek hız · Esc çık', 4200);
+      this.ui.showToast(_('Serbest dolaşım: fare ile bak · W A S D uç · R F yukarı/aşağı · Q E yatış · tekerlek hız · Esc çık'), 4200);
     } else {
-      this.ui.showToast('Serbest dolaşım kapatıldı');
+      this.ui.showToast(_('Serbest dolaşım kapatıldı'));
     }
   }
 
@@ -302,17 +303,17 @@ class App implements UIHost {
   goToBlackHole(id: string): void {
     const u = this.universe;
     const bh = u.blackHole(id);
-    if (!bh) { this.ui.showToast('Kara delik bulunamadı'); return; }
+    if (!bh) { this.ui.showToast(_('Kara delik bulunamadı')); return; }
     if (bh.systemStarId !== u.current.starId) {
       const delta = u.switchTo(bh.systemStarId, this.time.jd, this.time.t);
       this.camera.shiftFrame(delta, u.star);
     }
     const body = u.get(bh.entry.bodyId);
-    if (!body) { this.ui.showToast('Kara delik bulunamadı'); return; }
+    if (!body) { this.ui.showToast(_('Kara delik bulunamadı')); return; }
     this.select(body);
     this.camera.goTo(body, u.star.position);
     const dist = body.position.distanceTo(this.camera.position);
-    this.ui.showToast(`${body.name} kara deliğine uçuluyor… (${fmtLightYears(dist)})`, 2600);
+    this.ui.showToast(_('{name} kara deliğine uçuluyor… ({dist})', { name: body.name, dist: fmtLightYears(dist) }), 2600);
   }
 
   /** Point the camera at a black hole (no travel). */
@@ -336,18 +337,18 @@ class App implements UIHost {
     }
     const b = u.get(id);
     if (b) this.goTo(b);
-    else this.ui.showToast('Hedef bulunamadı');
+    else this.ui.showToast(_('Hedef bulunamadı'));
   }
 
   toggleFollow(): void {
     if (!this.selected) return;
     if (this.camera.mode === 'orbit' && this.camera.target === this.selected) {
       this.camera.setMode('free');
-      this.ui.showToast('Serbest uçuş');
+      this.ui.showToast(_('Serbest uçuş'));
     } else {
       this.camera.target = this.selected;
       this.camera.setMode('orbit');
-      this.ui.showToast(`${this.selected.name} takip ediliyor`);
+      this.ui.showToast(_('{name} takip ediliyor', { name: this.selected.name }));
     }
   }
 
@@ -363,7 +364,7 @@ class App implements UIHost {
     m.autoRate = rate > 1;
     this.trajectories.add(m);
     if (follow) this.followMission(m);
-    this.ui.showToast(`${m.name} fırlatıldı · ${plan.originName} → ${plan.targetName} · ${fmtDuration(plan.durationS)}${rate > 1 ? ` · zaman ${t.rateLabel()}` : ''}`, 3200);
+    this.ui.showToast(`${_('{name} fırlatıldı', { name: m.name })} · ${plan.originName} → ${plan.targetName} · ${fmtDuration(plan.durationS)}${rate > 1 ? ` · ${_('zaman')} ${t.rateLabel()}` : ''}`, 3200);
     return m;
   }
 
@@ -394,7 +395,7 @@ class App implements UIHost {
       if (this.selected === b) this.select(null);
       if (this.camera.target === b) { this.camera.target = null; this.camera.setMode('free'); this.camera.setReference(null); }
     }
-    this.ui.showToast(`${m.name} görevi kaldırıldı`);
+    this.ui.showToast(_('{name} görevi kaldırıldı', { name: m.name }));
   }
 
   showToast(msg: string, ms?: number): void { this.ui.showToast(msg, ms); }
@@ -432,7 +433,7 @@ class App implements UIHost {
       const delta = u.switchTo(systemId, this.time.jd, this.time.t);
       this.camera.shiftFrame(delta, u.star);
       this.selectStar(null); this.selectGalaxy(null); this.selectLandmark(null);
-      this.ui.showToast(`Referans çerçevesi: ${u.star.name} sistemi`, 2600);
+      this.ui.showToast(_('Referans çerçevesi: {name} sistemi', { name: u.star.name }), 2600);
     } catch (e) {
       console.error(e);
     }
@@ -443,7 +444,7 @@ class App implements UIHost {
       this.time.setRate(1);
       m.autoRate = false;
     }
-    this.ui.showToast(`${m.name}: ${m.plan.targetName} hedefine varıldı`, 3200);
+    this.ui.showToast(`${m.name}: ${_('{name} hedefine varıldı', { name: m.plan.targetName })}`, 3200);
   }
 
   applySettings(): void {
@@ -551,9 +552,9 @@ class App implements UIHost {
       case 'KeyJ': this.time.reverseWarp(); break;
       case 'KeyK': this.time.togglePause(); break;
       case 'KeyL': this.time.forwardWarp(); break;
-      case 'Backslash': this.time.setNow(); this.ui.showToast('Gerçek zaman'); break;
-      case 'KeyO': s.orbits = !s.orbits; this.applySettings(); this.ui.showToast(`Yörüngeler: ${s.orbits ? 'açık' : 'kapalı'}`); break;
-      case 'KeyN': s.labels = !s.labels; s.markers = s.labels; this.applySettings(); this.ui.showToast(`Etiketler: ${s.labels ? 'açık' : 'kapalı'}`); break;
+      case 'Backslash': this.time.setNow(); this.ui.showToast(_('Gerçek zaman')); break;
+      case 'KeyO': s.orbits = !s.orbits; this.applySettings(); this.ui.showToast(`${_('Yörüngeler')}: ${s.orbits ? _('açık') : _('kapalı')}`); break;
+      case 'KeyN': s.labels = !s.labels; s.markers = s.labels; this.applySettings(); this.ui.showToast(`${_('Etiketler')}: ${s.labels ? _('açık') : _('kapalı')}`); break;
       case 'Semicolon': s.eclipticGrid = !s.eclipticGrid; this.applySettings(); break;
       case 'Quote': s.equatorialGrid = !s.equatorialGrid; this.applySettings(); break;
       case 'KeyB': s.bloom = !s.bloom; this.applySettings(); break;
@@ -601,7 +602,7 @@ class App implements UIHost {
     this.select(null);
     this.selectStar(null);
     this.selectGalaxy(null);
-    this.ui.showToast(`Referans çerçevesi: ${u.star.name} sistemi`);
+    this.ui.showToast(_('Referans çerçevesi: {name} sistemi', { name: u.star.name }));
   }
 
   /**
@@ -799,9 +800,9 @@ class App implements UIHost {
       a.download = `yeits-${stamp}.png`;
       a.href = url;
       a.click();
-      this.ui.showToast('Ekran görüntüsü kaydedildi');
+      this.ui.showToast(_('Ekran görüntüsü kaydedildi'));
     } catch {
-      this.ui.showToast('Ekran görüntüsü alınamadı');
+      this.ui.showToast(_('Ekran görüntüsü alınamadı'));
     }
   }
 }
@@ -809,15 +810,18 @@ class App implements UIHost {
 async function boot(): Promise<void> {
   const loaderText = document.querySelector('#loader .loader-text');
   try {
-    if (loaderText) loaderText.textContent = 'Yıldız kataloğu yükleniyor…';
+    await initI18n();
+    applyDom();
+    document.title = _('Your Eyes In Space — Gözlemlenebilir evreni tarayıcıda gez');
+    if (loaderText) loaderText.textContent = _('Yıldız kataloğu yükleniyor…');
     const catalog = await StarCatalog.load(import.meta.env.BASE_URL);
-    if (loaderText) loaderText.textContent = 'Evren hazırlanıyor…';
+    if (loaderText) loaderText.textContent = _('Evren hazırlanıyor…');
     const app = new App(catalog);
     // Expose for debugging / console experiments
     (window as unknown as { yeits: App }).yeits = app;
   } catch (err) {
     console.error(err);
-    if (loaderText) loaderText.textContent = `Yükleme hatası: ${(err as Error).message}`;
+    if (loaderText) loaderText.textContent = `${_('Yükleme hatası')}: ${(err as Error).message}`;
   }
 }
 
