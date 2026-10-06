@@ -123,6 +123,16 @@ export class CameraController {
         dir1.copy(inPlane).multiplyScalar(Math.cos(0.25)).addScaledVector(body.pole, Math.sin(0.25)).normalize();
       }
     }
+    // mission vehicles: three-quarter view from the sunlit side, slightly behind
+    if (body.data.orbit?.kind === 'trajectory') {
+      const fwd = new Vector3(0, 1, 0).applyQuaternion(body.rotation);
+      const sunDir = new Vector3().copy(sunPos).sub(body.position).normalize();
+      const side = new Vector3().crossVectors(fwd, sunDir);
+      if (side.lengthSq() < 1e-6) side.crossVectors(fwd, new Vector3(0, 1, 0));
+      side.normalize();
+      dir1 = side.multiplyScalar(0.75).addScaledVector(sunDir, 0.6).addScaledVector(fwd, -0.3).normalize();
+      dist1 = body.radius * 5.5;
+    }
     const ratio = Math.max(r0.length(), 1) / dist1;
     const duration = 2.2 + Math.min(4.5, Math.max(0, Math.log10(ratio)) * 0.9);
     this.autopilot = {

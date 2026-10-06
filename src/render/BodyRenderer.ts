@@ -12,6 +12,7 @@ import { temperatureToRgb } from '../astro/stellar';
 import { IMAGERY } from '../data/imagery';
 import { Shaders } from './shaders';
 import { TileGlobe } from './TileGlobe';
+import { buildProceduralShip, disposeGroup } from './ProceduralShips';
 
 export interface RenderSettings {
   atmospheres: boolean;
@@ -99,6 +100,8 @@ export class BodyView {
   ringsMat?: ShaderMaterial;
   corona?: Mesh;
   coronaMat?: ShaderMaterial;
+  /** procedural (primitive-built) model whose GPU resources belong to this view */
+  private ownsModel = false;
   /** pulsar: the two beam cones (child of `group`, so they spin with the star) */
   beams?: Group;
   beamMat?: ShaderMaterial;
@@ -374,7 +377,8 @@ export class BodyView {
     if (this.beams) for (const m of this.beams.children) (m as Mesh).geometry.dispose();
     if (this.ground) { this.ground.geometry.dispose(); (this.ground.material as MeshStandardMaterial).dispose(); }
     this.tiles?.dispose();
-    // model geometries/materials stay in the shared cache
+    // model geometries/materials stay in the shared cache (procedural ships own theirs)
+    if (this.ownsModel && this.model) disposeGroup(this.model);
   }
 
   /** Fetch and fit the spacecraft model: centred, bounding radius = body.radius (km). */
@@ -382,8 +386,7 @@ export class BodyView {
     const a = this.body.data.appearance;
     if (a.kind !== 'spacecraft' || this.modelRequested) return;
     this.modelRequested = true;
-    loadModel(a.model).then((src) => {
-      const model = src.clone(true);
+    const fit = (model: Group) => {
       const box = new Box3().setFromObject(model);
       const sphere = box.getBoundingSphere(new Sphere());
       const s = this.body.radius / Math.max(sphere.radius, 1e-9);
@@ -394,6 +397,15 @@ export class BodyView {
       wrapper.traverse((o) => { o.frustumCulled = false; });
       this.model = wrapper;
       this.group.add(wrapper);
+    };
+    if (a.procedural) {
+      const g = buildProceduralShip(a.procedural, a.glow);
+      this.ownsModel = true;
+      fit(g);
+      return;
+    }
+    loadModel(a.model).then((src) => {
+      fit(src.clone(true));
       if (this.body.data.orbit?.kind === 'surface') this.addGroundPatch();
     }).catch((err) => console.warn(`Model yüklenemedi: ${a.model}`, err));
   }
@@ -599,6 +611,26 @@ export class BodyRenderer {
       this.byId.set(b.id, v);
     }
     for (const v of this.views) v.computeOccluders();
+  }
+
+  /** Add a view for a body created at runtime (mission vehicles). */
+  addBody(b: CelestialBody, system: StarSystem): BodyView {
+    this.removeBody(b.id);
+    const v = new BodyView(b, this.sphereGeo, system.star.radius, this.maxAnisotropy);
+    v.addTo(this.scene);
+    v.computeOccluders();
+    this.views.push(v);
+    this.byId.set(b.id, v);
+    return v;
+  }
+
+  removeBody(id: string): void {
+    const v = this.byId.get(id);
+    if (!v) return;
+    v.dispose(this.scene);
+    this.byId.delete(id);
+    const i = this.views.indexOf(v);
+    if (i >= 0) this.views.splice(i, 1);
   }
 
   update(

@@ -137,6 +137,12 @@ export class CelestialBody {
       this.localPosition.copy(_tmp).multiplyScalar(o.distance);
       this.orbitalSpeed = p.orbitalSpeed * ((p.localPosition.length() + (o.point === 'L2' ? o.distance : -o.distance)) / Math.max(p.localPosition.length(), 1));
       this.rotation.setFromUnitVectors(_yAxis, _tmp.negate().normalize());
+    } else if (o.kind === 'trajectory') {
+      // mission vehicle: absolute position & velocity from the planner's evaluator
+      if (!o.evaluate(jd, this.position, _tmp)) { this.position.copy(p.position); _tmp.set(0, 0, 0); }
+      this.localPosition.copy(this.position).sub(p.position);
+      this.orbitalSpeed = _tmp.length();
+      if (this.orbitalSpeed > 1e-9) this.rotation.setFromUnitVectors(_yAxis, _tmp.normalize());
     }
     this.position.copy(p.position).add(this.localPosition);
     this.orbitNormal.copy(p.orbitNormal);

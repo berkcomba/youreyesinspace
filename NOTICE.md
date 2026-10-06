@@ -21,8 +21,10 @@ catalogue objects.
 ## 3D models
 
 `public/models/*.glb` (Voyager, Pioneer, Parker Solar Probe, Hubble, ISS, JWST, Perseverance,
-Juno) come from [NASA 3D Resources](https://nasa3d.arc.nasa.gov/) and are Draco-compressed
-copies. NASA material is generally not copyrighted, but the
+Juno, Dawn, Galileo) come from [NASA 3D Resources](https://science.nasa.gov/3d-resources/) and
+are Draco-compressed copies. The mission planner's fictional ships (Star Trek, Star Wars,
+The Expanse) use original, schematic primitive-built models (`src/render/ProceduralShips.ts`);
+no third-party model or artwork is bundled. NASA material is generally not copyrighted, but the
 [NASA media usage guidelines](https://www.nasa.gov/nasa-brand-center/images-and-media/) apply:
 the NASA insignia and name must not be used in a way that implies endorsement.
 
@@ -45,3 +47,9 @@ Loaded at runtime directly from NASA servers; see `src/data/imagery.ts`.
 
 "Your Eyes In Space", the eye-and-orbit logo and "BigBrains" are trademarks of BigBrains
 (https://bigbrains.com.tr). Forks must use their own name and logo.
+
+"Star Trek", "USS Enterprise", "Star Wars", "Millennium Falcon", "X-wing" and "The Expanse" /
+"Rocinante" are trademarks of their respective owners (Paramount, Lucasfilm/Disney, Alcon/Amazon).
+They are referenced nominatively in the mission planner as well-known fictional vehicles for
+educational comparison with real spacecraft; this project is not affiliated with or endorsed by
+those owners.

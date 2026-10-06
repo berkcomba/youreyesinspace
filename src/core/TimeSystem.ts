@@ -62,6 +62,16 @@ export class TimeSystem {
     this.paused = !this.paused;
   }
 
+  /** Set an arbitrary forward rate (s/s); snaps the step index to the nearest preset for +/- */
+  setRate(rate: number): void {
+    this.rate = Math.max(1e-3, rate);
+    this.direction = 1;
+    this.paused = false;
+    let best = 0;
+    for (let i = 0; i < RATE_STEPS.length; i++) if (Math.abs(Math.log(RATE_STEPS[i] / this.rate)) < Math.abs(Math.log(RATE_STEPS[best] / this.rate))) best = i;
+    this.rateIndex = best;
+  }
+
   faster(): void {
     if (this.paused) {
       this.paused = false;
@@ -123,11 +133,12 @@ export class TimeSystem {
     if (this.paused) return 'Duraklatıldı';
     const r = this.rate;
     const sign = this.direction < 0 ? '−' : '';
-    if (r < 60) return `${sign}${r}× (${r} s/s)`;
-    if (r < 3600) return `${sign}${r / 60} dk/s`;
-    if (r < DAY_S) return `${sign}${r / 3600} sa/s`;
-    if (r < DAY_S * 365.25) return `${sign}${(r / DAY_S).toFixed(0)} gün/s`;
-    return `${sign}${(r / (DAY_S * 365.25)).toFixed(0)} yıl/s`;
+    const f = (x: number) => (Number.isInteger(x) ? `${x}` : x.toPrecision(3));
+    if (r < 60) return `${sign}${f(r)}× (${f(r)} s/s)`;
+    if (r < 3600) return `${sign}${f(r / 60)} dk/s`;
+    if (r < DAY_S) return `${sign}${f(r / 3600)} sa/s`;
+    if (r < DAY_S * 365.25) return `${sign}${f(r / DAY_S)} gün/s`;
+    return `${sign}${f(r / (DAY_S * 365.25))} yıl/s`;
   }
 
   static dateToJD(d: Date): number {

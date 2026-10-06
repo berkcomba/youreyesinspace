@@ -55,7 +55,21 @@ export interface LagrangeFix {
   distance: number;
 }
 
-export type OrbitElements = JplElements | SimpleElements | LinearState | SurfaceFix | LagrangeFix;
+/**
+ * Mission trajectory (planner-launched vehicles): the position is produced by an external
+ * evaluator (piecewise conics, warp legs, parking orbits). `evaluate` writes the absolute position
+ * (km, current system frame) and velocity (km/s) and returns false when the vehicle cannot be
+ * represented in the current frame (it is in another star system).
+ */
+export interface TrajectoryOrbit {
+  kind: 'trajectory';
+  evaluate: (jd: number, outPos: Vector3Like, outVel: Vector3Like) => boolean;
+}
+
+/** minimal mutable vector (three.js Vector3 satisfies it) */
+export interface Vector3Like { x: number; y: number; z: number; set(x: number, y: number, z: number): unknown }
+
+export type OrbitElements = JplElements | SimpleElements | LinearState | SurfaceFix | LagrangeFix | TrajectoryOrbit;
 
 export interface PoleRaDec { ra: number; dec: number }
 
@@ -106,6 +120,10 @@ export type Appearance =
       seed: number;
       /** model is a stand-in for a different vehicle (no free model available) */
       representative?: boolean;
+      /** built from primitives instead of a model file (fictional ships); `model` is ignored */
+      procedural?: 'saucer' | 'freighter' | 'xwing' | 'corvette' | 'capsule' | 'rocket';
+      /** engine glow tint for procedural ships (linear RGB) */
+      glow?: [number, number, number];
     }
   | {
       /**

@@ -92,15 +92,16 @@ canvas#overlay { pointer-events: none; }
 }
 .brand-name { font-weight: 600; letter-spacing: 0.22em; font-size: 12px; white-space: nowrap; line-height: 1; }
 .brand-sub { color: var(--muted); font-size: 11px; letter-spacing: 0.08em; }
-#btn-places .short { display: none; }
+#btn-places .short, #btn-mission .short { display: none; }
 @media (max-width: 900px) {
   .brand-sub { display: none; }
 }
 @media (max-width: 640px) {
   .brand-name { display: none; }
   #btn-roam { display: none; }
-  #btn-places .long { display: none; }
-  #btn-places .short { display: inline; }
+  #btn-places .long, #btn-mission .long { display: none; }
+  #btn-places .short, #btn-mission .short { display: inline; }
+  #btn-mission { padding: 0 8px; }
 }
 .topbar-right { display: flex; gap: 8px; align-items: center; }
 .text-btn { height: 32px; padding: 0 12px; font-size: 12.5px; white-space: nowrap; }
@@ -233,6 +234,55 @@ button.active { background: rgba(82, 215, 255, 0.18); border-color: var(--accent
 .switch input:checked + span::before { transform: translateX(16px); background: #fff; }
 input[type=range] { width: 120px; accent-color: var(--accent); }
 
+/* ---------- Mission planner ---------- */
+#mission { top: 68px; right: 16px; width: 360px; max-height: calc(100vh - 220px); overflow-y: auto; }
+#mission .panel-title { margin-bottom: 6px; }
+.m-form { display: flex; flex-direction: column; gap: 4px; }
+.m-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12.5px; min-height: 28px; }
+.m-row > span:first-child { color: var(--muted); flex: none; }
+.m-row[hidden] { display: none; }
+.m-row.m-sub { justify-content: flex-end; min-height: 0; margin-top: -2px; }
+.m-row select {
+  flex: 1; min-width: 0; max-width: 230px; font: inherit; font-size: 12px; color: var(--text);
+  background: rgba(20, 32, 56, 0.7); border: 1px solid var(--panel-border); border-radius: 7px; padding: 5px 8px;
+}
+.m-row select:focus { outline: none; border-color: rgba(82, 215, 255, 0.5); }
+.m-row select option, .m-row select optgroup { background: #0d1626; color: var(--text); }
+.m-row select option:disabled { color: #4b5c75; }
+.m-val { font-family: var(--mono); font-size: 11.5px; }
+.m-info { font-size: 11px; line-height: 1.4; margin: -2px 0 2px; }
+.muted { color: var(--muted); }
+.small-btn { padding: 3px 9px; font-size: 11px; }
+.m-actions { display: flex; gap: 6px; margin-top: 8px; }
+.m-actions button { flex: 1; min-height: 32px; }
+button.primary { background: rgba(82, 215, 255, 0.22); border-color: rgba(82, 215, 255, 0.6); color: #fff; }
+button.primary:hover { background: rgba(82, 215, 255, 0.34); }
+button:disabled { opacity: 0.45; cursor: default; }
+button:disabled:hover { background: rgba(20, 32, 56, 0.7); border-color: var(--panel-border); }
+.m-result { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--panel-border); }
+.m-result[hidden] { display: none; }
+.m-route { font-size: 13.5px; margin-bottom: 8px; }
+.m-route .muted { font-size: 12px; }
+.m-result dd.ok { color: #7ff0a8; }
+.m-result dd.bad { color: #ff8c8c; }
+.m-verdict { margin-top: 10px; font-size: 12px; padding: 6px 9px; border-radius: 7px; }
+.m-verdict.ok { background: rgba(80, 220, 140, 0.12); color: #9cf5c0; }
+.m-verdict.bad { background: rgba(255, 110, 110, 0.12); color: #ffb0b0; }
+.m-error { font-size: 12.5px; color: #ffb0b0; background: rgba(255, 110, 110, 0.12); padding: 8px 10px; border-radius: 7px; }
+.m-notes { margin: 8px 0 0; padding-left: 16px; font-size: 11.5px; color: var(--muted); line-height: 1.45; }
+.m-foot { margin-top: 8px; font-size: 10.5px; }
+.m-active { margin-top: 12px; }
+.m-active:empty { display: none; }
+.m-active .panel-title.small { margin: 0 0 6px; padding-top: 10px; border-top: 1px solid var(--panel-border); }
+.m-mission { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 8px; margin-bottom: 4px; background: rgba(20, 32, 56, 0.45); }
+.m-mission.followed { outline: 1px solid rgba(82, 215, 255, 0.45); }
+.m-mission-info { min-width: 0; flex: 1; }
+.m-mission-name { font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.m-mission-name .muted { font-size: 11px; }
+.m-mission-phase { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.m-mission-btns { display: flex; gap: 4px; flex: none; }
+.m-mission-btns button { padding: 4px 8px; font-size: 11px; }
+
 /* ---------- Bottom bar ---------- */
 #bottombar {
   position: absolute; bottom: 0; left: 0; right: 0;
@@ -330,12 +380,15 @@ kbd {
     max-height: min(60dvh, 520px);
   }
 
-  /* info & settings become bottom sheets above the time bar */
-  #info, #settings {
+  /* info, settings & mission become bottom sheets above the time bar */
+  #info, #settings, #mission {
     top: auto; left: 8px; right: 8px; width: auto;
     bottom: calc(96px + env(safe-area-inset-bottom));
     max-height: 42dvh; padding: 12px 14px;
   }
+  #mission { max-height: 60dvh; }
+  .m-row select { max-width: 60vw; font-size: 13px; min-height: 34px; }
+  .m-actions button, .m-mission-btns button { min-height: 38px; }
   #info h2 { font-size: 18px; }
   #info-expand { display: inline-grid; }
   #info.collapsed #info-expand { transform: rotate(180deg); }
@@ -367,5 +420,5 @@ kbd {
   .help-grid { grid-template-columns: 1fr; gap: 8px; font-size: 12px; }
 }
 @media (max-width: 700px) and (orientation: landscape) {
-  #info, #settings { max-height: calc(100dvh - 150px); bottom: calc(80px + env(safe-area-inset-bottom)); left: 8px; right: 8px; }
+  #info, #settings, #mission { max-height: calc(100dvh - 150px); bottom: calc(80px + env(safe-area-inset-bottom)); left: 8px; right: 8px; }
 }

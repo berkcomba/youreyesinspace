@@ -28,6 +28,13 @@ of the observable universe. Turkish UI.*
   PSR B1257+12 (Draugr, Poltergeist, Phobetor ile), en hızlı pulsar J1748-2446ad (716 Hz),
   Hulse–Taylor çift nötron yıldızı, Geminga, J0437-4715 ve SGR 1806-20 magnetarı; gerçek periyotlarıyla
   dönen, manyetik eksen boyunca ışın konileri süpüren ve bakış doğrultusunu kestiğinde parlayan nötron yıldızları.
+- **Görev planlayıcı** — Güneş Sistemi'nde kalkış/hedef seç, seçili simülasyon zamanına göre rota:
+  Lambert çözücü ile kalkış penceresi taraması, Hohmann (Dünya→Ay), tek sapan (gravity assist) ile
+  güçlendirilmiş geçiş, eliptik yakalama; Δv bütçesi gerçek araçlarla (Voyager, New Horizons, Parker,
+  Juno, Galileo, Cassini, Dawn, Orion, Starship) karşılaştırılır. Bilim kurgu gemileri (Enterprise-D /
+  NCC-1701 warp, Millennium Falcon / X-wing hiperuzay, Rocinante sürekli ivme) yıldızlara, pulsarlara,
+  kara deliklere ve galaksilere gidebilir. Fırlatınca araç sahneye eklenir, rota çizgisi çizilir,
+  kamera canlı takip eder; yıldızlararası varışta referans çerçevesi hedef sisteme geçer.
 - **Kamera** — serbest uçuş, yörünge, takip, otopilot, fare kilitli serbest dolaşım; floating origin
   + logaritmik derinlik (1 m'den 10¹³ km'ye).
 - **UI** — arama, bilgi paneli, zaman kontrolü, "Görmeye değecek yerler" menüsü, ayarlar, `F1` yardım.

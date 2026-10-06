@@ -69,7 +69,7 @@ export class Input {
 
   static isTyping(): boolean {
     const a = document.activeElement;
-    return !!a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || (a as HTMLElement).isContentEditable);
+    return !!a && (a.tagName === 'INPUT' || a.tagName === 'TEXTAREA' || a.tagName === 'SELECT' || (a as HTMLElement).isContentEditable);
   }
 
   private get tapSlop(): number {

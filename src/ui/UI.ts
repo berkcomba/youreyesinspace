@@ -1,4 +1,6 @@
 import type { CelestialBody } from '../core/CelestialBody';
+import { MissionPanel, type MissionPanelHost } from './MissionPanel';
+import { phaseLabel } from '../astro/mission';
 import type { TimeSystem } from '../core/TimeSystem';
 import type { Universe } from '../core/Universe';
 import type { CameraController } from '../camera/CameraController';
@@ -21,7 +23,7 @@ function isPrimaryType(t: string): boolean {
   return t === 'star' || t === 'pulsar' || t === 'blackhole';
 }
 
-export interface UIHost {
+export interface UIHost extends MissionPanelHost {
   universe: Universe;
   time: TimeSystem;
   camera: CameraController;
@@ -123,6 +125,7 @@ export class UI {
   private readonly roamBtn = $<HTMLButtonElement>('btn-roam');
   private readonly placesBtn = $<HTMLButtonElement>('btn-places');
   private readonly placesMenu = $('places-menu');
+  readonly missionPanel: MissionPanel;
   private lastInfoUpdate = 0;
   private toastTimer = 0;
   private searchIndex = -1;
@@ -141,6 +144,8 @@ export class UI {
     $('help-close').addEventListener('click', () => this.toggleHelp(false));
     this.help.addEventListener('click', (e) => { if (e.target === this.help) this.toggleHelp(false); });
     $('btn-settings').addEventListener('click', () => this.toggleSettings());
+    this.missionPanel = new MissionPanel(host);
+    $('btn-mission').addEventListener('click', () => this.toggleMission());
     // phones: the info sheet starts folded (name + actions) so the view stays visible
     if (window.matchMedia('(max-width: 700px)').matches) this.info.classList.add('collapsed');
     $('info-expand').addEventListener('click', () => this.info.classList.toggle('collapsed'));
@@ -427,8 +432,15 @@ export class UI {
     if (text !== null) this.creditEl.textContent = text;
   }
 
+  toggleMission(force?: boolean): void {
+    const show = force ?? this.missionPanel.panel.hidden === true;
+    if (show) this.toggleSettings(false);
+    this.missionPanel.toggle(show);
+  }
+
   toggleSettings(force?: boolean): void {
     const show = force ?? this.settingsPanel.hidden === true;
+    if (show) this.missionPanel.toggle(false);
     this.settingsPanel.hidden = !show;
     $('btn-settings').classList.toggle('active', show);
   }
@@ -467,6 +479,7 @@ export class UI {
     $('nav-speed').textContent = camera.mode === 'free' ? `${fmtSpeed(camera.speed)}  (×${camera.speedMultiplier.toPrecision(2)})` : '—';
     $('nav-alt').textContent = camera.nearest ? `${fmtDistance(camera.altitude)} · ${camera.nearest.name}` : '—';
     $('nav-fps').textContent = this.fps.toFixed(0);
+    this.missionPanel.update(now);
 
     this.followBtn.classList.toggle('active', camera.mode === 'orbit' && camera.target === selected);
     this.followBtn.disabled = !selected;
@@ -777,10 +790,33 @@ export class UI {
     const star = u.star;
     const earth = u.current.byId.get('earth');
     const o = b.data.orbit;
+    const mission = o?.kind === 'trajectory' ? this.host.missions.byBody(b) : undefined;
     this.infoParent.textContent = o?.kind === 'surface' ? `${b.parent!.name} yüzeyinde`
       : o?.kind === 'lagrange' ? `${star.name}–${b.parent!.name} ${o.point} noktası`
       : o?.kind === 'linear' ? 'Yıldızlararası / hiperbolik yörünge'
+      : mission ? `Görev: ${mission.plan.originName} → ${mission.plan.targetName}`
       : b.parent ? `${b.parent.name} yörüngesinde` : '';
+    if (mission) {
+      rows.push(['Evre', mission.phase ? phaseLabel(mission.phase, mission.plan) : '—']);
+      const jd = this.host.time.jd;
+      const eta = (mission.plan.arrivalJd - jd) * 86400;
+      rows.push(['Varış', eta > 0 ? `${fmtDuration(eta)} sonra` : 'varıldı']);
+      rows.push([`Hız (${star.name} referansı)`, fmtSpeed(b.orbitalSpeed)]);
+      rows.push(['Kameraya uzaklık', fmtDistance(camDist)]);
+      rows.push('sep');
+      rows.push(['Yol / süre', `${fmtDistance(mission.plan.distanceKm)} · ${fmtDuration(mission.plan.durationS)}`]);
+      if (Number.isFinite(mission.plan.budget)) rows.push(['Δv toplam / bütçe', `${mission.plan.dvTotal.toFixed(2)} / ${mission.plan.budget.toFixed(2)} km/s`]);
+      if (b.data.facts) {
+        rows.push('sep');
+        for (const [k, v] of Object.entries(b.data.facts)) rows.push([k, v]);
+      }
+      this.infoBody.innerHTML = rows
+        .map((r) => (r === 'sep' ? '<div class="sep"></div>' : `<dt>${r[0]}</dt><dd>${r[1]}</dd>`))
+        .join('');
+      const model = mission.plan.ship.model;
+      this.infoDesc.textContent = `${b.data.description ?? ''} ${model.kind === 'glb' ? `3B model: NASA 3D Resources${model.representative ? ' (temsilî)' : ''}.` : 'Model özgün, şematik bir temsildir.'} Rota patched-conic yaklaşımıyla hesaplanmıştır.`;
+      return;
+    }
 
     rows.push(['Kameraya uzaklık', fmtDistance(camDist)]);
     rows.push('sep');

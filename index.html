@@ -47,6 +47,7 @@
             <button id="btn-places" class="text-btn" title="Seçili hedefe otomatik uçuş" aria-haspopup="listbox" aria-expanded="false"><span class="long">Görmeye değecek yerler</span><span class="short">Yerler</span> ▾</button>
             <div id="places-menu" class="dropdown-menu" role="listbox" hidden></div>
           </div>
+          <button id="btn-mission" class="text-btn" title="Görev planlayıcı: gerçek ya da hayali bir araçla rota hesapla, fırlat, canlı izle (U)"><span class="long">Görev</span><span class="short">🚀</span></button>
           <button id="btn-roam" class="text-btn" title="Serbest dolaşım: fare ile bak, WASD ile uç (V)">Serbest dolaşım</button>
           <button id="btn-help" class="icon-btn" title="Yardım (F1)">?</button>
           <button id="btn-settings" class="icon-btn" title="Ayarlar">⚙</button>
@@ -79,6 +80,47 @@
       <aside id="settings" class="panel" hidden>
         <div class="panel-title">Ayarlar</div>
         <div id="settings-body"></div>
+      </aside>
+
+      <!-- Right: mission planner -->
+      <aside id="mission" class="panel" hidden>
+        <div class="panel-title">Görev Planlayıcı <button id="mission-close" class="icon-btn small" title="Kapat">✕</button></div>
+        <div class="m-form">
+          <label class="m-row"><span>Kalkış</span><select id="m-origin"></select></label>
+          <label class="m-row"><span>Hedef</span><select id="m-target"></select></label>
+          <div class="m-row m-sub"><button id="m-use-selected" class="small-btn" title="Sahnede seçili nesneyi hedef yap">Seçili nesneyi hedef yap</button></div>
+          <label class="m-row"><span>Araç</span><select id="m-ship"></select></label>
+          <div id="m-ship-info" class="m-info muted"></div>
+          <div class="m-row"><span>Kalkış zamanı</span><span id="m-depart" class="m-val" title="Simülasyon saati – alt bardan değiştirin">—</span></div>
+          <label class="m-row" id="m-window-row"><span>Kalkış penceresi</span>
+            <select id="m-window">
+              <option value="0">Hemen (sabit)</option>
+              <option value="180">6 ay içinde en iyi</option>
+              <option value="365">1 yıl içinde en iyi</option>
+              <option value="800">26 ay içinde en iyi</option>
+              <option value="1500">4 yıl içinde en iyi</option>
+            </select>
+          </label>
+          <label class="m-row" id="m-flyby-row"><span>Sapan (slingshot)</span><select id="m-flyby"></select></label>
+          <label class="m-row" id="m-speed-row"><span>Sürüş</span><select id="m-speed"></select></label>
+          <label class="m-row" id="m-arrival-row"><span>Varış</span>
+            <select id="m-arrival"><option value="orbit">Yörüngeye gir</option><option value="flyby">Yakın geçiş</option></select>
+          </label>
+          <label class="m-row" id="m-opt-row"><span>Öncelik</span>
+            <select id="m-opt"><option value="dv">En az Δv</option><option value="time">En hızlı (bütçe içinde)</option></select>
+          </label>
+          <label class="m-row"><span>İzleme hızı</span>
+            <select id="m-fit" title="Fırlatınca simülasyon zamanı yolculuk bu kadar sürecek şekilde hızlandırılır">
+              <option value="0">Gerçek zaman (1×)</option>
+              <option value="60" selected>Yolculuk ≈ 1 dakika</option>
+              <option value="180">Yolculuk ≈ 3 dakika</option>
+              <option value="600">Yolculuk ≈ 10 dakika</option>
+            </select>
+          </label>
+          <div class="m-actions"><button id="m-compute">Hesapla</button><button id="m-launch" class="primary" disabled>Fırlat ve izle</button></div>
+        </div>
+        <div id="m-result" class="m-result" hidden></div>
+        <div id="m-active" class="m-active"></div>
       </aside>
 
       <!-- Bottom: time & nav -->
@@ -117,6 +159,7 @@
             <div><kbd>Dokun</kbd> Seç &nbsp; <kbd>Çift dokun</kbd> Seç ve git</div>
             <div><kbd>Git</kbd> Seçili hedefe otopilot &nbsp; <kbd>Takip</kbd> Yörünge modu</div>
             <div><kbd>Ara</kbd> ve <kbd>Yerler</kbd> menüsüyle tek dokunuşla uçuş</div>
+            <div><kbd>Görev</kbd> Rota hesapla, fırlat, aracı canlı izle</div>
           </div>
           <div class="help-grid help-desktop">
             <div><kbd>Sol tık + sürükle</kbd> Bak / yörünge</div>
@@ -132,6 +175,7 @@
             <div><kbd>Yıldıza tık</kbd> Seç &nbsp; <kbd>G</kbd> Yıldızlar arası uçuş &nbsp; <kbd>Home</kbd> Güneş Sistemi</div>
             <div><kbd>Galaksiye tık</kbd> Seç &nbsp; <kbd>G</kbd> Galaksiler arası uçuş &nbsp; <kbd>M</kbd> Samanyolu'na dışarıdan bak</div>
             <div><kbd>Ara</kbd> Sirius, HIP 71683, Andromeda, M87, Sagittarius A*, Tarantula… (109 000 gerçek yıldız, 55 gerçek galaksi, 14 kara delik, 9 pulsar, 26 bulutsu/küme/rekor yıldız + prosedürel evren)</div>
+            <div><kbd>U</kbd> Görev planlayıcı: kalkış–hedef–araç seç, Lambert/Hohmann transferi ve isteğe bağlı sapan (gravity assist) hesaplanır, Δv bütçesiyle karşılaştırılır; <kbd>Fırlat</kbd> ile aracı canlı izle. Star Trek / Star Wars / The Expanse gemileri warp, hiperuzay ve sürekli ivmeyle yıldızlararası hedeflere gider</div>
             <div><kbd>Tab</kbd> Arayüzü gizle &nbsp; <kbd>P</kbd> Ekran görüntüsü &nbsp; <kbd>Esc</kbd> Seçimi bırak</div>
             <div><kbd>Görmeye değecek yerler</kbd> Uzay araçları (Voyager, JWST, ISS…), kara delikler (Sgr A*, Cygnus X-1…), pulsarlar (Yengeç, Vela, Hulse–Taylor…), bulutsular ve kümeler (Orion, Tarantula, Ülker…), gezegenler, yıldızlar ve galaksilere tek tıkla uçuş</div>
           </div>
@@ -141,7 +185,7 @@
               Yıldız kataloğu: <a href="https://github.com/astronexus/HYG-Database" target="_blank" rel="noopener noreferrer">HYG Database v3</a> (David Nash, Astronexus) —
               <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>; Hipparcos, Yale BSC ve Gliese kataloglarından derlenmiştir.
               Gezegen yörünge elemanları: NASA/JPL (Standish, Keplerian Elements). Uzay aracı konumları: JPL Horizons (yaklaşık, 2025 başı).
-              Uzay aracı 3B modelleri: <a href="https://nasa3d.arc.nasa.gov/" target="_blank" rel="noopener noreferrer">NASA 3D Resources</a> (kamu malı).
+              Uzay aracı 3B modelleri: <a href="https://science.nasa.gov/3d-resources/" target="_blank" rel="noopener noreferrer">NASA 3D Resources</a> (kamu malı). Görev planlayıcı: patched-conic yaklaşımı (Lambert, Hohmann, tek sapan); bilim kurgu gemileri ilgili eserlerin hayranlık amaçlı, isimle anılan temsilleridir; modeller özgün ve şematiktir.
               Yüzey görüntüleri: Dünya — <a href="https://www.earthdata.nasa.gov/engage/open-data-services-software/earthdata-developer-portal/gibs-api" target="_blank" rel="noopener noreferrer">NASA GIBS</a> (Blue Marble Next Generation, VIIRS Black Marble);
               Ay — <a href="https://trek.nasa.gov/moon/" target="_blank" rel="noopener noreferrer">NASA Moon Trek</a> (LRO WAC mozaiği); Mars — <a href="https://trek.nasa.gov/mars/" target="_blank" rel="noopener noreferrer">NASA Mars Trek</a> (Viking MDIM 2.1). Tümü NASA kamu malıdır ve doğrudan NASA sunucularından akıtılır.
               Galaksi kataloğu: NED / literatür değerleri. Kara delikler: literatür değerleri (GRAVITY, EHT, Gaia DR3 vb.); görüntüleme Schwarzschild metriğinde gerçek zamanlı ışın izlemedir. Bulutsu/küme/kalıntı yer imleri gerçek konum ve boyutta prosedürel temsillerdir (fotoğraf değildir). Pulsarlar: ATNF Pulsar Kataloğu değerleri; ışın geometrisi temsilîdir. Prosedürel yıldızlar, galaksiler ve kozmik ağ deterministik olarak üretilir; gerçek kataloglarla karıştırılmamalıdır.

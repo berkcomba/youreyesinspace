@@ -25,7 +25,10 @@ import { UI, type UIHost } from './ui/UI';
 import { loadSettings, saveSettings, type Settings } from './ui/Settings';
 import { DEG, PARSEC_KM } from './core/constants';
 import { starLightColor } from './astro/stellar';
-import { fmtLightYears } from './ui/format';
+import { fmtDuration, fmtLightYears } from './ui/format';
+import { Missions, type ActiveMission } from './core/Missions';
+import { TrajectoryLines } from './render/TrajectoryLines';
+import type { MissionPlan } from './astro/mission';
 
 const IDENTITY = new Matrix3();
 
@@ -55,6 +58,11 @@ class App implements UIHost {
   /** selected deep-sky landmark (index into universe.landmarks) when nothing else is selected */
   selectedLandmark: number | null = null;
   readonly landmarkSprites: LandmarkSprites;
+  readonly missions: Missions;
+  readonly trajectories: TrajectoryLines;
+  /** camera offset from the followed vehicle, kept across frame switches */
+  private readonly followOffset = new Vector3();
+  private followOffsetValid = false;
   uiVisible = true;
   private wantScreenshot = false;
   private last = performance.now();
@@ -99,6 +107,13 @@ class App implements UIHost {
     this.overlay = new Overlay(overlayCanvas);
     this.input = new Input(sceneCanvas);
     this.camera = new CameraController(this.universe);
+    this.trajectories = new TrajectoryLines(scene);
+    this.missions = new Missions(this.universe, {
+      spawned: (m, b) => this.onMissionSpawned(m, b),
+      despawned: (m, b) => this.onMissionDespawned(m, b),
+      frameSwitch: (m, systemId) => this.onMissionFrameSwitch(m, systemId),
+      arrived: (m) => this.onMissionArrived(m),
+    });
     this.ui = new UI(this);
 
     this.loadSystemRenderables(this.universe.current);
@@ -336,6 +351,101 @@ class App implements UIHost {
     }
   }
 
+  /* ---------------- Missions ---------------- */
+  launchMission(plan: MissionPlan, follow: boolean, fitSeconds: number): ActiveMission {
+    const t = this.time;
+    const rate = fitSeconds > 0 ? Math.max(1, plan.durationS / fitSeconds) : 1;
+    // start a few real seconds before departure so the launch is visible
+    const preRoll = (3 * rate) / 86400;
+    if (t.jd < plan.departureJd - preRoll || t.jd > plan.departureJd) t.jd = plan.departureJd - preRoll;
+    if (rate > 1) t.setRate(rate); else t.setRate(1);
+    const m = this.missions.launch(plan, t.jd, t.t);
+    m.autoRate = rate > 1;
+    this.trajectories.add(m);
+    if (follow) this.followMission(m);
+    this.ui.showToast(`${m.name} fırlatıldı · ${plan.originName} → ${plan.targetName} · ${fmtDuration(plan.durationS)}${rate > 1 ? ` · zaman ${t.rateLabel()}` : ''}`, 3200);
+    return m;
+  }
+
+  followMission(m: ActiveMission): void {
+    this.missions.followed = m;
+    this.followOffsetValid = false;
+    if (!m.body) {
+      // vehicle lives in another system right now: go there
+      const ph = m.phase;
+      if (ph && 'system' in ph && ph.system !== this.universe.current.starId) {
+        const delta = this.universe.switchTo(ph.system, this.time.jd, this.time.t);
+        this.camera.shiftFrame(delta, this.universe.star);
+      }
+      this.missions.update(this.time.jd, this.time.t);
+    }
+    if (m.body) {
+      this.select(m.body);
+      this.camera.goTo(m.body, this.universe.star.position);
+    }
+  }
+
+  cancelMission(m: ActiveMission): void {
+    const b = m.body;
+    if (this.missions.followed === m && m.autoRate) this.time.setRate(1);
+    this.missions.cancel(m);
+    this.trajectories.remove(m);
+    if (b) {
+      if (this.selected === b) this.select(null);
+      if (this.camera.target === b) { this.camera.target = null; this.camera.setMode('free'); this.camera.setReference(null); }
+    }
+    this.ui.showToast(`${m.name} görevi kaldırıldı`);
+  }
+
+  showToast(msg: string, ms?: number): void { this.ui.showToast(msg, ms); }
+
+  private onMissionSpawned(m: ActiveMission, b: CelestialBody): void {
+    this.bodies.addBody(b, this.universe.current);
+    this.points.setViews(this.bodies.views);
+    if (this.missions.followed === m) {
+      if (this.followOffsetValid) {
+        this.camera.placeAt(b, this.followOffset);
+        this.followOffsetValid = false;
+      }
+      if (this.selected === null || this.selected.id === b.id) this.select(b);
+    }
+  }
+
+  private onMissionDespawned(m: ActiveMission, b: CelestialBody): void {
+    this.bodies.removeBody(b.id);
+    this.points.setViews(this.bodies.views);
+    if (this.camera.target === b) {
+      this.followOffset.copy(this.camera.position).sub(b.position);
+      const d = this.followOffset.length();
+      // keep a sensible viewing distance for the respawned vehicle
+      if (!(d > b.radius * 1.2 && d < b.radius * 400)) this.followOffset.normalize().multiplyScalar(b.radius * 5);
+      this.followOffsetValid = this.missions.followed === m;
+      if (!this.followOffsetValid) { this.camera.target = null; this.camera.setMode('free'); this.camera.setReference(null); }
+    }
+    if (this.selected === b) this.selected = null;
+  }
+
+  private onMissionFrameSwitch(_m: ActiveMission, systemId: StarId): void {
+    const u = this.universe;
+    if (systemId === u.current.starId) return;
+    try {
+      const delta = u.switchTo(systemId, this.time.jd, this.time.t);
+      this.camera.shiftFrame(delta, u.star);
+      this.selectStar(null); this.selectGalaxy(null); this.selectLandmark(null);
+      this.ui.showToast(`Referans çerçevesi: ${u.star.name} sistemi`, 2600);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  private onMissionArrived(m: ActiveMission): void {
+    if (m.autoRate && this.missions.followed === m) {
+      this.time.setRate(1);
+      m.autoRate = false;
+    }
+    this.ui.showToast(`${m.name}: ${m.plan.targetName} hedefine varıldı`, 3200);
+  }
+
   applySettings(): void {
     const s = this.settings;
     saveSettings(s);
@@ -428,6 +538,7 @@ class App implements UIHost {
         else this.goToStar('c0');
         break;
       }
+      case 'KeyU': this.ui.toggleMission(); break;
       case 'KeyM':
         // Milky Way overview
         this.goToGalaxy(0);
@@ -556,6 +667,7 @@ class App implements UIHost {
 
     // Simulation
     this.time.advance(dt);
+    this.missions.update(this.time.jd, this.time.t);
     this.universe.update(this.time.jd, this.time.t);
 
     // Camera
@@ -603,6 +715,7 @@ class App implements UIHost {
       sp.update(this.camPc, pxPerRad, eng.pixelRatio, this.galaxyBoost, -1);
     });
     this.orbits.update(camPos, s.orbits, s.moonOrbits, pxPerRad, (id) => this.bodies.byId.get(id)?.apparentRadiusPx ?? 0, this.selected?.id ?? null);
+    this.trajectories.update(camPos, this.time.jd, this.missions.lookup, s.orbits, eng.width * eng.pixelRatio, eng.height * eng.pixelRatio);
     this.belts.update(this.time.t, sunRel, eng.pixelRatio, s.belts);
 
     // Render

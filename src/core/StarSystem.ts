@@ -55,6 +55,43 @@ export class StarSystem {
     return this.byId.get(id);
   }
 
+  /** Add a body at runtime (mission vehicles). The parent must already exist. */
+  addBody(data: BodyData): CelestialBody {
+    if (this.byId.has(data.id)) this.removeBody(data.id);
+    const b = new CelestialBody(data);
+    if (data.parent) {
+      const p = this.byId.get(data.parent);
+      if (!p) throw new Error(`Unknown parent ${data.parent} for ${data.id}`);
+      b.parent = p;
+      p.children.push(b);
+      b.depth = p.depth + 1;
+    } else {
+      this.roots.push(b);
+    }
+    this.byId.set(b.id, b);
+    this.bodies.push(b);
+    b.updateOrbitBasis();
+    return b;
+  }
+
+  /** Remove a runtime body (and its children) */
+  removeBody(id: string): CelestialBody | undefined {
+    const b = this.byId.get(id);
+    if (!b) return undefined;
+    for (const c of [...b.children]) this.removeBody(c.id);
+    this.byId.delete(id);
+    const i = this.bodies.indexOf(b);
+    if (i >= 0) this.bodies.splice(i, 1);
+    if (b.parent) {
+      const j = b.parent.children.indexOf(b);
+      if (j >= 0) b.parent.children.splice(j, 1);
+    } else {
+      const j = this.roots.indexOf(b);
+      if (j >= 0) this.roots.splice(j, 1);
+    }
+    return b;
+  }
+
   /** The primary star */
   get star(): CelestialBody {
     return this.roots[0];
