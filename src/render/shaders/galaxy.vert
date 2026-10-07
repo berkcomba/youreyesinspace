@@ -10,6 +10,7 @@ attribute vec3 gmajor;      // in-plane major axis (scene)
 attribute float axisRatio;  // thickness (discs) or b/a (ellipticals)
 attribute float seed;
 attribute float gindex;
+attribute vec3 spiral;      // (arm count, tan pitch, minor-arm weight) — same numbers as GalaxyModel
 uniform vec3 uCamPc;
 uniform float uPixelRatio;
 uniform float uSkyRadius;
@@ -20,6 +21,8 @@ uniform float uMaxPx;
 uniform float uHideIndex;
 uniform float uTierFade;    // whole-layer LOD fade (local index ↔ far-universe tiers)
 uniform float uBoostMag;    // magnitude offset of the boosted visibility scale (aggregated tiers)
+uniform float uCatalogCount; // galaxies with index ≥ this are procedural
+uniform vec4 uTint;         // rgb + strength: "procedural content" highlight
 varying vec3 vColor;
 varying float vAlpha;       // peak alpha
 varying vec4 vInvSig;       // inverse 2x2 covariance (screen ellipse), columns
@@ -30,8 +33,11 @@ varying float vType;
 varying float vSeed;
 varying float vPx;          // apparent galaxy radius (px)
 varying vec2 vMajor;        // projected major axis (screen, unit)
+varying vec3 vSpiral;
+varying float vProc;        // highlight strength (procedural galaxies only)
 
 void main() {
+  vSpiral = spiral;
   vec3 rel = position - uCamPc;
   float d = max(length(rel), 1e-3);
   vec3 dir = rel / d;
@@ -95,5 +101,6 @@ void main() {
   // cosmological redshift: light from Gpc distances arrives reddened (z ≈ 0.25 at 1 Gpc … ≫1 at the horizon)
   float redshift = smoothstep(8.0e8, 1.3e10, d);
   vColor = mix(vColor, vec3(1.0, 0.42, 0.22), redshift * 0.85);
+  vProc = gindex >= uCatalogCount - 0.5 ? uTint.a : 0.0;
   #include <logdepthbuf_vertex>
 }

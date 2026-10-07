@@ -9,13 +9,38 @@ varying float vType;
 varying float vSeed;
 varying float vPx;
 varying vec2 vMajor;
+varying vec3 vSpiral;
+varying float vProc;
+uniform vec4 uTint;
 
 float hash1(float n) { return fract(sin(n * 12.9898 + 78.233) * 43758.5453); }
 
+// Angular distance (rad, weighted) to the nearest arm ridge — mirrors GalaxyModel.armDistance so
+// the sprite fades into a point cloud with the very same arms. rho in galaxy radii.
+float armDistance(float rho, float theta, bool barred) {
+  float n = max(vSpiral.x, 1.0);
+  float tanP = max(vSpiral.y, 0.05);
+  float r0 = barred ? 0.3 : 0.072;          // bar length / 0.8 × bulge radius
+  float base = log(max(rho, r0) / r0) / tanP;
+  float phase0 = barred ? 0.0 : 0.3;
+  float best = 3.14159265;
+  for (int k = 0; k < 6; k++) {
+    if (float(k) >= n) break;
+    float d = theta - (base + 6.2831853 * float(k) / n + phase0);
+    d = atan(sin(d), cos(d));
+    float w = (barred && n > 2.5 && mod(float(k), 2.0) > 0.5) ? vSpiral.z : 1.0;
+    best = min(best, abs(d) / w);
+  }
+  return best;
+}
+
 void main() {
   #include <logdepthbuf_fragment>
-  // p: offset in units of the galaxy radius (|p| = 1 ↔ visible edge)
+  // p: offset in units of the galaxy radius (|p| = 1 ↔ visible edge). gl_PointCoord has its
+  // origin top-left (y down) while the projected axes in vInvSig/vDiscInv are view-space (y up),
+  // so flip y — otherwise the sprite is a mirror image of the point cloud it hands over to.
   vec2 p = (gl_PointCoord * 2.0 - 1.0) * vScale;
+  p.y = -p.y;
   float rr = length(p);
   if (length(gl_PointCoord * 2.0 - 1.0) > 1.0) discard;
 
@@ -49,16 +74,14 @@ void main() {
     float rho = length(uv);
     // atan(0,0) is undefined (NaN on some GPUs) – nudge the centre pixel
     float theta = rho > 1e-6 ? atan(uv.y, uv.x) : 0.0;
-    float arms = vType > 2.5 ? 2.0 : 2.0 + floor(hash1(vSeed) * 2.0);
-    float pitch = 0.2 + 0.18 * hash1(vSeed + 3.0);
-    float phase = theta - log(max(rho, 0.02)) / pitch + vSeed * 0.1;
-    float arm = clamp(0.5 + 0.5 * cos(arms * phase), 0.0, 1.0);
-    arm = pow(arm, 2.5);
+    bool barred = vType > 2.5;
+    float da = armDistance(rho, theta, barred);
+    float arm = exp(-da * da / (2.0 * 0.34 * 0.34));   // GalaxyModel: armW = 0.34
     float armStrength = (vType > 1.5 ? 0.85 : 0.2) * vEdge * smoothstep(0.08, 0.25, rho) * smoothstep(3.0, 14.0, vPx);
-    disc *= mix(1.0, 0.35 + 1.5 * arm, armStrength);
-    // bar
-    if (vType > 2.5) {
-      float bar = exp(-pow(uv.y / 0.06, 2.0)) * smoothstep(0.4, 0.15, rho) * vEdge;
+    disc *= mix(1.0, 0.41 + 1.19 * arm, armStrength);  // (0.55 + 1.6·arm) / 1.35
+    // bar along the local x axis, width 0.25 × bar length (GalaxyModel)
+    if (barred) {
+      float bar = exp(-pow(uv.y / 0.075, 2.0)) * smoothstep(0.4, 0.15, rho) * vEdge;
       disc += bar * 0.6;
     }
     // bulge (spherical)
@@ -79,6 +102,7 @@ void main() {
   // soft outer edge of the sprite so a clamped sprite doesn't show a hard border
   float edge = 1.0 - smoothstep(0.85, 1.0, length(gl_PointCoord * 2.0 - 1.0));
   float a = b * vAlpha * edge;
+  col = mix(col, uTint.rgb, vProc);
   gl_FragColor = vec4(col * a, 1.0);
   #include <tonemapping_fragment>
   #include <colorspace_fragment>

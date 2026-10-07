@@ -169,7 +169,11 @@ export class CelestialBody {
       positionFromE(r, this.E, _math);
       mathToScene(_math, this.orbitBasis, this.localPosition);
       this.position.copy(this.parent.position).add(this.localPosition);
-      this.orbitalSpeed = visViva(parentGM, this.localPosition.length(), r.a);
+      // around a barycentre the effective GM of body i is G·m_j³/(m_i+m_j)² (m_j = the partner)
+      const mu = this.parent.data.type === 'barycenter'
+        ? (parentGM * ((this.parent.data.mass - this.data.mass) / this.parent.data.mass) ** 3)
+        : parentGM;
+      this.orbitalSpeed = visViva(mu, this.localPosition.length(), r.a);
 
       // orbit normal (math frame): (sin i sin Ω, −sin i cos Ω, cos i)
       const si = Math.sin(r.i), ci = Math.cos(r.i);

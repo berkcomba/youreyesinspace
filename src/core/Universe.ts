@@ -2,7 +2,9 @@ import { Vector3 } from 'three';
 import type { StarCatalog, StarInfo } from '../data/StarCatalog';
 import { PLANET_HOTKEYS, SOLAR_BELTS, SOLAR_SYSTEM } from '../data/solarSystem';
 import { generateSystem } from '../gen/SystemGenerator';
-import { BLACK_HOLES, type BlackHoleEntry } from '../data/blackholes';
+import { BLACK_HOLES, type BlackHoleEntry, type HostStarOverride } from '../data/blackholes';
+import { SUN_MASS_KG, SUN_RADIUS_KM } from '../astro/stellar';
+import { toBarycentric } from '../astro/binary';
 import { LANDMARKS, isSystemLandmark, landmarkStarBodies, landmarkStarInfo, type LandmarkDef } from '../data/landmarks';
 import { raDecToScene } from '../math/frames';
 import type { BodyData } from '../data/types';
@@ -45,6 +47,20 @@ export interface ExtraSystem {
   bodies: () => BodyData[];
 }
 
+/** A body of a system other than the current one, found by name */
+export interface ForeignBodyHit {
+  starId: StarId;
+  systemName: string;
+  body: BodyData;
+  /** translated display name */
+  name: string;
+}
+
+/** lower-case, dotless-ı and accent folded (Turkish & western names) */
+export function normalizeQuery(s: string): string {
+  return s.toLowerCase().replace(/ı/g, 'i').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+}
+
 /** A deep-sky landmark resolved against the galaxy catalogue */
 export interface Landmark {
   def: LandmarkDef;
@@ -78,6 +94,9 @@ export class Universe {
   /** nebulae, clusters, remnants and record stars (Milky Way + nearby galaxies) */
   readonly landmarks: Landmark[] = [];
   private readonly extraSystems = new Map<StarId, ExtraSystem>();
+  /** measured parameters replacing the photometric estimates of some catalogue stars (X-ray binary hosts) */
+  private readonly hostOverrides = new Map<StarId, HostStarOverride>();
+  private readonly infoCache = new Map<StarId, StarInfo>();
   private readonly cache = new Map<StarId, StarSystem>();
   private readonly listeners: Array<(sys: StarSystem, prev: StarSystem) => void> = [];
 
@@ -106,6 +125,7 @@ export class Universe {
         const hit = catalog.search(entry.host.starRef, 1)[0];
         if (hit === undefined) continue;
         this.blackHoles.push({ entry, systemStarId: `c${hit}`, positionPc: catalog.position(hit), galaxy: 0, info: null });
+        if (entry.host.star) this.hostOverrides.set(`c${hit}`, entry.host.star);
       } else {
         const pos = entry.host.positionPc(ctx);
         const galaxy = entry.galaxy?.(ctx) ?? 0;
@@ -172,6 +192,28 @@ export class Universe {
     return out.sub(this.current.origin).sub(localKm);
   }
 
+  /**
+   * Bodies of *other* systems whose name matches: the Solar System when we are elsewhere, and
+   * the hand-made systems (companion stars, pulsar planets …). Pure data — nothing is instantiated.
+   */
+  searchForeignBodies(query: string, limit = 6): ForeignBodyHit[] {
+    const q = normalizeQuery(query);
+    if (!q) return [];
+    const out: ForeignBodyHit[] = [];
+    const consider = (starId: StarId, systemName: string, bodies: BodyData[]) => {
+      for (const d of bodies) {
+        if (out.length >= limit) return;
+        // black holes and pulsars have their own search sections
+        if (d.type === 'barycenter' || d.type === 'blackhole' || d.type === 'pulsar') continue;
+        const name = _(d.name);
+        if (normalizeQuery(name).includes(q) || normalizeQuery(d.name).includes(q) || d.id === q) out.push({ starId, systemName, body: d, name });
+      }
+    };
+    if (this.current.starId !== 'c0') consider('c0', _('Güneş Sistemi'), SOLAR_SYSTEM);
+    for (const [id, ex] of this.extraSystems) if (id !== this.current.starId) consider(id, ex.name, ex.bodies());
+    return out;
+  }
+
   /** Black hole by universal id (`b0`, `cygx1`, …) */
   blackHole(id: string): BlackHole | undefined {
     return this.blackHoles.find((b) => b.entry.id === id);
@@ -188,7 +230,31 @@ export class Universe {
     const ex = this.extraSystems.get(id);
     if (ex) return ex.info;
     const ci = catalogIndexOf(id);
-    return ci >= 0 ? this.catalog.info(ci) : this.procStars.info(id);
+    const ov = this.hostOverrides.get(id);
+    if (!ov) return ci >= 0 ? this.catalog.info(ci) : this.procStars.info(id);
+    let info = this.infoCache.get(id);
+    if (!info) {
+      const base = ci >= 0 ? this.catalog.info(ci) : this.procStars.info(id);
+      const massSolar = ov.massSolar ?? base.massSolar;
+      const radiusSolar = ov.radiusSolar ?? base.radiusSolar;
+      const luminosity = ov.luminosity ?? base.luminosity;
+      info = {
+        ...base,
+        massSolar, massKg: massSolar * SUN_MASS_KG,
+        radiusSolar, radiusKm: radiusSolar * SUN_RADIUS_KM,
+        temperature: ov.temperature ?? base.temperature,
+        luminosity,
+        spectral: ov.spectral ?? base.spectral,
+        catalogSpectral: ov.spectral ?? base.catalogSpectral,
+      };
+      this.infoCache.set(id, info);
+    }
+    return info;
+  }
+
+  /** `true` when the star's displayed parameters are measured values rather than photometric estimates */
+  hasMeasuredInfo(id: StarId): boolean {
+    return this.hostOverrides.has(id);
   }
 
   starName(id: StarId): string {
@@ -222,14 +288,16 @@ export class Universe {
     const ex = this.extraSystems.get(id);
     if (ex) {
       const origin = ex.positionPc.clone().multiplyScalar(PARSEC_KM);
-      sys = new StarSystem(`x-${id}`, id, -1, origin, ex.bodies(), [], []);
+      const bodies = toBarycentric(ex.bodies(), `${id}-bary`, _('{name} kütle merkezi', { name: ex.name }));
+      sys = new StarSystem(`x-${id}`, id, -1, origin, bodies, [], []);
     } else if (ci === 0) {
       sys = new StarSystem('sol', 'c0', 0, new Vector3(), SOLAR_SYSTEM, SOLAR_BELTS, PLANET_HOTKEYS);
     } else {
       const info = this.starInfo(id);
       const gen = generateSystem(info);
       const origin = info.position.clone().multiplyScalar(PARSEC_KM);
-      // black holes orbiting catalogue stars (X-ray binaries)
+      // black holes orbiting catalogue stars (X-ray binaries): both components circle their barycentre
+      let bodies = gen.bodies;
       for (const b of this.blackHoles) {
         if (b.systemStarId !== id || !b.entry.companionBody) continue;
         const host = b.entry.host;
@@ -239,8 +307,9 @@ export class Universe {
           for (const body of gen.bodies) body.name = body.name.replace(old, host.hostName);
         }
         gen.bodies.push(b.entry.companionBody(gen.bodies[0].id, info.massKg));
+        bodies = toBarycentric(gen.bodies, `${b.entry.id}-bary`, _('{name} kütle merkezi', { name: b.entry.name }));
       }
-      sys = new StarSystem(gen.id, id, ci, origin, gen.bodies, gen.belts, gen.planetIds);
+      sys = new StarSystem(gen.id, id, ci, origin, bodies, gen.belts, gen.planetIds);
     }
     // keep a handful of recently visited systems alive
     if (this.cache.size > 6) {

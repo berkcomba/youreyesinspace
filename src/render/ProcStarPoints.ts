@@ -1,11 +1,17 @@
 import {
-  AdditiveBlending, BufferAttribute, BufferGeometry, DynamicDrawUsage, Points, Scene, ShaderMaterial, Vector3,
+  AdditiveBlending, BufferAttribute, BufferGeometry, DynamicDrawUsage, Points, Scene, ShaderMaterial, Vector3, Vector4,
   type PerspectiveCamera,
 } from 'three';
 import { SKY_RADIUS_KM } from '../core/constants';
 import { ProcStars, type ProcTier } from '../galaxy/ProcStars';
 import type { NamedStarScreen } from './StarPoints';
 import { Shaders } from './shaders';
+
+/**
+ * Tint used by the "highlight procedural content" setting: a green no real star or galaxy ever
+ * has, so generated objects are unmistakable next to catalogue ones.
+ */
+export const PROCEDURAL_TINT: [number, number, number] = [0.35, 1.0, 0.55];
 
 /** Label candidates: brightest generated stars from the camera's position */
 const LABEL_MAG_LIMIT = 3.8;
@@ -55,6 +61,7 @@ export class ProcStarPoints {
           uHideIndex: { value: -1 },
           uMagLimit: { value: 8.5 },
           uSoftness: { value: 0.0 },
+          uTint: { value: new Vector4(...PROCEDURAL_TINT, 0) },
         },
         transparent: true,
         blending: AdditiveBlending,
@@ -69,6 +76,9 @@ export class ProcStarPoints {
   }
 
   setVisible(v: boolean): void { for (const t of this.views) t.points.visible = v; }
+
+  /** Tint every generated star green (debug / "what is real?" view) */
+  setHighlight(on: boolean): void { for (const t of this.views) t.mat.uniforms.uTint.value.w = on ? 0.85 : 0; }
 
   /** @param hideId id of the current system's star (rendered as a mesh) */
   update(camPc: Vector3, pixelRatio: number, hideId: string | null, dt = 0): void {

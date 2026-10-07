@@ -128,7 +128,13 @@ export interface BlackHoleEntry {
   /** body id inside its system */
   bodyId: string;
   /** host: a HYG catalogue star (search ref), or a stand-alone system around `position` */
-  host: { kind: 'catalog'; starRef: string; hostName?: string } | { kind: 'system'; positionPc: (ctx: PositionContext) => Vector3 };
+  host:
+    | {
+        kind: 'catalog'; starRef: string; hostName?: string;
+        /** measured parameters of the host star, replacing the photometric catalogue estimates */
+        star?: HostStarOverride;
+      }
+    | { kind: 'system'; positionPc: (ctx: PositionContext) => Vector3 };
   /** bodies of a stand-alone system (root first) */
   bodies?: () => BodyData[];
   /** StarInfo of the primary for stand-alone systems */
@@ -138,6 +144,15 @@ export interface BlackHoleEntry {
   /** body appended to a catalogue star's generated system */
   companionBody?: (starBodyId: string, starMassKg: number) => BodyData;
   summary: string;
+}
+
+/** Dynamically / spectroscopically measured values for a catalogue star (all optional) */
+export interface HostStarOverride {
+  massSolar?: number;
+  radiusSolar?: number;
+  temperature?: number;
+  luminosity?: number;
+  spectral?: string;
 }
 
 export interface PositionContext {
@@ -265,7 +280,11 @@ export const BLACK_HOLES: BlackHoleEntry[] = [
   },
   {
     id: 'cygx1', name: 'Cygnus X-1', massSolar: 21.2, bodyId: 'cygx1',
-    host: { kind: 'catalog', starRef: 'HIP 98298', hostName: 'HDE 226868' },
+    host: {
+      kind: 'catalog', starRef: 'HIP 98298', hostName: 'HDE 226868',
+      // Miller-Jones et al. 2021 (VLBA parallax): the supergiant is far heavier than its B−V colour suggests
+      star: { massSolar: 40.6, radiusSolar: 22.3, temperature: 31_000, luminosity: 4.0e5, spectral: 'O9.7 Iab' },
+    },
     summary: 'Keşfedilen ilk kara delik — HDE 226868 ile X-ışını çifti',
     companionBody: (starId, starMassKg) => blackHoleBody({
       id: 'cygx1', name: 'Cygnus X-1', massSolar: 21.2, parent: starId,

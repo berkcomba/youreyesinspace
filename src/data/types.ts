@@ -126,6 +126,11 @@ export type Appearance =
       glow?: [number, number, number];
     }
   | {
+      /** Nothing drawn: an invisible marker body (centre of mass of a binary) */
+      kind: 'none';
+      seed: number;
+    }
+  | {
       /**
        * Black hole: `radius` of the body is the Schwarzschild radius. Rendered entirely by the
        * gravitational-lensing post-process (geodesic ray tracing + accretion disk); the disk

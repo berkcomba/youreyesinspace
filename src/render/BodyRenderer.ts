@@ -141,8 +141,9 @@ export class BodyView {
       this.group.frustumCulled = false;
       return;
     }
-    if (a.kind === 'blackhole') {
-      // drawn by the screen-space lensing pass (BlackHolePass); nothing in the scene graph
+    if (a.kind === 'blackhole' || a.kind === 'none') {
+      // black holes are drawn by the screen-space lensing pass (BlackHolePass); barycentres are
+      // invisible markers — nothing in the scene graph either way
       this.group.visible = false;
       return;
     }

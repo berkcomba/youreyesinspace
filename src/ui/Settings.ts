@@ -16,6 +16,8 @@ export interface Settings {
   imagery: boolean;
   belts: boolean;
   milkyWay: boolean;
+  /** tint procedurally generated stars / galaxies green so they can be told from catalogue objects */
+  highlightProcedural: boolean;
   bloom: boolean;
   /** render resolution relative to the (capped) device pixel ratio */
   renderScale: number;
@@ -42,6 +44,7 @@ export const DEFAULT_SETTINGS: Settings = {
   imagery: true,
   belts: true,
   milkyWay: true,
+  highlightProcedural: false,
   bloom: true,
   renderScale: 1,
   fov: 50,

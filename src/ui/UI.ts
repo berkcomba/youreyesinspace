@@ -1,6 +1,7 @@
 import type { CelestialBody } from '../core/CelestialBody';
 import { MissionPanel, type MissionPanelHost } from './MissionPanel';
 import { phaseLabel } from '../astro/mission';
+import { binaryPartner } from '../astro/binary';
 import { _, fixed, fmtNum, LOCALES, currentLocale, setLocale, type Locale } from '../i18n';
 import type { TimeSystem } from '../core/TimeSystem';
 import type { Universe } from '../core/Universe';
@@ -21,7 +22,7 @@ import { PLACES } from './places';
 
 /** body types that act as the light source / primary of a system */
 function isPrimaryType(t: string): boolean {
-  return t === 'star' || t === 'pulsar' || t === 'blackhole';
+  return t === 'star' || t === 'pulsar' || t === 'blackhole' || t === 'barycenter';
 }
 
 export interface UIHost extends MissionPanelHost {
@@ -56,6 +57,8 @@ export interface UIHost extends MissionPanelHost {
   toggleFollow(): void;
   /** fly to a Solar-System body by id (switching back to the Solar System frame if needed) */
   goToBodyId(id: string): void;
+  /** fly to a body of any system (switching the reference frame to that system first) */
+  goToSystemBody(starId: StarId, bodyId: string): void;
   /** fly to a black hole by universal id (`b0`, `cygx1`, …), switching frames if needed */
   goToBlackHole(id: string): void;
   centerBlackHole(id: string): void;
@@ -95,6 +98,7 @@ const SETTING_DEFS: SettingDef[] = [
   { key: 'belts', label: 'Asteroit / Kuiper kuşağı', kind: 'bool' },
   { key: 'milkyWay', label: 'Galaksi yıldız bulutları', kind: 'bool' },
   { key: 'galaxies', label: 'Uzak galaksiler', kind: 'bool' },
+  { key: 'highlightProcedural', label: 'Prosedürel nesneleri yeşile boya', kind: 'bool' },
   { key: 'atmospheres', label: 'Atmosferler', kind: 'bool', group: 'Render' },
   { key: 'clouds', label: 'Bulutlar', kind: 'bool' },
   { key: 'rings', label: 'Halkalar', kind: 'bool' },
@@ -276,6 +280,14 @@ export class UI {
         li.addEventListener('click', () => { this.pick(b); });
         list.appendChild(li);
       }
+      // Bodies of other systems (the Solar System from elsewhere, companion stars, pulsar planets …)
+      const foreign = u.searchForeignBodies(q, 6);
+      for (const f of foreign) {
+        const li = document.createElement('li');
+        li.innerHTML = `<span>${f.name}</span><span class="t">${typeLabel(f.body.type)} · ${f.systemName}</span>`;
+        li.addEventListener('click', () => { this.host.goToSystemBody(f.starId, f.body.id); this.closeSearch(); });
+        list.appendChild(li);
+      }
       // Catalogue stars (other systems)
       const stars = u.catalog.search(q, 8).filter((i) => i !== u.current.catalogIndex);
       for (const i of stars) {
@@ -314,7 +326,7 @@ export class UI {
         li.addEventListener('click', () => { this.host.selectGalaxy(i); this.host.goToGalaxy(i); this.closeSearch(); });
         list.appendChild(li);
       }
-      list.hidden = hits.length + stars.length + bhs.length + lms.length + gals.length === 0;
+      list.hidden = hits.length + foreign.length + stars.length + bhs.length + lms.length + gals.length === 0;
     };
     input.addEventListener('input', render);
     input.addEventListener('focus', render);
@@ -649,7 +661,9 @@ export class UI {
     this.infoBody.innerHTML = rowsHtml(rows);
     this.infoDesc.textContent = isProc
       ? `${_(sys.star.data.description ?? '')} ${_('(* Bu yıldız {galaxy} galaksisinin yoğunluk modelinden deterministik olarak üretilmiştir; kimliği kalıcıdır, aynı yere dönünce aynı yıldızı bulursunuz.)', { galaxy: galName })}`
-      : `${_(sys.star.data.description ?? '')} ${_('(* Kadir, uzaklık ve B−V renginden türetilen tahminler.)')}`;
+      : u.hasMeasuredInfo(id)
+        ? `${_(sys.star.data.description ?? '')} ${_('(* Tayf ve yörünge ölçümlerinden gelen değerler; katalog tahminlerinin yerini alır.)')}`
+        : `${_(sys.star.data.description ?? '')} ${_('(* Kadir, uzaklık ve B−V renginden türetilen tahminler.)')}`;
   }
 
   private renderInfo(b: CelestialBody, camDist: number): void {
@@ -658,11 +672,18 @@ export class UI {
     const starTemp = u.current.starTemperature;
     this.infoName.textContent = b.name;
     this.infoType.textContent = typeLabel(b.data.type);
-    this.infoParent.textContent = b.parent ? _('{name} sisteminde', { name: b.parent.name }) : _('Sistem merkezi');
+    const partner = binaryPartner(b);
+    this.infoParent.textContent = partner
+      ? _('{name} ile çift sistem', { name: partner.name })
+      : b.parent ? _('{name} sisteminde', { name: b.parent.name }) : _('Sistem merkezi');
 
     const rows: Array<[string, string] | 'sep'> = [];
     if (b.data.type === 'spacecraft') {
       this.renderSpacecraftInfo(b, camDist, rows);
+      return;
+    }
+    if (b.data.type === 'barycenter') {
+      this.renderBarycenterInfo(b, camDist, rows);
       return;
     }
     if (b.data.type === 'blackhole') {
@@ -723,10 +744,35 @@ export class UI {
     this.infoDesc.textContent = _(b.data.description ?? '');
   }
 
+  private renderBarycenterInfo(b: CelestialBody, camDist: number, rows: Array<[string, string] | 'sep'>): void {
+    this.infoParent.textContent = _('Sistem merkezi');
+    rows.push(['Kameraya uzaklık', fmtDistance(camDist)]);
+    rows.push('sep');
+    rows.push(['Toplam kütle', fmtSolarMass(b.data.mass / SUN_MASS_KG)]);
+    const comps = b.children.filter((c) => c.resolved);
+    for (const c of comps) {
+      const frac = c.data.mass / b.data.mass;
+      rows.push([c.name, `${fmtSolarMass(c.data.mass / SUN_MASS_KG)} · ${_('%{n}', { n: fixed(frac * 100, 1) })}`]);
+    }
+    const first = comps[0];
+    if (first?.resolved) {
+      rows.push('sep');
+      rows.push(['Yörünge periyodu', first.periodDisplay()]);
+      const aTotal = comps.reduce((s, c) => s + (c.resolved?.a ?? 0), 0);
+      rows.push(['Bileşenler arası uzaklık', aTotal > AU_KM * 0.05 ? `${fixed(aTotal / AU_KM, 3)} AU` : fmtDistance(aTotal)]);
+      for (const c of comps) rows.push([_("{name}'ın yörünge yarıçapı", { name: c.name }), c.resolved!.a > AU_KM * 0.05 ? `${fixed(c.resolved!.a / AU_KM, 3)} AU` : fmtDistance(c.resolved!.a)]);
+      rows.push(['Dış merkezlik', fixed(first.resolved.e, 3)]);
+    }
+    rows.push(['Işık gecikmesi', fmtDuration(camDist / 299_792.458)]);
+    this.infoBody.innerHTML = rowsHtml(rows);
+    this.infoDesc.textContent = _('Çift sistemin ortak kütle merkezi: iki bileşen de bu görünmez noktanın etrafında, kütleleriyle ters orantılı yarıçaplarda ve her zaman karşılıklı konumlarda dolanır. Ağır bileşen küçük, hafif bileşen büyük bir yörünge çizer.');
+  }
+
   private renderBlackHoleInfo(b: CelestialBody, camDist: number, rows: Array<[string, string] | 'sep'>): void {
     const rs = b.radius;
     const mSun = b.data.mass / SUN_MASS_KG;
-    this.infoParent.textContent = b.parent ? _('{name} ile çift sistem', { name: b.parent.name }) : _('Sistem merkezi');
+    const partner = binaryPartner(b) ?? b.parent;
+    this.infoParent.textContent = partner ? _('{name} ile çift sistem', { name: partner.name }) : _('Sistem merkezi');
     rows.push(['Kameraya uzaklık', fmtDistance(camDist)]);
     rows.push(['Olay ufkuna uzaklık', `${fmtDistance(Math.max(0, camDist - rs))} (${fixed((camDist / rs), 1)} r_s)`]);
     rows.push('sep');
@@ -765,7 +811,8 @@ export class UI {
     const a = b.data.appearance.kind === 'pulsar' ? b.data.appearance : null;
     const P = b.rotationPeriodS; // s
     const mSun = b.data.mass / SUN_MASS_KG;
-    this.infoParent.textContent = b.parent ? _('{name} ile çift sistem', { name: b.parent.name }) : _('Sistem merkezi');
+    const partner = binaryPartner(b) ?? b.parent;
+    this.infoParent.textContent = partner ? _('{name} ile çift sistem', { name: partner.name }) : _('Sistem merkezi');
     rows.push(['Kameraya uzaklık', fmtDistance(camDist)]);
     rows.push(['Yüzeye uzaklık', fmtDistance(Math.max(0, camDist - b.radius))]);
     rows.push('sep');

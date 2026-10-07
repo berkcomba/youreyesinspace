@@ -1,10 +1,11 @@
 import {
-  AdditiveBlending, BufferAttribute, BufferGeometry, Points, Scene, ShaderMaterial, Vector3, type PerspectiveCamera,
+  AdditiveBlending, BufferAttribute, BufferGeometry, Points, Scene, ShaderMaterial, Vector3, Vector4, type PerspectiveCamera,
 } from 'three';
 import { SKY_RADIUS_KM } from '../core/constants';
 import type { GalaxySource } from '../galaxy/galaxies';
 import type { NamedStarScreen } from './StarPoints';
 import { GalaxyCloud } from './GalaxyCloud';
+import { PROCEDURAL_TINT } from './ProcStarPoints';
 import { Shaders } from './shaders';
 
 const _rel = new Vector3();
@@ -27,8 +28,20 @@ export class GalaxySprites {
     const idx = new Float32Array(n);
     const type = new Float32Array(n);
     const seed = new Float32Array(n);
-    for (let i = 0; i < n; i++) { idx[i] = i; type[i] = galaxies.type[i]; seed[i] = (galaxies.seed[i] % 1000) / 10; }
+    // spiral geometry packed as (arm count, tan pitch, major-arm weight); the same numbers drive the
+    // GalaxyModel, so the sprite's arms line up with the point cloud it fades into
+    const spiral = new Float32Array(n * 3);
+    for (let i = 0; i < n; i++) {
+      idx[i] = i; type[i] = galaxies.type[i]; seed[i] = (galaxies.seed[i] % 1000) / 10;
+      const arms = galaxies.arms?.[i] ?? 2;
+      const pitch = galaxies.pitch?.[i] ?? 15;
+      spiral[i * 3] = arms;
+      spiral[i * 3 + 1] = Math.tan((pitch * Math.PI) / 180);
+      // barred spirals with > 2 arms: odd arms are minor (GalaxyModel.armWeight)
+      spiral[i * 3 + 2] = galaxies.type[i] === 3 && arms > 2 ? 0.4 : 1;
+    }
     const geo = new BufferGeometry();
+    geo.setAttribute('spiral', new BufferAttribute(spiral, 3));
     geo.setAttribute('position', new BufferAttribute(galaxies.positions.subarray(0, n * 3), 3));
     geo.setAttribute('radius', new BufferAttribute(galaxies.radius.subarray(0, n), 1));
     geo.setAttribute('absMag', new BufferAttribute(galaxies.absMag.subarray(0, n), 1));
@@ -52,6 +65,8 @@ export class GalaxySprites {
         uHideIndex: { value: -1 },
         uTierFade: { value: 1 },
         uBoostMag: { value: boostMag },
+        uCatalogCount: { value: galaxies.catalogCount },
+        uTint: { value: new Vector4(...PROCEDURAL_TINT, 0) },
       },
       transparent: true,
       blending: AdditiveBlending,
@@ -67,6 +82,9 @@ export class GalaxySprites {
   private fade = 1;
 
   setVisible(v: boolean): void { this.enabled = v; this.applyVisibility(); }
+
+  /** Tint procedural (non-catalogue) galaxies green */
+  setHighlight(on: boolean): void { this.mat.uniforms.uTint.value.w = on ? 0.85 : 0; }
 
   /** Whole-layer visibility (0–1); used for the local ↔ far-universe LOD hand-over */
   setFade(f: number): void {

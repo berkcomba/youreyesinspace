@@ -1,9 +1,10 @@
 import {
-  AdditiveBlending, BufferAttribute, BufferGeometry, Points, Scene, ShaderMaterial, Vector3,
+  AdditiveBlending, BufferAttribute, BufferGeometry, Points, Scene, ShaderMaterial, Vector3, Vector4,
 } from 'three';
 import { SKY_RADIUS_KM } from '../core/constants';
 import { Rng } from '../gen/SystemGenerator';
 import { GalaxyModel, POPULATION_COLOR } from '../galaxy/GalaxyModel';
+import { PROCEDURAL_TINT } from './ProcStarPoints';
 import { Shaders } from './shaders';
 
 const _local = new Vector3();
@@ -58,6 +59,7 @@ export class GalaxyCloud {
         uMaxPx: { value: maxPointPx },
         uExtinction: { value: 0 },
         uSoftness: { value: 1.0 },
+        uTint: { value: new Vector4(...PROCEDURAL_TINT, 0) },
       },
       transparent: true,
       blending: AdditiveBlending,
@@ -91,6 +93,11 @@ export class GalaxyCloud {
     }
     u.uExtinction.value = ext;
     this.points.visible = visible && fade > 0.001;
+  }
+
+  /** Tint the cloud green when it belongs to a procedural (non-catalogue) galaxy */
+  setHighlight(on: boolean): void {
+    this.mat.uniforms.uTint.value.w = on && !this.model.p.catalog ? 0.85 : 0;
   }
 
   setGain(g: number): void {

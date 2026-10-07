@@ -92,9 +92,11 @@ export class StarSystem {
     return b;
   }
 
-  /** The primary star */
+  /** The primary star (for a barycentric binary: the first component, which is the primary) */
   get star(): CelestialBody {
-    return this.roots[0];
+    const r = this.roots[0];
+    if (r.data.type !== 'barycenter') return r;
+    return r.children.find((c) => c.data.type === 'star') ?? r.children[0] ?? r;
   }
 
   /** Photosphere temperature of the primary (K) */

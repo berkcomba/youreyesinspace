@@ -67,7 +67,7 @@ export class BodyPoints {
       this.pos[i * 3 + 1] = rp.y;
       this.pos[i * 3 + 2] = rp.z;
 
-      if (b.data.type === 'star' || b.data.type === 'spacecraft' || b.data.type === 'pulsar') {
+      if (b.data.type === 'star' || b.data.type === 'spacecraft' || b.data.type === 'pulsar' || b.data.type === 'barycenter') {
         this.alpha[i] = 0;
         this.size[i] = 0;
         continue;
@@ -110,7 +110,7 @@ export class BodyPoints {
         if (c.ocean && c.seaLevel !== undefined) {
           r = r * 0.4 + c.ocean[0] * 0.6 + 0.1;
           g = g * 0.4 + c.ocean[1] * 0.6 + 0.15;
-          bl = bl * 0.4 + c.ocean[2] * 0.6 + 0.35;    
+          bl = bl * 0.4 + c.ocean[2] * 0.6 + 0.35;
         }
         if (c.ice && (c.iceCaps ?? 0) > 0) {
           r = r * 0.8 + 0.2; g = g * 0.8 + 0.2; bl = bl * 0.8 + 0.2;

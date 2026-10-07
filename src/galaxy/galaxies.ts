@@ -87,6 +87,9 @@ export interface GalaxySource {
   readonly normal: Float32Array;
   readonly major: Float32Array;
   readonly axisRatio: Float32Array;
+  /** spiral arm count / pitch angle (deg) — absent for unresolved aggregate tiers */
+  readonly arms?: Float32Array;
+  readonly pitch?: Float32Array;
   name(i: number): string;
 }
 
@@ -127,6 +130,10 @@ export class GalaxyIndex {
   /** in-plane major axis (scene frame) */
   readonly major: Float32Array;
   readonly axisRatio: Float32Array;
+  /** spiral arm count (S / SB; shared by the analytic model and the sprite shader) */
+  readonly arms: Float32Array;
+  /** pitch angle (deg) */
+  readonly pitch: Float32Array;
   private readonly models = new Map<number, GalaxyModel>();
 
   constructor(proceduralCount = 110_000) {
@@ -290,6 +297,16 @@ export class GalaxyIndex {
       place(x, y, z, 0.05);
     }
     this.count = i;
+
+    // spiral geometry, derived from the seed exactly as the GalaxyModel always did
+    this.arms = new Float32Array(N);
+    this.pitch = new Float32Array(N);
+    for (let k = 0; k < this.count; k++) {
+      const t = this.typeOf(k);
+      const r = new Rng(this.seed[k]);
+      this.arms[k] = k === 0 ? 4 : t === 'SB' ? 2 : 2 + Math.floor(r.next() * 3);
+      this.pitch[k] = k === 0 ? 14 : 10 + r.next() * 14;
+    }
   }
 
   /** untranslated (source) name — use for matching catalogue references */
@@ -324,7 +341,6 @@ export class GalaxyIndex {
     const normal = new Vector3(this.normal[i * 3], this.normal[i * 3 + 1], this.normal[i * 3 + 2]);
     const z = new Vector3().crossVectors(major, normal).normalize();
     const basis = new Matrix3().set(major.x, normal.x, z.x, major.y, normal.y, z.y, major.z, normal.z, z.z);
-    const rng = new Rng(this.seed[i]);
     const params: GalaxyParams = {
       id: `g${i}`,
       name: this.name(i),
@@ -334,8 +350,8 @@ export class GalaxyIndex {
       basis,
       radius: this.radius[i],
       absMag: this.absMag[i],
-      arms: i === 0 ? 4 : t === 'SB' ? 2 : 2 + Math.floor(rng.next() * 3),
-      pitchDeg: i === 0 ? 14 : 10 + rng.next() * 14,
+      arms: this.arms[i],
+      pitchDeg: this.pitch[i],
       axisRatio: this.axisRatio[i],
       description: i === 0
         ? _('Ev galaksimiz: ~13 milyar yıllık, 100–400 milyar yıldızlı çubuklu sarmal. Güneş, merkezden ~8.2 kpc uzakta Orion Kolu\'nda yer alır.')

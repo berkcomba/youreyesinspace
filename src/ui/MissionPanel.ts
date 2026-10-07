@@ -140,7 +140,7 @@ export class MissionPanel {
       }
     };
     for (const r of sys.roots) {
-      if (r.data.type !== 'spacecraft') { if (r !== sys.star) out.push(r); walk(r); }
+      if (r.data.type !== 'spacecraft') { if (r !== sys.star && r.data.type !== 'barycenter') out.push(r); walk(r); }
     }
     return out;
   }

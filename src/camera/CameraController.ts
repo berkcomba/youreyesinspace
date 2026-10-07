@@ -148,6 +148,14 @@ export class CameraController {
         dir1.copy(inPlane).multiplyScalar(Math.cos(0.25)).addScaledVector(body.pole, Math.sin(0.25)).normalize();
       }
     }
+    // barycentres: far enough to see both components' orbits, looking down on their plane
+    if (body.data.type === 'barycenter' && body.children.length) {
+      let aMax = 1;
+      for (const c of body.children) aMax = Math.max(aMax, c.resolved?.a ?? 0, c.radius * 8);
+      dist1 = aMax * 3.2;
+      const n = body.children[0].orbitNormal;
+      if (n.lengthSq() > 0) dir1.addScaledVector(n, 1.2).normalize();
+    }
     // mission vehicles: three-quarter view from the sunlit side, slightly behind
     if (body.data.orbit?.kind === 'trajectory') {
       const fwd = new Vector3(0, 1, 0).applyQuaternion(body.rotation);

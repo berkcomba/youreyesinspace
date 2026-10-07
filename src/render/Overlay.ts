@@ -56,6 +56,8 @@ export class Overlay {
   showMarkers = true;
   showStarNames = false;
   showGalaxyNames = true;
+  /** procedural star labels in green (matches the point tint of the same setting) */
+  highlightProcedural = false;
   hoverId: string | null = null;
   /** draw a centre crosshair (free roam / pointer lock) */
   crosshair = false;
@@ -146,7 +148,9 @@ export class Overlay {
         taken.push({ x: x + 7, y, w });
         // fade the faintest labels so dense fields don't turn into a wall of text
         const fade = s.index === 0 || s.landmark ? 1 : Math.max(0.45, Math.min(1, 1 - (s.mag - 1.5) / 4));
-        ctx.fillStyle = s.index === 0 ? 'rgba(255, 225, 160, 0.85)' : s.index < 0 ? `rgba(195, 208, 235, ${0.7 * fade})` : `rgba(205, 215, 235, ${0.75 * fade})`;
+        ctx.fillStyle = s.index === 0 ? 'rgba(255, 225, 160, 0.85)'
+          : s.index < 0 ? (this.highlightProcedural ? `rgba(120, 255, 160, ${0.85 * fade})` : `rgba(195, 208, 235, ${0.7 * fade})`)
+          : `rgba(205, 215, 235, ${0.75 * fade})`;
         if (s.landmark) {
           // the star itself is invisible from here: give the label a small ring to point at
           ctx.strokeStyle = s.index === 0 ? 'rgba(255, 225, 160, 0.85)' : 'rgba(205, 215, 235, 0.7)';
@@ -273,8 +277,8 @@ export class Overlay {
     const occupied: Array<{ x: number; y: number; w: number; h: number }> = [];
     const sorted = [...this.items].sort((a, b) => {
       // bigger / more important first
-      const ia = a.body === selected ? 1e9 : a.radiusPx * 10 + (5 - a.body.depth) * 100 + Math.log10(a.body.radius);
-      const ib = b.body === selected ? 1e9 : b.radiusPx * 10 + (5 - b.body.depth) * 100 + Math.log10(b.body.radius);
+      const ia = a.body === selected ? 1e9 : a.radiusPx * 10 + (5 - a.body.depth) * 100 + Math.log10(Math.max(a.body.radius, 1));
+      const ib = b.body === selected ? 1e9 : b.radiusPx * 10 + (5 - b.body.depth) * 100 + Math.log10(Math.max(b.body.radius, 1));
       return ib - ia;
     });
 
@@ -330,6 +334,12 @@ export class Overlay {
           ctx.arc(it.x, it.y, 6, 0, Math.PI * 2);
           ctx.moveTo(it.x + 1.5, it.y);
           ctx.arc(it.x, it.y, 1.5, 0, Math.PI * 2);
+          ctx.stroke();
+        } else if (b.data.type === 'barycenter') {
+          // thin cross: the (empty) centre of mass of a binary
+          ctx.beginPath();
+          ctx.moveTo(it.x - 6, it.y); ctx.lineTo(it.x + 6, it.y);
+          ctx.moveTo(it.x, it.y - 6); ctx.lineTo(it.x, it.y + 6);
           ctx.stroke();
         } else if (b.data.type === 'spacecraft') {
           // diamond

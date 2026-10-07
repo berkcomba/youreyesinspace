@@ -330,13 +330,17 @@ class App implements UIHost {
   }
 
   goToBodyId(id: string): void {
+    this.goToSystemBody('c0', id);
+  }
+
+  /** Fly to a body of any system, switching the reference frame to that system first if needed. */
+  goToSystemBody(starId: StarId, bodyId: string): void {
     const u = this.universe;
-    if (u.current.catalogIndex !== 0) {
-      // return to the Solar System frame first
-      const delta = u.switchTo('c0', this.time.jd, this.time.t);
+    if (starId !== u.current.starId) {
+      const delta = u.switchTo(starId, this.time.jd, this.time.t);
       this.camera.shiftFrame(delta, u.star);
     }
-    const b = u.get(id);
+    const b = u.get(bodyId);
     if (b) this.goTo(b);
     else this.ui.showToast(_('Hedef bulunamadı'));
   }
@@ -489,6 +493,12 @@ class App implements UIHost {
     this.grid.setVisible(s.eclipticGrid, s.equatorialGrid);
     this.galaxySprites.setVisible(s.galaxies);
     for (const sp of this.farSprites) sp.setVisible(s.galaxies);
+    // "what is real?" view: generated stars & galaxies in green
+    this.procPoints.setHighlight(s.highlightProcedural);
+    this.galaxySprites.setHighlight(s.highlightProcedural);
+    for (const sp of this.farSprites) sp.setHighlight(s.highlightProcedural);
+    for (const c of this.clouds.values()) c.setHighlight(s.highlightProcedural);
+    this.overlay.highlightProcedural = s.highlightProcedural;
     this.camera.mouseSensitivity = 0.0032 * s.mouseSensitivity;
     this.camera.invertY = s.invertY;
     this.ui.syncSettings();
@@ -656,7 +666,9 @@ class App implements UIHost {
     for (const i of wanted) {
       if (this.clouds.has(i) || this.clouds.size >= 3) continue;
       const n = i === 0 ? 260_000 : Math.round(Math.min(160_000, 40_000 + g.radius[i] * 6));
-      this.clouds.set(i, new GalaxyCloud(i, g.model(i), scene, n, this.maxPointPx));
+      const cloud = new GalaxyCloud(i, g.model(i), scene, n, this.maxPointPx);
+      cloud.setHighlight(this.settings.highlightProcedural);
+      this.clouds.set(i, cloud);
     }
 
     // procedural stars for the galaxy we're in
