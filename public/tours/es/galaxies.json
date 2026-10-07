@@ -1,0 +1,269 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "andromeda": {
+   "hash": "e9e5ec2dfd77",
+   "duration": 42.31,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.22,
+     "text": "Andrómeda, nuestra gran vecina más cercana."
+    },
+    {
+     "start": 3.22,
+     "end": 14.12,
+     "text": "Está a 2,5 millones de años luz y es el objeto más lejano visible a simple vista; la luz que veis hoy partió cuando en la Tierra aún no había seres humanos."
+    },
+    {
+     "start": 14.12,
+     "end": 29.31,
+     "text": "En 1923, Edwin Hubble, al medir una estrella cefeida de aquí, demostró que Andrómeda no era parte de la Vía Láctea, sino una galaxia completamente distinta; el universo se hizo millones de veces más grande en una sola noche."
+    },
+    {
+     "start": 29.31,
+     "end": 34.57,
+     "text": "Contiene un billón de estrellas y se nos acerca a 110 kilómetros por segundo."
+    },
+    {
+     "start": 34.57,
+     "end": 42.31,
+     "text": "Dentro de unos 4,5 mil millones de años, al fusionarse con la Vía Láctea, formará una galaxia elíptica gigante."
+    }
+   ]
+  },
+  "antennae": {
+   "hash": "77582172acb8",
+   "duration": 49.51,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4.68,
+     "text": "En nuestra última parada veremos que las galaxias también pueden chocar."
+    },
+    {
+     "start": 4.68,
+     "end": 12.58,
+     "text": "Las Antenas son dos galaxias espirales a 45 millones de años luz que están pasando la una a través de la otra."
+    },
+    {
+     "start": 12.58,
+     "end": 16.5,
+     "text": "El encuentro comenzó hace unos 600 millones de años."
+    },
+    {
+     "start": 16.5,
+     "end": 23.89,
+     "text": "La gravedad lanzó al espacio dos largas colas formadas por estrellas; son las antenas de insecto que les dan nombre."
+    },
+    {
+     "start": 23.89,
+     "end": 35.53,
+     "text": "Las estrellas no chocan entre sí, las distancias entre ellas son enormes; pero las nubes de gas sí chocan y, al comprimirse, dan a luz miles de millones de estrellas nuevas."
+    },
+    {
+     "start": 35.53,
+     "end": 41.85,
+     "text": "Dentro de unos pocos cientos de millones de años, las dos se convertirán en una sola galaxia elíptica."
+    },
+    {
+     "start": 41.85,
+     "end": 46.69,
+     "text": "El futuro de la Vía Láctea y de Andrómeda también se verá exactamente así."
+    },
+    {
+     "start": 46.69,
+     "end": 49.51,
+     "text": "Nuestro recorrido por las galaxias ha terminado."
+    }
+   ]
+  },
+  "lmc": {
+   "hash": "5b4af6001312",
+   "duration": 40.39,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 12.98,
+     "text": "La Gran Nube de Magallanes, la galaxia satélite más grande de la Vía Láctea. Está a 160. 000 años luz y, desde el hemisferio sur, a simple vista parece en el cielo un trozo de nube arrancado."
+    },
+    {
+     "start": 12.98,
+     "end": 16.78,
+     "text": "Su masa es aproximadamente el uno por ciento de la nuestra."
+    },
+    {
+     "start": 16.78,
+     "end": 28.09,
+     "text": "En su interior se encuentran la nebulosa de la Tarántula, la mayor cuna de estrellas del Grupo Local, y R 136 a 1, una de las estrellas más pesadas conocidas."
+    },
+    {
+     "start": 28.09,
+     "end": 36.13,
+     "text": "La supernova que explotó aquí en 1987 fue la primera supernova visible a simple vista en 400 años."
+    },
+    {
+     "start": 36.13,
+     "end": 40.39,
+     "text": "Dentro de unos pocos miles de millones de años, la Vía Láctea se la tragará."
+    }
+   ]
+  },
+  "m87": {
+   "hash": "e699d71d8e87",
+   "duration": 40.07,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 7.96,
+     "text": "Ahora salimos del Grupo Local y nos dirigimos al corazón del Cúmulo de Virgo, a 55 millones de años luz."
+    },
+    {
+     "start": 7.96,
+     "end": 11.76,
+     "text": "M87, una galaxia elíptica gigante."
+    },
+    {
+     "start": 11.76,
+     "end": 25.01,
+     "text": "No tiene brazos espirales; es una esfera enorme formada por billones de estrellas viejas y amarillas, y a su alrededor orbitan más de 12. 000 cúmulos globulares; en la Vía Láctea solo hay 150."
+    },
+    {
+     "start": 25.01,
+     "end": 32.33,
+     "text": "En su centro se encuentra el primer agujero negro fotografiado, de 6,5 mil millones de masas solares."
+    },
+    {
+     "start": 32.33,
+     "end": 40.07,
+     "text": "El chorro que brota de este agujero negro se extiende a lo largo de 5. 000 años luz y se conoce desde 1918."
+    }
+   ]
+  },
+  "milkyway": {
+   "hash": "f53193ad2147",
+   "duration": 39.43,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 2.84,
+     "text": "Bienvenidos al recorrido por las galaxias."
+    },
+    {
+     "start": 2.84,
+     "end": 5.72,
+     "text": "Primero, miremos nuestro hogar desde fuera."
+    },
+    {
+     "start": 5.72,
+     "end": 16.34,
+     "text": "La Vía Láctea es una galaxia espiral de 100. 000 años luz de ancho, con una barra en el centro, y contiene entre 200 y 400 mil millones de estrellas."
+    },
+    {
+     "start": 16.34,
+     "end": 28.29,
+     "text": "El Sol se encuentra a 26. 000 años luz del centro, en un brazo pequeño llamado brazo de Orión, y completa una vuelta alrededor de la galaxia en 230 millones de años."
+    },
+    {
+     "start": 28.29,
+     "end": 34.19,
+     "text": "Desde que los dinosaurios se extinguieron, el Sol solo ha recorrido una cuarta parte de esta vuelta."
+    },
+    {
+     "start": 34.19,
+     "end": 39.43,
+     "text": "En el brillante bulbo central se esconde un agujero negro de 4 millones de masas solares."
+    }
+   ]
+  },
+  "smc": {
+   "hash": "c82642b0de6f",
+   "duration": 35.91,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 6.24,
+     "text": "La Pequeña Nube de Magallanes, su hermana más pequeña, a 200. 000 años luz de distancia."
+    },
+    {
+     "start": 6.24,
+     "end": 14.6,
+     "text": "Es una galaxia irregular; probablemente la gravedad de la Gran Nube de Magallanes y de la Vía Láctea la dejó con esta forma deforme."
+    },
+    {
+     "start": 14.6,
+     "end": 19.97,
+     "text": "Un puente de hidrógeno que se extiende entre ambas es la huella de un encuentro cercano."
+    },
+    {
+     "start": 19.97,
+     "end": 30.11,
+     "text": "En 1912, Henrietta Leavitt, al estudiar aquí miles de estrellas variables, descubrió la relación periodo-luminosidad de las estrellas cefeidas."
+    },
+    {
+     "start": 30.11,
+     "end": 35.91,
+     "text": "Este descubrimiento se convirtió en la primera regla cósmica que nos permite medir las distancias en el universo."
+    }
+   ]
+  },
+  "sombrero": {
+   "hash": "d4368620eeba",
+   "duration": 35.12,
+   "sentences": [
+    {
+     "start": 0,
+     "end": 7.97,
+     "text": "La galaxia del Sombrero se merece su nombre: a esta galaxia, a 29 millones de años luz, la vemos casi exactamente de canto."
+    },
+    {
+     "start": 7.97,
+     "end": 17.56,
+     "text": "Su bulbo central, extraordinariamente grande y brillante, está rodeado por una nítida franja de polvo; justo como un sombrero mexicano de ala ancha."
+    },
+    {
+     "start": 17.56,
+     "end": 24.428,
+     "text": "Alberga unos 2. 000 cúmulos globulares y, en el centro, un agujero negro de mil millones de masas solares."
+    },
+    {
+     "start": 24.428,
+     "end": 35.12,
+     "text": "Durante mucho tiempo se debatió si era espiral o elíptica; las observaciones infrarrojas mostraron que es un disco incrustado en el interior de una galaxia elíptica."
+    }
+   ]
+  },
+  "triangulum": {
+   "hash": "c376eec215ee",
+   "duration": 36.81,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4.62,
+     "text": "La galaxia del Triángulo, el tercer miembro más grande del Grupo Local."
+    },
+    {
+     "start": 4.62,
+     "end": 13.62,
+     "text": "Está a 2,7 millones de años luz y, con 40 mil millones de estrellas, es la hermana pequeña de Andrómeda y de la Vía Láctea."
+    },
+    {
+     "start": 13.62,
+     "end": 20.9,
+     "text": "En su centro no hay un bulbo prominente ni un agujero negro supermasivo; vemos sus brazos casi desde arriba."
+    },
+    {
+     "start": 20.9,
+     "end": 32.73,
+     "text": "En su interior se encuentra NGC 604, una gigantesca región de formación estelar de 1. 500 años luz de ancho; es 100 veces más grande que la nebulosa de Orión."
+    },
+    {
+     "start": 32.73,
+     "end": 36.81,
+     "text": "Probablemente es un satélite de Andrómeda y algún día se unirá a ella."
+    }
+   ]
+  }
+ }
+}

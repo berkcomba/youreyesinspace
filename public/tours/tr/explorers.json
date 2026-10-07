@@ -1,0 +1,213 @@
+{
+ "voice": "altair",
+ "locale": "tr",
+ "steps": {
+  "hubble": {
+   "hash": "8eab4ee75525",
+   "duration": 33.43,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 5.98,
+     "text": "Hubble Uzay Teleskobu, bin dokuz yüz doksandan beri evrene bakışımızı değiştiriyor."
+    },
+    {
+     "start": 5.98,
+     "end": 14.48,
+     "text": "Beş yüz kırk kilometre yükseklikte döner ve iki virgül dört metrelik aynasıyla atmosferin bulanıklığından kurtulmuş görüntüler alır."
+    },
+    {
+     "start": 14.48,
+     "end": 22.99,
+     "text": "İlk görüntüleri bulanıktı; aynasındaki ufak bir kusur bin dokuz yüz doksan üçte astronotlar tarafından yörüngede düzeltildi."
+    },
+    {
+     "start": 22.99,
+     "end": 33.43,
+     "text": "Evrenin yaşını ölçtü, karanlık enerjinin keşfine katkı sağladı ve Derin Alan görüntüleriyle gökyüzünün boş görünen bir noktasında binlerce galaksi gösterdi."
+    }
+   ]
+  },
+  "iss": {
+   "hash": "8eb9cf9c040a",
+   "duration": 32.63,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 6.3,
+     "text": "İnsanlığın uzaydaki elçilerini ziyaret edeceğimiz bu tura Dünya yörüngesinden başlıyoruz."
+    },
+    {
+     "start": 6.3,
+     "end": 9.4,
+     "text": "Karşınızda Uluslararası Uzay İstasyonu."
+    },
+    {
+     "start": 9.4,
+     "end": 20.81,
+     "text": "Dört yüz kilometre yükseklikte, saatte yirmi sekiz bin kilometre hızla döner ve Dünya'nın etrafını doksan dakikada tamamlar; astronotlar günde on altı gün doğumu görür."
+    },
+    {
+     "start": 20.81,
+     "end": 25.37,
+     "text": "Bir futbol sahası büyüklüğünde ve dört yüz yirmi ton ağırlığındadır."
+    },
+    {
+     "start": 25.37,
+     "end": 32.63,
+     "text": "İki bin Kasım'ından beri üzerinde kesintisiz insan yaşıyor; bu, insanlığın uzaydaki en uzun sürekli varlığıdır."
+    }
+   ]
+  },
+  "jwst": {
+   "hash": "7ea67dc697bf",
+   "duration": 34.56,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 9.78,
+     "text": "James Webb Uzay Teleskobu, Dünya'dan bir buçuk milyon kilometre uzakta, Güneş'in ters tarafındaki Lagrange iki noktasının etrafında döner."
+    },
+    {
+     "start": 9.78,
+     "end": 19.29,
+     "text": "Altı buçuk metrelik altın kaplı aynası on sekiz altıgen parçadan oluşur ve fırlatıldığı iki bin yirmi bir Noel'inde katlanmış hâldeydi."
+    },
+    {
+     "start": 19.29,
+     "end": 27.15,
+     "text": "Kızılötesi ışıkta gördüğü için tenis kortu büyüklüğündeki güneş kalkanıyla eksi iki yüz otuz üç dereceye soğutulur."
+    },
+    {
+     "start": 27.15,
+     "end": 34.56,
+     "text": "Evrenin ilk galaksilerini, yıldızların doğduğu toz bulutlarının içini ve ötegezegenlerin atmosferlerini inceliyor."
+    }
+   ]
+  },
+  "newhorizons": {
+   "hash": "9bdb1cc0992a",
+   "duration": 32.55,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 7.86,
+     "text": "New Horizons, iki bin altıda Dünya'dan ayrılan en hızlı uzay aracıydı; Ay'ın mesafesini dokuz saatte geçti."
+    },
+    {
+     "start": 7.86,
+     "end": 19.71,
+     "text": "Dokuz buçuk yıllık yolculuğun ardından iki bin on beş Temmuz'unda Plüton'un yanından geçti ve bulanık bir noktayı dağları, buzulları ve kalbiyle gerçek bir dünyaya dönüştürdü."
+    },
+    {
+     "start": 19.71,
+     "end": 28.91,
+     "text": "İki bin on dokuzda ise Kuiper Kuşağı'nda kardan adam biçimli Arrokoth'u ziyaret etti; bu, bir uzay aracının incelediği en uzak cisimdir."
+    },
+    {
+     "start": 28.91,
+     "end": 32.55,
+     "text": "Hâlâ çalışıyor ve Güneş Sistemi'nin dış sınırlarını ölçüyor."
+    }
+   ]
+  },
+  "parker": {
+   "hash": "bc538d69c169",
+   "duration": 33.35,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 3.66,
+     "text": "Parker Güneş Sondası, Güneş'e dokunan ilk araç."
+    },
+    {
+     "start": 3.66,
+     "end": 9.2,
+     "text": "İki bin on sekizde fırlatıldı ve Venüs'ün kütle çekimini kullanarak yörüngesini adım adım daralttı."
+    },
+    {
+     "start": 9.2,
+     "end": 20.89,
+     "text": "İki bin yirmi dört Aralık'ında Güneş yüzeyine altı milyon dokuz yüz bin kilometre yaklaştı; bu sırada saatte altı yüz doksan bin kilometreyle insan yapımı en hızlı nesne oldu."
+    },
+    {
+     "start": 20.89,
+     "end": 28.23,
+     "text": "On bir santimetrelik karbon kalkanı bin dört yüz dereceye dayanırken arkasındaki aletler oda sıcaklığında kalır."
+    },
+    {
+     "start": 28.23,
+     "end": 33.35,
+     "text": "Amacı, Güneş'in dış atmosferinin yüzeyinden neden yüzlerce kat sıcak olduğunu çözmek."
+    }
+   ]
+  },
+  "voyager1": {
+   "hash": "1d9cad51d2cc",
+   "duration": 32.39,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.54,
+     "text": "Voyager Bir, insan yapımı en uzak nesne."
+    },
+    {
+     "start": 3.54,
+     "end": 11.48,
+     "text": "Bin dokuz yüz yetmiş yedide fırlatıldı; Jüpiter ve Satürn'ü ziyaret etti, Titan'a yaklaşmak için Plüton'dan vazgeçti."
+    },
+    {
+     "start": 11.48,
+     "end": 17.73,
+     "text": "İki bin on ikide Güneş rüzgârının sınırını aşarak yıldızlararası uzaya çıkan ilk araç oldu."
+    },
+    {
+     "start": 17.73,
+     "end": 24.57,
+     "text": "Bugün yirmi beş milyar kilometreden uzaktadır; sinyalleri bize yirmi iki saatten uzun sürede ulaşır."
+    },
+    {
+     "start": 24.57,
+     "end": 32.39,
+     "text": "Üzerinde, elli beş dilde selam ve Dünya'nın seslerini taşıyan altın bir plak vardır: belki bir gün onu bulacak birileri için."
+    }
+   ]
+  },
+  "voyager2": {
+   "hash": "019870a3a348",
+   "duration": 35.91,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 4.94,
+     "text": "Ve Voyager İki, dört dış gezegenin hepsini ziyaret eden tek araç."
+    },
+    {
+     "start": 4.94,
+     "end": 13.06,
+     "text": "Kardeşinden on altı gün önce fırlatıldı ama daha yavaş bir rotayla Jüpiter, Satürn, Uranüs ve Neptün'ün yanından geçti."
+    },
+    {
+     "start": 13.06,
+     "end": 20.57,
+     "text": "Uranüs ve Neptün'e dair bildiklerimizin çoğu hâlâ onun bin dokuz yüz seksen altı ve seksen dokuzdaki geçişlerinden gelir."
+    },
+    {
+     "start": 20.57,
+     "end": 23.85,
+     "text": "İki bin on sekizde yıldızlararası uzaya ulaştı."
+    },
+    {
+     "start": 23.85,
+     "end": 34.27,
+     "text": "Her iki Voyager'ın plütonyum pilleri zayıflıyor; iki bin otuzlu yıllarda sessizleşecekler ama milyarlarca yıl boyunca yıldızların arasında süzülmeye devam edecekler."
+    },
+    {
+     "start": 34.27,
+     "end": 35.91,
+     "text": "Turumuz burada sona eriyor."
+    }
+   ]
+  }
+ }
+}

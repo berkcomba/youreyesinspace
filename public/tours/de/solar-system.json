@@ -1,0 +1,337 @@
+{
+ "voice": "altair",
+ "locale": "de",
+ "steps": {
+  "earth": {
+   "hash": "57a6febb25b0",
+   "duration": 28.22,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.92,
+     "text": "Und hier ist unser Zuhause: die Erde."
+    },
+    {
+     "start": 2.92,
+     "end": 14.51,
+     "text": "Der einzige Ort im Universum, von dem wir wissen, dass er Leben beherbergt. 71 Prozent ihrer Oberfläche sind von flüssigem Wasser bedeckt; deshalb erscheint sie aus dem All blau."
+    },
+    {
+     "start": 14.51,
+     "end": 21.2,
+     "text": "Ihr starkes Magnetfeld schützt uns vor dem Sonnenwind, die Ozonschicht filtert die ultraviolette Strahlung."
+    },
+    {
+     "start": 21.2,
+     "end": 28.22,
+     "text": "Die Anziehungskraft des Mondes hält die Achsneigung stabil und sorgt so dafür, dass die Jahreszeiten regelmäßig bleiben."
+    }
+   ]
+  },
+  "jupiter": {
+   "hash": "8f5ebcd412da",
+   "duration": 32.71,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.36,
+     "text": "Jupiter, der König der Planeten."
+    },
+    {
+     "start": 2.36,
+     "end": 10.46,
+     "text": "Seine Masse beträgt das 2,5-Fache aller anderen Planeten zusammen; 1. 300 Erden passen in ihn hinein."
+    },
+    {
+     "start": 10.46,
+     "end": 18.69,
+     "text": "Er hat keine Oberfläche; die farbigen Bänder, die Sie sehen, sind gewaltige Wolkengürtel in seiner Atmosphäre aus Wasserstoff und Helium."
+    },
+    {
+     "start": 18.69,
+     "end": 26.37,
+     "text": "Der Große Rote Fleck ist ein Sturm, der seit mindestens 350 Jahren andauert und größer ist als die Erde."
+    },
+    {
+     "start": 26.37,
+     "end": 32.71,
+     "text": "Ein Tag dieses Riesen dauert nur 10 Stunden, und um ihn kreisen mehr als 95 bekannte Monde."
+    }
+   ]
+  },
+  "mars": {
+   "hash": "a43f2cc70c98",
+   "duration": 34.07,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.1,
+     "text": "Der Rote Planet Mars."
+    },
+    {
+     "start": 2.1,
+     "end": 6.36,
+     "text": "Seine Farbe verdankt er dem verrosteten Eisen auf seiner Oberfläche."
+    },
+    {
+     "start": 6.36,
+     "end": 26.85,
+     "text": "Sein Durchmesser beträgt etwa die Hälfte des Erddurchmessers, doch er beherbergt den größten Vulkan des Sonnensystems: den 22 Kilometer hohen Olympus Mons. Die 4. 000 Kilometer lange Schlucht Valles Marineris ist so lang, dass sie den amerikanischen Kontinent von einem Ende zum anderen durchqueren würde."
+    },
+    {
+     "start": 26.85,
+     "end": 34.07,
+     "text": "Vor Milliarden von Jahren gab es auf seiner Oberfläche Flüsse und Seen; heute suchen Roboter nach den Spuren dieses Wassers."
+    }
+   ]
+  },
+  "mercury": {
+   "hash": "6e3b0f36e221",
+   "duration": 30.46,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.3,
+     "text": "Unsere erste Station ist Merkur, der kleinste und der Sonne nächste Planet."
+    },
+    {
+     "start": 5.3,
+     "end": 8.87,
+     "text": "Ein Umlauf um die Sonne dauert nur 88 Tage."
+    },
+    {
+     "start": 8.87,
+     "end": 20.51,
+     "text": "Seine Atmosphäre ist so dünn, dass sie praktisch nicht vorhanden ist; deshalb steigt die Tagseite auf 430 Grad, während die Nachtseite auf minus 180 Grad fällt."
+    },
+    {
+     "start": 20.51,
+     "end": 23.84,
+     "text": "Seine Oberfläche ist wie der Mond von Kratern bedeckt."
+    },
+    {
+     "start": 23.84,
+     "end": 30.46,
+     "text": "Gerade jetzt ist das gemeinsame Raumfahrzeug von Europa und Japan, BepiColombo, auf dem Weg zu ihm."
+    }
+   ]
+  },
+  "moon": {
+   "hash": "1ac9b6bb3239",
+   "duration": 29.66,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 7.43,
+     "text": "Der Mond ist der einzige natürliche Satellit der Erde und der einzige andere Himmelskörper, den Menschen betreten haben."
+    },
+    {
+     "start": 7.43,
+     "end": 26.12,
+     "text": "Zwischen 1969 und 1972 gingen bei den Apollo-Missionen zwölf Astronauten auf seiner Oberfläche. Er ist 384. 000 Kilometer entfernt und zeigt uns immer dieselbe Seite, weil seine Rotation an seine Umlaufbahn gebunden ist."
+    },
+    {
+     "start": 26.12,
+     "end": 29.66,
+     "text": "Jedes Jahr entfernt er sich um etwa 4 Zentimeter von uns."
+    }
+   ]
+  },
+  "neptune": {
+   "hash": "ef0c066d82c1",
+   "duration": 35.67,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 3.68,
+     "text": "Neptun, der am weitesten von der Sonne entfernte Planet."
+    },
+    {
+     "start": 3.68,
+     "end": 18.18,
+     "text": "Entdeckt wurde er nicht mit dem Teleskop, sondern auf dem Papier: Mathematiker, die die Abweichungen in der Umlaufbahn des Uranus untersuchten, berechneten seine Position, und 1846 wurde er genau dort gefunden."
+    },
+    {
+     "start": 18.18,
+     "end": 25.29,
+     "text": "Seine Winde überschreiten 2. 100 Kilometer pro Stunde; es sind die schnellsten Winde im Sonnensystem."
+    },
+    {
+     "start": 25.29,
+     "end": 29.15,
+     "text": "Ein Umlauf um die Sonne dauert 165 Jahre."
+    },
+    {
+     "start": 29.15,
+     "end": 35.67,
+     "text": "Sein großer Mond Triton kreist rückläufig; wahrscheinlich ist er ein eingefangenes Objekt des Kuipergürtels."
+    }
+   ]
+  },
+  "pluto": {
+   "hash": "0e416b70655f",
+   "duration": 38.22,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 2.5,
+     "text": "Unsere letzte Station ist Pluto."
+    },
+    {
+     "start": 2.5,
+     "end": 10.62,
+     "text": "Er wurde 1930 entdeckt und galt bis 2006 als neunter Planet; jetzt ist er ein Zwergplanet."
+    },
+    {
+     "start": 10.62,
+     "end": 17.08,
+     "text": "Bis New Horizons 2015 an ihm vorbeiflog, war er nichts als ein verschwommener Punkt."
+    },
+    {
+     "start": 17.08,
+     "end": 24.2,
+     "text": "Das Raumfahrzeug fand auf seiner Oberfläche eine riesige Herzform, Stickstoffgletscher und Berge aus Wassereis."
+    },
+    {
+     "start": 24.2,
+     "end": 28.46,
+     "text": "Die Oberflächentemperatur beträgt minus 230 Grad."
+    },
+    {
+     "start": 28.46,
+     "end": 35.2,
+     "text": "Sein Mond Charon ist so groß, dass die beiden gemeinsam um einen gemeinsamen Massenschwerpunkt kreisen."
+    },
+    {
+     "start": 35.2,
+     "end": 38.22,
+     "text": "Hier endet unsere Sonnensystem-Tour; gute Reise."
+    }
+   ]
+  },
+  "saturn": {
+   "hash": "d10a485237e7",
+   "duration": 30.39,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 4.78,
+     "text": "Saturn, ohne Zweifel der eleganteste Planet des Sonnensystems."
+    },
+    {
+     "start": 4.78,
+     "end": 16.47,
+     "text": "Seine Ringe bestehen größtenteils aus Wassereis; sie erreichen eine Breite von 280. 000 Kilometern, während ihre Dicke an den meisten Stellen nur etwa 10 Meter beträgt."
+    },
+    {
+     "start": 16.47,
+     "end": 23.65,
+     "text": "Der Planet selbst ist so leicht, dass er schwimmen würde, wenn Sie ihn in einen ausreichend großen Ozean setzten."
+    },
+    {
+     "start": 23.65,
+     "end": 30.39,
+     "text": "An seinem Nordpol dreht sich ein geheimnisvoller sechseckiger Sturm, dessen jede Seite so groß ist wie die Erde."
+    }
+   ]
+  },
+  "sun": {
+   "hash": "752892180ceb",
+   "duration": 34.64,
+   "sentences": [
+    {
+     "start": 0,
+     "end": 2.58,
+     "text": "Willkommen zur Sonnensystem-Tour."
+    },
+    {
+     "start": 2.58,
+     "end": 7.037,
+     "text": "Unsere Reise beginnt im Zentrum von allem, bei der Sonne."
+    },
+    {
+     "start": 7.037,
+     "end": 14.31,
+     "text": "Dieser 4,5 Milliarden Jahre alte Stern trägt allein 99,8 Prozent der Gesamtmasse des Systems."
+    },
+    {
+     "start": 14.31,
+     "end": 21.034,
+     "text": "Sein Durchmesser beträgt 1. 400. 000 Kilometer; nebeneinander passen 109 Erden hinein."
+    },
+    {
+     "start": 21.034,
+     "end": 26.508,
+     "text": "Seine Oberfläche hat 5. 500 Grad, sein Kern dagegen 15 Millionen Grad."
+    },
+    {
+     "start": 26.508,
+     "end": 34.64,
+     "text": "Das Licht, das Sie gerade sehen, verlässt diesen Ort und erreicht die Erde in 8 Minuten und 20 Sekunden."
+    }
+   ]
+  },
+  "uranus": {
+   "hash": "b03dc598e54d",
+   "duration": 28.09,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 3.08,
+     "text": "Uranus, der auf der Seite liegende Planet."
+    },
+    {
+     "start": 3.08,
+     "end": 8.88,
+     "text": "Seine Achse ist um 98 Grad geneigt; er rollt also gewissermaßen um die Sonne."
+    },
+    {
+     "start": 8.88,
+     "end": 14.64,
+     "text": "Deshalb erleben seine Pole 42 Jahre lang Tag und 42 Jahre lang Nacht."
+    },
+    {
+     "start": 14.64,
+     "end": 19.3,
+     "text": "Weil Methangas das rote Licht absorbiert, erscheint er blaugrün."
+    },
+    {
+     "start": 19.3,
+     "end": 28.09,
+     "text": "Er ist der erste Planet, den William Herschel 1781 mit dem Teleskop entdeckte, und aus der Nähe hat ihn nur Voyager 2 gesehen."
+    }
+   ]
+  },
+  "venus": {
+   "hash": "29c593f6e684",
+   "duration": 29.51,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 6.38,
+     "text": "Venus gilt von der Größe her als Zwilling der Erde, aber ihre Bedingungen sind die reinste Hölle."
+    },
+    {
+     "start": 6.38,
+     "end": 17.81,
+     "text": "Ihre dicke Kohlendioxidatmosphäre erhöht den Oberflächendruck auf das 92-Fache der Erde und treibt die Temperatur durch den Treibhauseffekt auf 465 Grad."
+    },
+    {
+     "start": 17.81,
+     "end": 21.93,
+     "text": "Das ist sogar heißer als Merkur, der der Sonne näher ist."
+    },
+    {
+     "start": 21.93,
+     "end": 24.63,
+     "text": "Ihre Wolken bestehen aus Schwefelsäure."
+    },
+    {
+     "start": 24.63,
+     "end": 29.51,
+     "text": "Venus dreht sich rückläufig und sehr langsam: Ihr Tag ist länger als ihr Jahr."
+    }
+   ]
+  }
+ }
+}

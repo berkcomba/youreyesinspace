@@ -1,0 +1,187 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "enceladus": {
+   "hash": "f00d3bf77c1f",
+   "duration": 32.3,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 7.85,
+     "text": "Enceladus is only 500 kilometers in diameter, but it is one of the most fascinating worlds in the Solar System."
+    },
+    {
+     "start": 7.85,
+     "end": 15.97,
+     "text": "From four cracks at the south pole called tiger stripes, hundreds of geysers spray water vapor and ice crystals into space."
+    },
+    {
+     "start": 15.97,
+     "end": 24.3,
+     "text": "Cassini flew through these fountains and found salt, organic molecules, and hydrogen; exactly the materials needed for life."
+    },
+    {
+     "start": 24.3,
+     "end": 27.26,
+     "text": "These ice grains feed Saturn's E ring."
+    },
+    {
+     "start": 27.26,
+     "end": 32.3,
+     "text": "Its surface is pure white like fresh snow, and it reflects nearly all of the sunlight."
+    }
+   ]
+  },
+  "iapetus": {
+   "hash": "7c6207d09992",
+   "duration": 33.75,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 5.48,
+     "text": "Our last stop is Iapetus, one of the strangest moons in the Solar System."
+    },
+    {
+     "start": 5.48,
+     "end": 10,
+     "text": "One half is as white as snow, the other half as black as coal."
+    },
+    {
+     "start": 10,
+     "end": 21.59,
+     "text": "Because the same face always points forward in its orbit, it sweeps up the dark dust from the outer rings, and ice evaporates from the warming dark regions and falls onto the bright side."
+    },
+    {
+     "start": 21.59,
+     "end": 31.63,
+     "text": "Right in the middle of its equator stretches a mountain ridge 13 kilometers high and 1,300 kilometers long; this gives it the appearance of a walnut."
+    },
+    {
+     "start": 31.63,
+     "end": 33.75,
+     "text": "Our Saturn tour has come to an end."
+    }
+   ]
+  },
+  "mimas": {
+   "hash": "7241a3a49ab6",
+   "duration": 30.7,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 7.89,
+     "text": "You recognize Mimas the moment you see it: the giant Herschel Crater gives it the appearance of the Death Star from Star Wars."
+    },
+    {
+     "start": 7.89,
+     "end": 13.93,
+     "text": "The crater is 130 kilometers wide; that is, one third of the moon's diameter."
+    },
+    {
+     "start": 13.93,
+     "end": 19.35,
+     "text": "If this collision had been a little more violent, Mimas would have been shattered to pieces."
+    },
+    {
+     "start": 19.35,
+     "end": 30.7,
+     "text": "When the small wobbles in its orbit were studied in 2024, a surprising result emerged: beneath the ice shell of this small moon that looks frozen, there may be a young ocean."
+    }
+   ]
+  },
+  "rings": {
+   "hash": "44d74d4528a1",
+   "duration": 36.15,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 3.06,
+     "text": "Now let's take a closer look at the rings."
+    },
+    {
+     "start": 3.06,
+     "end": 12.98,
+     "text": "This giant disk is not actually a single structure; it is made up of billions of pieces of ice, from microscopic dust to the size of a house."
+    },
+    {
+     "start": 12.98,
+     "end": 23.29,
+     "text": "Its width exceeds 280,000 kilometers, but its thickness is less than 10 meters in most places: even thinner than a sheet of paper to scale."
+    },
+    {
+     "start": 23.29,
+     "end": 29.97,
+     "text": "The largest gap between them, the Cassini Division, is opened by the gravity of the small moon Mimas."
+    },
+    {
+     "start": 29.97,
+     "end": 36.15,
+     "text": "The rings are probably only a few hundred million years old, and they are slowly raining down onto the planet."
+    }
+   ]
+  },
+  "saturn": {
+   "hash": "69679321f877",
+   "duration": 26.96,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.08,
+     "text": "Welcome to the Saturn tour."
+    },
+    {
+     "start": 2.08,
+     "end": 7.75,
+     "text": "The sixth planet from the Sun is a gas giant nine times the size of Earth in diameter."
+    },
+    {
+     "start": 7.75,
+     "end": 12.05,
+     "text": "Its density is lower than water; this is unique for a planet."
+    },
+    {
+     "start": 12.05,
+     "end": 16.75,
+     "text": "At its equator, winds reach 1,800 kilometers per hour."
+    },
+    {
+     "start": 16.75,
+     "end": 26.96,
+     "text": "The Cassini spacecraft studied this system for 13 years, from 2004 to 2017, and completed its mission by diving into the planet's atmosphere."
+    }
+   ]
+  },
+  "titan": {
+   "hash": "4d116ed64d00",
+   "duration": 34.87,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 6.02,
+     "text": "Titan is Saturn's largest moon and the only moon in the Solar System with a thick atmosphere."
+    },
+    {
+     "start": 6.02,
+     "end": 13.18,
+     "text": "Its nitrogen-dominated atmosphere is 50 percent denser than Earth's and hides the surface with an orange haze."
+    },
+    {
+     "start": 13.18,
+     "end": 22.62,
+     "text": "On its surface there are lakes, rivers, and rains of liquid methane and ethane; at minus 180 degrees, water is as hard as rock."
+    },
+    {
+     "start": 22.62,
+     "end": 27.15,
+     "text": "In 2005, the Huygens probe landed on its surface."
+    },
+    {
+     "start": 27.15,
+     "end": 34.87,
+     "text": "NASA's nuclear-powered drone called Dragonfly will arrive here in 2034 and fly over the sand dunes."
+    }
+   ]
+  }
+ }
+}

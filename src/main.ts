@@ -29,6 +29,7 @@ import { fmtDuration, fmtLightYears } from './ui/format';
 import { _, applyDom, initI18n } from './i18n';
 import { Missions, type ActiveMission } from './core/Missions';
 import { TrajectoryLines } from './render/TrajectoryLines';
+import { TourPlayer } from './core/TourPlayer';
 import type { MissionPlan } from './astro/mission';
 
 const IDENTITY = new Matrix3();
@@ -61,6 +62,7 @@ class App implements UIHost {
   readonly landmarkSprites: LandmarkSprites;
   readonly missions: Missions;
   readonly trajectories: TrajectoryLines;
+  readonly tours: TourPlayer;
   /** camera offset from the followed vehicle, kept across frame switches */
   private readonly followOffset = new Vector3();
   private followOffsetValid = false;
@@ -115,6 +117,8 @@ class App implements UIHost {
       frameSwitch: (m, systemId) => this.onMissionFrameSwitch(m, systemId),
       arrived: (m) => this.onMissionArrived(m),
     });
+    this.tours = new TourPlayer(this);
+    this.tours.onEnd = (why) => this.ui.showToast(why === 'finished' ? _('Tur tamamlandı') : _('Tur bitirildi'), 2400);
     this.ui = new UI(this);
 
     this.loadSystemRenderables(this.universe.current);
@@ -582,7 +586,8 @@ class App implements UIHost {
         this.goToGalaxy(0);
         break;
       case 'Escape':
-        if (this.camera.autopilot) this.camera.autopilot = null;
+        if (this.tours.active) { this.tours.stop(); this.ui.showToast(_('Tur bitirildi')); }
+        else if (this.camera.autopilot) this.camera.autopilot = null;
         else { this.select(null); this.selectStar(null); this.selectGalaxy(null); this.selectLandmark(null); }
         this.ui.toggleHelp(false);
         break;
@@ -709,6 +714,7 @@ class App implements UIHost {
     this.time.advance(dt);
     this.missions.update(this.time.jd, this.time.t);
     this.universe.update(this.time.jd, this.time.t);
+    this.tours.update(dt);
 
     // Camera
     const eng = this.engine;

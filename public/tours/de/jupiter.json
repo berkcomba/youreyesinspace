@@ -1,0 +1,197 @@
+{
+ "voice": "altair",
+ "locale": "de",
+ "steps": {
+  "callisto": {
+   "hash": "c54c32fab0c2",
+   "duration": 28.95,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 4.26,
+     "text": "Kallisto, die äußerste und stillste der vier Galileischen Monde."
+    },
+    {
+     "start": 4.26,
+     "end": 12.36,
+     "text": "Ihre Oberfläche ist die am dichtesten verkraterte Oberfläche im Sonnensystem; seit vier Milliarden Jahren hat sie sich fast nicht verändert."
+    },
+    {
+     "start": 12.36,
+     "end": 19.73,
+     "text": "Weil sie weit von Jupiter entfernt ist, wird sie von der Gezeitenheizung nicht beeinflusst und bleibt außerhalb der Strahlungsgürtel."
+    },
+    {
+     "start": 19.73,
+     "end": 24.33,
+     "text": "Das macht sie zur sichersten Kandidatin für eine bemannte Basis in der Zukunft."
+    },
+    {
+     "start": 24.33,
+     "end": 28.95,
+     "text": "Es gibt auch Hinweise darauf, dass sich unter ihr ebenfalls ein Ozean befinden könnte."
+    }
+   ]
+  },
+  "europa": {
+   "hash": "4b5affbb3083",
+   "duration": 31.6,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4.24,
+     "text": "Europa, die vielversprechendste Adresse auf der Suche nach Leben."
+    },
+    {
+     "start": 4.24,
+     "end": 12.65,
+     "text": "Unter ihrer glatten Eiskruste nimmt man einen globalen Salzwasserozean an, der doppelt so viel Wasser enthält wie alle Ozeane der Erde."
+    },
+    {
+     "start": 12.65,
+     "end": 19.69,
+     "text": "Die braunen Linien auf der Oberfläche sind Stellen, an denen das Eis aufbricht und Wasser von unten nach oben sickert."
+    },
+    {
+     "start": 19.69,
+     "end": 31.6,
+     "text": "Die Sonde Europa Clipper der NASA wurde zweitausendvierundzwanzig gestartet und wird zweitausenddreißig mit etwa fünfzig nahen Vorbeiflügen untersuchen, ob dieser Ozean bewohnbar ist."
+    }
+   ]
+  },
+  "ganymede": {
+   "hash": "60961db4301f",
+   "duration": 37.43,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.3,
+     "text": "Ganymed, der größte Mond des Sonnensystems."
+    },
+    {
+     "start": 3.3,
+     "end": 6.2,
+     "text": "Er ist sogar größer als der Planet Merkur."
+    },
+    {
+     "start": 6.2,
+     "end": 17.95,
+     "text": "Er ist der einzige bekannte Mond mit einem eigenen Magnetfeld; dieses Feld bildet innerhalb des Magnetfelds von Jupiter eine kleine Blase und erzeugt an seinen Polen Polarlichter."
+    },
+    {
+     "start": 17.95,
+     "end": 26.83,
+     "text": "Seine Oberfläche hat zwei verschiedene Alter: dunkle, kraterreiche alte Regionen und hellfarbige, gefurchte jüngere Regionen."
+    },
+    {
+     "start": 26.83,
+     "end": 30.09,
+     "text": "Auch unter seiner Eiskruste gibt es einen Ozean."
+    },
+    {
+     "start": 30.09,
+     "end": 37.43,
+     "text": "Die Sonde JUICE der Europäischen Weltraumorganisation wird zweitausendeinunddreißig in seine Umlaufbahn eintreten."
+    }
+   ]
+  },
+  "io": {
+   "hash": "1b0a737b7e45",
+   "duration": 31.67,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 3.58,
+     "text": "Io, die vulkanischste Welt des Sonnensystems."
+    },
+    {
+     "start": 3.58,
+     "end": 12.72,
+     "text": "Sie wird ständig zwischen der Anziehungskraft Jupiters und jener der anderen Monde gequetscht und gedehnt; diese Gezeitenheizung schmilzt ihr Inneres."
+    },
+    {
+     "start": 12.72,
+     "end": 20.71,
+     "text": "Auf ihrer Oberfläche gibt es mehr als vierhundert aktive Vulkane, und einige schleudern Lava Hunderte von Kilometern hoch."
+    },
+    {
+     "start": 20.71,
+     "end": 26.47,
+     "text": "Die gelben, orangefarbenen und roten Farben stammen von Schwefel und Schwefelverbindungen."
+    },
+    {
+     "start": 26.47,
+     "end": 31.67,
+     "text": "Ihre Oberfläche erneuert sich so schnell, dass es auf ihr fast keine Einschlagskrater gibt."
+    }
+   ]
+  },
+  "juno": {
+   "hash": "fa47bb8f1c9a",
+   "duration": 41.03,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.66,
+     "text": "Schauen wir uns zum Schluss Juno an."
+    },
+    {
+     "start": 2.66,
+     "end": 8.26,
+     "text": "Diese NASA-Sonde trat im Juli zweitausendsechzehn in die Umlaufbahn Jupiters ein."
+    },
+    {
+     "start": 8.26,
+     "end": 18.9,
+     "text": "Sie ist das erste Raumfahrzeug, das so weit von der Sonne entfernt mit Sonnenenergie betrieben wird; ihre drei riesigen Paneele nehmen so viel Platz ein wie ein Basketballfeld."
+    },
+    {
+     "start": 18.9,
+     "end": 30.93,
+     "text": "Um sich vor der Strahlung zu schützen, kreist sie auf einer langen, elliptischen Umlaufbahn, die über die Pole führt, und bei jedem Vorbeiflug fliegt sie ein paar tausend Kilometer über den Wolken."
+    },
+    {
+     "start": 30.93,
+     "end": 39.15,
+     "text": "Sie entdeckte an den Polen Jupiters riesige Zyklone und zeigte, dass sein Kern größer und diffuser ist, als man angenommen hatte."
+    },
+    {
+     "start": 39.15,
+     "end": 41.03,
+     "text": "Hier endet unsere Jupitertour."
+    }
+   ]
+  },
+  "jupiter": {
+   "hash": "10cf8154683e",
+   "duration": 36.56,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.4,
+     "text": "Willkommen im Jupitersystem."
+    },
+    {
+     "start": 2.4,
+     "end": 8.78,
+     "text": "Dieser Riese ist fast wie ein kleines Sonnensystem: Um ihn kreisen mehr als fünfundneunzig Monde."
+    },
+    {
+     "start": 8.78,
+     "end": 22.19,
+     "text": "Der Planet ist so groß, dass tausenddreihundert Erden in ihn hineinpassen, und sein starkes Magnetfeld ist die größte Struktur im Sonnensystem; wäre es am Himmel zu sehen, würde es größer erscheinen als der Vollmond."
+    },
+    {
+     "start": 22.19,
+     "end": 33.42,
+     "text": "Im Jahr sechzehnhundertzehn entdeckte Galileo mit seinem kleinen Teleskop seine vier großen Monde, und das war der erste Beweis dafür, dass sich nicht alles um die Erde dreht."
+    },
+    {
+     "start": 33.42,
+     "end": 36.56,
+     "text": "Jetzt werden wir diese vier Monde der Reihe nach besuchen."
+    }
+   ]
+  }
+ }
+}

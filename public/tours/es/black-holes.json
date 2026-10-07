@@ -1,0 +1,181 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "cygx1": {
+   "hash": "694c088dba31",
+   "duration": 44.47,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.3,
+     "text": "Bienvenidos al recorrido por los agujeros negros."
+    },
+    {
+     "start": 3.3,
+     "end": 7.82,
+     "text": "Nuestro punto de partida es un clásico: Cygnus X-1."
+    },
+    {
+     "start": 7.82,
+     "end": 19.26,
+     "text": "Esta fuente de rayos X, descubierta con un cohete en 1964, se convirtió en 1971 en el primer objeto identificado como un agujero negro."
+    },
+    {
+     "start": 19.26,
+     "end": 31.17,
+     "text": "Tiene 21 masas solares y gira con su compañera supergigante azul HDE 226868 cada cinco días y medio alrededor de su centro de masas común."
+    },
+    {
+     "start": 31.17,
+     "end": 36.87,
+     "text": "El gas que le arranca a su compañera se calienta hasta millones de grados en un disco brillante."
+    },
+    {
+     "start": 36.87,
+     "end": 44.47,
+     "text": "Stephen Hawking había apostado a que este objeto no era un agujero negro; en 1990 aceptó su derrota."
+    }
+   ]
+  },
+  "gaiabh1": {
+   "hash": "b06cc95aa171",
+   "duration": 40.87,
+   "sentences": [
+    {
+     "start": 0.12,
+     "end": 7.46,
+     "text": "Gaia BH1, el agujero negro conocido más cercano a nosotros: 1. 560 años luz."
+    },
+    {
+     "start": 7.46,
+     "end": 12.16,
+     "text": "No tiene disco ni emite rayos X; está completamente silencioso."
+    },
+    {
+     "start": 12.16,
+     "end": 21.88,
+     "text": "Su existencia se dedujo solo del bamboleo de una estrella similar al Sol alrededor de un compañero invisible, una vez cada 186 días."
+    },
+    {
+     "start": 21.88,
+     "end": 28.56,
+     "text": "Este bamboleo lo revelaron en 2022 las mediciones precisas de posición del satélite Gaia."
+    },
+    {
+     "start": 28.56,
+     "end": 36.16,
+     "text": "Tiene 9,6 masas solares y el diámetro de su horizonte de sucesos es de solo 56 kilómetros."
+    },
+    {
+     "start": 36.16,
+     "end": 40.87,
+     "text": "Aquí solo podéis verlo mediante la lente gravitatoria que curva las estrellas del fondo."
+    }
+   ]
+  },
+  "m87": {
+   "hash": "df24ac2c42ca",
+   "duration": 38.31,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 6.3,
+     "text": "Nuestra última parada, el primer agujero negro fotografiado: M87 star."
+    },
+    {
+     "start": 6.3,
+     "end": 13.08,
+     "text": "Se encuentra en el centro de la galaxia elíptica gigante Virgo A, a 55 millones de años luz."
+    },
+    {
+     "start": 13.08,
+     "end": 21.55,
+     "text": "Tiene 6,5 mil millones de masas solares; su horizonte de sucesos es 6 veces más ancho que la órbita de Plutón."
+    },
+    {
+     "start": 21.55,
+     "end": 28.47,
+     "text": "La famosa imagen del anillo naranja publicada en 2019 es la luz del gas caliente que rodea su sombra."
+    },
+    {
+     "start": 28.47,
+     "end": 35.15,
+     "text": "De aquí surge un chorro a una velocidad cercana a la de la luz y se extiende a lo largo de 5. 000 años luz."
+    },
+    {
+     "start": 35.15,
+     "end": 38.31,
+     "text": "Nuestro recorrido por los agujeros negros ha terminado."
+    }
+   ]
+  },
+  "sgra": {
+   "hash": "5e92de9c4a5f",
+   "duration": 41.43,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 5.76,
+     "text": "Ahora vamos al corazón de nuestra galaxia, a 26. 000 años luz de distancia."
+    },
+    {
+     "start": 5.76,
+     "end": 14.72,
+     "text": "Sagittarius A star, el agujero negro supermasivo del centro de la Vía Láctea: 4,3 millones de masas solares."
+    },
+    {
+     "start": 14.72,
+     "end": 27.25,
+     "text": "Las estrellas que lo rodean nos permitieron medir su masa; la estrella llamada S2 se acerca tanto a él una vez cada 16 años que alcanza el 3 por ciento de la velocidad de la luz."
+    },
+    {
+     "start": 27.25,
+     "end": 31.67,
+     "text": "Estas observaciones trajeron el Premio Nobel de Física en 2020."
+    },
+    {
+     "start": 31.67,
+     "end": 37.53,
+     "text": "En 2022 el Telescopio del Horizonte de Sucesos obtuvo una imagen de su sombra."
+    },
+    {
+     "start": 37.53,
+     "end": 41.43,
+     "text": "Ahora mismo está bastante silencioso; casi no engulle materia."
+    }
+   ]
+  },
+  "v404": {
+   "hash": "d342bba02520",
+   "duration": 42.08,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.48,
+     "text": "V 404 Cygni, una nova de rayos X."
+    },
+    {
+     "start": 4.48,
+     "end": 16.43,
+     "text": "La mayor parte del tiempo está en silencio, pero cuando el gas acumulado de su compañera supera un umbral, estalla en unos pocos días y se convierte en la fuente de rayos X más brillante del cielo."
+    },
+    {
+     "start": 16.43,
+     "end": 23.49,
+     "text": "Estos estallidos se observaron en 1938, 56, 89 y 2015."
+    },
+    {
+     "start": 23.49,
+     "end": 35.03,
+     "text": "En el estallido de 2015 se vio que sus chorros cambiaban de dirección en segundos; la rotación del agujero negro arrastraba el espacio-tiempo y hacía bambolear el disco como una peonza."
+    },
+    {
+     "start": 35.03,
+     "end": 42.08,
+     "text": "Tiene 9 masas solares y es el primer agujero negro cuya distancia se midió directamente mediante paralaje de radio."
+    }
+   ]
+  }
+ }
+}

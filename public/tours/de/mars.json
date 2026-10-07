@@ -1,0 +1,202 @@
+{
+ "voice": "altair",
+ "locale": "de",
+ "steps": {
+  "curiosity": {
+   "hash": "af685ef61acb",
+   "duration": 38.64,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 4.8,
+     "text": "Jetzt steigen wir zur Oberfläche hinab: vor Ihnen Curiosity."
+    },
+    {
+     "start": 4.8,
+     "end": 14.81,
+     "text": "Dieser eine Tonne schwere, autogroße Roboter landete im August 2012 im Gale-Krater, an Seilen von einem Himmelskran herabgelassen."
+    },
+    {
+     "start": 14.81,
+     "end": 21.31,
+     "text": "Er erzeugt seine Energie aus der Wärme von Plutonium, deshalb beeinträchtigen ihn Staubstürme nicht."
+    },
+    {
+     "start": 21.31,
+     "end": 31.66,
+     "text": "Er bewies, dass es auf dem Kraterboden einst einen See gab, der Millionen von Jahren bestand, und er fand die chemischen Bestandteile, die für Leben nötig sind."
+    },
+    {
+     "start": 31.66,
+     "end": 38.64,
+     "text": "Seit mehr als 10 Jahren erklimmt er die Hänge des Mount Sharp und liest die Klimageschichte des Mars Schicht für Schicht."
+    }
+   ]
+  },
+  "deimos": {
+   "hash": "47534f2c6099",
+   "duration": 36.31,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.18,
+     "text": "Deimos ist der kleinere und weiter entfernte Mond des Mars."
+    },
+    {
+     "start": 4.18,
+     "end": 10.34,
+     "text": "Sein Durchmesser beträgt etwa 12 km, und er umrundet den Planeten in 30 Stunden."
+    },
+    {
+     "start": 10.34,
+     "end": 17.02,
+     "text": "Seine Oberfläche ist glatter als die von Phobos, weil seine Krater mit einer dicken Staubschicht gefüllt sind."
+    },
+    {
+     "start": 17.02,
+     "end": 22.51,
+     "text": "Von der Marsoberfläche aus gesehen ist er von einem hellen Stern nicht zu unterscheiden."
+    },
+    {
+     "start": 22.51,
+     "end": 36.31,
+     "text": "Ob beide Monde eingefangene Asteroiden oder die Überreste einer riesigen Kollision sind, wird noch immer diskutiert; Japans MMX-Mission wird eine Probe von Phobos mitbringen, um diese Frage zu beantworten."
+    }
+   ]
+  },
+  "finale": {
+   "hash": "ad3932c8c781",
+   "duration": 34.07,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 3.78,
+     "text": "Bevor wir den Mars verlassen, blicken wir noch einmal zurück."
+    },
+    {
+     "start": 3.78,
+     "end": 10.34,
+     "text": "Heute arbeiten in seiner Umlaufbahn und auf seiner Oberfläche fast ein Dutzend aktive Raumfahrzeuge."
+    },
+    {
+     "start": 10.34,
+     "end": 16.74,
+     "text": "Die Befunde sind stimmig: Mars war einst eine milde, feuchte und vielleicht bewohnbare Welt."
+    },
+    {
+     "start": 16.74,
+     "end": 25.07,
+     "text": "Als er sein Magnetfeld verlor, fegte der Sonnenwind seine Atmosphäre ins All, und der Planet verwandelte sich in eine kalte Wüste."
+    },
+    {
+     "start": 25.07,
+     "end": 32.29,
+     "text": "Und doch wird dies aller Wahrscheinlichkeit nach der erste Planet sein, auf den die Menschheit eines Tages ihren Fuß setzt."
+    },
+    {
+     "start": 32.29,
+     "end": 34.07,
+     "text": "Unsere Mars-Tour ist zu Ende."
+    }
+   ]
+  },
+  "mars": {
+   "hash": "57d7bfd3c1d4",
+   "duration": 33.27,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 1.84,
+     "text": "Willkommen zur Mars-Tour."
+    },
+    {
+     "start": 1.84,
+     "end": 9.06,
+     "text": "Der Rote Planet ist der vierte Planet von der Sonne und die Welt, zu der die Menschheit die meisten Raumfahrzeuge geschickt hat."
+    },
+    {
+     "start": 9.06,
+     "end": 14.7,
+     "text": "Sein Tag ähnelt dem der Erde sehr: 24 Stunden und 37 Minuten."
+    },
+    {
+     "start": 14.7,
+     "end": 18.59,
+     "text": "Sein Jahr hingegen dauert 687 Tage."
+    },
+    {
+     "start": 18.59,
+     "end": 27.03,
+     "text": "Seine Atmosphäre ist sehr dünn und besteht fast vollständig aus Kohlendioxid; die Durchschnittstemperatur beträgt minus 60 Grad."
+    },
+    {
+     "start": 27.03,
+     "end": 33.27,
+     "text": "Dennoch gibt es an seinen Polen Eis, auf seiner Oberfläche ausgetrocknete Flussbetten und alte Seeböden."
+    }
+   ]
+  },
+  "perseverance": {
+   "hash": "d611067d6cdc",
+   "duration": 45.18,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4.18,
+     "text": "Und Perseverance ist der fortschrittlichste Roboter auf dem Mars."
+    },
+    {
+     "start": 4.18,
+     "end": 14.95,
+     "text": "Er landete im Februar 2021 im Jezero-Krater; das ist ein altes Delta, in dem vor 3,5 Milliarden Jahren ein Fluss in einen See mündete."
+    },
+    {
+     "start": 14.95,
+     "end": 26.51,
+     "text": "Seine Aufgabe ist es, nach Spuren früheren mikrobiellen Lebens zu suchen und Gesteinsproben in Titanröhren zu füllen und zu hinterlassen, damit eine künftige Mission sie zur Erde bringt."
+    },
+    {
+     "start": 26.51,
+     "end": 37.96,
+     "text": "Der kleine Helikopter Ingenuity, den er mitbrachte, wurde das erste Fahrzeug, das auf einem anderen Planeten flog, und absolvierte 72 Flüge statt der geplanten fünf."
+    },
+    {
+     "start": 37.96,
+     "end": 45.18,
+     "text": "Das MOXIE-Experiment wiederum erzeugte Sauerstoff aus der Marsluft und ebnete so künftigen Astronauten den Weg."
+    }
+   ]
+  },
+  "phobos": {
+   "hash": "b7aba2b3c376",
+   "duration": 35.99,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 4.2,
+     "text": "Der größere der beiden kleinen Monde des Mars ist Phobos."
+    },
+    {
+     "start": 4.2,
+     "end": 9.12,
+     "text": "Er ist ein kartoffelförmiger Felsen, nur 22 km breit."
+    },
+    {
+     "start": 9.12,
+     "end": 17,
+     "text": "Er umkreist den Planeten in einer Entfernung von 6. 000 km; das ist die engste Mondumlaufbahn im Sonnensystem."
+    },
+    {
+     "start": 17,
+     "end": 26.51,
+     "text": "Er ist so schnell, dass er den Mars in 7 Stunden und 39 Minuten umrundet und von der Marsoberfläche aus gesehen im Westen aufgeht."
+    },
+    {
+     "start": 26.51,
+     "end": 35.99,
+     "text": "In jedem Jahrhundert sinkt er um 2 Meter; in etwa 50 Millionen Jahren wird er entweder auf den Mars stürzen oder zerbrechen und zu einem Ring werden."
+    }
+   ]
+  }
+ }
+}

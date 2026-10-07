@@ -1,0 +1,182 @@
+{
+ "voice": "altair",
+ "locale": "de",
+ "steps": {
+  "enceladus": {
+   "hash": "0ac2305fe56b",
+   "duration": 34.31,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 7.26,
+     "text": "Enceladus ist nur 500 Kilometer im Durchmesser, aber eine der interessantesten Welten des Sonnensystems."
+    },
+    {
+     "start": 7.26,
+     "end": 15.8,
+     "text": "Aus vier Spalten am Südpol, den sogenannten Tigerstreifen, schleudern Hunderte von Geysiren Wasserdampf und Eiskristalle ins All."
+    },
+    {
+     "start": 15.8,
+     "end": 25.59,
+     "text": "Cassini flog mitten durch diese Fontänen und fand Salz, organische Moleküle und Wasserstoff; genau die Materialien, die für das Leben nötig sind."
+    },
+    {
+     "start": 25.59,
+     "end": 28.95,
+     "text": "Diese Eiskörner speisen den E-Ring des Saturn."
+    },
+    {
+     "start": 28.95,
+     "end": 34.31,
+     "text": "Seine Oberfläche ist schneeweiß wie frischer Schnee und reflektiert fast das gesamte Sonnenlicht."
+    }
+   ]
+  },
+  "iapetus": {
+   "hash": "e998025586ca",
+   "duration": 38.95,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 6.24,
+     "text": "Unsere letzte Station ist Iapetus, einer der seltsamsten Monde des Sonnensystems."
+    },
+    {
+     "start": 6.24,
+     "end": 10.66,
+     "text": "Eine Hälfte ist weiß wie Schnee, die andere schwarz wie Kohle."
+    },
+    {
+     "start": 10.66,
+     "end": 25.47,
+     "text": "Weil auf seiner Umlaufbahn immer dieselbe Seite nach vorn zeigt, fegt er den dunklen Staub auf, der von den äußeren Ringen kommt, und aus den sich erwärmenden dunklen Regionen verdampft das Eis und regnet auf die helle Seite herab."
+    },
+    {
+     "start": 25.47,
+     "end": 36.81,
+     "text": "Genau in der Mitte seines Äquators erstreckt sich ein Gebirgskamm, 13 Kilometer hoch und 1. 300 Kilometer lang; das verleiht ihm das Aussehen einer Walnuss."
+    },
+    {
+     "start": 36.81,
+     "end": 38.95,
+     "text": "Unsere Saturn-Tour ist zu Ende."
+    }
+   ]
+  },
+  "mimas": {
+   "hash": "ab8e1648362e",
+   "duration": 34.07,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 8.42,
+     "text": "Mimas erkennen Sie auf den ersten Blick: Der riesige Herschel-Krater gibt ihm das Aussehen des Todessterns aus Star Wars."
+    },
+    {
+     "start": 8.42,
+     "end": 14.56,
+     "text": "Der Krater ist 130 Kilometer breit, also ein Drittel des Monddurchmessers."
+    },
+    {
+     "start": 14.56,
+     "end": 20.05,
+     "text": "Wäre dieser Einschlag etwas heftiger gewesen, wäre Mimas in Stücke zerbrochen."
+    },
+    {
+     "start": 20.05,
+     "end": 34.07,
+     "text": "Als 2024 die kleinen Schwankungen in seiner Umlaufbahn untersucht wurden, ergab sich ein überraschendes Ergebnis: Unter der Eiskruste dieses kleinen, gefroren wirkenden Mondes könnte ein junger Ozean liegen."
+    }
+   ]
+  },
+  "rings": {
+   "hash": "1f9a0bd854b0",
+   "duration": 38.47,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.92,
+     "text": "Schauen wir uns die Ringe jetzt aus der Nähe an."
+    },
+    {
+     "start": 2.92,
+     "end": 13.3,
+     "text": "Diese riesige Scheibe ist eigentlich kein einzelnes Gebilde, sondern besteht aus Milliarden von Eisbrocken, von mikroskopischem Staub bis zur Größe eines Hauses."
+    },
+    {
+     "start": 13.3,
+     "end": 25.53,
+     "text": "Ihre Breite übersteigt 280. 000 Kilometer, aber ihre Dicke beträgt an den meisten Stellen weniger als 10 Meter: Sie ist sogar dünner als ein Blatt Papier im gleichen Maßstab."
+    },
+    {
+     "start": 25.53,
+     "end": 32.07,
+     "text": "Die Anziehungskraft des kleinen Mondes Mimas öffnet die Cassini-Teilung, die größte Lücke dazwischen."
+    },
+    {
+     "start": 32.07,
+     "end": 38.47,
+     "text": "Die Ringe sind wahrscheinlich nur ein paar hundert Millionen Jahre alt und regnen nach und nach auf den Planeten herab."
+    }
+   ]
+  },
+  "saturn": {
+   "hash": "cccd57a052c4",
+   "duration": 30.39,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 1.88,
+     "text": "Willkommen zur Saturn-Tour."
+    },
+    {
+     "start": 1.88,
+     "end": 8.14,
+     "text": "Der sechste Planet von der Sonne ist ein Gasriese, im Durchmesser neunmal so groß wie die Erde."
+    },
+    {
+     "start": 8.14,
+     "end": 13.48,
+     "text": "Seine Dichte ist geringer als die von Wasser; das ist für einen Planeten einzigartig."
+    },
+    {
+     "start": 13.48,
+     "end": 18.73,
+     "text": "An seinem Äquator erreichen die Winde 1. 800 Kilometer pro Stunde."
+    },
+    {
+     "start": 18.73,
+     "end": 30.39,
+     "text": "Die Raumsonde Cassini untersuchte dieses System von 2004 bis 2017, 13 Jahre lang, und beendete ihre Mission, indem sie in die Atmosphäre des Planeten eintauchte."
+    }
+   ]
+  },
+  "titan": {
+   "hash": "34130b6e285a",
+   "duration": 37.83,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 6.48,
+     "text": "Titan ist der größte Mond des Saturn und der einzige Mond im Sonnensystem mit einer dicken Atmosphäre."
+    },
+    {
+     "start": 6.48,
+     "end": 16.26,
+     "text": "Seine überwiegend aus Stickstoff bestehende Atmosphäre ist 50 Prozent dichter als die der Erde und verbirgt die Oberfläche hinter einem orangefarbenen Dunst."
+    },
+    {
+     "start": 16.26,
+     "end": 29.75,
+     "text": "Auf seiner Oberfläche gibt es Seen, Flüsse und Regen aus flüssigem Methan und Ethan; bei minus 180 Grad ist Wasser so hart wie Fels. 2005 landete die Sonde Huygens auf seiner Oberfläche."
+    },
+    {
+     "start": 29.75,
+     "end": 37.83,
+     "text": "Die nuklear betriebene Drohne der NASA namens Dragonfly wird 2034 hier eintreffen und über die Sanddünen fliegen."
+    }
+   ]
+  }
+ }
+}

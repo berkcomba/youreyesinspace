@@ -1,0 +1,176 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "cygx1": {
+   "hash": "9205d443c05c",
+   "duration": 41.27,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.34,
+     "text": "Welcome to the black holes tour."
+    },
+    {
+     "start": 2.34,
+     "end": 6.52,
+     "text": "Our starting point is a classic: Cygnus X-1."
+    },
+    {
+     "start": 6.52,
+     "end": 16,
+     "text": "This X-ray source, discovered with a rocket in 1964, became the first object identified as a black hole in 1971."
+    },
+    {
+     "start": 16,
+     "end": 29.97,
+     "text": "It is 21 solar masses, and once every five and a half days it orbits their common center of mass together with its blue supergiant companion HDE 226868."
+    },
+    {
+     "start": 29.97,
+     "end": 34.97,
+     "text": "Gas drawn from its companion heats to millions of degrees in a bright disk."
+    },
+    {
+     "start": 34.97,
+     "end": 41.27,
+     "text": "Stephen Hawking had bet that this object was not a black hole; in 1990 he conceded his defeat."
+    }
+   ]
+  },
+  "gaiabh1": {
+   "hash": "9c3309d84e06",
+   "duration": 38.55,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 7.14,
+     "text": "Gaia BH1, the closest known black hole to us: 1,560 light-years."
+    },
+    {
+     "start": 7.14,
+     "end": 12.12,
+     "text": "It has neither a disk nor does it emit X-rays; it is completely silent."
+    },
+    {
+     "start": 12.12,
+     "end": 20.49,
+     "text": "Its existence was understood only from a Sun-like star wobbling around an invisible companion once every 186 days."
+    },
+    {
+     "start": 20.49,
+     "end": 33.75,
+     "text": "This wobble was revealed in 2022 by the precise position measurements of the Gaia satellite. It is 9. 6 solar masses, and the diameter of its event horizon is only 56 kilometers."
+    },
+    {
+     "start": 33.75,
+     "end": 38.55,
+     "text": "Here you can see it only by the gravitational lensing that bends the stars in the background."
+    }
+   ]
+  },
+  "m87": {
+   "hash": "d0fdd142a3ef",
+   "duration": 36.21,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.24,
+     "text": "Our last stop, the first black hole to be photographed: M87 star."
+    },
+    {
+     "start": 6.24,
+     "end": 13.36,
+     "text": "It sits at the center of the giant elliptical galaxy Virgo A, 55 million light-years away."
+    },
+    {
+     "start": 13.36,
+     "end": 20.57,
+     "text": "It is six and a half billion solar masses; its event horizon is six times wider than Pluto's orbit."
+    },
+    {
+     "start": 20.57,
+     "end": 27.89,
+     "text": "The famous orange ring image published in 2019 is the light of the hot gas surrounding its shadow."
+    },
+    {
+     "start": 27.89,
+     "end": 33.91,
+     "text": "From here a jet shoots out at nearly the speed of light and extends for 5,000 light-years."
+    },
+    {
+     "start": 33.91,
+     "end": 36.21,
+     "text": "Our black holes tour has come to an end."
+    }
+   ]
+  },
+  "sgra": {
+   "hash": "49a9c55bfd47",
+   "duration": 38.87,
+   "sentences": [
+    {
+     "start": 0.2,
+     "end": 5.4,
+     "text": "Now we're going to the heart of our galaxy, 26,000 light-years away."
+    },
+    {
+     "start": 5.4,
+     "end": 13.86,
+     "text": "Sagittarius A star, the supermassive black hole at the center of the Milky Way: 4. 3 million solar masses."
+    },
+    {
+     "start": 13.86,
+     "end": 25.57,
+     "text": "The stars around it allowed us to measure its mass; the star named S2 approaches it so closely once every 16 years that it reaches 3 percent of the speed of light."
+    },
+    {
+     "start": 25.57,
+     "end": 29.83,
+     "text": "These observations brought the Nobel Prize in Physics in 2020."
+    },
+    {
+     "start": 29.83,
+     "end": 34.73,
+     "text": "In 2022 the Event Horizon Telescope imaged its shadow."
+    },
+    {
+     "start": 34.73,
+     "end": 38.87,
+     "text": "Right now it is quite quiet; it is swallowing almost no matter."
+    }
+   ]
+  },
+  "v404": {
+   "hash": "75fffd8dd637",
+   "duration": 41.43,
+   "sentences": [
+    {
+     "start": 0.18,
+     "end": 4.24,
+     "text": "V404 Cygni, an X-ray nova."
+    },
+    {
+     "start": 4.24,
+     "end": 15.4,
+     "text": "It is silent most of the time, but when gas accumulated from its companion crosses a threshold, it erupts within a few days and becomes the brightest X-ray source in the sky."
+    },
+    {
+     "start": 15.4,
+     "end": 22.95,
+     "text": "These outbursts were observed in 1938, 1956, 1989, and 2015."
+    },
+    {
+     "start": 22.95,
+     "end": 34.49,
+     "text": "During the 2015 outburst, its jets were seen to change direction within seconds; the black hole's spin was dragging spacetime and wobbling the disk like a spinning top."
+    },
+    {
+     "start": 34.49,
+     "end": 41.43,
+     "text": "It is 9 solar masses, and it is the first black hole whose distance was measured directly by radio parallax."
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,347 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "earth": {
+   "hash": "b3893823877e",
+   "duration": 25.59,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 2.54,
+     "text": "And here is our home: Earth."
+    },
+    {
+     "start": 2.54,
+     "end": 12.57,
+     "text": "The only place in the universe we know of that harbors life. 71 percent of its surface is covered with liquid water; that is why it looks blue from space."
+    },
+    {
+     "start": 12.57,
+     "end": 19.23,
+     "text": "Its strong magnetic field protects us from the solar wind, and the ozone layer filters ultraviolet rays."
+    },
+    {
+     "start": 19.23,
+     "end": 25.59,
+     "text": "The Moon's gravity, in turn, keeps Earth's axial tilt steady, so that the seasons stay regular."
+    }
+   ]
+  },
+  "jupiter": {
+   "hash": "b4d1729d6134",
+   "duration": 29.82,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 2.2,
+     "text": "Jupiter, king of the planets."
+    },
+    {
+     "start": 2.2,
+     "end": 9.91,
+     "text": "Its mass is two and a half times the total of all the other planets; 1,300 Earths fit inside it."
+    },
+    {
+     "start": 9.91,
+     "end": 17.17,
+     "text": "It has no surface; the colorful bands you see are giant cloud belts in an atmosphere of hydrogen and helium."
+    },
+    {
+     "start": 17.17,
+     "end": 23.74,
+     "text": "The Great Red Spot is a storm that has lasted at least 350 years and is larger than Earth."
+    },
+    {
+     "start": 23.74,
+     "end": 29.82,
+     "text": "This giant's day lasts only 10 hours, and more than 95 known moons orbit around it."
+    }
+   ]
+  },
+  "mars": {
+   "hash": "ba7ee987c4c4",
+   "duration": 30.71,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 2.18,
+     "text": "The Red Planet, Mars."
+    },
+    {
+     "start": 2.18,
+     "end": 5.68,
+     "text": "It takes its color from the rusted iron on its surface."
+    },
+    {
+     "start": 5.68,
+     "end": 15.28,
+     "text": "Its diameter is about half of Earth's, but it is home to the largest volcano in the Solar System: Olympus Mons, 22 kilometers high."
+    },
+    {
+     "start": 15.28,
+     "end": 23.77,
+     "text": "The Valles Marineris canyon, 4,000 kilometers long, is long enough to stretch from one end of the American continent to the other."
+    },
+    {
+     "start": 23.77,
+     "end": 30.71,
+     "text": "Billions of years ago there were rivers and lakes on its surface; today, robots are searching for traces of that water."
+    }
+   ]
+  },
+  "mercury": {
+   "hash": "f2317bcb62f7",
+   "duration": 27.91,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4.92,
+     "text": "Our first stop is Mercury, the smallest planet and the closest to the Sun."
+    },
+    {
+     "start": 4.92,
+     "end": 8.16,
+     "text": "One trip around the Sun takes only 88 days."
+    },
+    {
+     "start": 8.16,
+     "end": 19.05,
+     "text": "Its atmosphere is so thin it might as well not exist; that is why the day side rises to 430 degrees while the night side drops to minus 180 degrees."
+    },
+    {
+     "start": 19.05,
+     "end": 22.61,
+     "text": "Its surface is covered with craters, just like the Moon."
+    },
+    {
+     "start": 22.61,
+     "end": 27.91,
+     "text": "Right now, Europe and Japan's joint spacecraft BepiColombo is on its way toward it."
+    }
+   ]
+  },
+  "moon": {
+   "hash": "ed18b2f6a5a5",
+   "duration": 27.03,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 7.18,
+     "text": "The Moon is Earth's only natural satellite and the only other celestial body humans have set foot on."
+    },
+    {
+     "start": 7.18,
+     "end": 14.83,
+     "text": "Between 1969 and 1972, twelve astronauts walked on its surface on the Apollo missions."
+    },
+    {
+     "start": 14.83,
+     "end": 23.69,
+     "text": "It is 384,000 kilometers away and always shows us the same face, because its rotation is locked to its orbit."
+    },
+    {
+     "start": 23.69,
+     "end": 27.03,
+     "text": "Every year it moves about 4 centimeters farther from us."
+    }
+   ]
+  },
+  "neptune": {
+   "hash": "d7ce914ffee4",
+   "duration": 33.11,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.12,
+     "text": "Neptune, the farthest planet from the Sun."
+    },
+    {
+     "start": 3.12,
+     "end": 16.23,
+     "text": "It was discovered not with a telescope, but on paper: mathematicians studying the deviations in Uranus's orbit calculated its position, and in 1846 it was found right there."
+    },
+    {
+     "start": 16.23,
+     "end": 23.01,
+     "text": "Its winds exceed 2,100 kilometers per hour; they are the fastest winds in the Solar System."
+    },
+    {
+     "start": 23.01,
+     "end": 26.79,
+     "text": "One trip around the Sun takes 165 years."
+    },
+    {
+     "start": 26.79,
+     "end": 33.11,
+     "text": "Its large moon Triton orbits in the opposite direction; it is probably a captured Kuiper Belt object."
+    }
+   ]
+  },
+  "pluto": {
+   "hash": "eaf3ddb572bc",
+   "duration": 35.75,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.1,
+     "text": "Our last stop is Pluto."
+    },
+    {
+     "start": 2.1,
+     "end": 10.1,
+     "text": "It was discovered in 1930 and was considered the ninth planet until 2006; it is now a dwarf planet."
+    },
+    {
+     "start": 10.1,
+     "end": 15.87,
+     "text": "Until New Horizons flew past it in 2015, it was nothing but a blurry dot."
+    },
+    {
+     "start": 15.87,
+     "end": 22.89,
+     "text": "The spacecraft found a giant heart shape, nitrogen glaciers, and mountains of water ice on its surface."
+    },
+    {
+     "start": 22.89,
+     "end": 26.49,
+     "text": "The surface temperature is minus 230 degrees."
+    },
+    {
+     "start": 26.49,
+     "end": 32.49,
+     "text": "Its moon Charon is so large that the two of them orbit together around a common center of mass."
+    },
+    {
+     "start": 32.49,
+     "end": 35.75,
+     "text": "Our Solar System tour ends here; have a good journey."
+    }
+   ]
+  },
+  "saturn": {
+   "hash": "042f94455d77",
+   "duration": 27.1,
+   "sentences": [
+    {
+     "start": 0.12,
+     "end": 4.98,
+     "text": "Saturn is, without a doubt, the most elegant planet in the Solar System."
+    },
+    {
+     "start": 4.98,
+     "end": 15.21,
+     "text": "Its rings are made mostly of water ice; their width reaches 280,000 kilometers, while their thickness is only about 10 meters in most places."
+    },
+    {
+     "start": 15.21,
+     "end": 20.87,
+     "text": "The planet itself is so light that if you put it in a big enough ocean, it would float."
+    },
+    {
+     "start": 20.87,
+     "end": 27.1,
+     "text": "At its north pole, a mysterious hexagonal storm rotates, each side as large as Earth."
+    }
+   ]
+  },
+  "sun": {
+   "hash": "a43c8392cda2",
+   "duration": 34.71,
+   "sentences": [
+    {
+     "start": 0,
+     "end": 2.676,
+     "text": "Welcome to the Solar System tour."
+    },
+    {
+     "start": 2.676,
+     "end": 7.218,
+     "text": "Our journey begins at the center of everything, the Sun."
+    },
+    {
+     "start": 7.218,
+     "end": 15.571,
+     "text": "This star, 4. 5 billion years old, carries 99. 8 percent of the total mass of the system all by itself."
+    },
+    {
+     "start": 15.571,
+     "end": 21.734,
+     "text": "Its diameter is 1,400,000 kilometers; 109 Earths fit inside it side by side."
+    },
+    {
+     "start": 21.734,
+     "end": 27.168,
+     "text": "Its surface is 5,500 degrees, while its core is 15 million degrees."
+    },
+    {
+     "start": 27.168,
+     "end": 34.71,
+     "text": "The light you are seeing right now leaves here and reaches Earth in 8 minutes and 20 seconds."
+    }
+   ]
+  },
+  "uranus": {
+   "hash": "649553bfc5c5",
+   "duration": 28.15,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 3.2,
+     "text": "Uranus, the planet lying on its side."
+    },
+    {
+     "start": 3.2,
+     "end": 9.64,
+     "text": "Its axis is tilted 98 degrees; that is, it all but rolls as it orbits the Sun."
+    },
+    {
+     "start": 9.64,
+     "end": 15.95,
+     "text": "Because of this, its poles experience 42 years of day and 42 years of night."
+    },
+    {
+     "start": 15.95,
+     "end": 20.01,
+     "text": "It looks blue-green because methane gas absorbs red light."
+    },
+    {
+     "start": 20.01,
+     "end": 28.15,
+     "text": "It is the first planet discovered with a telescope, by William Herschel in 1781, and only Voyager 2 saw it up close."
+    }
+   ]
+  },
+  "venus": {
+   "hash": "609537a3f8c7",
+   "duration": 30.87,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.88,
+     "text": "Venus is considered Earth's twin in size, but its conditions are a true hell."
+    },
+    {
+     "start": 5.88,
+     "end": 18.63,
+     "text": "Its thick carbon dioxide atmosphere raises the surface pressure to 92 times that of Earth and, through the greenhouse effect, drives the temperature up to 465 degrees."
+    },
+    {
+     "start": 18.63,
+     "end": 22.43,
+     "text": "It is hotter even than Mercury, which is closer to the Sun."
+    },
+    {
+     "start": 22.43,
+     "end": 24.91,
+     "text": "Its clouds are sulfuric acid."
+    },
+    {
+     "start": 24.91,
+     "end": 30.87,
+     "text": "Venus rotates in the opposite direction and very slowly: a day there is longer than a year."
+    }
+   ]
+  }
+ }
+}

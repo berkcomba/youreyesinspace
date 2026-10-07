@@ -92,16 +92,16 @@ canvas#overlay { pointer-events: none; }
 }
 .brand-name { font-weight: 600; letter-spacing: 0.22em; font-size: 12px; white-space: nowrap; line-height: 1; }
 .brand-sub { color: var(--muted); font-size: 11px; letter-spacing: 0.08em; }
-#btn-places .short, #btn-mission .short { display: none; }
+#btn-places .short, #btn-mission .short, #btn-tours .short { display: none; }
 @media (max-width: 900px) {
   .brand-sub { display: none; }
 }
 @media (max-width: 640px) {
   .brand-name { display: none; }
   #btn-roam { display: none; }
-  #btn-places .long, #btn-mission .long { display: none; }
-  #btn-places .short, #btn-mission .short { display: inline; }
-  #btn-mission { padding: 0 8px; }
+  #btn-places .long, #btn-mission .long, #btn-tours .long { display: none; }
+  #btn-places .short, #btn-mission .short, #btn-tours .short { display: inline; }
+  #btn-mission, #btn-tours { padding: 0 8px; }
 }
 .topbar-right { display: flex; gap: 8px; align-items: center; }
 .text-btn { height: 32px; padding: 0 12px; font-size: 12.5px; white-space: nowrap; }
@@ -289,6 +289,43 @@ button:disabled:hover { background: rgba(20, 32, 56, 0.7); border-color: var(--p
 .m-mission-btns { display: flex; gap: 4px; flex: none; }
 .m-mission-btns button { padding: 4px 8px; font-size: 11px; }
 
+/* ---------- Guided tours ---------- */
+#tours { top: 68px; right: 16px; width: 360px; max-height: calc(100vh - 220px); overflow-y: auto; }
+#tours .panel-title { margin-bottom: 6px; }
+.tours-intro { margin: 0 0 10px; font-size: 12px; color: var(--muted); line-height: 1.45; }
+.tours-list { display: flex; flex-direction: column; gap: 6px; }
+.tour-item {
+  display: flex; gap: 10px; align-items: flex-start; text-align: left; width: 100%;
+  padding: 9px 10px; border-radius: 9px; background: rgba(20, 32, 56, 0.45); cursor: pointer;
+}
+.tour-item:hover { background: rgba(82, 215, 255, 0.14); }
+.tour-icon { font-size: 20px; line-height: 1.2; flex: none; width: 26px; text-align: center; }
+.tour-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.tour-name { font-size: 13.5px; color: #fff; }
+.tour-summary { font-size: 11.5px; color: var(--muted); line-height: 1.4; }
+.tour-meta { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-top: 2px; }
+
+.tour-bar {
+  position: absolute; left: 50%; bottom: 96px; transform: translateX(-50%);
+  width: min(720px, calc(100vw - 32px));
+  background: var(--panel); border: 1px solid var(--panel-border); border-radius: 12px;
+  backdrop-filter: blur(14px) saturate(140%); -webkit-backdrop-filter: blur(14px) saturate(140%);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+  padding: 10px 14px 10px; z-index: 5;
+  animation: toast-in 0.25s ease;
+}
+.tour-bar[hidden] { display: none; }
+.tour-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+.tour-step { font-family: var(--mono); color: var(--muted); letter-spacing: 0.04em; }
+.tour-subtitle { margin: 7px 0 8px; font-size: 15px; line-height: 1.45; min-height: 44px; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6); }
+.tour-bar.silent .tour-subtitle { font-size: 13.5px; }
+.tour-progress { height: 3px; border-radius: 2px; background: rgba(160, 178, 205, 0.18); overflow: hidden; }
+#tour-progress-fill { height: 100%; width: 0; background: var(--accent); transition: width 0.25s linear; }
+.tour-bar.paused #tour-progress-fill { background: var(--muted); }
+.tour-controls { display: flex; gap: 6px; justify-content: center; margin-top: 8px; }
+.tour-controls button { min-width: 40px; padding: 5px 10px; }
+.tour-controls .tour-stop { margin-left: 10px; font-size: 12px; }
+
 /* ---------- Bottom bar ---------- */
 #bottombar {
   position: absolute; bottom: 0; left: 0; right: 0;
@@ -387,12 +424,15 @@ kbd {
   }
 
   /* info, settings & mission become bottom sheets above the time bar */
-  #info, #settings, #mission {
+  #info, #settings, #mission, #tours {
     top: auto; left: 8px; right: 8px; width: auto;
     bottom: calc(96px + env(safe-area-inset-bottom));
     max-height: 42dvh; padding: 12px 14px;
   }
-  #mission { max-height: 60dvh; }
+  #mission, #tours { max-height: 60dvh; }
+  .tour-bar { bottom: calc(118px + env(safe-area-inset-bottom)); padding: 8px 12px; }
+  .tour-subtitle { font-size: 13px; min-height: 36px; margin: 5px 0 6px; }
+  .tour-controls { margin-top: 6px; }
   .m-row select { max-width: 60vw; font-size: 13px; min-height: 34px; }
   .m-actions button, .m-mission-btns button { min-height: 38px; }
   #info h2 { font-size: 18px; }
@@ -426,5 +466,5 @@ kbd {
   .help-grid { grid-template-columns: 1fr; gap: 8px; font-size: 12px; }
 }
 @media (max-width: 700px) and (orientation: landscape) {
-  #info, #settings, #mission { max-height: calc(100dvh - 150px); bottom: calc(80px + env(safe-area-inset-bottom)); left: 8px; right: 8px; }
+  #info, #settings, #mission, #tours { max-height: calc(100dvh - 150px); bottom: calc(80px + env(safe-area-inset-bottom)); left: 8px; right: 8px; }
 }

@@ -10,7 +10,7 @@
  *   - `_('…')` calls in src/**\/*.ts
  *   - `rows.push(['label', 'value'])` info-grid rows (labels and literal values)
  *   - display fields in data files (name/summary/description/desc/tagline/label/title/note/group/credit/
- *     hyperLabel/hostName) and `facts: { 'k': 'v' }` objects
+ *     hyperLabel/hostName/text) and `facts: { 'k': 'v' }` objects
  *   - label tables (TYPE_LABELS, CLASS_LABEL, LUM_CLASS_DESC, LANDMARK_KIND_LABEL, GALAXY_TYPE_LABEL)
  *   - `data-i18n*` attributes in index.html
  */
@@ -126,7 +126,7 @@ function looksLikeText(s) {
 /* ------------------------------------------------------------------ TS sources */
 
 const DATA_FILE = /\/src\/(data\/|galaxy\/galaxies\.ts|ui\/places\.ts|ui\/UI\.ts|gen\/SystemGenerator\.ts|astro\/stellar\.ts|ui\/format\.ts|ui\/MissionPanel\.ts)/;
-const FIELD_RE = /(?:^|[\s,{(])(name|summary|description|desc|tagline|label|title|note|group|credit|hyperLabel|hostName)\s*:\s*$/;
+const FIELD_RE = /(?:^|[\s,{(])(name|summary|description|desc|tagline|label|title|note|group|credit|hyperLabel|hostName|text)\s*:\s*$/;
 const TABLE_NAMES = ['TYPE_LABELS', 'CLASS_LABEL', 'LUM_CLASS_DESC', 'LANDMARK_KIND_LABEL', 'GALAXY_TYPE_LABEL', 'LETTERS_TR'];
 
 const keys = new Map(); // key -> Set(files)

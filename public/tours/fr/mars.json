@@ -1,0 +1,202 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "curiosity": {
+   "hash": "eca827cbc6fd",
+   "duration": 36.47,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4.48,
+     "text": "Nous descendons maintenant à la surface : devant vous, Curiosity."
+    },
+    {
+     "start": 4.48,
+     "end": 14.2,
+     "text": "Ce robot de la taille d'une voiture, qui pèse une tonne, s'est posé dans le cratère Gale en août deux mille douze, descendu au bout de câbles par une grue volante."
+    },
+    {
+     "start": 14.2,
+     "end": 20.79,
+     "text": "Il produit son énergie à partir de la chaleur du plutonium, et n'est donc pas affecté par les tempêtes de poussière."
+    },
+    {
+     "start": 20.79,
+     "end": 29.47,
+     "text": "Il a prouvé qu'un lac ayant duré des millions d'années occupait autrefois le fond du cratère, et il a trouvé les composants chimiques nécessaires à la vie."
+    },
+    {
+     "start": 29.47,
+     "end": 36.47,
+     "text": "Depuis plus de dix ans, il gravit les pentes du mont Sharp et lit, couche après couche, l'histoire climatique de Mars."
+    }
+   ]
+  },
+  "deimos": {
+   "hash": "f3cdb57e6a71",
+   "duration": 31.2,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 4.02,
+     "text": "Déimos, la lune de Mars la plus petite et la plus éloignée."
+    },
+    {
+     "start": 4.02,
+     "end": 9.23,
+     "text": "Son diamètre est d'environ douze kilomètres, et il fait le tour de la planète en trente heures."
+    },
+    {
+     "start": 9.23,
+     "end": 15.29,
+     "text": "Sa surface est plus lisse que celle de Phobos, car ses cratères sont remplis d'une épaisse couche de poussière."
+    },
+    {
+     "start": 15.29,
+     "end": 19.81,
+     "text": "Vu depuis la surface de Mars, il ne se distingue pas d'une étoile brillante."
+    },
+    {
+     "start": 19.81,
+     "end": 31.2,
+     "text": "On débat encore pour savoir si les deux lunes sont des astéroïdes capturés ou les vestiges d'une collision géante ; la mission MMX du Japon rapportera un échantillon de Phobos pour répondre à cette question."
+    }
+   ]
+  },
+  "finale": {
+   "hash": "54bc6a7be413",
+   "duration": 31.51,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4.12,
+     "text": "Avant de quitter Mars, jetons encore une fois un regard en arrière."
+    },
+    {
+     "start": 4.12,
+     "end": 9.66,
+     "text": "Aujourd'hui, près d'une douzaine d'engins actifs fonctionnent en orbite autour d'elle et à sa surface."
+    },
+    {
+     "start": 9.66,
+     "end": 15.85,
+     "text": "Les découvertes sont cohérentes : Mars était autrefois un monde tiède, humide et peut-être habitable."
+    },
+    {
+     "start": 15.85,
+     "end": 24.05,
+     "text": "Lorsqu'elle a perdu son champ magnétique, le vent solaire a balayé son atmosphère dans l'espace, et la planète s'est transformée en un désert froid."
+    },
+    {
+     "start": 24.05,
+     "end": 29.69,
+     "text": "Pourtant, la première planète où l'humanité posera un jour le pied sera très probablement celle-ci."
+    },
+    {
+     "start": 29.69,
+     "end": 31.51,
+     "text": "Notre visite de Mars est terminée."
+    }
+   ]
+  },
+  "mars": {
+   "hash": "1bca8c80eca9",
+   "duration": 33.67,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.4,
+     "text": "Bienvenue pour la visite de Mars."
+    },
+    {
+     "start": 2.4,
+     "end": 9.72,
+     "text": "La Planète rouge est la quatrième planète à partir du Soleil, et le monde vers lequel l'humanité a envoyé le plus d'engins."
+    },
+    {
+     "start": 9.72,
+     "end": 14.96,
+     "text": "Son jour ressemble beaucoup à celui de la Terre : vingt-quatre heures et trente-sept minutes."
+    },
+    {
+     "start": 14.96,
+     "end": 18.57,
+     "text": "Quant à son année, elle dure six cent quatre-vingt-sept jours."
+    },
+    {
+     "start": 18.57,
+     "end": 26.91,
+     "text": "Son atmosphère est très ténue et se compose presque entièrement de dioxyde de carbone ; la température moyenne est de moins soixante degrés."
+    },
+    {
+     "start": 26.91,
+     "end": 33.67,
+     "text": "Pourtant, il y a de la glace à ses pôles, et, à sa surface, des lits de rivières asséchés et d'anciens fonds de lacs."
+    }
+   ]
+  },
+  "perseverance": {
+   "hash": "2f030a82337b",
+   "duration": 40.87,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.36,
+     "text": "Et Perseverance, le robot le plus avancé sur Mars."
+    },
+    {
+     "start": 3.36,
+     "end": 13.04,
+     "text": "Il s'est posé dans le cratère Jezero en février deux mille vingt et un ; c'est un ancien delta où, il y a trois milliards et demi d'années, une rivière se jetait dans un lac."
+    },
+    {
+     "start": 13.04,
+     "end": 23.25,
+     "text": "Sa mission est de chercher des traces de vie microbienne passée et de remplir des tubes en titane d'échantillons de roche, pour les laisser afin qu'une future mission les rapporte sur Terre."
+    },
+    {
+     "start": 23.25,
+     "end": 33.87,
+     "text": "Le petit hélicoptère Ingenuity, qu'il a emporté avec lui, est devenu le premier engin à voler sur une autre planète, et il a effectué soixante-douze vols au lieu des cinq prévus."
+    },
+    {
+     "start": 33.87,
+     "end": 40.87,
+     "text": "L'expérience MOXIE, quant à elle, a ouvert la voie aux futurs astronautes en produisant de l'oxygène à partir de l'air de Mars."
+    }
+   ]
+  },
+  "phobos": {
+   "hash": "d69a6fb12702",
+   "duration": 31.74,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.7,
+     "text": "La plus grande des deux petites lunes de Mars est Phobos."
+    },
+    {
+     "start": 3.7,
+     "end": 8.59,
+     "text": "C'est un rocher en forme de pomme de terre, large de seulement vingt-deux kilomètres."
+    },
+    {
+     "start": 8.59,
+     "end": 14.41,
+     "text": "Il orbite à six mille kilomètres de la planète ; c'est l'orbite lunaire la plus proche du Système solaire."
+    },
+    {
+     "start": 14.41,
+     "end": 22.41,
+     "text": "Il est si rapide qu'il fait le tour de Mars en sept heures et trente-neuf minutes, et, vu depuis la surface de Mars, il se lève à l'ouest."
+    },
+    {
+     "start": 22.41,
+     "end": 31.74,
+     "text": "Il descend de deux mètres par siècle ; dans environ cinquante millions d'années, soit il s'écrasera sur Mars, soit il se disloquera et se transformera en un anneau."
+    }
+   ]
+  }
+ }
+}

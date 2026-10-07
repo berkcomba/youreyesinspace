@@ -1,0 +1,202 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "curiosity": {
+   "hash": "45c2ec400513",
+   "duration": 36.31,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.34,
+     "text": "Ahora descendemos a la superficie: ante vosotros, Curiosity."
+    },
+    {
+     "start": 4.34,
+     "end": 14.82,
+     "text": "Este robot, del tamaño de un coche y de una tonelada de peso, aterrizó en el cráter Gale en agosto de dos mil doce, suspendido de cables mediante una grúa aérea."
+    },
+    {
+     "start": 14.82,
+     "end": 20.73,
+     "text": "Genera su energía a partir del calor del plutonio, por lo que las tormentas de polvo no le afectan."
+    },
+    {
+     "start": 20.73,
+     "end": 29.33,
+     "text": "Demostró que en el fondo del cráter hubo antaño un lago que duró millones de años, y encontró los componentes químicos necesarios para la vida."
+    },
+    {
+     "start": 29.33,
+     "end": 36.31,
+     "text": "Desde hace más de diez años asciende por las laderas del monte Sharp, leyendo capa a capa la historia climática de Marte."
+    }
+   ]
+  },
+  "deimos": {
+   "hash": "6bb3543a72f7",
+   "duration": 31.36,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 3.6,
+     "text": "Deimos, la luna más pequeña y más lejana de Marte."
+    },
+    {
+     "start": 3.6,
+     "end": 8.61,
+     "text": "Su diámetro es de unos doce kilómetros y da una vuelta al planeta en treinta horas."
+    },
+    {
+     "start": 8.61,
+     "end": 15.11,
+     "text": "Su superficie es más lisa que la de Fobos, porque sus cráteres están rellenos de una gruesa capa de polvo."
+    },
+    {
+     "start": 15.11,
+     "end": 19.87,
+     "text": "Visto desde la superficie de Marte, no se distingue de una estrella brillante."
+    },
+    {
+     "start": 19.87,
+     "end": 31.36,
+     "text": "Todavía se debate si ambas lunas son asteroides capturados o restos de una colisión gigante; la misión MMX de Japón traerá muestras de Fobos para responder a esta pregunta."
+    }
+   ]
+  },
+  "finale": {
+   "hash": "48478b4503c5",
+   "duration": 32.48,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.84,
+     "text": "Antes de dejar Marte, miremos atrás una vez más."
+    },
+    {
+     "start": 3.84,
+     "end": 8.96,
+     "text": "Hoy operan cerca de una docena de vehículos activos en su órbita y en su superficie."
+    },
+    {
+     "start": 8.96,
+     "end": 15.67,
+     "text": "Los hallazgos son coherentes: Marte fue en otro tiempo un mundo tibio, húmedo y quizá habitable."
+    },
+    {
+     "start": 15.67,
+     "end": 23.75,
+     "text": "Cuando perdió su campo magnético, el viento solar barrió su atmósfera hacia el espacio y el planeta se convirtió en un desierto frío."
+    },
+    {
+     "start": 23.75,
+     "end": 30.22,
+     "text": "Aun así, lo más probable es que este sea el primer planeta en el que la humanidad ponga el pie algún día."
+    },
+    {
+     "start": 30.22,
+     "end": 32.48,
+     "text": "Nuestro recorrido por Marte ha terminado."
+    }
+   ]
+  },
+  "mars": {
+   "hash": "4661c5c4d53d",
+   "duration": 34.23,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.42,
+     "text": "Bienvenidos al recorrido por Marte."
+    },
+    {
+     "start": 2.42,
+     "end": 9,
+     "text": "El Planeta Rojo es el cuarto planeta desde el Sol y el mundo al que la humanidad ha enviado más vehículos."
+    },
+    {
+     "start": 9,
+     "end": 14.5,
+     "text": "Su día se parece mucho al de la Tierra: veinticuatro horas y treinta y siete minutos."
+    },
+    {
+     "start": 14.5,
+     "end": 18.73,
+     "text": "Su año, en cambio, dura seiscientos ochenta y siete días."
+    },
+    {
+     "start": 18.73,
+     "end": 27.29,
+     "text": "Su atmósfera es muy tenue y está compuesta casi por completo de dióxido de carbono; la temperatura media es de menos sesenta grados."
+    },
+    {
+     "start": 27.29,
+     "end": 34.23,
+     "text": "Aun así, hay hielo en sus polos y, en su superficie, cauces secos de ríos y antiguos fondos de lagos."
+    }
+   ]
+  },
+  "perseverance": {
+   "hash": "e3a35adce72a",
+   "duration": 41.99,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 3.28,
+     "text": "Y Perseverance, el robot más avanzado de Marte."
+    },
+    {
+     "start": 3.28,
+     "end": 14.12,
+     "text": "Aterrizó en el cráter Jezero en febrero de dos mil veintiuno; se trata de un antiguo delta donde, hace tres mil quinientos millones de años, un río desembocaba en un lago."
+    },
+    {
+     "start": 14.12,
+     "end": 24.39,
+     "text": "Su misión es buscar rastros de vida microbiana pasada y llenar tubos de titanio con muestras de roca para dejarlas, de modo que una misión futura las traiga a la Tierra."
+    },
+    {
+     "start": 24.39,
+     "end": 34.79,
+     "text": "El pequeño helicóptero Ingenuity que trajo consigo se convirtió en el primer vehículo que voló en otro planeta, y realizó setenta y dos vuelos en lugar de los cinco previstos."
+    },
+    {
+     "start": 34.79,
+     "end": 41.99,
+     "text": "El experimento MOXIE, por su parte, produjo oxígeno a partir del aire de Marte y abrió el camino a los futuros astronautas."
+    }
+   ]
+  },
+  "phobos": {
+   "hash": "362d31b688fe",
+   "duration": 32.22,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.02,
+     "text": "De las dos pequeñas lunas de Marte, la mayor es Fobos."
+    },
+    {
+     "start": 4.02,
+     "end": 8.85,
+     "text": "Es una roca con forma de patata, de tan solo veintidós kilómetros de ancho."
+    },
+    {
+     "start": 8.85,
+     "end": 14.79,
+     "text": "Orbita a seis mil kilómetros del planeta; es la órbita lunar más cercana del Sistema Solar."
+    },
+    {
+     "start": 14.79,
+     "end": 23.4,
+     "text": "Es tan rápido que da una vuelta a Marte en siete horas y treinta y nueve minutos y, visto desde la superficie de Marte, sale por el oeste."
+    },
+    {
+     "start": 23.4,
+     "end": 32.22,
+     "text": "Desciende dos metros cada siglo; dentro de unos cincuenta millones de años, o chocará contra Marte, o se fragmentará y se convertirá en un anillo."
+    }
+   ]
+  }
+ }
+}

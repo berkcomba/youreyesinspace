@@ -1,0 +1,207 @@
+{
+ "voice": "altair",
+ "locale": "tr",
+ "steps": {
+  "alphacen": {
+   "hash": "20e0f1c210ca",
+   "duration": 33.67,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 3.56,
+     "text": "Proxima aslında büyük bir ailenin uzak üyesi."
+    },
+    {
+     "start": 3.56,
+     "end": 11.94,
+     "text": "Alpha Centauri A ve B, dört virgül dört ışık yılı uzaklıkta birbirlerinin etrafında seksen yılda bir dönen iki yıldızdır."
+    },
+    {
+     "start": 11.94,
+     "end": 17.09,
+     "text": "A, Güneş'e şaşırtıcı ölçüde benzer: biraz daha büyük, biraz daha parlak."
+    },
+    {
+     "start": 17.09,
+     "end": 19.75,
+     "text": "B ise biraz daha küçük ve turuncudur."
+    },
+    {
+     "start": 19.75,
+     "end": 23.95,
+     "text": "Birlikte gökyüzünün üçüncü en parlak yıldızı olarak görünürler."
+    },
+    {
+     "start": 23.95,
+     "end": 33.67,
+     "text": "Breakthrough Starshot projesi, lazerle itilen pul büyüklüğünde sondaları ışık hızının beşte biriyle buraya göndermeyi ve yirmi yılda ulaşmayı hayal ediyor."
+    }
+   ]
+  },
+  "antares": {
+   "hash": "1c8c3f06316f",
+   "duration": 30.71,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 2.98,
+     "text": "Antares, Akrep takımyıldızının kalbi."
+    },
+    {
+     "start": 2.98,
+     "end": 9.96,
+     "text": "Adı Yunanca Mars'ın rakibi anlamına gelir; çünkü kızıl rengi ve parlaklığıyla gezegene benzetilirdi."
+    },
+    {
+     "start": 9.96,
+     "end": 20.35,
+     "text": "Beş yüz elli ışık yılı uzaklıktaki bu kırmızı süperdevin çapı Güneş'in yaklaşık yedi yüz katıdır; Güneş'in yerine koysanız Mars'ın yörüngesini yutardı."
+    },
+    {
+     "start": 20.35,
+     "end": 22.77,
+     "text": "Yoğunluğu ise havadan bile düşüktür."
+    },
+    {
+     "start": 22.77,
+     "end": 30.71,
+     "text": "Güneş'ten on iki kat ağırdır ve yakıtını tüketmek üzeredir; önümüzdeki bir milyon yıl içinde bir süpernova olarak patlayacak."
+    }
+   ]
+  },
+  "deneb": {
+   "hash": "715358eed7b7",
+   "duration": 33.59,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 7.78,
+     "text": "Son durağımız Deneb, Kuğu takımyıldızının kuyruğu ve bu turdaki en uzak yıldız: yaklaşık iki bin altı yüz ışık yılı."
+    },
+    {
+     "start": 7.78,
+     "end": 18.53,
+     "text": "Buna rağmen gökyüzünün en parlak yirmi yıldızından biridir; çünkü Güneş'ten yaklaşık iki yüz bin kat daha fazla ışık saçan, bilinen en parlak yıldızlardan biridir."
+    },
+    {
+     "start": 18.53,
+     "end": 23.43,
+     "text": "Bugün gördüğünüz ışığı, Roma Cumhuriyeti'nin kurulduğu dönemde yola çıktı."
+    },
+    {
+     "start": 23.43,
+     "end": 31.39,
+     "text": "Mavi-beyaz bir süperdevdir ve birkaç milyon yıl içinde ya süpernova olacak ya da kırmızı bir süperdeve dönüşecek."
+    },
+    {
+     "start": 31.39,
+     "end": 33.59,
+     "text": "Komşu yıldızlar turumuz sona erdi."
+    }
+   ]
+  },
+  "polaris": {
+   "hash": "76225930db3c",
+   "duration": 36.15,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 2.2,
+     "text": "Polaris, Kutup Yıldızı."
+    },
+    {
+     "start": 2.2,
+     "end": 15.62,
+     "text": "Gökyüzünün en parlak yıldızı değildir ama en önemlilerinden biridir: Dünya'nın dönme ekseninin uzantısına bir dereceden daha yakın durur, bu yüzden tüm gökyüzü onun etrafında dönüyor gibi görünür."
+    },
+    {
+     "start": 15.62,
+     "end": 18.89,
+     "text": "Yüzyıllar boyunca denizcilere kuzeyi gösterdi."
+    },
+    {
+     "start": 18.89,
+     "end": 28.51,
+     "text": "Aslında dört yüz otuz ışık yılı uzaklıkta, Güneş'ten iki bin kat parlak bir sarı süperdevdir ve iki küçük yoldaşıyla üçlü bir sistem oluşturur."
+    },
+    {
+     "start": 28.51,
+     "end": 36.15,
+     "text": "Ayrıca bir Sefeid değişenidir: dört günde bir ritmik olarak parlayıp sönerek bize kozmik uzaklıkları ölçmeyi öğretir."
+    }
+   ]
+  },
+  "proxima": {
+   "hash": "883c5cf6a5d2",
+   "duration": 39.03,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 2.66,
+     "text": "Komşu yıldızlar turuna hoş geldiniz."
+    },
+    {
+     "start": 2.66,
+     "end": 10.06,
+     "text": "İlk durağımız, Güneş'e en yakın yıldız: dört virgül iki ışık yılı uzaklıktaki Proxima Centauri."
+    },
+    {
+     "start": 10.06,
+     "end": 18.96,
+     "text": "Küçük ve soğuk bir kırmızı cücedir; Güneş'in yalnızca yüzde on ikisi kadar kütlesi vardır ve çıplak gözle görülemeyecek kadar sönüktür."
+    },
+    {
+     "start": 18.96,
+     "end": 23.61,
+     "text": "Ama ani parlamalarla yüzeyinden şiddetli radyasyon püskürtür."
+    },
+    {
+     "start": 23.61,
+     "end": 34.51,
+     "text": "İki bin on altıda etrafında Dünya büyüklüğünde bir gezegen keşfedildi: Proxima b, yaşanabilir bölgede, yani yüzeyinde sıvı suyun bulunabileceği uzaklıkta döner."
+    },
+    {
+     "start": 34.51,
+     "end": 39.03,
+     "text": "Bugünkü en hızlı araçlarımızla buraya ulaşmak yetmiş bin yıl sürerdi."
+    }
+   ]
+  },
+  "vega": {
+   "hash": "b7f3c7dfff7a",
+   "duration": 35.75,
+   "sentences": [
+    {
+     "start": 0.12,
+     "end": 4.74,
+     "text": "Vega, yirmi beş ışık yılı uzaklıktaki parlak mavi-beyaz yıldız."
+    },
+    {
+     "start": 4.74,
+     "end": 9.04,
+     "text": "Güneş'in iki katı kütlesinde ve kırk katı parlaklığındadır."
+    },
+    {
+     "start": 9.04,
+     "end": 17.27,
+     "text": "O kadar hızlı döner ki ekvatoru kutuplarından belirgin biçimde şişkindir; üstelik ona neredeyse tam kutbundan bakıyoruz."
+    },
+    {
+     "start": 17.27,
+     "end": 22.49,
+     "text": "Etrafında, gezegen oluşumunun artığı olabilecek bir toz diski bulundu."
+    },
+    {
+     "start": 22.49,
+     "end": 30.71,
+     "text": "Dünya'nın ekseni yavaşça yalpaladığı için on iki bin yıl önce Kutup Yıldızı'ydı ve on iki bin yıl sonra yeniden olacak."
+    },
+    {
+     "start": 30.71,
+     "end": 35.75,
+     "text": "Gökbilimciler yüzyıllarca parlaklık ölçeğinin sıfır noktası olarak onu kullandı."
+    }
+   ]
+  }
+ }
+}

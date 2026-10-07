@@ -59,6 +59,19 @@ server {
     try_files $uri =404;
   }
 
+  # Guided-tour narration: clips carry ?v=<text hash> (immutable); the manifests revalidate daily
+  location ~ ^/tours/.*\.mp3$ {
+    include /etc/nginx/snippets/security-headers.conf;
+    add_header Cache-Control "public, max-age=31536000, immutable";
+    add_header Accept-Ranges bytes;
+    try_files $uri =404;
+  }
+  location ~ ^/tours/.*\.json$ {
+    include /etc/nginx/snippets/security-headers.conf;
+    add_header Cache-Control "public, max-age=86400";
+    try_files $uri =404;
+  }
+
   # Icons / logos: a day
   location ~* \.(png|ico|svg|webp|jpg)$ {
     include /etc/nginx/snippets/security-headers.conf;

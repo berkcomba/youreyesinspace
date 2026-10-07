@@ -1,0 +1,279 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "betelgeuse": {
+   "hash": "84f69f59c21f",
+   "duration": 35.67,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 4.58,
+     "text": "Bételgeuse montre à quoi ressemble une étoile qui approche de la fin de sa vie."
+    },
+    {
+     "start": 4.58,
+     "end": 15.04,
+     "text": "Lorsque l'hydrogène de son cœur s'est épuisé, elle a gonflé et s'est transformée en supergéante rouge ; si elle était à la place du Soleil, elle s'étendrait jusqu'à l'orbite de Jupiter."
+    },
+    {
+     "start": 15.04,
+     "end": 22.75,
+     "text": "Elle n'a que dix millions d'années, mais, comme elle est environ quinze fois plus massive que le Soleil, elle a épuisé son carburant très rapidement."
+    },
+    {
+     "start": 22.75,
+     "end": 29.95,
+     "text": "En deux mille dix-neuf, elle s'est soudainement affaiblie ; un immense nuage de poussière arraché à sa surface l'avait voilée."
+    },
+    {
+     "start": 29.95,
+     "end": 35.67,
+     "text": "Dans les cent mille prochaines années, elle explosera en supernova et sera visible même en plein jour."
+    }
+   ]
+  },
+  "crab": {
+   "hash": "f1ed50b31db1",
+   "duration": 40.96,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 3.56,
+     "text": "Les étoiles massives, elles, meurent bien plus bruyamment."
+    },
+    {
+     "start": 3.56,
+     "end": 11,
+     "text": "La nébuleuse du Crabe est le reste d'une supernova que des astronomes chinois et arabes ont enregistrée en l'an mille cinquante-quatre."
+    },
+    {
+     "start": 11,
+     "end": 15.25,
+     "text": "Cette explosion a été visible même en plein jour pendant trois semaines."
+    },
+    {
+     "start": 15.25,
+     "end": 22.53,
+     "text": "Aujourd'hui, ce nuage filamenteux, large de six années-lumière, continue de s'étendre à mille cinq cents kilomètres par seconde."
+    },
+    {
+     "start": 22.53,
+     "end": 29.93,
+     "text": "En son centre se trouve l'étoile à neutrons qui reste de l'explosion : le pulsar du Crabe, qui tourne trente fois par seconde."
+    },
+    {
+     "start": 29.93,
+     "end": 40.96,
+     "text": "Le fer, l'or et les autres éléments lourds de l'étoile sont dispersés dans l'espace par de telles explosions ; le calcium de votre corps se trouvait lui aussi, autrefois, à l'intérieur d'une étoile."
+    }
+   ]
+  },
+  "cygx1": {
+   "hash": "0eb29caa802a",
+   "duration": 36.62,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.96,
+     "text": "Et pour les étoiles les plus massives, le dernier arrêt : le trou noir."
+    },
+    {
+     "start": 4.96,
+     "end": 8.56,
+     "text": "Cygnus X 1 est le premier trou noir découvert."
+    },
+    {
+     "start": 8.56,
+     "end": 19.81,
+     "text": "Cet objet de vingt et une masses solaires attire le gaz de sa compagne supergéante bleue ; le gaz s'échauffe à des millions de degrés dans le disque d'accrétion et émet des rayons X."
+    },
+    {
+     "start": 19.81,
+     "end": 24.33,
+     "text": "Tous deux tournent autour de leur centre de masse commun une fois tous les cinq jours et demi."
+    },
+    {
+     "start": 24.33,
+     "end": 28.44,
+     "text": "Même la lumière ne peut pas s'échapper de l'intérieur de l'horizon des événements."
+    },
+    {
+     "start": 28.44,
+     "end": 34.3,
+     "text": "Le voyage commencé dans un nuage de gaz s'achève par un trou ouvert dans l'espace-temps lui-même."
+    },
+    {
+     "start": 34.3,
+     "end": 36.62,
+     "text": "La visite sur la vie des étoiles s'achève ici."
+    }
+   ]
+  },
+  "orion": {
+   "hash": "1a30ab844562",
+   "duration": 31.67,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.22,
+     "text": "Dans cette visite, nous allons suivre l'histoire de la vie d'une étoile, de sa naissance jusqu'à sa mort."
+    },
+    {
+     "start": 6.22,
+     "end": 15.36,
+     "text": "L'histoire commence dans des endroits comme celui-ci : la nébuleuse d'Orion, une immense usine à étoiles située à mille trois cent cinquante années-lumière de nous."
+    },
+    {
+     "start": 15.36,
+     "end": 21.37,
+     "text": "Le gaz froid et la poussière s'effondrent sous leur propre poids et forment des centaines de nouvelles étoiles."
+    },
+    {
+     "start": 21.37,
+     "end": 27.87,
+     "text": "Au centre, les quatre étoiles brillantes du Trapèze éclairent la nébuleuse de l'intérieur par leur lumière ultraviolette."
+    },
+    {
+     "start": 27.87,
+     "end": 31.67,
+     "text": "Dans le ciel, on la voit à l'œil nu comme une tache floue dans l'épée d'Orion."
+    }
+   ]
+  },
+  "pleiades": {
+   "hash": "feebbbf2068e",
+   "duration": 32.15,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4.18,
+     "text": "Les étoiles ne naissent pas seules ; elles naissent avec leurs frères et sœurs."
+    },
+    {
+     "start": 4.18,
+     "end": 7.1,
+     "text": "Les Pléiades sont une jeune famille de ce genre."
+    },
+    {
+     "start": 7.1,
+     "end": 11.62,
+     "text": "Elles ont environ cent millions d'années ; à côté du Soleil, c'est un bébé."
+    },
+    {
+     "start": 11.62,
+     "end": 21.07,
+     "text": "Elles contiennent plus de mille étoiles, mais à l'œil nu on en voit généralement six ou sept ; c'est pourquoi, dans bien des cultures, on les appelle les Sept Sœurs."
+    },
+    {
+     "start": 21.07,
+     "end": 27.05,
+     "text": "La brume autour de leurs étoiles bleues brillantes est le reflet d'un nuage de poussière que l'amas traverse."
+    },
+    {
+     "start": 27.05,
+     "end": 32.15,
+     "text": "Dans quelques centaines de millions d'années, ces sœurs se disperseront et se mêleront à la galaxie."
+    }
+   ]
+  },
+  "ring": {
+   "hash": "73edfec53751",
+   "duration": 33.27,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.76,
+     "text": "Les étoiles de masse moyenne, comme le Soleil, n'explosent pas ; elles soufflent doucement leurs couches externes dans l'espace."
+    },
+    {
+     "start": 6.76,
+     "end": 9.76,
+     "text": "La nébuleuse de la Lyre en est le plus bel exemple."
+    },
+    {
+     "start": 9.76,
+     "end": 18.27,
+     "text": "Cette coquille colorée, à deux mille cinq cents années-lumière, est constituée des couches externes qu'une étoile mourante a rejetées il y a quelques milliers d'années."
+    },
+    {
+     "start": 18.27,
+     "end": 27.35,
+     "text": "Le minuscule point blanc qui reste au centre est son cœur, à la température de cent vingt mille degrés, et il fait briller le gaz par sa lumière ultraviolette."
+    },
+    {
+     "start": 27.35,
+     "end": 33.27,
+     "text": "Dans environ sept milliards d'années, le Soleil se transformera lui aussi en une nébuleuse planétaire de ce genre."
+    }
+   ]
+  },
+  "sirius": {
+   "hash": "b53c09ac9d86",
+   "duration": 30.16,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 6.08,
+     "text": "Sirius est l'étoile la plus brillante du ciel ; elle n'est qu'à huit virgule six années-lumière de nous."
+    },
+    {
+     "start": 6.08,
+     "end": 12.75,
+     "text": "Mais ce qui nous intéresse surtout, c'est sa petite compagne, restée dans l'ombre de son éclat, Sirius B."
+    },
+    {
+     "start": 12.75,
+     "end": 16.49,
+     "text": "C'est une naine blanche : le cœur qui reste d'une étoile morte."
+    },
+    {
+     "start": 16.49,
+     "end": 22.91,
+     "text": "Elle a autant de masse que le Soleil et la taille de la Terre ; une cuillerée à café de sa matière pèse une tonne."
+    },
+    {
+     "start": 22.91,
+     "end": 28.18,
+     "text": "Elle ne produit plus d'énergie, elle ne fait que se refroidir lentement pendant des milliards d'années."
+    },
+    {
+     "start": 28.18,
+     "end": 30.16,
+     "text": "C'est aussi le destin final du Soleil."
+    }
+   ]
+  },
+  "sun": {
+   "hash": "9f27c4ed788e",
+   "duration": 31.43,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6,
+     "text": "La période la plus longue et la plus calme de la vie d'une étoile est la phase de la séquence principale."
+    },
+    {
+     "start": 6,
+     "end": 17.25,
+     "text": "Le Soleil est justement dans cette phase : depuis quatre milliards et demi d'années, il transforme l'hydrogène en hélium dans son cœur, et il continuera ainsi pendant encore environ cinq milliards d'années."
+    },
+    {
+     "start": 17.25,
+     "end": 20.99,
+     "text": "Chaque seconde, il brûle six cents millions de tonnes d'hydrogène."
+    },
+    {
+     "start": 20.99,
+     "end": 28.51,
+     "text": "Ce délicat équilibre entre la pression qui pousse vers l'extérieur et la gravité qui attire vers l'intérieur maintient l'étoile stable."
+    },
+    {
+     "start": 28.51,
+     "end": 31.43,
+     "text": "Quand cet équilibre se rompt, la vieillesse commence."
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,197 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "callisto": {
+   "hash": "068c9df85e97",
+   "duration": 25.67,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 4.9,
+     "text": "Callisto, la plus extérieure et la plus silencieuse des quatre lunes galiléennes."
+    },
+    {
+     "start": 4.9,
+     "end": 11.8,
+     "text": "Sa surface est la plus densément cratérisée du Système solaire ; elle n'a presque pas changé depuis quatre milliards d'années."
+    },
+    {
+     "start": 11.8,
+     "end": 18.73,
+     "text": "Parce qu'elle est éloignée de Jupiter, elle n'est pas affectée par l'échauffement de marée et reste en dehors des ceintures de radiation."
+    },
+    {
+     "start": 18.73,
+     "end": 22.63,
+     "text": "Cela en fait la candidate la plus sûre pour une future base habitée."
+    },
+    {
+     "start": 22.63,
+     "end": 25.67,
+     "text": "Il y a aussi des indices qu'un océan pourrait se trouver en dessous."
+    }
+   ]
+  },
+  "europa": {
+   "hash": "ca3cb94ed044",
+   "duration": 29.51,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 3.86,
+     "text": "Europe, l'adresse la plus prometteuse dans la recherche de la vie."
+    },
+    {
+     "start": 3.86,
+     "end": 12.12,
+     "text": "Sous sa croûte de glace lisse, on pense qu'il existe un océan global d'eau salée renfermant deux fois plus d'eau que tous les océans de la Terre."
+    },
+    {
+     "start": 12.12,
+     "end": 18.75,
+     "text": "Les lignes brunes à la surface sont les endroits où la glace se fissure et où l'eau d'en dessous suinte vers le haut."
+    },
+    {
+     "start": 18.75,
+     "end": 29.51,
+     "text": "La sonde Europa Clipper de la NASA a été lancée en deux mille vingt-quatre et, en deux mille trente, elle étudiera, au cours d'environ cinquante survols rapprochés, si cet océan est habitable."
+    }
+   ]
+  },
+  "ganymede": {
+   "hash": "9c5cdb283e9e",
+   "duration": 32.47,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 3.34,
+     "text": "Ganymède, la plus grande lune du Système solaire."
+    },
+    {
+     "start": 3.34,
+     "end": 5.94,
+     "text": "Il est même plus grand que la planète Mercure."
+    },
+    {
+     "start": 5.94,
+     "end": 15.3,
+     "text": "C'est la seule lune connue à posséder son propre champ magnétique ; ce champ forme une petite bulle à l'intérieur de celui de Jupiter et crée des aurores à ses pôles."
+    },
+    {
+     "start": 15.3,
+     "end": 23.49,
+     "text": "Sa surface a deux âges différents : des régions anciennes, sombres et cratérisées, et des régions plus jeunes, claires et rainurées."
+    },
+    {
+     "start": 23.49,
+     "end": 26.79,
+     "text": "Sous sa croûte de glace, lui aussi possède un océan."
+    },
+    {
+     "start": 26.79,
+     "end": 32.47,
+     "text": "La sonde JUICE de l'Agence spatiale européenne entrera en orbite autour de lui en deux mille trente et un."
+    }
+   ]
+  },
+  "io": {
+   "hash": "50a91b148085",
+   "duration": 29.35,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.42,
+     "text": "Io, le monde le plus volcanique du Système solaire."
+    },
+    {
+     "start": 3.42,
+     "end": 12.84,
+     "text": "Elle est sans cesse comprimée et étirée entre l'attraction gravitationnelle de Jupiter et celle des autres lunes ; cet échauffement de marée fait fondre son intérieur."
+    },
+    {
+     "start": 12.84,
+     "end": 19.85,
+     "text": "Sa surface compte plus de quatre cents volcans actifs, et certains projettent de la lave à des centaines de kilomètres de hauteur."
+    },
+    {
+     "start": 19.85,
+     "end": 24.79,
+     "text": "Les couleurs jaune, orange et rouge viennent du soufre et des composés soufrés."
+    },
+    {
+     "start": 24.79,
+     "end": 29.35,
+     "text": "Sa surface se renouvelle si vite qu'elle ne porte presque aucun cratère d'impact."
+    }
+   ]
+  },
+  "juno": {
+   "hash": "d38d492f2c7e",
+   "duration": 36.23,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.14,
+     "text": "Enfin, regardons Juno."
+    },
+    {
+     "start": 2.14,
+     "end": 7.32,
+     "text": "Cette sonde de la NASA est entrée en orbite autour de Jupiter en juillet deux mille seize."
+    },
+    {
+     "start": 7.32,
+     "end": 15.79,
+     "text": "C'est le premier engin à fonctionner à l'énergie solaire aussi loin du Soleil ; ses trois immenses panneaux occupent autant de place qu'un terrain de basket-ball."
+    },
+    {
+     "start": 15.79,
+     "end": 26.33,
+     "text": "Pour se protéger des radiations, elle suit une orbite longue et elliptique passant au-dessus des pôles et, à chaque passage, elle passe à quelques milliers de kilomètres au-dessus des nuages."
+    },
+    {
+     "start": 26.33,
+     "end": 34.29,
+     "text": "Elle a découvert des cyclones géants aux pôles de Jupiter et a montré que le noyau de Jupiter est plus grand et plus diffus qu'on ne le pensait."
+    },
+    {
+     "start": 34.29,
+     "end": 36.23,
+     "text": "Notre tour de Jupiter s'achève ici."
+    }
+   ]
+  },
+  "jupiter": {
+   "hash": "1c9ca82225bd",
+   "duration": 33.74,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.68,
+     "text": "Bienvenue dans le système de Jupiter."
+    },
+    {
+     "start": 2.68,
+     "end": 9.03,
+     "text": "Ce géant ressemble presque à un petit système solaire : plus de quatre-vingt-quinze lunes tournent autour de lui."
+    },
+    {
+     "start": 9.03,
+     "end": 21.17,
+     "text": "La planète est si grande que mille trois cents Terres y tiendraient, et son puissant champ magnétique est la plus grande structure du Système solaire ; s'il était visible dans le ciel, il paraîtrait plus grand que la pleine lune."
+    },
+    {
+     "start": 21.17,
+     "end": 30.4,
+     "text": "En mille six cent dix, Galilée a découvert ses quatre grandes lunes avec son petit télescope, et ce fut la première preuve que tout ne tournait pas autour de la Terre."
+    },
+    {
+     "start": 30.4,
+     "end": 33.74,
+     "text": "Nous allons maintenant visiter ces quatre lunes l'une après l'autre."
+    }
+   ]
+  }
+ }
+}

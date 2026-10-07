@@ -1,0 +1,181 @@
+{
+ "voice": "altair",
+ "locale": "tr",
+ "steps": {
+  "cygx1": {
+   "hash": "770da7b7ca58",
+   "duration": 40.54,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 2.54,
+     "text": "Kara delikler turuna hoş geldiniz."
+    },
+    {
+     "start": 2.54,
+     "end": 6.72,
+     "text": "Başlangıç noktamız bir klasik: Cygnus X-Bir."
+    },
+    {
+     "start": 6.72,
+     "end": 16.29,
+     "text": "Bin dokuz yüz altmış dörtte bir roketle keşfedilen bu X-ışını kaynağı, bin dokuz yüz yetmiş birde bir kara delik olarak tanımlanan ilk nesne oldu."
+    },
+    {
+     "start": 16.29,
+     "end": 28.56,
+     "text": "Yirmi bir güneş kütlesindedir ve mavi süperdev yoldaşı HDE iki yüz yirmi altı bin sekiz yüz altmış sekiz ile beş buçuk günde bir ortak kütle merkezlerinin etrafında döner."
+    },
+    {
+     "start": 28.56,
+     "end": 33.7,
+     "text": "Yoldaşından çektiği gaz, parlak bir diskte milyonlarca dereceye ısınır."
+    },
+    {
+     "start": 33.7,
+     "end": 40.54,
+     "text": "Stephen Hawking bu nesnenin kara delik olmadığına bahse girmişti; bin dokuz yüz doksanda yenilgisini kabul etti."
+    }
+   ]
+  },
+  "gaiabh1": {
+   "hash": "7c09855b1a9b",
+   "duration": 36.39,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.22,
+     "text": "Gaia BH Bir, bize en yakın bilinen kara delik: bin beş yüz altmış ışık yılı."
+    },
+    {
+     "start": 6.22,
+     "end": 10.16,
+     "text": "Ne diski var ne de X-ışını yayar; tamamen sessiz."
+    },
+    {
+     "start": 10.16,
+     "end": 18.27,
+     "text": "Varlığı yalnızca Güneş benzeri bir yıldızın görünmez bir eşin etrafında yüz seksen altı günde bir sallanmasından anlaşıldı."
+    },
+    {
+     "start": 18.27,
+     "end": 24.25,
+     "text": "Bu sallantıyı iki bin yirmi ikide Gaia uydusunun hassas konum ölçümleri ortaya çıkardı."
+    },
+    {
+     "start": 24.25,
+     "end": 30.63,
+     "text": "Dokuz virgül altı güneş kütlesindedir ve olay ufkunun çapı yalnızca elli altı kilometredir."
+    },
+    {
+     "start": 30.63,
+     "end": 36.39,
+     "text": "Burada onu yalnızca arka plandaki yıldızları büken kütle çekimsel merceklemeyle görebilirsiniz."
+    }
+   ]
+  },
+  "m87": {
+   "hash": "545e4aa221f1",
+   "duration": 31.67,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 5.62,
+     "text": "Son durağımız, fotoğrafı çekilen ilk kara delik: M Seksen Yedi yıldız."
+    },
+    {
+     "start": 5.62,
+     "end": 11.58,
+     "text": "Elli beş milyon ışık yılı uzaktaki dev eliptik galaksi Virgo A'nın merkezinde oturur."
+    },
+    {
+     "start": 11.58,
+     "end": 17.91,
+     "text": "Altı buçuk milyar güneş kütlesindedir; olay ufku Plüton'un yörüngesinden altı kat geniştir."
+    },
+    {
+     "start": 17.91,
+     "end": 24.61,
+     "text": "İki bin on dokuzda yayımlanan ünlü turuncu halka görüntüsü, gölgesini çevreleyen sıcak gazın ışığıdır."
+    },
+    {
+     "start": 24.61,
+     "end": 29.73,
+     "text": "Buradan ışık hızına yakın bir jet fırlar ve beş bin ışık yılı boyunca uzanır."
+    },
+    {
+     "start": 29.73,
+     "end": 31.67,
+     "text": "Kara delikler turumuz sona erdi."
+    }
+   ]
+  },
+  "sgra": {
+   "hash": "88133405d1a3",
+   "duration": 35.04,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 5.06,
+     "text": "Şimdi galaksimizin kalbine, yirmi altı bin ışık yılı uzağa gidiyoruz."
+    },
+    {
+     "start": 5.06,
+     "end": 13.03,
+     "text": "Sagittarius A yıldız, Samanyolu'nun merkezindeki süper kütleli kara delik: dört virgül üç milyon güneş kütlesi."
+    },
+    {
+     "start": 13.03,
+     "end": 23.33,
+     "text": "Etrafındaki yıldızlar onun kütlesini ölçmemizi sağladı; S İki adlı yıldız, on altı yılda bir ona o kadar yaklaşır ki ışık hızının yüzde üçüne ulaşır."
+    },
+    {
+     "start": 23.33,
+     "end": 27.05,
+     "text": "Bu gözlemler iki bin yirmide Nobel Fizik Ödülü'nü getirdi."
+    },
+    {
+     "start": 27.05,
+     "end": 31.37,
+     "text": "İki bin yirmi ikide Olay Ufku Teleskobu onun gölgesini görüntüledi."
+    },
+    {
+     "start": 31.37,
+     "end": 35.04,
+     "text": "Şu anda oldukça sessiz; neredeyse hiç madde yutmuyor."
+    }
+   ]
+  },
+  "v404": {
+   "hash": "252a513f22d5",
+   "duration": 36.95,
+   "sentences": [
+    {
+     "start": 0.12,
+     "end": 3.74,
+     "text": "V Dört Yüz Dört Cygni, bir X-ışını novası."
+    },
+    {
+     "start": 3.74,
+     "end": 13.44,
+     "text": "Çoğu zaman sessizdir ama yoldaşından biriken gaz bir eşiği aştığında birkaç gün içinde patlayarak gökyüzünün en parlak X-ışını kaynağı olur."
+    },
+    {
+     "start": 13.44,
+     "end": 20.17,
+     "text": "Bu patlamalar bin dokuz yüz otuz sekiz, elli altı, seksen dokuz ve iki bin on beşte gözlendi."
+    },
+    {
+     "start": 20.17,
+     "end": 31.05,
+     "text": "İki bin on beşteki patlamada jetlerinin saniyeler içinde yön değiştirdiği görüldü; kara deliğin dönüşü uzay-zamanı sürükleyerek diski bir topaç gibi yalpalatıyordu."
+    },
+    {
+     "start": 31.05,
+     "end": 36.95,
+     "text": "Dokuz güneş kütlesindedir ve uzaklığı radyo paralaksıyla doğrudan ölçülen ilk kara deliktir."
+    }
+   ]
+  }
+ }
+}

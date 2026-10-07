@@ -1,0 +1,264 @@
+{
+ "voice": "altair",
+ "locale": "de",
+ "steps": {
+  "andromeda": {
+   "hash": "f1f6f77bda33",
+   "duration": 43.99,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.98,
+     "text": "Andromeda, unsere nächste große Nachbarin."
+    },
+    {
+     "start": 2.98,
+     "end": 30.13,
+     "text": "Sie ist 2,5 Millionen Lichtjahre entfernt und das fernste Objekt, das mit bloßem Auge sichtbar ist; das Licht, das Sie heute sehen, machte sich auf den Weg, als es auf der Erde noch keine Menschen gab. 1923 bewies Edwin Hubble, indem er hier einen Cepheiden vermaß, dass sie kein Teil der Milchstraße ist, sondern eine völlig andere Galaxie; über Nacht wurde das Universum millionenfach größer."
+    },
+    {
+     "start": 30.13,
+     "end": 36.27,
+     "text": "Sie enthält eine Billion Sterne und nähert sich uns mit 110 Kilometern pro Sekunde."
+    },
+    {
+     "start": 36.27,
+     "end": 43.99,
+     "text": "In etwa 4,5 Milliarden Jahren wird sie mit der Milchstraße verschmelzen und eine riesige elliptische Galaxie bilden."
+    }
+   ]
+  },
+  "antennae": {
+   "hash": "b1de28fc8d7e",
+   "duration": 49.66,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 5.16,
+     "text": "An unserem letzten Halt werden wir sehen, dass auch Galaxien kollidieren können."
+    },
+    {
+     "start": 5.16,
+     "end": 14.29,
+     "text": "Die Antennengalaxien sind zwei Spiralgalaxien in 45 Millionen Lichtjahren Entfernung, die gerade durcheinander hindurchgehen."
+    },
+    {
+     "start": 14.29,
+     "end": 18.05,
+     "text": "Die Begegnung begann vor etwa 600 Millionen Jahren."
+    },
+    {
+     "start": 18.05,
+     "end": 25.91,
+     "text": "Die Schwerkraft schleuderte zwei lange Schweife aus Sternen ins All; das sind die Insektenantennen, die ihnen den Namen geben."
+    },
+    {
+     "start": 25.91,
+     "end": 36.72,
+     "text": "Die Sterne stoßen nicht zusammen, die Abstände zwischen ihnen sind sehr groß; aber die Gaswolken kollidieren, werden zusammengedrückt und gebären Milliarden neuer Sterne."
+    },
+    {
+     "start": 36.72,
+     "end": 42.98,
+     "text": "In ein paar hundert Millionen Jahren werden sich die beiden in eine einzige elliptische Galaxie verwandeln."
+    },
+    {
+     "start": 42.98,
+     "end": 47.56,
+     "text": "Auch die Zukunft der Milchstraße und Andromedas wird genauso aussehen."
+    },
+    {
+     "start": 47.56,
+     "end": 49.66,
+     "text": "Unsere Galaxientour ist zu Ende."
+    }
+   ]
+  },
+  "lmc": {
+   "hash": "0c778a109d13",
+   "duration": 40.15,
+   "sentences": [
+    {
+     "start": 0,
+     "end": 5.201,
+     "text": "Die Große Magellansche Wolke, die größte Satellitengalaxie der Milchstraße."
+    },
+    {
+     "start": 5.201,
+     "end": 14.562,
+     "text": "Sie ist 160. 000 Lichtjahre entfernt und erscheint von der Südhalbkugel aus mit bloßem Auge am Himmel wie ein abgerissenes Stück Wolke."
+    },
+    {
+     "start": 14.562,
+     "end": 17.891,
+     "text": "Ihre Masse beträgt etwa ein Prozent der unseren."
+    },
+    {
+     "start": 17.891,
+     "end": 27.946,
+     "text": "In ihr befinden sich der Tarantelnebel, die größte Sternkinderstube der Lokalen Gruppe, und R 136 a 1, einer der massereichsten bekannten Sterne."
+    },
+    {
+     "start": 27.946,
+     "end": 35.435,
+     "text": "Die Supernova, die hier 1987 explodierte, war die erste seit 400 Jahren mit bloßem Auge sichtbare Supernova."
+    },
+    {
+     "start": 35.435,
+     "end": 40.15,
+     "text": "In ein paar Milliarden Jahren wird die Milchstraße sie verschlingen."
+    }
+   ]
+  },
+  "m87": {
+   "hash": "e7a06d94a98a",
+   "duration": 40.64,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 8.12,
+     "text": "Jetzt verlassen wir die Lokale Gruppe und begeben uns ins Herz des Virgo-Haufens, 55 Millionen Lichtjahre weit."
+    },
+    {
+     "start": 8.12,
+     "end": 12.27,
+     "text": "M 87, eine riesige elliptische Galaxie."
+    },
+    {
+     "start": 12.27,
+     "end": 25.63,
+     "text": "Sie hat keine Spiralarme; sie ist eine gewaltige Kugel aus Billionen alter, gelber Sterne, und um sie kreisen mehr als 12. 000 Kugelsternhaufen; in der Milchstraße gibt es davon nur 150."
+    },
+    {
+     "start": 25.63,
+     "end": 32.67,
+     "text": "In ihrem Zentrum befindet sich das erste fotografierte Schwarze Loch, mit 6,5 Milliarden Sonnenmassen."
+    },
+    {
+     "start": 32.67,
+     "end": 40.64,
+     "text": "Der Jet, der aus diesem Schwarzen Loch herausschießt, erstreckt sich über 5. 000 Lichtjahre und ist seit 1918 bekannt."
+    }
+   ]
+  },
+  "milkyway": {
+   "hash": "f4bf778b6122",
+   "duration": 40.79,
+   "sentences": [
+    {
+     "start": 0,
+     "end": 1.979,
+     "text": "Willkommen zur Galaxientour."
+    },
+    {
+     "start": 1.979,
+     "end": 5.655,
+     "text": "Schauen wir uns zunächst unser Zuhause von außen an."
+    },
+    {
+     "start": 5.655,
+     "end": 15.906,
+     "text": "Die Milchstraße ist eine 100. 000 Lichtjahre breite Spiralgalaxie mit einem Balken im Zentrum und enthält zwischen 200 und 400 Milliarden Sterne."
+    },
+    {
+     "start": 15.906,
+     "end": 27.924,
+     "text": "Die Sonne liegt 26. 000 Lichtjahre vom Zentrum entfernt in einem kleinen Arm, dem sogenannten Orionarm, und vollendet in 230 Millionen Jahren einen Umlauf um die Galaxie."
+    },
+    {
+     "start": 27.924,
+     "end": 34.569,
+     "text": "Seit dem Aussterben der Dinosaurier hat die Sonne nur ein Viertel dieses Umlaufs zurückgelegt."
+    },
+    {
+     "start": 34.569,
+     "end": 40.79,
+     "text": "Im hellen zentralen Wulst verbirgt sich ein Schwarzes Loch von 4 Millionen Sonnenmassen."
+    }
+   ]
+  },
+  "smc": {
+   "hash": "8a2eb329bf88",
+   "duration": 37.34,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 6.1,
+     "text": "Die Kleine Magellansche Wolke, ihre kleinere Schwester in 200. 000 Lichtjahren Entfernung."
+    },
+    {
+     "start": 6.1,
+     "end": 15.47,
+     "text": "Sie ist eine irreguläre Galaxie; wahrscheinlich hat die Schwerkraft der Großen Magellanschen Wolke und der Milchstraße sie in diese formlose Gestalt gebracht."
+    },
+    {
+     "start": 15.47,
+     "end": 31.4,
+     "text": "Eine Brücke aus Wasserstoff, die sich zwischen den beiden erstreckt, ist die Spur einer nahen Begegnung. 1912 entdeckte Henrietta Leavitt hier die Perioden-Leuchtkraft-Beziehung der Cepheiden, indem sie Tausende veränderliche Sterne untersuchte."
+    },
+    {
+     "start": 31.4,
+     "end": 37.34,
+     "text": "Diese Entdeckung wurde zum ersten kosmischen Lineal, mit dem wir Entfernungen im Universum messen können."
+    }
+   ]
+  },
+  "sombrero": {
+   "hash": "2f1ef3edcfc1",
+   "duration": 38.24,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 9.62,
+     "text": "Die Sombrerogalaxie verdient ihren Namen: Diese Galaxie in 29 Millionen Lichtjahren Entfernung sehen wir fast genau von der Kante."
+    },
+    {
+     "start": 9.62,
+     "end": 18.73,
+     "text": "Ihr außerordentlich großer und heller zentraler Wulst ist von einem scharfen Staubband umgeben; genau wie ein mexikanischer Hut mit breiter Krempe."
+    },
+    {
+     "start": 18.73,
+     "end": 26.61,
+     "text": "Sie beherbergt etwa 2. 000 Kugelsternhaufen und in ihrem Zentrum ein Schwarzes Loch von einer Milliarde Sonnenmassen."
+    },
+    {
+     "start": 26.61,
+     "end": 38.24,
+     "text": "Lange wurde diskutiert, ob sie eine Spiralgalaxie oder eine elliptische Galaxie ist; Infrarotbeobachtungen zeigten, dass sie eine Scheibe ist, die in eine elliptische Galaxie eingebettet ist."
+    }
+   ]
+  },
+  "triangulum": {
+   "hash": "3cfabbd81b7c",
+   "duration": 38.22,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 4.5,
+     "text": "Die Dreiecksgalaxie, das drittgrößte Mitglied der Lokalen Gruppe."
+    },
+    {
+     "start": 4.5,
+     "end": 13.29,
+     "text": "Sie ist 2,7 Millionen Lichtjahre entfernt und mit 40 Milliarden Sternen die kleine Schwester von Andromeda und der Milchstraße."
+    },
+    {
+     "start": 13.29,
+     "end": 22.33,
+     "text": "In ihrem Zentrum gibt es weder einen ausgeprägten Wulst noch ein supermassereiches Schwarzes Loch; ihre Arme sehen wir nahezu von oben."
+    },
+    {
+     "start": 22.33,
+     "end": 33.66,
+     "text": "In ihr befindet sich NGC 604, ein riesiges Sternentstehungsgebiet von 1. 500 Lichtjahren Breite; es ist hundertmal größer als der Orionnebel."
+    },
+    {
+     "start": 33.66,
+     "end": 38.22,
+     "text": "Wahrscheinlich ist sie ein Satellit Andromedas und wird sich ihr eines Tages anschließen."
+    }
+   ]
+  }
+ }
+}

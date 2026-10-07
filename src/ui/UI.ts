@@ -1,5 +1,7 @@
 import type { CelestialBody } from '../core/CelestialBody';
 import { MissionPanel, type MissionPanelHost } from './MissionPanel';
+import { TourPanel } from './TourPanel';
+import type { TourPlayer } from '../core/TourPlayer';
 import { phaseLabel } from '../astro/mission';
 import { binaryPartner } from '../astro/binary';
 import { _, fixed, fmtNum, LOCALES, currentLocale, setLocale, type Locale } from '../i18n';
@@ -30,6 +32,7 @@ export interface UIHost extends MissionPanelHost {
   time: TimeSystem;
   camera: CameraController;
   settings: Settings;
+  tours: TourPlayer;
   starPoints: StarPoints;
   galaxySprites: GalaxySprites;
   landmarkSprites: LandmarkSprites;
@@ -138,6 +141,7 @@ export class UI {
   private readonly placesBtn = $<HTMLButtonElement>('btn-places');
   private readonly placesMenu = $('places-menu');
   readonly missionPanel: MissionPanel;
+  readonly tourPanel: TourPanel;
   private lastInfoUpdate = 0;
   private toastTimer = 0;
   private searchIndex = -1;
@@ -158,6 +162,8 @@ export class UI {
     $('btn-settings').addEventListener('click', () => this.toggleSettings());
     this.missionPanel = new MissionPanel(host);
     $('btn-mission').addEventListener('click', () => this.toggleMission());
+    this.tourPanel = new TourPanel(host.tours, (show) => { if (show) { this.toggleSettings(false); this.missionPanel.toggle(false); } });
+    $('btn-tours').addEventListener('click', () => this.toggleTours());
     // phones: the info sheet starts folded (name + actions) so the view stays visible
     if (window.matchMedia('(max-width: 700px)').matches) this.info.classList.add('collapsed');
     $('info-expand').addEventListener('click', () => this.info.classList.toggle('collapsed'));
@@ -473,13 +479,18 @@ export class UI {
 
   toggleMission(force?: boolean): void {
     const show = force ?? this.missionPanel.panel.hidden === true;
-    if (show) this.toggleSettings(false);
+    if (show) { this.toggleSettings(false); this.tourPanel.toggle(false); }
     this.missionPanel.toggle(show);
+  }
+
+  toggleTours(force?: boolean): void {
+    const show = force ?? this.tourPanel.panel.hidden === true;
+    this.tourPanel.toggle(show);
   }
 
   toggleSettings(force?: boolean): void {
     const show = force ?? this.settingsPanel.hidden === true;
-    if (show) this.missionPanel.toggle(false);
+    if (show) { this.missionPanel.toggle(false); this.tourPanel.toggle(false); }
     this.settingsPanel.hidden = !show;
     $('btn-settings').classList.toggle('active', show);
   }

@@ -1,0 +1,274 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "andromeda": {
+   "hash": "ba6bd4e683af",
+   "duration": 39.44,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.88,
+     "text": "Andromède, notre plus proche grande voisine."
+    },
+    {
+     "start": 2.88,
+     "end": 13.57,
+     "text": "Elle se trouve à deux millions et demi d'années-lumière et c'est l'objet le plus lointain visible à l'œil nu ; la lumière que vous voyez aujourd'hui est partie alors qu'il n'y avait pas encore d'humains sur Terre."
+    },
+    {
+     "start": 13.57,
+     "end": 27.73,
+     "text": "En mille neuf cent vingt-trois, Edwin Hubble a mesuré une étoile céphéide qui s'y trouve et a prouvé qu'Andromède n'était pas une partie de la Voie lactée, mais une tout autre galaxie ; en une seule nuit, l'univers est devenu des millions de fois plus grand."
+    },
+    {
+     "start": 27.73,
+     "end": 32.86,
+     "text": "Elle contient un billion d'étoiles et s'approche de nous à cent dix kilomètres par seconde."
+    },
+    {
+     "start": 32.86,
+     "end": 39.44,
+     "text": "Dans environ quatre milliards et demi d'années, elle fusionnera avec la Voie lactée pour former une galaxie elliptique géante."
+    }
+   ]
+  },
+  "antennae": {
+   "hash": "59dd3b9cecef",
+   "duration": 47.27,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 5.28,
+     "text": "À notre dernier arrêt, nous verrons que les galaxies peuvent elles aussi entrer en collision."
+    },
+    {
+     "start": 5.28,
+     "end": 12.68,
+     "text": "Les Antennes sont deux galaxies spirales, à quarante-cinq millions d'années-lumière, qui sont en train de passer l'une à travers l'autre."
+    },
+    {
+     "start": 12.68,
+     "end": 16.42,
+     "text": "La rencontre a commencé il y a environ six cents millions d'années."
+    },
+    {
+     "start": 16.42,
+     "end": 23.58,
+     "text": "La gravité a projeté dans l'espace deux longues queues formées d'étoiles ; ce sont les antennes d'insecte qui leur donnent leur nom."
+    },
+    {
+     "start": 23.58,
+     "end": 34.85,
+     "text": "Les étoiles ne se percutent pas, les distances qui les séparent sont très grandes ; mais les nuages de gaz entrent en collision et, en se comprimant, donnent naissance à des milliards de nouvelles étoiles."
+    },
+    {
+     "start": 34.85,
+     "end": 40.49,
+     "text": "Dans quelques centaines de millions d'années, les deux se transformeront en une seule galaxie elliptique."
+    },
+    {
+     "start": 40.49,
+     "end": 45.13,
+     "text": "L'avenir de la Voie lactée et d'Andromède aura lui aussi exactement cet aspect."
+    },
+    {
+     "start": 45.13,
+     "end": 47.27,
+     "text": "Notre visite des galaxies est terminée."
+    }
+   ]
+  },
+  "lmc": {
+   "hash": "ec9fd02a3441",
+   "duration": 37.04,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 4.8,
+     "text": "Le Grand Nuage de Magellan, la plus grande galaxie satellite de la Voie lactée."
+    },
+    {
+     "start": 4.8,
+     "end": 13.71,
+     "text": "Il se trouve à cent soixante mille années-lumière et, depuis l'hémisphère Sud, il apparaît à l'œil nu dans le ciel comme un morceau de nuage arraché."
+    },
+    {
+     "start": 13.71,
+     "end": 16.65,
+     "text": "Sa masse est d'environ un pour cent de la nôtre."
+    },
+    {
+     "start": 16.65,
+     "end": 26.55,
+     "text": "Il abrite la nébuleuse de la Tarentule, la plus grande pouponnière d'étoiles du Groupe local, et R 136 a 1, l'une des étoiles les plus massives connues."
+    },
+    {
+     "start": 26.55,
+     "end": 34.14,
+     "text": "La supernova qui y a explosé en mille neuf cent quatre-vingt-sept était la première supernova visible à l'œil nu depuis quatre cents ans."
+    },
+    {
+     "start": 34.14,
+     "end": 37.04,
+     "text": "Dans quelques milliards d'années, la Voie lactée l'avalera."
+    }
+   ]
+  },
+  "m87": {
+   "hash": "c398e74bba22",
+   "duration": 34.87,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 6.44,
+     "text": "Nous quittons maintenant le Groupe local pour le cœur de l'amas de la Vierge, à cinquante-cinq millions d'années-lumière."
+    },
+    {
+     "start": 6.44,
+     "end": 9.96,
+     "text": "M 87 est une galaxie elliptique géante."
+    },
+    {
+     "start": 9.96,
+     "end": 21.78,
+     "text": "Elle n'a pas de bras spiraux ; c'est une sphère immense composée de billions d'étoiles vieilles et jaunes, et plus de douze mille amas globulaires tournent autour d'elle ; la Voie lactée n'en compte que cent cinquante."
+    },
+    {
+     "start": 21.78,
+     "end": 28.71,
+     "text": "En son centre se trouve le premier trou noir à avoir été photographié, de six milliards et demi de masses solaires."
+    },
+    {
+     "start": 28.71,
+     "end": 34.87,
+     "text": "Le jet qui jaillit de ce trou noir s'étend sur cinq mille années-lumière et il est connu depuis mille neuf cent dix-huit."
+    }
+   ]
+  },
+  "milkyway": {
+   "hash": "9f7e59441030",
+   "duration": 35.27,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.56,
+     "text": "Bienvenue dans la visite des galaxies."
+    },
+    {
+     "start": 2.56,
+     "end": 5.38,
+     "text": "Regardons d'abord notre maison de l'extérieur."
+    },
+    {
+     "start": 5.38,
+     "end": 15.34,
+     "text": "La Voie lactée est une galaxie spirale de cent mille années-lumière de large, avec une barre en son centre, et elle contient entre deux cents et quatre cents milliards d'étoiles."
+    },
+    {
+     "start": 15.34,
+     "end": 25.73,
+     "text": "Le Soleil se trouve à vingt-six mille années-lumière du centre, dans un petit bras appelé le bras d'Orion, et il accomplit un tour autour de la galaxie en deux cent trente millions d'années."
+    },
+    {
+     "start": 25.73,
+     "end": 30.85,
+     "text": "Depuis la disparition des dinosaures, le Soleil n'a parcouru qu'un quart de ce tour."
+    },
+    {
+     "start": 30.85,
+     "end": 35.27,
+     "text": "Dans le bulbe brillant du centre se cache un trou noir de quatre millions de masses solaires."
+    }
+   ]
+  },
+  "smc": {
+   "hash": "a53299b53550",
+   "duration": 32.47,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4.94,
+     "text": "Le Petit Nuage de Magellan, son petit frère situé à deux cent mille années-lumière."
+    },
+    {
+     "start": 4.94,
+     "end": 13.2,
+     "text": "C'est une galaxie irrégulière ; la gravité du Grand Nuage de Magellan et de la Voie lactée l'a probablement mise dans cet état informe."
+    },
+    {
+     "start": 13.2,
+     "end": 18.07,
+     "text": "Un pont d'hydrogène qui s'étend entre les deux est la trace d'une rencontre rapprochée."
+    },
+    {
+     "start": 18.07,
+     "end": 27.25,
+     "text": "En mille neuf cent douze, Henrietta Leavitt y a étudié des milliers d'étoiles variables et a découvert la relation période-luminosité des étoiles céphéides."
+    },
+    {
+     "start": 27.25,
+     "end": 32.47,
+     "text": "Cette découverte est devenue la première règle cosmique qui nous permet de mesurer les distances dans l'univers."
+    }
+   ]
+  },
+  "sombrero": {
+   "hash": "ea3e47967fc8",
+   "duration": 32.23,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 8.6,
+     "text": "La galaxie du Sombrero mérite bien son nom : nous regardons cette galaxie, à vingt-neuf millions d'années-lumière, presque exactement par la tranche."
+    },
+    {
+     "start": 8.6,
+     "end": 16.87,
+     "text": "Son bulbe central, extraordinairement grand et brillant, est entouré d'une bande de poussière nette, tout comme un chapeau mexicain à large bord."
+    },
+    {
+     "start": 16.87,
+     "end": 23.33,
+     "text": "Elle abrite environ deux mille amas globulaires et, en son centre, un trou noir d'un milliard de masses solaires."
+    },
+    {
+     "start": 23.33,
+     "end": 32.23,
+     "text": "On a longtemps débattu pour savoir si elle était spirale ou elliptique ; les observations infrarouges ont montré qu'elle est un disque enfoui à l'intérieur d'une galaxie elliptique."
+    }
+   ]
+  },
+  "triangulum": {
+   "hash": "dccf9a29d693",
+   "duration": 34.23,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4.36,
+     "text": "La galaxie du Triangle, troisième plus grand membre du Groupe local."
+    },
+    {
+     "start": 4.36,
+     "end": 13.24,
+     "text": "Elle se trouve à deux virgule sept millions d'années-lumière et, avec ses quarante milliards d'étoiles, elle est la petite sœur d'Andromède et de la Voie lactée."
+    },
+    {
+     "start": 13.24,
+     "end": 20.31,
+     "text": "Elle n'a en son centre ni bulbe prononcé ni trou noir supermassif ; nous voyons ses bras presque par le dessus."
+    },
+    {
+     "start": 20.31,
+     "end": 30.29,
+     "text": "Elle abrite NGC 604, une région géante de formation d'étoiles large de mille cinq cents années-lumière ; elle est cent fois plus grande que la nébuleuse d'Orion."
+    },
+    {
+     "start": 30.29,
+     "end": 34.23,
+     "text": "Elle est probablement un satellite d'Andromède et la rejoindra un jour."
+    }
+   ]
+  }
+ }
+}

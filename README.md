@@ -34,6 +34,12 @@ Vite · TypeScript · Three.js. UI in English, Turkish, German, Spanish and Fren
   NCC-1701 warp, Millennium Falcon / X-wing hyperspace, Rocinante constant acceleration) can reach stars,
   pulsars, black holes and galaxies. On launch the vehicle is added to the scene, the trajectory is drawn
   and the camera follows live; on interstellar arrival the reference frame switches to the target system.
+- **Guided tours** — ten narrated lessons (Solar System, Mars and its rovers, Jupiter's moons, Saturn,
+  spacecraft, the life of stars, black holes, pulsars, neighbouring stars, galaxies). Each stop flies the
+  camera to the object while a synthetic voice (xAI TTS, voice "altair") explains it; subtitles follow the
+  per-sentence timestamps, the camera drifts slowly around the target once it has arrived and the next
+  stop starts only when both the narration and the flight are done. Audio exists for all five languages;
+  if a locale lacks it, English audio plays with localized subtitles.
 - **Camera** — free flight, orbit, follow, autopilot, pointer-locked roaming; floating origin plus a
   logarithmic depth buffer (from 1 m to 10¹³ km).
 - **UI** — search, info panel, time controls, a "Places worth seeing" menu, settings, `F1` help.
@@ -67,6 +73,16 @@ node scripts/i18n-check.mjs              # report (exit 1 if anything is missing
 node scripts/i18n-check.mjs --missing de # list missing keys for one language
 ```
 
+Guided-tour narration: the scripts live in `src/data/tours.ts` (Turkish source text); the other
+languages are ordinary dictionary entries in `locales/<lang>/data.json`. The audio under
+`public/tours/<lang>/<tour>/<step>.mp3` and the manifests with sentence timings are generated with the
+xAI TTS API (the key is read from the environment only):
+
+```bash
+XAI_API_KEY=… node scripts/translate-tours.mjs            # draft de/es/fr/en texts with Grok (review them!)
+XAI_API_KEY=… node scripts/tts-tours.mjs --lang tr,en     # voice new/changed steps (skips unchanged ones)
+```
+
 ## Deployment
 
 The app is static; in production it is served from `nginx:alpine` (`Dockerfile`, `deploy/nginx/*`:
@@ -84,14 +100,14 @@ GitHub Secrets and are never committed.
 ## Architecture (short)
 
 ```
-src/core      Engine (renderer, post-processing), Universe, StarSystem, CelestialBody, TimeSystem
+src/core      Engine (renderer, post-processing), Universe, StarSystem, CelestialBody, TimeSystem, TourPlayer
 src/math      Kepler solver, reference frames (ecliptic ↔ scene)
 src/data      Solar System, spacecraft, black hole and deep-sky data, HYG catalogue reader, imagery providers
 src/gen       Procedural star-system generator
 src/galaxy    Galaxy catalogue/model, procedural stars, far-universe layers
 src/render    Body/tile/star/galaxy/orbit renderers, black-hole lensing pass and GLSL shaders
 src/camera    Camera controller (modes, autopilot, speed scaling)
-src/ui        HUD, panels, settings, search, places menu, mission planner
+src/ui        HUD, panels, settings, search, places menu, mission planner, tour panel
 src/i18n      Translation runtime and dictionaries
 ```
 

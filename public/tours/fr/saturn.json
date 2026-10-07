@@ -1,0 +1,187 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "enceladus": {
+   "hash": "d66eebed4749",
+   "duration": 35.03,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 7.08,
+     "text": "Encelade ne mesure que cinq cents kilomètres de diamètre, mais c'est l'un des mondes les plus intéressants du Système solaire."
+    },
+    {
+     "start": 7.08,
+     "end": 16.18,
+     "text": "Depuis quatre fissures de son pôle Sud, appelées rayures de tigre, des centaines de geysers projettent de la vapeur d'eau et des cristaux de glace dans l'espace."
+    },
+    {
+     "start": 16.18,
+     "end": 25.59,
+     "text": "Cassini a volé à travers ces fontaines et y a trouvé du sel, des molécules organiques et de l'hydrogène : exactement les matériaux nécessaires à la vie."
+    },
+    {
+     "start": 25.59,
+     "end": 28.83,
+     "text": "Ces grains de glace alimentent l'anneau E de Saturne."
+    },
+    {
+     "start": 28.83,
+     "end": 35.03,
+     "text": "Sa surface est d'un blanc éclatant, comme de la neige fraîche, et elle réfléchit presque toute la lumière du Soleil."
+    }
+   ]
+  },
+  "iapetus": {
+   "hash": "1a648d03e1a8",
+   "duration": 33.84,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.14,
+     "text": "Notre dernière étape est Japet, l'une des lunes les plus étranges du Système solaire."
+    },
+    {
+     "start": 5.14,
+     "end": 10.37,
+     "text": "Une moitié est aussi blanche que la neige, l'autre moitié aussi noire que le charbon."
+    },
+    {
+     "start": 10.37,
+     "end": 22.51,
+     "text": "Comme la même face est toujours tournée vers l'avant sur son orbite, elle balaie la poussière sombre venue des anneaux extérieurs, et la glace s'évapore des régions sombres qui se réchauffent pour retomber en pluie sur le côté brillant."
+    },
+    {
+     "start": 22.51,
+     "end": 31.72,
+     "text": "En plein milieu de son équateur s'étend une crête montagneuse de treize kilomètres de haut et de mille trois cents kilomètres de long ; cela lui donne l'apparence d'une noix."
+    },
+    {
+     "start": 31.72,
+     "end": 33.84,
+     "text": "Notre visite de Saturne est terminée."
+    }
+   ]
+  },
+  "mimas": {
+   "hash": "4eafc0b1091e",
+   "duration": 28.88,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 7.99,
+     "text": "Vous reconnaissez Mimas dès que vous le voyez : le cratère géant Herschel lui donne l'apparence de l'Étoile de la mort dans La Guerre des étoiles."
+    },
+    {
+     "start": 7.99,
+     "end": 13.23,
+     "text": "Le cratère mesure cent trente kilomètres de large, soit un tiers du diamètre de la lune."
+    },
+    {
+     "start": 13.23,
+     "end": 18.11,
+     "text": "Si cette collision avait été un peu plus violente, Mimas aurait volé en éclats."
+    },
+    {
+     "start": 18.11,
+     "end": 28.88,
+     "text": "En deux mille vingt-quatre, l'étude des petites oscillations de son orbite a donné un résultat surprenant : sous la croûte de glace de cette petite lune d'apparence gelée, il pourrait y avoir un jeune océan."
+    }
+   ]
+  },
+  "rings": {
+   "hash": "4c212d34d059",
+   "duration": 35.68,
+   "sentences": [
+    {
+     "start": 0.12,
+     "end": 2.54,
+     "text": "Regardons maintenant les anneaux de plus près."
+    },
+    {
+     "start": 2.54,
+     "end": 12.51,
+     "text": "Ce disque géant n'est pas en réalité une seule structure : il se compose de milliards de morceaux de glace, de la poussière microscopique jusqu'à la taille d'une maison."
+    },
+    {
+     "start": 12.51,
+     "end": 23.29,
+     "text": "Sa largeur dépasse deux cent quatre-vingt mille kilomètres, mais son épaisseur est inférieure à dix mètres dans la plupart des endroits : à l'échelle, il est plus mince encore qu'une feuille de papier."
+    },
+    {
+     "start": 23.29,
+     "end": 30.33,
+     "text": "La plus grande lacune, la division de Cassini, est ouverte par l'attraction gravitationnelle de la petite lune Mimas."
+    },
+    {
+     "start": 30.33,
+     "end": 35.68,
+     "text": "Les anneaux n'ont probablement que quelques centaines de millions d'années, et ils pleuvent lentement sur la planète."
+    }
+   ]
+  },
+  "saturn": {
+   "hash": "b86a55ac1fb7",
+   "duration": 25.91,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.54,
+     "text": "Bienvenue pour la visite de Saturne."
+    },
+    {
+     "start": 2.54,
+     "end": 8.74,
+     "text": "Sixième planète à partir du Soleil, c'est un géant gazeux dont le diamètre est neuf fois celui de la Terre."
+    },
+    {
+     "start": 8.74,
+     "end": 13.06,
+     "text": "Sa densité est inférieure à celle de l'eau ; c'est unique pour une planète."
+    },
+    {
+     "start": 13.06,
+     "end": 16.99,
+     "text": "À son équateur, les vents atteignent mille huit cents kilomètres à l'heure."
+    },
+    {
+     "start": 16.99,
+     "end": 25.91,
+     "text": "Le vaisseau Cassini a étudié ce système pendant treize ans, de deux mille quatre à deux mille dix-sept, et a achevé sa mission en plongeant dans l'atmosphère de la planète."
+    }
+   ]
+  },
+  "titan": {
+   "hash": "5f859177eaff",
+   "duration": 34.39,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 6.36,
+     "text": "Titan, la plus grande lune de Saturne, et la seule lune du Système solaire à posséder une atmosphère épaisse."
+    },
+    {
+     "start": 6.36,
+     "end": 14.28,
+     "text": "Son atmosphère, dominée par l'azote, est cinquante pour cent plus dense que celle de la Terre, et une brume orangée en cache la surface."
+    },
+    {
+     "start": 14.28,
+     "end": 23.01,
+     "text": "À sa surface, il y a des lacs, des rivières et des pluies de méthane et d'éthane liquides ; à moins cent quatre-vingts degrés, l'eau est aussi dure que la roche."
+    },
+    {
+     "start": 23.01,
+     "end": 26.75,
+     "text": "En deux mille cinq, la sonde Huygens s'est posée à sa surface."
+    },
+    {
+     "start": 26.75,
+     "end": 34.39,
+     "text": "Le drone à énergie nucléaire de la NASA, nommé Dragonfly, arrivera ici en deux mille trente-quatre et volera au-dessus des dunes de sable."
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,198 @@
+{
+ "voice": "altair",
+ "locale": "de",
+ "steps": {
+  "hubble": {
+   "hash": "cdd2e8e0f4d2",
+   "duration": 36.87,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 6.26,
+     "text": "Das Hubble-Weltraumteleskop verändert seit 1990 unseren Blick auf das Universum."
+    },
+    {
+     "start": 6.26,
+     "end": 16.71,
+     "text": "Es kreist in 540 Kilometern Höhe und nimmt mit seinem 2,4 Meter großen Spiegel Bilder auf, die frei von der Unschärfe der Atmosphäre sind."
+    },
+    {
+     "start": 16.71,
+     "end": 25.77,
+     "text": "Die ersten Bilder waren unscharf; ein kleiner Fehler in seinem Spiegel wurde 1993 von Astronauten in der Umlaufbahn korrigiert."
+    },
+    {
+     "start": 25.77,
+     "end": 36.87,
+     "text": "Es maß das Alter des Universums, trug zur Entdeckung der dunklen Energie bei und zeigte mit den Deep-Field-Aufnahmen Tausende Galaxien an einem scheinbar leeren Punkt des Himmels."
+    }
+   ]
+  },
+  "iss": {
+   "hash": "be5758511de3",
+   "duration": 34.07,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.64,
+     "text": "Wir beginnen diese Tour, auf der wir die Botschafter der Menschheit im All besuchen, in der Erdumlaufbahn."
+    },
+    {
+     "start": 6.64,
+     "end": 9.66,
+     "text": "Vor Ihnen die Internationale Raumstation."
+    },
+    {
+     "start": 9.66,
+     "end": 21.93,
+     "text": "Sie kreist in 400 Kilometern Höhe mit 28. 000 Kilometern pro Stunde und umrundet die Erde in 90 Minuten; die Astronauten sehen 16 Sonnenaufgänge am Tag."
+    },
+    {
+     "start": 21.93,
+     "end": 26.83,
+     "text": "Sie ist so groß wie ein Fußballfeld und 420 Tonnen schwer."
+    },
+    {
+     "start": 26.83,
+     "end": 34.07,
+     "text": "Seit November 2000 leben ununterbrochen Menschen an Bord; das ist die längste ununterbrochene Präsenz der Menschheit im All."
+    }
+   ]
+  },
+  "jwst": {
+   "hash": "75e55da1aae2",
+   "duration": 39.83,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 9.94,
+     "text": "Das James-Webb-Weltraumteleskop kreist eineinhalb Millionen Kilometer von der Erde entfernt um den Lagrange-Punkt 2 auf der sonnenabgewandten Seite."
+    },
+    {
+     "start": 9.94,
+     "end": 21.69,
+     "text": "Sein sechseinhalb Meter großer, goldbeschichteter Spiegel besteht aus 18 sechseckigen Segmenten und war an Weihnachten 2021, als er gestartet wurde, zusammengefaltet."
+    },
+    {
+     "start": 21.69,
+     "end": 30.83,
+     "text": "Weil es im Infrarotlicht sieht, wird es mit einem Sonnenschutzschild von der Größe eines Tennisplatzes auf minus 233 Grad gekühlt."
+    },
+    {
+     "start": 30.83,
+     "end": 39.83,
+     "text": "Es untersucht die ersten Galaxien des Universums, das Innere der Staubwolken, in denen Sterne geboren werden, und die Atmosphären von Exoplaneten."
+    }
+   ]
+  },
+  "newhorizons": {
+   "hash": "93f345450fd7",
+   "duration": 35.43,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 9.24,
+     "text": "New Horizons war das schnellste Raumfahrzeug, das 2006 die Erde verließ; es legte die Entfernung zum Mond in 9 Stunden zurück."
+    },
+    {
+     "start": 9.24,
+     "end": 31.37,
+     "text": "Nach einer Reise von neuneinhalb Jahren flog es im Juli 2015 an Pluto vorbei und verwandelte einen verschwommenen Punkt in eine echte Welt mit Bergen, Gletschern und seinem Herzen. 2019 besuchte es dann im Kuipergürtel den schneemannförmigen Arrokoth; das ist das fernste Objekt, das ein Raumfahrzeug untersucht hat."
+    },
+    {
+     "start": 31.37,
+     "end": 35.43,
+     "text": "Es arbeitet noch immer und misst die äußeren Grenzen des Sonnensystems."
+    }
+   ]
+  },
+  "parker": {
+   "hash": "d4222a4cdd82",
+   "duration": 42.39,
+   "sentences": [
+    {
+     "start": 0,
+     "end": 5.073,
+     "text": "Die Parker-Sonnensonde ist das erste Raumfahrzeug, das die Sonne berührt."
+    },
+    {
+     "start": 5.073,
+     "end": 12.925,
+     "text": "Sie wurde 2018 gestartet und verengte ihre Umlaufbahn Schritt für Schritt mithilfe der Anziehungskraft der Venus."
+    },
+    {
+     "start": 12.925,
+     "end": 25.573,
+     "text": "Im Dezember 2024 näherte sie sich der Sonnenoberfläche auf 6. 900. 000 Kilometer; dabei wurde sie mit 690. 000 Kilometern pro Stunde zum schnellsten von Menschen geschaffenen Objekt."
+    },
+    {
+     "start": 25.573,
+     "end": 34.398,
+     "text": "Ihr 11 Zentimeter dicker Kohlenstoffschild hält 1. 400 Grad stand, während die Instrumente dahinter bei Raumtemperatur bleiben."
+    },
+    {
+     "start": 34.398,
+     "end": 42.39,
+     "text": "Ihr Ziel ist es herauszufinden, warum die äußere Atmosphäre der Sonne hunderte Male heißer ist als ihre Oberfläche."
+    }
+   ]
+  },
+  "voyager1": {
+   "hash": "dd9c4b961786",
+   "duration": 40.32,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.26,
+     "text": "Voyager 1 ist das fernste von Menschen geschaffene Objekt."
+    },
+    {
+     "start": 4.26,
+     "end": 21.93,
+     "text": "Sie wurde 1977 gestartet; sie besuchte Jupiter und Saturn und verzichtete auf Pluto, um sich Titan zu nähern. 2012 überschritt sie die Grenze des Sonnenwinds und wurde das erste Raumfahrzeug, das in den interstellaren Raum vorstieß."
+    },
+    {
+     "start": 21.93,
+     "end": 30.93,
+     "text": "Heute ist sie mehr als 25 Milliarden Kilometer entfernt; ihre Signale brauchen mehr als 22 Stunden, um uns zu erreichen."
+    },
+    {
+     "start": 30.93,
+     "end": 40.32,
+     "text": "An Bord befindet sich eine goldene Schallplatte mit Grüßen in 55 Sprachen und den Klängen der Erde: für jene, die sie vielleicht eines Tages finden."
+    }
+   ]
+  },
+  "voyager2": {
+   "hash": "289ca150181a",
+   "duration": 40.55,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.48,
+     "text": "Und Voyager 2 ist das einzige Raumfahrzeug, das alle vier äußeren Planeten besucht hat."
+    },
+    {
+     "start": 6.48,
+     "end": 15.58,
+     "text": "Sie wurde 16 Tage vor ihrer Schwester gestartet, flog aber auf einer langsameren Route an Jupiter, Saturn, Uranus und Neptun vorbei."
+    },
+    {
+     "start": 15.58,
+     "end": 28.45,
+     "text": "Das meiste, was wir über Uranus und Neptun wissen, stammt noch immer von ihren Vorbeiflügen 1986 und 1989. 2018 erreichte sie den interstellaren Raum."
+    },
+    {
+     "start": 28.45,
+     "end": 39.07,
+     "text": "Die Plutoniumbatterien beider Voyager werden schwächer; in den 2030er-Jahren werden sie verstummen, aber noch Milliarden Jahre lang zwischen den Sternen weitergleiten."
+    },
+    {
+     "start": 39.07,
+     "end": 40.55,
+     "text": "Unsere Tour endet hier."
+    }
+   ]
+  }
+ }
+}

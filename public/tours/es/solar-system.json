@@ -1,0 +1,347 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "earth": {
+   "hash": "e01e8887a53e",
+   "duration": 27.35,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 2.82,
+     "text": "Y aquí está nuestro hogar: la Tierra."
+    },
+    {
+     "start": 2.82,
+     "end": 6.5,
+     "text": "El único lugar del universo del que sabemos que alberga vida."
+    },
+    {
+     "start": 6.5,
+     "end": 13.28,
+     "text": "El 71 por ciento de su superficie está cubierto de agua líquida; por eso se ve azul desde el espacio."
+    },
+    {
+     "start": 13.28,
+     "end": 19.77,
+     "text": "Su fuerte campo magnético nos protege del viento solar, y la capa de ozono filtra los rayos ultravioleta."
+    },
+    {
+     "start": 19.77,
+     "end": 27.35,
+     "text": "La gravedad de la Luna, por su parte, mantiene estable la inclinación del eje de la Tierra y así hace que las estaciones sean regulares."
+    }
+   ]
+  },
+  "jupiter": {
+   "hash": "887635dadfb0",
+   "duration": 32.94,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.6,
+     "text": "Júpiter, el rey de los planetas."
+    },
+    {
+     "start": 2.6,
+     "end": 10.49,
+     "text": "Su masa es dos veces y media la masa total de todos los demás planetas; en su interior caben 1. 300 Tierras."
+    },
+    {
+     "start": 10.49,
+     "end": 18.95,
+     "text": "No tiene superficie; las franjas de colores que estáis viendo son gigantescos cinturones de nubes en la atmósfera de hidrógeno y helio."
+    },
+    {
+     "start": 18.95,
+     "end": 26.44,
+     "text": "La Gran Mancha Roja es una tormenta que dura desde hace al menos 350 años y es más grande que la Tierra."
+    },
+    {
+     "start": 26.44,
+     "end": 32.94,
+     "text": "El día de este gigante dura solo 10 horas, y a su alrededor giran más de 95 lunas conocidas."
+    }
+   ]
+  },
+  "mars": {
+   "hash": "650c331388e9",
+   "duration": 32.48,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.28,
+     "text": "El planeta rojo, Marte."
+    },
+    {
+     "start": 2.28,
+     "end": 5.58,
+     "text": "Toma su color del hierro oxidado de su superficie."
+    },
+    {
+     "start": 5.58,
+     "end": 16.25,
+     "text": "Su diámetro es aproximadamente la mitad del de la Tierra, pero alberga el volcán más grande del Sistema Solar: el Olympus Mons, de 22 kilómetros de altura."
+    },
+    {
+     "start": 16.25,
+     "end": 25.21,
+     "text": "El cañón Valles Marineris, de 4. 000 kilómetros de longitud, es tan largo que atravesaría el continente americano de un extremo a otro."
+    },
+    {
+     "start": 25.21,
+     "end": 32.48,
+     "text": "Hace miles de millones de años había ríos y lagos en su superficie; hoy, los robots buscan los rastros de esa agua."
+    }
+   ]
+  },
+  "mercury": {
+   "hash": "b34e37715579",
+   "duration": 30.39,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.52,
+     "text": "Nuestra primera parada es Mercurio, el planeta más pequeño y el más cercano al Sol."
+    },
+    {
+     "start": 5.52,
+     "end": 9.74,
+     "text": "Una vuelta alrededor del Sol le lleva solo 88 días."
+    },
+    {
+     "start": 9.74,
+     "end": 21.65,
+     "text": "Su atmósfera es tan tenue que casi no existe; por eso, el lado diurno sube hasta los 430 grados, mientras que el lado nocturno baja a 180 grados bajo cero."
+    },
+    {
+     "start": 21.65,
+     "end": 25.35,
+     "text": "Su superficie está cubierta de cráteres, igual que la Luna."
+    },
+    {
+     "start": 25.35,
+     "end": 30.39,
+     "text": "Ahora mismo, la nave conjunta de Europa y Japón, BepiColombo, viaja hacia él."
+    }
+   ]
+  },
+  "moon": {
+   "hash": "2b907edf290a",
+   "duration": 28.79,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 7.76,
+     "text": "La Luna es el único satélite natural de la Tierra y el único otro cuerpo celeste sobre el que el ser humano ha puesto el pie."
+    },
+    {
+     "start": 7.76,
+     "end": 24.95,
+     "text": "Entre 1969 y 1972, con las misiones Apolo, doce astronautas caminaron por su superficie. Está a 384. 000 kilómetros y siempre nos muestra la misma cara, porque su rotación está acoplada a su órbita."
+    },
+    {
+     "start": 24.95,
+     "end": 28.79,
+     "text": "Cada año se aleja de nosotros aproximadamente 4 centímetros."
+    }
+   ]
+  },
+  "neptune": {
+   "hash": "a3f8bf71f789",
+   "duration": 32.15,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 3.02,
+     "text": "Neptuno, el planeta más alejado del Sol."
+    },
+    {
+     "start": 3.02,
+     "end": 15.83,
+     "text": "No se descubrió con un telescopio, sino sobre el papel: unos matemáticos que estudiaban las desviaciones de la órbita de Urano calcularon su posición, y en 1846 se encontró justo allí."
+    },
+    {
+     "start": 15.83,
+     "end": 21.63,
+     "text": "Sus vientos superan los 2. 100 kilómetros por hora; son los más rápidos del Sistema Solar."
+    },
+    {
+     "start": 21.63,
+     "end": 25.77,
+     "text": "Una vuelta alrededor del Sol le lleva 165 años."
+    },
+    {
+     "start": 25.77,
+     "end": 32.15,
+     "text": "Su gran luna Tritón gira en sentido contrario; probablemente es un objeto capturado del cinturón de Kuiper."
+    }
+   ]
+  },
+  "pluto": {
+   "hash": "1156fd8338dc",
+   "duration": 37.27,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.5,
+     "text": "Nuestra última parada es Plutón."
+    },
+    {
+     "start": 2.5,
+     "end": 10.2,
+     "text": "Se descubrió en 1930 y hasta 2006 se consideró el noveno planeta; ahora es un planeta enano."
+    },
+    {
+     "start": 10.2,
+     "end": 15.92,
+     "text": "Hasta que la New Horizons pasó junto a él en 2015, no era más que un punto borroso."
+    },
+    {
+     "start": 15.92,
+     "end": 23.23,
+     "text": "La nave encontró en su superficie una forma de corazón gigante, glaciares de nitrógeno y montañas de hielo de agua."
+    },
+    {
+     "start": 23.23,
+     "end": 27.63,
+     "text": "La temperatura de su superficie es de 230 grados bajo cero."
+    },
+    {
+     "start": 27.63,
+     "end": 33.51,
+     "text": "Su satélite Caronte es tan grande que los dos giran juntos alrededor de un centro de masas común."
+    },
+    {
+     "start": 33.51,
+     "end": 37.27,
+     "text": "Aquí termina nuestro recorrido por el Sistema Solar; buen viaje."
+    }
+   ]
+  },
+  "saturn": {
+   "hash": "1a63c8894d57",
+   "duration": 29.6,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 5.18,
+     "text": "Saturno es, sin duda alguna, el planeta más elegante del Sistema Solar."
+    },
+    {
+     "start": 5.18,
+     "end": 17.69,
+     "text": "Sus anillos están formados sobre todo por hielo de agua; alcanzan una anchura de 280. 000 kilómetros, mientras que su grosor, en la mayoría de los lugares, es de apenas unos 10 metros."
+    },
+    {
+     "start": 17.69,
+     "end": 23.75,
+     "text": "El propio planeta es tan ligero que, si lo pusierais en un océano lo bastante grande, flotaría."
+    },
+    {
+     "start": 23.75,
+     "end": 29.6,
+     "text": "En su polo norte gira una misteriosa tormenta hexagonal, con cada lado tan grande como la Tierra."
+    }
+   ]
+  },
+  "sun": {
+   "hash": "278a858dcf9f",
+   "duration": 35.43,
+   "sentences": [
+    {
+     "start": 0,
+     "end": 3.475,
+     "text": "Bienvenidos al recorrido por el Sistema Solar."
+    },
+    {
+     "start": 3.475,
+     "end": 7.403,
+     "text": "Nuestro viaje comienza en el centro de todo, el Sol."
+    },
+    {
+     "start": 7.403,
+     "end": 15.94,
+     "text": "Esta estrella, de 4. 500 millones de años, concentra por sí sola el 99,8 por ciento de la masa total del sistema."
+    },
+    {
+     "start": 15.94,
+     "end": 23.116,
+     "text": "Su diámetro es de 1. 400. 000 kilómetros; en su interior caben 109 Tierras una al lado de otra."
+    },
+    {
+     "start": 23.116,
+     "end": 28.556,
+     "text": "Su superficie está a 5. 500 grados y su núcleo, a 15 millones de grados."
+    },
+    {
+     "start": 28.556,
+     "end": 35.43,
+     "text": "La luz que estáis viendo ahora sale de aquí y llega a la Tierra en 8 minutos y 20 segundos."
+    }
+   ]
+  },
+  "uranus": {
+   "hash": "17daeb82eb14",
+   "duration": 26.54,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.38,
+     "text": "Urano, el planeta tumbado de lado."
+    },
+    {
+     "start": 2.38,
+     "end": 8.57,
+     "text": "Su eje está inclinado 98 grados; es decir, gira alrededor del Sol como si rodara."
+    },
+    {
+     "start": 8.57,
+     "end": 13.85,
+     "text": "Por eso, sus polos viven 42 años de día y 42 años de noche."
+    },
+    {
+     "start": 13.85,
+     "end": 17.88,
+     "text": "Se ve azul verdoso porque el gas metano absorbe la luz roja."
+    },
+    {
+     "start": 17.88,
+     "end": 26.54,
+     "text": "Es el primer planeta descubierto con telescopio, por William Herschel en 1781, y de cerca solo lo vio la Voyager 2."
+    }
+   ]
+  },
+  "venus": {
+   "hash": "a9c62311a441",
+   "duration": 31.67,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 6.64,
+     "text": "Venus se considera la gemela de la Tierra por su tamaño, pero sus condiciones son un auténtico infierno."
+    },
+    {
+     "start": 6.64,
+     "end": 19.62,
+     "text": "Su espesa atmósfera de dióxido de carbono eleva la presión en la superficie a 92 veces la de la Tierra y, por el efecto invernadero, sube la temperatura hasta los 465 grados."
+    },
+    {
+     "start": 19.62,
+     "end": 23.85,
+     "text": "Es más caliente incluso que Mercurio, que está más cerca del Sol."
+    },
+    {
+     "start": 23.85,
+     "end": 26.41,
+     "text": "Sus nubes son de ácido sulfúrico."
+    },
+    {
+     "start": 26.41,
+     "end": 31.67,
+     "text": "Venus gira en sentido contrario y muy despacio: un día suyo dura más que un año."
+    }
+   ]
+  }
+ }
+}

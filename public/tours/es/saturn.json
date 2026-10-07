@@ -1,0 +1,187 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "enceladus": {
+   "hash": "a2adcc8e2654",
+   "duration": 35.59,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 7.72,
+     "text": "Encélado tiene apenas quinientos kilómetros de diámetro, pero es uno de los mundos más interesantes del Sistema Solar."
+    },
+    {
+     "start": 7.72,
+     "end": 17.04,
+     "text": "Desde cuatro grietas de su polo sur, llamadas rayas de tigre, cientos de géiseres expulsan vapor de agua y cristales de hielo al espacio."
+    },
+    {
+     "start": 17.04,
+     "end": 26.45,
+     "text": "Cassini voló por el interior de estos surtidores y encontró sal, moléculas orgánicas e hidrógeno; justo los materiales necesarios para la vida."
+    },
+    {
+     "start": 26.45,
+     "end": 29.99,
+     "text": "Estos granos de hielo alimentan el anillo E de Saturno."
+    },
+    {
+     "start": 29.99,
+     "end": 35.59,
+     "text": "Su superficie es blanquísima, como la nieve fresca, y refleja casi toda la luz del Sol."
+    }
+   ]
+  },
+  "iapetus": {
+   "hash": "4c389fc679ec",
+   "duration": 37.33,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.84,
+     "text": "Nuestra última parada, Jápeto, es una de las lunas más extrañas del Sistema Solar."
+    },
+    {
+     "start": 5.84,
+     "end": 11.16,
+     "text": "Una mitad es tan blanca como la nieve y la otra mitad, tan negra como el carbón."
+    },
+    {
+     "start": 11.16,
+     "end": 24.23,
+     "text": "Como en su órbita siempre mira hacia delante con la misma cara, barre el polvo oscuro que llega de los anillos exteriores, y el hielo se evapora de las zonas oscuras que se calientan y precipita sobre el lado brillante."
+    },
+    {
+     "start": 24.23,
+     "end": 34.79,
+     "text": "Justo en el centro de su ecuador se extiende una cresta montañosa de trece kilómetros de altura y mil trescientos kilómetros de longitud; esto le da un aspecto de nuez."
+    },
+    {
+     "start": 34.79,
+     "end": 37.33,
+     "text": "Nuestro recorrido por Saturno ha terminado."
+    }
+   ]
+  },
+  "mimas": {
+   "hash": "13f64d2ed09e",
+   "duration": 33.99,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 9.46,
+     "text": "Reconoceréis a Mimas en cuanto la veáis: el gigantesco cráter Herschel le da el aspecto de la Estrella de la Muerte de La guerra de las galaxias."
+    },
+    {
+     "start": 9.46,
+     "end": 15.74,
+     "text": "El cráter tiene ciento treinta kilómetros de ancho; es decir, un tercio del diámetro de la luna."
+    },
+    {
+     "start": 15.74,
+     "end": 21.01,
+     "text": "Si este impacto hubiera sido un poco más violento, Mimas se habría hecho pedazos."
+    },
+    {
+     "start": 21.01,
+     "end": 33.99,
+     "text": "Cuando en dos mil veinticuatro se analizaron las pequeñas oscilaciones de su órbita, surgió un resultado sorprendente: bajo la corteza de hielo de esta pequeña luna de aspecto congelado podría haber un océano joven."
+    }
+   ]
+  },
+  "rings": {
+   "hash": "844329f38474",
+   "duration": 38.88,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.76,
+     "text": "Ahora miremos los anillos más de cerca."
+    },
+    {
+     "start": 2.76,
+     "end": 13.75,
+     "text": "Este disco gigante no es en realidad una sola estructura, sino que está formado por miles de millones de trozos de hielo, desde polvo microscópico hasta el tamaño de una casa."
+    },
+    {
+     "start": 13.75,
+     "end": 25.19,
+     "text": "Su anchura supera los doscientos ochenta mil kilómetros, pero su grosor es inferior a diez metros en la mayoría de los lugares: es incluso más fino que una hoja de papel a escala."
+    },
+    {
+     "start": 25.19,
+     "end": 31.86,
+     "text": "La gravedad de la pequeña luna Mimas abre la División de Cassini, el mayor hueco que hay entre los anillos."
+    },
+    {
+     "start": 31.86,
+     "end": 38.88,
+     "text": "Los anillos tienen probablemente solo unos pocos cientos de millones de años y están lloviendo poco a poco sobre el planeta."
+    }
+   ]
+  },
+  "saturn": {
+   "hash": "999fedb2fea5",
+   "duration": 28.94,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.72,
+     "text": "Bienvenidos al recorrido por Saturno."
+    },
+    {
+     "start": 2.72,
+     "end": 9.57,
+     "text": "Es el sexto planeta desde el Sol, un gigante gaseoso cuyo diámetro es nueve veces el de la Tierra."
+    },
+    {
+     "start": 9.57,
+     "end": 14.35,
+     "text": "Su densidad es menor que la del agua; esto es único para un planeta."
+    },
+    {
+     "start": 14.35,
+     "end": 19.03,
+     "text": "En su ecuador, los vientos alcanzan los mil ochocientos kilómetros por hora."
+    },
+    {
+     "start": 19.03,
+     "end": 28.94,
+     "text": "La nave Cassini, desde dos mil cuatro hasta dos mil diecisiete, estudió este sistema durante trece años y completó su misión zambulléndose en la atmósfera del planeta."
+    }
+   ]
+  },
+  "titan": {
+   "hash": "14be38bea86a",
+   "duration": 37.27,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 6.68,
+     "text": "Titán es la luna más grande de Saturno y la única luna del Sistema Solar con una atmósfera espesa."
+    },
+    {
+     "start": 6.68,
+     "end": 16,
+     "text": "Su atmósfera, de predominio de nitrógeno, es un cincuenta por ciento más densa que la de la Tierra y oculta la superficie con una bruma anaranjada."
+    },
+    {
+     "start": 16,
+     "end": 25.29,
+     "text": "En su superficie hay lagos, ríos y lluvias de metano y etano líquidos; a menos ciento ochenta grados, el agua es tan dura como la roca."
+    },
+    {
+     "start": 25.29,
+     "end": 29.41,
+     "text": "En dos mil cinco, la sonda Huygens aterrizó en su superficie."
+    },
+    {
+     "start": 29.41,
+     "end": 37.27,
+     "text": "El dron de energía nuclear de la NASA llamado Dragonfly llegará aquí en dos mil treinta y cuatro y volará sobre las dunas de arena."
+    }
+   ]
+  }
+ }
+}

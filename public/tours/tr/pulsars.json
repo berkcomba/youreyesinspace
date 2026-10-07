@@ -1,0 +1,233 @@
+{
+ "voice": "altair",
+ "locale": "tr",
+ "steps": {
+  "b1919": {
+   "hash": "163a0510f74d",
+   "duration": 35.68,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 2.3,
+     "text": "Pulsarlar turuna hoş geldiniz."
+    },
+    {
+     "start": 2.3,
+     "end": 14.69,
+     "text": "Her şey bin dokuz yüz altmış yedide, Cambridge'de doktora öğrencisi Jocelyn Bell'in radyo verilerinde her bir virgül üç saniyede bir tekrarlayan tuhaf bir sinyal fark etmesiyle başladı."
+    },
+    {
+     "start": 14.69,
+     "end": 22.99,
+     "text": "Sinyal o kadar düzenliydi ki ekibi ona yarı şaka Küçük Yeşil Adamlar anlamına gelen LGM Bir adını verdi."
+    },
+    {
+     "start": 22.99,
+     "end": 29.68,
+     "text": "Karşınızdaki PSR B Bin Dokuz Yüz On Dokuz artı Yirmi Bir, işte o ilk pulsar."
+    },
+    {
+     "start": 29.68,
+     "end": 35.68,
+     "text": "Aslında bir deniz feneri gibi dönen ve ışın demetini her turda bize doğrultan bir nötron yıldızıydı."
+    }
+   ]
+  },
+  "crab": {
+   "hash": "70221ee31273",
+   "duration": 34.23,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 5.96,
+     "text": "Yengeç Pulsarı, bin elli dört yılındaki süpernovanın geride bıraktığı nötron yıldızı."
+    },
+    {
+     "start": 5.96,
+     "end": 11.78,
+     "text": "Saniyede otuz kez döner ve Yengeç Bulutsusu'nun tamamını enerjisiyle aydınlatır."
+    },
+    {
+     "start": 11.78,
+     "end": 20.55,
+     "text": "Yalnızca yirmi kilometre çapındadır ama Güneş'ten daha ağırdır; bir şeker küpü büyüklüğündeki maddesi bir dağ kadar çeker."
+    },
+    {
+     "start": 20.55,
+     "end": 25.35,
+     "text": "Radyo dalgalarından gama ışınlarına kadar her dalga boyunda nabız atar."
+    },
+    {
+     "start": 25.35,
+     "end": 34.23,
+     "text": "Gözlemlenebilir bir süpernovayla kesin olarak eşleştirilen ilk pulsardır ve pulsarların patlayan yıldızlardan doğduğunu kanıtlamıştır."
+    }
+   ]
+  },
+  "hulsetaylor": {
+   "hash": "386f4d13fe37",
+   "duration": 36.79,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 5.06,
+     "text": "Hulse ve Taylor Çifti, fiziğin en önemli deneylerinden birine sahne oldu."
+    },
+    {
+     "start": 5.06,
+     "end": 16.33,
+     "text": "Bin dokuz yüz yetmiş dörtte keşfedilen bu sistemde bir pulsar ile başka bir nötron yıldızı, ortak kütle merkezlerinin etrafında yedi saat kırk beş dakikada bir dönerler."
+    },
+    {
+     "start": 16.33,
+     "end": 19.33,
+     "text": "Yörüngeleri her yıl birkaç milimetre küçülür."
+    },
+    {
+     "start": 19.33,
+     "end": 27.63,
+     "text": "Bu, Einstein'ın öngördüğü kütle çekim dalgalarıyla enerji kaybına tam olarak uyar: genel göreliliğin ilk dolaylı kanıtı."
+    },
+    {
+     "start": 27.63,
+     "end": 33.27,
+     "text": "Russell Hulse ve Joseph Taylor bu keşifle bin dokuz yüz doksan üçte Nobel Fizik Ödülü'nü kazandı."
+    },
+    {
+     "start": 33.27,
+     "end": 36.79,
+     "text": "İki yıldız üç yüz milyon yıl içinde birleşecek."
+    }
+   ]
+  },
+  "j1748": {
+   "hash": "d9c091488f94",
+   "duration": 34.57,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 9.76,
+     "text": "PSR J Bin Yedi Yüz Kırk Sekiz eksi Yirmi Dört Kırk Altı A D, bilinen en hızlı dönen pulsar: saniyede yedi yüz on altı tur."
+    },
+    {
+     "start": 9.76,
+     "end": 15.82,
+     "text": "Ekvatorundaki hız ışık hızının dörtte birine yaklaşır; biraz daha hızlı dönse parçalanırdı."
+    },
+    {
+     "start": 15.82,
+     "end": 21.84,
+     "text": "Bu hıza, yoldaş yıldızından çektiği maddeyle milyonlarca yıl boyunca hızlanarak ulaştı."
+    },
+    {
+     "start": 21.84,
+     "end": 26.32,
+     "text": "Yay takımyıldızındaki Terzan Beş adlı yoğun küresel kümede yaşar."
+    },
+    {
+     "start": 26.32,
+     "end": 34.57,
+     "text": "Yoldaşı, pulsarın şiddetli ışınımıyla şişmiş durumdadır ve yörüngenin yaklaşık yüzde kırkında onu örterek sinyalini keser."
+    }
+   ]
+  },
+  "lich": {
+   "hash": "cb4f7d5feb2c",
+   "duration": 39.18,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.96,
+     "text": "İlk ötegezegenler bir Güneş benzeri yıldızın değil, ölü bir yıldızın etrafında bulundu."
+    },
+    {
+     "start": 5.96,
+     "end": 16.99,
+     "text": "Bin dokuz yüz doksan ikide Aleksander Wolszczan ve Dale Frail, Lich adlı bu pulsarın nabzındaki milisaniyelik gecikmelerden etrafında dönen gezegenleri çıkardı."
+    },
+    {
+     "start": 16.99,
+     "end": 25.24,
+     "text": "Draugr, Poltergeist ve Phobetor adlı bu üç gezegen, muhtemelen süpernovadan arta kalan enkazdan yeniden oluştu."
+    },
+    {
+     "start": 25.24,
+     "end": 31.66,
+     "text": "Draugr, bilinen en küçük kütleli ötegezegendir; Ay'ın yalnızca iki katı ağırlığındadır."
+    },
+    {
+     "start": 31.66,
+     "end": 39.18,
+     "text": "Pulsarın ölümcül ışınımı altında yaşam düşünülemez bile; adları bu yüzden hayaletlerden ve yaşayan ölülerden alınmıştır."
+    }
+   ]
+  },
+  "sgr1806": {
+   "hash": "a6d119057b70",
+   "duration": 41.35,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.56,
+     "text": "Son durağımız bir magnetar: SGR Bin Sekiz Yüz Altı eksi Yirmi."
+    },
+    {
+     "start": 5.56,
+     "end": 17.46,
+     "text": "Magnetarlar, evrendeki en güçlü manyetik alanlara sahip nötron yıldızlarıdır; bu alan Dünya'nınkinden bin trilyon kat güçlüdür ve bin kilometre öteden bir kredi kartını siler."
+    },
+    {
+     "start": 17.46,
+     "end": 25.84,
+     "text": "İki bin dört Aralık'ının yirmi yedisinde kabuğu çatladı ve onda bir saniyede Güneş'in yüz bin yılda yaydığı kadar enerji saçtı."
+    },
+    {
+     "start": 25.84,
+     "end": 35.12,
+     "text": "Elli bin ışık yılı uzaktan gelen bu patlama Dünya'nın üst atmosferini ölçülebilir biçimde iyonlaştırdı ve uyduların dedektörlerini kör etti."
+    },
+    {
+     "start": 35.12,
+     "end": 39.43,
+     "text": "Bugüne kadar Güneş Sistemi dışından gözlenen en parlak olaydır."
+    },
+    {
+     "start": 39.43,
+     "end": 41.35,
+     "text": "Pulsarlar turumuz sona erdi."
+    }
+   ]
+  },
+  "vela": {
+   "hash": "ce52c330fb4b",
+   "duration": 30.71,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.66,
+     "text": "Vela Pulsarı, bin ışık yılı uzaklıktaki en parlak radyo pulsarlarından biri."
+    },
+    {
+     "start": 5.66,
+     "end": 11.34,
+     "text": "On bir bin yıl önce patlayan bir yıldızın kalıntısıdır ve saniyede on bir kez döner."
+    },
+    {
+     "start": 11.34,
+     "end": 15.34,
+     "text": "Zaman zaman aniden hızlanır; bu olaylara glitch denir."
+    },
+    {
+     "start": 15.34,
+     "end": 23.03,
+     "text": "Yıldızın katı kabuğundaki depremlerin ya da iç kısmındaki süperakışkan nötronların kabuğa enerji aktarmasının sonucudur."
+    },
+    {
+     "start": 23.03,
+     "end": 30.71,
+     "text": "Yani bu küçük yıldızı inceleyerek maddenin Dünya'daki hiçbir laboratuvarda üretilemeyecek yoğunluklardaki davranışını öğreniyoruz."
+    }
+   ]
+  }
+ }
+}

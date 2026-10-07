@@ -1,0 +1,233 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "b1919": {
+   "hash": "3e567133a258",
+   "duration": 38.31,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.94,
+     "text": "Bienvenidos al recorrido de los púlsares."
+    },
+    {
+     "start": 2.94,
+     "end": 15.23,
+     "text": "Todo empezó en mil novecientos sesenta y siete, cuando Jocelyn Bell, estudiante de doctorado en Cambridge, advirtió en los datos de radio una extraña señal que se repetía cada uno coma tres segundos."
+    },
+    {
+     "start": 15.23,
+     "end": 24.25,
+     "text": "La señal era tan regular que su equipo le puso, medio en broma, el nombre de LGM uno, que significa hombrecillos verdes."
+    },
+    {
+     "start": 24.25,
+     "end": 32.05,
+     "text": "El que tenéis delante, PSR B 1919 más 21, es precisamente ese primer púlsar."
+    },
+    {
+     "start": 32.05,
+     "end": 38.31,
+     "text": "En realidad era una estrella de neutrones que giraba como un faro y dirigía su haz hacia nosotros en cada vuelta."
+    }
+   ]
+  },
+  "crab": {
+   "hash": "a091e1fa6067",
+   "duration": 36.47,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 7.14,
+     "text": "El púlsar del Cangrejo es la estrella de neutrones que dejó tras de sí la supernova del año mil cincuenta y cuatro."
+    },
+    {
+     "start": 7.14,
+     "end": 12.9,
+     "text": "Gira treinta veces por segundo e ilumina con su energía toda la nebulosa del Cangrejo."
+    },
+    {
+     "start": 12.9,
+     "end": 22.64,
+     "text": "Tiene apenas veinte kilómetros de diámetro, pero es más pesado que el Sol; su materia del tamaño de un terrón de azúcar pesa tanto como una montaña."
+    },
+    {
+     "start": 22.64,
+     "end": 28.31,
+     "text": "Pulsa en todas las longitudes de onda, desde las ondas de radio hasta los rayos gamma."
+    },
+    {
+     "start": 28.31,
+     "end": 36.47,
+     "text": "Es el primer púlsar emparejado de forma definitiva con una supernova observable, y demostró que los púlsares nacen de estrellas que explotan."
+    }
+   ]
+  },
+  "hulsetaylor": {
+   "hash": "c0bd29e8c227",
+   "duration": 43.51,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 6.72,
+     "text": "El sistema binario de Hulse y Taylor fue el escenario de uno de los experimentos más importantes de la física."
+    },
+    {
+     "start": 6.72,
+     "end": 18.9,
+     "text": "En este sistema, descubierto en mil novecientos setenta y cuatro, un púlsar y otra estrella de neutrones giran en torno a su centro de masas común una vez cada siete horas y cuarenta y cinco minutos."
+    },
+    {
+     "start": 18.9,
+     "end": 22.41,
+     "text": "Sus órbitas se reducen unos pocos milímetros cada año."
+    },
+    {
+     "start": 22.41,
+     "end": 32.21,
+     "text": "Esto se ajusta exactamente a la pérdida de energía mediante ondas gravitatorias que predijo Einstein: la primera prueba indirecta de la relatividad general."
+    },
+    {
+     "start": 32.21,
+     "end": 39.75,
+     "text": "Russell Hulse y Joseph Taylor ganaron con este descubrimiento el Premio Nobel de Física en mil novecientos noventa y tres."
+    },
+    {
+     "start": 39.75,
+     "end": 43.51,
+     "text": "Las dos estrellas se fusionarán dentro de trescientos millones de años."
+    }
+   ]
+  },
+  "j1748": {
+   "hash": "37cba9908812",
+   "duration": 40.88,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 11.95,
+     "text": "PSR J 1748 menos 2446 A D, el púlsar de rotación más rápida conocido: setecientas dieciséis vueltas por segundo."
+    },
+    {
+     "start": 11.95,
+     "end": 19.85,
+     "text": "La velocidad en su ecuador se acerca a un cuarto de la velocidad de la luz; si girara un poco más deprisa, se despedazaría."
+    },
+    {
+     "start": 19.85,
+     "end": 26.51,
+     "text": "Alcanzó esta velocidad acelerándose a lo largo de millones de años con la materia que atraía de su estrella compañera."
+    },
+    {
+     "start": 26.51,
+     "end": 32.15,
+     "text": "Vive en el denso cúmulo globular llamado Terzan cinco, en la constelación de Sagitario."
+    },
+    {
+     "start": 32.15,
+     "end": 40.88,
+     "text": "Su compañera está hinchada por la violenta radiación del púlsar y lo oculta durante aproximadamente el cuarenta por ciento de la órbita, cortando su señal."
+    }
+   ]
+  },
+  "lich": {
+   "hash": "fe59aacdb9f0",
+   "duration": 43.6,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 7.12,
+     "text": "Los primeros exoplanetas no se encontraron alrededor de una estrella similar al Sol, sino de una estrella muerta."
+    },
+    {
+     "start": 7.12,
+     "end": 19.65,
+     "text": "En mil novecientos noventa y dos, Aleksander Wolszczan y Dale Frail dedujeron los planetas que giran alrededor de este púlsar, llamado Lich, a partir de retrasos de milisegundos en su pulso."
+    },
+    {
+     "start": 19.65,
+     "end": 29.33,
+     "text": "Estos tres planetas, llamados Draugr, Poltergeist y Phobetor, probablemente se formaron de nuevo a partir de los escombros que sobraron de la supernova."
+    },
+    {
+     "start": 29.33,
+     "end": 35.02,
+     "text": "Draugr es el exoplaneta de menor masa que se conoce; pesa apenas el doble que la Luna."
+    },
+    {
+     "start": 35.02,
+     "end": 43.6,
+     "text": "Bajo la radiación mortal del púlsar, la vida ni siquiera se puede concebir; por eso sus nombres están tomados de fantasmas y de muertos vivientes."
+    }
+   ]
+  },
+  "sgr1806": {
+   "hash": "5056ac36f7cb",
+   "duration": 47.91,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.48,
+     "text": "Nuestra última parada es un magnetar: SGR 1806 menos 20."
+    },
+    {
+     "start": 6.48,
+     "end": 19.7,
+     "text": "Los magnetares son estrellas de neutrones con los campos magnéticos más fuertes del universo; este campo es mil billones de veces más fuerte que el de la Tierra y borra una tarjeta de crédito desde mil kilómetros de distancia."
+    },
+    {
+     "start": 19.7,
+     "end": 29.77,
+     "text": "El veintisiete de diciembre de dos mil cuatro, su corteza se agrietó y, en una décima de segundo, liberó tanta energía como la que el Sol emite en cien mil años."
+    },
+    {
+     "start": 29.77,
+     "end": 40.23,
+     "text": "Esta explosión, llegada desde cincuenta mil años luz de distancia, ionizó de forma medible la atmósfera superior de la Tierra y cegó los detectores de los satélites."
+    },
+    {
+     "start": 40.23,
+     "end": 45.19,
+     "text": "Es el suceso más brillante observado hasta hoy desde fuera del Sistema Solar."
+    },
+    {
+     "start": 45.19,
+     "end": 47.91,
+     "text": "Nuestro recorrido por los púlsares ha terminado."
+    }
+   ]
+  },
+  "vela": {
+   "hash": "5c2510d0ed54",
+   "duration": 34.47,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 6.14,
+     "text": "El púlsar de Vela es uno de los púlsares de radio más brillantes a mil años luz de distancia."
+    },
+    {
+     "start": 6.14,
+     "end": 12.12,
+     "text": "Es el resto de una estrella que explotó hace once mil años, y gira once veces por segundo."
+    },
+    {
+     "start": 12.12,
+     "end": 17.21,
+     "text": "De vez en cuando se acelera de repente; a estos sucesos se les llama glitch."
+    },
+    {
+     "start": 17.21,
+     "end": 26.21,
+     "text": "Es el resultado de terremotos en la corteza sólida de la estrella, o de que los neutrones superfluidos de su interior transfieren energía a la corteza."
+    },
+    {
+     "start": 26.21,
+     "end": 34.47,
+     "text": "Así, al estudiar esta pequeña estrella, aprendemos el comportamiento de la materia a densidades que ningún laboratorio de la Tierra podría producir."
+    }
+   ]
+  }
+ }
+}

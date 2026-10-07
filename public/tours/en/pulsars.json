@@ -1,0 +1,233 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "b1919": {
+   "hash": "d4639941fca8",
+   "duration": 35.19,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 2.24,
+     "text": "Welcome to the pulsars tour."
+    },
+    {
+     "start": 2.24,
+     "end": 14.24,
+     "text": "It all began in 1967, when Jocelyn Bell, a PhD student at Cambridge, noticed a strange signal in the radio data that repeated every 1. 3 seconds."
+    },
+    {
+     "start": 14.24,
+     "end": 22.15,
+     "text": "The signal was so regular that her team half-jokingly named it LGM 1, meaning Little Green Men."
+    },
+    {
+     "start": 22.15,
+     "end": 28.85,
+     "text": "PSR B 1919 plus 21, before you, is that very first pulsar."
+    },
+    {
+     "start": 28.85,
+     "end": 35.19,
+     "text": "It was in fact a neutron star, spinning like a lighthouse and directing its beam toward us on every turn."
+    }
+   ]
+  },
+  "crab": {
+   "hash": "3645014dcce3",
+   "duration": 33.99,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 6.8,
+     "text": "The Crab Pulsar is the neutron star left behind by the supernova of 1054."
+    },
+    {
+     "start": 6.8,
+     "end": 12.44,
+     "text": "It spins 30 times a second and lights up the entire Crab Nebula with its energy."
+    },
+    {
+     "start": 12.44,
+     "end": 21.15,
+     "text": "It is only 20 kilometers across, yet heavier than the Sun; a sugar-cube-sized piece of its matter weighs as much as a mountain."
+    },
+    {
+     "start": 21.15,
+     "end": 25.67,
+     "text": "It pulses at every wavelength, from radio waves to gamma rays."
+    },
+    {
+     "start": 25.67,
+     "end": 33.99,
+     "text": "It is the first pulsar definitively matched to an observable supernova, and it proved that pulsars are born from exploding stars."
+    }
+   ]
+  },
+  "hulsetaylor": {
+   "hash": "b4c0d4484153",
+   "duration": 38.31,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 5.68,
+     "text": "The Hulse–Taylor binary was the setting for one of the most important experiments in physics."
+    },
+    {
+     "start": 5.68,
+     "end": 16.32,
+     "text": "In this system, discovered in 1974, a pulsar and another neutron star orbit their common center of mass once every 7 hours and 45 minutes."
+    },
+    {
+     "start": 16.32,
+     "end": 19.8,
+     "text": "Their orbits shrink by a few millimeters every year."
+    },
+    {
+     "start": 19.8,
+     "end": 28.41,
+     "text": "This matches exactly the energy loss through gravitational waves that Einstein predicted: the first indirect evidence for general relativity."
+    },
+    {
+     "start": 28.41,
+     "end": 34.91,
+     "text": "With this discovery, Russell Hulse and Joseph Taylor won the Nobel Prize in Physics in 1993."
+    },
+    {
+     "start": 34.91,
+     "end": 38.31,
+     "text": "The two stars will merge within 300 million years."
+    }
+   ]
+  },
+  "j1748": {
+   "hash": "36e2c0644a6a",
+   "duration": 39.75,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 11.58,
+     "text": "PSR J 1748 minus 2446 A D is the fastest-spinning pulsar known: 716 revolutions a second."
+    },
+    {
+     "start": 11.58,
+     "end": 19.31,
+     "text": "The speed at its equator approaches a quarter of the speed of light; if it spun even a little faster, it would fly apart."
+    },
+    {
+     "start": 19.31,
+     "end": 25.23,
+     "text": "It reached this speed by accelerating for millions of years on matter drawn from its companion star."
+    },
+    {
+     "start": 25.23,
+     "end": 31.47,
+     "text": "It lives in a dense globular cluster called Terzan 5, in the constellation Sagittarius."
+    },
+    {
+     "start": 31.47,
+     "end": 39.75,
+     "text": "Its companion is swollen by the pulsar's intense radiation, and for about 40 percent of the orbit it covers the pulsar and cuts off its signal."
+    }
+   ]
+  },
+  "lich": {
+   "hash": "2e68262e4370",
+   "duration": 40.13,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 6.04,
+     "text": "The first exoplanets were found not around a Sun-like star, but around a dead star."
+    },
+    {
+     "start": 6.04,
+     "end": 17.85,
+     "text": "In 1992, Aleksander Wolszczan and Dale Frail deduced the planets orbiting this pulsar, named Lich, from millisecond delays in its pulse."
+    },
+    {
+     "start": 17.85,
+     "end": 26.43,
+     "text": "These three planets, named Draugr, Poltergeist, and Phobetor, probably re-formed from debris left over from the supernova."
+    },
+    {
+     "start": 26.43,
+     "end": 32.23,
+     "text": "Draugr is the least massive exoplanet known; it weighs only twice as much as the Moon."
+    },
+    {
+     "start": 32.23,
+     "end": 40.13,
+     "text": "Under the pulsar's lethal radiation, life cannot even be imagined; that is why their names are taken from ghosts and the living dead."
+    }
+   ]
+  },
+  "sgr1806": {
+   "hash": "c297d565648a",
+   "duration": 47.11,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 7.14,
+     "text": "Our final stop is a magnetar: SGR 1806 minus 20."
+    },
+    {
+     "start": 7.14,
+     "end": 20.24,
+     "text": "Magnetars are neutron stars with the strongest magnetic fields in the universe; this field is a thousand trillion times stronger than Earth's, and from 1,000 kilometers away it erases a credit card."
+    },
+    {
+     "start": 20.24,
+     "end": 31.05,
+     "text": "On December 27, 2004, its crust cracked and, in a tenth of a second, it flung out as much energy as the Sun emits in 100,000 years."
+    },
+    {
+     "start": 31.05,
+     "end": 40.33,
+     "text": "This explosion, coming from 50,000 light-years away, measurably ionized Earth's upper atmosphere and blinded the detectors of satellites."
+    },
+    {
+     "start": 40.33,
+     "end": 44.67,
+     "text": "It is the brightest event observed from outside the Solar System to date."
+    },
+    {
+     "start": 44.67,
+     "end": 47.11,
+     "text": "Our pulsars tour has come to an end."
+    }
+   ]
+  },
+  "vela": {
+   "hash": "2c4ee5d0eaf4",
+   "duration": 34.06,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 6.08,
+     "text": "The Vela Pulsar is one of the brightest radio pulsars, 1,000 light-years away."
+    },
+    {
+     "start": 6.08,
+     "end": 12.91,
+     "text": "It is the remnant of a star that exploded 11,000 years ago, and it spins 11 times a second."
+    },
+    {
+     "start": 12.91,
+     "end": 18.07,
+     "text": "From time to time it suddenly speeds up; these events are called glitches."
+    },
+    {
+     "start": 18.07,
+     "end": 26.62,
+     "text": "They are the result of quakes in the star's solid crust, or of the superfluid neutrons in its interior transferring energy to the crust."
+    },
+    {
+     "start": 26.62,
+     "end": 34.06,
+     "text": "So by studying this little star, we learn how matter behaves at densities that cannot be produced in any laboratory on Earth."
+    }
+   ]
+  }
+ }
+}

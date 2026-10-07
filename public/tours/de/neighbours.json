@@ -1,0 +1,207 @@
+{
+ "voice": "altair",
+ "locale": "de",
+ "steps": {
+  "alphacen": {
+   "hash": "69af30be7c2d",
+   "duration": 37.27,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 4.54,
+     "text": "Proxima ist eigentlich das ferne Mitglied einer großen Familie."
+    },
+    {
+     "start": 4.54,
+     "end": 13.66,
+     "text": "Alpha Centauri A und B sind zwei Sterne in vier Komma vier Lichtjahren Entfernung, die einander einmal in achtzig Jahren umkreisen."
+    },
+    {
+     "start": 13.66,
+     "end": 18.77,
+     "text": "A ähnelt der Sonne in erstaunlichem Maße: etwas größer, etwas heller."
+    },
+    {
+     "start": 18.77,
+     "end": 22.13,
+     "text": "B hingegen ist etwas kleiner und orangefarben."
+    },
+    {
+     "start": 22.13,
+     "end": 25.93,
+     "text": "Zusammen erscheinen sie als der dritthellste Stern am Himmel."
+    },
+    {
+     "start": 25.93,
+     "end": 37.27,
+     "text": "Das Projekt Breakthrough Starshot träumt davon, briefmarkengroße, lasergetriebene Sonden mit einem Fünftel der Lichtgeschwindigkeit hierher zu schicken und sie in zwanzig Jahren zu erreichen."
+    }
+   ]
+  },
+  "antares": {
+   "hash": "e66724dcc5d7",
+   "duration": 37.83,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 3.32,
+     "text": "Antares, das Herz des Sternbilds Skorpion."
+    },
+    {
+     "start": 3.32,
+     "end": 11.88,
+     "text": "Sein Name bedeutet auf Griechisch Rivale des Mars; denn mit seiner roten Farbe und Helligkeit wurde er mit dem Planeten verglichen."
+    },
+    {
+     "start": 11.88,
+     "end": 24.47,
+     "text": "Dieser rote Überriese in fünfhundertfünfzig Lichtjahren Entfernung hat etwa den siebenhundertfachen Durchmesser der Sonne; setzten Sie ihn an die Stelle der Sonne, würde er die Umlaufbahn des Mars verschlingen."
+    },
+    {
+     "start": 24.47,
+     "end": 27.85,
+     "text": "Seine Dichte hingegen ist sogar geringer als die von Luft."
+    },
+    {
+     "start": 27.85,
+     "end": 37.83,
+     "text": "Er ist zwölfmal so schwer wie die Sonne und steht kurz davor, seinen Brennstoff aufzubrauchen; in den nächsten eine Million Jahren wird er als Supernova explodieren."
+    }
+   ]
+  },
+  "deneb": {
+   "hash": "a03f4935987d",
+   "duration": 37.58,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 9.57,
+     "text": "Unsere letzte Station ist Deneb, der Schwanz des Sternbilds Schwan und der fernste Stern dieser Tour: etwa zweitausendsechshundert Lichtjahre entfernt."
+    },
+    {
+     "start": 9.57,
+     "end": 19.75,
+     "text": "Trotzdem ist er einer der zwanzig hellsten Sterne am Himmel; denn er ist einer der hellsten bekannten Sterne, der etwa zweihunderttausendmal mehr Licht aussendet als die Sonne."
+    },
+    {
+     "start": 19.75,
+     "end": 26.12,
+     "text": "Das Licht, das Sie heute sehen, machte sich in der Zeit auf den Weg, als die Römische Republik gegründet wurde."
+    },
+    {
+     "start": 26.12,
+     "end": 35.28,
+     "text": "Er ist ein blauweißer Überriese und wird innerhalb einiger Millionen Jahre entweder zur Supernova werden oder sich in einen roten Überriesen verwandeln."
+    },
+    {
+     "start": 35.28,
+     "end": 37.58,
+     "text": "Unsere Tour der Nachbarsterne ist zu Ende."
+    }
+   ]
+  },
+  "polaris": {
+   "hash": "aed54a6610e9",
+   "duration": 37.68,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 2.28,
+     "text": "Polaris, der Polarstern."
+    },
+    {
+     "start": 2.28,
+     "end": 14.59,
+     "text": "Er ist nicht der hellste Stern am Himmel, aber einer der wichtigsten: Er steht weniger als ein Grad von der Verlängerung der Rotationsachse der Erde entfernt, deshalb scheint sich der ganze Himmel um ihn zu drehen."
+    },
+    {
+     "start": 14.59,
+     "end": 17.75,
+     "text": "Jahrhundertelang wies er den Seefahrern den Norden."
+    },
+    {
+     "start": 17.75,
+     "end": 28.71,
+     "text": "Tatsächlich ist er ein gelber Überriese in vierhundertdreißig Lichtjahren Entfernung, zweitausendmal so hell wie die Sonne, und bildet mit zwei kleinen Begleitern ein Dreifachsystem."
+    },
+    {
+     "start": 28.71,
+     "end": 37.68,
+     "text": "Außerdem ist er ein Cepheiden-Veränderlicher: Indem er alle vier Tage rhythmisch heller und dunkler wird, lehrt er uns, kosmische Entfernungen zu messen."
+    }
+   ]
+  },
+  "proxima": {
+   "hash": "15010c31a77f",
+   "duration": 44.55,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.74,
+     "text": "Willkommen zur Tour der Nachbarsterne."
+    },
+    {
+     "start": 2.74,
+     "end": 10.16,
+     "text": "Unsere erste Station ist der sonnennächste Stern: Proxima Centauri, vier Komma zwei Lichtjahre entfernt."
+    },
+    {
+     "start": 10.16,
+     "end": 19.54,
+     "text": "Er ist ein kleiner, kühler roter Zwerg; er hat nur zwölf Prozent der Masse der Sonne und ist so lichtschwach, dass man ihn mit bloßem Auge nicht sehen kann."
+    },
+    {
+     "start": 19.54,
+     "end": 24.67,
+     "text": "Doch mit plötzlichen Ausbrüchen schleudert er heftige Strahlung von seiner Oberfläche."
+    },
+    {
+     "start": 24.67,
+     "end": 38.81,
+     "text": "Im Jahr zweitausendsechzehn wurde um ihn ein Planet von der Größe der Erde entdeckt: Proxima b umkreist ihn in der habitablen Zone, also in einer Entfernung, in der auf seiner Oberfläche flüssiges Wasser vorhanden sein könnte."
+    },
+    {
+     "start": 38.81,
+     "end": 44.55,
+     "text": "Mit unseren heutigen schnellsten Fahrzeugen würde es siebzigtausend Jahre dauern, hierher zu gelangen."
+    }
+   ]
+  },
+  "vega": {
+   "hash": "59a86565d648",
+   "duration": 35.75,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 4.86,
+     "text": "Vega, der helle blauweiße Stern in fünfundzwanzig Lichtjahren Entfernung."
+    },
+    {
+     "start": 4.86,
+     "end": 8.96,
+     "text": "Er hat die zweifache Masse der Sonne und die vierzigfache Leuchtkraft."
+    },
+    {
+     "start": 8.96,
+     "end": 17.91,
+     "text": "Er rotiert so schnell, dass sein Äquator deutlich stärker ausgebaucht ist als seine Pole; und obendrein blicken wir nahezu genau auf seinen Pol."
+    },
+    {
+     "start": 17.91,
+     "end": 23.35,
+     "text": "Um ihn wurde eine Staubscheibe gefunden, die ein Überrest der Planetenentstehung sein könnte."
+    },
+    {
+     "start": 23.35,
+     "end": 31.49,
+     "text": "Weil die Erdachse langsam taumelt, war er vor zwölftausend Jahren der Polarstern und wird es in zwölftausend Jahren wieder sein."
+    },
+    {
+     "start": 31.49,
+     "end": 35.75,
+     "text": "Jahrhundertelang nutzten Astronomen ihn als Nullpunkt der Helligkeitsskala."
+    }
+   ]
+  }
+ }
+}

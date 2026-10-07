@@ -1,0 +1,208 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "hubble": {
+   "hash": "2232aa075744",
+   "duration": 34.15,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.78,
+     "text": "The Hubble Space Telescope has been changing our view of the universe since 1990."
+    },
+    {
+     "start": 5.78,
+     "end": 15.44,
+     "text": "It orbits at an altitude of 540 kilometers and, with its 2. 4-meter mirror, captures images free of the atmosphere's blur."
+    },
+    {
+     "start": 15.44,
+     "end": 23.69,
+     "text": "Its first images were blurry; a small flaw in its mirror was corrected in orbit by astronauts in 1993."
+    },
+    {
+     "start": 23.69,
+     "end": 34.15,
+     "text": "It measured the age of the universe, contributed to the discovery of dark energy, and with its Deep Field images showed thousands of galaxies in a spot of sky that appeared empty."
+    }
+   ]
+  },
+  "iss": {
+   "hash": "ab6aa8c20cb3",
+   "duration": 33.83,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 6.1,
+     "text": "We begin from Earth orbit this tour, on which we will visit humanity's envoys in space."
+    },
+    {
+     "start": 6.1,
+     "end": 9.16,
+     "text": "Before you is the International Space Station."
+    },
+    {
+     "start": 9.16,
+     "end": 21.63,
+     "text": "It orbits at an altitude of 400 kilometers, at a speed of 28,000 kilometers per hour, and completes a circuit of Earth in 90 minutes; astronauts see 16 sunrises a day."
+    },
+    {
+     "start": 21.63,
+     "end": 26.17,
+     "text": "It is the size of a football field and weighs 420 tons."
+    },
+    {
+     "start": 26.17,
+     "end": 33.83,
+     "text": "Humans have lived aboard it without interruption since November 2000; this is humanity's longest continuous presence in space."
+    }
+   ]
+  },
+  "jwst": {
+   "hash": "5a0af0a0e3a4",
+   "duration": 35.12,
+   "sentences": [
+    {
+     "start": 0,
+     "end": 17.944,
+     "text": "The James Webb Space Telescope orbits around Lagrange point 2, 1. 5 million kilometers from Earth on the side opposite the Sun. Its 6. 5-meter gold-coated mirror is made of 18 hexagonal segments, and it was folded up on Christmas 2021, when it was launched."
+    },
+    {
+     "start": 17.944,
+     "end": 25.694,
+     "text": "Because it sees in infrared light, it is cooled to minus 233 degrees by a sunshield the size of a tennis court."
+    },
+    {
+     "start": 25.694,
+     "end": 35.12,
+     "text": "It is studying the universe's first galaxies, the interiors of the dust clouds where stars are born, and the atmospheres of exoplanets."
+    }
+   ]
+  },
+  "newhorizons": {
+   "hash": "3eb76c332d9a",
+   "duration": 32.01,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 8.06,
+     "text": "New Horizons was the fastest spacecraft to leave Earth in 2006; it crossed the Moon's distance in 9 hours."
+    },
+    {
+     "start": 8.06,
+     "end": 19.48,
+     "text": "After a journey of 9. 5 years, it flew past Pluto in July 2015 and turned a blurry dot into a real world, with its mountains, glaciers, and heart."
+    },
+    {
+     "start": 19.48,
+     "end": 28.56,
+     "text": "Then in 2019 it visited snowman-shaped Arrokoth in the Kuiper Belt; this is the most distant object a spacecraft has studied."
+    },
+    {
+     "start": 28.56,
+     "end": 32.01,
+     "text": "It is still working and measuring the outer limits of the Solar System."
+    }
+   ]
+  },
+  "parker": {
+   "hash": "4ea661ff2de6",
+   "duration": 38.14,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 4.52,
+     "text": "The Parker Solar Probe is the first spacecraft to touch the Sun."
+    },
+    {
+     "start": 4.52,
+     "end": 11.13,
+     "text": "It was launched in 2018 and, using Venus's gravity, tightened its orbit step by step."
+    },
+    {
+     "start": 11.13,
+     "end": 24.61,
+     "text": "In December 2024 it came within 6. 9 million kilometers of the Sun's surface; at that time, at 690,000 kilometers per hour, it became the fastest human-made object."
+    },
+    {
+     "start": 24.61,
+     "end": 32.74,
+     "text": "Its 11-centimeter carbon shield withstands 1,400 degrees while the instruments behind it stay at room temperature."
+    },
+    {
+     "start": 32.74,
+     "end": 38.14,
+     "text": "Its goal is to solve why the Sun's outer atmosphere is hundreds of times hotter than its surface."
+    }
+   ]
+  },
+  "voyager1": {
+   "hash": "b0ce764d33d0",
+   "duration": 33.75,
+   "sentences": [
+    {
+     "start": 0.14,
+     "end": 3.84,
+     "text": "Voyager 1 is the most distant human-made object."
+    },
+    {
+     "start": 3.84,
+     "end": 11.6,
+     "text": "It was launched in 1977; it visited Jupiter and Saturn, and gave up Pluto in order to approach Titan."
+    },
+    {
+     "start": 11.6,
+     "end": 19.17,
+     "text": "In 2012, by crossing the boundary of the solar wind, it became the first spacecraft to enter interstellar space."
+    },
+    {
+     "start": 19.17,
+     "end": 26.05,
+     "text": "Today it is 25 billion kilometers away; its signals take more than 22 hours to reach us."
+    },
+    {
+     "start": 26.05,
+     "end": 33.75,
+     "text": "Aboard it is a golden record carrying greetings in 55 languages and the sounds of Earth: for someone who may find it one day."
+    }
+   ]
+  },
+  "voyager2": {
+   "hash": "20524994a619",
+   "duration": 37.91,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 5.4,
+     "text": "And Voyager 2 is the only spacecraft to have visited all four outer planets."
+    },
+    {
+     "start": 5.4,
+     "end": 14.08,
+     "text": "It was launched 16 days before its sibling, but on a slower route it flew past Jupiter, Saturn, Uranus, and Neptune."
+    },
+    {
+     "start": 14.08,
+     "end": 23.17,
+     "text": "Most of what we know about Uranus and Neptune still comes from its flybys in 1986 and 1989."
+    },
+    {
+     "start": 23.17,
+     "end": 26.47,
+     "text": "It reached interstellar space in 2018."
+    },
+    {
+     "start": 26.47,
+     "end": 36.59,
+     "text": "The plutonium batteries of both Voyagers are weakening; they will fall silent in the 2030s, but they will continue to glide among the stars for billions of years."
+    },
+    {
+     "start": 36.59,
+     "end": 37.91,
+     "text": "Our tour ends here."
+    }
+   ]
+  }
+ }
+}

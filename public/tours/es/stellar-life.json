@@ -1,0 +1,279 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "betelgeuse": {
+   "hash": "8e8a69e0d966",
+   "duration": 36.87,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.82,
+     "text": "Betelgeuse muestra cómo se ve una estrella que se acerca al final de su vida."
+    },
+    {
+     "start": 4.82,
+     "end": 15.48,
+     "text": "Cuando se agotó el hidrógeno de su núcleo, se hinchó y se convirtió en una supergigante roja; si estuviera en el lugar del Sol, se extendería hasta la órbita de Júpiter."
+    },
+    {
+     "start": 15.48,
+     "end": 24.31,
+     "text": "Tiene solo diez millones de años, pero, como es aproximadamente quince veces más pesada que el Sol, consumió su combustible muy deprisa."
+    },
+    {
+     "start": 24.31,
+     "end": 31.47,
+     "text": "En dos mil diecinueve se atenuó de repente; una enorme nube de polvo desprendida de su superficie la había velado."
+    },
+    {
+     "start": 31.47,
+     "end": 36.87,
+     "text": "En los próximos cien mil años explotará como una supernova y podrá verse incluso de día."
+    }
+   ]
+  },
+  "crab": {
+   "hash": "197f4dd17d8c",
+   "duration": 44.15,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4.84,
+     "text": "Las estrellas masivas, en cambio, mueren de forma mucho más ruidosa."
+    },
+    {
+     "start": 4.84,
+     "end": 13.3,
+     "text": "La nebulosa del Cangrejo es el remanente de una supernova que registraron astrónomos chinos y árabes en el año mil cincuenta y cuatro."
+    },
+    {
+     "start": 13.3,
+     "end": 17.24,
+     "text": "Aquella explosión se vio incluso de día durante tres semanas."
+    },
+    {
+     "start": 17.24,
+     "end": 25.31,
+     "text": "Hoy, esta nube filamentosa, de seis años luz de anchura, sigue expandiéndose a mil quinientos kilómetros por segundo."
+    },
+    {
+     "start": 25.31,
+     "end": 33.33,
+     "text": "Y en su centro está la estrella de neutrones que quedó de la explosión: el púlsar del Cangrejo, que gira treinta veces por segundo."
+    },
+    {
+     "start": 33.33,
+     "end": 44.15,
+     "text": "El hierro, el oro y los demás elementos pesados de la estrella se esparcen por el espacio con explosiones como esta; el calcio de vuestro cuerpo también estuvo una vez dentro de una estrella."
+    }
+   ]
+  },
+  "cygx1": {
+   "hash": "43785e443b33",
+   "duration": 38.49,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4.92,
+     "text": "Y para las estrellas más masivas, la última parada: el agujero negro."
+    },
+    {
+     "start": 4.92,
+     "end": 8.82,
+     "text": "Cygnus X-1 es el primer agujero negro descubierto."
+    },
+    {
+     "start": 8.82,
+     "end": 20.07,
+     "text": "Este objeto, de veintiuna masas solares, atrae gas de su compañera supergigante azul; el gas se calienta hasta millones de grados en el disco de acreción y emite rayos X."
+    },
+    {
+     "start": 20.07,
+     "end": 25.57,
+     "text": "Los dos giran alrededor de su centro de masas común una vez cada cinco días y medio."
+    },
+    {
+     "start": 25.57,
+     "end": 29.61,
+     "text": "Ni siquiera la luz puede escapar del interior del horizonte de sucesos."
+    },
+    {
+     "start": 29.61,
+     "end": 35.59,
+     "text": "El viaje que comenzó en una nube de gas termina en un agujero abierto en el propio espacio-tiempo."
+    },
+    {
+     "start": 35.59,
+     "end": 38.49,
+     "text": "El recorrido de la vida de las estrellas termina aquí."
+    }
+   ]
+  },
+  "orion": {
+   "hash": "4e2d01f3f83e",
+   "duration": 34.07,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.68,
+     "text": "En este recorrido seguiremos la historia de la vida de una estrella, desde su nacimiento hasta su muerte."
+    },
+    {
+     "start": 6.68,
+     "end": 16.41,
+     "text": "La historia comienza en lugares como este: la nebulosa de Orión, una gigantesca fábrica de estrellas a mil trescientos cincuenta años luz de nosotros."
+    },
+    {
+     "start": 16.41,
+     "end": 22.51,
+     "text": "El gas frío y el polvo se colapsan bajo su propio peso y forman cientos de estrellas nuevas."
+    },
+    {
+     "start": 22.51,
+     "end": 29.77,
+     "text": "Las cuatro brillantes estrellas del Trapecio, en el centro, iluminan la nebulosa desde dentro con su luz ultravioleta."
+    },
+    {
+     "start": 29.77,
+     "end": 34.07,
+     "text": "En el cielo se ve a simple vista como una mancha borrosa en la espada de Orión."
+    }
+   ]
+  },
+  "pleiades": {
+   "hash": "43bf397219e4",
+   "duration": 37.75,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.56,
+     "text": "Las estrellas no nacen solas; nacen junto a sus hermanas."
+    },
+    {
+     "start": 4.56,
+     "end": 7.78,
+     "text": "Las Pléyades son una familia joven de este tipo."
+    },
+    {
+     "start": 7.78,
+     "end": 14.18,
+     "text": "Tienen aproximadamente cien millones de años; comparadas con el Sol, se consideran un bebé."
+    },
+    {
+     "start": 14.18,
+     "end": 24.29,
+     "text": "Contienen más de mil estrellas, pero a simple vista suelen verse seis o siete; por eso, en muchas culturas se las conoce con el nombre de las Siete Hermanas."
+    },
+    {
+     "start": 24.29,
+     "end": 31.65,
+     "text": "La bruma que rodea a sus brillantes estrellas azules es el reflejo de una nube de polvo que el cúmulo está atravesando."
+    },
+    {
+     "start": 31.65,
+     "end": 37.75,
+     "text": "Dentro de algunos cientos de millones de años, estas hermanas se dispersarán y se mezclarán con la galaxia."
+    }
+   ]
+  },
+  "ring": {
+   "hash": "46b43a64d614",
+   "duration": 38.47,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 8.24,
+     "text": "Las estrellas de masa intermedia, como el Sol, no explotan; soplan suavemente sus capas exteriores hacia el espacio."
+    },
+    {
+     "start": 8.24,
+     "end": 11.94,
+     "text": "La nebulosa del Anillo es el ejemplo más bello de esto."
+    },
+    {
+     "start": 11.94,
+     "end": 22.59,
+     "text": "Esta colorida envoltura, a dos mil quinientos años luz de distancia, está formada por las capas exteriores que una estrella moribunda arrojó hace algunos miles de años."
+    },
+    {
+     "start": 22.59,
+     "end": 31.87,
+     "text": "El diminuto punto blanco que queda en el centro es su núcleo, a ciento veinte mil grados de temperatura, y hace brillar el gas con su luz ultravioleta."
+    },
+    {
+     "start": 31.87,
+     "end": 38.47,
+     "text": "El Sol también se convertirá en una nebulosa planetaria así dentro de aproximadamente siete mil millones de años."
+    }
+   ]
+  },
+  "sirius": {
+   "hash": "5b9caaca71be",
+   "duration": 32.64,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 6.58,
+     "text": "Sirio es la estrella más brillante del cielo; está a solo ocho coma seis años luz de nosotros."
+    },
+    {
+     "start": 6.58,
+     "end": 13.05,
+     "text": "Pero lo que de verdad nos interesa es su pequeña compañera Sirio B, que queda a la sombra de su brillo."
+    },
+    {
+     "start": 13.05,
+     "end": 17.49,
+     "text": "Es una enana blanca: el núcleo que queda de una estrella muerta."
+    },
+    {
+     "start": 17.49,
+     "end": 24.56,
+     "text": "Tiene tanta masa como el Sol y el tamaño de la Tierra; una cucharadita de su materia pesa una tonelada."
+    },
+    {
+     "start": 24.56,
+     "end": 30.34,
+     "text": "Ya no produce energía, solo se enfría lentamente a lo largo de miles de millones de años."
+    },
+    {
+     "start": 30.34,
+     "end": 32.64,
+     "text": "Este es también el destino final del Sol."
+    }
+   ]
+  },
+  "sun": {
+   "hash": "855ed0271bef",
+   "duration": 34.63,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 6.36,
+     "text": "El periodo más largo y más tranquilo de la vida de una estrella es la fase de la secuencia principal."
+    },
+    {
+     "start": 6.36,
+     "end": 19.27,
+     "text": "El Sol está justo en esta fase: desde hace cuatro mil quinientos millones de años convierte el hidrógeno en helio en su núcleo, y lo seguirá haciendo durante aproximadamente cinco mil millones de años más."
+    },
+    {
+     "start": 19.27,
+     "end": 23.39,
+     "text": "Cada segundo quema seiscientos millones de toneladas de hidrógeno."
+    },
+    {
+     "start": 23.39,
+     "end": 31.55,
+     "text": "Este delicado equilibrio entre la presión que empuja hacia fuera y la gravedad que atrae hacia dentro mantiene estable a la estrella."
+    },
+    {
+     "start": 31.55,
+     "end": 34.63,
+     "text": "Cuando este equilibrio se rompe, comienza la vejez."
+    }
+   ]
+  }
+ }
+}

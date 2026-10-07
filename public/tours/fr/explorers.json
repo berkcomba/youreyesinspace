@@ -1,0 +1,213 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "hubble": {
+   "hash": "dc0d7f5c8a74",
+   "duration": 33.36,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 5.96,
+     "text": "Le télescope spatial Hubble change notre regard sur l'univers depuis mille neuf cent quatre-vingt-dix."
+    },
+    {
+     "start": 5.96,
+     "end": 14.87,
+     "text": "Il orbite à cinq cent quarante kilomètres d'altitude et, avec son miroir de deux virgule quatre mètres, obtient des images libérées du flou de l'atmosphère."
+    },
+    {
+     "start": 14.87,
+     "end": 22.75,
+     "text": "Ses premières images étaient floues ; un petit défaut de son miroir a été corrigé en orbite par des astronautes en mille neuf cent quatre-vingt-treize."
+    },
+    {
+     "start": 22.75,
+     "end": 33.36,
+     "text": "Il a mesuré l'âge de l'univers, a contribué à la découverte de l'énergie noire et, avec les images du Champ profond, a montré des milliers de galaxies dans un point du ciel qui semblait vide."
+    }
+   ]
+  },
+  "iss": {
+   "hash": "94b11935f111",
+   "duration": 32.39,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 6.12,
+     "text": "Nous commençons depuis l'orbite terrestre ce tour où nous visiterons les émissaires de l'humanité dans l'espace."
+    },
+    {
+     "start": 6.12,
+     "end": 9.4,
+     "text": "Devant vous se trouve la Station spatiale internationale."
+    },
+    {
+     "start": 9.4,
+     "end": 21.25,
+     "text": "Elle orbite à quatre cents kilomètres d'altitude, à une vitesse de vingt-huit mille kilomètres par heure, et fait le tour de la Terre en quatre-vingt-dix minutes ; les astronautes y voient seize levers de soleil par jour."
+    },
+    {
+     "start": 21.25,
+     "end": 25.47,
+     "text": "Elle a la taille d'un terrain de football et pèse quatre cent vingt tonnes."
+    },
+    {
+     "start": 25.47,
+     "end": 32.39,
+     "text": "Depuis novembre deux mille, des humains y vivent sans interruption ; c'est la plus longue présence continue de l'humanité dans l'espace."
+    }
+   ]
+  },
+  "jwst": {
+   "hash": "c8845179523f",
+   "duration": 34.71,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 9.12,
+     "text": "Le télescope spatial James Webb orbite autour du point de Lagrange deux, à l'opposé du Soleil, à un million et demi de kilomètres de la Terre."
+    },
+    {
+     "start": 9.12,
+     "end": 19.59,
+     "text": "Son miroir de six mètres et demi, recouvert d'or, se compose de dix-huit segments hexagonaux et se trouvait replié lors de son lancement, à Noël deux mille vingt et un."
+    },
+    {
+     "start": 19.59,
+     "end": 27.07,
+     "text": "Parce qu'il voit dans l'infrarouge, il est refroidi à moins deux cent trente-trois degrés par un pare-soleil de la taille d'un court de tennis."
+    },
+    {
+     "start": 27.07,
+     "end": 34.71,
+     "text": "Il étudie les premières galaxies de l'univers, l'intérieur des nuages de poussière où naissent les étoiles, et les atmosphères des exoplanètes."
+    }
+   ]
+  },
+  "newhorizons": {
+   "hash": "b96d563006a3",
+   "duration": 33.66,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 8.47,
+     "text": "New Horizons était l'engin spatial le plus rapide à quitter la Terre en deux mille six ; il a parcouru la distance de la Terre à la Lune en neuf heures."
+    },
+    {
+     "start": 8.47,
+     "end": 19.49,
+     "text": "Après un voyage de neuf ans et demi, il est passé près de Pluton en juillet deux mille quinze et a transformé un point flou en un véritable monde, avec ses montagnes, ses glaciers et son cœur."
+    },
+    {
+     "start": 19.49,
+     "end": 29.98,
+     "text": "Puis, en deux mille dix-neuf, il a visité Arrokoth, en forme de bonhomme de neige, dans la ceinture de Kuiper ; c'est l'objet le plus lointain jamais étudié par un engin spatial."
+    },
+    {
+     "start": 29.98,
+     "end": 33.66,
+     "text": "Il fonctionne encore et mesure les limites extérieures du Système solaire."
+    }
+   ]
+  },
+  "parker": {
+   "hash": "b67e6d2b9d07",
+   "duration": 41.51,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4.2,
+     "text": "La sonde solaire Parker est le premier engin à toucher le Soleil."
+    },
+    {
+     "start": 4.2,
+     "end": 12.22,
+     "text": "Elle a été lancée en deux mille dix-huit et, en utilisant l'attraction gravitationnelle de Vénus, a resserré son orbite pas à pas."
+    },
+    {
+     "start": 12.22,
+     "end": 26.8,
+     "text": "En décembre deux mille vingt-quatre, elle s'est approchée à six millions neuf cent mille kilomètres de la surface du Soleil ; à ce moment-là, à une vitesse de six cent quatre-vingt-dix mille kilomètres par heure, elle est devenue l'objet de fabrication humaine le plus rapide."
+    },
+    {
+     "start": 26.8,
+     "end": 35.21,
+     "text": "Son bouclier de carbone de onze centimètres résiste à mille quatre cents degrés, tandis que les instruments derrière lui restent à température ambiante."
+    },
+    {
+     "start": 35.21,
+     "end": 41.51,
+     "text": "Son but est de comprendre pourquoi l'atmosphère extérieure du Soleil est des centaines de fois plus chaude que sa surface."
+    }
+   ]
+  },
+  "voyager1": {
+   "hash": "2ef32511abf1",
+   "duration": 35.51,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.14,
+     "text": "Voyager 1 est l'objet de fabrication humaine le plus lointain."
+    },
+    {
+     "start": 4.14,
+     "end": 12.32,
+     "text": "Il a été lancé en mille neuf cent soixante-dix-sept ; il a visité Jupiter et Saturne, et a renoncé à Pluton pour s'approcher de Titan."
+    },
+    {
+     "start": 12.32,
+     "end": 19.63,
+     "text": "En deux mille douze, en franchissant la frontière du vent solaire, il est devenu le premier engin à entrer dans l'espace interstellaire."
+    },
+    {
+     "start": 19.63,
+     "end": 26.65,
+     "text": "Aujourd'hui, il se trouve à plus de vingt-cinq milliards de kilomètres ; ses signaux mettent plus de vingt-deux heures à nous parvenir."
+    },
+    {
+     "start": 26.65,
+     "end": 35.51,
+     "text": "À son bord se trouve un disque d'or portant des salutations en cinquante-cinq langues et les sons de la Terre : pour ceux qui, peut-être, le trouveront un jour."
+    }
+   ]
+  },
+  "voyager2": {
+   "hash": "81709a7d9d4a",
+   "duration": 38.7,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.84,
+     "text": "Et Voyager 2 est le seul engin à avoir visité chacune des quatre planètes extérieures."
+    },
+    {
+     "start": 5.84,
+     "end": 15.31,
+     "text": "Il a été lancé seize jours avant son frère, mais sur une trajectoire plus lente, il est passé près de Jupiter, Saturne, Uranus et Neptune."
+    },
+    {
+     "start": 15.31,
+     "end": 23.51,
+     "text": "La plupart de ce que nous savons d'Uranus et de Neptune provient encore de ses survols de mille neuf cent quatre-vingt-six et de quatre-vingt-neuf."
+    },
+    {
+     "start": 23.51,
+     "end": 27.33,
+     "text": "En deux mille dix-huit, il a atteint l'espace interstellaire."
+    },
+    {
+     "start": 27.33,
+     "end": 37.26,
+     "text": "Les batteries au plutonium des deux Voyager s'affaiblissent ; ils se tairont dans les années deux mille trente, mais ils continueront de voguer parmi les étoiles pendant des milliards d'années."
+    },
+    {
+     "start": 37.26,
+     "end": 38.7,
+     "text": "Notre tour s'achève ici."
+    }
+   ]
+  }
+ }
+}

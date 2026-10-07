@@ -1,0 +1,279 @@
+{
+ "voice": "altair",
+ "locale": "tr",
+ "steps": {
+  "betelgeuse": {
+   "hash": "3c2415574000",
+   "duration": 34.23,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.44,
+     "text": "Betelgeuse, yaşamının sonuna yaklaşmış bir yıldızın nasıl göründüğünü gösterir."
+    },
+    {
+     "start": 5.44,
+     "end": 14.96,
+     "text": "Çekirdeğindeki hidrojen tükenince şişerek kırmızı bir süperdeve dönüştü; Güneş'in yerinde olsaydı Jüpiter'in yörüngesine kadar uzanırdı."
+    },
+    {
+     "start": 14.96,
+     "end": 22.19,
+     "text": "Yalnızca on milyon yaşında ama Güneş'ten yaklaşık on beş kat ağır olduğu için yakıtını çok hızlı tüketti."
+    },
+    {
+     "start": 22.19,
+     "end": 28.75,
+     "text": "İki bin on dokuzda aniden sönükleşti; yüzeyinden kopan dev bir toz bulutu onu perdelemişti."
+    },
+    {
+     "start": 28.75,
+     "end": 34.23,
+     "text": "Önümüzdeki yüz bin yıl içinde bir süpernova olarak patlayacak ve gündüz bile görülebilecek."
+    }
+   ]
+  },
+  "crab": {
+   "hash": "283af889f470",
+   "duration": 37.59,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 3.2,
+     "text": "Ağır yıldızlar ise çok daha gürültülü ölür."
+    },
+    {
+     "start": 3.2,
+     "end": 10.34,
+     "text": "Yengeç Bulutsusu, bin elli dört yılında Çinli ve Arap gökbilimcilerin kaydettiği bir süpernovanın kalıntısıdır."
+    },
+    {
+     "start": 10.34,
+     "end": 13.54,
+     "text": "O patlama gündüz bile üç hafta boyunca görüldü."
+    },
+    {
+     "start": 13.54,
+     "end": 20.71,
+     "text": "Bugün altı ışık yılı genişliğindeki bu lifli bulut saniyede bin beş yüz kilometreyle genişlemeye devam ediyor."
+    },
+    {
+     "start": 20.71,
+     "end": 28.11,
+     "text": "Merkezinde ise patlamadan arta kalan nötron yıldızı var: saniyede otuz kez dönen Yengeç Pulsarı."
+    },
+    {
+     "start": 28.11,
+     "end": 37.59,
+     "text": "Yıldızdaki demir, altın ve diğer ağır elementler böyle patlamalarla uzaya saçılır; vücudunuzdaki kalsiyum da bir zamanlar bir yıldızın içindeydi."
+    }
+   ]
+  },
+  "cygx1": {
+   "hash": "3251f0448acd",
+   "duration": 33.92,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.8,
+     "text": "Ve en ağır yıldızlar için son durak: kara delik."
+    },
+    {
+     "start": 3.8,
+     "end": 7.52,
+     "text": "Cygnus X-Bir, keşfedilen ilk kara deliktir."
+    },
+    {
+     "start": 7.52,
+     "end": 17.93,
+     "text": "Yirmi bir güneş kütlesindeki bu nesne, mavi süperdev yoldaşından gaz çeker; gaz akreasyon diskinde milyonlarca dereceye ısınarak X-ışını yayar."
+    },
+    {
+     "start": 17.93,
+     "end": 22.73,
+     "text": "İkisi ortak kütle merkezlerinin etrafında beş buçuk günde bir dönerler."
+    },
+    {
+     "start": 22.73,
+     "end": 25.55,
+     "text": "Olay ufkunun içinden ışık bile kaçamaz."
+    },
+    {
+     "start": 25.55,
+     "end": 31.64,
+     "text": "Bir gaz bulutunda başlayan yolculuk, uzay-zamanın kendisinde açılmış bir delikle sona erer."
+    },
+    {
+     "start": 31.64,
+     "end": 33.92,
+     "text": "Yıldızların yaşamı turu burada bitiyor."
+    }
+   ]
+  },
+  "orion": {
+   "hash": "a0f7a15b5abd",
+   "duration": 30.33,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 5.5,
+     "text": "Bu turda bir yıldızın yaşam öyküsünü, doğumundan ölümüne kadar izleyeceğiz."
+    },
+    {
+     "start": 5.5,
+     "end": 13.48,
+     "text": "Hikâye böyle yerlerde başlar: Orion Bulutsusu, bize bin üç yüz elli ışık yılı uzaklıktaki dev bir yıldız fabrikası."
+    },
+    {
+     "start": 13.48,
+     "end": 19.56,
+     "text": "Soğuk gaz ve toz, kendi ağırlığı altında çökerek yüzlerce yeni yıldız oluşturuyor."
+    },
+    {
+     "start": 19.56,
+     "end": 25.87,
+     "text": "Merkezdeki dört parlak Trapezium yıldızı, morötesi ışığıyla bulutsuyu içten aydınlatır."
+    },
+    {
+     "start": 25.87,
+     "end": 30.33,
+     "text": "Gökyüzünde çıplak gözle Orion'un kılıcındaki bulanık leke olarak görülür."
+    }
+   ]
+  },
+  "pleiades": {
+   "hash": "96f9f9ab41d9",
+   "duration": 32.56,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 3.88,
+     "text": "Yıldızlar yalnız doğmaz; kardeşleriyle birlikte doğar."
+    },
+    {
+     "start": 3.88,
+     "end": 7.46,
+     "text": "Ülker, yani Pleiades, böyle genç bir aile."
+    },
+    {
+     "start": 7.46,
+     "end": 12.13,
+     "text": "Yaklaşık yüz milyon yaşındadır; Güneş'e kıyasla bir bebek sayılır."
+    },
+    {
+     "start": 12.13,
+     "end": 21.37,
+     "text": "Binden fazla yıldız içerir ama çıplak gözle genellikle altı ya da yedisi görülür; bu yüzden pek çok kültürde Yedi Kız Kardeş adıyla bilinir."
+    },
+    {
+     "start": 21.37,
+     "end": 27.96,
+     "text": "Parlak mavi yıldızlarının etrafındaki pus, kümenin içinden geçtiği bir toz bulutunun yansımasıdır."
+    },
+    {
+     "start": 27.96,
+     "end": 32.56,
+     "text": "Birkaç yüz milyon yıl içinde bu kardeşler dağılıp galaksiye karışacak."
+    }
+   ]
+  },
+  "ring": {
+   "hash": "48d618cfb920",
+   "duration": 30.07,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 6.12,
+     "text": "Güneş gibi orta kütleli yıldızlar patlamaz; dış katmanlarını yumuşakça uzaya üfler."
+    },
+    {
+     "start": 6.12,
+     "end": 9.12,
+     "text": "Halka Bulutsusu bunun en güzel örneğidir."
+    },
+    {
+     "start": 9.12,
+     "end": 17.22,
+     "text": "İki bin beş yüz ışık yılı uzaklıktaki bu renkli kabuk, ölmekte olan bir yıldızın birkaç bin yıl önce attığı dış katmanlarıdır."
+    },
+    {
+     "start": 17.22,
+     "end": 25.39,
+     "text": "Merkezde kalan minik beyaz nokta, yüz yirmi bin derece sıcaklığındaki çekirdeğidir ve morötesi ışığıyla gazı parlatır."
+    },
+    {
+     "start": 25.39,
+     "end": 30.07,
+     "text": "Güneş de yaklaşık yedi milyar yıl sonra böyle bir gezegenimsi bulutsuya dönüşecek."
+    }
+   ]
+  },
+  "sirius": {
+   "hash": "128c0f3c4a00",
+   "duration": 30.06,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 6.67,
+     "text": "Sirius, gökyüzünün en parlak yıldızı; bize yalnızca sekiz virgül altı ışık yılı uzaklıkta."
+    },
+    {
+     "start": 6.67,
+     "end": 12.47,
+     "text": "Ama bizi asıl ilgilendiren, parlaklığının gölgesinde kalan küçük yoldaşı Sirius B."
+    },
+    {
+     "start": 12.47,
+     "end": 16.77,
+     "text": "Bu bir beyaz cüce: ölmüş bir yıldızın geriye kalan çekirdeği."
+    },
+    {
+     "start": 16.77,
+     "end": 23.04,
+     "text": "Güneş kadar kütlesi, Dünya kadar boyutu vardır; bir çay kaşığı maddesi bir ton çeker."
+    },
+    {
+     "start": 23.04,
+     "end": 28.06,
+     "text": "Artık enerji üretmez, yalnızca milyarlarca yıl boyunca yavaşça soğur."
+    },
+    {
+     "start": 28.06,
+     "end": 30.06,
+     "text": "Güneş'in nihai kaderi de budur."
+    }
+   ]
+  },
+  "sun": {
+   "hash": "d456b48341a0",
+   "duration": 27.92,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.26,
+     "text": "Bir yıldızın yaşamının en uzun ve en sakin dönemi, anakol evresidir."
+    },
+    {
+     "start": 5.26,
+     "end": 14.87,
+     "text": "Güneş tam da bu evrededir: dört buçuk milyar yıldır çekirdeğinde hidrojeni helyuma dönüştürüyor ve bunu yaklaşık beş milyar yıl daha sürdürecek."
+    },
+    {
+     "start": 14.87,
+     "end": 18.27,
+     "text": "Her saniye altı yüz milyon ton hidrojen yakar."
+    },
+    {
+     "start": 18.27,
+     "end": 25.16,
+     "text": "Dışa doğru iten basınç ile içe çeken kütle çekimi arasındaki bu hassas denge, yıldızı kararlı tutar."
+    },
+    {
+     "start": 25.16,
+     "end": 27.92,
+     "text": "Bu denge bozulduğunda ise yaşlılık başlar."
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,207 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "alphacen": {
+   "hash": "f8f6250cf719",
+   "duration": 35.28,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4.28,
+     "text": "Proxima est en réalité le membre éloigné d'une grande famille."
+    },
+    {
+     "start": 4.28,
+     "end": 12.69,
+     "text": "Alpha Centauri A et B sont deux étoiles, à quatre virgule quatre années-lumière, qui tournent l'une autour de l'autre tous les quatre-vingts ans."
+    },
+    {
+     "start": 12.69,
+     "end": 17.49,
+     "text": "A est étonnamment semblable au Soleil : un peu plus grande, un peu plus brillante."
+    },
+    {
+     "start": 17.49,
+     "end": 20.75,
+     "text": "B, elle, est un peu plus petite et orangée."
+    },
+    {
+     "start": 20.75,
+     "end": 25.15,
+     "text": "Ensemble, elles apparaissent comme la troisième étoile la plus brillante du ciel."
+    },
+    {
+     "start": 25.15,
+     "end": 35.28,
+     "text": "Le projet Breakthrough Starshot rêve d'envoyer ici des sondes de la taille d'un timbre, propulsées par laser à un cinquième de la vitesse de la lumière, et d'y parvenir en vingt ans."
+    }
+   ]
+  },
+  "antares": {
+   "hash": "4fa025e155c8",
+   "duration": 34.63,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.4,
+     "text": "Antarès, le cœur de la constellation du Scorpion."
+    },
+    {
+     "start": 3.4,
+     "end": 11.42,
+     "text": "Son nom signifie en grec « rival de Mars » ; car, par sa couleur rougeoyante et son éclat, on la comparait à la planète."
+    },
+    {
+     "start": 11.42,
+     "end": 22.83,
+     "text": "Cette supergéante rouge, à cinq cent cinquante années-lumière, a un diamètre d'environ sept cents fois celui du Soleil ; si vous la placiez à la place du Soleil, elle avalerait l'orbite de Mars."
+    },
+    {
+     "start": 22.83,
+     "end": 26.37,
+     "text": "Sa densité, elle, est même plus faible que celle de l'air."
+    },
+    {
+     "start": 26.37,
+     "end": 34.63,
+     "text": "Elle est douze fois plus lourde que le Soleil et elle est sur le point d'épuiser son carburant ; dans le prochain million d'années, elle explosera en supernova."
+    }
+   ]
+  },
+  "deneb": {
+   "hash": "dee814652939",
+   "duration": 36.23,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 9.08,
+     "text": "Notre dernière étape, Deneb, la queue de la constellation du Cygne et l'étoile la plus lointaine de cette visite : environ deux mille six cents années-lumière."
+    },
+    {
+     "start": 9.08,
+     "end": 19.67,
+     "text": "Malgré cela, elle est l'une des vingt étoiles les plus brillantes du ciel ; car c'est l'une des étoiles connues les plus brillantes, qui émet environ deux cent mille fois plus de lumière que le Soleil."
+    },
+    {
+     "start": 19.67,
+     "end": 24.81,
+     "text": "La lumière que vous voyez aujourd'hui est partie à l'époque de la fondation de la République romaine."
+    },
+    {
+     "start": 24.81,
+     "end": 33.91,
+     "text": "C'est une supergéante bleu-blanc, et dans quelques millions d'années, soit elle deviendra une supernova, soit elle se transformera en supergéante rouge."
+    },
+    {
+     "start": 33.91,
+     "end": 36.23,
+     "text": "Notre visite des étoiles voisines est terminée."
+    }
+   ]
+  },
+  "polaris": {
+   "hash": "2b9bee4bc3c7",
+   "duration": 34.79,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 2.12,
+     "text": "Polaris, l'étoile Polaire."
+    },
+    {
+     "start": 2.12,
+     "end": 13.58,
+     "text": "Ce n'est pas l'étoile la plus brillante du ciel, mais c'est l'une des plus importantes : elle se tient à moins d'un degré du prolongement de l'axe de rotation de la Terre, si bien que tout le ciel semble tourner autour d'elle."
+    },
+    {
+     "start": 13.58,
+     "end": 16.52,
+     "text": "Pendant des siècles, elle a montré le nord aux marins."
+    },
+    {
+     "start": 16.52,
+     "end": 26.83,
+     "text": "En réalité, à quatre cent trente années-lumière, c'est une supergéante jaune deux mille fois plus brillante que le Soleil, et elle forme un système triple avec deux petites compagnes."
+    },
+    {
+     "start": 26.83,
+     "end": 34.79,
+     "text": "C'est aussi une variable céphéide : en brillant et en pâlissant de façon rythmique tous les quatre jours, elle nous apprend à mesurer les distances cosmiques."
+    }
+   ]
+  },
+  "proxima": {
+   "hash": "e0aace08fa6d",
+   "duration": 39.73,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.9,
+     "text": "Bienvenue dans la visite des étoiles voisines."
+    },
+    {
+     "start": 2.9,
+     "end": 10.04,
+     "text": "Notre première étape est l'étoile la plus proche du Soleil : Proxima Centauri, à quatre virgule deux années-lumière."
+    },
+    {
+     "start": 10.04,
+     "end": 17.47,
+     "text": "C'est une petite naine rouge froide ; elle n'a que douze pour cent de la masse du Soleil, et elle est trop faible pour être vue à l'œil nu."
+    },
+    {
+     "start": 17.47,
+     "end": 22.73,
+     "text": "Mais, par de brusques éruptions, elle projette depuis sa surface un rayonnement violent."
+    },
+    {
+     "start": 22.73,
+     "end": 34.71,
+     "text": "En deux mille seize, on a découvert autour d'elle une planète de la taille de la Terre : Proxima b, qui orbite dans la zone habitable, c'est-à-dire à une distance où de l'eau liquide pourrait se trouver à sa surface."
+    },
+    {
+     "start": 34.71,
+     "end": 39.73,
+     "text": "Avec nos véhicules les plus rapides d'aujourd'hui, il faudrait soixante-dix mille ans pour y parvenir."
+    }
+   ]
+  },
+  "vega": {
+   "hash": "5bc99f660d21",
+   "duration": 34.32,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 4.24,
+     "text": "Véga, brillante étoile bleu-blanc située à vingt-cinq années-lumière."
+    },
+    {
+     "start": 4.24,
+     "end": 8.06,
+     "text": "Elle a deux fois la masse du Soleil et quarante fois sa luminosité."
+    },
+    {
+     "start": 8.06,
+     "end": 17.21,
+     "text": "Elle tourne si vite que son équateur est nettement renflé par rapport à ses pôles ; et, qui plus est, nous la regardons presque exactement depuis son pôle."
+    },
+    {
+     "start": 17.21,
+     "end": 22.69,
+     "text": "Autour d'elle, on a trouvé un disque de poussière qui pourrait être un reste de la formation des planètes."
+    },
+    {
+     "start": 22.69,
+     "end": 30.04,
+     "text": "Parce que l'axe de la Terre oscille lentement, elle était l'étoile Polaire il y a douze mille ans, et elle le redeviendra dans douze mille ans."
+    },
+    {
+     "start": 30.04,
+     "end": 34.32,
+     "text": "Pendant des siècles, les astronomes l'ont utilisée comme point zéro de l'échelle de brillance."
+    }
+   ]
+  }
+ }
+}

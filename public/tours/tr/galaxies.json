@@ -1,0 +1,274 @@
+{
+ "voice": "altair",
+ "locale": "tr",
+ "steps": {
+  "andromeda": {
+   "hash": "bcb5f302733a",
+   "duration": 38.23,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.96,
+     "text": "Andromeda, en yakın büyük komşumuz."
+    },
+    {
+     "start": 2.96,
+     "end": 12.8,
+     "text": "İki buçuk milyon ışık yılı uzaklıktadır ve çıplak gözle görülebilen en uzak cisimdir; bugün gördüğünüz ışığı, Dünya'da henüz insan yokken yola çıktı."
+    },
+    {
+     "start": 12.8,
+     "end": 26.87,
+     "text": "Bin dokuz yüz yirmi üçte Edwin Hubble buradaki bir Sefeid yıldızını ölçerek onun Samanyolu'nun bir parçası değil, bambaşka bir galaksi olduğunu kanıtladı; evren bir gecede milyonlarca kat büyüdü."
+    },
+    {
+     "start": 26.87,
+     "end": 31.95,
+     "text": "Bir trilyon yıldız içerir ve saniyede yüz on kilometreyle bize yaklaşıyor."
+    },
+    {
+     "start": 31.95,
+     "end": 38.23,
+     "text": "Yaklaşık dört buçuk milyar yıl sonra Samanyolu ile birleşerek dev bir eliptik galaksi oluşturacak."
+    }
+   ]
+  },
+  "antennae": {
+   "hash": "f15eb5c519c7",
+   "duration": 41.67,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 4.08,
+     "text": "Son durağımızda galaksilerin de çarpışabildiğini göreceğiz."
+    },
+    {
+     "start": 4.08,
+     "end": 11.16,
+     "text": "Antenler, kırk beş milyon ışık yılı uzaklıkta birbirinin içinden geçmekte olan iki sarmal galaksidir."
+    },
+    {
+     "start": 11.16,
+     "end": 14.84,
+     "text": "Karşılaşma yaklaşık altı yüz milyon yıl önce başladı."
+    },
+    {
+     "start": 14.84,
+     "end": 22.01,
+     "text": "Kütle çekimi yıldızlardan oluşan iki uzun kuyruğu uzaya savurdu; adını veren böcek antenleri bunlardır."
+    },
+    {
+     "start": 22.01,
+     "end": 31.09,
+     "text": "Yıldızlar birbirine çarpmaz, aralarındaki uzaklıklar çok büyüktür; ama gaz bulutları çarpışır ve sıkışarak milyarlarca yeni yıldız doğurur."
+    },
+    {
+     "start": 31.09,
+     "end": 36.01,
+     "text": "Birkaç yüz milyon yıl içinde ikisi tek bir eliptik galaksiye dönüşecek."
+    },
+    {
+     "start": 36.01,
+     "end": 39.79,
+     "text": "Samanyolu ile Andromeda'nın geleceği de aynen böyle görünecek."
+    },
+    {
+     "start": 39.79,
+     "end": 41.67,
+     "text": "Galaksiler turumuz sona erdi."
+    }
+   ]
+  },
+  "lmc": {
+   "hash": "ec213ddd4aa4",
+   "duration": 35.43,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.6,
+     "text": "Büyük Macellan Bulutu, Samanyolu'nun en büyük uydu galaksisi."
+    },
+    {
+     "start": 4.6,
+     "end": 12.38,
+     "text": "Yüz altmış bin ışık yılı uzaklıktadır ve güney yarım küreden çıplak gözle gökyüzünde kopmuş bir bulut parçası gibi görünür."
+    },
+    {
+     "start": 12.38,
+     "end": 15.26,
+     "text": "Kütlesi bizimkinin yaklaşık yüzde biridir."
+    },
+    {
+     "start": 15.26,
+     "end": 25.31,
+     "text": "İçinde, Yerel Grup'un en büyük yıldız doğumevi olan Tarantula Bulutsusu ve bilinen en ağır yıldızlardan R Yüz Otuz Altı a Bir bulunur."
+    },
+    {
+     "start": 25.31,
+     "end": 32.53,
+     "text": "Bin dokuz yüz seksen yedide burada patlayan süpernova, dört yüz yıldır çıplak gözle görülen ilk süpernovaydı."
+    },
+    {
+     "start": 32.53,
+     "end": 35.43,
+     "text": "Birkaç milyar yıl içinde Samanyolu onu yutacak."
+    }
+   ]
+  },
+  "m87": {
+   "hash": "aad461defc32",
+   "duration": 35.99,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.78,
+     "text": "Şimdi Yerel Grup'tan çıkıp Virgo Kümesi'nin kalbine, elli beş milyon ışık yılı uzağa gidiyoruz."
+    },
+    {
+     "start": 6.78,
+     "end": 9.92,
+     "text": "M Seksen Yedi, dev bir eliptik galaksi."
+    },
+    {
+     "start": 9.92,
+     "end": 23.21,
+     "text": "Sarmal kolları yoktur; trilyonlarca yaşlı, sarı yıldızdan oluşan devasa bir küredir ve etrafında on iki binden fazla küresel yıldız kümesi döner; Samanyolu'nda yalnızca yüz elli tane vardır."
+    },
+    {
+     "start": 23.21,
+     "end": 28.87,
+     "text": "Merkezinde altı buçuk milyar güneş kütleli, fotoğrafı çekilen ilk kara delik bulunur."
+    },
+    {
+     "start": 28.87,
+     "end": 35.99,
+     "text": "Bu kara delikten fırlayan jet, beş bin ışık yılı boyunca uzanır ve bin dokuz yüz on sekizden beri bilinmektedir."
+    }
+   ]
+  },
+  "milkyway": {
+   "hash": "9ee0146da1d4",
+   "duration": 36.07,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 2.42,
+     "text": "Galaksiler turuna hoş geldiniz."
+    },
+    {
+     "start": 2.42,
+     "end": 4.7,
+     "text": "Önce evimize dışarıdan bakalım."
+    },
+    {
+     "start": 4.7,
+     "end": 14.9,
+     "text": "Samanyolu, yüz bin ışık yılı genişliğinde, merkezinde bir çubuk bulunan sarmal bir galaksidir ve iki yüz ile dört yüz milyar arasında yıldız içerir."
+    },
+    {
+     "start": 14.9,
+     "end": 25.93,
+     "text": "Güneş, merkezden yirmi altı bin ışık yılı uzakta, Orion Kolu denilen küçük bir kolda yer alır ve galaksinin etrafındaki bir turunu iki yüz otuz milyon yılda tamamlar."
+    },
+    {
+     "start": 25.93,
+     "end": 30.95,
+     "text": "Dinozorlar yok olduğundan beri Güneş bu turun yalnızca dörtte birini aldı."
+    },
+    {
+     "start": 30.95,
+     "end": 36.07,
+     "text": "Merkezdeki parlak şişkinlikte dört milyon güneş kütleli bir kara delik gizlidir."
+    }
+   ]
+  },
+  "smc": {
+   "hash": "7ac13596f702",
+   "duration": 32.32,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 5.28,
+     "text": "Küçük Macellan Bulutu, iki yüz bin ışık yılı uzaklıktaki daha küçük kardeşi."
+    },
+    {
+     "start": 5.28,
+     "end": 12.91,
+     "text": "Düzensiz bir galaksidir; muhtemelen Büyük Macellan ve Samanyolu'nun kütle çekimi onu bu biçimsiz hâle getirdi."
+    },
+    {
+     "start": 12.91,
+     "end": 18.11,
+     "text": "İkisi arasında uzanan bir hidrojen köprüsü, yakın bir karşılaşmanın izidir."
+    },
+    {
+     "start": 18.11,
+     "end": 27.32,
+     "text": "Bin dokuz yüz on ikide Henrietta Leavitt burada binlerce değişen yıldızı inceleyerek Sefeid yıldızlarının periyot-parlaklık ilişkisini keşfetti."
+    },
+    {
+     "start": 27.32,
+     "end": 32.32,
+     "text": "Bu keşif, evrendeki uzaklıkları ölçmemizi sağlayan ilk kozmik cetvel oldu."
+    }
+   ]
+  },
+  "sombrero": {
+   "hash": "f691fb9d1f45",
+   "duration": 32.47,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 8.58,
+     "text": "Sombrero Galaksisi adını hak ediyor: yirmi dokuz milyon ışık yılı uzaklıktaki bu galaksiye neredeyse tam kenarından bakıyoruz."
+    },
+    {
+     "start": 8.58,
+     "end": 17.45,
+     "text": "Olağanüstü büyük ve parlak merkez şişkinliği, keskin bir toz şeridiyle çevrilidir; tıpkı geniş kenarlı bir Meksika şapkası gibi."
+    },
+    {
+     "start": 17.45,
+     "end": 23.37,
+     "text": "Yaklaşık iki bin küresel küme ve merkezinde bir milyar güneş kütleli bir kara delik barındırır."
+    },
+    {
+     "start": 23.37,
+     "end": 32.47,
+     "text": "Sarmal mı yoksa eliptik mi olduğu uzun süre tartışıldı; kızılötesi gözlemler, eliptik bir galaksinin içine gömülü bir disk olduğunu gösterdi."
+    }
+   ]
+  },
+  "triangulum": {
+   "hash": "9226d0b19021",
+   "duration": 34.38,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.32,
+     "text": "Üçgen Galaksisi, Yerel Grup'un üçüncü büyük üyesi."
+    },
+    {
+     "start": 4.32,
+     "end": 12.55,
+     "text": "İki virgül yedi milyon ışık yılı uzaklıktadır ve kırk milyar yıldızıyla Andromeda ile Samanyolu'nun küçük kardeşidir."
+    },
+    {
+     "start": 12.55,
+     "end": 19.59,
+     "text": "Merkezinde belirgin bir şişkinlik ya da süper kütleli kara delik yoktur; kollarını neredeyse tepeden görürüz."
+    },
+    {
+     "start": 19.59,
+     "end": 30,
+     "text": "İçinde bin beş yüz ışık yılı genişliğinde dev bir yıldız oluşum bölgesi olan NGC Altı Yüz Dört bulunur; Orion Bulutsusu'ndan yüz kat büyüktür."
+    },
+    {
+     "start": 30,
+     "end": 34.38,
+     "text": "Muhtemelen Andromeda'nın bir uydusudur ve bir gün ona katılacaktır."
+    }
+   ]
+  }
+ }
+}

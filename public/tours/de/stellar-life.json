@@ -1,0 +1,279 @@
+{
+ "voice": "altair",
+ "locale": "de",
+ "steps": {
+  "betelgeuse": {
+   "hash": "1bbc307783d7",
+   "duration": 40.31,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 5.48,
+     "text": "Beteigeuze zeigt, wie ein Stern aussieht, der sich dem Ende seines Lebens nähert."
+    },
+    {
+     "start": 5.48,
+     "end": 17.04,
+     "text": "Als der Wasserstoff in seinem Kern zur Neige ging, blähte er sich auf und wurde zu einem roten Überriesen; stünde er an der Stelle der Sonne, würde er bis zur Umlaufbahn des Jupiter reichen."
+    },
+    {
+     "start": 17.04,
+     "end": 25.29,
+     "text": "Er ist erst 10 Millionen Jahre alt, hat seinen Brennstoff aber sehr schnell verbraucht, weil er etwa 15-mal so schwer ist wie die Sonne."
+    },
+    {
+     "start": 25.29,
+     "end": 33.91,
+     "text": "Im Jahr 2019 wurde er plötzlich dunkler; eine riesige Staubwolke, die sich von seiner Oberfläche gelöst hatte, verhüllte ihn."
+    },
+    {
+     "start": 33.91,
+     "end": 40.31,
+     "text": "In den nächsten 100. 000 Jahren wird er als Supernova explodieren und selbst bei Tag zu sehen sein."
+    }
+   ]
+  },
+  "crab": {
+   "hash": "2fa3e6fc1977",
+   "duration": 46.56,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.5,
+     "text": "Schwere Sterne hingegen sterben viel geräuschvoller."
+    },
+    {
+     "start": 3.5,
+     "end": 12.72,
+     "text": "Der Krebsnebel ist der Überrest einer Supernova, die chinesische und arabische Astronomen im Jahr 1054 aufgezeichnet haben."
+    },
+    {
+     "start": 12.72,
+     "end": 16.73,
+     "text": "Diese Explosion war sogar am Tag drei Wochen lang zu sehen."
+    },
+    {
+     "start": 16.73,
+     "end": 25.45,
+     "text": "Heute dehnt sich diese faserige Wolke mit einer Breite von 6 Lichtjahren weiterhin mit 1. 500 Kilometern pro Sekunde aus."
+    },
+    {
+     "start": 25.45,
+     "end": 35.51,
+     "text": "In ihrem Zentrum hingegen befindet sich der von der Explosion übrig gebliebene Neutronenstern: der Krebspulsar, der sich 30-mal pro Sekunde dreht."
+    },
+    {
+     "start": 35.51,
+     "end": 46.56,
+     "text": "Das Eisen, das Gold und die anderen schweren Elemente im Stern werden durch solche Explosionen ins All verstreut; auch das Kalzium in Ihrem Körper war einst im Inneren eines Sterns."
+    }
+   ]
+  },
+  "cygx1": {
+   "hash": "a2608d3e5d56",
+   "duration": 38.39,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4.62,
+     "text": "Und für die schwersten Sterne ist die letzte Station: das Schwarze Loch."
+    },
+    {
+     "start": 4.62,
+     "end": 8.28,
+     "text": "Cygnus X-1 ist das erste entdeckte Schwarze Loch."
+    },
+    {
+     "start": 8.28,
+     "end": 20.25,
+     "text": "Dieses Objekt mit 21 Sonnenmassen zieht Gas von seinem blauen Überriesenbegleiter; das Gas erhitzt sich in der Akkretionsscheibe auf Millionen von Grad und sendet Röntgenstrahlung aus."
+    },
+    {
+     "start": 20.25,
+     "end": 25.53,
+     "text": "Die beiden umkreisen ihren gemeinsamen Massenschwerpunkt einmal alle fünfeinhalb Tage."
+    },
+    {
+     "start": 25.53,
+     "end": 29.45,
+     "text": "Nicht einmal Licht kann aus dem Inneren des Ereignishorizonts entkommen."
+    },
+    {
+     "start": 29.45,
+     "end": 35.91,
+     "text": "Die Reise, die in einer Gaswolke begann, endet mit einem Loch, das in die Raumzeit selbst aufgerissen wurde."
+    },
+    {
+     "start": 35.91,
+     "end": 38.39,
+     "text": "Die Tour über das Leben der Sterne endet hier."
+    }
+   ]
+  },
+  "orion": {
+   "hash": "b062bf8ce698",
+   "duration": 34.63,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.74,
+     "text": "Auf dieser Tour werden wir die Lebensgeschichte eines Sterns verfolgen, von seiner Geburt bis zu seinem Tod."
+    },
+    {
+     "start": 6.74,
+     "end": 16.42,
+     "text": "Die Geschichte beginnt an Orten wie diesem: dem Orionnebel, einer riesigen Sternenfabrik in 1. 350 Lichtjahren Entfernung von uns."
+    },
+    {
+     "start": 16.42,
+     "end": 23.15,
+     "text": "Kaltes Gas und Staub fallen unter ihrem eigenen Gewicht in sich zusammen und bilden Hunderte neuer Sterne."
+    },
+    {
+     "start": 23.15,
+     "end": 29.99,
+     "text": "Die vier hellen Trapezium-Sterne im Zentrum erleuchten den Nebel von innen mit ihrem ultravioletten Licht."
+    },
+    {
+     "start": 29.99,
+     "end": 34.63,
+     "text": "Am Himmel ist er mit bloßem Auge als verschwommener Fleck im Schwert des Orion zu sehen."
+    }
+   ]
+  },
+  "pleiades": {
+   "hash": "afae27a8230b",
+   "duration": 39.43,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.24,
+     "text": "Sterne werden nicht allein geboren; sie werden zusammen mit ihren Geschwistern geboren."
+    },
+    {
+     "start": 5.24,
+     "end": 8.08,
+     "text": "Die Plejaden sind so eine junge Familie."
+    },
+    {
+     "start": 8.08,
+     "end": 14.02,
+     "text": "Sie sind etwa 100 Millionen Jahre alt; im Vergleich zur Sonne gelten sie als ein Baby."
+    },
+    {
+     "start": 14.02,
+     "end": 25.51,
+     "text": "Sie enthalten mehr als tausend Sterne, doch mit bloßem Auge sieht man gewöhnlich sechs oder sieben von ihnen; deshalb sind sie in vielen Kulturen unter dem Namen Sieben Schwestern bekannt."
+    },
+    {
+     "start": 25.51,
+     "end": 33.15,
+     "text": "Der Dunst um ihre hellen blauen Sterne ist die Reflexion einer Staubwolke, durch die der Haufen gerade hindurchzieht."
+    },
+    {
+     "start": 33.15,
+     "end": 39.43,
+     "text": "Innerhalb einiger hundert Millionen Jahre werden sich diese Geschwister zerstreuen und in der Galaxie aufgehen."
+    }
+   ]
+  },
+  "ring": {
+   "hash": "e4ab869f220e",
+   "duration": 36.23,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 6.84,
+     "text": "Sterne mittlerer Masse wie die Sonne explodieren nicht; sie blasen ihre äußeren Schichten sanft ins All."
+    },
+    {
+     "start": 6.84,
+     "end": 9.92,
+     "text": "Der Ringnebel ist das schönste Beispiel dafür."
+    },
+    {
+     "start": 9.92,
+     "end": 20.53,
+     "text": "Diese farbige Hülle in 2. 500 Lichtjahren Entfernung besteht aus den äußeren Schichten, die ein sterbender Stern vor einigen tausend Jahren abgestoßen hat."
+    },
+    {
+     "start": 20.53,
+     "end": 31.25,
+     "text": "Der winzige weiße Punkt in der Mitte ist sein Kern mit einer Temperatur von 120. 000 Grad, und mit seinem ultravioletten Licht bringt er das Gas zum Leuchten."
+    },
+    {
+     "start": 31.25,
+     "end": 36.23,
+     "text": "Auch die Sonne wird in etwa 7 Milliarden Jahren zu einem solchen planetarischen Nebel werden."
+    }
+   ]
+  },
+  "sirius": {
+   "hash": "8da5492941f3",
+   "duration": 33.04,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 6.3,
+     "text": "Sirius ist der hellste Stern am Himmel; er ist nur 8,6 Lichtjahre von uns entfernt."
+    },
+    {
+     "start": 6.3,
+     "end": 13.29,
+     "text": "Aber was uns eigentlich interessiert, ist sein kleiner Begleiter Sirius B, der im Schatten seiner Helligkeit steht."
+    },
+    {
+     "start": 13.29,
+     "end": 18.39,
+     "text": "Das ist ein Weißer Zwerg: der übrig gebliebene Kern eines toten Sterns."
+    },
+    {
+     "start": 18.39,
+     "end": 25.29,
+     "text": "Er hat so viel Masse wie die Sonne und die Größe der Erde; ein Teelöffel seiner Materie wiegt eine Tonne."
+    },
+    {
+     "start": 25.29,
+     "end": 30.51,
+     "text": "Er erzeugt keine Energie mehr und kühlt nur noch über Milliarden von Jahren langsam ab."
+    },
+    {
+     "start": 30.51,
+     "end": 33.04,
+     "text": "Das ist auch das endgültige Schicksal der Sonne."
+    }
+   ]
+  },
+  "sun": {
+   "hash": "6e9b315965c3",
+   "duration": 33.03,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 5.4,
+     "text": "Die längste und ruhigste Phase im Leben eines Sterns ist die Hauptreihenphase."
+    },
+    {
+     "start": 5.4,
+     "end": 17.71,
+     "text": "Die Sonne befindet sich genau in dieser Phase: Seit viereinhalb Milliarden Jahren wandelt sie in ihrem Kern Wasserstoff in Helium um und wird das noch etwa 5 Milliarden Jahre lang tun."
+    },
+    {
+     "start": 17.71,
+     "end": 21.93,
+     "text": "Jede Sekunde verbrennt sie 600 Millionen Tonnen Wasserstoff."
+    },
+    {
+     "start": 21.93,
+     "end": 30.01,
+     "text": "Dieses empfindliche Gleichgewicht zwischen dem nach außen drückenden Druck und der nach innen ziehenden Schwerkraft hält den Stern stabil."
+    },
+    {
+     "start": 30.01,
+     "end": 33.03,
+     "text": "Wenn dieses Gleichgewicht gestört wird, beginnt das Alter."
+    }
+   ]
+  }
+ }
+}

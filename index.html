@@ -56,6 +56,7 @@
             <button id="btn-places" class="text-btn" data-i18n-title title="Seçili hedefe otomatik uçuş" aria-haspopup="listbox" aria-expanded="false"><span class="long" data-i18n>Görmeye değecek yerler</span><span class="short" data-i18n>Yerler</span> ▾</button>
             <div id="places-menu" class="dropdown-menu" role="listbox" hidden></div>
           </div>
+          <button id="btn-tours" class="text-btn" data-i18n-title title="Sesli rehberli turlar: kamera uçar, anlatıcı anlatır"><span class="long" data-i18n>Turlar</span><span class="short">🎧</span></button>
           <button id="btn-mission" class="text-btn" data-i18n-title title="Görev planlayıcı: gerçek ya da hayali bir araçla rota hesapla, fırlat, canlı izle (U)"><span class="long" data-i18n>Görev</span><span class="short">🚀</span></button>
           <button id="btn-roam" class="text-btn" data-i18n data-i18n-title title="Serbest dolaşım: fare ile bak, WASD ile uç (V)">Serbest dolaşım</button>
           <button id="btn-help" class="icon-btn" data-i18n-title title="Yardım (F1)">?</button>
@@ -132,6 +133,29 @@
         <div id="m-active" class="m-active"></div>
       </aside>
 
+      <!-- Right: guided tours -->
+      <aside id="tours" class="panel" hidden>
+        <div class="panel-title"><span data-i18n>Rehberli Turlar</span> <button id="tours-close" class="icon-btn small" data-i18n-title title="Kapat">✕</button></div>
+        <p class="tours-intro" data-i18n>Bir konu seçin: kamera gök cisimlerine uçar, anlatıcı onları sırayla anlatır. Sürükleyerek etrafa bakabilirsiniz; tur devam eder.</p>
+        <div id="tours-list" class="tours-list"></div>
+      </aside>
+
+      <!-- Bottom-centre: tour playback -->
+      <div id="tour-bar" class="tour-bar" hidden>
+        <div class="tour-head">
+          <span id="tour-title" class="tour-title"></span>
+          <span id="tour-step" class="tour-step"></span>
+        </div>
+        <div id="tour-subtitle" class="tour-subtitle"></div>
+        <div class="tour-progress"><div id="tour-progress-fill"></div></div>
+        <div class="tour-controls">
+          <button id="tour-prev" data-i18n-title title="Önceki durak">◀</button>
+          <button id="tour-pause" data-i18n-title title="Duraklat / sürdür">❚❚</button>
+          <button id="tour-next" data-i18n-title title="Sonraki durak">▶</button>
+          <button id="tour-stop" class="tour-stop" data-i18n data-i18n-title title="Turu bitir">Bitir</button>
+        </div>
+      </div>
+
       <!-- Bottom: time & nav -->
       <footer id="bottombar">
         <div class="time-block">
@@ -187,6 +211,7 @@
             <div><kbd>U</kbd> <span data-i18n>Görev planlayıcı: kalkış–hedef–araç seç, Lambert/Hohmann transferi ve isteğe bağlı sapan (gravity assist) hesaplanır, Δv bütçesiyle karşılaştırılır;</span> <kbd data-i18n>Fırlat</kbd> <span data-i18n>ile aracı canlı izle. Star Trek / Star Wars / The Expanse gemileri warp, hiperuzay ve sürekli ivmeyle yıldızlararası hedeflere gider</span></div>
             <div><kbd>Tab</kbd> <span data-i18n>Arayüzü gizle</span> &nbsp; <kbd>P</kbd> <span data-i18n>Ekran görüntüsü</span> &nbsp; <kbd>Esc</kbd> <span data-i18n>Seçimi bırak</span></div>
             <div><kbd data-i18n>Görmeye değecek yerler</kbd> <span data-i18n>Uzay araçları (Voyager, JWST, ISS…), kara delikler (Sgr A*, Cygnus X-1…), pulsarlar (Yengeç, Vela, Hulse–Taylor…), bulutsular ve kümeler (Orion, Tarantula, Ülker…), gezegenler, yıldızlar ve galaksilere tek tıkla uçuş</span></div>
+            <div><kbd data-i18n>Turlar</kbd> <span data-i18n>10 sesli rehberli ders (Güneş Sistemi, Mars ve robotları, Jüpiter, Satürn, uzay araçları, yıldızların yaşamı, kara delikler, pulsarlar, komşu yıldızlar, galaksiler): kamera her durağa uçar, anlatıcı eşzamanlı anlatır;</span> <kbd>Esc</kbd> <span data-i18n>turu bitirir</span></div>
           </div>
           <div class="help-credits">
             <div class="panel-title small" data-i18n>Veri kaynakları ve lisanslar</div>

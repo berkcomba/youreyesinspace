@@ -1,0 +1,197 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "callisto": {
+   "hash": "76ec631c3e61",
+   "duration": 26.47,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 4.82,
+     "text": "Callisto, the outermost and the quietest of the four Galilean moons."
+    },
+    {
+     "start": 4.82,
+     "end": 12.06,
+     "text": "Its surface is the most densely cratered surface in the Solar System; it has barely changed for 4 billion years."
+    },
+    {
+     "start": 12.06,
+     "end": 19.31,
+     "text": "Because it is far from Jupiter, it is not affected by tidal heating and remains outside the radiation belts."
+    },
+    {
+     "start": 19.31,
+     "end": 23.47,
+     "text": "This makes it the safest candidate for a crewed base in the future."
+    },
+    {
+     "start": 23.47,
+     "end": 26.47,
+     "text": "There are also clues that an ocean may exist beneath it."
+    }
+   ]
+  },
+  "europa": {
+   "hash": "4b94105a20f3",
+   "duration": 28.56,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 4.16,
+     "text": "Europa, the most promising destination in the search for life."
+    },
+    {
+     "start": 4.16,
+     "end": 12.27,
+     "text": "Beneath its smooth ice shell, a global saltwater ocean holding twice as much water as all the oceans on Earth is thought to exist."
+    },
+    {
+     "start": 12.27,
+     "end": 18.21,
+     "text": "The brown lines on the surface are places where the ice cracks and water from below seeps upward."
+    },
+    {
+     "start": 18.21,
+     "end": 28.56,
+     "text": "NASA's Europa Clipper spacecraft was launched in 2024 and, in 2030, with about 50 close flybys, will investigate whether this ocean is habitable."
+    }
+   ]
+  },
+  "ganymede": {
+   "hash": "5dfa459d9bd3",
+   "duration": 31.37,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 3.22,
+     "text": "Ganymede, the largest moon in the Solar System."
+    },
+    {
+     "start": 3.22,
+     "end": 5.86,
+     "text": "It is even larger than the planet Mercury."
+    },
+    {
+     "start": 5.86,
+     "end": 14.96,
+     "text": "It is the only known moon with its own magnetic field; this field forms a small bubble inside Jupiter's and creates auroras at its poles."
+    },
+    {
+     "start": 14.96,
+     "end": 22.37,
+     "text": "Its surface is of two different ages: dark, cratered old regions and light-colored, grooved younger regions."
+    },
+    {
+     "start": 22.37,
+     "end": 25.39,
+     "text": "Beneath its ice shell, it has an ocean too."
+    },
+    {
+     "start": 25.39,
+     "end": 31.37,
+     "text": "The European Space Agency's JUICE spacecraft will enter orbit around it in 2031."
+    }
+   ]
+  },
+  "io": {
+   "hash": "b813d8bc9af2",
+   "duration": 28.86,
+   "sentences": [
+    {
+     "start": 0.2,
+     "end": 3.82,
+     "text": "Io, the most volcanic world in the Solar System."
+    },
+    {
+     "start": 3.82,
+     "end": 11.69,
+     "text": "It is constantly squeezed and stretched between the gravity of Jupiter and the other moons; this tidal heating melts its interior."
+    },
+    {
+     "start": 11.69,
+     "end": 19.15,
+     "text": "There are more than 400 active volcanoes on its surface, and some of them hurl lava hundreds of kilometers high."
+    },
+    {
+     "start": 19.15,
+     "end": 24.05,
+     "text": "The yellow, orange, and red colors come from sulfur and sulfur compounds."
+    },
+    {
+     "start": 24.05,
+     "end": 28.86,
+     "text": "Its surface is renewed so quickly that it has almost no impact craters."
+    }
+   ]
+  },
+  "juno": {
+   "hash": "f6f922603752",
+   "duration": 37.5,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.42,
+     "text": "Finally, let's look at Juno."
+    },
+    {
+     "start": 2.42,
+     "end": 7.42,
+     "text": "This NASA spacecraft entered orbit around Jupiter in July 2016."
+    },
+    {
+     "start": 7.42,
+     "end": 16.61,
+     "text": "It is the first spacecraft to operate on solar power this far from the Sun; its three giant panels take up as much space as a basketball court."
+    },
+    {
+     "start": 16.61,
+     "end": 27.85,
+     "text": "To protect itself from radiation, it travels in a long, elliptical orbit that passes over the poles, and on each pass it flies a few thousand kilometers above the clouds."
+    },
+    {
+     "start": 27.85,
+     "end": 35.72,
+     "text": "It discovered giant cyclones at Jupiter's poles and showed that Jupiter's core is larger and more diffuse than had been thought."
+    },
+    {
+     "start": 35.72,
+     "end": 37.5,
+     "text": "Our tour of Jupiter ends here."
+    }
+   ]
+  },
+  "jupiter": {
+   "hash": "576836fa5c27",
+   "duration": 36.07,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 1.98,
+     "text": "Welcome to the Jupiter system."
+    },
+    {
+     "start": 1.98,
+     "end": 8.3,
+     "text": "This giant is almost like a small solar system: more than 95 moons orbit around it."
+    },
+    {
+     "start": 8.3,
+     "end": 23.05,
+     "text": "The planet is so large that 1,300 Earths can fit inside it, and its powerful magnetic field is the largest structure in the Solar System; if it could be seen in the sky, it would appear larger than the full Moon."
+    },
+    {
+     "start": 23.05,
+     "end": 33.63,
+     "text": "In 1610, Galileo discovered its four large moons with his small telescope, and this became the first evidence that not everything revolves around Earth."
+    },
+    {
+     "start": 33.63,
+     "end": 36.07,
+     "text": "Now we will visit those four moons in turn."
+    }
+   ]
+  }
+ }
+}

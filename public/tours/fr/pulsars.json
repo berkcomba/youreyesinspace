@@ -1,0 +1,233 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "b1919": {
+   "hash": "a2c3af1ae519",
+   "duration": 35.59,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.46,
+     "text": "Bienvenue dans la visite des pulsars."
+    },
+    {
+     "start": 2.46,
+     "end": 14.2,
+     "text": "Tout a commencé en 1967, lorsque Jocelyn Bell, doctorante à Cambridge, a remarqué dans des données radio un étrange signal qui se répétait toutes les 1,3 secondes."
+    },
+    {
+     "start": 14.2,
+     "end": 23.47,
+     "text": "Le signal était si régulier que son équipe lui a donné, à moitié pour plaisanter, le nom de LGM 1, qui signifie petits hommes verts."
+    },
+    {
+     "start": 23.47,
+     "end": 29.55,
+     "text": "Devant vous, PSR B 1919 plus 21, c'est ce premier pulsar."
+    },
+    {
+     "start": 29.55,
+     "end": 35.59,
+     "text": "C'était en réalité une étoile à neutrons qui tournait comme un phare et dirigeait son faisceau vers nous à chaque tour."
+    }
+   ]
+  },
+  "crab": {
+   "hash": "aa1f70c5724e",
+   "duration": 30.47,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.22,
+     "text": "Le pulsar du Crabe est l'étoile à neutrons laissée par la supernova de 1054."
+    },
+    {
+     "start": 5.22,
+     "end": 10.32,
+     "text": "Il tourne 30 fois par seconde et illumine de son énergie toute la nébuleuse du Crabe."
+    },
+    {
+     "start": 10.32,
+     "end": 18.51,
+     "text": "Il ne mesure que 20 km de diamètre, mais il est plus lourd que le Soleil ; un morceau de sucre de sa matière pèse autant qu'une montagne."
+    },
+    {
+     "start": 18.51,
+     "end": 22.55,
+     "text": "Il pulse à toutes les longueurs d'onde, des ondes radio aux rayons gamma."
+    },
+    {
+     "start": 22.55,
+     "end": 30.47,
+     "text": "C'est le premier pulsar associé de façon certaine à une supernova observable, et il a prouvé que les pulsars naissent d'étoiles qui explosent."
+    }
+   ]
+  },
+  "hulsetaylor": {
+   "hash": "3f51078ddf3e",
+   "duration": 38.63,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.58,
+     "text": "Le couple de Hulse et Taylor a été le théâtre de l'une des expériences les plus importantes de la physique."
+    },
+    {
+     "start": 6.58,
+     "end": 16.6,
+     "text": "Dans ce système découvert en 1974, un pulsar et une autre étoile à neutrons tournent autour de leur centre de masse commun toutes les 7 heures et 45 minutes."
+    },
+    {
+     "start": 16.6,
+     "end": 20.13,
+     "text": "Leurs orbites rétrécissent de quelques millimètres chaque année."
+    },
+    {
+     "start": 20.13,
+     "end": 29.37,
+     "text": "Cela correspond exactement à la perte d'énergie par ondes gravitationnelles prédite par Einstein : la première preuve indirecte de la relativité générale."
+    },
+    {
+     "start": 29.37,
+     "end": 35.89,
+     "text": "Russell Hulse et Joseph Taylor ont reçu le prix Nobel de physique en 1993 pour cette découverte."
+    },
+    {
+     "start": 35.89,
+     "end": 38.63,
+     "text": "Les deux étoiles fusionneront dans 300 millions d'années."
+    }
+   ]
+  },
+  "j1748": {
+   "hash": "2c609aa43906",
+   "duration": 37.04,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 10.27,
+     "text": "PSR J 1748 moins vingt-quatre quarante-six A D est le pulsar connu qui tourne le plus vite : 716 tours par seconde."
+    },
+    {
+     "start": 10.27,
+     "end": 17.27,
+     "text": "À son équateur, la vitesse approche le quart de la vitesse de la lumière ; s'il tournait un peu plus vite, il se disloquerait."
+    },
+    {
+     "start": 17.27,
+     "end": 23.77,
+     "text": "Il a atteint cette vitesse en accélérant pendant des millions d'années grâce à la matière qu'il attire de son étoile compagne."
+    },
+    {
+     "start": 23.77,
+     "end": 29.02,
+     "text": "Il vit dans l'amas globulaire dense nommé Terzan 5, dans la constellation du Sagittaire."
+    },
+    {
+     "start": 29.02,
+     "end": 37.04,
+     "text": "Sa compagne est gonflée par le rayonnement intense du pulsar et, pendant environ 40 pour cent de l'orbite, elle le masque et coupe son signal."
+    }
+   ]
+  },
+  "lich": {
+   "hash": "a7f3b62538cd",
+   "duration": 42.23,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 7.32,
+     "text": "Les premières exoplanètes ont été trouvées non pas autour d'une étoile semblable au Soleil, mais autour d'une étoile morte."
+    },
+    {
+     "start": 7.32,
+     "end": 20.56,
+     "text": "En 1992, Aleksander Wolszczan et Dale Frail ont déduit, à partir des retards de l'ordre de la milliseconde dans les pulsations de ce pulsar nommé Lich, les planètes qui tournent autour de lui."
+    },
+    {
+     "start": 20.56,
+     "end": 29.49,
+     "text": "Ces trois planètes, nommées Draugr, Poltergeist et Phobetor, se sont probablement reformées à partir des débris laissés par la supernova."
+    },
+    {
+     "start": 29.49,
+     "end": 35.07,
+     "text": "Draugr est l'exoplanète de plus faible masse connue ; elle ne pèse que deux fois la Lune."
+    },
+    {
+     "start": 35.07,
+     "end": 42.23,
+     "text": "Sous le rayonnement mortel du pulsar, la vie est même inconcevable ; c'est pourquoi leurs noms sont tirés de fantômes et de morts-vivants."
+    }
+   ]
+  },
+  "sgr1806": {
+   "hash": "cd46989e0585",
+   "duration": 45.57,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.82,
+     "text": "Notre dernier arrêt est un magnétar : SGR 1806 moins 20."
+    },
+    {
+     "start": 5.82,
+     "end": 19.02,
+     "text": "Les magnétars sont des étoiles à neutrons qui possèdent les champs magnétiques les plus puissants de l'univers ; ce champ est un million de milliards de fois plus fort que celui de la Terre et efface une carte de crédit à 1 000 km de distance."
+    },
+    {
+     "start": 19.02,
+     "end": 28.57,
+     "text": "Le 27 décembre 2004, sa croûte s'est fissurée et, en un dixième de seconde, il a libéré autant d'énergie que le Soleil en émet en 100 000 ans."
+    },
+    {
+     "start": 28.57,
+     "end": 37.73,
+     "text": "Venue de 50 000 années-lumière, cette explosion a ionisé de façon mesurable la haute atmosphère de la Terre et a aveuglé les détecteurs des satellites."
+    },
+    {
+     "start": 37.73,
+     "end": 43.69,
+     "text": "C'est, à ce jour, l'événement le plus brillant observé en provenance de l'extérieur du Système solaire."
+    },
+    {
+     "start": 43.69,
+     "end": 45.57,
+     "text": "Notre visite des pulsars est terminée."
+    }
+   ]
+  },
+  "vela": {
+   "hash": "342af849dcc5",
+   "duration": 31.75,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 5.34,
+     "text": "Le pulsar de Vela est l'un des pulsars radio les plus brillants, à 1 000 années-lumière."
+    },
+    {
+     "start": 5.34,
+     "end": 11.2,
+     "text": "C'est le reste d'une étoile qui a explosé il y a 11 000 ans, et il tourne 11 fois par seconde."
+    },
+    {
+     "start": 11.2,
+     "end": 16.08,
+     "text": "De temps en temps, il accélère brusquement ; on appelle ces événements des glitches."
+    },
+    {
+     "start": 16.08,
+     "end": 24.22,
+     "text": "C'est le résultat de séismes dans la croûte solide de l'étoile, ou du transfert d'énergie à la croûte par les neutrons superfluides de son intérieur."
+    },
+    {
+     "start": 24.22,
+     "end": 31.75,
+     "text": "Ainsi, en étudiant cette petite étoile, nous apprenons comment la matière se comporte à des densités qu'aucun laboratoire sur Terre ne peut produire."
+    }
+   ]
+  }
+ }
+}

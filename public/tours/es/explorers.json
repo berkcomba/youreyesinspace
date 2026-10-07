@@ -1,0 +1,213 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "hubble": {
+   "hash": "8917c85a5f8a",
+   "duration": 35.19,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 6.32,
+     "text": "El telescopio espacial Hubble lleva cambiando nuestra visión del universo desde 1990."
+    },
+    {
+     "start": 6.32,
+     "end": 15.62,
+     "text": "Orbita a 540 km de altitud y, con su espejo de 2,4 metros, obtiene imágenes libres de la borrosidad de la atmósfera."
+    },
+    {
+     "start": 15.62,
+     "end": 24.17,
+     "text": "Sus primeras imágenes eran borrosas; un pequeño defecto de su espejo fue corregido en órbita por astronautas en 1993."
+    },
+    {
+     "start": 24.17,
+     "end": 35.19,
+     "text": "Midió la edad del universo, contribuyó al descubrimiento de la energía oscura y, con las imágenes del Campo Profundo, mostró miles de galaxias en un punto del cielo que parecía vacío."
+    }
+   ]
+  },
+  "iss": {
+   "hash": "af7900be7d7e",
+   "duration": 34.53,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 6.94,
+     "text": "Comenzamos desde la órbita terrestre este recorrido en el que visitaremos a los emisarios de la humanidad en el espacio."
+    },
+    {
+     "start": 6.94,
+     "end": 10.22,
+     "text": "Ante ustedes, la Estación Espacial Internacional."
+    },
+    {
+     "start": 10.22,
+     "end": 21.55,
+     "text": "Gira a 400 km de altitud, a 28. 000 km por hora, y completa una vuelta a la Tierra en 90 minutos; los astronautas ven 16 amaneceres al día."
+    },
+    {
+     "start": 21.55,
+     "end": 26.35,
+     "text": "Tiene el tamaño de un campo de fútbol y pesa 420 toneladas."
+    },
+    {
+     "start": 26.35,
+     "end": 34.53,
+     "text": "Desde noviembre de 2000 hay personas viviendo en ella de forma ininterrumpida; es la presencia continua más larga de la humanidad en el espacio."
+    }
+   ]
+  },
+  "jwst": {
+   "hash": "91eb2180d57e",
+   "duration": 37.83,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 10.1,
+     "text": "El telescopio espacial James Webb orbita a un millón y medio de kilómetros de la Tierra, alrededor del punto de Lagrange 2, en el lado opuesto al Sol."
+    },
+    {
+     "start": 10.1,
+     "end": 21.41,
+     "text": "Su espejo de seis metros y medio, recubierto de oro, está formado por 18 piezas hexagonales y, en la Navidad de 2021, cuando fue lanzado, iba plegado."
+    },
+    {
+     "start": 21.41,
+     "end": 29.61,
+     "text": "Como ve en luz infrarroja, se enfría hasta menos 233 grados con un escudo solar del tamaño de una pista de tenis."
+    },
+    {
+     "start": 29.61,
+     "end": 37.83,
+     "text": "Estudia las primeras galaxias del universo, el interior de las nubes de polvo donde nacen las estrellas y las atmósferas de los exoplanetas."
+    }
+   ]
+  },
+  "newhorizons": {
+   "hash": "6268d3c2e4ec",
+   "duration": 33.44,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 8.42,
+     "text": "La New Horizons fue la nave espacial más rápida que partió de la Tierra en 2006; recorrió la distancia a la Luna en 9 horas."
+    },
+    {
+     "start": 8.42,
+     "end": 20.01,
+     "text": "Tras un viaje de nueve años y medio, en julio de 2015 pasó junto a Plutón y convirtió un punto borroso en un mundo real, con sus montañas, sus glaciares y su corazón."
+    },
+    {
+     "start": 20.01,
+     "end": 29.8,
+     "text": "Y en 2019 visitó Arrokoth, con forma de muñeco de nieve, en el cinturón de Kuiper; es el objeto más lejano examinado por una nave espacial."
+    },
+    {
+     "start": 29.8,
+     "end": 33.44,
+     "text": "Sigue funcionando y mide los límites exteriores del Sistema Solar."
+    }
+   ]
+  },
+  "parker": {
+   "hash": "025f201639b0",
+   "duration": 40.07,
+   "sentences": [
+    {
+     "start": 0,
+     "end": 4.397,
+     "text": "La sonda solar Parker es la primera nave que ha tocado el Sol."
+    },
+    {
+     "start": 4.397,
+     "end": 10.283,
+     "text": "Fue lanzada en 2018 y, usando la gravedad de Venus, estrechó su órbita paso a paso."
+    },
+    {
+     "start": 10.283,
+     "end": 22.978,
+     "text": "En diciembre de 2024 se acercó a 6. 900. 000 km de la superficie del Sol; en ese momento, a 690. 000 km por hora, se convirtió en el objeto más rápido fabricado por el ser humano."
+    },
+    {
+     "start": 22.978,
+     "end": 32.056,
+     "text": "Su escudo de carbono, de 11 cm, resiste 1400 grados, mientras los instrumentos que hay detrás permanecen a temperatura ambiente."
+    },
+    {
+     "start": 32.056,
+     "end": 40.07,
+     "text": "Su objetivo es resolver por qué la atmósfera exterior del Sol es cientos de veces más caliente que su superficie."
+    }
+   ]
+  },
+  "voyager1": {
+   "hash": "3b6db97e8032",
+   "duration": 34.38,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 4.44,
+     "text": "La Voyager 1 es el objeto más lejano fabricado por el ser humano."
+    },
+    {
+     "start": 4.44,
+     "end": 12.57,
+     "text": "Fue lanzada en 1977; visitó Júpiter y Saturno, y renunció a Plutón para acercarse a Titán."
+    },
+    {
+     "start": 12.57,
+     "end": 19.67,
+     "text": "En 2012 se convirtió en la primera nave que salió al espacio interestelar al cruzar el límite del viento solar."
+    },
+    {
+     "start": 19.67,
+     "end": 26.78,
+     "text": "Hoy está a más de 25. 000 millones de kilómetros; sus señales tardan más de 22 horas en llegarnos."
+    },
+    {
+     "start": 26.78,
+     "end": 34.38,
+     "text": "Lleva un disco de oro con saludos en 55 idiomas y los sonidos de la Tierra: para quienes quizá algún día lo encuentren."
+    }
+   ]
+  },
+  "voyager2": {
+   "hash": "da2d69619911",
+   "duration": 38.95,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.1,
+     "text": "Y la Voyager 2 es la única nave que ha visitado los cuatro planetas exteriores."
+    },
+    {
+     "start": 5.1,
+     "end": 13.32,
+     "text": "Fue lanzada 16 días antes que su hermana, pero con una ruta más lenta pasó junto a Júpiter, Saturno, Urano y Neptuno."
+    },
+    {
+     "start": 13.32,
+     "end": 22.77,
+     "text": "Gran parte de lo que sabemos sobre Urano y Neptuno procede todavía de sus sobrevuelos de 1986 y 1989."
+    },
+    {
+     "start": 22.77,
+     "end": 25.67,
+     "text": "En 2018 alcanzó el espacio interestelar."
+    },
+    {
+     "start": 25.67,
+     "end": 37.25,
+     "text": "Las baterías de plutonio de ambas Voyager se debilitan; en la década de 2030 se quedarán en silencio, pero seguirán deslizándose entre las estrellas durante miles de millones de años."
+    },
+    {
+     "start": 37.25,
+     "end": 38.95,
+     "text": "Nuestro recorrido termina aquí."
+    }
+   ]
+  }
+ }
+}

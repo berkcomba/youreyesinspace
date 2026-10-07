@@ -1,0 +1,352 @@
+{
+ "voice": "altair",
+ "locale": "tr",
+ "steps": {
+  "earth": {
+   "hash": "7805bc5261d7",
+   "duration": 22.55,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.2,
+     "text": "Ve işte evimiz: Dünya."
+    },
+    {
+     "start": 2.2,
+     "end": 5.3,
+     "text": "Evrende yaşam barındırdığını bildiğimiz tek yer."
+    },
+    {
+     "start": 5.3,
+     "end": 10.76,
+     "text": "Yüzeyinin yüzde yetmiş biri sıvı suyla kaplıdır; bu yüzden uzaydan mavi görünür."
+    },
+    {
+     "start": 10.76,
+     "end": 16.85,
+     "text": "Güçlü manyetik alanı bizi Güneş rüzgârından korur, ozon tabakası morötesi ışınları süzer."
+    },
+    {
+     "start": 16.85,
+     "end": 22.55,
+     "text": "Ay'ın kütle çekimi ise eksen eğikliğini sabit tutarak mevsimlerin düzenli olmasını sağlar."
+    }
+   ]
+  },
+  "jupiter": {
+   "hash": "caaedb1fe337",
+   "duration": 28.07,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.38,
+     "text": "Jüpiter, gezegenlerin kralı."
+    },
+    {
+     "start": 2.38,
+     "end": 8.84,
+     "text": "Kütlesi diğer tüm gezegenlerin toplamının iki buçuk katıdır; içine bin üç yüz Dünya sığar."
+    },
+    {
+     "start": 8.84,
+     "end": 15.96,
+     "text": "Yüzeyi yoktur; gördüğünüz renkli şeritler, hidrojen ve helyum atmosferindeki dev bulut kuşaklarıdır."
+    },
+    {
+     "start": 15.96,
+     "end": 21.93,
+     "text": "Büyük Kırmızı Leke, en az üç yüz elli yıldır süren ve Dünya'dan daha büyük bir fırtınadır."
+    },
+    {
+     "start": 21.93,
+     "end": 28.07,
+     "text": "Bu devin günü yalnızca on saat sürer ve etrafında bilinen doksan beşten fazla ay döner."
+    }
+   ]
+  },
+  "mars": {
+   "hash": "f51bfbf36c4e",
+   "duration": 28.87,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 1.8,
+     "text": "Kızıl Gezegen Mars."
+    },
+    {
+     "start": 1.8,
+     "end": 4.78,
+     "text": "Rengini yüzeyindeki paslanmış demirden alır."
+    },
+    {
+     "start": 4.78,
+     "end": 14.53,
+     "text": "Çapı Dünya'nın yarısı kadardır ama Güneş Sistemi'nin en büyük yanardağına ev sahipliği yapar: yirmi iki kilometre yüksekliğindeki Olympus Mons."
+    },
+    {
+     "start": 14.53,
+     "end": 22.47,
+     "text": "Dört bin kilometre uzunluğundaki Valles Marineris kanyonu ise Amerika kıtasını baştan başa geçecek kadar uzundur."
+    },
+    {
+     "start": 22.47,
+     "end": 28.87,
+     "text": "Milyarlarca yıl önce yüzeyinde nehirler ve göller vardı; bugün bu suyun izlerini robotlar arıyor."
+    }
+   ]
+  },
+  "mercury": {
+   "hash": "d3f4b950572b",
+   "duration": 25.11,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.14,
+     "text": "İlk durağımız Merkür, en küçük ve Güneş'e en yakın gezegen."
+    },
+    {
+     "start": 4.14,
+     "end": 8.24,
+     "text": "Güneş'in etrafındaki bir turu yalnızca seksen sekiz gün sürer."
+    },
+    {
+     "start": 8.24,
+     "end": 17.24,
+     "text": "Atmosferi yok denecek kadar incedir; bu yüzden gündüz tarafı dört yüz otuz dereceye çıkarken gece tarafı eksi yüz seksen dereceye düşer."
+    },
+    {
+     "start": 17.24,
+     "end": 20.34,
+     "text": "Yüzeyi tıpkı Ay gibi kraterlerle kaplıdır."
+    },
+    {
+     "start": 20.34,
+     "end": 25.11,
+     "text": "Şu anda Avrupa ve Japonya'nın ortak aracı BepiColombo ona doğru yol alıyor."
+    }
+   ]
+  },
+  "moon": {
+   "hash": "d18f40276426",
+   "duration": 25.27,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.02,
+     "text": "Ay, Dünya'nın tek doğal uydusu ve insanların ayak bastığı tek başka gök cismi."
+    },
+    {
+     "start": 6.02,
+     "end": 14.21,
+     "text": "Bin dokuz yüz altmış dokuz ile bin dokuz yüz yetmiş iki arasında Apollo görevleriyle on iki astronot yüzeyinde yürüdü."
+    },
+    {
+     "start": 14.21,
+     "end": 22.15,
+     "text": "Üç yüz seksen dört bin kilometre uzaktadır ve bize hep aynı yüzünü gösterir, çünkü dönüşü yörüngesine kilitlenmiştir."
+    },
+    {
+     "start": 22.15,
+     "end": 25.27,
+     "text": "Her yıl yaklaşık dört santimetre bizden uzaklaşır."
+    }
+   ]
+  },
+  "neptune": {
+   "hash": "1c5e0f07b67a",
+   "duration": 30.47,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.82,
+     "text": "Neptün, Güneş'ten en uzak gezegen."
+    },
+    {
+     "start": 2.82,
+     "end": 14.36,
+     "text": "Teleskopla değil, kâğıt üzerinde keşfedildi: Uranüs'ün yörüngesindeki sapmaları inceleyen matematikçiler yerini hesapladı ve bin sekiz yüz kırk altıda tam orada bulundu."
+    },
+    {
+     "start": 14.36,
+     "end": 20.93,
+     "text": "Rüzgârları saatte iki bin yüz kilometreyi aşar; Güneş Sistemi'ndeki en hızlı rüzgârlardır."
+    },
+    {
+     "start": 20.93,
+     "end": 24.67,
+     "text": "Güneş etrafındaki bir turu yüz altmış beş yıl sürer."
+    },
+    {
+     "start": 24.67,
+     "end": 30.47,
+     "text": "Büyük ayı Triton ters yönde döner; muhtemelen yakalanmış bir Kuiper Kuşağı cismidir."
+    }
+   ]
+  },
+  "pluto": {
+   "hash": "c9dddc1b6a47",
+   "duration": 33.98,
+   "sentences": [
+    {
+     "start": 0.12,
+     "end": 2.1,
+     "text": "Son durağımız Plüton."
+    },
+    {
+     "start": 2.1,
+     "end": 9.65,
+     "text": "Bin dokuz yüz otuzda keşfedildi ve iki bin altıya kadar dokuzuncu gezegen sayıldı; artık bir cüce gezegen."
+    },
+    {
+     "start": 9.65,
+     "end": 15.47,
+     "text": "İki bin on beşte New Horizons yanından geçene kadar bulanık bir noktadan ibaretti."
+    },
+    {
+     "start": 15.47,
+     "end": 21.49,
+     "text": "Araç, yüzeyinde dev bir kalp şekli, azot buzulları ve su buzundan dağlar buldu."
+    },
+    {
+     "start": 21.49,
+     "end": 24.68,
+     "text": "Yüzey sıcaklığı eksi iki yüz otuz derecedir."
+    },
+    {
+     "start": 24.68,
+     "end": 30.84,
+     "text": "Uydusu Charon o kadar büyüktür ki ikisi birlikte ortak bir kütle merkezi etrafında döner."
+    },
+    {
+     "start": 30.84,
+     "end": 33.98,
+     "text": "Güneş Sistemi turumuz burada bitiyor; iyi yolculuklar."
+    }
+   ]
+  },
+  "saturn": {
+   "hash": "d1aec660ce74",
+   "duration": 24.79,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4.2,
+     "text": "Satürn, hiç şüphesiz Güneş Sistemi'nin en zarif gezegeni."
+    },
+    {
+     "start": 4.2,
+     "end": 13.91,
+     "text": "Halkaları çoğunlukla su buzundan oluşur; genişlikleri iki yüz seksen bin kilometreyi bulurken kalınlıkları çoğu yerde sadece on metre kadardır."
+    },
+    {
+     "start": 13.91,
+     "end": 19.73,
+     "text": "Gezegenin kendisi o kadar hafiftir ki yeterince büyük bir okyanusa koysanız yüzerdi."
+    },
+    {
+     "start": 19.73,
+     "end": 24.79,
+     "text": "Kuzey kutbunda, her kenarı Dünya kadar olan gizemli bir altıgen fırtına döner."
+    }
+   ]
+  },
+  "sun": {
+   "hash": "4622b23efc16",
+   "duration": 30.24,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.54,
+     "text": "Güneş Sistemi turuna hoş geldiniz."
+    },
+    {
+     "start": 2.54,
+     "end": 6.62,
+     "text": "Yolculuğumuz her şeyin merkezinden, Güneş'ten başlıyor."
+    },
+    {
+     "start": 6.62,
+     "end": 14.39,
+     "text": "Dört buçuk milyar yaşındaki bu yıldız, sistemdeki toplam kütlenin yüzde doksan dokuz virgül sekizini tek başına taşır."
+    },
+    {
+     "start": 14.39,
+     "end": 20.17,
+     "text": "Çapı bir milyon dört yüz bin kilometredir; içine yan yana yüz dokuz Dünya sığar."
+    },
+    {
+     "start": 20.17,
+     "end": 25.09,
+     "text": "Yüzeyi beş bin beş yüz derece, çekirdeği ise on beş milyon derecedir."
+    },
+    {
+     "start": 25.09,
+     "end": 30.24,
+     "text": "Şu anda gördüğünüz ışık, buradan çıkıp Dünya'ya sekiz dakika yirmi saniyede ulaşır."
+    }
+   ]
+  },
+  "uranus": {
+   "hash": "c9ca942c6daa",
+   "duration": 26.16,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.3,
+     "text": "Uranüs, yan yatmış gezegen."
+    },
+    {
+     "start": 2.3,
+     "end": 8.29,
+     "text": "Ekseni doksan sekiz derece eğiktir; yani Güneş'in etrafında adeta yuvarlanarak döner."
+    },
+    {
+     "start": 8.29,
+     "end": 13.61,
+     "text": "Bu yüzden kutupları kırk iki yıl boyunca gündüz, kırk iki yıl boyunca gece yaşar."
+    },
+    {
+     "start": 13.61,
+     "end": 18.07,
+     "text": "Metan gazı kırmızı ışığı soğurduğu için mavi-yeşil görünür."
+    },
+    {
+     "start": 18.07,
+     "end": 26.16,
+     "text": "Bin yedi yüz seksen birde William Herschel'in teleskopla keşfettiği ilk gezegendir ve onu yakından yalnızca Voyager İki gördü."
+    }
+   ]
+  },
+  "venus": {
+   "hash": "eda70e7bacef",
+   "duration": 26.71,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.38,
+     "text": "Venüs, boyutuyla Dünya'nın ikizi sayılır ama koşulları tam bir cehennemdir."
+    },
+    {
+     "start": 5.38,
+     "end": 15.69,
+     "text": "Kalın karbondioksit atmosferi, yüzey basıncını Dünya'nın doksan iki katına çıkarır ve sera etkisiyle sıcaklığı dört yüz altmış beş dereceye yükseltir."
+    },
+    {
+     "start": 15.69,
+     "end": 19.41,
+     "text": "Bu, Güneş'e daha yakın olan Merkür'den bile sıcaktır."
+    },
+    {
+     "start": 19.41,
+     "end": 21.67,
+     "text": "Bulutları sülfürik asittir."
+    },
+    {
+     "start": 21.67,
+     "end": 26.71,
+     "text": "Venüs ters yönde ve çok yavaş döner: bir günü, bir yılından daha uzundur."
+    }
+   ]
+  }
+ }
+}

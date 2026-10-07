@@ -1,0 +1,259 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "andromeda": {
+   "hash": "7e9b62f21403",
+   "duration": 39.76,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 14.01,
+     "text": "Andromeda is our nearest large neighbor. It lies 2. 5 million light-years away and is the most distant object visible to the naked eye; the light you see today set out when there were not yet any humans on Earth."
+    },
+    {
+     "start": 14.01,
+     "end": 27.43,
+     "text": "In 1923, Edwin Hubble measured a Cepheid star here and proved that Andromeda was not part of the Milky Way, but an entirely different galaxy; overnight, the universe grew millions of times larger."
+    },
+    {
+     "start": 27.43,
+     "end": 39.76,
+     "text": "It contains 1 trillion stars and is approaching us at 110 kilometers per second. In about 4. 5 billion years it will merge with the Milky Way to form a giant elliptical galaxy."
+    }
+   ]
+  },
+  "antennae": {
+   "hash": "d2f31b024525",
+   "duration": 43.91,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4.34,
+     "text": "At our final stop we will see that galaxies can collide too."
+    },
+    {
+     "start": 4.34,
+     "end": 11.08,
+     "text": "The Antennae are two spiral galaxies 45 million light-years away, passing through each other."
+    },
+    {
+     "start": 11.08,
+     "end": 14.62,
+     "text": "The encounter began about 600 million years ago."
+    },
+    {
+     "start": 14.62,
+     "end": 22.13,
+     "text": "Gravity flung two long tails of stars out into space; these are the insect antennae that give them their name."
+    },
+    {
+     "start": 22.13,
+     "end": 32.25,
+     "text": "Stars do not collide with each other, the distances between them are very large; but the gas clouds collide and compress, giving birth to billions of new stars."
+    },
+    {
+     "start": 32.25,
+     "end": 37.25,
+     "text": "Within a few hundred million years the two will turn into a single elliptical galaxy."
+    },
+    {
+     "start": 37.25,
+     "end": 41.77,
+     "text": "The future of the Milky Way and Andromeda will look exactly like this too."
+    },
+    {
+     "start": 41.77,
+     "end": 43.91,
+     "text": "Our galaxies tour has come to an end."
+    }
+   ]
+  },
+  "lmc": {
+   "hash": "ae51e5f7b3e8",
+   "duration": 40.23,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 5.22,
+     "text": "The Large Magellanic Cloud is the Milky Way's largest satellite galaxy."
+    },
+    {
+     "start": 5.22,
+     "end": 15.06,
+     "text": "It lies 160,000 light-years away, and from the southern hemisphere it looks to the naked eye like a broken-off piece of cloud in the sky."
+    },
+    {
+     "start": 15.06,
+     "end": 18.12,
+     "text": "Its mass is about 1 percent of ours."
+    },
+    {
+     "start": 18.12,
+     "end": 28.89,
+     "text": "Inside it are the Tarantula Nebula, the largest stellar nursery in the Local Group, and R 136 a 1, one of the most massive stars known."
+    },
+    {
+     "start": 28.89,
+     "end": 36.85,
+     "text": "The supernova that exploded here in 1987 was the first supernova visible to the naked eye in 400 years."
+    },
+    {
+     "start": 36.85,
+     "end": 40.23,
+     "text": "Within a few billion years, the Milky Way will swallow it."
+    }
+   ]
+  },
+  "m87": {
+   "hash": "34f654f4a9f7",
+   "duration": 37.19,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 7.52,
+     "text": "Now we are leaving the Local Group and going to the heart of the Virgo Cluster, 55 million light-years away."
+    },
+    {
+     "start": 7.52,
+     "end": 10.78,
+     "text": "M87 is a giant elliptical galaxy."
+    },
+    {
+     "start": 10.78,
+     "end": 23.94,
+     "text": "It has no spiral arms; it is an enormous sphere of trillions of old, yellow stars, and more than 12,000 globular star clusters orbit around it; the Milky Way has only 150."
+    },
+    {
+     "start": 23.94,
+     "end": 30.63,
+     "text": "At its center is the first black hole ever photographed, of 6. 5 billion solar masses."
+    },
+    {
+     "start": 30.63,
+     "end": 37.19,
+     "text": "The jet shooting from this black hole stretches for 5,000 light-years and has been known since 1918."
+    }
+   ]
+  },
+  "milkyway": {
+   "hash": "9aca70d1895e",
+   "duration": 37.83,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.58,
+     "text": "Welcome to the galaxies tour."
+    },
+    {
+     "start": 2.58,
+     "end": 5.68,
+     "text": "First, let's look at our home from the outside."
+    },
+    {
+     "start": 5.68,
+     "end": 16.8,
+     "text": "The Milky Way is a spiral galaxy 100,000 light-years across, with a bar at its center, and it contains between 200 and 400 billion stars."
+    },
+    {
+     "start": 16.8,
+     "end": 27.84,
+     "text": "The Sun lies 26,000 light-years from the center, in a small arm called the Orion Arm, and completes one orbit around the galaxy in 230 million years."
+    },
+    {
+     "start": 27.84,
+     "end": 33.02,
+     "text": "Since the dinosaurs vanished, the Sun has completed only a quarter of this orbit."
+    },
+    {
+     "start": 33.02,
+     "end": 37.83,
+     "text": "Hidden in the bright central bulge is a black hole of 4 million solar masses."
+    }
+   ]
+  },
+  "smc": {
+   "hash": "34f506244f4a",
+   "duration": 33.99,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 6.1,
+     "text": "The Small Magellanic Cloud is its smaller sibling, 200,000 light-years away."
+    },
+    {
+     "start": 6.1,
+     "end": 14.52,
+     "text": "It is an irregular galaxy; the gravity of the Large Magellanic Cloud and the Milky Way probably made it into this shapeless form."
+    },
+    {
+     "start": 14.52,
+     "end": 19.35,
+     "text": "A hydrogen bridge stretching between the two is the trace of a close encounter."
+    },
+    {
+     "start": 19.35,
+     "end": 28.89,
+     "text": "In 1912, Henrietta Leavitt studied thousands of variable stars here and discovered the period-luminosity relation of Cepheid stars."
+    },
+    {
+     "start": 28.89,
+     "end": 33.99,
+     "text": "This discovery became the first cosmic ruler that lets us measure distances in the universe."
+    }
+   ]
+  },
+  "sombrero": {
+   "hash": "9c1d91358934",
+   "duration": 34.56,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 9.62,
+     "text": "The Sombrero Galaxy deserves its name: we are looking at this galaxy, 29 million light-years away, almost exactly from its edge."
+    },
+    {
+     "start": 9.62,
+     "end": 18.33,
+     "text": "Its extraordinarily large and bright central bulge is surrounded by a sharp dust lane; just like a wide-brimmed Mexican hat."
+    },
+    {
+     "start": 18.33,
+     "end": 25.51,
+     "text": "It hosts about 2,000 globular clusters and a black hole of 1 billion solar masses at its center."
+    },
+    {
+     "start": 25.51,
+     "end": 34.56,
+     "text": "Whether it is spiral or elliptical was debated for a long time; infrared observations showed that it is a disk embedded inside an elliptical galaxy."
+    }
+   ]
+  },
+  "triangulum": {
+   "hash": "ef349f41fa57",
+   "duration": 34.95,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 12.94,
+     "text": "The Triangulum Galaxy is the third-largest member of the Local Group. It lies 2. 7 million light-years away, and with 40 billion stars it is the little sibling of Andromeda and the Milky Way."
+    },
+    {
+     "start": 12.94,
+     "end": 19.57,
+     "text": "It has no prominent central bulge or supermassive black hole; we see its arms almost from above."
+    },
+    {
+     "start": 19.57,
+     "end": 31.05,
+     "text": "Inside it lies NGC 604, a giant star-forming region 1,500 light-years across; it is 100 times larger than the Orion Nebula."
+    },
+    {
+     "start": 31.05,
+     "end": 34.95,
+     "text": "It is probably a satellite of Andromeda and will one day join it."
+    }
+   ]
+  }
+ }
+}

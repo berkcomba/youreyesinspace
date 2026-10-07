@@ -1,0 +1,181 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "cygx1": {
+   "hash": "7e4aa69d6b64",
+   "duration": 39.67,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.48,
+     "text": "Bienvenue dans la visite des trous noirs."
+    },
+    {
+     "start": 2.48,
+     "end": 6.36,
+     "text": "Notre point de départ est un classique : Cygnus X-1."
+    },
+    {
+     "start": 6.36,
+     "end": 15.88,
+     "text": "Cette source de rayons X, découverte en 1964 par une fusée, est devenue en 1971 le premier objet identifié comme un trou noir."
+    },
+    {
+     "start": 15.88,
+     "end": 28.07,
+     "text": "Elle a une masse de 21 masses solaires et tourne avec sa compagne, la supergéante bleue HDE 226868, autour de leur centre de masse commun tous les cinq jours et demi."
+    },
+    {
+     "start": 28.07,
+     "end": 33.37,
+     "text": "Le gaz qu'elle arrache à sa compagne s'échauffe à des millions de degrés dans un disque brillant."
+    },
+    {
+     "start": 33.37,
+     "end": 39.67,
+     "text": "Stephen Hawking avait parié que cet objet n'était pas un trou noir ; en 1990, il a accepté sa défaite."
+    }
+   ]
+  },
+  "gaiabh1": {
+   "hash": "d6aed4f2488b",
+   "duration": 39.2,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 6.44,
+     "text": "Gaia BH1, le trou noir connu le plus proche de nous : 1 560 années-lumière."
+    },
+    {
+     "start": 6.44,
+     "end": 11.08,
+     "text": "Il n'a pas de disque et n'émet pas de rayons X ; il est totalement silencieux."
+    },
+    {
+     "start": 11.08,
+     "end": 20.05,
+     "text": "Son existence n'a été comprise qu'à partir de l'oscillation, tous les 186 jours, d'une étoile semblable au Soleil autour d'un compagnon invisible."
+    },
+    {
+     "start": 20.05,
+     "end": 26.27,
+     "text": "Cette oscillation a été révélée en 2022 par les mesures de position précises du satellite Gaia."
+    },
+    {
+     "start": 26.27,
+     "end": 33.86,
+     "text": "Il a une masse de 9,6 masses solaires, et le diamètre de son horizon des événements n'est que de 56 kilomètres."
+    },
+    {
+     "start": 33.86,
+     "end": 39.2,
+     "text": "Ici, vous ne pouvez le voir que par lentille gravitationnelle, qui courbe les étoiles de l'arrière-plan."
+    }
+   ]
+  },
+  "m87": {
+   "hash": "492ccce21872",
+   "duration": 34.79,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.08,
+     "text": "Notre dernier arrêt, le premier trou noir photographié : M87 star."
+    },
+    {
+     "start": 6.08,
+     "end": 12.8,
+     "text": "Il se trouve au centre de la galaxie elliptique géante Virgo A, à 55 millions d'années-lumière."
+    },
+    {
+     "start": 12.8,
+     "end": 20.29,
+     "text": "Il a une masse de six milliards et demi de masses solaires ; son horizon des événements est 6 fois plus large que l'orbite de Pluton."
+    },
+    {
+     "start": 20.29,
+     "end": 27.19,
+     "text": "La célèbre image de l'anneau orange, publiée en 2019, est la lumière du gaz chaud qui entoure son ombre."
+    },
+    {
+     "start": 27.19,
+     "end": 32.73,
+     "text": "De là jaillit un jet proche de la vitesse de la lumière, qui s'étend sur 5 000 années-lumière."
+    },
+    {
+     "start": 32.73,
+     "end": 34.79,
+     "text": "Notre visite des trous noirs est terminée."
+    }
+   ]
+  },
+  "sgra": {
+   "hash": "f68aff0115d1",
+   "duration": 35.99,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.9,
+     "text": "Maintenant, nous allons au cœur de notre galaxie, à 26 000 années-lumière."
+    },
+    {
+     "start": 4.9,
+     "end": 13.26,
+     "text": "Sagittarius A star, le trou noir supermassif au centre de la Voie lactée : 4,3 millions de masses solaires."
+    },
+    {
+     "start": 13.26,
+     "end": 23.39,
+     "text": "Les étoiles qui l'entourent nous ont permis de mesurer sa masse ; l'étoile nommée S 2 s'en approche tous les 16 ans, si près qu'elle atteint 3 pour cent de la vitesse de la lumière."
+    },
+    {
+     "start": 23.39,
+     "end": 27.23,
+     "text": "Ces observations ont valu le prix Nobel de physique en 2020."
+    },
+    {
+     "start": 27.23,
+     "end": 31.99,
+     "text": "En 2022, le Télescope de l'horizon des événements a photographié son ombre."
+    },
+    {
+     "start": 31.99,
+     "end": 35.99,
+     "text": "En ce moment, il est assez silencieux ; il n'avale presque aucune matière."
+    }
+   ]
+  },
+  "v404": {
+   "hash": "ba0c71283d0e",
+   "duration": 40.39,
+   "sentences": [
+    {
+     "start": 0.12,
+     "end": 4.18,
+     "text": "V 404 Cygni, une nova de rayons X."
+    },
+    {
+     "start": 4.18,
+     "end": 15.22,
+     "text": "La plupart du temps, elle est silencieuse, mais lorsque le gaz accumulé depuis sa compagne franchit un seuil, elle explose en quelques jours et devient la source de rayons X la plus brillante du ciel."
+    },
+    {
+     "start": 15.22,
+     "end": 23.09,
+     "text": "Ces éruptions ont été observées en 1938, 1956, 1989 et 2015."
+    },
+    {
+     "start": 23.09,
+     "end": 33.59,
+     "text": "Lors de l'éruption de 2015, on a vu ses jets changer de direction en quelques secondes ; la rotation du trou noir entraînait l'espace-temps et faisait vaciller le disque comme une toupie."
+    },
+    {
+     "start": 33.59,
+     "end": 40.39,
+     "text": "Elle a une masse de 9 masses solaires, et c'est le premier trou noir dont la distance a été mesurée directement par parallaxe radio."
+    }
+   ]
+  }
+ }
+}

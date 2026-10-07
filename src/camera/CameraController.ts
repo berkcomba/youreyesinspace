@@ -64,6 +64,8 @@ export class CameraController {
   altitude = 0;
   nearest: CelestialBody | null = null;
   autopilot: Autopilot | null = null;
+  /** Slow automatic rotation around the orbit pivot (rad/s) — used by guided tours while dwelling */
+  autoOrbit = 0;
   mouseSensitivity = 0.0032;
   invertY = false;
   /**
@@ -320,6 +322,11 @@ export class CameraController {
           const right = new Vector3(1, 0, 0).applyQuaternion(this.quaternion);
           _q2.setFromAxisAngle(right, -dy * this.mouseSensitivity * ySign);
           _q.multiply(_q2);
+          offset.applyQuaternion(_q);
+          this.quaternion.premultiply(_q);
+        } else if (this.autoOrbit !== 0) {
+          const up = _v2.set(0, 1, 0).applyQuaternion(this.quaternion);
+          _q.setFromAxisAngle(up, this.autoOrbit * dt);
           offset.applyQuaternion(_q);
           this.quaternion.premultiply(_q);
         }

@@ -1,0 +1,207 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "alphacen": {
+   "hash": "d789a67494e0",
+   "duration": 38.31,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 4.68,
+     "text": "Próxima es, en realidad, un miembro lejano de una gran familia."
+    },
+    {
+     "start": 4.68,
+     "end": 14.5,
+     "text": "Alfa Centauri A y B son dos estrellas a cuatro coma cuatro años luz de distancia que orbitan una alrededor de la otra una vez cada ochenta años."
+    },
+    {
+     "start": 14.5,
+     "end": 20.02,
+     "text": "A se parece al Sol de forma sorprendente: un poco más grande, un poco más brillante."
+    },
+    {
+     "start": 20.02,
+     "end": 23.47,
+     "text": "B, en cambio, es un poco más pequeña y anaranjada."
+    },
+    {
+     "start": 23.47,
+     "end": 27.43,
+     "text": "Juntas aparecen como la tercera estrella más brillante del cielo."
+    },
+    {
+     "start": 27.43,
+     "end": 38.31,
+     "text": "El proyecto Breakthrough Starshot sueña con enviar hasta aquí sondas del tamaño de un sello impulsadas por láser, a una quinta parte de la velocidad de la luz, y llegar en veinte años."
+    }
+   ]
+  },
+  "antares": {
+   "hash": "75f8a56930fe",
+   "duration": 37.51,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 3.78,
+     "text": "Antares, el corazón de la constelación del Escorpión."
+    },
+    {
+     "start": 3.78,
+     "end": 12.04,
+     "text": "Su nombre significa, en griego, rival de Marte, porque, por su color rojizo y su brillo, se la comparaba con el planeta."
+    },
+    {
+     "start": 12.04,
+     "end": 25.09,
+     "text": "Esta supergigante roja, a quinientos cincuenta años luz de distancia, tiene un diámetro de aproximadamente setecientas veces el del Sol; si la pusierais en el lugar del Sol, engulliría la órbita de Marte."
+    },
+    {
+     "start": 25.09,
+     "end": 28.91,
+     "text": "Su densidad, en cambio, es incluso más baja que la del aire."
+    },
+    {
+     "start": 28.91,
+     "end": 37.51,
+     "text": "Es doce veces más pesada que el Sol y está a punto de agotar su combustible; dentro del próximo millón de años explotará como una supernova."
+    }
+   ]
+  },
+  "deneb": {
+   "hash": "f30dbeb03035",
+   "duration": 39.91,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 10.74,
+     "text": "Nuestra última parada es Deneb, la cola de la constelación del Cisne y la estrella más lejana de este recorrido: aproximadamente dos mil seiscientos años luz."
+    },
+    {
+     "start": 10.74,
+     "end": 22.57,
+     "text": "Aun así, es una de las veinte estrellas más brillantes del cielo, porque es una de las estrellas más luminosas conocidas, que emite aproximadamente doscientas mil veces más luz que el Sol."
+    },
+    {
+     "start": 22.57,
+     "end": 26.85,
+     "text": "La luz que veis hoy partió en la época en que se fundó la República romana."
+    },
+    {
+     "start": 26.85,
+     "end": 36.93,
+     "text": "Es una supergigante blanco-azulada y, dentro de unos pocos millones de años, o bien se convertirá en supernova o bien se transformará en una supergigante roja."
+    },
+    {
+     "start": 36.93,
+     "end": 39.91,
+     "text": "Nuestro recorrido de las estrellas vecinas ha terminado."
+    }
+   ]
+  },
+  "polaris": {
+   "hash": "fa0c80c358a3",
+   "duration": 38.07,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 2.38,
+     "text": "Polaris, la Estrella Polar."
+    },
+    {
+     "start": 2.38,
+     "end": 14.88,
+     "text": "No es la estrella más brillante del cielo, pero es una de las más importantes: se encuentra a menos de un grado de la prolongación del eje de rotación de la Tierra, por eso todo el cielo parece girar a su alrededor."
+    },
+    {
+     "start": 14.88,
+     "end": 17.88,
+     "text": "Durante siglos mostró el norte a los marinos."
+    },
+    {
+     "start": 17.88,
+     "end": 29.25,
+     "text": "En realidad es una supergigante amarilla a cuatrocientos treinta años luz de distancia, dos mil veces más brillante que el Sol, y forma un sistema triple con dos compañeras pequeñas."
+    },
+    {
+     "start": 29.25,
+     "end": 38.07,
+     "text": "Además es una variable cefeida: brillando y apagándose de forma rítmica cada cuatro días, nos enseña a medir las distancias cósmicas."
+    }
+   ]
+  },
+  "proxima": {
+   "hash": "7c681bce7479",
+   "duration": 42.63,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.14,
+     "text": "Bienvenidos al recorrido de las estrellas vecinas."
+    },
+    {
+     "start": 3.14,
+     "end": 10.92,
+     "text": "Nuestra primera parada es la estrella más cercana al Sol: Próxima Centauri, a cuatro coma dos años luz de distancia."
+    },
+    {
+     "start": 10.92,
+     "end": 19.14,
+     "text": "Es una enana roja pequeña y fría; tiene solo el doce por ciento de la masa del Sol y es demasiado tenue para verse a simple vista."
+    },
+    {
+     "start": 19.14,
+     "end": 24.57,
+     "text": "Pero, con llamaradas repentinas, expulsa radiación violenta desde su superficie."
+    },
+    {
+     "start": 24.57,
+     "end": 37.55,
+     "text": "En dos mil dieciséis se descubrió a su alrededor un planeta del tamaño de la Tierra: Próxima b, que orbita en la zona habitable, es decir, a una distancia en la que podría haber agua líquida en su superficie."
+    },
+    {
+     "start": 37.55,
+     "end": 42.63,
+     "text": "Con nuestros vehículos más rápidos de hoy, llegar hasta aquí llevaría setenta mil años."
+    }
+   ]
+  },
+  "vega": {
+   "hash": "32a548b42c85",
+   "duration": 35.11,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 5.18,
+     "text": "Vega, la brillante estrella blanco-azulada a veinticinco años luz de distancia."
+    },
+    {
+     "start": 5.18,
+     "end": 9.34,
+     "text": "Tiene el doble de masa y es cuarenta veces más brillante que el Sol."
+    },
+    {
+     "start": 9.34,
+     "end": 17.6,
+     "text": "Gira tan deprisa que su ecuador está notablemente más abultado que sus polos; además, la vemos casi exactamente desde su polo."
+    },
+    {
+     "start": 17.6,
+     "end": 23.05,
+     "text": "A su alrededor se encontró un disco de polvo que podría ser un resto de la formación de planetas."
+    },
+    {
+     "start": 23.05,
+     "end": 30.93,
+     "text": "Como el eje de la Tierra se bambolea lentamente, fue la Estrella Polar hace doce mil años y lo volverá a ser dentro de doce mil años."
+    },
+    {
+     "start": 30.93,
+     "end": 35.11,
+     "text": "Los astrónomos la usaron durante siglos como punto cero de la escala de brillo."
+    }
+   ]
+  }
+ }
+}
