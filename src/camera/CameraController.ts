@@ -5,11 +5,23 @@ import type { Input } from '../input/Input';
 
 export type CameraMode = 'free' | 'orbit';
 
+/**
+ * Orbit pivot that is not a body: a fixed point of the current frame (galaxy centre, nebula, …)
+ * with a "surface" radius the camera cannot descend below.
+ */
+export interface OrbitAnchor {
+  position: Vector3;
+  radius: number;
+  name: string;
+}
+
 interface Autopilot {
   kind: 'goto' | 'center' | 'centerDir' | 'gotoPoint';
   target: CelestialBody | null;
   /** fixed destination (current frame, km) for 'gotoPoint' */
   point: Vector3 | null;
+  /** 'gotoPoint': settle into orbit around the point on arrival, with this minimum radius */
+  anchor?: { radius: number; name: string };
   t: number;
   duration: number;
   r0: Vector3; // start offset from target
@@ -44,6 +56,8 @@ export class CameraController {
   reference: CelestialBody | null = null;
   /** Body we orbit / look at in orbit mode */
   target: CelestialBody | null = null;
+  /** Non-body orbit pivot (galaxy, nebula…); used when `target` is null */
+  anchor: OrbitAnchor | null = null;
   speedMultiplier = 1;
   /** current speed in km/s (for HUD) */
   speed = 0;
@@ -74,8 +88,19 @@ export class CameraController {
     this.lookAt(body.position);
     this.setReference(body);
     this.target = body;
+    this.anchor = null;
     this.mode = 'orbit';
     this.autopilot = null;
+  }
+
+  /** Orbit a fixed point of the current frame (galaxy centre, nebula…) without moving first. */
+  orbitPoint(point: Vector3, radius: number, name: string): void {
+    this.anchor = { position: point.clone(), radius, name };
+    this.target = null;
+    this.setReference(null);
+    this.autopilot = null;
+    this.mode = 'orbit';
+    this.lookAt(point);
   }
 
   lookAt(point: Vector3): void {
@@ -141,6 +166,7 @@ export class CameraController {
     };
     this.setReference(body);
     this.target = body;
+    this.anchor = null;
     this.mode = 'orbit';
   }
 
@@ -148,16 +174,17 @@ export class CameraController {
    * Fly to a fixed point of the current frame (e.g. a galaxy centre) and stop `arriveDist` km
    * away, approaching along `approachDir` (unit, from the point toward the camera's final spot).
    */
-  goToPoint(point: Vector3, arriveDist: number, approachDir?: Vector3): void {
+  goToPoint(point: Vector3, arriveDist: number, approachDir?: Vector3, anchor?: { radius: number; name: string }): void {
     const r0 = _v.copy(this.position).sub(point);
     const dir1 = approachDir ? approachDir.clone().normalize() : (r0.lengthSq() > 0 ? r0.clone().normalize() : new Vector3(0, 0.3, 1).normalize());
     const ratio = Math.max(r0.length(), 1) / arriveDist;
     const duration = 3 + Math.min(6, Math.abs(Math.log10(ratio)) * 1.1);
     this.autopilot = {
-      kind: 'gotoPoint', target: null, point: point.clone(), t: 0, duration,
+      kind: 'gotoPoint', target: null, point: point.clone(), anchor, t: 0, duration,
       r0: r0.clone(), dir1, dist1: arriveDist, q0: this.quaternion.clone(),
     };
     this.target = null;
+    this.anchor = null;
     this.mode = 'free';
   }
 
@@ -187,16 +214,21 @@ export class CameraController {
     this.autopilot = null;
     this.mode = 'free';
     this.target = null;
+    this.anchor = null;
     this.setReference(newReference);
     // velocity is kept: star frames are static relative to each other, so free flight stays smooth
   }
 
   setMode(mode: CameraMode): void {
-    if (mode === 'orbit' && !this.target) return;
+    if (mode === 'orbit' && !this.target && !this.anchor) return;
     this.mode = mode;
-    if (mode === 'orbit' && this.target) {
-      this.setReference(this.target);
-      this.lookAt(this.target.position);
+    if (mode === 'orbit') {
+      if (this.target) {
+        this.setReference(this.target);
+        this.lookAt(this.target.position);
+      } else if (this.anchor) {
+        this.lookAt(this.anchor.position);
+      }
     }
   }
 
@@ -255,6 +287,13 @@ export class CameraController {
           this.mode = 'orbit';
           this.setReference(tgt);
           this.lookAt(tgt.position);
+        } else if (ap.kind === 'gotoPoint' && ap.anchor && ap.point) {
+          // settle into orbit around the point so drag / wheel keep working
+          this.anchor = { position: ap.point.clone(), radius: ap.anchor.radius, name: ap.anchor.name };
+          this.target = null;
+          this.setReference(null);
+          this.mode = 'orbit';
+          this.lookAt(ap.point);
         }
         this.autopilot = null;
       }
@@ -263,8 +302,9 @@ export class CameraController {
 
     // 3. Mouse look / orbit
     if (!this.autopilot) {
-      if (this.mode === 'orbit' && this.target) {
-        const tgt = this.target;
+      const pivot: { position: Vector3; radius: number } | null = this.target ?? this.anchor;
+      if (this.mode === 'orbit' && pivot) {
+        const tgt = pivot;
         const offset = _v.copy(this.position).sub(tgt.position);
         if (dx !== 0 || dy !== 0) {
           const up = _v2.set(0, 1, 0).applyQuaternion(this.quaternion);

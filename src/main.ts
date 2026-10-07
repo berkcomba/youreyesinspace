@@ -201,7 +201,7 @@ class App implements UIHost {
     const fromCam = new Vector3().copy(this.camera.position).sub(centre).normalize();
     // stop where the object fills a good part of the view (sprites fade when we are inside)
     const arrive = l.def.kind === 'remnant' ? R * 5 : R * 3.2;
-    this.camera.goToPoint(centre, arrive, fromCam);
+    this.camera.goToPoint(centre, arrive, fromCam, { radius: R * 0.3, name: _(l.def.name) });
     const dist = new Vector3().copy(centre).sub(this.camera.position).length();
     this.ui.showToast(_('{name} hedefine uçuluyor… ({dist})', { name: l.def.name, dist: fmtLightYears(dist) }), 2600);
   }
@@ -245,7 +245,8 @@ class App implements UIHost {
     const normal = new Vector3(g.normal[i * 3], g.normal[i * 3 + 1], g.normal[i * 3 + 2]);
     if (fromCam.dot(normal) < 0) normal.negate();
     const approach = fromCam.lerp(normal, 0.55).normalize();
-    this.camera.goToPoint(centre, R * 2.6, approach);
+    // arrive in orbit around the centre; the wheel may descend deep into the galaxy
+    this.camera.goToPoint(centre, R * 2.6, approach, { radius: R * 0.02, name: g.name(i) });
     const dist = new Vector3().copy(centre).sub(this.camera.position).length();
     this.ui.showToast(_('{name} galaksisine uçuluyor… ({dist})', { name: g.name(i), dist: fmtLightYears(dist) }), 2600);
   }
@@ -341,14 +342,40 @@ class App implements UIHost {
   }
 
   toggleFollow(): void {
-    if (!this.selected) return;
-    if (this.camera.mode === 'orbit' && this.camera.target === this.selected) {
-      this.camera.setMode('free');
+    const cam = this.camera;
+    if (this.selected) {
+      if (cam.mode === 'orbit' && cam.target === this.selected) {
+        cam.setMode('free');
+        this.ui.showToast(_('Serbest uçuş'));
+      } else {
+        cam.anchor = null;
+        cam.target = this.selected;
+        cam.setMode('orbit');
+        this.ui.showToast(_('{name} takip ediliyor', { name: this.selected.name }));
+      }
+      return;
+    }
+    // galaxies / nebulae: orbit a fixed point of the current frame
+    const u = this.universe;
+    let centre: Vector3 | null = null, radius = 0, name = '';
+    if (this.selectedGalaxy !== null) {
+      const i = this.selectedGalaxy;
+      centre = u.galaxyRelative(i, new Vector3());
+      radius = u.galaxies.radius[i] * PARSEC_KM * 0.02;
+      name = u.galaxies.name(i);
+    } else if (this.selectedLandmark !== null) {
+      const i = this.selectedLandmark;
+      centre = u.landmarkRelative(i, new Vector3());
+      radius = u.landmarks[i].def.radiusPc * PARSEC_KM * 0.3;
+      name = _(u.landmarks[i].def.name);
+    }
+    if (!centre) return;
+    if (cam.mode === 'orbit' && cam.anchor && cam.anchor.position.distanceToSquared(centre) < 1e-6 * Math.max(1, centre.lengthSq())) {
+      cam.setMode('free');
       this.ui.showToast(_('Serbest uçuş'));
     } else {
-      this.camera.target = this.selected;
-      this.camera.setMode('orbit');
-      this.ui.showToast(_('{name} takip ediliyor', { name: this.selected.name }));
+      cam.orbitPoint(centre, radius, name);
+      this.ui.showToast(_('{name} takip ediliyor', { name }));
     }
   }
 

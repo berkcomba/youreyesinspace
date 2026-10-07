@@ -502,14 +502,15 @@ export class UI {
 
     $('nav-mode').textContent = camera.autopilot ? _('Otopilot') : camera.mode === 'orbit' ? _('Takip / Yörünge') : this.host.freeRoam ? _('Serbest dolaşım') : _('Serbest uçuş');
     this.roamBtn.classList.toggle('active', this.host.freeRoam);
-    $('nav-ref').textContent = camera.reference?.name ?? '—';
+    $('nav-ref').textContent = camera.reference?.name ?? camera.anchor?.name ?? '—';
     $('nav-speed').textContent = camera.mode === 'free' ? `${fmtSpeed(camera.speed)}  (×${camera.speedMultiplier.toPrecision(2)})` : '—';
     $('nav-alt').textContent = camera.nearest ? `${fmtDistance(camera.altitude)} · ${camera.nearest.name}` : '—';
     $('nav-fps').textContent = fixed(this.fps, 0);
     this.missionPanel.update(now);
 
-    this.followBtn.classList.toggle('active', camera.mode === 'orbit' && camera.target === selected);
-    this.followBtn.disabled = !selected;
+    const pointSel = this.host.selectedGalaxy !== null || this.host.selectedLandmark !== null;
+    this.followBtn.classList.toggle('active', camera.mode === 'orbit' && (selected ? camera.target === selected : pointSel && camera.anchor !== null));
+    this.followBtn.disabled = !selected && !pointSel;
 
     const u = this.host.universe;
     const sys = u.current;
