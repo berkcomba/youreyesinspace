@@ -128,31 +128,40 @@ export function fixed(n: number, digits: number): string {
  * `data-i18n-title`, `data-i18n-placeholder`, `data-i18n-content` (meta tags). The attribute
  * value is the source string; when it is empty the element's current text is used as the key
  * and written back so the markup can stay in Turkish.
+ *
+ * Elements with an explicit key may carry *English* static content (so crawlers and link
+ * previews, which don't run JS, see English); they are rewritten for every locale including
+ * Turkish, where `_()` is the identity and therefore yields the Turkish key itself.
  */
 export function applyDom(root: ParentNode = document): void {
-  if (current === 'tr') return;
+  const tr = current === 'tr';
   const norm = (s: string) => s.replace(/\s+/g, ' ').trim();
   root.querySelectorAll<HTMLElement>('[data-i18n]').forEach((el) => {
+    if (tr && !el.dataset.i18n) return;
     const key = el.dataset.i18n || norm(el.textContent ?? '');
     if (!el.dataset.i18n) el.dataset.i18n = key;
     el.textContent = _(key);
   });
   root.querySelectorAll<HTMLElement>('[data-i18n-html]').forEach((el) => {
+    if (tr && !el.dataset.i18nHtml) return;
     const key = el.dataset.i18nHtml || norm(el.innerHTML);
     if (!el.dataset.i18nHtml) el.dataset.i18nHtml = key;
     el.innerHTML = _(key);
   });
   root.querySelectorAll<HTMLElement>('[data-i18n-title]').forEach((el) => {
+    if (tr && !el.dataset.i18nTitle) return;
     const key = el.dataset.i18nTitle || el.title;
     if (!el.dataset.i18nTitle) el.dataset.i18nTitle = key;
     el.title = _(key);
   });
   root.querySelectorAll<HTMLInputElement>('[data-i18n-placeholder]').forEach((el) => {
+    if (tr && !el.dataset.i18nPlaceholder) return;
     const key = el.dataset.i18nPlaceholder || el.placeholder;
     if (!el.dataset.i18nPlaceholder) el.dataset.i18nPlaceholder = key;
     el.placeholder = _(key);
   });
   root.querySelectorAll<HTMLMetaElement>('[data-i18n-content]').forEach((el) => {
+    if (tr && !el.dataset.i18nContent) return;
     const key = el.dataset.i18nContent || el.content;
     if (!el.dataset.i18nContent) el.dataset.i18nContent = key;
     el.content = _(key);

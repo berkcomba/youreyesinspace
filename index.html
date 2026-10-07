@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="tr">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -7,21 +7,30 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="theme-color" content="#04060c" />
-    <title>Your Eyes In Space — Gözlemlenebilir evreni tarayıcıda gez</title>
-    <meta name="description" data-i18n-content content="Güneş Sistemi'nden gözlemlenebilir evrenin sınırına: 109 000 gerçek yıldız, 55 galaksi, 14 kara delik, NASA uydu görüntüleri ve uzay araçları. NASA/JPL, ESA Hipparcos, Gaia, NED ve SIMBAD verileriyle, tarayıcıda, açık kaynak." />
+    <!-- Static head text is English for crawlers / link previews (no JS); applyDom() rewrites it
+         per locale at runtime using the Turkish source key in data-i18n-content. -->
+    <title>Your Eyes In Space — Explore the observable universe in your browser</title>
+    <meta name="description" data-i18n-content="Güneş Sistemi'nden gözlemlenebilir evrenin sınırına: 109 000 gerçek yıldız, 55 galaksi, 14 kara delik, NASA uydu görüntüleri ve uzay araçları. NASA/JPL, ESA Hipparcos, Gaia, NED ve SIMBAD verileriyle, tarayıcıda, açık kaynak." content="From the Solar System to the edge of the observable universe: 109,000 real stars, 55 galaxies, 14 black holes, NASA satellite imagery and spacecraft. Built on NASA/JPL, ESA Hipparcos, Gaia, NED and SIMBAD data — in the browser, open source." />
     <link rel="canonical" href="https://youreyesinspace.com/" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Your Eyes In Space" />
-    <meta property="og:title" data-i18n-content content="Your Eyes In Space — Gözlemlenebilir evreni tarayıcıda gez" />
-    <meta property="og:description" data-i18n-content content="Dünya'dan Andromeda'ya, Sagittarius A* kara deliğinden Tarantula Bulutsusu'na gerçek verilerle uçun. Kurulum yok, açık kaynak." />
+    <meta property="og:title" data-i18n-content="Your Eyes In Space — Gözlemlenebilir evreni tarayıcıda gez" content="Your Eyes In Space — Explore the observable universe in your browser" />
+    <meta property="og:description" data-i18n-content="Dünya'dan Andromeda'ya, Sagittarius A* kara deliğinden Tarantula Bulutsusu'na gerçek verilerle uçun. Kurulum yok, açık kaynak." content="Fly from Earth to Andromeda, from the black hole Sagittarius A* to the Tarantula Nebula, on real data. No install, open source." />
     <meta property="og:url" content="https://youreyesinspace.com/" />
     <meta property="og:image" content="https://youreyesinspace.com/og-image.png" />
+    <meta property="og:image:secure_url" content="https://youreyesinspace.com/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:locale" content="tr_TR" />
+    <meta property="og:image:alt" content="Your Eyes In Space logo" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="tr_TR" />
+    <meta property="og:locale:alternate" content="de_DE" />
+    <meta property="og:locale:alternate" content="es_ES" />
+    <meta property="og:locale:alternate" content="fr_FR" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Your Eyes In Space" />
-    <meta name="twitter:description" data-i18n-content content="Gözlemlenebilir evreni gerçek verilerle tarayıcıda gezin." />
+    <meta name="twitter:description" data-i18n-content="Gözlemlenebilir evreni gerçek verilerle tarayıcıda gezin." content="Explore the observable universe in your browser, on real data." />
     <meta name="twitter:image" content="https://youreyesinspace.com/og-image.png" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />

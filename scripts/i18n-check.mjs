@@ -185,8 +185,11 @@ const decode = (s) => s.replace(/&nbsp;/g, '\u00a0').replace(/&amp;/g, '&').repl
 let m;
 const reText = /<(\w+)([^>]*)\sdata-i18n(?:="")?(?=[\s>])[^>]*>([^<]*)<\/\1>/g;
 while ((m = reText.exec(html))) add(norm(decode(m[3])), 'index.html', true);
+// implicit key: `data-i18n-x title="…"`; explicit key (English static content): `data-i18n-x="<Turkish key>" …`
 const reAttr = /data-i18n-(title|placeholder|content)(?:="")?\s+(?:title|placeholder|content)="([^"]*)"/g;
 while ((m = reAttr.exec(html))) add(decode(m[2]), 'index.html', true);
+const reAttrKey = /data-i18n-(?:title|placeholder|content)="([^"]+)"/g;
+while ((m = reAttrKey.exec(html))) add(decode(m[1]), 'index.html', true);
 // title set from main.ts via _(); meta/og handled above
 
 /* ------------------------------------------------------------------ report */
