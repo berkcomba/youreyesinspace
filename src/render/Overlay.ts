@@ -43,6 +43,9 @@ const LANDMARK_COLORS: Record<string, string> = {
   pulsar: 'rgba(150, 230, 255, 0.95)',
 };
 
+/** Muted brass — the one accent colour of the interface, used only for the selected object. */
+const SELECTION_COLOR = 'rgba(189, 155, 108, 0.95)';
+
 const _v = new Vector3();
 
 /** 2D canvas overlay: markers, labels, selection reticle, star names. */
@@ -313,18 +316,17 @@ export class Overlay {
         ctx.lineWidth = 1;
         ctx.globalAlpha = it.radiusPx < 6 ? 0.85 : 0.5;
         if (isSel) {
+          // finder-chart reticle: a thin circle with four short ticks, in the selection colour
           const r = Math.max(it.radiusPx + 8, 12);
-          ctx.strokeStyle = 'rgba(82, 215, 255, 0.95)';
-          ctx.lineWidth = 1.5;
-          const g = r * 0.45;
+          ctx.strokeStyle = SELECTION_COLOR;
+          ctx.lineWidth = 1;
+          const t = 5;
           ctx.beginPath();
-          // corner brackets
-          const corners = [[-1, -1], [1, -1], [1, 1], [-1, 1]];
-          for (const [sx, sy] of corners) {
-            ctx.moveTo(it.x + sx * r, it.y + sy * (r - g));
-            ctx.lineTo(it.x + sx * r, it.y + sy * r);
-            ctx.lineTo(it.x + sx * (r - g), it.y + sy * r);
-          }
+          ctx.arc(it.x, it.y, r, 0, Math.PI * 2);
+          ctx.moveTo(it.x - r - t, it.y); ctx.lineTo(it.x - r, it.y);
+          ctx.moveTo(it.x + r, it.y); ctx.lineTo(it.x + r + t, it.y);
+          ctx.moveTo(it.x, it.y - r - t); ctx.lineTo(it.x, it.y - r);
+          ctx.moveTo(it.x, it.y + r); ctx.lineTo(it.x, it.y + r + t);
           ctx.stroke();
         } else if (b.data.type === 'star') {
           // no marker on the sun
@@ -384,15 +386,15 @@ export class Overlay {
     // Free-roam crosshair (pointer locked: clicks pick under the centre)
     if (this.crosshair) {
       const cx = W / 2, cy = H / 2;
-      ctx.strokeStyle = 'rgba(82, 215, 255, 0.85)';
-      ctx.lineWidth = 1.2;
+      ctx.strokeStyle = 'rgba(240, 240, 235, 0.7)';
+      ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(cx - 12, cy); ctx.lineTo(cx - 4, cy);
       ctx.moveTo(cx + 4, cy); ctx.lineTo(cx + 12, cy);
       ctx.moveTo(cx, cy - 12); ctx.lineTo(cx, cy - 4);
       ctx.moveTo(cx, cy + 4); ctx.lineTo(cx, cy + 12);
       ctx.stroke();
-      ctx.fillStyle = 'rgba(82, 215, 255, 0.9)';
+      ctx.fillStyle = 'rgba(240, 240, 235, 0.8)';
       ctx.fillRect(cx - 0.75, cy - 0.75, 1.5, 1.5);
     }
     return this.items;

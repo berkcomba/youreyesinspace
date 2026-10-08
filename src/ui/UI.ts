@@ -520,7 +520,7 @@ export class UI {
 
     $('time-date').textContent = time.formatDate();
     $('time-rate').textContent = time.rateLabel();
-    this.pauseBtn.textContent = time.paused ? '▶' : '❚❚';
+    this.pauseBtn.textContent = time.paused ? '▶\uFE0E' : '❚❚';
     this.pauseBtn.classList.toggle('active', time.paused);
 
     $('nav-mode').textContent = camera.autopilot ? _('Otopilot') : camera.mode === 'orbit' ? _('Takip / Yörünge') : this.host.freeRoam ? _('Serbest dolaşım') : _('Serbest uçuş');

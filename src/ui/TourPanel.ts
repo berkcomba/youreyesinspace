@@ -40,17 +40,18 @@ export class TourPanel {
 
   private build(): void {
     this.list.innerHTML = '';
-    for (const tour of this.player.available()) {
+    this.player.available().forEach((tour, i) => {
       const el = document.createElement('button');
       el.className = 'tour-item';
       el.dataset.tour = tour.id;
-      el.innerHTML = `<span class="tour-icon">${tour.icon}</span><span class="tour-text"><span class="tour-name">${_(tour.title)}</span><span class="tour-summary">${_(tour.summary)}</span><span class="tour-meta">${_('{n} durak', { n: tour.steps.length })}</span></span>`;
+      const index = String(i + 1).padStart(2, '0');
+      el.innerHTML = `<span class="tour-index">${index}</span><span class="tour-text"><span class="tour-name">${_(tour.title)}</span><span class="tour-summary">${_(tour.summary)}</span></span><span class="tour-meta">${_('{n} durak', { n: tour.steps.length })}</span>`;
       el.addEventListener('click', () => {
         this.player.start(tour.id);
         this.toggle(false);
       });
       this.list.appendChild(el);
-    }
+    });
   }
 
   private render(s: TourState): void {
@@ -63,7 +64,7 @@ export class TourPanel {
     if (this.bar.hidden) this.bar.hidden = false;
     if (this.lastStep !== s.stepIndex) {
       this.lastStep = s.stepIndex;
-      this.title.textContent = `${s.tour.icon} ${_(s.tour.title)}`;
+      this.title.textContent = _(s.tour.title);
       this.stepLabel.textContent = `${s.stepIndex + 1} / ${s.tour.steps.length}`;
       this.bar.classList.toggle('silent', s.silent);
       this.bar.title = s.silent ? _('Bu dil için ses bulunamadı; tur altyazıyla ilerliyor') : '';
@@ -74,7 +75,7 @@ export class TourPanel {
     }
     if (this.lastPaused !== s.paused) {
       this.lastPaused = s.paused;
-      this.pauseBtn.textContent = s.paused ? '▶' : '❚❚';
+      this.pauseBtn.textContent = s.paused ? '▶\uFE0E' : '❚❚';
       this.bar.classList.toggle('paused', s.paused);
     }
     this.fill.style.width = `${(s.progress * 100).toFixed(1)}%`;

@@ -6,7 +6,7 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="theme-color" content="#04060c" />
+    <meta name="theme-color" content="#090b0f" />
     <!-- Static head text is English for crawlers / link previews (no JS); applyDom() rewrites it
          per locale at runtime using the Turkish source key in data-i18n-content. -->
     <title>Your Eyes In Space — Explore the observable universe in your browser</title>
@@ -53,14 +53,14 @@
         </div>
         <div class="topbar-right">
           <div id="places" class="dropdown">
-            <button id="btn-places" class="text-btn" data-i18n-title title="Seçili hedefe otomatik uçuş" aria-haspopup="listbox" aria-expanded="false"><span class="long" data-i18n>Görmeye değecek yerler</span><span class="short" data-i18n>Yerler</span> ▾</button>
+            <button id="btn-places" class="text-btn" data-i18n-title title="Seçili hedefe otomatik uçuş" aria-haspopup="listbox" aria-expanded="false"><span class="long" data-i18n>Görmeye değecek yerler</span><span class="short" data-i18n>Yerler</span><svg class="caret" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" /></svg></button>
             <div id="places-menu" class="dropdown-menu" role="listbox" hidden></div>
           </div>
-          <button id="btn-tours" class="text-btn" data-i18n-title title="Sesli rehberli turlar: kamera uçar, anlatıcı anlatır"><span class="long" data-i18n>Turlar</span><span class="short">🎧</span></button>
-          <button id="btn-mission" class="text-btn" data-i18n-title title="Görev planlayıcı: gerçek ya da hayali bir araçla rota hesapla, fırlat, canlı izle (U)"><span class="long" data-i18n>Görev</span><span class="short">🚀</span></button>
+          <button id="btn-tours" class="text-btn" data-i18n data-i18n-title title="Sesli rehberli turlar: kamera uçar, anlatıcı anlatır">Turlar</button>
+          <button id="btn-mission" class="text-btn" data-i18n data-i18n-title title="Görev planlayıcı: gerçek ya da hayali bir araçla rota hesapla, fırlat, canlı izle (U)">Görev</button>
           <button id="btn-roam" class="text-btn" data-i18n data-i18n-title title="Serbest dolaşım: fare ile bak, WASD ile uç (V)">Serbest dolaşım</button>
           <button id="btn-help" class="icon-btn" data-i18n-title title="Yardım (F1)">?</button>
-          <button id="btn-settings" class="icon-btn" data-i18n-title title="Ayarlar">⚙</button>
+          <button id="btn-settings" class="icon-btn" data-i18n-title title="Ayarlar" aria-label="Settings"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1 4h14M1 8h14M1 12h14" /><path d="M10 2.5v3M5 6.5v3M11 10.5v3" /></svg></button>
         </div>
       </header>
 
@@ -149,9 +149,9 @@
         <div id="tour-subtitle" class="tour-subtitle"></div>
         <div class="tour-progress"><div id="tour-progress-fill"></div></div>
         <div class="tour-controls">
-          <button id="tour-prev" data-i18n-title title="Önceki durak">◀</button>
+          <button id="tour-prev" data-i18n-title title="Önceki durak">◀&#xFE0E;</button>
           <button id="tour-pause" data-i18n-title title="Duraklat / sürdür">❚❚</button>
-          <button id="tour-next" data-i18n-title title="Sonraki durak">▶</button>
+          <button id="tour-next" data-i18n-title title="Sonraki durak">▶&#xFE0E;</button>
           <button id="tour-stop" class="tour-stop" data-i18n data-i18n-title title="Turu bitir">Bitir</button>
         </div>
       </div>
@@ -161,11 +161,11 @@
         <div class="time-block">
           <div id="time-date" class="time-date">—</div>
           <div class="time-controls">
-            <button id="t-rev" data-i18n-title title="Geri hızlandır (J)">◀◀</button>
+            <button id="t-rev" data-i18n-title title="Geri hızlandır (J)">◀&#xFE0E;◀&#xFE0E;</button>
             <button id="t-slow" data-i18n-title title="Yavaşlat">−</button>
             <button id="t-pause" data-i18n-title title="Duraklat (K)">❚❚</button>
             <button id="t-fast" data-i18n-title title="Hızlandır">+</button>
-            <button id="t-fwd" data-i18n-title title="İleri hızlandır (L)">▶▶</button>
+            <button id="t-fwd" data-i18n-title title="İleri hızlandır (L)">▶&#xFE0E;▶&#xFE0E;</button>
             <button id="t-now" data-i18n data-i18n-title title="Gerçek zamana dön (\\)">Şimdi</button>
             <span id="time-rate" class="time-rate">1×</span>
           </div>

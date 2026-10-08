@@ -34,8 +34,6 @@ export interface TourDef {
   id: string;
   title: string;
   summary: string;
-  /** emoji shown in the list */
-  icon: string;
   steps: TourStep[];
 }
 
@@ -50,7 +48,6 @@ export const TOURS: TourDef[] = [
     id: 'solar-system',
     title: 'Güneş Sistemi Turu',
     summary: 'Güneş\'ten Plüton\'a: sekiz gezegen, bir ay ve bir cüce gezegen.',
-    icon: '☀️',
     steps: [
       { id: 'sun', target: body('sun'), text: 'Güneş Sistemi turuna hoş geldiniz. Yolculuğumuz her şeyin merkezinden, Güneş\'ten başlıyor. Dört buçuk milyar yaşındaki bu yıldız, sistemdeki toplam kütlenin yüzde doksan dokuz virgül sekizini tek başına taşır. Çapı bir milyon dört yüz bin kilometredir; içine yan yana yüz dokuz Dünya sığar. Yüzeyi beş bin beş yüz derece, çekirdeği ise on beş milyon derecedir. Şu anda gördüğünüz ışık, buradan çıkıp Dünya\'ya sekiz dakika yirmi saniyede ulaşır.' },
       { id: 'mercury', target: body('mercury'), text: 'İlk durağımız Merkür, en küçük ve Güneş\'e en yakın gezegen. Güneş\'in etrafındaki bir turu yalnızca seksen sekiz gün sürer. Atmosferi yok denecek kadar incedir; bu yüzden gündüz tarafı dört yüz otuz dereceye çıkarken gece tarafı eksi yüz seksen dereceye düşer. Yüzeyi tıpkı Ay gibi kraterlerle kaplıdır. Şu anda Avrupa ve Japonya\'nın ortak aracı BepiColombo ona doğru yol alıyor.' },
@@ -69,7 +66,6 @@ export const TOURS: TourDef[] = [
     id: 'mars',
     title: 'Mars ve Robotları',
     summary: 'Kızıl Gezegen, iki küçük ayı ve yüzeyinde dolaşan keşif araçları.',
-    icon: '🤖',
     steps: [
       { id: 'mars', target: body('mars'), text: 'Mars turuna hoş geldiniz. Kızıl Gezegen, Güneş\'ten dördüncü sıradaki gezegendir ve insanlığın en çok araç gönderdiği dünya. Günü Dünya\'nınkine çok benzer: yirmi dört saat otuz yedi dakika. Yılı ise altı yüz seksen yedi gündür. Atmosferi çok incedir ve neredeyse tamamen karbondioksitten oluşur; ortalama sıcaklık eksi altmış derecedir. Buna rağmen kutuplarında buz, yüzeyinde kurumuş nehir yatakları ve eski göl tabanları vardır.' },
       { id: 'phobos', target: body('phobos'), text: 'Mars\'ın iki küçük ayından büyüğü Phobos. Yalnızca yirmi iki kilometre genişliğinde, patates biçimli bir kayadır. Gezegene altı bin kilometre uzaklıkta döner; bu, Güneş Sistemi\'ndeki en yakın ay yörüngesidir. O kadar hızlıdır ki Mars\'ın etrafını yedi saat otuz dokuz dakikada dolaşır ve Mars yüzeyinden bakıldığında batıdan doğar. Her yüzyıl iki metre alçalıyor; yaklaşık elli milyon yıl içinde ya Mars\'a çarpacak ya da parçalanıp bir halkaya dönüşecek.' },
@@ -83,7 +79,6 @@ export const TOURS: TourDef[] = [
     id: 'jupiter',
     title: 'Jüpiter ve Ayları',
     summary: 'Dev gezegen, dört Galileo ayı ve kutuplarının üzerinde dönen Juno.',
-    icon: '🪐',
     steps: [
       { id: 'jupiter', target: body('jupiter'), text: 'Jüpiter sistemine hoş geldiniz. Bu dev, neredeyse küçük bir güneş sistemi gibidir: etrafında doksan beşten fazla ay döner. Gezegen o kadar büyüktür ki içine bin üç yüz Dünya sığar ve güçlü manyetik alanı Güneş Sistemi\'ndeki en büyük yapıdır; gökyüzünde görülebilseydi dolunaydan büyük görünürdü. Bin altı yüz onda Galileo, küçük teleskobuyla dört büyük ayını keşfetti ve bu, her şeyin Dünya\'nın etrafında dönmediğinin ilk kanıtı oldu. Şimdi o dört ayı sırayla ziyaret edeceğiz.', timeRate: 1200 },
       { id: 'io', target: body('io'), text: 'Io, Güneş Sistemi\'nin en volkanik dünyası. Jüpiter ile diğer ayların kütle çekimi arasında sürekli ezilip gerilir; bu gelgit ısınması iç kısmını eritir. Yüzeyinde dört yüzden fazla aktif yanardağ vardır ve bazıları lavı yüzlerce kilometre yükseğe fırlatır. Sarı, turuncu ve kırmızı renkler kükürt ve kükürt bileşiklerinden gelir. Yüzeyi o kadar hızlı yenilenir ki üzerinde neredeyse hiç çarpma krateri yoktur.', timeRate: 1200 },
@@ -97,7 +92,6 @@ export const TOURS: TourDef[] = [
     id: 'saturn',
     title: 'Satürn: Halkaların Efendisi',
     summary: 'Halkalar, kalın atmosferli Titan, gayzerleriyle Enceladus ve iki tuhaf ay.',
-    icon: '💍',
     steps: [
       { id: 'saturn', target: body('saturn'), text: 'Satürn turuna hoş geldiniz. Güneş\'ten altıncı gezegen, çapıyla Dünya\'nın dokuz katı büyüklüğünde bir gaz devidir. Yoğunluğu sudan düşüktür; bu, bir gezegen için benzersizdir. Ekvatorunda rüzgârlar saatte bin sekiz yüz kilometreye ulaşır. Cassini aracı iki bin dörtten iki bin on yediye kadar on üç yıl boyunca bu sistemi inceledi ve görevini gezegenin atmosferine dalarak tamamladı.', timeRate: 600 },
       { id: 'rings', target: body('saturn'), text: 'Şimdi halkalara daha yakından bakalım. Bu dev disk aslında tek bir yapı değil, mikroskobik tozdan ev büyüklüğüne kadar milyarlarca buz parçasından oluşur. Genişliği iki yüz seksen bin kilometreyi aşar ama kalınlığı çoğu yerde on metreden azdır: ölçekli bir kâğıt yaprağından bile incedir. Aradaki en büyük boşluk olan Cassini Bölümü\'nü küçük ay Mimas\'ın kütle çekimi açar. Halkalar muhtemelen yalnızca birkaç yüz milyon yaşında ve yavaş yavaş gezegene yağıyorlar.', orbitRate: 0.09, timeRate: 600 },
@@ -111,7 +105,6 @@ export const TOURS: TourDef[] = [
     id: 'explorers',
     title: 'İnsanlığın Elçileri',
     summary: 'Dünya yörüngesinden yıldızlararası uzaya: ISS, Hubble, JWST, Parker ve Voyager\'lar.',
-    icon: '🛰️',
     steps: [
       { id: 'iss', target: body('iss'), text: 'İnsanlığın uzaydaki elçilerini ziyaret edeceğimiz bu tura Dünya yörüngesinden başlıyoruz. Karşınızda Uluslararası Uzay İstasyonu. Dört yüz kilometre yükseklikte, saatte yirmi sekiz bin kilometre hızla döner ve Dünya\'nın etrafını doksan dakikada tamamlar; astronotlar günde on altı gün doğumu görür. Bir futbol sahası büyüklüğünde ve dört yüz yirmi ton ağırlığındadır. İki bin Kasım\'ından beri üzerinde kesintisiz insan yaşıyor; bu, insanlığın uzaydaki en uzun sürekli varlığıdır.', timeRate: 30 },
       { id: 'hubble', target: body('hubble'), text: 'Hubble Uzay Teleskobu, bin dokuz yüz doksandan beri evrene bakışımızı değiştiriyor. Beş yüz kırk kilometre yükseklikte döner ve iki virgül dört metrelik aynasıyla atmosferin bulanıklığından kurtulmuş görüntüler alır. İlk görüntüleri bulanıktı; aynasındaki ufak bir kusur bin dokuz yüz doksan üçte astronotlar tarafından yörüngede düzeltildi. Evrenin yaşını ölçtü, karanlık enerjinin keşfine katkı sağladı ve Derin Alan görüntüleriyle gökyüzünün boş görünen bir noktasında binlerce galaksi gösterdi.', timeRate: 30 },
@@ -126,7 +119,6 @@ export const TOURS: TourDef[] = [
     id: 'stellar-life',
     title: 'Bir Yıldızın Yaşamı',
     summary: 'Gaz bulutundan kara deliğe: yıldızların doğumu, yaşamı ve ölümü.',
-    icon: '⭐',
     steps: [
       { id: 'orion', target: lm('l-m42'), text: 'Bu turda bir yıldızın yaşam öyküsünü, doğumundan ölümüne kadar izleyeceğiz. Hikâye böyle yerlerde başlar: Orion Bulutsusu, bize bin üç yüz elli ışık yılı uzaklıktaki dev bir yıldız fabrikası. Soğuk gaz ve toz, kendi ağırlığı altında çökerek yüzlerce yeni yıldız oluşturuyor. Merkezdeki dört parlak Trapezium yıldızı, morötesi ışığıyla bulutsuyu içten aydınlatır. Gökyüzünde çıplak gözle Orion\'un kılıcındaki bulanık leke olarak görülür.' },
       { id: 'pleiades', target: lm('l-pleiades'), text: 'Yıldızlar yalnız doğmaz; kardeşleriyle birlikte doğar. Ülker, yani Pleiades, böyle genç bir aile. Yaklaşık yüz milyon yaşındadır; Güneş\'e kıyasla bir bebek sayılır. Binden fazla yıldız içerir ama çıplak gözle genellikle altı ya da yedisi görülür; bu yüzden pek çok kültürde Yedi Kız Kardeş adıyla bilinir. Parlak mavi yıldızlarının etrafındaki pus, kümenin içinden geçtiği bir toz bulutunun yansımasıdır. Birkaç yüz milyon yıl içinde bu kardeşler dağılıp galaksiye karışacak.' },
@@ -142,7 +134,6 @@ export const TOURS: TourDef[] = [
     id: 'black-holes',
     title: 'Kara Delikler',
     summary: 'En yakın uyuyan kara delikten galaksilerin merkezindeki devlere.',
-    icon: '🕳️',
     steps: [
       { id: 'cygx1', target: bh('cygx1'), text: 'Kara delikler turuna hoş geldiniz. Başlangıç noktamız bir klasik: Cygnus X-Bir. Bin dokuz yüz altmış dörtte bir roketle keşfedilen bu X-ışını kaynağı, bin dokuz yüz yetmiş birde bir kara delik olarak tanımlanan ilk nesne oldu. Yirmi bir güneş kütlesindedir ve mavi süperdev yoldaşı HDE iki yüz yirmi altı bin sekiz yüz altmış sekiz ile beş buçuk günde bir ortak kütle merkezlerinin etrafında döner. Yoldaşından çektiği gaz, parlak bir diskte milyonlarca dereceye ısınır. Stephen Hawking bu nesnenin kara delik olmadığına bahse girmişti; bin dokuz yüz doksanda yenilgisini kabul etti.' },
       { id: 'gaiabh1', target: bh('b2'), text: 'Gaia BH Bir, bize en yakın bilinen kara delik: bin beş yüz altmış ışık yılı. Ne diski var ne de X-ışını yayar; tamamen sessiz. Varlığı yalnızca Güneş benzeri bir yıldızın görünmez bir eşin etrafında yüz seksen altı günde bir sallanmasından anlaşıldı. Bu sallantıyı iki bin yirmi ikide Gaia uydusunun hassas konum ölçümleri ortaya çıkardı. Dokuz virgül altı güneş kütlesindedir ve olay ufkunun çapı yalnızca elli altı kilometredir. Burada onu yalnızca arka plandaki yıldızları büken kütle çekimsel merceklemeyle görebilirsiniz.' },
@@ -155,7 +146,6 @@ export const TOURS: TourDef[] = [
     id: 'pulsars',
     title: 'Pulsarlar: Kozmik Fenerler',
     summary: 'Saniyede yüzlerce kez dönen nötron yıldızları ve değiştirdikleri fizik.',
-    icon: '💫',
     steps: [
       { id: 'b1919', target: lm('l-b1919'), text: 'Pulsarlar turuna hoş geldiniz. Her şey bin dokuz yüz altmış yedide, Cambridge\'de doktora öğrencisi Jocelyn Bell\'in radyo verilerinde her bir virgül üç saniyede bir tekrarlayan tuhaf bir sinyal fark etmesiyle başladı. Sinyal o kadar düzenliydi ki ekibi ona yarı şaka Küçük Yeşil Adamlar anlamına gelen LGM Bir adını verdi. Karşınızdaki PSR B Bin Dokuz Yüz On Dokuz artı Yirmi Bir, işte o ilk pulsar. Aslında bir deniz feneri gibi dönen ve ışın demetini her turda bize doğrultan bir nötron yıldızıydı.' },
       { id: 'crab', target: lm('l-crabpsr'), text: 'Yengeç Pulsarı, bin elli dört yılındaki süpernovanın geride bıraktığı nötron yıldızı. Saniyede otuz kez döner ve Yengeç Bulutsusu\'nun tamamını enerjisiyle aydınlatır. Yalnızca yirmi kilometre çapındadır ama Güneş\'ten daha ağırdır; bir şeker küpü büyüklüğündeki maddesi bir dağ kadar çeker. Radyo dalgalarından gama ışınlarına kadar her dalga boyunda nabız atar. Gözlemlenebilir bir süpernovayla kesin olarak eşleştirilen ilk pulsardır ve pulsarların patlayan yıldızlardan doğduğunu kanıtlamıştır.' },
@@ -170,7 +160,6 @@ export const TOURS: TourDef[] = [
     id: 'neighbours',
     title: 'Komşu Yıldızlar',
     summary: 'En yakın yıldızlardan gökyüzünün en parlaklarına: altı yıldız, altı öykü.',
-    icon: '✨',
     steps: [
       { id: 'proxima', target: star('Proxima Centauri'), text: 'Komşu yıldızlar turuna hoş geldiniz. İlk durağımız, Güneş\'e en yakın yıldız: dört virgül iki ışık yılı uzaklıktaki Proxima Centauri. Küçük ve soğuk bir kırmızı cücedir; Güneş\'in yalnızca yüzde on ikisi kadar kütlesi vardır ve çıplak gözle görülemeyecek kadar sönüktür. Ama ani parlamalarla yüzeyinden şiddetli radyasyon püskürtür. İki bin on altıda etrafında Dünya büyüklüğünde bir gezegen keşfedildi: Proxima b, yaşanabilir bölgede, yani yüzeyinde sıvı suyun bulunabileceği uzaklıkta döner. Bugünkü en hızlı araçlarımızla buraya ulaşmak yetmiş bin yıl sürerdi.' },
       { id: 'alphacen', target: star('Rigil Kentaurus'), text: 'Proxima aslında büyük bir ailenin uzak üyesi. Alpha Centauri A ve B, dört virgül dört ışık yılı uzaklıkta birbirlerinin etrafında seksen yılda bir dönen iki yıldızdır. A, Güneş\'e şaşırtıcı ölçüde benzer: biraz daha büyük, biraz daha parlak. B ise biraz daha küçük ve turuncudur. Birlikte gökyüzünün üçüncü en parlak yıldızı olarak görünürler. Breakthrough Starshot projesi, lazerle itilen pul büyüklüğünde sondaları ışık hızının beşte biriyle buraya göndermeyi ve yirmi yılda ulaşmayı hayal ediyor.' },
@@ -184,7 +173,6 @@ export const TOURS: TourDef[] = [
     id: 'galaxies',
     title: 'Galaksiler: Evin Ötesi',
     summary: 'Samanyolu\'nun dışına çıkıp uydu galaksilerimizi, Andromeda\'yı ve çarpışan galaksileri ziyaret edin.',
-    icon: '🌌',
     steps: [
       { id: 'milkyway', target: gal('#0'), text: 'Galaksiler turuna hoş geldiniz. Önce evimize dışarıdan bakalım. Samanyolu, yüz bin ışık yılı genişliğinde, merkezinde bir çubuk bulunan sarmal bir galaksidir ve iki yüz ile dört yüz milyar arasında yıldız içerir. Güneş, merkezden yirmi altı bin ışık yılı uzakta, Orion Kolu denilen küçük bir kolda yer alır ve galaksinin etrafındaki bir turunu iki yüz otuz milyon yılda tamamlar. Dinozorlar yok olduğundan beri Güneş bu turun yalnızca dörtte birini aldı. Merkezdeki parlak şişkinlikte dört milyon güneş kütleli bir kara delik gizlidir.', orbitRate: 0.03 },
       { id: 'lmc', target: gal('Büyük Macellan'), text: 'Büyük Macellan Bulutu, Samanyolu\'nun en büyük uydu galaksisi. Yüz altmış bin ışık yılı uzaklıktadır ve güney yarım küreden çıplak gözle gökyüzünde kopmuş bir bulut parçası gibi görünür. Kütlesi bizimkinin yaklaşık yüzde biridir. İçinde, Yerel Grup\'un en büyük yıldız doğumevi olan Tarantula Bulutsusu ve bilinen en ağır yıldızlardan R Yüz Otuz Altı a Bir bulunur. Bin dokuz yüz seksen yedide burada patlayan süpernova, dört yüz yıldır çıplak gözle görülen ilk süpernovaydı. Birkaç milyar yıl içinde Samanyolu onu yutacak.', orbitRate: 0.03 },
