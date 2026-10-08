@@ -19,7 +19,7 @@ export interface RenderSettings {
   clouds: boolean;
   rings: boolean;
   shadows: boolean;
-  /** real satellite imagery tiles on Earth / Moon / Mars */
+  /** real imagery tiles (NASA GIBS / Solar System Treks) on bodies listed in IMAGERY */
   imagery: boolean;
 }
 
@@ -116,7 +116,7 @@ export class BodyView {
   readonly relPos = new Vector3();
   /** on-screen visibility of the mesh */
   meshVisible = false;
-  /** streamed imagery layer (Earth, Moon, Mars), replaces the procedural surface once loaded */
+  /** streamed imagery layer, replaces the procedural surface once loaded */
   tiles: TileGlobe | null = null;
   imageryActive = false;
 
