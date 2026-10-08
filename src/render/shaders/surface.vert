@@ -13,8 +13,18 @@ void main() {
   vec3 p = position;
   vec3 n = normal;
   if (uIrregular > 0.0) {
-    float d = fbm(p * 1.6 + uSeed, 4) + 0.5 * fbm(p * 5.0 + uSeed * 1.7, 3);
-    p *= 1.0 + uIrregular * d * 0.45;
+    // displace along the direction and rebuild a smooth normal from neighbouring samples
+    vec3 d = normalize(position);
+    vec3 T = normalize(cross(abs(d.y) < 0.99 ? vec3(0.0, 1.0, 0.0) : vec3(1.0, 0.0, 0.0), d));
+    vec3 B = cross(d, T);
+    const float e = 0.015;
+    vec3 dT = normalize(d + T * e);
+    vec3 dB = normalize(d + B * e);
+    p = d * smallBodyRadius(d, uSeed, uIrregular);
+    vec3 pT = dT * smallBodyRadius(dT, uSeed, uIrregular);
+    vec3 pB = dB * smallBodyRadius(dB, uSeed, uIrregular);
+    n = normalize(cross(pT - p, pB - p));
+    if (dot(n, d) < 0.0) n = -n;
   }
   vObjPos = p;
   // Oblateness: squash along the local pole (Y)

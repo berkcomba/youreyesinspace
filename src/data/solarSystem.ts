@@ -122,14 +122,14 @@ export const SOLAR_SYSTEM: BodyData[] = [
     id: 'phobos', name: 'Phobos', type: 'moon', parent: 'mars',
     radius: 11.1, mass: 1.0659e16, albedo: 0.071, rotationPeriod: 'sync',
     orbit: moonOrbit(9376, 0.0151, 1.08, 0.31891, 40),
-    appearance: { kind: 'terrestrial', seed: 42, landLow: [0.18, 0.17, 0.16], landMid: [0.30, 0.28, 0.26], landHigh: [0.42, 0.40, 0.38], craters: 1.0, roughness: 2.0, variation: 0.3 },
+    appearance: { kind: 'terrestrial', seed: 42, landLow: [0.18, 0.17, 0.16], landMid: [0.30, 0.28, 0.26], landHigh: [0.42, 0.40, 0.38], craters: 1.0, roughness: 1.4, variation: 0.3 },
     description: 'Mars\'ın büyük ve iç uydusu. Mars\'a o kadar yakındır ki gelgit kuvvetleri onu ~50 milyon yıl içinde parçalayacak veya yüzeye düşürecek.',
   },
   {
     id: 'deimos', name: 'Deimos', type: 'moon', parent: 'mars',
     radius: 6.2, mass: 1.4762e15, albedo: 0.068, rotationPeriod: 'sync',
     orbit: moonOrbit(23_463, 0.0002, 1.79, 1.26244, 200),
-    appearance: { kind: 'terrestrial', seed: 43, landLow: [0.20, 0.19, 0.18], landMid: [0.32, 0.31, 0.30], landHigh: [0.44, 0.42, 0.40], craters: 0.8, roughness: 2.0, variation: 0.3 },
+    appearance: { kind: 'terrestrial', seed: 43, landLow: [0.20, 0.19, 0.18], landMid: [0.32, 0.31, 0.30], landHigh: [0.44, 0.42, 0.40], craters: 0.6, roughness: 1.2, variation: 0.3 },
     description: 'Mars\'ın küçük dış uydusu. Regolitle yumuşamış kraterli yüzeye sahip, muhtemelen yakalanmış bir asteroit.',
   },
 

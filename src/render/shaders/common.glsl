@@ -129,6 +129,25 @@ float craterField(vec3 p, float seed, float density) {
   return c;
 }
 
+// Small-body shape: radius multiplier along unit direction d. A triaxial potato with a few
+// broad lobes and some large bowl craters (Stickney on Phobos spans ~40 % of its radius).
+// Deliberately low-frequency: the fine texture comes from the fragment bump, not the mesh.
+float smallBodyRadius(vec3 d, float seed, float amount) {
+  vec3 ax = vec3(1.0, 1.0 - 0.14 * amount, 1.0 - 0.26 * amount);
+  float r = 1.0 / length(d / ax);
+  float lobes = fbm(d * 1.15 + seed, 2);
+  float undulation = fbm(d * 3.2 + seed * 1.7, 2);
+  r *= 1.0 + amount * (0.13 * lobes + 0.035 * undulation);
+  r += amount * craterField(d, seed, 0.3) * 0.07;
+  // one giant impact basin (Stickney-class), direction picked by the seed
+  vec3 big = normalize(hash33(vec3(seed, seed * 0.31, 7.0)) * 2.0 - 1.0);
+  float t = acos(clamp(dot(d, big), -1.0, 1.0)) / 0.48;
+  float bowl = (smoothstep(0.0, 1.0, t) - 1.0) * 0.11 * (1.0 - smoothstep(1.0, 1.35, t));
+  float rim = exp(-pow((t - 1.0) * 4.0, 2.0)) * 0.025;
+  r += amount * (bowl + rim);
+  return r;
+}
+
 // Fraction of sun visible from P in direction L given a spherical occluder
 float sphereShadow(vec3 P, vec3 L, vec3 occPos, float occR, float sunAng) {
   vec3 toOcc = occPos - P;

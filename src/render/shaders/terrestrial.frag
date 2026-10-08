@@ -44,10 +44,8 @@ void main() {
   #include <logdepthbuf_fragment>
 
   vec3 p = normalize(vObjPos);
+  // irregular bodies: the vertex shader already derives a smooth normal from the displaced shape
   vec3 Ngeo = normalize(vWorldNormal);
-  if (uIrregular > 0.0) {
-    Ngeo = normalize(cross(dFdx(vWorldPos), dFdy(vWorldPos)));
-  }
 
   // --- height & normal perturbation ---
   float h = heightAt(p);
@@ -58,6 +56,8 @@ void main() {
   float hT = heightAt(normalize(p + T * eps));
   float hB = heightAt(normalize(p + B * eps));
   float bumpScale = 0.02 / eps;
+  // small bodies: regolith-softened relief — the mesh already carries the big shape
+  if (uIrregular > 0.0) bumpScale *= mix(1.0, 0.4, uIrregular);
 
   // Transform tangent-space bump into world: world tangents via modelMatrix rotation
   vec3 Tw = normalize(mat3(modelMatrix) * T);
