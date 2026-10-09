@@ -76,10 +76,10 @@ export const TOURS: TourDef[] = [
         // the light's eight minutes: pull back to Earth's orbit and let a year roll by
         cues: [{ at: 5, action: 'overview', ref: 'earth' }, { at: 5, action: 'rate', rate: 2.5e6 }], dwell: 7 },
       { id: 'mercury', target: body('mercury'), text: 'İlk durağımız Merkür, en küçük ve Güneş\'e en yakın gezegen. Güneş\'in etrafındaki bir turu yalnızca seksen sekiz gün sürer. Atmosferi yok denecek kadar incedir; bu yüzden gündüz tarafı dört yüz otuz dereceye çıkarken gece tarafı eksi yüz seksen dereceye düşer. Yüzeyi tıpkı Ay gibi kraterlerle kaplıdır. Şu anda Avrupa ve Japonya\'nın ortak aracı BepiColombo ona doğru yol alıyor.',
-        // "88 days": watch a whole orbit from above the Sun, then come back for the craters
+        // "88 days": a whole orbit from above the Sun within that one sentence, then straight back
         cues: [
-          { at: 1, action: 'overview', ref: 'mercury' }, { at: 1, action: 'rate', rate: 8e5 },
-          { at: 3, action: 'return' }, { at: 3, action: 'rate', rate: 1 },
+          { at: 1, action: 'overview', ref: 'mercury' }, { at: 1, action: 'rate', rate: 2.8e6 },
+          { at: 2, action: 'return' }, { at: 2, action: 'rate', rate: 1 },
         ] },
       { id: 'venus', target: body('venus'), text: 'Venüs, boyutuyla Dünya\'nın ikizi sayılır ama koşulları tam bir cehennemdir. Kalın karbondioksit atmosferi, yüzey basıncını Dünya\'nın doksan iki katına çıkarır ve sera etkisiyle sıcaklığı dört yüz altmış beş dereceye yükseltir. Bu, Güneş\'e daha yakın olan Merkür\'den bile sıcaktır. Bulutları sülfürik asittir. Venüs ters yönde ve çok yavaş döner: bir günü, bir yılından daha uzundur.',
         // strip the clouds while the hellish surface is described; speed up for the 243-day rotation
@@ -109,7 +109,7 @@ export const TOURS: TourDef[] = [
       { id: 'uranus', target: body('uranus'), text: 'Uranüs, yan yatmış gezegen. Ekseni doksan sekiz derece eğiktir; yani Güneş\'in etrafında adeta yuvarlanarak döner. Bu yüzden kutupları kırk iki yıl boyunca gündüz, kırk iki yıl boyunca gece yaşar. Metan gazı kırmızı ışığı soğurduğu için mavi-yeşil görünür. Bin yedi yüz seksen birde William Herschel\'in teleskopla keşfettiği ilk gezegendir ve onu yakından yalnızca Voyager İki gördü.',
         // "rolls around the Sun": an 84-year orbit from above, then back in close
         cues: [
-          { at: 1, action: 'overview', ref: 'uranus' }, { at: 1, action: 'rate', rate: 2.5e8 },
+          { at: 1, action: 'overview', ref: 'uranus' }, { at: 1, action: 'rate', rate: 3e8 },
           { at: 3, action: 'return' }, { at: 3, action: 'rate', rate: 1 },
         ] },
       { id: 'neptune', target: body('neptune'), text: 'Neptün, Güneş\'ten en uzak gezegen. Teleskopla değil, kâğıt üzerinde keşfedildi: Uranüs\'ün yörüngesindeki sapmaları inceleyen matematikçiler yerini hesapladı ve bin sekiz yüz kırk altıda tam orada bulundu. Rüzgârları saatte iki bin yüz kilometreyi aşar; Güneş Sistemi\'ndeki en hızlı rüzgârlardır. Güneş etrafındaki bir turu yüz altmış beş yıl sürer. Büyük ayı Triton ters yönde döner; muhtemelen yakalanmış bir Kuiper Kuşağı cismidir.',

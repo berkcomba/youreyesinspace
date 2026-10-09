@@ -64,7 +64,10 @@ export class CameraController {
   altitude = 0;
   nearest: CelestialBody | null = null;
   autopilot: Autopilot | null = null;
-  /** Slow automatic rotation around the orbit pivot (rad/s) — used by guided tours while dwelling */
+  /**
+   * Slow automatic rotation around the orbit pivot (rad/s) — the opening view and guided tours
+   * while dwelling. Any new flight or re-targeting clears it.
+   */
   autoOrbit = 0;
   mouseSensitivity = 0.0032;
   invertY = false;
@@ -101,6 +104,7 @@ export class CameraController {
     this.target = null;
     this.setReference(null);
     this.autopilot = null;
+    this.autoOrbit = 0;
     this.mode = 'orbit';
     this.lookAt(point);
   }
@@ -114,8 +118,8 @@ export class CameraController {
     this.quaternion.setFromRotationMatrix(_m);
   }
 
-  /** Fly to a body (autopilot). */
-  goTo(body: CelestialBody, sunPos: Vector3): void {
+  /** Fly to a body (autopilot). `durationS` overrides the distance-based flight time. */
+  goTo(body: CelestialBody, sunPos: Vector3, durationS?: number): void {
     const r0 = _v.copy(this.position).sub(body.position);
     let dist1 = body.radius * 3.6;
     if (body.data.rings) dist1 = Math.max(dist1, body.data.rings.outer * 2.2);
@@ -169,11 +173,12 @@ export class CameraController {
       dist1 = body.radius * 5.5;
     }
     const ratio = Math.max(r0.length(), 1) / dist1;
-    const duration = 2.2 + Math.min(4.5, Math.max(0, Math.log10(ratio)) * 0.9);
+    const duration = durationS ?? 2.2 + Math.min(4.5, Math.max(0, Math.log10(ratio)) * 0.9);
     this.autopilot = {
       kind: 'goto', target: body, point: null, t: 0, duration,
       r0: r0.clone(), dir1, dist1, q0: this.quaternion.clone(),
     };
+    this.autoOrbit = 0;
     this.setReference(body);
     this.target = body;
     this.anchor = null;
@@ -183,15 +188,17 @@ export class CameraController {
   /**
    * Fly to an explicit vantage point around a body: `dir1` (unit, from the body) and `dist1` km
    * away, ending in orbit mode around it. Used by guided tours for overviews and surface close-ups.
+   * `durationS` overrides the distance-based flight time.
    */
-  goToVantage(body: CelestialBody, dir1: Vector3, dist1: number): void {
+  goToVantage(body: CelestialBody, dir1: Vector3, dist1: number, durationS?: number): void {
     const r0 = _v.copy(this.position).sub(body.position);
     const ratio = Math.max(r0.length(), 1) / dist1;
-    const duration = 2.2 + Math.min(4.5, Math.abs(Math.log10(ratio)) * 0.9);
+    const duration = durationS ?? 2.2 + Math.min(4.5, Math.abs(Math.log10(ratio)) * 0.9);
     this.autopilot = {
       kind: 'goto', target: body, point: null, t: 0, duration,
       r0: r0.clone(), dir1: dir1.clone().normalize(), dist1, q0: this.quaternion.clone(),
     };
+    this.autoOrbit = 0;
     this.setReference(body);
     this.target = body;
     this.anchor = null;
@@ -211,6 +218,7 @@ export class CameraController {
       kind: 'gotoPoint', target: null, point: point.clone(), anchor, t: 0, duration,
       r0: r0.clone(), dir1, dist1: arriveDist, q0: this.quaternion.clone(),
     };
+    this.autoOrbit = 0;
     this.target = null;
     this.anchor = null;
     this.mode = 'free';
@@ -222,6 +230,7 @@ export class CameraController {
       kind: 'center', target: body, point: null, t: 0, duration: 0.9,
       r0: new Vector3(), dir1: new Vector3(), dist1: 0, q0: this.quaternion.clone(),
     };
+    this.autoOrbit = 0;
     this.target = body;
   }
 
@@ -231,6 +240,7 @@ export class CameraController {
       kind: 'centerDir', target: null, point: null, t: 0, duration: 0.9,
       r0: new Vector3(), dir1: dir.clone().normalize(), dist1: 0, q0: this.quaternion.clone(),
     };
+    this.autoOrbit = 0;
   }
 
   /**
@@ -240,6 +250,7 @@ export class CameraController {
   shiftFrame(delta: Vector3, newReference: CelestialBody): void {
     this.position.add(delta);
     this.autopilot = null;
+    this.autoOrbit = 0;
     this.mode = 'free';
     this.target = null;
     this.anchor = null;
@@ -250,6 +261,7 @@ export class CameraController {
   setMode(mode: CameraMode): void {
     if (mode === 'orbit' && !this.target && !this.anchor) return;
     this.mode = mode;
+    this.autoOrbit = 0;
     if (mode === 'orbit') {
       if (this.target) {
         this.setReference(this.target);

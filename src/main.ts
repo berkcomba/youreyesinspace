@@ -34,6 +34,8 @@ import { TourPlayer, type SurfacePin, type TourOverrides } from './core/TourPlay
 import type { MissionPlan } from './astro/mission';
 
 const IDENTITY = new Matrix3();
+/** Flight time of a tour cue's hop (overview and back): quick, so the demo fits in one sentence */
+const TOUR_HOP_S = 1.6;
 
 class App implements UIHost {
   readonly universe: Universe;
@@ -138,12 +140,18 @@ class App implements UIHost {
     window.addEventListener('resize', () => this.resizeOverlay());
     window.visualViewport?.addEventListener('resize', () => { this.engine.resize(); this.resizeOverlay(); });
 
-    // Initial view: Earth, with the Moon in frame
+    // Opening view: the planetary system out to Jupiter from above the ecliptic, slowly circling
+    // the Sun as a backdrop until the visitor picks a destination
+    const sun = this.universe.star;
     const earth = this.universe.get('earth')!;
-    const sunDir = new Vector3().copy(this.universe.star.position).sub(earth.position).normalize();
-    const offset = sunDir.clone().multiplyScalar(0.6).add(earth.pole.clone().multiplyScalar(0.35)).add(new Vector3().crossVectors(earth.pole, sunDir).multiplyScalar(0.7)).normalize().multiplyScalar(earth.radius * 4.2);
-    this.camera.placeAt(earth, offset);
-    this.select(earth);
+    const outer = this.universe.get('jupiter') ?? earth;
+    const span = outer.resolved?.a ?? outer.localPosition.length();
+    const north = earth.orbitNormal.lengthSq() > 1e-6 ? earth.orbitNormal : sun.pole;
+    const toEarth = new Vector3().copy(earth.position).sub(sun.position).normalize();
+    // ~40° from the pole, leaning to Earth's side so the inner system sits in the foreground
+    const dir = north.clone().addScaledVector(toEarth, 0.85).normalize();
+    this.camera.placeAt(sun, dir.multiplyScalar(span * 2.5));
+    this.camera.autoOrbit = 0.03;
 
     this.input.onClick = (x, y, dbl) => this.onClick(x, y, dbl);
     this.input.onKey = (code, e) => this.onKey(code, e);
@@ -362,7 +370,15 @@ class App implements UIHost {
     if (dir.lengthSq() < 1e-6) dir.copy(p.pole);
     dir.addScaledVector(toBody, 0.35).normalize();
     this.select(b);
-    this.camera.goToVantage(p, dir, Math.max(a * 2.7, p.radius * 6));
+    this.camera.goToVantage(p, dir, Math.max(a * 2.7, p.radius * 6), TOUR_HOP_S);
+  }
+
+  /** Hop back to `bodyId` after an overview/pin cue (quick flight, no toast). */
+  returnTo(bodyId: string): void {
+    const b = this.universe.get(bodyId);
+    if (!b) return;
+    this.select(b);
+    this.camera.goTo(b, this.universe.star.position, TOUR_HOP_S);
   }
 
   /** Fly in above a surface point (lat/lon, degrees) of `bodyId`, looking down at it. */

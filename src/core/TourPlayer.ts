@@ -34,6 +34,8 @@ export interface TourHost {
   goToBlackHole(id: string): void;
   /** camera above a body's orbit around its parent, whole orbit in view */
   goToOverview(bodyId: string): void;
+  /** quick hop back to a body after an overview/pin */
+  returnTo(bodyId: string): void;
   /** camera close above a point of a body's surface */
   goToSurface(bodyId: string, lat: number, lon: number, storm?: boolean): void;
   setTourOverrides(o: TourOverrides): void;
@@ -375,7 +377,8 @@ export class TourPlayer {
         this.pinned = false;
         break;
       case 'return':
-        this.navigate(step.target);
+        if (step.target.kind === 'body') h.returnTo(step.target.ref);
+        else this.navigate(step.target);
         this.flight = h.camera.autopilot;
         this.state.phase = 'flying';
         break;
