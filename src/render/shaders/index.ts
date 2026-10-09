@@ -19,6 +19,7 @@ import orbitFrag from './orbit.frag?raw';
 import beltVert from './belt.vert?raw';
 import beltFrag from './belt.frag?raw';
 import galaxyCloudVert from './galaxycloud.vert?raw';
+import nebulaCloudVert from './nebulacloud.vert?raw';
 import galaxyVert from './galaxy.vert?raw';
 import galaxyFrag from './galaxy.frag?raw';
 import tileVert from './tile.vert?raw';
@@ -55,6 +56,7 @@ export const Shaders = {
   beltVert,
   beltFrag,
   galaxyCloudVert,
+  nebulaCloudVert,
   galaxyVert,
   galaxyFrag,
   beamVert,

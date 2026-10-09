@@ -84,6 +84,7 @@ export class LandmarkSprites {
         uAtlas: { value: null },
         uAtlasReady: { value: 0 },
         uAtlasGrid: { value: LANDMARK_ATLAS_GRID },
+        uCloudOn: { value: 0 },
       },
       transparent: true,
       blending: AdditiveBlending,
@@ -141,6 +142,12 @@ export class LandmarkSprites {
   }
 
   setVisible(v: boolean): void { this.mesh.visible = v; }
+
+  /** Once the volumetric clouds exist, photographed sprites fade out as they get resolved */
+  setCloudHandover(on: boolean): void { this.mat.uniforms.uCloudOn.value = on ? 1 : 0; }
+
+  /** flux → alpha·px² calibration shared with the clouds */
+  get k(): number { return this.mat.uniforms.uK.value as number; }
 
   /** Unit direction from the camera to landmark i */
   direction(i: number, out = new Vector3()): Vector3 {

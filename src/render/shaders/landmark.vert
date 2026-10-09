@@ -16,6 +16,7 @@ uniform float uSkyRadius;
 uniform float uPxPerRad;
 uniform float uK;         // flux → alpha·px² calibration (shared with the galaxy sprites)
 uniform float uHideIndex; // instance to hide (we are inside its system)
+uniform float uCloudOn;   // 1 once the volumetric clouds exist: photographed sprites yield to them when resolved
 varying vec2 vUv;
 varying vec3 vColor;
 varying float vAlpha;
@@ -54,6 +55,8 @@ void main() {
   }
   // fade out when flying through it (a flat sprite would otherwise fill the screen)
   alpha *= smoothstep(0.8, 2.2, ratio);
+  // the photograph is only the far LOD of its 3-D cloud (same curve as NebulaClouds.handover)
+  if (iImg >= 0.0 && uCloudOn > 0.5) alpha *= 1.0 - smoothstep(8.0, 20.0, px);
   if (abs(iIndex - uHideIndex) < 0.5) alpha = 0.0;
   if (alpha < 0.002) gl_Position = vec4(2.0, 2.0, 2.0, 1.0);
 

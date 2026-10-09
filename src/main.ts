@@ -13,6 +13,7 @@ import { StarPoints } from './render/StarPoints';
 import { ProcStarPoints } from './render/ProcStarPoints';
 import { GalaxySprites } from './render/GalaxySprites';
 import { LandmarkSprites } from './render/LandmarkSprites';
+import { NebulaClouds } from './render/NebulaClouds';
 import { GalaxyCloud } from './render/GalaxyCloud';
 import { FarUniverse, localFade } from './galaxy/FarUniverse';
 import { Belts } from './render/Belts';
@@ -60,6 +61,7 @@ class App implements UIHost {
   /** selected deep-sky landmark (index into universe.landmarks) when nothing else is selected */
   selectedLandmark: number | null = null;
   readonly landmarkSprites: LandmarkSprites;
+  readonly nebulaClouds: NebulaClouds;
   readonly missions: Missions;
   readonly trajectories: TrajectoryLines;
   readonly tours: TourPlayer;
@@ -100,6 +102,8 @@ class App implements UIHost {
 
     this.galaxySprites = new GalaxySprites(this.universe.galaxies, scene, this.maxPointPx);
     this.landmarkSprites = new LandmarkSprites(this.universe.landmarks, scene);
+    this.nebulaClouds = new NebulaClouds(this.universe.landmarks, scene, this.maxPointPx);
+    this.nebulaClouds.onReady = () => this.landmarkSprites.setCloudHandover(true);
     this.farUniverse = new FarUniverse();
     this.farSprites = this.farUniverse.tiers.map((t) => {
       const s = new GalaxySprites(t, scene, this.maxPointPx, t.spec.boostMag);
@@ -841,6 +845,7 @@ class App implements UIHost {
     for (const c of this.clouds.values()) c.update(this.camPc, pxPerRad, eng.pixelRatio, s.milkyWay);
     this.galaxySprites.update(this.camPc, pxPerRad, eng.pixelRatio, this.galaxyBoost, this.universe.currentGalaxy ?? -1);
     this.landmarkSprites.update(this.camPc, pxPerRad, this.universe.current.starId, (gi) => this.galaxySprites.apparent(gi).ratio);
+    this.nebulaClouds.update(this.camPc, pxPerRad, eng.pixelRatio, this.landmarkSprites.k, this.landmarkSprites.mesh.visible);
     // bottom-left credit: streamed planetary imagery first, otherwise a resolved landmark photograph
     if (this.bodies.imageryCredit) this.ui.setImageryCredit(this.bodies.imageryCredit);
     else {
