@@ -1,8 +1,26 @@
 import type { Universe, StarId } from './Universe';
 import type { CameraController } from '../camera/CameraController';
 import type { TimeSystem } from './TimeSystem';
-import { TOURS, type TourDef, type TourStep, type TourTarget } from '../data/tours';
+import { TOURS, type TourCue, type TourDef, type TourStep, type TourTarget } from '../data/tours';
 import { _, currentLocale } from '../i18n';
+import { DAY_S } from './constants';
+
+/** Render settings a tour may force while it plays (undefined = the user's own setting) */
+export interface TourOverrides {
+  clouds?: boolean;
+  orbits?: boolean;
+  moonOrbits?: boolean;
+}
+
+/** A labelled surface feature the overlay points at during a tour */
+export interface SurfacePin {
+  bodyId: string;
+  lat: number;
+  lon: number;
+  label: string;
+  /** follow the gas giant's rendered storm instead of fixed coordinates */
+  storm?: boolean;
+}
 
 /** Navigation the player needs from the app (a subset of UIHost) */
 export interface TourHost {
@@ -14,6 +32,12 @@ export interface TourHost {
   goToGalaxy(i: number): void;
   goToLandmark(i: number): void;
   goToBlackHole(id: string): void;
+  /** camera above a body's orbit around its parent, whole orbit in view */
+  goToOverview(bodyId: string): void;
+  /** camera close above a point of a body's surface */
+  goToSurface(bodyId: string, lat: number, lon: number, storm?: boolean): void;
+  setTourOverrides(o: TourOverrides): void;
+  setSurfacePin(pin: SurfacePin | null): void;
 }
 
 /** Per-step timing produced by scripts/tts-tours.mjs */
@@ -45,6 +69,24 @@ export interface TourState {
 const SILENT_CPS = 14;
 const DEFAULT_DWELL = 1.5;
 const DEFAULT_ORBIT = 0.05;
+const PIN_ORBIT = 0.008;
+
+/** Same sentence splitter as scripts/tts-tours.mjs (keeps punctuation, merges tiny fragments) */
+function splitSentences(text: string): string[] {
+  const out: string[] = [];
+  const re = /[^.!?…]+[.!?…]+(?:["»”']+)?|[^.!?…]+$/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text)) !== null) {
+    const s = m[0].trim();
+    if (s) out.push(s);
+  }
+  const merged: string[] = [];
+  for (const s of out) {
+    if (merged.length && (s.length < 12 || /^\d/.test(s))) merged[merged.length - 1] += ' ' + s;
+    else merged.push(s);
+  }
+  return merged;
+}
 
 /**
  * Plays a guided tour: for each step it starts the flight and the narration at the same moment,
@@ -67,9 +109,16 @@ export class TourPlayer {
   private audioFailed = false;
   private savedRate = 1;
   private savedPaused = false;
+  private savedJd = 0;
+  private savedAt = 0;
   private token = 0;
   /** the flight we started for the current step — a different one means the user navigated away */
   private flight: object | null = null;
+  /** cues of the current step already fired */
+  private fired = new Set<TourCue>();
+  private cueTimes = new Map<TourCue, number>();
+  private overrides: TourOverrides = {};
+  private pinned = false;
   /** set when the player stops itself (user navigated elsewhere / tour finished) */
   onEnd: ((reason: 'finished' | 'interrupted') => void) | null = null;
 
@@ -107,6 +156,8 @@ export class TourPlayer {
     const time = this.host.time;
     this.savedRate = time.rate;
     this.savedPaused = time.paused;
+    this.savedJd = time.jd;
+    this.savedAt = performance.now();
     this.state.tour = tour;
     this.state.silent = false;
     this.state.paused = false;
@@ -172,13 +223,30 @@ export class TourPlayer {
       s.subtitle = _(step.text);
     }
 
+    // timed cues (surface pins, overviews, cloud toggles…)
+    if (step.cues) {
+      for (const cue of step.cues) {
+        if (this.fired.has(cue)) continue;
+        let at = this.cueTimes.get(cue);
+        // times are only final once the manifest is in; until then re-derive each frame
+        if (at === undefined) {
+          at = this.cueTime(step, cue, timing, duration);
+          if (timing) this.cueTimes.set(cue, at);
+        }
+        if (t < at) continue;
+        this.fired.add(cue);
+        this.fire(step, cue);
+      }
+    }
+
     const narrationDone = useAudio ? this.audioEnded : this.elapsed >= duration;
     if (narrationDone) {
       this.sinceEnd = this.sinceEnd < 0 ? 0 : this.sinceEnd + dt;
     }
     const arrived = cam.autopilot === null;
     if (s.phase === 'flying' && arrived) s.phase = 'dwell';
-    if (arrived) cam.autoOrbit = step.orbitRate ?? DEFAULT_ORBIT;
+    // a pinned feature should stay put on screen: barely drift while one is shown
+    if (arrived) cam.autoOrbit = this.pinned ? PIN_ORBIT : (step.orbitRate ?? DEFAULT_ORBIT);
 
     if (narrationDone && arrived && this.sinceEnd >= (step.dwell ?? DEFAULT_DWELL)) this.next();
     else this.emit();
@@ -198,6 +266,9 @@ export class TourPlayer {
     this.sinceEnd = -1;
     this.audioEnded = false;
     this.audioFailed = false;
+    this.fired.clear();
+    this.cueTimes.clear();
+    this.resetCues();
     this.host.camera.autoOrbit = 0;
     this.host.time.setRate(step.timeRate ?? 1);
     this.navigate(step.target);
@@ -224,7 +295,13 @@ export class TourPlayer {
     const time = this.host.time;
     time.setRate(this.savedRate);
     if (this.savedPaused) time.togglePause();
+    // steps fast-forward years and jump the clock for daylight: put the calendar back where the
+    // visitor left it (plus the real time that passed, as if the tour had run at their rate)
+    const realS = (performance.now() - this.savedAt) / 1000;
+    time.jd = this.savedJd + (this.savedPaused ? 0 : (realS * this.savedRate) / DAY_S);
     this.host.camera.autoOrbit = 0;
+    this.fired.clear();
+    this.resetCues();
     this.flight = null;
     this.state.tour = null;
     this.state.stepIndex = -1;
@@ -240,6 +317,77 @@ export class TourPlayer {
 
   private timing(step: TourStep): StepTiming | null {
     return this.manifest?.steps[step.id] ?? null;
+  }
+
+  /**
+   * Narration time (s) at which a cue fires. The cue names a sentence of the source text; the
+   * spoken locale may split sentences differently, so the index is mapped proportionally onto
+   * the manifest's sentence list (or, without audio, onto the displayed text's sentences).
+   */
+  private cueTime(step: TourStep, cue: TourCue, timing: StepTiming | null, duration: number): number {
+    const srcCount = splitSentences(step.text).length;
+    const frac = srcCount > 1 ? Math.min(cue.at, srcCount - 1) / (srcCount - 1) : 0;
+    if (timing && timing.sentences.length) {
+      const i = Math.round(frac * (timing.sentences.length - 1));
+      return timing.sentences[i].start;
+    }
+    // silent: sentence starts proportional to character offsets in the displayed text
+    const shown = splitSentences(_(step.text));
+    const i = Math.round(frac * Math.max(shown.length - 1, 0));
+    const total = shown.reduce((n, s) => n + s.length, 0) || 1;
+    let before = 0;
+    for (let k = 0; k < i; k++) before += shown[k].length;
+    return (before / total) * duration;
+  }
+
+  private fire(step: TourStep, cue: TourCue): void {
+    const h = this.host;
+    switch (cue.action) {
+      case 'clouds':
+        this.overrides = { ...this.overrides, clouds: cue.on };
+        h.setTourOverrides(this.overrides);
+        break;
+      case 'rate':
+        h.time.setRate(cue.rate);
+        break;
+      case 'overview': {
+        // the orbit lines are the whole point of an overview
+        const moon = h.universe.get(cue.ref)?.data.type === 'moon';
+        this.overrides = { ...this.overrides, ...(moon ? { moonOrbits: true } : { orbits: true }) };
+        h.setTourOverrides(this.overrides);
+        h.goToOverview(cue.ref);
+        this.flight = h.camera.autopilot;
+        this.state.phase = 'flying';
+        break;
+      }
+      case 'pin':
+        h.setSurfacePin({ bodyId: cue.ref, lat: cue.lat, lon: cue.lon, label: cue.label, storm: cue.storm });
+        this.pinned = true;
+        h.camera.autoOrbit = PIN_ORBIT;
+        if (cue.approach !== false) {
+          h.goToSurface(cue.ref, cue.lat, cue.lon, cue.storm);
+          this.flight = h.camera.autopilot;
+          this.state.phase = 'flying';
+        }
+        break;
+      case 'unpin':
+        h.setSurfacePin(null);
+        this.pinned = false;
+        break;
+      case 'return':
+        this.navigate(step.target);
+        this.flight = h.camera.autopilot;
+        this.state.phase = 'flying';
+        break;
+    }
+  }
+
+  /** Undo everything cues may have changed (called on step change and teardown) */
+  private resetCues(): void {
+    this.overrides = {};
+    this.pinned = false;
+    this.host.setTourOverrides(this.overrides);
+    this.host.setSurfacePin(null);
   }
 
   private silentDuration(step: TourStep): number {

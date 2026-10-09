@@ -1,9 +1,11 @@
 import {
-  AdditiveBlending, InstancedBufferAttribute, InstancedBufferGeometry, Mesh, PlaneGeometry, Scene, ShaderMaterial, Vector3,
+  AdditiveBlending, CanvasTexture, InstancedBufferAttribute, InstancedBufferGeometry, LinearMipmapLinearFilter, Mesh, PlaneGeometry,
+  NoColorSpace, Scene, ShaderMaterial, Vector3,
   type PerspectiveCamera,
 } from 'three';
 import { SKY_RADIUS_KM } from '../core/constants';
 import type { Landmark } from '../core/Universe';
+import { LANDMARK_ATLAS_GRID, LANDMARK_ATLAS_SLOT, LANDMARK_IMAGES } from '../data/landmarkImages';
 import { GalaxyCloud } from './GalaxyCloud';
 import { Shaders } from './shaders';
 
@@ -37,6 +39,8 @@ export class LandmarkSprites {
     const n = landmarks.length;
     const pos = new Float32Array(n * 3), col = new Float32Array(n * 3);
     const rad = new Float32Array(n), kind = new Float32Array(n), mag = new Float32Array(n), seed = new Float32Array(n), idx = new Float32Array(n);
+    const img = new Float32Array(n), span = new Float32Array(n);
+    const files: string[] = [];
     landmarks.forEach((l, i) => {
       pos[i * 3] = l.positionPc.x; pos[i * 3 + 1] = l.positionPc.y; pos[i * 3 + 2] = l.positionPc.z;
       col[i * 3] = l.def.color[0]; col[i * 3 + 1] = l.def.color[1]; col[i * 3 + 2] = l.def.color[2];
@@ -45,6 +49,12 @@ export class LandmarkSprites {
       mag[i] = l.def.absMag;
       seed[i] = (i * 7.31) % 13;
       idx[i] = i;
+      const photo = LANDMARK_IMAGES[l.def.id];
+      if (photo && files.length < LANDMARK_ATLAS_GRID * LANDMARK_ATLAS_GRID) {
+        img[i] = files.length; span[i] = photo.span; files.push(photo.file);
+      } else {
+        img[i] = -1; span[i] = 1.6;
+      }
     });
     const quad = new PlaneGeometry(2, 2);
     const geo = new InstancedBufferGeometry();
@@ -58,6 +68,8 @@ export class LandmarkSprites {
     geo.setAttribute('iAbsMag', new InstancedBufferAttribute(mag, 1));
     geo.setAttribute('iSeed', new InstancedBufferAttribute(seed, 1));
     geo.setAttribute('iIndex', new InstancedBufferAttribute(idx, 1));
+    geo.setAttribute('iImg', new InstancedBufferAttribute(img, 1));
+    geo.setAttribute('iSpan', new InstancedBufferAttribute(span, 1));
     geo.instanceCount = n;
     this.mat = new ShaderMaterial({
       vertexShader: Shaders.landmarkVert,
@@ -69,6 +81,9 @@ export class LandmarkSprites {
         uK: { value: 1 },
         uHideIndex: { value: -1 },
         uTime: { value: 0 },
+        uAtlas: { value: null },
+        uAtlasReady: { value: 0 },
+        uAtlasGrid: { value: LANDMARK_ATLAS_GRID },
       },
       transparent: true,
       blending: AdditiveBlending,
@@ -78,6 +93,51 @@ export class LandmarkSprites {
     this.mesh.frustumCulled = false;
     this.mesh.renderOrder = -11;
     scene.add(this.mesh);
+    // photographs are a progressive enhancement: procedural sprites until the atlas is in
+    if (files.length && typeof document !== 'undefined') setTimeout(() => this.loadAtlas(files), 1500);
+  }
+
+  /** Compose the landmark photographs into one atlas texture (grid of square slots). */
+  private loadAtlas(files: string[]): void {
+    const G = LANDMARK_ATLAS_GRID, S = LANDMARK_ATLAS_SLOT;
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = G * S;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    let loaded = 0;
+    Promise.all(files.map((file, s) => new Promise<void>((resolve) => {
+      const im = new Image();
+      im.onload = () => { ctx.drawImage(im, (s % G) * S, Math.floor(s / G) * S, S, S); loaded++; resolve(); };
+      im.onerror = () => resolve();
+      im.src = `${import.meta.env.BASE_URL}nebulae/${file}.jpg`;
+    }))).then(() => {
+      if (!loaded) return;
+      const tex = new CanvasTexture(canvas);
+      tex.colorSpace = NoColorSpace; // raw sRGB bytes; decoded explicitly in the shader
+      tex.minFilter = LinearMipmapLinearFilter;
+      tex.generateMipmaps = true;
+      tex.anisotropy = 4;
+      this.mat.uniforms.uAtlas.value = tex;
+      this.mat.uniforms.uAtlasReady.value = 1;
+    });
+  }
+
+  /**
+   * Credit line for the photograph dominating the view: the largest photographed landmark that is
+   * clearly resolved (≥ minPx) and in front of the camera. Null when none / atlas not loaded.
+   */
+  photoCredit(forward: Vector3, minPx = 60): string | null {
+    if (!this.mat.uniforms.uAtlasReady.value) return null;
+    let best: string | null = null;
+    let bestPx = minPx;
+    for (const m of this.named) {
+      if (m.radiusPx < bestPx || m.dir.dot(forward) < 0.7) continue;
+      const photo = LANDMARK_IMAGES[this.landmarks[m.index].def.id];
+      if (!photo) continue;
+      bestPx = m.radiusPx;
+      best = photo.source;
+    }
+    return best;
   }
 
   setVisible(v: boolean): void { this.mesh.visible = v; }

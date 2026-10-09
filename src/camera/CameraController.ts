@@ -181,6 +181,24 @@ export class CameraController {
   }
 
   /**
+   * Fly to an explicit vantage point around a body: `dir1` (unit, from the body) and `dist1` km
+   * away, ending in orbit mode around it. Used by guided tours for overviews and surface close-ups.
+   */
+  goToVantage(body: CelestialBody, dir1: Vector3, dist1: number): void {
+    const r0 = _v.copy(this.position).sub(body.position);
+    const ratio = Math.max(r0.length(), 1) / dist1;
+    const duration = 2.2 + Math.min(4.5, Math.abs(Math.log10(ratio)) * 0.9);
+    this.autopilot = {
+      kind: 'goto', target: body, point: null, t: 0, duration,
+      r0: r0.clone(), dir1: dir1.clone().normalize(), dist1, q0: this.quaternion.clone(),
+    };
+    this.setReference(body);
+    this.target = body;
+    this.anchor = null;
+    this.mode = 'orbit';
+  }
+
+  /**
    * Fly to a fixed point of the current frame (e.g. a galaxy centre) and stop `arriveDist` km
    * away, approaching along `approachDir` (unit, from the point toward the camera's final spot).
    */

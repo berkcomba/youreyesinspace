@@ -223,6 +223,16 @@ export class CelestialBody {
     this.distanceToStar = this.parent ? this.position.distanceTo(this.root.position) : 0;
   }
 
+  /**
+   * Unit vector (scene frame) from the centre toward a point of the surface, given planetographic
+   * latitude and east longitude in degrees — same convention as surface-fixed spacecraft.
+   */
+  surfaceDirection(latDeg: number, lonDeg: number, out: Vector3): Vector3 {
+    const lat = latDeg * DEG, lon = lonDeg * DEG;
+    out.set(Math.cos(lat) * Math.cos(lon), Math.sin(lat), -Math.cos(lat) * Math.sin(lon));
+    return out.applyQuaternion(this.rotation);
+  }
+
   /** Effective rotation period in hours (positive) for display */
   get displayRotationHours(): number {
     if (this.data.rotationPeriod === 'sync') return this.periodDays * 24;

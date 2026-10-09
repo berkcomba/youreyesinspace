@@ -470,11 +470,11 @@ export class UI {
   private readonly creditEl = $('imagery-credit');
 
   /** Bottom-left credit for streamed imagery (null hides it) */
-  setImageryCredit(text: string | null): void {
+  setImageryCredit(text: string | null, translated = false): void {
     if (text === this.creditText) return;
     this.creditText = text;
     this.creditEl.hidden = text === null;
-    if (text !== null) this.creditEl.textContent = _(text);
+    if (text !== null) this.creditEl.textContent = translated ? text : _(text);
   }
 
   toggleMission(force?: boolean): void {

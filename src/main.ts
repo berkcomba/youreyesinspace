@@ -1,5 +1,5 @@
 import './style.css';
-import { Matrix3, Vector3 } from 'three';
+import { Matrix3, Quaternion, Vector3 } from 'three';
 import { Engine } from './core/Engine';
 import { TimeSystem } from './core/TimeSystem';
 import { Universe, catalogIndexOf, type StarId } from './core/Universe';
@@ -29,7 +29,7 @@ import { fmtDuration, fmtLightYears } from './ui/format';
 import { _, applyDom, initI18n } from './i18n';
 import { Missions, type ActiveMission } from './core/Missions';
 import { TrajectoryLines } from './render/TrajectoryLines';
-import { TourPlayer } from './core/TourPlayer';
+import { TourPlayer, type SurfacePin, type TourOverrides } from './core/TourPlayer';
 import type { MissionPlan } from './astro/mission';
 
 const IDENTITY = new Matrix3();
@@ -63,6 +63,11 @@ class App implements UIHost {
   readonly missions: Missions;
   readonly trajectories: TrajectoryLines;
   readonly tours: TourPlayer;
+  /** render settings forced by the running tour (empty when none) */
+  private tourOverrides: TourOverrides = {};
+  /** labelled surface feature the overlay points at (tours) */
+  private surfacePin: SurfacePin | null = null;
+  private readonly pinScreen = { dir: new Vector3(), label: '', visible: false };
   /** camera offset from the followed vehicle, kept across frame switches */
   private readonly followOffset = new Vector3();
   private followOffsetValid = false;
@@ -71,6 +76,7 @@ class App implements UIHost {
   private last = performance.now();
   private readonly camPosTmp = new Vector3();
   private readonly camPc = new Vector3();
+  private readonly camForward = new Vector3();
   private readonly sunColor = new Vector3(1, 1, 1);
   private starLuminosity = 1;
   private frameCheckAcc = 0;
@@ -335,6 +341,88 @@ class App implements UIHost {
 
   goToBodyId(id: string): void {
     this.goToSystemBody('c0', id);
+  }
+
+  /* ---------------- tour cues ---------------- */
+
+  /** Pull back above `bodyId`'s orbit around its parent so the whole orbit is in view. */
+  goToOverview(bodyId: string): void {
+    const b = this.universe.get(bodyId);
+    const p = b?.parent;
+    if (!b || !p) return;
+    const a = b.resolved?.a ?? b.localPosition.length();
+    // ~70° above the orbital plane, leaning to the body's side so it sits in the foreground;
+    // 2.7 a keeps the whole orbit inside a ~50° field of view
+    const toBody = new Vector3().copy(b.position).sub(p.position).normalize();
+    const dir = new Vector3().copy(b.orbitNormal);
+    if (dir.lengthSq() < 1e-6) dir.copy(p.pole);
+    dir.addScaledVector(toBody, 0.35).normalize();
+    this.select(b);
+    this.camera.goToVantage(p, dir, Math.max(a * 2.7, p.radius * 6));
+  }
+
+  /** Fly in above a surface point (lat/lon, degrees) of `bodyId`, looking down at it. */
+  goToSurface(bodyId: string, lat: number, lon: number, storm = false): void {
+    const b = this.universe.get(bodyId);
+    if (!b) return;
+    const dir = this.pinDirection(b, lat, lon, storm, new Vector3());
+    this.bringIntoDaylight(b, dir);
+    // Stand a little south and screen-left of the feature so, looking at the body's centre, the pin
+    // lands in the upper right of the screen, clear of the info panel and the tour bar.
+    // (camera up ≈ pole, so screen-right = forward × pole = pole × camDir; we move the opposite way)
+    const south = new Vector3().copy(b.pole).addScaledVector(dir, -b.pole.dot(dir)).multiplyScalar(-1);
+    const left = new Vector3().crossVectors(dir, b.pole);
+    if (left.lengthSq() < 1e-4) {
+      // polar feature: any tangent will do — lean toward the Sun so the area is lit
+      left.copy(this.universe.star.position).sub(b.position).normalize();
+      left.addScaledVector(dir, -left.dot(dir)).normalize();
+    } else left.normalize();
+    const camDir = dir.clone().addScaledVector(south, 0.18).addScaledVector(left, 0.26).normalize();
+    this.select(b);
+    this.camera.goToVantage(b, camDir, b.radius * 1.9);
+  }
+
+  /**
+   * If the surface point `dir` is in the dark, advance the clock by less than one rotation so the
+   * Sun is high over it (tours already fast-forward time; a feature in the night is useless).
+   * `dir` is rotated in place to where it will be after the jump.
+   */
+  private bringIntoDaylight(b: CelestialBody, dir: Vector3): void {
+    if (b.rotationPeriodS === 0 || this.universe.star === b) return;
+    const toSun = new Vector3().copy(this.universe.star.position).sub(b.position).normalize();
+    if (dir.dot(toSun) > 0.5) return; // Sun already more than 30° up
+    const sunT = toSun.clone().addScaledVector(b.pole, -toSun.dot(b.pole));
+    const dirT = dir.clone().addScaledVector(b.pole, -dir.dot(b.pole));
+    if (sunT.lengthSq() < 1e-6 || dirT.lengthSq() < 1e-6) return; // polar: no rotation helps
+    sunT.normalize(); dirT.normalize();
+    // signed angle from the feature to the sub-solar meridian about the pole (spin is +about pole)
+    const phi = Math.atan2(b.pole.dot(new Vector3().crossVectors(dirT, sunT)), dirT.dot(sunT));
+    const omega = (2 * Math.PI) / b.rotationPeriodS;
+    let dt = phi / omega;
+    const period = Math.abs(b.rotationPeriodS);
+    while (dt < 0) dt += period;
+    this.time.jump(dt);
+    dir.applyQuaternion(new Quaternion().setFromAxisAngle(b.pole, omega * dt));
+  }
+
+  /** Outward unit vector of a surface point; gas-giant storms follow the shader's drifting spot. */
+  private pinDirection(b: CelestialBody, lat: number, lon: number, storm: boolean, out: Vector3): Vector3 {
+    const app = b.data.appearance;
+    if (storm && app.kind === 'gas' && app.storm) {
+      // gasgiant.frag: lon = atan(z, x), storm at uStorm.y + hours * 0.004 rad — our east longitude is the negative
+      const hours = this.time.t / 3600;
+      lat = app.storm[0];
+      lon = -(app.storm[1] + (hours * 0.004) / DEG);
+    }
+    return b.surfaceDirection(lat, lon, out);
+  }
+
+  setTourOverrides(o: TourOverrides): void {
+    this.tourOverrides = o;
+  }
+
+  setSurfacePin(pin: SurfacePin | null): void {
+    this.surfacePin = pin;
   }
 
   /** Fly to a body of any system, switching the reference frame to that system first if needed. */
@@ -740,10 +828,10 @@ class App implements UIHost {
     }
 
     // Renderables
+    const ov = this.tourOverrides;
     this.bodies.update(camPos, this.camera.quaternion, eng.camera, eng.height, fovRad, star.position, star.radius, this.sunColor, this.time.t / 3600, {
-      atmospheres: s.atmospheres, clouds: s.clouds, rings: s.rings, shadows: s.shadows, imagery: s.imagery,
+      atmospheres: s.atmospheres, clouds: ov.clouds ?? s.clouds, rings: s.rings, shadows: s.shadows, imagery: s.imagery,
     });
-    this.ui.setImageryCredit(this.bodies.imageryCredit);
     this.updateLensing(fovRad);
     this.points.setPixelRatio(eng.pixelRatio);
     this.points.update(star.position, camPos, this.starLuminosity);
@@ -753,6 +841,13 @@ class App implements UIHost {
     for (const c of this.clouds.values()) c.update(this.camPc, pxPerRad, eng.pixelRatio, s.milkyWay);
     this.galaxySprites.update(this.camPc, pxPerRad, eng.pixelRatio, this.galaxyBoost, this.universe.currentGalaxy ?? -1);
     this.landmarkSprites.update(this.camPc, pxPerRad, this.universe.current.starId, (gi) => this.galaxySprites.apparent(gi).ratio);
+    // bottom-left credit: streamed planetary imagery first, otherwise a resolved landmark photograph
+    if (this.bodies.imageryCredit) this.ui.setImageryCredit(this.bodies.imageryCredit);
+    else {
+      this.camForward.set(0, 0, -1).applyQuaternion(this.camera.quaternion);
+      const photo = this.landmarkSprites.photoCredit(this.camForward);
+      this.ui.setImageryCredit(photo ? _('Fotoğraf: {source}', { source: photo }) : null, true);
+    }
     // LOD hand-over between the detailed local volume and the aggregated far-universe tiers
     const dSunPc = this.camPc.length();
     this.galaxySprites.setFade(localFade(dSunPc));
@@ -760,7 +855,7 @@ class App implements UIHost {
       sp.setFade(this.farUniverse.tiers[k].fade(dSunPc));
       sp.update(this.camPc, pxPerRad, eng.pixelRatio, this.galaxyBoost, -1);
     });
-    this.orbits.update(camPos, s.orbits, s.moonOrbits, pxPerRad, (id) => this.bodies.byId.get(id)?.apparentRadiusPx ?? 0, this.selected?.id ?? null);
+    this.orbits.update(camPos, ov.orbits ?? s.orbits, ov.moonOrbits ?? s.moonOrbits, pxPerRad, (id) => this.bodies.byId.get(id)?.apparentRadiusPx ?? 0, this.selected?.id ?? null);
     this.trajectories.update(camPos, this.time.jd, this.missions.lookup, s.orbits, eng.width * eng.pixelRatio, eng.height * eng.pixelRatio);
     this.belts.update(this.time.t, sunRel, eng.pixelRatio, s.belts);
 
@@ -798,7 +893,21 @@ class App implements UIHost {
     const namedStars = this.procPoints.namedStars.length
       ? this.starPoints.namedStars.concat(this.procPoints.namedStars)
       : this.starPoints.namedStars;
-    this.overlay.draw(this.bodies.views, eng.camera, this.selected, namedStars, starSel, this.uiVisible, s.galaxies ? this.galaxySprites.named : [], this.blackHoleMarkers(camPos), this.landmarkSprites.named);
+    // tour surface pin: world point on the body, hidden when it faces away from us
+    const pin = this.pinScreen;
+    pin.visible = false;
+    if (this.surfacePin) {
+      const b = this.universe.get(this.surfacePin.bodyId);
+      if (b) {
+        const sp = this.surfacePin;
+        const n = this.pinDirection(b, sp.lat, sp.lon, !!sp.storm, this.camForward);
+        const toCam = new Vector3().copy(camPos).sub(b.position).addScaledVector(n, -b.radius);
+        pin.visible = n.dot(toCam) > 0;
+        pin.dir.copy(b.position).addScaledVector(n, b.radius).sub(camPos);
+        pin.label = _(sp.label);
+      }
+    }
+    this.overlay.draw(this.bodies.views, eng.camera, this.selected, namedStars, starSel, this.uiVisible, s.galaxies ? this.galaxySprites.named : [], this.blackHoleMarkers(camPos), this.landmarkSprites.named, pin.visible ? pin : null);
     const selDist = this.selected ? this.bodies.byId.get(this.selected.id)?.distance ?? 0 : 0;
     this.ui.update(now, dt, selDist);
   };

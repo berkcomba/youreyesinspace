@@ -5,14 +5,37 @@ varying vec3 vColor;
 varying float vAlpha;
 varying float vKind;
 varying float vSeed;
+varying float vImg;
+varying float vSpan;
 uniform float uTime;
+uniform sampler2D uAtlas;
+uniform float uAtlasReady;
+uniform float uAtlasGrid;
 
 void main() {
   #include <logdepthbuf_fragment>
-  vec2 p = vUv * 2.0 - 1.0;      // −1..1 across the sprite (= 1.6 object radii)
-  float r = length(p) * 1.6;     // 1 at the object's radius
+  vec2 p = vUv * 2.0 - 1.0;      // −1..1 across the sprite (= vSpan object radii)
+  float r = length(p) * vSpan;   // 1 at the object's radius
   float a;
   vec3 col = vColor;
+  if (vImg >= 0.0 && uAtlasReady > 0.5) {
+    // photograph from the atlas (flipY canvas texture: slot rows count from the top)
+    float g = uAtlasGrid;
+    float slotCol = mod(vImg, g);
+    float slotRow = floor(vImg / g);
+    vec2 uv = vec2((slotCol + vUv.x) / g, 1.0 - (slotRow + 1.0 - vUv.y) / g);
+    vec3 tex = texture2D(uAtlas, uv).rgb;
+    tex = pow(tex, vec3(2.2));   // sRGB → linear (the composer's output pass re-encodes)
+    // the output pass applies ACES filmic, which pre-scales by 1/0.6 and lifts the mid-tones;
+    // compensate so the photograph keeps its published contrast and colour
+    tex *= 0.55;
+    // soft superellipse vignette hides the frame without reading as a disc; the photo's own
+    // sky is additive-black anyway
+    vec2 q = p * p; q *= q;
+    float mask = smoothstep(1.0, 0.68, pow(q.x + q.y, 0.25));
+    gl_FragColor = vec4(tex * mask * vAlpha, 1.0);
+    return;
+  }
   if (vKind < 0.5) {
     // nebula: irregular glowing cloud with brighter knots
     float n = snoise(vec3(p * 2.4 + vSeed, vSeed * 0.37)) * 0.5 + 0.5;

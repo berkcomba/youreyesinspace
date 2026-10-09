@@ -14,6 +14,13 @@ export interface StarSelectionScreen {
   radiusPx?: number;
 }
 
+/** A labelled point on a body's surface (guided tours) */
+export interface SurfacePinScreen {
+  /** position relative to the camera (km) */
+  dir: Vector3;
+  label: string;
+}
+
 export interface ScreenItem {
   body: CelestialBody;
   x: number;
@@ -86,6 +93,7 @@ export class Overlay {
     namedGalaxies: NamedStarScreen[] = [],
     blackHoles: NamedStarScreen[] = [],
     landmarks: LandmarkScreen[] = [],
+    pin: SurfacePinScreen | null = null,
   ): ScreenItem[] {
     const ctx = this.ctx;
     const W = this.width, H = this.height;
@@ -368,6 +376,43 @@ export class Overlay {
         ctx.globalAlpha = 1;
         occupied.push(box);
         it.labelShown = true;
+      }
+    }
+
+    // Tour surface pin: a dot on the feature, a leader line and the feature's name
+    if (pin) {
+      _v.copy(pin.dir).project(camera);
+      if (_v.z < 1 && _v.z > -1) {
+        const x = (_v.x * 0.5 + 0.5) * W;
+        const y = (-_v.y * 0.5 + 0.5) * H;
+        if (x > -20 && x < W + 20 && y > -20 && y < H + 20) {
+          // lead the label away from the nearest screen edge so it stays readable
+          const sx = x > W * 0.6 ? -1 : 1;
+          const sy = y < H * 0.35 ? 1 : -1;
+          const lx = x + sx * 34, ly = y + sy * 30;
+          ctx.font = '500 13px Inter, ui-sans-serif, system-ui, sans-serif';
+          const tw = ctx.measureText(pin.label).width;
+          const ex = lx + sx * (tw + 8);
+          ctx.strokeStyle = SELECTION_COLOR;
+          ctx.fillStyle = SELECTION_COLOR;
+          ctx.lineWidth = 1.25;
+          ctx.beginPath();
+          ctx.arc(x, y, 7, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(x, y, 2.2, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.moveTo(x + sx * 7 * Math.SQRT1_2, y + sy * 7 * Math.SQRT1_2);
+          ctx.lineTo(lx, ly);
+          ctx.lineTo(ex, ly);
+          ctx.stroke();
+          ctx.textAlign = sx > 0 ? 'left' : 'right';
+          ctx.fillStyle = 'rgba(255, 250, 240, 0.98)';
+          ctx.fillText(pin.label, lx + sx * 4, ly - 9);
+          ctx.textAlign = 'left';
+          ctx.font = '500 12px Inter, ui-sans-serif, system-ui, sans-serif';
+        }
       }
     }
 

@@ -16,6 +16,27 @@ export type TourTarget =
   | { kind: 'landmark'; ref: string }
   | { kind: 'galaxy'; ref: string };
 
+/**
+ * Something that happens while a step is narrated. `at` is the index of the sentence (of the
+ * source text, 0-based) at whose start the cue fires; the player maps it onto the spoken locale.
+ */
+export type TourCue =
+  /** force the cloud layer on/off (e.g. strip Venus to show the radar surface) */
+  | { at: number; action: 'clouds'; on: boolean }
+  /** change the simulation rate from this sentence on (s/s) */
+  | { at: number; action: 'rate'; rate: number }
+  /** pull back above `ref`'s orbit around its parent so the whole orbit is in view */
+  | { at: number; action: 'overview'; ref: string }
+  /**
+   * Pin a surface feature of `ref` (east longitude, degrees) with a labelled marker and, unless
+   * `approach` is false, fly in above it. `storm` snaps to the gas giant's rendered storm instead.
+   */
+  | { at: number; action: 'pin'; ref: string; lat: number; lon: number; label: string; approach?: boolean; storm?: boolean }
+  /** remove the pin */
+  | { at: number; action: 'unpin' }
+  /** fly back to the step's target */
+  | { at: number; action: 'return' };
+
 export interface TourStep {
   /** stable id — audio file name */
   id: string;
@@ -28,6 +49,8 @@ export interface TourStep {
   orbitRate?: number;
   /** extra seconds to linger after the narration ends; default 1.5 */
   dwell?: number;
+  /** timed events during the narration (see TourCue) */
+  cues?: TourCue[];
 }
 
 export interface TourDef {
@@ -49,17 +72,55 @@ export const TOURS: TourDef[] = [
     title: 'Güneş Sistemi Turu',
     summary: 'Güneş\'ten Plüton\'a: sekiz gezegen, bir ay ve bir cüce gezegen.',
     steps: [
-      { id: 'sun', target: body('sun'), text: 'Güneş Sistemi turuna hoş geldiniz. Yolculuğumuz her şeyin merkezinden, Güneş\'ten başlıyor. Dört buçuk milyar yaşındaki bu yıldız, sistemdeki toplam kütlenin yüzde doksan dokuz virgül sekizini tek başına taşır. Çapı bir milyon dört yüz bin kilometredir; içine yan yana yüz dokuz Dünya sığar. Yüzeyi beş bin beş yüz derece, çekirdeği ise on beş milyon derecedir. Şu anda gördüğünüz ışık, buradan çıkıp Dünya\'ya sekiz dakika yirmi saniyede ulaşır.' },
-      { id: 'mercury', target: body('mercury'), text: 'İlk durağımız Merkür, en küçük ve Güneş\'e en yakın gezegen. Güneş\'in etrafındaki bir turu yalnızca seksen sekiz gün sürer. Atmosferi yok denecek kadar incedir; bu yüzden gündüz tarafı dört yüz otuz dereceye çıkarken gece tarafı eksi yüz seksen dereceye düşer. Yüzeyi tıpkı Ay gibi kraterlerle kaplıdır. Şu anda Avrupa ve Japonya\'nın ortak aracı BepiColombo ona doğru yol alıyor.' },
-      { id: 'venus', target: body('venus'), text: 'Venüs, boyutuyla Dünya\'nın ikizi sayılır ama koşulları tam bir cehennemdir. Kalın karbondioksit atmosferi, yüzey basıncını Dünya\'nın doksan iki katına çıkarır ve sera etkisiyle sıcaklığı dört yüz altmış beş dereceye yükseltir. Bu, Güneş\'e daha yakın olan Merkür\'den bile sıcaktır. Bulutları sülfürik asittir. Venüs ters yönde ve çok yavaş döner: bir günü, bir yılından daha uzundur.' },
-      { id: 'earth', target: body('earth'), text: 'Ve işte evimiz: Dünya. Evrende yaşam barındırdığını bildiğimiz tek yer. Yüzeyinin yüzde yetmiş biri sıvı suyla kaplıdır; bu yüzden uzaydan mavi görünür. Güçlü manyetik alanı bizi Güneş rüzgârından korur, ozon tabakası morötesi ışınları süzer. Ay\'ın kütle çekimi ise eksen eğikliğini sabit tutarak mevsimlerin düzenli olmasını sağlar.' },
-      { id: 'moon', target: body('moon'), text: 'Ay, Dünya\'nın tek doğal uydusu ve insanların ayak bastığı tek başka gök cismi. Bin dokuz yüz altmış dokuz ile bin dokuz yüz yetmiş iki arasında Apollo görevleriyle on iki astronot yüzeyinde yürüdü. Üç yüz seksen dört bin kilometre uzaktadır ve bize hep aynı yüzünü gösterir, çünkü dönüşü yörüngesine kilitlenmiştir. Her yıl yaklaşık dört santimetre bizden uzaklaşır.' },
-      { id: 'mars', target: body('mars'), text: 'Kızıl Gezegen Mars. Rengini yüzeyindeki paslanmış demirden alır. Çapı Dünya\'nın yarısı kadardır ama Güneş Sistemi\'nin en büyük yanardağına ev sahipliği yapar: yirmi iki kilometre yüksekliğindeki Olympus Mons. Dört bin kilometre uzunluğundaki Valles Marineris kanyonu ise Amerika kıtasını baştan başa geçecek kadar uzundur. Milyarlarca yıl önce yüzeyinde nehirler ve göller vardı; bugün bu suyun izlerini robotlar arıyor.' },
-      { id: 'jupiter', target: body('jupiter'), text: 'Jüpiter, gezegenlerin kralı. Kütlesi diğer tüm gezegenlerin toplamının iki buçuk katıdır; içine bin üç yüz Dünya sığar. Yüzeyi yoktur; gördüğünüz renkli şeritler, hidrojen ve helyum atmosferindeki dev bulut kuşaklarıdır. Büyük Kırmızı Leke, en az üç yüz elli yıldır süren ve Dünya\'dan daha büyük bir fırtınadır. Bu devin günü yalnızca on saat sürer ve etrafında bilinen doksan beşten fazla ay döner.' },
-      { id: 'saturn', target: body('saturn'), text: 'Satürn, hiç şüphesiz Güneş Sistemi\'nin en zarif gezegeni. Halkaları çoğunlukla su buzundan oluşur; genişlikleri iki yüz seksen bin kilometreyi bulurken kalınlıkları çoğu yerde sadece on metre kadardır. Gezegenin kendisi o kadar hafiftir ki yeterince büyük bir okyanusa koysanız yüzerdi. Kuzey kutbunda, her kenarı Dünya kadar olan gizemli bir altıgen fırtına döner.' },
-      { id: 'uranus', target: body('uranus'), text: 'Uranüs, yan yatmış gezegen. Ekseni doksan sekiz derece eğiktir; yani Güneş\'in etrafında adeta yuvarlanarak döner. Bu yüzden kutupları kırk iki yıl boyunca gündüz, kırk iki yıl boyunca gece yaşar. Metan gazı kırmızı ışığı soğurduğu için mavi-yeşil görünür. Bin yedi yüz seksen birde William Herschel\'in teleskopla keşfettiği ilk gezegendir ve onu yakından yalnızca Voyager İki gördü.' },
-      { id: 'neptune', target: body('neptune'), text: 'Neptün, Güneş\'ten en uzak gezegen. Teleskopla değil, kâğıt üzerinde keşfedildi: Uranüs\'ün yörüngesindeki sapmaları inceleyen matematikçiler yerini hesapladı ve bin sekiz yüz kırk altıda tam orada bulundu. Rüzgârları saatte iki bin yüz kilometreyi aşar; Güneş Sistemi\'ndeki en hızlı rüzgârlardır. Güneş etrafındaki bir turu yüz altmış beş yıl sürer. Büyük ayı Triton ters yönde döner; muhtemelen yakalanmış bir Kuiper Kuşağı cismidir.' },
-      { id: 'pluto', target: body('pluto'), text: 'Son durağımız Plüton. Bin dokuz yüz otuzda keşfedildi ve iki bin altıya kadar dokuzuncu gezegen sayıldı; artık bir cüce gezegen. İki bin on beşte New Horizons yanından geçene kadar bulanık bir noktadan ibaretti. Araç, yüzeyinde dev bir kalp şekli, azot buzulları ve su buzundan dağlar buldu. Yüzey sıcaklığı eksi iki yüz otuz derecedir. Uydusu Charon o kadar büyüktür ki ikisi birlikte ortak bir kütle merkezi etrafında döner. Güneş Sistemi turumuz burada bitiyor; iyi yolculuklar.' },
+      { id: 'sun', target: body('sun'), text: 'Güneş Sistemi turuna hoş geldiniz. Yolculuğumuz her şeyin merkezinden, Güneş\'ten başlıyor. Dört buçuk milyar yaşındaki bu yıldız, sistemdeki toplam kütlenin yüzde doksan dokuz virgül sekizini tek başına taşır. Çapı bir milyon dört yüz bin kilometredir; içine yan yana yüz dokuz Dünya sığar. Yüzeyi beş bin beş yüz derece, çekirdeği ise on beş milyon derecedir. Şu anda gördüğünüz ışık, buradan çıkıp Dünya\'ya sekiz dakika yirmi saniyede ulaşır.',
+        // the light's eight minutes: pull back to Earth's orbit and let a year roll by
+        cues: [{ at: 5, action: 'overview', ref: 'earth' }, { at: 5, action: 'rate', rate: 2.5e6 }], dwell: 7 },
+      { id: 'mercury', target: body('mercury'), text: 'İlk durağımız Merkür, en küçük ve Güneş\'e en yakın gezegen. Güneş\'in etrafındaki bir turu yalnızca seksen sekiz gün sürer. Atmosferi yok denecek kadar incedir; bu yüzden gündüz tarafı dört yüz otuz dereceye çıkarken gece tarafı eksi yüz seksen dereceye düşer. Yüzeyi tıpkı Ay gibi kraterlerle kaplıdır. Şu anda Avrupa ve Japonya\'nın ortak aracı BepiColombo ona doğru yol alıyor.',
+        // "88 days": watch a whole orbit from above the Sun, then come back for the craters
+        cues: [
+          { at: 1, action: 'overview', ref: 'mercury' }, { at: 1, action: 'rate', rate: 8e5 },
+          { at: 3, action: 'return' }, { at: 3, action: 'rate', rate: 1 },
+        ] },
+      { id: 'venus', target: body('venus'), text: 'Venüs, boyutuyla Dünya\'nın ikizi sayılır ama koşulları tam bir cehennemdir. Kalın karbondioksit atmosferi, yüzey basıncını Dünya\'nın doksan iki katına çıkarır ve sera etkisiyle sıcaklığı dört yüz altmış beş dereceye yükseltir. Bu, Güneş\'e daha yakın olan Merkür\'den bile sıcaktır. Bulutları sülfürik asittir. Venüs ters yönde ve çok yavaş döner: bir günü, bir yılından daha uzundur.',
+        // strip the clouds while the hellish surface is described; speed up for the 243-day rotation
+        cues: [
+          { at: 1, action: 'clouds', on: false }, { at: 3, action: 'clouds', on: true },
+          { at: 4, action: 'rate', rate: 2.5e6 },
+        ], dwell: 5 },
+      { id: 'earth', target: body('earth'), text: 'Ve işte evimiz: Dünya. Evrende yaşam barındırdığını bildiğimiz tek yer. Yüzeyinin yüzde yetmiş biri sıvı suyla kaplıdır; bu yüzden uzaydan mavi görünür. Güçlü manyetik alanı bizi Güneş rüzgârından korur, ozon tabakası morötesi ışınları süzer. Ay\'ın kütle çekimi ise eksen eğikliğini sabit tutarak mevsimlerin düzenli olmasını sağlar.',
+        // the Moon's steadying pull: pull back and watch it circle Earth
+        cues: [{ at: 4, action: 'overview', ref: 'moon' }, { at: 4, action: 'rate', rate: 3e5 }], dwell: 7 },
+      { id: 'moon', target: body('moon'), text: 'Ay, Dünya\'nın tek doğal uydusu ve insanların ayak bastığı tek başka gök cismi. Bin dokuz yüz altmış dokuz ile bin dokuz yüz yetmiş iki arasında Apollo görevleriyle on iki astronot yüzeyinde yürüdü. Üç yüz seksen dört bin kilometre uzaktadır ve bize hep aynı yüzünü gösterir, çünkü dönüşü yörüngesine kilitlenmiştir. Her yıl yaklaşık dört santimetre bizden uzaklaşır.',
+        cues: [{ at: 1, action: 'pin', ref: 'moon', lat: 0.67, lon: 23.47, label: 'Apollo 11 iniş yeri' }] },
+      { id: 'mars', target: body('mars'), text: 'Kızıl Gezegen Mars. Rengini yüzeyindeki paslanmış demirden alır. Çapı Dünya\'nın yarısı kadardır ama Güneş Sistemi\'nin en büyük yanardağına ev sahipliği yapar: yirmi iki kilometre yüksekliğindeki Olympus Mons. Dört bin kilometre uzunluğundaki Valles Marineris kanyonu ise Amerika kıtasını baştan başa geçecek kadar uzundur. Milyarlarca yıl önce yüzeyinde nehirler ve göller vardı; bugün bu suyun izlerini robotlar arıyor.',
+        cues: [
+          { at: 2, action: 'pin', ref: 'mars', lat: 18.65, lon: -133.8, label: 'Olympus Mons' },
+          { at: 3, action: 'pin', ref: 'mars', lat: -13.9, lon: -59.2, label: 'Valles Marineris' },
+          { at: 4, action: 'unpin' }, { at: 4, action: 'return' },
+        ] },
+      { id: 'jupiter', target: body('jupiter'), text: 'Jüpiter, gezegenlerin kralı. Kütlesi diğer tüm gezegenlerin toplamının iki buçuk katıdır; içine bin üç yüz Dünya sığar. Yüzeyi yoktur; gördüğünüz renkli şeritler, hidrojen ve helyum atmosferindeki dev bulut kuşaklarıdır. Büyük Kırmızı Leke, en az üç yüz elli yıldır süren ve Dünya\'dan daha büyük bir fırtınadır. Bu devin günü yalnızca on saat sürer ve etrafında bilinen doksan beşten fazla ay döner.',
+        // dive to the Great Red Spot, then back out and spin through the ten-hour day
+        cues: [
+          { at: 3, action: 'pin', ref: 'jupiter', lat: -22, lon: 20, storm: true, label: 'Büyük Kırmızı Leke' },
+          { at: 4, action: 'unpin' }, { at: 4, action: 'return' }, { at: 4, action: 'rate', rate: 3600 },
+        ], dwell: 5 },
+      { id: 'saturn', target: body('saturn'), text: 'Satürn, hiç şüphesiz Güneş Sistemi\'nin en zarif gezegeni. Halkaları çoğunlukla su buzundan oluşur; genişlikleri iki yüz seksen bin kilometreyi bulurken kalınlıkları çoğu yerde sadece on metre kadardır. Gezegenin kendisi o kadar hafiftir ki yeterince büyük bir okyanusa koysanız yüzerdi. Kuzey kutbunda, her kenarı Dünya kadar olan gizemli bir altıgen fırtına döner.',
+        cues: [{ at: 3, action: 'pin', ref: 'saturn', lat: 89, lon: 0, label: 'Kuzey kutbu altıgeni' }], dwell: 4 },
+      { id: 'uranus', target: body('uranus'), text: 'Uranüs, yan yatmış gezegen. Ekseni doksan sekiz derece eğiktir; yani Güneş\'in etrafında adeta yuvarlanarak döner. Bu yüzden kutupları kırk iki yıl boyunca gündüz, kırk iki yıl boyunca gece yaşar. Metan gazı kırmızı ışığı soğurduğu için mavi-yeşil görünür. Bin yedi yüz seksen birde William Herschel\'in teleskopla keşfettiği ilk gezegendir ve onu yakından yalnızca Voyager İki gördü.',
+        // "rolls around the Sun": an 84-year orbit from above, then back in close
+        cues: [
+          { at: 1, action: 'overview', ref: 'uranus' }, { at: 1, action: 'rate', rate: 2.5e8 },
+          { at: 3, action: 'return' }, { at: 3, action: 'rate', rate: 1 },
+        ] },
+      { id: 'neptune', target: body('neptune'), text: 'Neptün, Güneş\'ten en uzak gezegen. Teleskopla değil, kâğıt üzerinde keşfedildi: Uranüs\'ün yörüngesindeki sapmaları inceleyen matematikçiler yerini hesapladı ve bin sekiz yüz kırk altıda tam orada bulundu. Rüzgârları saatte iki bin yüz kilometreyi aşar; Güneş Sistemi\'ndeki en hızlı rüzgârlardır. Güneş etrafındaki bir turu yüz altmış beş yıl sürer. Büyük ayı Triton ters yönde döner; muhtemelen yakalanmış bir Kuiper Kuşağı cismidir.',
+        // the orbits from above the Sun (its discovery and the 165-year year), then Triton's backwards orbit
+        cues: [
+          { at: 1, action: 'overview', ref: 'neptune' }, { at: 1, action: 'rate', rate: 5e8 },
+          { at: 4, action: 'overview', ref: 'triton' }, { at: 4, action: 'rate', rate: 6e4 },
+        ], dwell: 7 },
+      { id: 'pluto', target: body('pluto'), text: 'Son durağımız Plüton. Bin dokuz yüz otuzda keşfedildi ve iki bin altıya kadar dokuzuncu gezegen sayıldı; artık bir cüce gezegen. İki bin on beşte New Horizons yanından geçene kadar bulanık bir noktadan ibaretti. Araç, yüzeyinde dev bir kalp şekli, azot buzulları ve su buzundan dağlar buldu. Yüzey sıcaklığı eksi iki yüz otuz derecedir. Uydusu Charon o kadar büyüktür ki ikisi birlikte ortak bir kütle merkezi etrafında döner. Güneş Sistemi turumuz burada bitiyor; iyi yolculuklar.',
+        // Pluto and Charon circling their common centre of mass
+        cues: [{ at: 5, action: 'overview', ref: 'charon' }, { at: 5, action: 'rate', rate: 6e4 }], dwell: 6 },
     ],
   },
   {

@@ -59,6 +59,11 @@ export class TimeSystem {
     this.jd = TimeSystem.dateToJD(d);
   }
 
+  /** Shift the clock by `seconds` of simulated time (tours use it to bring a feature into daylight) */
+  jump(seconds: number): void {
+    this.jd += seconds / DAY_S;
+  }
+
   togglePause(): void {
     this.paused = !this.paused;
   }

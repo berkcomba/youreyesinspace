@@ -9,6 +9,8 @@ attribute float iKind;    // 0 nebula, 1 cluster, 2 remnant, 3 star
 attribute float iAbsMag;
 attribute float iSeed;
 attribute float iIndex;
+attribute float iImg;     // atlas slot of the photograph, −1 = procedural
+attribute float iSpan;    // half-width of the sprite in object radii
 uniform vec3 uCamPc;
 uniform float uSkyRadius;
 uniform float uPxPerRad;
@@ -19,6 +21,8 @@ varying vec3 vColor;
 varying float vAlpha;
 varying float vKind;
 varying float vSeed;
+varying float vImg;
+varying float vSpan;
 
 void main() {
   vec3 rel = iPos - uCamPc;
@@ -28,8 +32,9 @@ void main() {
   float ang = atan(iRadius / d);
   float px = ang * uPxPerRad;
   bool star = iKind > 2.5;
-  // the sprite reaches 1.6 radii (soft edges); never smaller than a few pixels
-  float halfPx = max(px * 1.6, star ? 2.6 : 3.5);
+  // the sprite reaches `iSpan` radii (1.6 for procedural shapes, the photo's field otherwise);
+  // never smaller than a few pixels
+  float halfPx = max(px * iSpan, star ? 2.6 : 3.5);
   float halfAng = min(halfPx / uPxPerRad, 1.2);
   vec4 mv = modelViewMatrix * vec4(dir * uSkyRadius, 1.0);
   mv.xy += position.xy * uSkyRadius * tan(halfAng);
@@ -57,5 +62,7 @@ void main() {
   vAlpha = alpha;
   vKind = iKind;
   vSeed = iSeed;
+  vImg = iImg;
+  vSpan = iSpan;
   #include <logdepthbuf_vertex>
 }
