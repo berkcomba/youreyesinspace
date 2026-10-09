@@ -29,32 +29,32 @@
    ]
   },
   "iss": {
-   "hash": "94b11935f111",
-   "duration": 32.39,
+   "hash": "4d7ad4a2b4e1",
+   "duration": 31.67,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 6.12,
-     "text": "Nous commençons depuis l'orbite terrestre ce tour où nous visiterons les émissaires de l'humanité dans l'espace."
+     "start": 0.08,
+     "end": 9.2,
+     "text": "Nous commençons depuis l'orbite terrestre ce tour où nous rendrons visite aux ambassadeurs de l'humanité dans l'espace : devant vous, la Station spatiale internationale."
     },
     {
-     "start": 6.12,
-     "end": 9.4,
-     "text": "Devant vous se trouve la Station spatiale internationale."
+     "start": 9.2,
+     "end": 18.33,
+     "text": "À quatre cents kilomètres d'altitude, elle tourne à vingt-huit mille kilomètres à l'heure et fait le tour de la Terre en quatre-vingt-dix minutes ; voici ce tour, en accéléré."
     },
     {
-     "start": 9.4,
-     "end": 21.25,
-     "text": "Elle orbite à quatre cents kilomètres d'altitude, à une vitesse de vingt-huit mille kilomètres par heure, et fait le tour de la Terre en quatre-vingt-dix minutes ; les astronautes y voient seize levers de soleil par jour."
+     "start": 18.33,
+     "end": 21.23,
+     "text": "Les astronautes voient seize levers de soleil par jour."
     },
     {
-     "start": 21.25,
-     "end": 25.47,
+     "start": 21.23,
+     "end": 24.81,
      "text": "Elle a la taille d'un terrain de football et pèse quatre cent vingt tonnes."
     },
     {
-     "start": 25.47,
-     "end": 32.39,
+     "start": 24.81,
+     "end": 31.67,
      "text": "Depuis novembre deux mille, des humains y vivent sans interruption ; c'est la plus longue présence continue de l'humanité dans l'espace."
     }
    ]
@@ -112,32 +112,32 @@
    ]
   },
   "parker": {
-   "hash": "b67e6d2b9d07",
-   "duration": 41.51,
+   "hash": "09092c178e74",
+   "duration": 40.63,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 4.2,
-     "text": "La sonde solaire Parker est le premier engin à toucher le Soleil."
+     "start": 0.1,
+     "end": 4.02,
+     "text": "La sonde solaire Parker, le premier engin à toucher le Soleil."
     },
     {
-     "start": 4.2,
-     "end": 12.22,
-     "text": "Elle a été lancée en deux mille dix-huit et, en utilisant l'attraction gravitationnelle de Vénus, a resserré son orbite pas à pas."
+     "start": 4.02,
+     "end": 13.48,
+     "text": "Elle a été lancée en deux mille dix-huit et, en utilisant l'attraction gravitationnelle de Vénus, a resserré son orbite pas à pas ; suivons son orbite vue d'en haut."
     },
     {
-     "start": 12.22,
-     "end": 26.8,
-     "text": "En décembre deux mille vingt-quatre, elle s'est approchée à six millions neuf cent mille kilomètres de la surface du Soleil ; à ce moment-là, à une vitesse de six cent quatre-vingt-dix mille kilomètres par heure, elle est devenue l'objet de fabrication humaine le plus rapide."
+     "start": 13.48,
+     "end": 26.39,
+     "text": "En décembre deux mille vingt-quatre, elle s'est approchée à six millions neuf cent mille kilomètres de la surface du Soleil ; à ce moment-là, à six cent quatre-vingt-dix mille kilomètres à l'heure, elle est devenue l'objet le plus rapide fabriqué par l'humain."
     },
     {
-     "start": 26.8,
-     "end": 35.21,
-     "text": "Son bouclier de carbone de onze centimètres résiste à mille quatre cents degrés, tandis que les instruments derrière lui restent à température ambiante."
+     "start": 26.39,
+     "end": 34.69,
+     "text": "Tandis que son bouclier de carbone de onze centimètres résiste à mille quatre cents degrés, les instruments derrière lui restent à température ambiante."
     },
     {
-     "start": 35.21,
-     "end": 41.51,
+     "start": 34.69,
+     "end": 40.63,
      "text": "Son but est de comprendre pourquoi l'atmosphère extérieure du Soleil est des centaines de fois plus chaude que sa surface."
     }
    ]
@@ -174,38 +174,33 @@
    ]
   },
   "voyager2": {
-   "hash": "81709a7d9d4a",
-   "duration": 38.7,
+   "hash": "df3435316303",
+   "duration": 35.19,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 5.84,
-     "text": "Et Voyager 2 est le seul engin à avoir visité chacune des quatre planètes extérieures."
+     "start": 0.06,
+     "end": 4.92,
+     "text": "Et Voyager Deux, la seule sonde à avoir visité les quatre planètes extérieures."
     },
     {
-     "start": 5.84,
-     "end": 15.31,
-     "text": "Il a été lancé seize jours avant son frère, mais sur une trajectoire plus lente, il est passé près de Jupiter, Saturne, Uranus et Neptune."
+     "start": 4.92,
+     "end": 13.54,
+     "text": "Elle a été lancée seize jours avant sa sœur, mais sur une trajectoire plus lente, elle est passée près de Jupiter, Saturne, Uranus et Neptune."
     },
     {
-     "start": 15.31,
-     "end": 23.51,
-     "text": "La plupart de ce que nous savons d'Uranus et de Neptune provient encore de ses survols de mille neuf cent quatre-vingt-six et de quatre-vingt-neuf."
+     "start": 13.54,
+     "end": 20.77,
+     "text": "La plupart de ce que nous savons sur Uranus et Neptune vient encore de ses survols de mille neuf cent quatre-vingt-six et de quatre-vingt-neuf."
     },
     {
-     "start": 23.51,
-     "end": 27.33,
-     "text": "En deux mille dix-huit, il a atteint l'espace interstellaire."
+     "start": 20.77,
+     "end": 24.27,
+     "text": "En deux mille dix-huit, elle a atteint l'espace interstellaire."
     },
     {
-     "start": 27.33,
-     "end": 37.26,
-     "text": "Les batteries au plutonium des deux Voyager s'affaiblissent ; ils se tairont dans les années deux mille trente, mais ils continueront de voguer parmi les étoiles pendant des milliards d'années."
-    },
-    {
-     "start": 37.26,
-     "end": 38.7,
-     "text": "Notre tour s'achève ici."
+     "start": 24.27,
+     "end": 35.19,
+     "text": "Les piles au plutonium des deux Voyager s'affaiblissent ; les sondes se tairont dans les années deux mille trente, mais elles continueront de glisser parmi les étoiles pendant des milliards d'années ; notre tour s'achève ici."
     }
    ]
   }

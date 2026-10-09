@@ -29,33 +29,33 @@
    ]
   },
   "iss": {
-   "hash": "be5758511de3",
-   "duration": 34.07,
+   "hash": "c9e1bb1ed466",
+   "duration": 34.55,
    "sentences": [
     {
      "start": 0.08,
-     "end": 6.64,
-     "text": "Wir beginnen diese Tour, auf der wir die Botschafter der Menschheit im All besuchen, in der Erdumlaufbahn."
+     "end": 8.3,
+     "text": "Wir beginnen diese Tour zu den Botschaftern der Menschheit im Weltraum in der Erdumlaufbahn: Vor Ihnen die Internationale Raumstation."
     },
     {
-     "start": 6.64,
-     "end": 9.66,
-     "text": "Vor Ihnen die Internationale Raumstation."
+     "start": 8.3,
+     "end": 18.95,
+     "text": "In vierhundert Kilometern Höhe kreist sie mit achtundzwanzigtausend Kilometern pro Stunde und umrundet die Erde in neunzig Minuten; hier ist diese Umrundung, beschleunigt."
     },
     {
-     "start": 9.66,
-     "end": 21.93,
-     "text": "Sie kreist in 400 Kilometern Höhe mit 28. 000 Kilometern pro Stunde und umrundet die Erde in 90 Minuten; die Astronauten sehen 16 Sonnenaufgänge am Tag."
+     "start": 18.95,
+     "end": 22.49,
+     "text": "Die Astronauten sehen sechzehn Sonnenaufgänge am Tag."
     },
     {
-     "start": 21.93,
-     "end": 26.83,
-     "text": "Sie ist so groß wie ein Fußballfeld und 420 Tonnen schwer."
+     "start": 22.49,
+     "end": 27.25,
+     "text": "Sie ist so groß wie ein Fußballfeld und vierhundertzwanzig Tonnen schwer."
     },
     {
-     "start": 26.83,
-     "end": 34.07,
-     "text": "Seit November 2000 leben ununterbrochen Menschen an Bord; das ist die längste ununterbrochene Präsenz der Menschheit im All."
+     "start": 27.25,
+     "end": 34.55,
+     "text": "Seit November zweitausend leben ununterbrochen Menschen an Bord; das ist die längste kontinuierliche Präsenz der Menschheit im Weltraum."
     }
    ]
   },
@@ -107,33 +107,33 @@
    ]
   },
   "parker": {
-   "hash": "d4222a4cdd82",
-   "duration": 42.39,
+   "hash": "814e67298ab8",
+   "duration": 43.51,
    "sentences": [
     {
-     "start": 0,
-     "end": 5.073,
-     "text": "Die Parker-Sonnensonde ist das erste Raumfahrzeug, das die Sonne berührt."
+     "start": 0.06,
+     "end": 4.66,
+     "text": "Die Parker Solar Probe ist das erste Raumfahrzeug, das die Sonne berührt."
     },
     {
-     "start": 5.073,
-     "end": 12.925,
-     "text": "Sie wurde 2018 gestartet und verengte ihre Umlaufbahn Schritt für Schritt mithilfe der Anziehungskraft der Venus."
+     "start": 4.66,
+     "end": 14.52,
+     "text": "Zweitausendachtzehn wurde sie gestartet und verengte ihre Umlaufbahn Schritt für Schritt mithilfe der Schwerkraft der Venus; verfolgen wir ihre Umlaufbahn von oben."
     },
     {
-     "start": 12.925,
-     "end": 25.573,
-     "text": "Im Dezember 2024 näherte sie sich der Sonnenoberfläche auf 6. 900. 000 Kilometer; dabei wurde sie mit 690. 000 Kilometern pro Stunde zum schnellsten von Menschen geschaffenen Objekt."
+     "start": 14.52,
+     "end": 28.65,
+     "text": "Im Dezember zweitausendvierundzwanzig näherte sie sich der Sonnenoberfläche bis auf sechs Millionen neunhunderttausend Kilometer; dabei wurde sie mit sechshundertneunzigtausend Kilometern pro Stunde zum schnellsten menschengemachten Objekt."
     },
     {
-     "start": 25.573,
-     "end": 34.398,
-     "text": "Ihr 11 Zentimeter dicker Kohlenstoffschild hält 1. 400 Grad stand, während die Instrumente dahinter bei Raumtemperatur bleiben."
+     "start": 28.65,
+     "end": 36.85,
+     "text": "Während ihr elf Zentimeter dicker Kohlenstoffschild eintausendvierhundert Grad standhält, bleiben die Instrumente dahinter auf Raumtemperatur."
     },
     {
-     "start": 34.398,
-     "end": 42.39,
-     "text": "Ihr Ziel ist es herauszufinden, warum die äußere Atmosphäre der Sonne hunderte Male heißer ist als ihre Oberfläche."
+     "start": 36.85,
+     "end": 43.51,
+     "text": "Ihr Ziel ist es, zu klären, warum die äußere Atmosphäre der Sonne hunderte Male heißer ist als die Sonnenoberfläche."
     }
    ]
   },
@@ -164,33 +164,33 @@
    ]
   },
   "voyager2": {
-   "hash": "289ca150181a",
-   "duration": 40.55,
+   "hash": "6d30991a9b72",
+   "duration": 38.39,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 6.48,
-     "text": "Und Voyager 2 ist das einzige Raumfahrzeug, das alle vier äußeren Planeten besucht hat."
+     "start": 0.06,
+     "end": 5.86,
+     "text": "Und Voyager Zwei ist das einzige Raumfahrzeug, das alle vier äußeren Planeten besucht hat."
     },
     {
-     "start": 6.48,
-     "end": 15.58,
-     "text": "Sie wurde 16 Tage vor ihrer Schwester gestartet, flog aber auf einer langsameren Route an Jupiter, Saturn, Uranus und Neptun vorbei."
+     "start": 5.86,
+     "end": 14.9,
+     "text": "Sie wurde sechzehn Tage vor ihrer Schwestersonde gestartet, flog aber auf einer langsameren Route an Jupiter, Saturn, Uranus und Neptun vorbei."
     },
     {
-     "start": 15.58,
-     "end": 28.45,
-     "text": "Das meiste, was wir über Uranus und Neptun wissen, stammt noch immer von ihren Vorbeiflügen 1986 und 1989. 2018 erreichte sie den interstellaren Raum."
+     "start": 14.9,
+     "end": 23.17,
+     "text": "Das meiste, was wir über Uranus und Neptun wissen, stammt noch immer von ihren Vorbeiflügen tausendneunhundertsechsundachtzig und neunundachtzig."
     },
     {
-     "start": 28.45,
-     "end": 39.07,
-     "text": "Die Plutoniumbatterien beider Voyager werden schwächer; in den 2030er-Jahren werden sie verstummen, aber noch Milliarden Jahre lang zwischen den Sternen weitergleiten."
+     "start": 23.17,
+     "end": 26.67,
+     "text": "Zweitausendachtzehn erreichte sie den interstellaren Raum."
     },
     {
-     "start": 39.07,
-     "end": 40.55,
-     "text": "Unsere Tour endet hier."
+     "start": 26.67,
+     "end": 38.39,
+     "text": "Die Plutoniumbatterien beider Voyager werden schwächer; in den zweitausenddreißiger Jahren werden sie verstummen, doch sie werden noch Milliarden Jahre lang zwischen den Sternen weitergleiten; hier endet unsere Tour."
     }
    ]
   }

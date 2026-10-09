@@ -29,33 +29,33 @@
    ]
   },
   "iss": {
-   "hash": "af7900be7d7e",
-   "duration": 34.53,
+   "hash": "de9a16e88adc",
+   "duration": 37.11,
    "sentences": [
     {
-     "start": 0.02,
-     "end": 6.94,
-     "text": "Comenzamos desde la órbita terrestre este recorrido en el que visitaremos a los emisarios de la humanidad en el espacio."
+     "start": 0.1,
+     "end": 10.82,
+     "text": "Empezamos este recorrido, en el que visitaremos a los emisarios de la humanidad en el espacio, desde la órbita terrestre: ante ustedes, la Estación Espacial Internacional."
     },
     {
-     "start": 6.94,
-     "end": 10.22,
-     "text": "Ante ustedes, la Estación Espacial Internacional."
+     "start": 10.82,
+     "end": 21.43,
+     "text": "Gira a cuatrocientos kilómetros de altitud, a veintiocho mil kilómetros por hora, y completa una vuelta a la Tierra en noventa minutos; aquí está esa vuelta, acelerada."
     },
     {
-     "start": 10.22,
-     "end": 21.55,
-     "text": "Gira a 400 km de altitud, a 28. 000 km por hora, y completa una vuelta a la Tierra en 90 minutos; los astronautas ven 16 amaneceres al día."
+     "start": 21.43,
+     "end": 24.69,
+     "text": "Los astronautas ven dieciséis amaneceres al día."
     },
     {
-     "start": 21.55,
-     "end": 26.35,
-     "text": "Tiene el tamaño de un campo de fútbol y pesa 420 toneladas."
+     "start": 24.69,
+     "end": 29.29,
+     "text": "Tiene el tamaño de un campo de fútbol y pesa cuatrocientas veinte toneladas."
     },
     {
-     "start": 26.35,
-     "end": 34.53,
-     "text": "Desde noviembre de 2000 hay personas viviendo en ella de forma ininterrumpida; es la presencia continua más larga de la humanidad en el espacio."
+     "start": 29.29,
+     "end": 37.11,
+     "text": "Desde noviembre de dos mil hay personas viviendo en ella sin interrupción; es la presencia continua más larga de la humanidad en el espacio."
     }
    ]
   },
@@ -112,32 +112,32 @@
    ]
   },
   "parker": {
-   "hash": "025f201639b0",
-   "duration": 40.07,
+   "hash": "86460a01eee7",
+   "duration": 41.59,
    "sentences": [
     {
-     "start": 0,
-     "end": 4.397,
+     "start": 0.08,
+     "end": 3.94,
      "text": "La sonda solar Parker es la primera nave que ha tocado el Sol."
     },
     {
-     "start": 4.397,
-     "end": 10.283,
-     "text": "Fue lanzada en 2018 y, usando la gravedad de Venus, estrechó su órbita paso a paso."
+     "start": 3.94,
+     "end": 12.72,
+     "text": "Se lanzó en dos mil dieciocho y, usando la gravedad de Venus, fue reduciendo su órbita paso a paso; veamos su órbita desde arriba."
     },
     {
-     "start": 10.283,
-     "end": 22.978,
-     "text": "En diciembre de 2024 se acercó a 6. 900. 000 km de la superficie del Sol; en ese momento, a 690. 000 km por hora, se convirtió en el objeto más rápido fabricado por el ser humano."
+     "start": 12.72,
+     "end": 26.69,
+     "text": "En diciembre de dos mil veinticuatro se acercó a seis millones novecientos mil kilómetros de la superficie del Sol; en ese momento, a seiscientos noventa mil kilómetros por hora, se convirtió en el objeto más rápido fabricado por el ser humano."
     },
     {
-     "start": 22.978,
-     "end": 32.056,
-     "text": "Su escudo de carbono, de 11 cm, resiste 1400 grados, mientras los instrumentos que hay detrás permanecen a temperatura ambiente."
+     "start": 26.69,
+     "end": 35.39,
+     "text": "Su escudo de carbono de once centímetros resiste mil cuatrocientos grados, mientras los instrumentos que van detrás permanecen a temperatura ambiente."
     },
     {
-     "start": 32.056,
-     "end": 40.07,
+     "start": 35.39,
+     "end": 41.59,
      "text": "Su objetivo es resolver por qué la atmósfera exterior del Sol es cientos de veces más caliente que su superficie."
     }
    ]
@@ -174,38 +174,33 @@
    ]
   },
   "voyager2": {
-   "hash": "da2d69619911",
-   "duration": 38.95,
+   "hash": "5ec7ab4b4203",
+   "duration": 37.75,
    "sentences": [
     {
      "start": 0.08,
-     "end": 5.1,
-     "text": "Y la Voyager 2 es la única nave que ha visitado los cuatro planetas exteriores."
+     "end": 5,
+     "text": "Y la Voyager Dos es la única nave que visitó los cuatro planetas exteriores."
     },
     {
-     "start": 5.1,
-     "end": 13.32,
-     "text": "Fue lanzada 16 días antes que su hermana, pero con una ruta más lenta pasó junto a Júpiter, Saturno, Urano y Neptuno."
+     "start": 5,
+     "end": 13.26,
+     "text": "Se lanzó dieciséis días antes que su hermana, pero con una ruta más lenta pasó junto a Júpiter, Saturno, Urano y Neptuno."
     },
     {
-     "start": 13.32,
-     "end": 22.77,
-     "text": "Gran parte de lo que sabemos sobre Urano y Neptuno procede todavía de sus sobrevuelos de 1986 y 1989."
+     "start": 13.26,
+     "end": 21.51,
+     "text": "La mayor parte de lo que sabemos sobre Urano y Neptuno procede todavía de sus sobrevuelos de mil novecientos ochenta y seis y ochenta y nueve."
     },
     {
-     "start": 22.77,
-     "end": 25.67,
-     "text": "En 2018 alcanzó el espacio interestelar."
+     "start": 21.51,
+     "end": 24.97,
+     "text": "En dos mil dieciocho alcanzó el espacio interestelar."
     },
     {
-     "start": 25.67,
-     "end": 37.25,
-     "text": "Las baterías de plutonio de ambas Voyager se debilitan; en la década de 2030 se quedarán en silencio, pero seguirán deslizándose entre las estrellas durante miles de millones de años."
-    },
-    {
-     "start": 37.25,
-     "end": 38.95,
-     "text": "Nuestro recorrido termina aquí."
+     "start": 24.97,
+     "end": 37.75,
+     "text": "Las pilas de plutonio de ambas Voyager se están debilitando; en la década de dos mil treinta enmudecerán, pero seguirán deslizándose entre las estrellas durante miles de millones de años; aquí termina nuestro recorrido."
     }
    ]
   }

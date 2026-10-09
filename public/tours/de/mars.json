@@ -3,198 +3,198 @@
  "locale": "de",
  "steps": {
   "curiosity": {
-   "hash": "af685ef61acb",
-   "duration": 38.64,
+   "hash": "79f27b91af06",
+   "duration": 38.07,
    "sentences": [
     {
-     "start": 0.04,
-     "end": 4.8,
-     "text": "Jetzt steigen wir zur Oberfläche hinab: vor Ihnen Curiosity."
+     "start": 0.1,
+     "end": 8.7,
+     "text": "Jetzt steigen wir zur Oberfläche hinab: vor Ihnen Curiosity, ein Roboter, eine Tonne schwer und so groß wie ein Auto."
     },
     {
-     "start": 4.8,
-     "end": 14.81,
-     "text": "Dieser eine Tonne schwere, autogroße Roboter landete im August 2012 im Gale-Krater, an Seilen von einem Himmelskran herabgelassen."
+     "start": 8.7,
+     "end": 15.42,
+     "text": "Im August zweitausendzwölf landete er im Gale-Krater, an Seilen von einem Himmelskran herabgelassen."
     },
     {
-     "start": 14.81,
-     "end": 21.31,
-     "text": "Er erzeugt seine Energie aus der Wärme von Plutonium, deshalb beeinträchtigen ihn Staubstürme nicht."
+     "start": 15.42,
+     "end": 21.73,
+     "text": "Er erzeugt seine Energie aus der Wärme des Plutoniums, deshalb beeinträchtigen ihn Staubstürme nicht."
     },
     {
-     "start": 21.31,
-     "end": 31.66,
-     "text": "Er bewies, dass es auf dem Kraterboden einst einen See gab, der Millionen von Jahren bestand, und er fand die chemischen Bestandteile, die für Leben nötig sind."
+     "start": 21.73,
+     "end": 31.31,
+     "text": "Er bewies, dass es auf dem Kraterboden einst einen See gab, der Millionen Jahre bestand, und fand die chemischen Bestandteile, die für das Leben nötig sind."
     },
     {
-     "start": 31.66,
-     "end": 38.64,
-     "text": "Seit mehr als 10 Jahren erklimmt er die Hänge des Mount Sharp und liest die Klimageschichte des Mars Schicht für Schicht."
+     "start": 31.31,
+     "end": 38.07,
+     "text": "Seit mehr als zehn Jahren erklimmt er die Hänge des Mount Sharp und liest die Klimageschichte des Mars Schicht für Schicht."
     }
    ]
   },
   "deimos": {
-   "hash": "47534f2c6099",
-   "duration": 36.31,
+   "hash": "298c71e2469e",
+   "duration": 35.19,
    "sentences": [
     {
      "start": 0.08,
-     "end": 4.18,
-     "text": "Deimos ist der kleinere und weiter entfernte Mond des Mars."
+     "end": 7,
+     "text": "Deimos, der kleinere und entferntere Mond des Mars: Sein Durchmesser beträgt etwa zwölf Kilometer."
     },
     {
-     "start": 4.18,
-     "end": 10.34,
-     "text": "Sein Durchmesser beträgt etwa 12 km, und er umrundet den Planeten in 30 Stunden."
+     "start": 7,
+     "end": 14.44,
+     "text": "Er umrundet den Planeten in dreißig Stunden; vom Marsboden aus gesehen ist er von einem hellen Stern nicht zu unterscheiden."
     },
     {
-     "start": 10.34,
-     "end": 17.02,
+     "start": 14.44,
+     "end": 20.79,
      "text": "Seine Oberfläche ist glatter als die von Phobos, weil seine Krater mit einer dicken Staubschicht gefüllt sind."
     },
     {
-     "start": 17.02,
-     "end": 22.51,
-     "text": "Von der Marsoberfläche aus gesehen ist er von einem hellen Stern nicht zu unterscheiden."
+     "start": 20.79,
+     "end": 28.27,
+     "text": "Ob beide Monde eingefangene Asteroiden sind oder die Überreste einer gewaltigen Kollision, wird noch immer diskutiert."
     },
     {
-     "start": 22.51,
-     "end": 36.31,
-     "text": "Ob beide Monde eingefangene Asteroiden oder die Überreste einer riesigen Kollision sind, wird noch immer diskutiert; Japans MMX-Mission wird eine Probe von Phobos mitbringen, um diese Frage zu beantworten."
+     "start": 28.27,
+     "end": 35.19,
+     "text": "Japans MMX-Mission wird zur Beantwortung dieser Frage eine Probe von Phobos entnehmen und zur Erde bringen."
     }
    ]
   },
   "finale": {
-   "hash": "ad3932c8c781",
-   "duration": 34.07,
+   "hash": "a4becaca5e24",
+   "duration": 32.31,
    "sentences": [
     {
-     "start": 0.02,
-     "end": 3.78,
+     "start": 0.08,
+     "end": 3.74,
      "text": "Bevor wir den Mars verlassen, blicken wir noch einmal zurück."
     },
     {
-     "start": 3.78,
-     "end": 10.34,
+     "start": 3.74,
+     "end": 10.22,
      "text": "Heute arbeiten in seiner Umlaufbahn und auf seiner Oberfläche fast ein Dutzend aktive Raumfahrzeuge."
     },
     {
-     "start": 10.34,
-     "end": 16.74,
-     "text": "Die Befunde sind stimmig: Mars war einst eine milde, feuchte und vielleicht bewohnbare Welt."
+     "start": 10.22,
+     "end": 16.49,
+     "text": "Die Befunde sind stimmig: Der Mars war einst eine milde, feuchte und vielleicht bewohnbare Welt."
     },
     {
-     "start": 16.74,
-     "end": 25.07,
-     "text": "Als er sein Magnetfeld verlor, fegte der Sonnenwind seine Atmosphäre ins All, und der Planet verwandelte sich in eine kalte Wüste."
+     "start": 16.49,
+     "end": 24.17,
+     "text": "Als er sein Magnetfeld verlor, fegte der Sonnenwind seine Atmosphäre ins All, und der Planet wurde zu einer kalten Wüste."
     },
     {
-     "start": 25.07,
-     "end": 32.29,
-     "text": "Und doch wird dies aller Wahrscheinlichkeit nach der erste Planet sein, auf den die Menschheit eines Tages ihren Fuß setzt."
-    },
-    {
-     "start": 32.29,
-     "end": 34.07,
-     "text": "Unsere Mars-Tour ist zu Ende."
+     "start": 24.17,
+     "end": 32.31,
+     "text": "Dennoch wird dies höchstwahrscheinlich der erste Planet sein, auf den die Menschheit eines Tages den Fuß setzt; unsere Mars-Tour ist zu Ende."
     }
    ]
   },
   "mars": {
-   "hash": "57d7bfd3c1d4",
-   "duration": 33.27,
+   "hash": "bdd55eb39436",
+   "duration": 45.43,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 1.84,
-     "text": "Willkommen zur Mars-Tour."
+     "start": 0.08,
+     "end": 6.94,
+     "text": "Willkommen zur Mars-Tour; der Rote Planet ist die Welt, zu der die Menschheit die meisten Raumfahrzeuge geschickt hat."
     },
     {
-     "start": 1.84,
-     "end": 9.06,
-     "text": "Der Rote Planet ist der vierte Planet von der Sonne und die Welt, zu der die Menschheit die meisten Raumfahrzeuge geschickt hat."
+     "start": 6.94,
+     "end": 15.58,
+     "text": "Sein Tag ähnelt dem der Erde sehr, vierundzwanzig Stunden und siebenunddreißig Minuten; gerade sehen Sie einen Marstag im Zeitraffer."
     },
     {
-     "start": 9.06,
-     "end": 14.7,
-     "text": "Sein Tag ähnelt dem der Erde sehr: 24 Stunden und 37 Minuten."
+     "start": 15.58,
+     "end": 23.79,
+     "text": "Seine Atmosphäre ist sehr dünn und besteht fast vollständig aus Kohlendioxid; die Durchschnittstemperatur beträgt minus sechzig Grad."
     },
     {
-     "start": 14.7,
-     "end": 18.59,
-     "text": "Sein Jahr hingegen dauert 687 Tage."
+     "start": 23.79,
+     "end": 32.09,
+     "text": "Das Hellas-Becken auf der Südhalbkugel ist die größte Einschlagsspur, zweitausenddreihundert Kilometer breit und neun Kilometer tief."
     },
     {
-     "start": 18.59,
-     "end": 27.03,
-     "text": "Seine Atmosphäre ist sehr dünn und besteht fast vollständig aus Kohlendioxid; die Durchschnittstemperatur beträgt minus 60 Grad."
+     "start": 32.09,
+     "end": 38.83,
+     "text": "An seinen Polen gibt es Kappen aus Wassereis und Trockeneis; im Winter gefriert ein Viertel der Atmosphäre am Pol."
     },
     {
-     "start": 27.03,
-     "end": 33.27,
-     "text": "Dennoch gibt es an seinen Polen Eis, auf seiner Oberfläche ausgetrocknete Flussbetten und alte Seeböden."
+     "start": 38.83,
+     "end": 45.43,
+     "text": "Die ausgetrockneten Flussbetten und alten Seeböden auf seiner Oberfläche flüstern, dass der Mars einst ganz anders war."
     }
    ]
   },
   "perseverance": {
-   "hash": "d611067d6cdc",
-   "duration": 45.18,
+   "hash": "5d45f7ae2293",
+   "duration": 44.15,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 4.18,
-     "text": "Und Perseverance ist der fortschrittlichste Roboter auf dem Mars."
+     "start": 0.08,
+     "end": 8.66,
+     "text": "Und Perseverance, der fortschrittlichste Roboter auf dem Mars; im Februar zweitausendeinundzwanzig landete er im Jezero-Krater."
     },
     {
-     "start": 4.18,
-     "end": 14.95,
-     "text": "Er landete im Februar 2021 im Jezero-Krater; das ist ein altes Delta, in dem vor 3,5 Milliarden Jahren ein Fluss in einen See mündete."
+     "start": 8.66,
+     "end": 14.5,
+     "text": "Dies ist ein altes Delta, wo vor dreieinhalb Milliarden Jahren ein Fluss in einen See mündete."
     },
     {
-     "start": 14.95,
-     "end": 26.51,
-     "text": "Seine Aufgabe ist es, nach Spuren früheren mikrobiellen Lebens zu suchen und Gesteinsproben in Titanröhren zu füllen und zu hinterlassen, damit eine künftige Mission sie zur Erde bringt."
+     "start": 14.5,
+     "end": 26.11,
+     "text": "Seine Aufgabe ist es, nach Spuren vergangenen mikrobiellen Lebens zu suchen und Gesteinsproben in Titanröhren zu füllen und zu hinterlassen, damit eine künftige Mission sie zur Erde bringt."
     },
     {
-     "start": 26.51,
-     "end": 37.96,
-     "text": "Der kleine Helikopter Ingenuity, den er mitbrachte, wurde das erste Fahrzeug, das auf einem anderen Planeten flog, und absolvierte 72 Flüge statt der geplanten fünf."
+     "start": 26.11,
+     "end": 37.15,
+     "text": "Der kleine Helikopter Ingenuity, den er mitbrachte, wurde das erste Fahrzeug, das auf einem anderen Planeten flog, und absolvierte zweiundsiebzig Flüge statt der geplanten fünf."
     },
     {
-     "start": 37.96,
-     "end": 45.18,
+     "start": 37.15,
+     "end": 44.15,
      "text": "Das MOXIE-Experiment wiederum erzeugte Sauerstoff aus der Marsluft und ebnete so künftigen Astronauten den Weg."
     }
    ]
   },
   "phobos": {
-   "hash": "b7aba2b3c376",
-   "duration": 35.99,
+   "hash": "a216491724c8",
+   "duration": 44.15,
    "sentences": [
     {
-     "start": 0.04,
-     "end": 4.2,
-     "text": "Der größere der beiden kleinen Monde des Mars ist Phobos."
+     "start": 0.08,
+     "end": 8.4,
+     "text": "Phobos, der größere der beiden kleinen Monde des Mars: nur zweiundzwanzig Kilometer breit, ein kartoffelförmiger Fels."
     },
     {
-     "start": 4.2,
-     "end": 9.12,
-     "text": "Er ist ein kartoffelförmiger Felsen, nur 22 km breit."
+     "start": 8.4,
+     "end": 15.62,
+     "text": "Er umkreist den Planeten in sechstausend Kilometern Entfernung; das ist die nächste Mondumlaufbahn im Sonnensystem."
     },
     {
-     "start": 9.12,
-     "end": 17,
-     "text": "Er umkreist den Planeten in einer Entfernung von 6. 000 km; das ist die engste Mondumlaufbahn im Sonnensystem."
+     "start": 15.62,
+     "end": 24.39,
+     "text": "Er ist so schnell, dass er den Mars in sieben Stunden und neununddreißig Minuten umrundet; hier ist diese Runde, von oben und im Zeitraffer."
     },
     {
-     "start": 17,
-     "end": 26.51,
-     "text": "Er ist so schnell, dass er den Mars in 7 Stunden und 39 Minuten umrundet und von der Marsoberfläche aus gesehen im Westen aufgeht."
+     "start": 24.39,
+     "end": 30.19,
+     "text": "Vom Marsboden aus gesehen geht er im Westen auf und vier Stunden später im Osten unter."
     },
     {
-     "start": 26.51,
-     "end": 35.99,
-     "text": "In jedem Jahrhundert sinkt er um 2 Meter; in etwa 50 Millionen Jahren wird er entweder auf den Mars stürzen oder zerbrechen und zu einem Ring werden."
+     "start": 30.19,
+     "end": 39.15,
+     "text": "Jedes Jahrhundert sinkt er um zwei Meter; in etwa fünfzig Millionen Jahren wird er entweder auf den Mars stürzen oder zerbrechen und zu einem Ring werden."
+    },
+    {
+     "start": 39.15,
+     "end": 44.15,
+     "text": "Der riesige Stickney-Krater bedeckt mit neun Kilometern Breite fast die Hälfte des Mondes."
     }
    ]
   }

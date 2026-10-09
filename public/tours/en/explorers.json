@@ -29,33 +29,33 @@
    ]
   },
   "iss": {
-   "hash": "ab6aa8c20cb3",
-   "duration": 33.83,
+   "hash": "1d2fe3160cdf",
+   "duration": 33.59,
    "sentences": [
     {
-     "start": 0.04,
-     "end": 6.1,
-     "text": "We begin from Earth orbit this tour, on which we will visit humanity's envoys in space."
+     "start": 0.06,
+     "end": 8.76,
+     "text": "We begin this tour, on which we will visit humanity's ambassadors in space, from Earth orbit: before you is the International Space Station."
     },
     {
-     "start": 6.1,
-     "end": 9.16,
-     "text": "Before you is the International Space Station."
+     "start": 8.76,
+     "end": 19.39,
+     "text": "At an altitude of four hundred kilometers, it orbits at twenty-eight thousand kilometers an hour and completes a circuit of Earth in ninety minutes; here is that circuit, sped up."
     },
     {
-     "start": 9.16,
-     "end": 21.63,
-     "text": "It orbits at an altitude of 400 kilometers, at a speed of 28,000 kilometers per hour, and completes a circuit of Earth in 90 minutes; astronauts see 16 sunrises a day."
+     "start": 19.39,
+     "end": 22.21,
+     "text": "Astronauts see sixteen sunrises a day."
     },
     {
-     "start": 21.63,
-     "end": 26.17,
-     "text": "It is the size of a football field and weighs 420 tons."
+     "start": 22.21,
+     "end": 26.61,
+     "text": "It is the size of a football field and weighs four hundred and twenty tons."
     },
     {
-     "start": 26.17,
-     "end": 33.83,
-     "text": "Humans have lived aboard it without interruption since November 2000; this is humanity's longest continuous presence in space."
+     "start": 26.61,
+     "end": 33.59,
+     "text": "Humans have lived aboard it continuously since November two thousand; this is humanity's longest continuous presence in space."
     }
    ]
   },
@@ -107,33 +107,33 @@
    ]
   },
   "parker": {
-   "hash": "4ea661ff2de6",
-   "duration": 38.14,
+   "hash": "148251dd5f80",
+   "duration": 38.07,
    "sentences": [
     {
-     "start": 0.02,
-     "end": 4.52,
+     "start": 0.08,
+     "end": 4.04,
      "text": "The Parker Solar Probe is the first spacecraft to touch the Sun."
     },
     {
-     "start": 4.52,
-     "end": 11.13,
-     "text": "It was launched in 2018 and, using Venus's gravity, tightened its orbit step by step."
+     "start": 4.04,
+     "end": 12.72,
+     "text": "It was launched in two thousand eighteen and, using Venus's gravity, tightened its orbit step by step; let's watch its orbit from above."
     },
     {
-     "start": 11.13,
-     "end": 24.61,
-     "text": "In December 2024 it came within 6. 9 million kilometers of the Sun's surface; at that time, at 690,000 kilometers per hour, it became the fastest human-made object."
+     "start": 12.72,
+     "end": 25.43,
+     "text": "In December two thousand twenty-four it came within six million nine hundred thousand kilometers of the Sun's surface; at that moment, at six hundred and ninety thousand kilometers an hour, it became the fastest human-made object."
     },
     {
-     "start": 24.61,
-     "end": 32.74,
-     "text": "Its 11-centimeter carbon shield withstands 1,400 degrees while the instruments behind it stay at room temperature."
+     "start": 25.43,
+     "end": 32.87,
+     "text": "Its eleven-centimeter carbon shield withstands one thousand four hundred degrees, while the instruments behind it stay at room temperature."
     },
     {
-     "start": 32.74,
-     "end": 38.14,
-     "text": "Its goal is to solve why the Sun's outer atmosphere is hundreds of times hotter than its surface."
+     "start": 32.87,
+     "end": 38.07,
+     "text": "Its purpose is to figure out why the Sun's outer atmosphere is hundreds of times hotter than its surface."
     }
    ]
   },
@@ -169,38 +169,33 @@
    ]
   },
   "voyager2": {
-   "hash": "20524994a619",
-   "duration": 37.91,
+   "hash": "cbee136e125d",
+   "duration": 32.31,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 5.4,
-     "text": "And Voyager 2 is the only spacecraft to have visited all four outer planets."
+     "start": 0.08,
+     "end": 4.8,
+     "text": "And Voyager Two is the only spacecraft to visit all four outer planets."
     },
     {
-     "start": 5.4,
-     "end": 14.08,
-     "text": "It was launched 16 days before its sibling, but on a slower route it flew past Jupiter, Saturn, Uranus, and Neptune."
+     "start": 4.8,
+     "end": 12.64,
+     "text": "It was launched sixteen days before its sibling, but on a slower route it flew past Jupiter, Saturn, Uranus, and Neptune."
     },
     {
-     "start": 14.08,
-     "end": 23.17,
-     "text": "Most of what we know about Uranus and Neptune still comes from its flybys in 1986 and 1989."
+     "start": 12.64,
+     "end": 18.69,
+     "text": "Most of what we know about Uranus and Neptune still comes from its flybys in nineteen eighty-six and eighty-nine."
     },
     {
-     "start": 23.17,
-     "end": 26.47,
-     "text": "It reached interstellar space in 2018."
+     "start": 18.69,
+     "end": 21.83,
+     "text": "In two thousand eighteen it reached interstellar space."
     },
     {
-     "start": 26.47,
-     "end": 36.59,
-     "text": "The plutonium batteries of both Voyagers are weakening; they will fall silent in the 2030s, but they will continue to glide among the stars for billions of years."
-    },
-    {
-     "start": 36.59,
-     "end": 37.91,
-     "text": "Our tour ends here."
+     "start": 21.83,
+     "end": 32.31,
+     "text": "The plutonium batteries of both Voyagers are weakening; in the twenty-thirties they will fall silent, but for billions of years they will continue to glide among the stars; our tour ends here."
     }
    ]
   }

@@ -108,6 +108,9 @@ export class BodyView {
   /** pulsar: unit magnetic axis in group-local space */
   private magAxis?: Vector3;
   occluders: CelestialBody[] = [];
+  /** cloud deck visibility 0..1 — eases toward the setting instead of popping (tours strip Venus) */
+  private cloudFade = 1;
+  private lastNow = 0;
   /** apparent radius in pixels, updated each frame */
   apparentRadiusPx = 0;
   /** camera distance in km, updated each frame */
@@ -462,7 +465,16 @@ export class BodyView {
 
     const ringsOn = !!this.rings && settings.rings;
     if (this.rings) this.rings.visible = ringsOn;
-    if (this.clouds) this.clouds.visible = settings.clouds;
+    if (this.clouds) {
+      // ease the deck in/out over ~2.5 s of real time
+      const now = performance.now();
+      const dtReal = this.lastNow ? Math.min(0.1, (now - this.lastNow) / 1000) : 0;
+      this.lastNow = now;
+      const target = settings.clouds ? 1 : 0;
+      const step = dtReal / 2.5;
+      this.cloudFade = this.cloudFade < target ? Math.min(target, this.cloudFade + step) : Math.max(target, this.cloudFade - step);
+      this.clouds.visible = this.cloudFade > 0.002;
+    }
 
     for (const lit of this.lit) {
       lit.uSunPos.value.copy(_v);
@@ -488,7 +500,12 @@ export class BodyView {
       }
     }
     if (this.surfaceMat) this.surfaceMat.uniforms.uTime.value = time;
-    if (this.cloudsMat) this.cloudsMat.uniforms.uTime.value = time;
+    if (this.cloudsMat && b.data.clouds) {
+      this.cloudsMat.uniforms.uTime.value = time;
+      // smoothstep on the fade so the deck thins gently at both ends of the transition
+      const f = this.cloudFade * this.cloudFade * (3 - 2 * this.cloudFade);
+      this.cloudsMat.uniforms.uOpacity.value = b.data.clouds.opacity * f;
+    }
 
     // Imagery tiles take over from the procedural globe as soon as the base level is loaded
     if (this.tiles && this.surface) {
@@ -505,7 +522,7 @@ export class BodyView {
       if (this.cloudsMat && b.data.clouds) {
         const alt = dist - b.radius;
         const k = this.imageryActive ? smooth01((alt - 600) / 1900) : 1;
-        this.cloudsMat.uniforms.uOpacity.value = b.data.clouds.opacity * k;
+        this.cloudsMat.uniforms.uOpacity.value *= k;
       }
     }
 

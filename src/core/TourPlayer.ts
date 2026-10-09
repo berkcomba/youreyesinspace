@@ -38,8 +38,23 @@ export interface TourHost {
   returnTo(bodyId: string): void;
   /** camera close above a point of a body's surface */
   goToSurface(bodyId: string, lat: number, lon: number, storm?: boolean): void;
+  /** camera at `elev`° above the equator plane, `az`° around the pole from the noon side, `dist` radii */
+  goToVantageOf(bodyId: string, elev: number, az: number, dist: number): void;
+  /** true-scale copy of `refId` beside `besideId` (null removes it) */
+  setComparison(refId: string | null, besideId?: string): void;
+  /** light pulse travelling between two bodies (null stops it) */
+  setPulse(p: { from: string; to: string; seconds: number } | null): void;
   setTourOverrides(o: TourOverrides): void;
   setSurfacePin(pin: SurfacePin | null): void;
+}
+
+/** Inset shown in the corner during a step (see the `card` cue) */
+export interface TourCard {
+  image?: string;
+  title?: string;
+  big?: string;
+  text?: string;
+  source?: string;
 }
 
 /** Per-step timing produced by scripts/tts-tours.mjs */
@@ -65,6 +80,8 @@ export interface TourState {
   subtitle: string;
   /** true when no audio is available for this locale and English (text-only tour) */
   silent: boolean;
+  /** corner inset currently shown (photo / trivia), if any */
+  card: TourCard | null;
 }
 
 /** Reading speed used when no audio file exists (characters per second) */
@@ -96,7 +113,7 @@ function splitSentences(text: string): string[] {
  * once it has arrived, and only moves on when the voice has finished *and* the camera is there.
  */
 export class TourPlayer {
-  readonly state: TourState = { tour: null, stepIndex: -1, phase: 'idle', paused: false, progress: 0, subtitle: '', silent: false };
+  readonly state: TourState = { tour: null, stepIndex: -1, phase: 'idle', paused: false, progress: 0, subtitle: '', silent: false, card: null };
   onChange: ((s: TourState) => void) | null = null;
 
   private readonly audio = new Audio();
@@ -121,6 +138,8 @@ export class TourPlayer {
   private cueTimes = new Map<TourCue, number>();
   private overrides: TourOverrides = {};
   private pinned = false;
+  /** narration time at which the current card hides itself (Infinity = end of step) */
+  private cardUntil = Infinity;
   /** set when the player stops itself (user navigated elsewhere / tour finished) */
   onEnd: ((reason: 'finished' | 'interrupted') => void) | null = null;
 
@@ -237,9 +256,10 @@ export class TourPlayer {
         }
         if (t < at) continue;
         this.fired.add(cue);
-        this.fire(step, cue);
+        this.fire(step, cue, timing, duration);
       }
     }
+    if (s.card && t >= this.cardUntil) { s.card = null; this.cardUntil = Infinity; }
 
     const narrationDone = useAudio ? this.audioEnded : this.elapsed >= duration;
     if (narrationDone) {
@@ -342,9 +362,41 @@ export class TourPlayer {
     return (before / total) * duration;
   }
 
-  private fire(step: TourStep, cue: TourCue): void {
+  private fire(step: TourStep, cue: TourCue, timing: StepTiming | null, duration: number): void {
     const h = this.host;
+    const targetId = step.target.kind === 'body' ? step.target.ref : null;
     switch (cue.action) {
+      case 'card':
+        this.state.card = { image: cue.image, title: cue.title, big: cue.big, text: cue.text, source: cue.source };
+        this.cardUntil = cue.until === undefined ? Infinity : this.cueTime(step, { at: cue.until, action: 'uncard' }, timing, duration);
+        break;
+      case 'uncard':
+        this.state.card = null;
+        this.cardUntil = Infinity;
+        break;
+      case 'compare':
+        if (!targetId) break;
+        h.setComparison(cue.ref, targetId);
+        // the host may back the camera off to fit both bodies: adopt that flight as ours
+        if (h.camera.autopilot && h.camera.autopilot !== this.flight) {
+          this.flight = h.camera.autopilot;
+          this.state.phase = 'flying';
+        }
+        break;
+      case 'uncompare':
+        h.setComparison(null);
+        break;
+      case 'vantage': {
+        const ref = cue.ref ?? targetId;
+        if (!ref) break;
+        h.goToVantageOf(ref, cue.elev, cue.az, cue.dist);
+        this.flight = h.camera.autopilot;
+        this.state.phase = 'flying';
+        break;
+      }
+      case 'pulse':
+        h.setPulse({ from: cue.from, to: cue.to, seconds: cue.seconds });
+        break;
       case 'clouds':
         this.overrides = { ...this.overrides, clouds: cue.on };
         h.setTourOverrides(this.overrides);
@@ -389,8 +441,12 @@ export class TourPlayer {
   private resetCues(): void {
     this.overrides = {};
     this.pinned = false;
+    this.state.card = null;
+    this.cardUntil = Infinity;
     this.host.setTourOverrides(this.overrides);
     this.host.setSurfacePin(null);
+    this.host.setComparison(null);
+    this.host.setPulse(null);
   }
 
   private silentDuration(step: TourStep): number {

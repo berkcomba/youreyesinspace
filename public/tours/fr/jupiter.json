@@ -3,192 +3,182 @@
  "locale": "fr",
  "steps": {
   "callisto": {
-   "hash": "068c9df85e97",
-   "duration": 25.67,
+   "hash": "9804dc8eda06",
+   "duration": 23.99,
    "sentences": [
     {
-     "start": 0.02,
-     "end": 4.9,
-     "text": "Callisto, la plus extérieure et la plus silencieuse des quatre lunes galiléennes."
+     "start": 0.04,
+     "end": 4.66,
+     "text": "Callisto, la plus extérieure et la plus calme des quatre lunes galiléennes."
     },
     {
-     "start": 4.9,
-     "end": 11.8,
+     "start": 4.66,
+     "end": 11.04,
      "text": "Sa surface est la plus densément cratérisée du Système solaire ; elle n'a presque pas changé depuis quatre milliards d'années."
     },
     {
-     "start": 11.8,
-     "end": 18.73,
-     "text": "Parce qu'elle est éloignée de Jupiter, elle n'est pas affectée par l'échauffement de marée et reste en dehors des ceintures de radiation."
+     "start": 11.04,
+     "end": 17.45,
+     "text": "Parce qu'elle est loin de Jupiter, elle n'est pas affectée par l'échauffement de marée et reste en dehors des ceintures de radiation."
     },
     {
-     "start": 18.73,
-     "end": 22.63,
-     "text": "Cela en fait la candidate la plus sûre pour une future base habitée."
-    },
-    {
-     "start": 22.63,
-     "end": 25.67,
-     "text": "Il y a aussi des indices qu'un océan pourrait se trouver en dessous."
+     "start": 17.45,
+     "end": 23.99,
+     "text": "Cela en fait la candidate la plus sûre pour une future base habitée ; il y a aussi des indices qu'un océan pourrait se trouver en dessous."
     }
    ]
   },
   "europa": {
-   "hash": "ca3cb94ed044",
-   "duration": 29.51,
+   "hash": "5ed899085a8f",
+   "duration": 30.07,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 3.86,
-     "text": "Europe, l'adresse la plus prometteuse dans la recherche de la vie."
+     "start": 0.08,
+     "end": 3.62,
+     "text": "Europe, l'adresse la plus prometteuse dans la quête de la vie."
     },
     {
-     "start": 3.86,
-     "end": 12.12,
-     "text": "Sous sa croûte de glace lisse, on pense qu'il existe un océan global d'eau salée renfermant deux fois plus d'eau que tous les océans de la Terre."
+     "start": 3.62,
+     "end": 13.92,
+     "text": "Elle est un peu plus petite que notre Lune ; mais on pense que, sous sa croûte de glace lisse, se trouve un océan global renfermant deux fois plus d'eau que tous les océans de la Terre."
     },
     {
-     "start": 12.12,
-     "end": 18.75,
-     "text": "Les lignes brunes à la surface sont les endroits où la glace se fissure et où l'eau d'en dessous suinte vers le haut."
+     "start": 13.92,
+     "end": 20.39,
+     "text": "Les lignes brunes à la surface sont les endroits où la glace s'est fissurée et où l'eau du dessous a suinté vers le haut."
     },
     {
-     "start": 18.75,
-     "end": 29.51,
-     "text": "La sonde Europa Clipper de la NASA a été lancée en deux mille vingt-quatre et, en deux mille trente, elle étudiera, au cours d'environ cinquante survols rapprochés, si cet océan est habitable."
+     "start": 20.39,
+     "end": 30.07,
+     "text": "La sonde Europa Clipper de la NASA a été lancée en deux mille vingt-quatre et, en deux mille trente, elle étudiera si cet océan est habitable au cours d'environ cinquante survols rapprochés."
     }
    ]
   },
   "ganymede": {
-   "hash": "9c5cdb283e9e",
-   "duration": 32.47,
+   "hash": "c6a70c9bc84d",
+   "duration": 33.59,
    "sentences": [
     {
      "start": 0.1,
-     "end": 3.34,
+     "end": 3.36,
      "text": "Ganymède, la plus grande lune du Système solaire."
     },
     {
-     "start": 3.34,
-     "end": 5.94,
-     "text": "Il est même plus grand que la planète Mercure."
+     "start": 3.36,
+     "end": 8.86,
+     "text": "Elle est même plus grande que la planète Mercure ; vous pouvez le voir lorsque nous les plaçons côte à côte."
     },
     {
-     "start": 5.94,
-     "end": 15.3,
+     "start": 8.86,
+     "end": 18.05,
      "text": "C'est la seule lune connue à posséder son propre champ magnétique ; ce champ forme une petite bulle à l'intérieur de celui de Jupiter et crée des aurores à ses pôles."
     },
     {
-     "start": 15.3,
-     "end": 23.49,
+     "start": 18.05,
+     "end": 25.67,
      "text": "Sa surface a deux âges différents : des régions anciennes, sombres et cratérisées, et des régions plus jeunes, claires et rainurées."
     },
     {
-     "start": 23.49,
-     "end": 26.79,
-     "text": "Sous sa croûte de glace, lui aussi possède un océan."
-    },
-    {
-     "start": 26.79,
-     "end": 32.47,
-     "text": "La sonde JUICE de l'Agence spatiale européenne entrera en orbite autour de lui en deux mille trente et un."
+     "start": 25.67,
+     "end": 33.59,
+     "text": "Elle aussi a un océan sous sa croûte de glace ; la sonde JUICE de l'Agence spatiale européenne entrera en orbite autour d'elle en deux mille trente et un."
     }
    ]
   },
   "io": {
-   "hash": "50a91b148085",
-   "duration": 29.35,
+   "hash": "912e2e737dc4",
+   "duration": 32.95,
    "sentences": [
     {
      "start": 0.08,
-     "end": 3.42,
+     "end": 3.58,
      "text": "Io, le monde le plus volcanique du Système solaire."
     },
     {
-     "start": 3.42,
-     "end": 12.84,
-     "text": "Elle est sans cesse comprimée et étirée entre l'attraction gravitationnelle de Jupiter et celle des autres lunes ; cet échauffement de marée fait fondre son intérieur."
+     "start": 3.58,
+     "end": 12.38,
+     "text": "Elle est sans cesse comprimée et étirée entre l'attraction de Jupiter et celle des autres lunes ; cet échauffement de marée fait fondre son intérieur."
     },
     {
-     "start": 12.84,
-     "end": 19.85,
-     "text": "Sa surface compte plus de quatre cents volcans actifs, et certains projettent de la lave à des centaines de kilomètres de hauteur."
+     "start": 12.38,
+     "end": 24.13,
+     "text": "Sa surface compte plus de quatre cents volcans actifs, et certains projettent la lave à des centaines de kilomètres de hauteur ; le plus grand, Loki Patera, est un lac de lave de deux cents kilomètres de large."
     },
     {
-     "start": 19.85,
-     "end": 24.79,
+     "start": 24.13,
+     "end": 28.61,
      "text": "Les couleurs jaune, orange et rouge viennent du soufre et des composés soufrés."
     },
     {
-     "start": 24.79,
-     "end": 29.35,
+     "start": 28.61,
+     "end": 32.95,
      "text": "Sa surface se renouvelle si vite qu'elle ne porte presque aucun cratère d'impact."
     }
    ]
   },
   "juno": {
-   "hash": "d38d492f2c7e",
-   "duration": 36.23,
+   "hash": "b83ebf6f5458",
+   "duration": 37.11,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 2.14,
-     "text": "Enfin, regardons Juno."
+     "start": 0.02,
+     "end": 7.28,
+     "text": "Pour finir, regardons Juno : cette sonde de la NASA est entrée en orbite autour de Jupiter en juillet deux mille seize."
     },
     {
-     "start": 2.14,
-     "end": 7.32,
-     "text": "Cette sonde de la NASA est entrée en orbite autour de Jupiter en juillet deux mille seize."
+     "start": 7.28,
+     "end": 15.22,
+     "text": "C'est le premier engin à fonctionner à l'énergie solaire aussi loin du Soleil ; ses trois panneaux géants occupent autant de place qu'un terrain de basket."
     },
     {
-     "start": 7.32,
-     "end": 15.79,
-     "text": "C'est le premier engin à fonctionner à l'énergie solaire aussi loin du Soleil ; ses trois immenses panneaux occupent autant de place qu'un terrain de basket-ball."
+     "start": 15.22,
+     "end": 23.25,
+     "text": "Pour se protéger des radiations, elle suit une orbite longue et elliptique passant au-dessus des pôles ; voici cette orbite, en accéléré."
     },
     {
-     "start": 15.79,
-     "end": 26.33,
-     "text": "Pour se protéger des radiations, elle suit une orbite longue et elliptique passant au-dessus des pôles et, à chaque passage, elle passe à quelques milliers de kilomètres au-dessus des nuages."
+     "start": 23.25,
+     "end": 30.53,
+     "text": "À chaque passage, elle survole les nuages à quelques milliers de kilomètres et a découvert des cyclones géants aux pôles de Jupiter."
     },
     {
-     "start": 26.33,
-     "end": 34.29,
-     "text": "Elle a découvert des cyclones géants aux pôles de Jupiter et a montré que le noyau de Jupiter est plus grand et plus diffus qu'on ne le pensait."
-    },
-    {
-     "start": 34.29,
-     "end": 36.23,
-     "text": "Notre tour de Jupiter s'achève ici."
+     "start": 30.53,
+     "end": 37.11,
+     "text": "Elle a montré que le noyau de Jupiter est plus grand et plus diffus qu'on ne le pensait ; notre tour de Jupiter s'achève ici."
     }
    ]
   },
   "jupiter": {
-   "hash": "1c9ca82225bd",
-   "duration": 33.74,
+   "hash": "e03dfbb07bfe",
+   "duration": 45.75,
    "sentences": [
     {
      "start": 0.08,
-     "end": 2.68,
-     "text": "Bienvenue dans le système de Jupiter."
+     "end": 5.84,
+     "text": "Bienvenue dans le système de Jupiter ; ce géant est presque comme un petit système solaire."
     },
     {
-     "start": 2.68,
-     "end": 9.03,
-     "text": "Ce géant ressemble presque à un petit système solaire : plus de quatre-vingt-quinze lunes tournent autour de lui."
+     "start": 5.84,
+     "end": 11.9,
+     "text": "Plus de quatre-vingt-quinze lunes tournent autour de lui ; suivons d'en haut les orbites de ses quatre plus grandes."
     },
     {
-     "start": 9.03,
-     "end": 21.17,
-     "text": "La planète est si grande que mille trois cents Terres y tiendraient, et son puissant champ magnétique est la plus grande structure du Système solaire ; s'il était visible dans le ciel, il paraîtrait plus grand que la pleine lune."
+     "start": 11.9,
+     "end": 26.67,
+     "text": "Io fait le tour en deux jours, Europe en trois jours et demi, Ganymède en sept jours, et Callisto en dix-sept jours ; les trois intérieures sont verrouillées entre elles : quand Io fait quatre tours, Europe en fait deux et Ganymède un."
     },
     {
-     "start": 21.17,
-     "end": 30.4,
-     "text": "En mille six cent dix, Galilée a découvert ses quatre grandes lunes avec son petit télescope, et ce fut la première preuve que tout ne tournait pas autour de la Terre."
+     "start": 26.67,
+     "end": 34.03,
+     "text": "La planète est si grande qu'elle peut contenir mille trois cents Terres, et son champ magnétique est la plus grande structure du Système solaire."
     },
     {
-     "start": 30.4,
-     "end": 33.74,
+     "start": 34.03,
+     "end": 42.49,
+     "text": "En mille six cent dix, Galilée a découvert ces quatre lunes avec son petit télescope ; c'était la première preuve que tout ne tournait pas autour de la Terre."
+    },
+    {
+     "start": 42.49,
+     "end": 45.75,
      "text": "Nous allons maintenant visiter ces quatre lunes l'une après l'autre."
     }
    ]

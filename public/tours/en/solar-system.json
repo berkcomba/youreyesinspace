@@ -3,343 +3,393 @@
  "locale": "en",
  "steps": {
   "earth": {
-   "hash": "b3893823877e",
-   "duration": 25.59,
+   "hash": "eb55fcc9c534",
+   "duration": 40.95,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 2.54,
-     "text": "And here is our home: Earth."
+     "start": 0.08,
+     "end": 11.64,
+     "text": "And here is our home: Earth, the only place in the universe we know to harbor life. 71 percent of its surface is covered with liquid water; that is why it looks blue from space."
     },
     {
-     "start": 2.54,
-     "end": 12.57,
-     "text": "The only place in the universe we know of that harbors life. 71 percent of its surface is covered with liquid water; that is why it looks blue from space."
+     "start": 11.64,
+     "end": 17.5,
+     "text": "Let's move to the night side: city lights are the signature of a living planet, visible from space."
     },
     {
-     "start": 12.57,
-     "end": 19.23,
-     "text": "Its strong magnetic field protects us from the solar wind, and the ozone layer filters ultraviolet rays."
+     "start": 17.5,
+     "end": 24.09,
+     "text": "Its strong magnetic field protects us from the solar wind, and the ozone layer filters out ultraviolet rays."
     },
     {
-     "start": 19.23,
-     "end": 25.59,
-     "text": "The Moon's gravity, in turn, keeps Earth's axial tilt steady, so that the seasons stay regular."
+     "start": 24.09,
+     "end": 33.11,
+     "text": "This photograph, the Blue Marble, taken in 1972 by the crew of Apollo 17, became one of the most reproduced images in history."
+    },
+    {
+     "start": 33.11,
+     "end": 40.95,
+     "text": "The Moon's gravity keeps Earth's axial tilt steady, so the seasons stay regular; now let's pull back and watch its month-long trip."
     }
    ]
   },
   "jupiter": {
-   "hash": "b4d1729d6134",
-   "duration": 29.82,
+   "hash": "9e38ce52fa62",
+   "duration": 37.43,
    "sentences": [
     {
-     "start": 0.02,
-     "end": 2.2,
-     "text": "Jupiter, king of the planets."
+     "start": 0.08,
+     "end": 6.28,
+     "text": "Jupiter, king of the planets: its mass is two and a half times the total of all the other planets."
     },
     {
-     "start": 2.2,
-     "end": 9.91,
-     "text": "Its mass is two and a half times the total of all the other planets; 1,300 Earths fit inside it."
+     "start": 6.28,
+     "end": 13.2,
+     "text": "When we place a true-scale Earth beside it, the difference is striking: 1,300 Earths fit inside it."
     },
     {
-     "start": 9.91,
-     "end": 17.17,
-     "text": "It has no surface; the colorful bands you see are giant cloud belts in an atmosphere of hydrogen and helium."
+     "start": 13.2,
+     "end": 19.73,
+     "text": "It has no surface; the colored bands you see are giant cloud belts in an atmosphere of hydrogen and helium."
     },
     {
-     "start": 17.17,
-     "end": 23.74,
-     "text": "The Great Red Spot is a storm that has lasted at least 350 years and is larger than Earth."
+     "start": 19.73,
+     "end": 25.13,
+     "text": "The Great Red Spot is a storm larger than Earth that has lasted at least 350 years."
     },
     {
-     "start": 23.74,
-     "end": 29.82,
-     "text": "This giant's day lasts only 10 hours, and more than 95 known moons orbit around it."
+     "start": 25.13,
+     "end": 30.73,
+     "text": "This giant's day lasts only 10 hours; right now you are watching one Jupiter day sped up."
+    },
+    {
+     "start": 30.73,
+     "end": 37.43,
+     "text": "More than 95 known moons orbit it; Galileo discovered four of them in 1610 with his small telescope."
     }
    ]
   },
   "mars": {
-   "hash": "ba7ee987c4c4",
-   "duration": 30.71,
+   "hash": "f8a288bf490e",
+   "duration": 44.15,
    "sentences": [
     {
-     "start": 0.04,
-     "end": 2.18,
-     "text": "The Red Planet, Mars."
+     "start": 0.1,
+     "end": 5.02,
+     "text": "The Red Planet, Mars, takes its color from the rusted iron on its surface."
     },
     {
-     "start": 2.18,
-     "end": 5.68,
-     "text": "It takes its color from the rusted iron on its surface."
+     "start": 5.02,
+     "end": 12.62,
+     "text": "Its diameter is about half of Earth's; but its land area is almost equal to all of Earth's land, because it has no ocean."
     },
     {
-     "start": 5.68,
-     "end": 15.28,
-     "text": "Its diameter is about half of Earth's, but it is home to the largest volcano in the Solar System: Olympus Mons, 22 kilometers high."
+     "start": 12.62,
+     "end": 20.88,
+     "text": "It is home to the largest volcano in the Solar System: Olympus Mons, 22 kilometers high, is two and a half times Everest."
     },
     {
-     "start": 15.28,
-     "end": 23.77,
-     "text": "The Valles Marineris canyon, 4,000 kilometers long, is long enough to stretch from one end of the American continent to the other."
+     "start": 20.88,
+     "end": 28.33,
+     "text": "The Valles Marineris canyon, 4,000 kilometers long, is long enough to stretch clear across the American continent."
     },
     {
-     "start": 23.77,
-     "end": 30.71,
-     "text": "Billions of years ago there were rivers and lakes on its surface; today, robots are searching for traces of that water."
+     "start": 28.33,
+     "end": 37.05,
+     "text": "Billions of years ago there were rivers and lakes on its surface; today robots such as Curiosity and Perseverance are searching for traces of that water."
+    },
+    {
+     "start": 37.05,
+     "end": 44.15,
+     "text": "Its day is very similar to ours, 24 hours and 37 minutes; its year lasts 687 days."
     }
    ]
   },
   "mercury": {
-   "hash": "f2317bcb62f7",
-   "duration": 27.91,
+   "hash": "01000471439a",
+   "duration": 45.75,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 4.92,
-     "text": "Our first stop is Mercury, the smallest planet and the closest to the Sun."
+     "start": 0.08,
+     "end": 5.64,
+     "text": "Our first stop is Mercury: the smallest planet, and the closest to the Sun."
     },
     {
-     "start": 4.92,
-     "end": 8.16,
-     "text": "One trip around the Sun takes only 88 days."
+     "start": 5.64,
+     "end": 11.56,
+     "text": "One trip around the Sun takes only 88 days; right now you are watching that trip sped up."
     },
     {
-     "start": 8.16,
-     "end": 19.05,
-     "text": "Its atmosphere is so thin it might as well not exist; that is why the day side rises to 430 degrees while the night side drops to minus 180 degrees."
+     "start": 11.56,
+     "end": 18.02,
+     "text": "By contrast, it spins very slowly on its axis: one Mercury day lasts two Mercury years."
     },
     {
-     "start": 19.05,
-     "end": 22.61,
-     "text": "Its surface is covered with craters, just like the Moon."
+     "start": 18.02,
+     "end": 27.67,
+     "text": "Its atmosphere is so thin it barely exists; that is why the dayside rises to 430 degrees while the nightside drops to minus 180 degrees."
     },
     {
-     "start": 22.61,
-     "end": 27.91,
-     "text": "Right now, Europe and Japan's joint spacecraft BepiColombo is on its way toward it."
+     "start": 27.67,
+     "end": 39.13,
+     "text": "The Caloris Basin in the northern hemisphere is a giant impact scar 1,500 kilometers wide; the collision that formed it raised hills even on the exact opposite side of the planet."
+    },
+    {
+     "start": 39.13,
+     "end": 45.75,
+     "text": "Right now BepiColombo, the joint spacecraft of Europe and Japan, is on its way to enter orbit around Mercury."
     }
    ]
   },
   "moon": {
-   "hash": "ed18b2f6a5a5",
-   "duration": 27.03,
+   "hash": "675e5fe57eac",
+   "duration": 45.11,
    "sentences": [
     {
-     "start": 0.02,
-     "end": 7.18,
-     "text": "The Moon is Earth's only natural satellite and the only other celestial body humans have set foot on."
+     "start": 0.08,
+     "end": 6.66,
+     "text": "The Moon is Earth's only natural satellite, and the only other celestial body humans have set foot on."
     },
     {
-     "start": 7.18,
-     "end": 14.83,
-     "text": "Between 1969 and 1972, twelve astronauts walked on its surface on the Apollo missions."
+     "start": 6.66,
+     "end": 11.98,
+     "text": "Look how small it is beside Earth: its diameter is only about a quarter of Earth's."
     },
     {
-     "start": 14.83,
-     "end": 23.69,
-     "text": "It is 384,000 kilometers away and always shows us the same face, because its rotation is locked to its orbit."
+     "start": 11.98,
+     "end": 20.62,
+     "text": "In 1969 Apollo 11 landed in the Sea of Tranquility; Neil Armstrong and Buzz Aldrin walked on the surface for two and a half hours."
     },
     {
-     "start": 23.69,
-     "end": 27.03,
-     "text": "Every year it moves about 4 centimeters farther from us."
+     "start": 20.62,
+     "end": 28.21,
+     "text": "By 1972 a total of 12 astronauts had walked on the Moon and brought back 382 kilograms of rock."
+    },
+    {
+     "start": 28.21,
+     "end": 36.73,
+     "text": "The bright-rayed Tycho Crater in the south is the mark of a collision 108 million years ago; its rays stretch for thousands of kilometers."
+    },
+    {
+     "start": 36.73,
+     "end": 45.11,
+     "text": "The Moon always shows us the same face, because its rotation is locked to its orbit; every year it moves about 4 centimeters farther away from us."
     }
    ]
   },
   "neptune": {
-   "hash": "d7ce914ffee4",
-   "duration": 33.11,
+   "hash": "0b6fcc124d3b",
+   "duration": 44.15,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 3.12,
-     "text": "Neptune, the farthest planet from the Sun."
+     "start": 0.1,
+     "end": 6.62,
+     "text": "Neptune, the farthest planet from the Sun; it was discovered not with a telescope, but on paper."
     },
     {
-     "start": 3.12,
-     "end": 16.23,
-     "text": "It was discovered not with a telescope, but on paper: mathematicians studying the deviations in Uranus's orbit calculated its position, and in 1846 it was found right there."
+     "start": 6.62,
+     "end": 15.8,
+     "text": "Mathematicians studying the deviations in Uranus's orbit calculated its position, and in 1846 it was found right there."
     },
     {
-     "start": 16.23,
-     "end": 23.01,
-     "text": "Its winds exceed 2,100 kilometers per hour; they are the fastest winds in the Solar System."
+     "start": 15.8,
+     "end": 22.59,
+     "text": "One trip around the Sun takes 165 years; since its discovery it has completed only one trip."
     },
     {
-     "start": 23.01,
-     "end": 26.79,
-     "text": "One trip around the Sun takes 165 years."
+     "start": 22.59,
+     "end": 29.03,
+     "text": "Its winds exceed 2,100 kilometers per hour; these are the fastest winds in the Solar System."
     },
     {
-     "start": 26.79,
-     "end": 33.11,
-     "text": "Its large moon Triton orbits in the opposite direction; it is probably a captured Kuiper Belt object."
+     "start": 29.03,
+     "end": 35.77,
+     "text": "When Voyager 2 flew past in 1989, it saw a storm the size of Earth: the Great Dark Spot."
+    },
+    {
+     "start": 35.77,
+     "end": 44.15,
+     "text": "Its large moon Triton orbits backwards; it is probably a captured Kuiper Belt object, and one day it will break apart and turn into a ring."
     }
    ]
   },
   "pluto": {
-   "hash": "eaf3ddb572bc",
-   "duration": 35.75,
+   "hash": "643609d8637d",
+   "duration": 39.35,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 2.1,
-     "text": "Our last stop is Pluto."
+     "start": 0.06,
+     "end": 7.56,
+     "text": "Our last stop is Pluto; it was discovered in 1930 and was considered the ninth planet until 2006."
     },
     {
-     "start": 2.1,
-     "end": 10.1,
-     "text": "It was discovered in 1930 and was considered the ninth planet until 2006; it is now a dwarf planet."
+     "start": 7.56,
+     "end": 14.14,
+     "text": "In fact it is even smaller than our Moon: when we place them side by side, this is clearly visible."
     },
     {
-     "start": 10.1,
-     "end": 15.87,
-     "text": "Until New Horizons flew past it in 2015, it was nothing but a blurry dot."
+     "start": 14.14,
+     "end": 19.54,
+     "text": "Until New Horizons flew past in 2015, it was nothing more than a blurry dot."
     },
     {
-     "start": 15.87,
-     "end": 22.89,
-     "text": "The spacecraft found a giant heart shape, nitrogen glaciers, and mountains of water ice on its surface."
+     "start": 19.54,
+     "end": 29.07,
+     "text": "The spacecraft found a giant heart shape on the surface, nitrogen glaciers and mountains of water ice; the surface temperature is minus 230 degrees."
     },
     {
-     "start": 22.89,
-     "end": 26.49,
-     "text": "The surface temperature is minus 230 degrees."
+     "start": 29.07,
+     "end": 36.39,
+     "text": "Its moon Charon is so large that the two of them orbit together around a shared center of mass that lies in the space between them."
     },
     {
-     "start": 26.49,
-     "end": 32.49,
-     "text": "Its moon Charon is so large that the two of them orbit together around a common center of mass."
-    },
-    {
-     "start": 32.49,
-     "end": 35.75,
+     "start": 36.39,
+     "end": 39.35,
      "text": "Our Solar System tour ends here; have a good journey."
     }
    ]
   },
   "saturn": {
-   "hash": "042f94455d77",
-   "duration": 27.1,
+   "hash": "32f24ec34915",
+   "duration": 38.71,
    "sentences": [
     {
-     "start": 0.12,
-     "end": 4.98,
+     "start": 0.14,
+     "end": 5,
      "text": "Saturn is, without a doubt, the most elegant planet in the Solar System."
     },
     {
-     "start": 4.98,
-     "end": 15.21,
-     "text": "Its rings are made mostly of water ice; their width reaches 280,000 kilometers, while their thickness is only about 10 meters in most places."
+     "start": 5,
+     "end": 11.28,
+     "text": "Its rings are made mostly of water ice, and they reach a width of 280,000 kilometers."
     },
     {
-     "start": 15.21,
-     "end": 20.87,
-     "text": "The planet itself is so light that if you put it in a big enough ocean, it would float."
+     "start": 11.28,
+     "end": 19,
+     "text": "But when we look at them exactly edge-on, they almost disappear: in most places they are only about 10 meters thick."
     },
     {
-     "start": 20.87,
-     "end": 27.1,
-     "text": "At its north pole, a mysterious hexagonal storm rotates, each side as large as Earth."
+     "start": 19,
+     "end": 24.63,
+     "text": "The planet itself is so light that if you placed it in a large enough ocean, it would float."
+    },
+    {
+     "start": 24.63,
+     "end": 30.23,
+     "text": "At the north pole spins a mysterious hexagonal storm, each side as large as Earth."
+    },
+    {
+     "start": 30.23,
+     "end": 38.71,
+     "text": "The Cassini spacecraft studied this system for 13 years and, in 2017, completed its mission by diving into the planet's atmosphere."
     }
    ]
   },
   "sun": {
-   "hash": "a43c8392cda2",
-   "duration": 34.71,
+   "hash": "9b28b75bc59d",
+   "duration": 46.39,
    "sentences": [
     {
-     "start": 0,
-     "end": 2.676,
-     "text": "Welcome to the Solar System tour."
+     "start": 0.08,
+     "end": 6.26,
+     "text": "Welcome to the Solar System tour; our journey begins at the center of everything, the Sun."
     },
     {
-     "start": 2.676,
-     "end": 7.218,
-     "text": "Our journey begins at the center of everything, the Sun."
+     "start": 6.26,
+     "end": 13.74,
+     "text": "This star, four and a half billion years old, alone holds 99. 8 percent of the system's total mass."
     },
     {
-     "start": 7.218,
-     "end": 15.571,
-     "text": "This star, 4. 5 billion years old, carries 99. 8 percent of the total mass of the system all by itself."
+     "start": 13.74,
+     "end": 24.89,
+     "text": "To see how big it is, let's place a true-scale Earth beside it: 109 Earths line up side by side across its diameter, and 1. 3 million of them fit inside."
     },
     {
-     "start": 15.571,
-     "end": 21.734,
-     "text": "Its diameter is 1,400,000 kilometers; 109 Earths fit inside it side by side."
+     "start": 24.89,
+     "end": 34.79,
+     "text": "Its surface is 5,500 degrees, its core 15 million degrees; every second it converts 600 million tons of hydrogen into helium."
     },
     {
-     "start": 21.734,
-     "end": 27.168,
-     "text": "Its surface is 5,500 degrees, while its core is 15 million degrees."
+     "start": 34.79,
+     "end": 41.43,
+     "text": "Now let's pull back and follow the journey of light: light leaving the Sun reaches Earth in 8 minutes and 20 seconds."
     },
     {
-     "start": 27.168,
-     "end": 34.71,
-     "text": "The light you are seeing right now leaves here and reaches Earth in 8 minutes and 20 seconds."
+     "start": 41.43,
+     "end": 46.39,
+     "text": "So every time you look at the Sun, you are actually seeing it as it was 8 minutes ago."
     }
    ]
   },
   "uranus": {
-   "hash": "649553bfc5c5",
-   "duration": 28.15,
+   "hash": "4d0377e2418c",
+   "duration": 36.15,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 3.2,
-     "text": "Uranus, the planet lying on its side."
+     "start": 0.14,
+     "end": 5.58,
+     "text": "Uranus, the planet lying on its side: its axis is tilted 98 degrees."
     },
     {
-     "start": 3.2,
-     "end": 9.64,
-     "text": "Its axis is tilted 98 degrees; that is, it all but rolls as it orbits the Sun."
+     "start": 5.58,
+     "end": 11.38,
+     "text": "So it practically rolls as it goes around the Sun; let's watch an 84-year trip from above."
     },
     {
-     "start": 9.64,
-     "end": 15.95,
-     "text": "Because of this, its poles experience 42 years of day and 42 years of night."
+     "start": 11.38,
+     "end": 16.7,
+     "text": "Because of this, its poles spend 42 years in day and 42 years in night."
     },
     {
-     "start": 15.95,
-     "end": 20.01,
-     "text": "It looks blue-green because methane gas absorbs red light."
+     "start": 16.7,
+     "end": 22.67,
+     "text": "It looks blue-green because methane gas absorbs red light, and it too has thin, dark rings."
     },
     {
-     "start": 20.01,
-     "end": 28.15,
-     "text": "It is the first planet discovered with a telescope, by William Herschel in 1781, and only Voyager 2 saw it up close."
+     "start": 22.67,
+     "end": 30.15,
+     "text": "It is the first planet William Herschel discovered with a telescope, in 1781; only Voyager 2 saw it up close."
+    },
+    {
+     "start": 30.15,
+     "end": 36.15,
+     "text": "The James Webb Space Telescope, in 2023, imaged its rings and polar cap with this clarity."
     }
    ]
   },
   "venus": {
-   "hash": "609537a3f8c7",
-   "duration": 30.87,
+   "hash": "abe6b76604c3",
+   "duration": 44.15,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 5.88,
-     "text": "Venus is considered Earth's twin in size, but its conditions are a true hell."
+     "start": 0.12,
+     "end": 7.52,
+     "text": "Venus is considered Earth's twin in size; when we place them side by side, the difference is almost invisible."
     },
     {
-     "start": 5.88,
-     "end": 18.63,
-     "text": "Its thick carbon dioxide atmosphere raises the surface pressure to 92 times that of Earth and, through the greenhouse effect, drives the temperature up to 465 degrees."
+     "start": 7.52,
+     "end": 13.76,
+     "text": "But the resemblance ends there: the sulfuric acid clouds you see now completely hide the world beneath."
     },
     {
-     "start": 18.63,
-     "end": 22.43,
-     "text": "It is hotter even than Mercury, which is closer to the Sun."
+     "start": 13.76,
+     "end": 25.49,
+     "text": "Let's remove the clouds: underneath lies a hell, heated to 465 degrees by the greenhouse effect of a thick carbon dioxide atmosphere, with a pressure 92 times Earth's."
     },
     {
-     "start": 22.43,
-     "end": 24.91,
-     "text": "Its clouds are sulfuric acid."
+     "start": 25.49,
+     "end": 31.71,
+     "text": "Lead melts on the surface; the highest mountain here is Maxwell Montes, 11 kilometers high."
     },
     {
-     "start": 24.91,
-     "end": 30.87,
-     "text": "Venus rotates in the opposite direction and very slowly: a day there is longer than a year."
+     "start": 31.71,
+     "end": 38.17,
+     "text": "Only radar could see this surface; the Soviet Venera spacecraft lasted at most 2 hours after landing."
+    },
+    {
+     "start": 38.17,
+     "end": 44.15,
+     "text": "Venus also rotates backwards, and very slowly: one of its days is longer than one of its years."
     }
    ]
   }

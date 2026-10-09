@@ -3,198 +3,198 @@
  "locale": "tr",
  "steps": {
   "curiosity": {
-   "hash": "4854d4f062f4",
-   "duration": 35.28,
+   "hash": "ed5d5a24eecc",
+   "duration": 34.55,
    "sentences": [
     {
      "start": 0.08,
-     "end": 4.12,
-     "text": "Şimdi yüzeye iniyoruz: karşınızda Curiosity."
+     "end": 7.26,
+     "text": "Şimdi yüzeye iniyoruz: karşınızda Curiosity, bir ton ağırlığında, araba büyüklüğünde bir robot."
     },
     {
-     "start": 4.12,
-     "end": 14.45,
-     "text": "Bu bir ton ağırlığındaki araba büyüklüğündeki robot, iki bin on iki Ağustos'unda Gale Krateri'ne bir gökyüzü vinciyle, halatlarla sarkıtılarak indi."
+     "start": 7.26,
+     "end": 14,
+     "text": "İki bin on iki Ağustos'unda Gale Krateri'ne bir gökyüzü vinciyle, halatlarla sarkıtılarak indi."
     },
     {
-     "start": 14.45,
-     "end": 20.25,
+     "start": 14,
+     "end": 19.75,
      "text": "Enerjisini plütonyumun ısısından üretir, bu yüzden toz fırtınalarından etkilenmez."
     },
     {
-     "start": 20.25,
-     "end": 28.56,
+     "start": 19.75,
+     "end": 27.89,
      "text": "Krater tabanında eskiden milyonlarca yıl süren bir göl olduğunu kanıtladı ve yaşam için gereken kimyasal bileşenleri buldu."
     },
     {
-     "start": 28.56,
-     "end": 35.28,
+     "start": 27.89,
+     "end": 34.55,
      "text": "On yılı aşkın süredir Sharp Dağı'nın yamaçlarını tırmanarak Mars'ın iklim tarihini katman katman okuyor."
     }
    ]
   },
   "deimos": {
-   "hash": "eff3a4087578",
-   "duration": 30.39,
+   "hash": "e6143884d94b",
+   "duration": 31.35,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 3.38,
-     "text": "Deimos, Mars'ın daha küçük ve daha uzak ayı."
+     "start": 0.12,
+     "end": 6.06,
+     "text": "Deimos, Mars'ın daha küçük ve daha uzak ayı: çapı yaklaşık on iki kilometredir."
     },
     {
-     "start": 3.38,
-     "end": 8.42,
-     "text": "Çapı yaklaşık on iki kilometredir ve gezegenin etrafını otuz saatte dolaşır."
+     "start": 6.06,
+     "end": 13,
+     "text": "Gezegenin etrafını otuz saatte dolaşır; Mars yüzeyinden bakıldığında parlak bir yıldızdan farksızdır."
     },
     {
-     "start": 8.42,
-     "end": 14.44,
+     "start": 13,
+     "end": 19.01,
      "text": "Yüzeyi Phobos'a göre daha pürüzsüzdür, çünkü kraterleri kalın bir toz tabakasıyla dolmuştur."
     },
     {
-     "start": 14.44,
-     "end": 18.26,
-     "text": "Mars yüzeyinden bakıldığında parlak bir yıldızdan farksızdır."
+     "start": 19.01,
+     "end": 25.95,
+     "text": "Her iki ayın da yakalanmış asteroitler mi yoksa dev bir çarpışmanın kalıntıları mı olduğu hâlâ tartışılıyor."
     },
     {
-     "start": 18.26,
-     "end": 30.39,
-     "text": "Her iki ayın da yakalanmış asteroitler mi yoksa dev bir çarpışmanın kalıntıları mı olduğu hâlâ tartışılıyor; Japonya'nın MMX görevi bu soruyu yanıtlamak için Phobos'tan örnek getirecek."
+     "start": 25.95,
+     "end": 31.35,
+     "text": "Japonya'nın MMX görevi bu soruyu yanıtlamak için Phobos'tan örnek alıp Dünya'ya getirecek."
     }
    ]
   },
   "finale": {
-   "hash": "fd42f42b3cd1",
-   "duration": 28.87,
+   "hash": "4d45fa1af4d1",
+   "duration": 29.43,
    "sentences": [
     {
      "start": 0.08,
-     "end": 3.56,
+     "end": 3.76,
      "text": "Mars'tan ayrılmadan önce bir kez daha geriye bakalım."
     },
     {
-     "start": 3.56,
-     "end": 8.24,
+     "start": 3.76,
+     "end": 8.56,
      "text": "Bugün yörüngesinde ve yüzeyinde bir düzineye yakın aktif araç çalışıyor."
     },
     {
-     "start": 8.24,
-     "end": 14.59,
+     "start": 8.56,
+     "end": 14.97,
      "text": "Bulgular tutarlı: Mars bir zamanlar ılık, nemli ve belki de yaşanabilir bir dünyaydı."
     },
     {
-     "start": 14.59,
-     "end": 21.77,
+     "start": 14.97,
+     "end": 22.15,
      "text": "Manyetik alanını kaybedince Güneş rüzgârı atmosferini uzaya süpürdü ve gezegen soğuk bir çöle dönüştü."
     },
     {
-     "start": 21.77,
-     "end": 27.31,
-     "text": "Yine de insanlığın bir gün ayak basacağı ilk gezegen büyük olasılıkla burası olacak."
-    },
-    {
-     "start": 27.31,
-     "end": 28.87,
-     "text": "Mars turumuz sona erdi."
+     "start": 22.15,
+     "end": 29.43,
+     "text": "Yine de insanlığın bir gün ayak basacağı ilk gezegen büyük olasılıkla burası olacak; Mars turumuz sona erdi."
     }
    ]
   },
   "mars": {
-   "hash": "75fde7660c98",
-   "duration": 29.67,
+   "hash": "984d1512ec64",
+   "duration": 43.19,
    "sentences": [
     {
      "start": 0.08,
-     "end": 2.02,
-     "text": "Mars turuna hoş geldiniz."
+     "end": 6.1,
+     "text": "Mars turuna hoş geldiniz; Kızıl Gezegen, insanlığın en çok araç gönderdiği dünya."
     },
     {
-     "start": 2.02,
-     "end": 8.9,
-     "text": "Kızıl Gezegen, Güneş'ten dördüncü sıradaki gezegendir ve insanlığın en çok araç gönderdiği dünya."
+     "start": 6.1,
+     "end": 13.8,
+     "text": "Günü Dünya'nınkine çok benzer, yirmi dört saat otuz yedi dakika; şu anda bir Mars gününü hızlandırılmış izliyorsunuz."
     },
     {
-     "start": 8.9,
-     "end": 13.54,
-     "text": "Günü Dünya'nınkine çok benzer: yirmi dört saat otuz yedi dakika."
-    },
-    {
-     "start": 13.54,
-     "end": 16.41,
-     "text": "Yılı ise altı yüz seksen yedi gündür."
-    },
-    {
-     "start": 16.41,
-     "end": 23.85,
+     "start": 13.8,
+     "end": 21.46,
      "text": "Atmosferi çok incedir ve neredeyse tamamen karbondioksitten oluşur; ortalama sıcaklık eksi altmış derecedir."
     },
     {
-     "start": 23.85,
-     "end": 29.67,
-     "text": "Buna rağmen kutuplarında buz, yüzeyinde kurumuş nehir yatakları ve eski göl tabanları vardır."
+     "start": 21.46,
+     "end": 29.83,
+     "text": "Güney yarım küredeki Hellas Havzası, iki bin üç yüz kilometre genişliğinde ve dokuz kilometre derinliğindeki en büyük çarpma izidir."
+    },
+    {
+     "start": 29.83,
+     "end": 36.31,
+     "text": "Kutuplarında su buzu ve kuru buzdan başlıklar vardır; kışın atmosferin dörtte biri kutupta donar."
+    },
+    {
+     "start": 36.31,
+     "end": 43.19,
+     "text": "Yüzeyindeki kurumuş nehir yatakları ve eski göl tabanları, Mars'ın bir zamanlar çok farklı olduğunu fısıldar."
     }
    ]
   },
   "perseverance": {
-   "hash": "3a78109d2826",
-   "duration": 37.59,
+   "hash": "dd54adaa039a",
+   "duration": 38.07,
    "sentences": [
     {
      "start": 0.08,
-     "end": 3.52,
-     "text": "Ve Perseverance, Mars'taki en gelişmiş robot."
+     "end": 7.14,
+     "text": "Ve Perseverance, Mars'taki en gelişmiş robot; iki bin yirmi bir Şubat'ında Jezero Krateri'ne indi."
     },
     {
-     "start": 3.52,
-     "end": 11.98,
-     "text": "İki bin yirmi bir Şubat'ında Jezero Krateri'ne indi; burası üç buçuk milyar yıl önce bir nehrin göle döküldüğü eski bir delta."
+     "start": 7.14,
+     "end": 12.34,
+     "text": "Burası üç buçuk milyar yıl önce bir nehrin göle döküldüğü eski bir delta."
     },
     {
-     "start": 11.98,
-     "end": 21.77,
+     "start": 12.34,
+     "end": 22.23,
      "text": "Görevi, geçmiş mikrobik yaşamın izlerini aramak ve kaya örneklerini titanyum tüplere doldurarak gelecekteki bir görevin Dünya'ya getirmesi için bırakmak."
     },
     {
-     "start": 21.77,
-     "end": 31.75,
+     "start": 22.23,
+     "end": 32.19,
      "text": "Yanında getirdiği küçük helikopter Ingenuity, başka bir gezegende uçan ilk araç oldu ve planlanan beş uçuş yerine yetmiş iki uçuş gerçekleştirdi."
     },
     {
-     "start": 31.75,
-     "end": 37.59,
+     "start": 32.19,
+     "end": 38.07,
      "text": "MOXIE deneyi ise Mars havasından oksijen üreterek gelecekteki astronotlar için yolu açtı."
     }
    ]
   },
   "phobos": {
-   "hash": "cc1357f19590",
-   "duration": 31.11,
+   "hash": "a3b1ee5168d7",
+   "duration": 41.91,
    "sentences": [
     {
      "start": 0.08,
-     "end": 3.14,
-     "text": "Mars'ın iki küçük ayından büyüğü Phobos."
+     "end": 7.64,
+     "text": "Mars'ın iki küçük ayından büyüğü Phobos: yalnızca yirmi iki kilometre genişliğinde, patates biçimli bir kaya."
     },
     {
-     "start": 3.14,
-     "end": 8.02,
-     "text": "Yalnızca yirmi iki kilometre genişliğinde, patates biçimli bir kayadır."
-    },
-    {
-     "start": 8.02,
-     "end": 14.59,
+     "start": 7.64,
+     "end": 14.04,
      "text": "Gezegene altı bin kilometre uzaklıkta döner; bu, Güneş Sistemi'ndeki en yakın ay yörüngesidir."
     },
     {
-     "start": 14.59,
-     "end": 22.89,
-     "text": "O kadar hızlıdır ki Mars'ın etrafını yedi saat otuz dokuz dakikada dolaşır ve Mars yüzeyinden bakıldığında batıdan doğar."
+     "start": 14.04,
+     "end": 22.37,
+     "text": "O kadar hızlıdır ki Mars'ın etrafını yedi saat otuz dokuz dakikada dolaşır; işte o tur, yukarıdan ve hızlandırılmış."
     },
     {
-     "start": 22.89,
-     "end": 31.11,
+     "start": 22.37,
+     "end": 27.69,
+     "text": "Mars yüzeyinden bakıldığında batıdan doğar ve dört saat sonra doğudan batar."
+    },
+    {
+     "start": 27.69,
+     "end": 36.21,
      "text": "Her yüzyıl iki metre alçalıyor; yaklaşık elli milyon yıl içinde ya Mars'a çarpacak ya da parçalanıp bir halkaya dönüşecek."
+    },
+    {
+     "start": 36.21,
+     "end": 41.91,
+     "text": "Dev Stickney Krateri, dokuz kilometre genişliğiyle ayın neredeyse yarısını kaplar."
     }
    ]
   }

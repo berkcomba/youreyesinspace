@@ -126,7 +126,7 @@ function looksLikeText(s) {
 /* ------------------------------------------------------------------ TS sources */
 
 const DATA_FILE = /\/src\/(data\/|galaxy\/galaxies\.ts|ui\/places\.ts|ui\/UI\.ts|gen\/SystemGenerator\.ts|astro\/stellar\.ts|ui\/format\.ts|ui\/MissionPanel\.ts)/;
-const FIELD_RE = /(?:^|[\s,{(])(name|summary|description|desc|tagline|label|title|note|group|credit|hyperLabel|hostName|text)\s*:\s*$/;
+const FIELD_RE = /(?:^|[\s,{(])(name|summary|description|desc|tagline|label|title|note|group|credit|hyperLabel|hostName|text|big)\s*:\s*$/;
 const TABLE_NAMES = ['TYPE_LABELS', 'CLASS_LABEL', 'LUM_CLASS_DESC', 'LANDMARK_KIND_LABEL', 'GALAXY_TYPE_LABEL', 'LETTERS_TR'];
 
 const keys = new Map(); // key -> Set(files)

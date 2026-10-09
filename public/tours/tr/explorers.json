@@ -29,32 +29,32 @@
    ]
   },
   "iss": {
-   "hash": "8eb9cf9c040a",
-   "duration": 32.63,
+   "hash": "93646b0ef0d4",
+   "duration": 35.83,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 6.3,
-     "text": "İnsanlığın uzaydaki elçilerini ziyaret edeceğimiz bu tura Dünya yörüngesinden başlıyoruz."
+     "start": 0.08,
+     "end": 9.7,
+     "text": "İnsanlığın uzaydaki elçilerini ziyaret edeceğimiz bu tura Dünya yörüngesinden başlıyoruz: karşınızda Uluslararası Uzay İstasyonu."
     },
     {
-     "start": 6.3,
-     "end": 9.4,
-     "text": "Karşınızda Uluslararası Uzay İstasyonu."
+     "start": 9.7,
+     "end": 20.59,
+     "text": "Dört yüz kilometre yükseklikte, saatte yirmi sekiz bin kilometre hızla döner ve Dünya'nın etrafını doksan dakikada tamamlar; işte o tur, hızlandırılmış."
     },
     {
-     "start": 9.4,
-     "end": 20.81,
-     "text": "Dört yüz kilometre yükseklikte, saatte yirmi sekiz bin kilometre hızla döner ve Dünya'nın etrafını doksan dakikada tamamlar; astronotlar günde on altı gün doğumu görür."
+     "start": 20.59,
+     "end": 23.59,
+     "text": "Astronotlar günde on altı gün doğumu görür."
     },
     {
-     "start": 20.81,
-     "end": 25.37,
+     "start": 23.59,
+     "end": 28.27,
      "text": "Bir futbol sahası büyüklüğünde ve dört yüz yirmi ton ağırlığındadır."
     },
     {
-     "start": 25.37,
-     "end": 32.63,
+     "start": 28.27,
+     "end": 35.83,
      "text": "İki bin Kasım'ından beri üzerinde kesintisiz insan yaşıyor; bu, insanlığın uzaydaki en uzun sürekli varlığıdır."
     }
    ]
@@ -112,32 +112,32 @@
    ]
   },
   "parker": {
-   "hash": "bc538d69c169",
-   "duration": 33.35,
+   "hash": "a789f6f47c87",
+   "duration": 35.83,
    "sentences": [
     {
      "start": 0.02,
-     "end": 3.66,
+     "end": 3.84,
      "text": "Parker Güneş Sondası, Güneş'e dokunan ilk araç."
     },
     {
-     "start": 3.66,
-     "end": 9.2,
-     "text": "İki bin on sekizde fırlatıldı ve Venüs'ün kütle çekimini kullanarak yörüngesini adım adım daralttı."
+     "start": 3.84,
+     "end": 11.98,
+     "text": "İki bin on sekizde fırlatıldı ve Venüs'ün kütle çekimini kullanarak yörüngesini adım adım daralttı; yörüngesini yukarıdan izleyelim."
     },
     {
-     "start": 9.2,
-     "end": 20.89,
+     "start": 11.98,
+     "end": 23.29,
      "text": "İki bin yirmi dört Aralık'ında Güneş yüzeyine altı milyon dokuz yüz bin kilometre yaklaştı; bu sırada saatte altı yüz doksan bin kilometreyle insan yapımı en hızlı nesne oldu."
     },
     {
-     "start": 20.89,
-     "end": 28.23,
+     "start": 23.29,
+     "end": 30.89,
      "text": "On bir santimetrelik karbon kalkanı bin dört yüz dereceye dayanırken arkasındaki aletler oda sıcaklığında kalır."
     },
     {
-     "start": 28.23,
-     "end": 33.35,
+     "start": 30.89,
+     "end": 35.83,
      "text": "Amacı, Güneş'in dış atmosferinin yüzeyinden neden yüzlerce kat sıcak olduğunu çözmek."
     }
    ]
@@ -174,38 +174,33 @@
    ]
   },
   "voyager2": {
-   "hash": "019870a3a348",
-   "duration": 35.91,
+   "hash": "13c61e9ddb5d",
+   "duration": 36.47,
    "sentences": [
     {
-     "start": 0.1,
+     "start": 0.08,
      "end": 4.94,
      "text": "Ve Voyager İki, dört dış gezegenin hepsini ziyaret eden tek araç."
     },
     {
      "start": 4.94,
-     "end": 13.06,
+     "end": 13.5,
      "text": "Kardeşinden on altı gün önce fırlatıldı ama daha yavaş bir rotayla Jüpiter, Satürn, Uranüs ve Neptün'ün yanından geçti."
     },
     {
-     "start": 13.06,
-     "end": 20.57,
+     "start": 13.5,
+     "end": 21.13,
      "text": "Uranüs ve Neptün'e dair bildiklerimizin çoğu hâlâ onun bin dokuz yüz seksen altı ve seksen dokuzdaki geçişlerinden gelir."
     },
     {
-     "start": 20.57,
-     "end": 23.85,
+     "start": 21.13,
+     "end": 24.51,
      "text": "İki bin on sekizde yıldızlararası uzaya ulaştı."
     },
     {
-     "start": 23.85,
-     "end": 34.27,
-     "text": "Her iki Voyager'ın plütonyum pilleri zayıflıyor; iki bin otuzlu yıllarda sessizleşecekler ama milyarlarca yıl boyunca yıldızların arasında süzülmeye devam edecekler."
-    },
-    {
-     "start": 34.27,
-     "end": 35.91,
-     "text": "Turumuz burada sona eriyor."
+     "start": 24.51,
+     "end": 36.47,
+     "text": "Her iki Voyager'ın plütonyum pilleri zayıflıyor; iki bin otuzlu yıllarda sessizleşecekler ama milyarlarca yıl boyunca yıldızların arasında süzülmeye devam edecekler; turumuz burada sona eriyor."
     }
    ]
   }

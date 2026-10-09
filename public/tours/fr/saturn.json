@@ -3,63 +3,63 @@
  "locale": "fr",
  "steps": {
   "enceladus": {
-   "hash": "d66eebed4749",
-   "duration": 35.03,
+   "hash": "95dd0d3b1e47",
+   "duration": 37.43,
    "sentences": [
     {
      "start": 0.08,
-     "end": 7.08,
-     "text": "Encelade ne mesure que cinq cents kilomètres de diamètre, mais c'est l'un des mondes les plus intéressants du Système solaire."
+     "end": 7.1,
+     "text": "Encelade ne mesure que 500 kilomètres de diamètre, mais c'est l'un des mondes les plus captivants du Système solaire."
     },
     {
-     "start": 7.08,
-     "end": 16.18,
-     "text": "Depuis quatre fissures de son pôle Sud, appelées rayures de tigre, des centaines de geysers projettent de la vapeur d'eau et des cristaux de glace dans l'espace."
+     "start": 7.1,
+     "end": 15.78,
+     "text": "Depuis quatre fissures du pôle Sud, appelées rayures de tigre, des centaines de geysers projettent dans l'espace de la vapeur d'eau et des cristaux de glace."
     },
     {
-     "start": 16.18,
-     "end": 25.59,
-     "text": "Cassini a volé à travers ces fontaines et y a trouvé du sel, des molécules organiques et de l'hydrogène : exactement les matériaux nécessaires à la vie."
+     "start": 15.78,
+     "end": 24.79,
+     "text": "Cassini a volé à travers ces fontaines et y a trouvé du sel, des molécules organiques et de l'hydrogène, exactement les matériaux nécessaires à la vie."
     },
     {
-     "start": 25.59,
-     "end": 28.83,
-     "text": "Ces grains de glace alimentent l'anneau E de Saturne."
+     "start": 24.79,
+     "end": 31.33,
+     "text": "Ces grains de glace alimentent l'anneau E de Saturne ; Encelade fait le tour de Saturne en 33 heures."
     },
     {
-     "start": 28.83,
-     "end": 35.03,
+     "start": 31.33,
+     "end": 37.43,
      "text": "Sa surface est d'un blanc éclatant, comme de la neige fraîche, et elle réfléchit presque toute la lumière du Soleil."
     }
    ]
   },
   "iapetus": {
-   "hash": "1a648d03e1a8",
-   "duration": 33.84,
+   "hash": "95e6260b67af",
+   "duration": 39.67,
    "sentences": [
     {
      "start": 0.08,
-     "end": 5.14,
-     "text": "Notre dernière étape est Japet, l'une des lunes les plus étranges du Système solaire."
+     "end": 9.04,
+     "text": "Notre dernière étape est Japet, l'une des lunes les plus étranges du Système solaire : une moitié est blanche comme la neige, l'autre noire comme le charbon."
     },
     {
-     "start": 5.14,
-     "end": 10.37,
-     "text": "Une moitié est aussi blanche que la neige, l'autre moitié aussi noire que le charbon."
+     "start": 9.04,
+     "end": 20.73,
+     "text": "Comme elle présente toujours la même face vers l'avant sur son orbite, elle balaie la poussière sombre venue des anneaux extérieurs ; la glace s'évapore des régions sombres qui se réchauffent et retombe sur le côté brillant."
     },
     {
-     "start": 10.37,
-     "end": 22.51,
-     "text": "Comme la même face est toujours tournée vers l'avant sur son orbite, elle balaie la poussière sombre venue des anneaux extérieurs, et la glace s'évapore des régions sombres qui se réchauffent pour retomber en pluie sur le côté brillant."
+     "start": 20.73,
+     "end": 29.39,
+     "text": "En plein milieu de son équateur s'étend une crête montagneuse de 13 kilomètres de haut et de 1 300 kilomètres de long ; cela lui donne l'aspect d'une noix."
     },
     {
-     "start": 22.51,
-     "end": 31.72,
-     "text": "En plein milieu de son équateur s'étend une crête montagneuse de treize kilomètres de haut et de mille trois cents kilomètres de long ; cela lui donne l'apparence d'une noix."
+     "start": 29.39,
+     "end": 37.57,
+     "text": "À 3,5 millions de kilomètres de Saturne, elle en fait le tour en 79 jours ; c'est la seule grande lune qui puisse voir les anneaux d'en haut."
     },
     {
-     "start": 31.72,
-     "end": 33.84,
+     "start": 37.57,
+     "end": 39.67,
      "text": "Notre visite de Saturne est terminée."
     }
    ]
@@ -91,95 +91,95 @@
    ]
   },
   "rings": {
-   "hash": "4c212d34d059",
-   "duration": 35.68,
+   "hash": "aff0cef3f67d",
+   "duration": 39.99,
    "sentences": [
     {
-     "start": 0.12,
-     "end": 2.54,
-     "text": "Regardons maintenant les anneaux de plus près."
+     "start": 0.1,
+     "end": 12.26,
+     "text": "Regardons maintenant les anneaux de plus près : ce disque géant n'est pas en réalité une seule structure, il se compose de milliards de fragments de glace, de la poussière microscopique jusqu'à la taille d'une maison."
     },
     {
-     "start": 2.54,
-     "end": 12.51,
-     "text": "Ce disque géant n'est pas en réalité une seule structure : il se compose de milliards de morceaux de glace, de la poussière microscopique jusqu'à la taille d'une maison."
+     "start": 12.26,
+     "end": 21.61,
+     "text": "Sa largeur dépasse 280 000 kilomètres, mais vu de profil il disparaît presque : son épaisseur est inférieure à 10 mètres dans la plupart des endroits."
     },
     {
-     "start": 12.51,
-     "end": 23.29,
-     "text": "Sa largeur dépasse deux cent quatre-vingt mille kilomètres, mais son épaisseur est inférieure à dix mètres dans la plupart des endroits : à l'échelle, il est plus mince encore qu'une feuille de papier."
+     "start": 21.61,
+     "end": 25.17,
+     "text": "À l'échelle, il est plus mince encore qu'une feuille de papier."
     },
     {
-     "start": 23.29,
-     "end": 30.33,
+     "start": 25.17,
+     "end": 32.29,
      "text": "La plus grande lacune, la division de Cassini, est ouverte par l'attraction gravitationnelle de la petite lune Mimas."
     },
     {
-     "start": 30.33,
-     "end": 35.68,
-     "text": "Les anneaux n'ont probablement que quelques centaines de millions d'années, et ils pleuvent lentement sur la planète."
+     "start": 32.29,
+     "end": 39.99,
+     "text": "Les anneaux n'ont probablement que quelques centaines de millions d'années et pleuvent lentement sur la planète ; ils pourraient disparaître d'ici 100 millions d'années."
     }
    ]
   },
   "saturn": {
-   "hash": "b86a55ac1fb7",
-   "duration": 25.91,
+   "hash": "4012bd441108",
+   "duration": 32.63,
    "sentences": [
     {
      "start": 0.08,
-     "end": 2.54,
-     "text": "Bienvenue pour la visite de Saturne."
+     "end": 8.3,
+     "text": "Bienvenue dans la visite de Saturne : sixième planète depuis le Soleil, une géante gazeuse dont le diamètre est 9 fois celui de la Terre."
     },
     {
-     "start": 2.54,
-     "end": 8.74,
-     "text": "Sixième planète à partir du Soleil, c'est un géant gazeux dont le diamètre est neuf fois celui de la Terre."
+     "start": 8.3,
+     "end": 14.22,
+     "text": "Lorsque nous plaçons à côté d'elle une Terre à l'échelle réelle, on découvre à quel point même les anneaux sont vastes."
     },
     {
-     "start": 8.74,
-     "end": 13.06,
+     "start": 14.22,
+     "end": 18.37,
      "text": "Sa densité est inférieure à celle de l'eau ; c'est unique pour une planète."
     },
     {
-     "start": 13.06,
-     "end": 16.99,
-     "text": "À son équateur, les vents atteignent mille huit cents kilomètres à l'heure."
+     "start": 18.37,
+     "end": 24.23,
+     "text": "À l'équateur, les vents atteignent 1 800 kilomètres à l'heure, et son jour ne dure que 10 heures et demie."
     },
     {
-     "start": 16.99,
-     "end": 25.91,
-     "text": "Le vaisseau Cassini a étudié ce système pendant treize ans, de deux mille quatre à deux mille dix-sept, et a achevé sa mission en plongeant dans l'atmosphère de la planète."
+     "start": 24.23,
+     "end": 32.63,
+     "text": "La sonde Cassini a étudié ce système de 2004 à 2017, pendant 13 ans, et a achevé sa mission en plongeant dans l'atmosphère de la planète."
     }
    ]
   },
   "titan": {
-   "hash": "5f859177eaff",
-   "duration": 34.39,
+   "hash": "83a46d5960d4",
+   "duration": 42.23,
    "sentences": [
     {
-     "start": 0.02,
-     "end": 6.36,
-     "text": "Titan, la plus grande lune de Saturne, et la seule lune du Système solaire à posséder une atmosphère épaisse."
+     "start": 0.04,
+     "end": 6.56,
+     "text": "Titan est la plus grande lune de Saturne et la seule lune du Système solaire à posséder une atmosphère épaisse."
     },
     {
-     "start": 6.36,
-     "end": 14.28,
-     "text": "Son atmosphère, dominée par l'azote, est cinquante pour cent plus dense que celle de la Terre, et une brume orangée en cache la surface."
+     "start": 6.56,
+     "end": 17.18,
+     "text": "Elle fait une fois et demie la taille de notre Lune ; son atmosphère, dominée par l'azote, est plus dense de 50 % que celle de la Terre et cache la surface sous une brume orangée."
     },
     {
-     "start": 14.28,
-     "end": 23.01,
-     "text": "À sa surface, il y a des lacs, des rivières et des pluies de méthane et d'éthane liquides ; à moins cent quatre-vingts degrés, l'eau est aussi dure que la roche."
+     "start": 17.18,
+     "end": 27.69,
+     "text": "Regardons sous la brume : à la surface, il y a des lacs, des rivières et des pluies de méthane et d'éthane liquides ; à moins 180 degrés, l'eau est aussi dure que la roche."
     },
     {
-     "start": 23.01,
-     "end": 26.75,
-     "text": "En deux mille cinq, la sonde Huygens s'est posée à sa surface."
+     "start": 27.69,
+     "end": 34.81,
+     "text": "En 2005, la sonde Huygens s'est posée à sa surface et a photographié un lit de rivière couvert de galets de glace."
     },
     {
-     "start": 26.75,
-     "end": 34.39,
-     "text": "Le drone à énergie nucléaire de la NASA, nommé Dragonfly, arrivera ici en deux mille trente-quatre et volera au-dessus des dunes de sable."
+     "start": 34.81,
+     "end": 42.23,
+     "text": "Le drone à énergie nucléaire de la NASA, nommé Dragonfly, y arrivera en 2034 et volera au-dessus des dunes de sable."
     }
    ]
   }

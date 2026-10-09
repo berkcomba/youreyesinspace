@@ -3,198 +3,198 @@
  "locale": "en",
  "steps": {
   "curiosity": {
-   "hash": "6b18d8ed15c0",
-   "duration": 34.31,
+   "hash": "537c0f0b6e99",
+   "duration": 31.99,
    "sentences": [
     {
      "start": 0.12,
-     "end": 4.64,
-     "text": "Now we descend to the surface: before you is Curiosity."
+     "end": 7.62,
+     "text": "Now we descend to the surface: before you is Curiosity, a robot weighing one ton, the size of a car."
     },
     {
-     "start": 4.64,
-     "end": 13.8,
-     "text": "This car-sized robot, weighing 1 ton, landed in Gale Crater in August 2012, lowered on cables by a sky crane."
+     "start": 7.62,
+     "end": 13.32,
+     "text": "In August of two thousand twelve it was lowered into Gale Crater on cables by a sky crane."
     },
     {
-     "start": 13.8,
-     "end": 19.45,
-     "text": "It generates its energy from the heat of plutonium, so it is unaffected by dust storms."
+     "start": 13.32,
+     "end": 18.49,
+     "text": "It generates its energy from the heat of plutonium, so dust storms do not affect it."
     },
     {
-     "start": 19.45,
-     "end": 27.59,
-     "text": "It proved that a lake lasting millions of years once existed on the crater floor, and it found the chemical ingredients needed for life."
+     "start": 18.49,
+     "end": 25.65,
+     "text": "It proved that a lake lasting millions of years once lay on the crater floor, and it found the chemical components needed for life."
     },
     {
-     "start": 27.59,
-     "end": 34.31,
-     "text": "For more than 10 years it has been climbing the slopes of Mount Sharp, reading Mars's climate history layer by layer."
+     "start": 25.65,
+     "end": 31.99,
+     "text": "For more than ten years it has been climbing the slopes of Mount Sharp, reading Mars's climate history layer by layer."
     }
    ]
   },
   "deimos": {
-   "hash": "efc17d1796f5",
-   "duration": 30.79,
+   "hash": "55f7a4358840",
+   "duration": 30.07,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 3.78,
-     "text": "Deimos is Mars's smaller and more distant moon."
+     "start": 0.1,
+     "end": 6.5,
+     "text": "Deimos, Mars's smaller and more distant moon: its diameter is about twelve kilometers."
     },
     {
-     "start": 3.78,
-     "end": 9.32,
-     "text": "Its diameter is about 12 kilometers, and it circles the planet in 30 hours."
+     "start": 6.5,
+     "end": 13.18,
+     "text": "It circles the planet in thirty hours; seen from the surface of Mars, it is no different from a bright star."
     },
     {
-     "start": 9.32,
-     "end": 15.47,
+     "start": 13.18,
+     "end": 18.83,
      "text": "Its surface is smoother than Phobos's, because its craters are filled with a thick layer of dust."
     },
     {
-     "start": 15.47,
-     "end": 19.83,
-     "text": "Seen from the surface of Mars, it is no different from a bright star."
+     "start": 18.83,
+     "end": 24.73,
+     "text": "Whether both moons are captured asteroids or the remnants of a giant collision is still debated."
     },
     {
-     "start": 19.83,
-     "end": 30.79,
-     "text": "It is still debated whether both moons are captured asteroids or the remnants of a giant collision; Japan's MMX mission will bring a sample from Phobos to answer this question."
+     "start": 24.73,
+     "end": 30.07,
+     "text": "Japan's MMX mission will take a sample from Phobos and bring it to Earth to answer this question."
     }
    ]
   },
   "finale": {
-   "hash": "e42694294c5c",
-   "duration": 31.84,
+   "hash": "a9719e0768d9",
+   "duration": 29.75,
    "sentences": [
     {
-     "start": 0.04,
+     "start": 0.06,
      "end": 3.66,
      "text": "Before we leave Mars, let's look back once more."
     },
     {
      "start": 3.66,
-     "end": 9.06,
-     "text": "Today nearly a dozen active vehicles are operating in its orbit and on its surface."
+     "end": 8.48,
+     "text": "Today nearly a dozen active vehicles are at work in its orbit and on its surface."
     },
     {
-     "start": 9.06,
-     "end": 15.65,
+     "start": 8.48,
+     "end": 14.5,
      "text": "The findings are consistent: Mars was once a warm, moist, and perhaps habitable world."
     },
     {
-     "start": 15.65,
-     "end": 23.55,
+     "start": 14.5,
+     "end": 21.87,
      "text": "When it lost its magnetic field, the solar wind swept its atmosphere into space, and the planet turned into a cold desert."
     },
     {
-     "start": 23.55,
-     "end": 29.69,
-     "text": "Even so, the first planet humanity will one day set foot on will most likely be this one."
-    },
-    {
-     "start": 29.69,
-     "end": 31.84,
-     "text": "Our Mars tour has come to an end."
+     "start": 21.87,
+     "end": 29.75,
+     "text": "Even so, the first planet humanity will one day set foot on will most likely be this one; our Mars tour has come to an end."
     }
    ]
   },
   "mars": {
-   "hash": "0da643172ab0",
-   "duration": 31.59,
+   "hash": "405fb20468a3",
+   "duration": 41.27,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 2.02,
-     "text": "Welcome to the Mars tour."
+     "start": 0.12,
+     "end": 5.8,
+     "text": "Welcome to the Mars tour; the Red Planet is the world humanity has sent the most spacecraft to."
     },
     {
-     "start": 2.02,
-     "end": 8.42,
-     "text": "The Red Planet is the fourth planet from the Sun, and the world humanity has sent the most vehicles to."
+     "start": 5.8,
+     "end": 13.3,
+     "text": "Its day is very similar to Earth's, twenty-four hours and thirty-seven minutes; right now you are watching a Martian day sped up."
     },
     {
-     "start": 8.42,
-     "end": 13.42,
-     "text": "Its day is very similar to Earth's: 24 hours and 37 minutes."
+     "start": 13.3,
+     "end": 21.21,
+     "text": "Its atmosphere is very thin and consists almost entirely of carbon dioxide; the average temperature is minus sixty degrees."
     },
     {
-     "start": 13.42,
-     "end": 16.99,
-     "text": "Its year, though, is 687 days."
+     "start": 21.21,
+     "end": 29.27,
+     "text": "Hellas Basin in the southern hemisphere is the largest impact scar, two thousand three hundred kilometers wide and nine kilometers deep."
     },
     {
-     "start": 16.99,
-     "end": 25.19,
-     "text": "Its atmosphere is very thin and consists almost entirely of carbon dioxide; the average temperature is minus 60 degrees."
+     "start": 29.27,
+     "end": 35.97,
+     "text": "At its poles there are caps of water ice and dry ice; in winter a quarter of the atmosphere freezes at the pole."
     },
     {
-     "start": 25.19,
-     "end": 31.59,
-     "text": "Even so, there is ice at its poles, and dried-up riverbeds and ancient lake beds on its surface."
+     "start": 35.97,
+     "end": 41.27,
+     "text": "The dried-up riverbeds and ancient lake beds on its surface whisper that Mars was once very different."
     }
    ]
   },
   "perseverance": {
-   "hash": "de50d636df5c",
-   "duration": 41.42,
+   "hash": "9fb9e988120a",
+   "duration": 38.71,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 4.02,
-     "text": "And Perseverance, the most advanced robot on Mars."
+     "start": 0.08,
+     "end": 8.02,
+     "text": "And Perseverance, the most advanced robot on Mars; it landed in Jezero Crater in February of two thousand twenty-one."
     },
     {
-     "start": 4.02,
-     "end": 14.11,
-     "text": "It landed in Jezero Crater in February 2021; this is an ancient delta where a river emptied into a lake 3. 5 billion years ago."
+     "start": 8.02,
+     "end": 13.44,
+     "text": "This is an ancient delta where a river emptied into a lake three and a half billion years ago."
     },
     {
-     "start": 14.11,
-     "end": 24.03,
+     "start": 13.44,
+     "end": 22.61,
      "text": "Its mission is to search for traces of past microbial life and to fill titanium tubes with rock samples, leaving them for a future mission to bring to Earth."
     },
     {
-     "start": 24.03,
-     "end": 34.2,
-     "text": "The small helicopter it brought with it, Ingenuity, became the first vehicle to fly on another planet, and it carried out 72 flights instead of the planned 5."
+     "start": 22.61,
+     "end": 32.35,
+     "text": "The little helicopter it brought along, Ingenuity, became the first vehicle to fly on another planet, and carried out seventy-two flights instead of the five that were planned."
     },
     {
-     "start": 34.2,
-     "end": 41.42,
-     "text": "The MOXIE experiment, for its part, opened the way for future astronauts by producing oxygen from the air of Mars."
+     "start": 32.35,
+     "end": 38.71,
+     "text": "The MOXIE experiment, for its part, paved the way for future astronauts by producing oxygen from Martian air."
     }
    ]
   },
   "phobos": {
-   "hash": "462faa66a354",
-   "duration": 32.54,
+   "hash": "2ea2e0b0502f",
+   "duration": 38.07,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 4,
-     "text": "The larger of Mars's two small moons is Phobos."
+     "start": 0.12,
+     "end": 7,
+     "text": "Phobos, the larger of Mars's two small moons: a potato-shaped rock only twenty-two kilometers wide."
     },
     {
-     "start": 4,
-     "end": 8.16,
-     "text": "It is a potato-shaped rock only 22 kilometers wide."
+     "start": 7,
+     "end": 12.96,
+     "text": "It orbits six thousand kilometers from the planet; this is the closest moon orbit in the Solar System."
     },
     {
-     "start": 8.16,
-     "end": 15.81,
-     "text": "It orbits at a distance of 6,000 kilometers from the planet; this is the closest orbit of any moon in the Solar System."
+     "start": 12.96,
+     "end": 20.29,
+     "text": "It is so fast that it circles Mars in seven hours and thirty-nine minutes; here is that orbit, from above and sped up."
     },
     {
-     "start": 15.81,
-     "end": 24.37,
-     "text": "It is so fast that it circles Mars in 7 hours and 39 minutes, and seen from the surface of Mars it rises in the west."
+     "start": 20.29,
+     "end": 25.49,
+     "text": "Seen from the surface of Mars, it rises in the west and sets in the east four hours later."
     },
     {
-     "start": 24.37,
-     "end": 32.54,
-     "text": "It is dropping by 2 meters every century; within about 50 million years it will either crash into Mars or break apart and turn into a ring."
+     "start": 25.49,
+     "end": 33.21,
+     "text": "Every century it drops two meters; within about fifty million years it will either crash into Mars or break apart and become a ring."
+    },
+    {
+     "start": 33.21,
+     "end": 38.07,
+     "text": "The giant Stickney Crater, nine kilometers wide, covers nearly half the moon."
     }
    ]
   }

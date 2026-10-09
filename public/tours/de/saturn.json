@@ -3,63 +3,63 @@
  "locale": "de",
  "steps": {
   "enceladus": {
-   "hash": "0ac2305fe56b",
-   "duration": 34.31,
+   "hash": "29e346f715b0",
+   "duration": 36.79,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 7.26,
-     "text": "Enceladus ist nur 500 Kilometer im Durchmesser, aber eine der interessantesten Welten des Sonnensystems."
+     "start": 0.08,
+     "end": 7.06,
+     "text": "Enceladus ist nur fünfhundert Kilometer im Durchmesser, aber eine der faszinierendsten Welten des Sonnensystems."
     },
     {
-     "start": 7.26,
-     "end": 15.8,
+     "start": 7.06,
+     "end": 15.5,
      "text": "Aus vier Spalten am Südpol, den sogenannten Tigerstreifen, schleudern Hunderte von Geysiren Wasserdampf und Eiskristalle ins All."
     },
     {
-     "start": 15.8,
-     "end": 25.59,
-     "text": "Cassini flog mitten durch diese Fontänen und fand Salz, organische Moleküle und Wasserstoff; genau die Materialien, die für das Leben nötig sind."
+     "start": 15.5,
+     "end": 24.25,
+     "text": "Cassini flog durch diese Fontänen und fand Salz, organische Moleküle und Wasserstoff; genau die Stoffe, die für das Leben nötig sind."
     },
     {
-     "start": 25.59,
-     "end": 28.95,
-     "text": "Diese Eiskörner speisen den E-Ring des Saturn."
+     "start": 24.25,
+     "end": 31.21,
+     "text": "Diese Eiskörner speisen den E-Ring des Saturn; Enceladus umrundet den Saturn in dreiunddreißig Stunden."
     },
     {
-     "start": 28.95,
-     "end": 34.31,
-     "text": "Seine Oberfläche ist schneeweiß wie frischer Schnee und reflektiert fast das gesamte Sonnenlicht."
+     "start": 31.21,
+     "end": 36.79,
+     "text": "Seine Oberfläche ist schneeweiß wie frischer Schnee und reflektiert nahezu das gesamte Sonnenlicht."
     }
    ]
   },
   "iapetus": {
-   "hash": "e998025586ca",
-   "duration": 38.95,
+   "hash": "d795051fc9de",
+   "duration": 46.39,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 6.24,
-     "text": "Unsere letzte Station ist Iapetus, einer der seltsamsten Monde des Sonnensystems."
+     "start": 0.08,
+     "end": 10.2,
+     "text": "Unsere letzte Station ist Iapetus, einer der seltsamsten Monde des Sonnensystems: Eine Hälfte ist weiß wie Schnee, die andere schwarz wie Kohle."
     },
     {
-     "start": 6.24,
-     "end": 10.66,
-     "text": "Eine Hälfte ist weiß wie Schnee, die andere schwarz wie Kohle."
+     "start": 10.2,
+     "end": 23.57,
+     "text": "Weil auf seiner Umlaufbahn immer dieselbe Seite nach vorn blickt, fegt er den dunklen Staub auf, der von den äußeren Ringen kommt; aus den sich erwärmenden dunklen Gebieten verdampft das Eis und regnet auf die helle Seite herab."
     },
     {
-     "start": 10.66,
-     "end": 25.47,
-     "text": "Weil auf seiner Umlaufbahn immer dieselbe Seite nach vorn zeigt, fegt er den dunklen Staub auf, der von den äußeren Ringen kommt, und aus den sich erwärmenden dunklen Regionen verdampft das Eis und regnet auf die helle Seite herab."
+     "start": 23.57,
+     "end": 34.29,
+     "text": "Genau in der Mitte seines Äquators erstreckt sich ein Gebirgsrücken, dreizehn Kilometer hoch und eintausenddreihundert Kilometer lang; das verleiht ihm das Aussehen einer Walnuss."
     },
     {
-     "start": 25.47,
-     "end": 36.81,
-     "text": "Genau in der Mitte seines Äquators erstreckt sich ein Gebirgskamm, 13 Kilometer hoch und 1. 300 Kilometer lang; das verleiht ihm das Aussehen einer Walnuss."
+     "start": 34.29,
+     "end": 44.41,
+     "text": "Dreieinhalb Millionen Kilometer von Saturn entfernt, umrundet er ihn einmal in neunundsiebzig Tagen; er ist der einzige große Mond, der die Ringe von oben sehen kann."
     },
     {
-     "start": 36.81,
-     "end": 38.95,
+     "start": 44.41,
+     "end": 46.39,
      "text": "Unsere Saturn-Tour ist zu Ende."
     }
    ]
@@ -91,90 +91,95 @@
    ]
   },
   "rings": {
-   "hash": "1f9a0bd854b0",
-   "duration": 38.47,
+   "hash": "c49ee27e19ce",
+   "duration": 42.23,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 2.92,
-     "text": "Schauen wir uns die Ringe jetzt aus der Nähe an."
+     "start": 0.06,
+     "end": 13.14,
+     "text": "Schauen wir uns die Ringe nun genauer an: Diese riesige Scheibe ist eigentlich kein einzelnes Gebilde, sondern besteht aus Milliarden von Eisstücken, von mikroskopischem Staub bis hin zur Größe eines Hauses."
     },
     {
-     "start": 2.92,
-     "end": 13.3,
-     "text": "Diese riesige Scheibe ist eigentlich kein einzelnes Gebilde, sondern besteht aus Milliarden von Eisbrocken, von mikroskopischem Staub bis zur Größe eines Hauses."
+     "start": 13.14,
+     "end": 23.63,
+     "text": "Ihre Breite übersteigt zweihundertachtzigtausend Kilometer, doch von der Kante aus betrachtet verschwinden sie fast: An den meisten Stellen sind sie weniger als zehn Meter dick."
     },
     {
-     "start": 13.3,
-     "end": 25.53,
-     "text": "Ihre Breite übersteigt 280. 000 Kilometer, aber ihre Dicke beträgt an den meisten Stellen weniger als 10 Meter: Sie ist sogar dünner als ein Blatt Papier im gleichen Maßstab."
+     "start": 23.63,
+     "end": 27.07,
+     "text": "Sie sind dünner als selbst ein maßstäbliches Blatt Papier."
     },
     {
-     "start": 25.53,
-     "end": 32.07,
-     "text": "Die Anziehungskraft des kleinen Mondes Mimas öffnet die Cassini-Teilung, die größte Lücke dazwischen."
+     "start": 27.07,
+     "end": 33.15,
+     "text": "Die größte Lücke dazwischen, die Cassini-Teilung, öffnet die Schwerkraft des kleinen Mondes Mimas."
     },
     {
-     "start": 32.07,
-     "end": 38.47,
-     "text": "Die Ringe sind wahrscheinlich nur ein paar hundert Millionen Jahre alt und regnen nach und nach auf den Planeten herab."
+     "start": 33.15,
+     "end": 42.23,
+     "text": "Die Ringe sind wahrscheinlich nur ein paar hundert Millionen Jahre alt und regnen langsam auf den Planeten herab; innerhalb von hundert Millionen Jahren könnten sie verschwinden."
     }
    ]
   },
   "saturn": {
-   "hash": "cccd57a052c4",
-   "duration": 30.39,
+   "hash": "c9f52641661e",
+   "duration": 38.07,
    "sentences": [
     {
-     "start": 0.04,
-     "end": 1.88,
-     "text": "Willkommen zur Saturn-Tour."
+     "start": 0.08,
+     "end": 8.32,
+     "text": "Willkommen zur Saturn-Tour: der sechste Planet von der Sonne, ein Gasriese, im Durchmesser neunmal so groß wie die Erde."
     },
     {
-     "start": 1.88,
-     "end": 8.14,
-     "text": "Der sechste Planet von der Sonne ist ein Gasriese, im Durchmesser neunmal so groß wie die Erde."
+     "start": 8.32,
+     "end": 14.18,
+     "text": "Wenn wir eine maßstabsgetreue Erde danebenstellen, wird deutlich, wie breit selbst die Ringe sind."
     },
     {
-     "start": 8.14,
-     "end": 13.48,
+     "start": 14.18,
+     "end": 19.41,
      "text": "Seine Dichte ist geringer als die von Wasser; das ist für einen Planeten einzigartig."
     },
     {
-     "start": 13.48,
-     "end": 18.73,
-     "text": "An seinem Äquator erreichen die Winde 1. 800 Kilometer pro Stunde."
+     "start": 19.41,
+     "end": 27.11,
+     "text": "An seinem Äquator erreichen die Winde eintausendachthundert Kilometer pro Stunde, und sein Tag dauert nur zehneinhalb Stunden."
     },
     {
-     "start": 18.73,
-     "end": 30.39,
-     "text": "Die Raumsonde Cassini untersuchte dieses System von 2004 bis 2017, 13 Jahre lang, und beendete ihre Mission, indem sie in die Atmosphäre des Planeten eintauchte."
+     "start": 27.11,
+     "end": 38.07,
+     "text": "Die Sonde Cassini untersuchte dieses System dreizehn Jahre lang, von zweitausendvier bis zweitausendsiebzehn, und beendete ihre Mission, indem sie in die Atmosphäre des Planeten eintauchte."
     }
    ]
   },
   "titan": {
-   "hash": "34130b6e285a",
-   "duration": 37.83,
+   "hash": "275199a3ab07",
+   "duration": 46.71,
    "sentences": [
     {
      "start": 0.04,
-     "end": 6.48,
+     "end": 6.78,
      "text": "Titan ist der größte Mond des Saturn und der einzige Mond im Sonnensystem mit einer dicken Atmosphäre."
     },
     {
-     "start": 6.48,
-     "end": 16.26,
-     "text": "Seine überwiegend aus Stickstoff bestehende Atmosphäre ist 50 Prozent dichter als die der Erde und verbirgt die Oberfläche hinter einem orangefarbenen Dunst."
+     "start": 6.78,
+     "end": 19.26,
+     "text": "Er ist eineinhalbmal so groß wie unser Mond; seine hauptsächlich aus Stickstoff bestehende Atmosphäre ist um fünfzig Prozent dichter als die der Erde und verbirgt die Oberfläche mit einem orangefarbenen Dunst."
     },
     {
-     "start": 16.26,
-     "end": 29.75,
-     "text": "Auf seiner Oberfläche gibt es Seen, Flüsse und Regen aus flüssigem Methan und Ethan; bei minus 180 Grad ist Wasser so hart wie Fels. 2005 landete die Sonde Huygens auf seiner Oberfläche."
+     "start": 19.26,
+     "end": 30.21,
+     "text": "Schauen wir unter den Dunst: Auf seiner Oberfläche gibt es Seen, Flüsse und Regen aus flüssigem Methan und Ethan; bei minus hundertachtzig Grad ist Wasser so hart wie Gestein."
     },
     {
-     "start": 29.75,
-     "end": 37.83,
-     "text": "Die nuklear betriebene Drohne der NASA namens Dragonfly wird 2034 hier eintreffen und über die Sanddünen fliegen."
+     "start": 30.21,
+     "end": 38.25,
+     "text": "Im Jahr zweitausendfünf landete die Sonde Huygens auf seiner Oberfläche und fotografierte ein Flussbett, bedeckt mit Eiskieseln."
+    },
+    {
+     "start": 38.25,
+     "end": 46.71,
+     "text": "Die nuklear angetriebene Drohne der NASA namens Dragonfly wird im Jahr zweitausendvierunddreißig hier eintreffen und über die Sanddünen fliegen."
     }
    ]
   }

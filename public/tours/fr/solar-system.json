@@ -3,343 +3,398 @@
  "locale": "fr",
  "steps": {
   "earth": {
-   "hash": "5fe81fcf2c3b",
-   "duration": 26.15,
+   "hash": "44762fd4de31",
+   "duration": 43.51,
    "sentences": [
     {
      "start": 0.08,
-     "end": 2.62,
-     "text": "Et voici notre maison : la Terre."
+     "end": 6.2,
+     "text": "Et voici notre maison : la Terre, le seul endroit de l'univers dont nous sachions qu'il abrite la vie."
     },
     {
-     "start": 2.62,
-     "end": 12.72,
-     "text": "Le seul endroit de l'Univers dont nous savons qu'il abrite la vie. 71 pour cent de sa surface est couverte d'eau liquide ; c'est pourquoi elle paraît bleue depuis l'espace."
+     "start": 6.2,
+     "end": 12.54,
+     "text": "Soixante et onze pour cent de sa surface est couverte d'eau liquide ; c'est pourquoi elle apparaît bleue depuis l'espace."
     },
     {
-     "start": 12.72,
-     "end": 19.07,
-     "text": "Son puissant champ magnétique nous protège du vent solaire, et la couche d'ozone filtre les rayons ultraviolets."
+     "start": 12.54,
+     "end": 19.04,
+     "text": "Passons du côté nuit : les lumières des villes sont la signature d'une planète vivante, visible depuis l'espace."
     },
     {
-     "start": 19.07,
-     "end": 26.15,
-     "text": "L'attraction gravitationnelle de la Lune, elle, maintient stable l'inclinaison de son axe et assure ainsi la régularité des saisons."
+     "start": 19.04,
+     "end": 25.13,
+     "text": "Son puissant champ magnétique nous protège du vent solaire, la couche d'ozone filtre les rayons ultraviolets."
+    },
+    {
+     "start": 25.13,
+     "end": 34.29,
+     "text": "Cette photographie, prise en mille neuf cent soixante-douze par l'équipage d'Apollo dix-sept, la Bille bleue, est devenue l'une des images les plus reproduites de l'histoire."
+    },
+    {
+     "start": 34.29,
+     "end": 43.51,
+     "text": "L'attraction gravitationnelle de la Lune, en maintenant stable l'inclinaison de l'axe, assure la régularité des saisons ; reculons maintenant et suivons son tour d'un mois."
     }
    ]
   },
   "jupiter": {
-   "hash": "3cd2a91199ae",
-   "duration": 28.07,
+   "hash": "8cb15fa9592e",
+   "duration": 41.27,
    "sentences": [
     {
      "start": 0.1,
-     "end": 2.38,
-     "text": "Jupiter, le roi des planètes."
+     "end": 6.42,
+     "text": "Jupiter, le roi des planètes : sa masse vaut deux fois et demie la somme de toutes les autres planètes."
     },
     {
-     "start": 2.38,
-     "end": 8.72,
-     "text": "Sa masse est deux fois et demie celle de toutes les autres planètes réunies ; 1 300 Terres peuvent y tenir."
+     "start": 6.42,
+     "end": 14.16,
+     "text": "Lorsque nous plaçons à côté de lui une Terre à l'échelle réelle, la différence est frappante : mille trois cents Terres tiennent à l'intérieur."
     },
     {
-     "start": 8.72,
-     "end": 16.21,
+     "start": 14.16,
+     "end": 21.77,
      "text": "Il n'a pas de surface ; les bandes colorées que vous voyez sont d'immenses ceintures de nuages dans une atmosphère d'hydrogène et d'hélium."
     },
     {
-     "start": 16.21,
-     "end": 22.47,
-     "text": "La Grande Tache rouge est une tempête qui dure depuis au moins 350 ans et qui est plus grande que la Terre."
+     "start": 21.77,
+     "end": 28.15,
+     "text": "La Grande Tache rouge est une tempête qui dure depuis au moins trois cent cinquante ans et qui est plus grande que la Terre."
     },
     {
-     "start": 22.47,
-     "end": 28.07,
-     "text": "La journée de ce géant ne dure que 10 heures, et plus de 95 lunes connues tournent autour de lui."
+     "start": 28.15,
+     "end": 33.95,
+     "text": "Le jour de ce géant ne dure que dix heures ; en ce moment, vous regardez un jour de Jupiter en accéléré."
+    },
+    {
+     "start": 33.95,
+     "end": 41.27,
+     "text": "Plus de quatre-vingt-quinze lunes connues tournent autour de lui ; Galilée en a découvert quatre en mille six cent dix, avec son petit télescope."
     }
    ]
   },
   "mars": {
-   "hash": "b601d5225c75",
-   "duration": 29.76,
+   "hash": "f70623b51f9a",
+   "duration": 45.75,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 2.06,
-     "text": "Mars, la planète rouge."
+     "start": 0.08,
+     "end": 4.66,
+     "text": "Mars, la planète rouge, doit sa couleur au fer rouillé de sa surface."
     },
     {
-     "start": 2.06,
-     "end": 5.22,
-     "text": "Il doit sa couleur au fer rouillé de sa surface."
+     "start": 4.66,
+     "end": 13.62,
+     "text": "Son diamètre est environ la moitié de celui de la Terre ; mais sa superficie de terres égale presque l'ensemble des terres de la Terre, car il n'a pas d'océan."
     },
     {
-     "start": 5.22,
-     "end": 14.73,
-     "text": "Son diamètre est d'environ la moitié de celui de la Terre, mais il abrite le plus grand volcan du Système solaire : Olympus Mons, haut de 22 kilomètres."
+     "start": 13.62,
+     "end": 21.42,
+     "text": "Il abrite le plus grand volcan du système solaire : Olympus Mons, haut de vingt-deux kilomètres, fait deux fois et demie l'Everest."
     },
     {
-     "start": 14.73,
-     "end": 22.43,
-     "text": "Le canyon Valles Marineris, long de 4 000 kilomètres, est assez long pour traverser de bout en bout le continent américain."
+     "start": 21.42,
+     "end": 28.93,
+     "text": "Le canyon Valles Marineris, long de quatre mille kilomètres, est assez long pour traverser de bout en bout le continent américain."
     },
     {
-     "start": 22.43,
-     "end": 29.76,
-     "text": "Il y a des milliards d'années, il y avait des rivières et des lacs à sa surface ; aujourd'hui, des robots cherchent les traces de cette eau."
+     "start": 28.93,
+     "end": 38.53,
+     "text": "Il y a des milliards d'années, des rivières et des lacs couvraient sa surface ; aujourd'hui, des robots comme Curiosity et Perseverance cherchent les traces de cette eau."
+    },
+    {
+     "start": 38.53,
+     "end": 45.75,
+     "text": "Son jour ressemble beaucoup au nôtre, vingt-quatre heures et trente-sept minutes ; son année, elle, dure six cent quatre-vingt-sept jours."
     }
    ]
   },
   "mercury": {
-   "hash": "67d75eeb57c7",
-   "duration": 28.3,
+   "hash": "234cf5cd4757",
+   "duration": 46.71,
    "sentences": [
     {
      "start": 0.08,
-     "end": 5.12,
-     "text": "Notre première étape est Mercure, la plus petite planète et la plus proche du Soleil."
+     "end": 5.4,
+     "text": "Notre première étape est Mercure : la plus petite planète, et la plus proche du Soleil."
     },
     {
-     "start": 5.12,
-     "end": 8.67,
-     "text": "Un tour autour du Soleil ne lui prend que 88 jours."
+     "start": 5.4,
+     "end": 11.62,
+     "text": "Un tour autour du Soleil ne lui prend que quatre-vingt-huit jours ; en ce moment, vous regardez ce tour en accéléré."
     },
     {
-     "start": 8.67,
-     "end": 19.3,
-     "text": "Son atmosphère est si ténue qu'elle est presque inexistante ; c'est pourquoi le côté jour monte à 430 degrés, tandis que le côté nuit descend à moins 180 degrés."
+     "start": 11.62,
+     "end": 17.56,
+     "text": "En revanche, il tourne très lentement sur lui-même : un jour mercurien dure deux années mercuriennes."
     },
     {
-     "start": 19.3,
-     "end": 23.26,
-     "text": "Sa surface, tout comme celle de la Lune, est couverte de cratères."
+     "start": 17.56,
+     "end": 28.09,
+     "text": "Son atmosphère est si ténue qu'elle en est pour ainsi dire inexistante ; c'est pourquoi le côté jour monte à quatre cent trente degrés, tandis que le côté nuit descend à moins cent quatre-vingts degrés."
     },
     {
-     "start": 23.26,
-     "end": 28.3,
-     "text": "En ce moment, BepiColombo, l'engin commun de l'Europe et du Japon, fait route vers lui."
+     "start": 28.09,
+     "end": 39.79,
+     "text": "Le bassin Caloris, dans l'hémisphère nord, est une immense cicatrice d'impact large de mille cinq cents kilomètres ; la collision qui a formé ce bassin a même soulevé des collines à l'exact opposé de la planète."
+    },
+    {
+     "start": 39.79,
+     "end": 46.71,
+     "text": "En ce moment, BepiColombo, la sonde commune de l'Europe et du Japon, est en route vers Mercure pour entrer en orbite autour de lui."
     }
    ]
   },
   "moon": {
-   "hash": "d38447e9de68",
-   "duration": 26.63,
+   "hash": "6bf6510288ba",
+   "duration": 47.67,
    "sentences": [
     {
      "start": 0.1,
-     "end": 7.2,
-     "text": "La Lune est le seul satellite naturel de la Terre et le seul autre corps céleste où des humains ont posé le pied."
+     "end": 7.26,
+     "text": "La Lune est l'unique satellite naturel de la Terre, et le seul autre corps céleste sur lequel des humains aient posé le pied."
     },
     {
-     "start": 7.2,
-     "end": 15.25,
-     "text": "Entre 1969 et 1972, douze astronautes ont marché à sa surface lors des missions Apollo."
+     "start": 7.26,
+     "end": 13.14,
+     "text": "Regardez comme elle est petite à côté de la Terre : son diamètre n'est environ que le quart de celui de la Terre."
     },
     {
-     "start": 15.25,
-     "end": 23.43,
-     "text": "Elle se trouve à 384 000 kilomètres et nous montre toujours la même face, car sa rotation est verrouillée sur son orbite."
+     "start": 13.14,
+     "end": 22.62,
+     "text": "En mille neuf cent soixante-neuf, Apollo onze s'est posé dans la mer de la Tranquillité ; Neil Armstrong et Buzz Aldrin ont marché deux heures et demie à la surface."
     },
     {
-     "start": 23.43,
-     "end": 26.63,
-     "text": "Chaque année, elle s'éloigne de nous d'environ 4 centimètres."
+     "start": 22.62,
+     "end": 30.63,
+     "text": "Jusqu'en mille neuf cent soixante-douze, douze astronautes au total ont marché sur la Lune et ont rapporté trois cent quatre-vingt-deux kilogrammes de roches."
+    },
+    {
+     "start": 30.63,
+     "end": 39.61,
+     "text": "Le cratère Tycho, aux rayons brillants dans le sud, est la trace d'une collision d'il y a cent huit millions d'années ; ses rayons s'étendent sur des milliers de kilomètres."
+    },
+    {
+     "start": 39.61,
+     "end": 47.67,
+     "text": "La Lune nous montre toujours la même face, car sa rotation est verrouillée sur son orbite ; chaque année, elle s'éloigne de nous d'environ quatre centimètres."
     }
    ]
   },
   "neptune": {
-   "hash": "b9b8e00016c4",
-   "duration": 30.87,
+   "hash": "783f2f93dfce",
+   "duration": 43.83,
    "sentences": [
     {
      "start": 0.08,
-     "end": 3.3,
-     "text": "Neptune, la planète la plus éloignée du Soleil."
+     "end": 6.68,
+     "text": "Neptune, la planète la plus éloignée du Soleil ; il a été découvert non pas au télescope, mais sur le papier."
     },
     {
-     "start": 3.3,
-     "end": 15.91,
-     "text": "Il n'a pas été découvert au télescope, mais sur le papier : des mathématiciens étudiant les écarts de l'orbite d'Uranus ont calculé sa position, et en 1846 on l'a trouvé exactement là."
+     "start": 6.68,
+     "end": 15.44,
+     "text": "Des mathématiciens qui examinaient les écarts de l'orbite d'Uranus ont calculé sa position, et en mille huit cent quarante-six il a été trouvé exactement là."
     },
     {
-     "start": 15.91,
-     "end": 21.37,
-     "text": "Ses vents dépassent 2 100 kilomètres à l'heure ; ce sont les plus rapides du Système solaire."
+     "start": 15.44,
+     "end": 21.82,
+     "text": "Un tour autour du Soleil lui prend cent soixante-cinq ans ; depuis sa découverte, il n'en a accompli qu'un seul."
     },
     {
-     "start": 21.37,
-     "end": 24.71,
-     "text": "Un tour autour du Soleil lui prend 165 ans."
+     "start": 21.82,
+     "end": 27.33,
+     "text": "Ses vents dépassent deux mille cent kilomètres à l'heure ; ce sont les vents les plus rapides du système solaire."
     },
     {
-     "start": 24.71,
-     "end": 30.87,
-     "text": "Sa grande lune Triton tourne en sens inverse ; c'est probablement un objet capturé de la ceinture de Kuiper."
+     "start": 27.33,
+     "end": 35.37,
+     "text": "Lorsque Voyager deux est passée à proximité en mille neuf cent quatre-vingt-neuf, elle a vu une tempête de la taille de la Terre : la Grande Tache sombre."
+    },
+    {
+     "start": 35.37,
+     "end": 43.83,
+     "text": "Sa grande lune Triton tourne en sens inverse ; c'est probablement un objet capturé de la ceinture de Kuiper, et un jour elle se disloquera pour devenir un anneau."
     }
    ]
   },
   "pluto": {
-   "hash": "342fb8e621fb",
-   "duration": 36.17,
+   "hash": "35270833f43e",
+   "duration": 40.63,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 2.4,
-     "text": "Notre dernière étape, Pluton."
+     "start": 0.08,
+     "end": 8.22,
+     "text": "Notre dernière étape est Pluton ; découvert en mille neuf cent trente, il a été considéré comme la neuvième planète jusqu'en deux mille six."
     },
     {
-     "start": 2.4,
-     "end": 10.78,
-     "text": "Il a été découvert en 1930 et considéré comme la neuvième planète jusqu'en 2006 ; c'est désormais une planète naine."
+     "start": 8.22,
+     "end": 14.6,
+     "text": "En fait, il est même plus petit que notre Lune : cela se voit clairement lorsque nous les plaçons côte à côte."
     },
     {
-     "start": 10.78,
-     "end": 16.36,
-     "text": "Jusqu'à ce que New Horizons passe à côté de lui en 2015, il n'était qu'un point flou."
+     "start": 14.6,
+     "end": 20.04,
+     "text": "Jusqu'à ce que New Horizons passe à proximité en deux mille quinze, il n'était qu'un point flou."
     },
     {
-     "start": 16.36,
-     "end": 23.5,
-     "text": "L'engin a trouvé à sa surface une gigantesque forme de cœur, des glaciers d'azote et des montagnes de glace d'eau."
+     "start": 20.04,
+     "end": 29.99,
+     "text": "La sonde a trouvé à sa surface une forme de cœur géante, des glaciers d'azote et des montagnes de glace d'eau ; la température de surface est de moins deux cent trente degrés."
     },
     {
-     "start": 23.5,
-     "end": 27.26,
-     "text": "La température à la surface est de moins 230 degrés."
+     "start": 29.99,
+     "end": 37.17,
+     "text": "Son satellite Charon est si grand que les deux tournent ensemble autour d'un centre de masse commun, situé dans l'espace qui les sépare."
     },
     {
-     "start": 27.26,
-     "end": 32.72,
-     "text": "Son satellite Charon est si grand que les deux tournent ensemble autour d'un centre de masse commun."
-    },
-    {
-     "start": 32.72,
-     "end": 36.17,
-     "text": "Notre tour du Système solaire s'achève ici ; bon voyage."
+     "start": 37.17,
+     "end": 40.63,
+     "text": "Notre visite du système solaire s'achève ici ; bon voyage."
     }
    ]
   },
   "saturn": {
-   "hash": "497fb2f83f33",
-   "duration": 27.67,
+   "hash": "578d8f4b1b9f",
+   "duration": 39.67,
    "sentences": [
     {
      "start": 0.1,
-     "end": 4.34,
-     "text": "Saturne est sans aucun doute la planète la plus élégante du Système solaire."
+     "end": 4.56,
+     "text": "Saturne est sans aucun doute la planète la plus élégante du système solaire."
     },
     {
-     "start": 4.34,
-     "end": 15.51,
-     "text": "Ses anneaux sont composés en grande partie de glace d'eau ; leur largeur atteint 280 000 kilomètres, tandis que leur épaisseur, dans la plupart des endroits, n'est que d'environ 10 mètres."
+     "start": 4.56,
+     "end": 10.86,
+     "text": "Ses anneaux sont composés en majorité de glace d'eau, et leur largeur atteint deux cent quatre-vingt mille kilomètres."
     },
     {
-     "start": 15.51,
-     "end": 21.75,
+     "start": 10.86,
+     "end": 19.76,
+     "text": "Mais, lorsque nous les regardons exactement par la tranche, ils disparaissent presque : leur épaisseur n'est, dans la plupart des endroits, que d'environ dix mètres."
+    },
+    {
+     "start": 19.76,
+     "end": 25.71,
      "text": "La planète elle-même est si légère que, si vous la placiez dans un océan assez grand, elle flotterait."
     },
     {
-     "start": 21.75,
-     "end": 27.67,
-     "text": "À son pôle Nord tourne une mystérieuse tempête hexagonale dont chaque côté est aussi grand que la Terre."
+     "start": 25.71,
+     "end": 31.53,
+     "text": "Au pôle nord tourne une mystérieuse tempête hexagonale, dont chaque côté est aussi grand que la Terre."
+    },
+    {
+     "start": 31.53,
+     "end": 39.67,
+     "text": "La sonde Cassini a étudié ce système pendant treize ans et, en deux mille dix-sept, a achevé sa mission en plongeant dans l'atmosphère de la planète."
     }
    ]
   },
   "sun": {
-   "hash": "97a2df841032",
-   "duration": 31.35,
+   "hash": "0c743fb63f7b",
+   "duration": 47.35,
    "sentences": [
     {
      "start": 0.08,
-     "end": 2.62,
-     "text": "Bienvenue dans le tour du Système solaire."
+     "end": 6.18,
+     "text": "Bienvenue dans la visite du système solaire ; notre voyage commence au centre de tout, le Soleil."
     },
     {
-     "start": 2.62,
-     "end": 6.02,
-     "text": "Notre voyage commence au centre de tout, le Soleil."
+     "start": 6.18,
+     "end": 14.16,
+     "text": "Cette étoile, âgée de quatre milliards et demi d'années, porte à elle seule quatre-vingt-dix-neuf virgule huit pour cent de la masse totale du système."
     },
     {
-     "start": 6.02,
-     "end": 14.58,
-     "text": "Cette étoile, âgée de quatre milliards et demi d'années, détient à elle seule 99,8 pour cent de la masse totale du système."
+     "start": 14.16,
+     "end": 25.75,
+     "text": "Pour voir à quel point elle est grande, plaçons à côté d'elle une Terre à l'échelle réelle : cent neuf Terres se rangent côte à côte le long de son diamètre, et un million trois cent mille d'entre elles tiennent à l'intérieur."
     },
     {
-     "start": 14.58,
-     "end": 20.41,
-     "text": "Son diamètre est de 1 400 000 kilomètres ; 109 Terres y tiennent côte à côte."
+     "start": 25.75,
+     "end": 34.91,
+     "text": "Sa surface est à cinq mille cinq cents degrés, son cœur à quinze millions de degrés ; chaque seconde, elle transforme six cents millions de tonnes d'hydrogène en hélium."
     },
     {
-     "start": 20.41,
-     "end": 26.11,
-     "text": "Sa surface est à 5 500 degrés, et son cœur, lui, à 15 millions de degrés."
+     "start": 34.91,
+     "end": 42.11,
+     "text": "Reculons maintenant et suivons le voyage de la lumière : la lumière qui quitte le Soleil atteint la Terre en huit minutes et vingt secondes."
     },
     {
-     "start": 26.11,
-     "end": 31.35,
-     "text": "La lumière que vous voyez en ce moment part d'ici et atteint la Terre en 8 minutes et 20 secondes."
+     "start": 42.11,
+     "end": 47.35,
+     "text": "Ainsi, chaque fois que vous regardez le Soleil, vous voyez en réalité son état d'il y a huit minutes."
     }
    ]
   },
   "uranus": {
-   "hash": "afef4cff4a21",
-   "duration": 26.07,
+   "hash": "e413a6d63abf",
+   "duration": 37.11,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 2.8,
-     "text": "Uranus, la planète couchée sur le flanc."
+     "start": 0.1,
+     "end": 5.7,
+     "text": "Uranus, la planète couchée sur le flanc : son axe est incliné de quatre-vingt-dix-huit degrés."
     },
     {
-     "start": 2.8,
-     "end": 8.86,
-     "text": "Son axe est incliné de 98 degrés, c'est-à-dire qu'il tourne autour du Soleil presque en roulant."
+     "start": 5.7,
+     "end": 11.92,
+     "text": "Il tourne donc autour du Soleil en roulant, pour ainsi dire ; suivons d'en haut son tour de quatre-vingt-quatre ans."
     },
     {
-     "start": 8.86,
-     "end": 13.42,
-     "text": "C'est pourquoi ses pôles vivent 42 ans de jour, puis 42 ans de nuit."
+     "start": 11.92,
+     "end": 16.14,
+     "text": "C'est pourquoi ses pôles vivent quarante-deux ans de jour, et quarante-deux ans de nuit."
     },
     {
-     "start": 13.42,
-     "end": 17.9,
-     "text": "Il apparaît bleu-vert, car le gaz méthane absorbe la lumière rouge."
+     "start": 16.14,
+     "end": 22.59,
+     "text": "Comme le gaz méthane absorbe la lumière rouge, il apparaît bleu-vert, et il a lui aussi de fins anneaux sombres."
     },
     {
-     "start": 17.9,
-     "end": 26.07,
-     "text": "C'est la première planète découverte au télescope par William Herschel, en 1781, et seule Voyager 2 l'a vu de près."
+     "start": 22.59,
+     "end": 30.81,
+     "text": "C'est la première planète découverte au télescope, par William Herschel, en mille sept cent quatre-vingt-un ; de près, seule Voyager deux l'a vu."
+    },
+    {
+     "start": 30.81,
+     "end": 37.11,
+     "text": "Le télescope James-Webb, lui, a photographié ses anneaux et sa calotte polaire avec cette netteté en deux mille vingt-trois."
     }
    ]
   },
   "venus": {
-   "hash": "f1d07932c1af",
-   "duration": 28.55,
+   "hash": "ed29e16c9379",
+   "duration": 47.03,
    "sentences": [
     {
      "start": 0.1,
-     "end": 6.38,
-     "text": "Vénus est considérée comme la jumelle de la Terre par sa taille, mais ses conditions sont un véritable enfer."
+     "end": 7.82,
+     "text": "Vénus est considérée comme la jumelle de la Terre par sa taille ; lorsque nous les plaçons côte à côte, la différence est presque invisible."
     },
     {
-     "start": 6.38,
-     "end": 17.81,
-     "text": "Son épaisse atmosphère de dioxyde de carbone porte la pression à la surface à 92 fois celle de la Terre et, par effet de serre, élève la température à 465 degrés."
+     "start": 7.82,
+     "end": 14.96,
+     "text": "Mais la ressemblance s'arrête là : les nuages d'acide sulfurique que vous voyez en ce moment cachent entièrement le monde en dessous."
     },
     {
-     "start": 17.81,
-     "end": 21.37,
-     "text": "C'est encore plus chaud que Mercure, pourtant plus proche du Soleil."
+     "start": 14.96,
+     "end": 27.01,
+     "text": "Retirons les nuages : en dessous, un enfer, chauffé à quatre cent soixante-cinq degrés par l'effet de serre d'une épaisse atmosphère de dioxyde de carbone, et dont la pression est quatre-vingt-douze fois celle de la Terre."
     },
     {
-     "start": 21.37,
-     "end": 23.81,
-     "text": "Ses nuages sont de l'acide sulfurique."
+     "start": 27.01,
+     "end": 34.09,
+     "text": "À la surface, le plomb fond ; la plus haute montagne ici, ce sont les monts Maxwell, hauts de onze kilomètres."
     },
     {
-     "start": 23.81,
-     "end": 28.55,
-     "text": "Vénus tourne en sens inverse et très lentement : un jour y dure plus longtemps qu'une année."
+     "start": 34.09,
+     "end": 41.49,
+     "text": "Seul le radar a pu voir cette surface ; les sondes soviétiques Venera, elles, n'ont tenu au plus que deux heures après l'atterrissage."
+    },
+    {
+     "start": 41.49,
+     "end": 47.03,
+     "text": "Vénus tourne en outre en sens inverse, et très lentement : un de ses jours est plus long qu'une de ses années."
     }
    ]
   }

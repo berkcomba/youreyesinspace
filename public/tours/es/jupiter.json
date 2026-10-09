@@ -3,193 +3,183 @@
  "locale": "es",
  "steps": {
   "callisto": {
-   "hash": "f1b831e1f1e2",
-   "duration": 28.07,
+   "hash": "796746af41f6",
+   "duration": 26.87,
    "sentences": [
     {
-     "start": 0.02,
-     "end": 4.72,
-     "text": "Calisto, la más exterior y la más tranquila de las cuatro lunas de Galileo."
+     "start": 0.04,
+     "end": 5.04,
+     "text": "Calisto, la más exterior y la más tranquila de las cuatro lunas galileanas."
     },
     {
-     "start": 4.72,
-     "end": 12.22,
-     "text": "Su superficie es la más densamente craterizada del Sistema Solar; casi no ha cambiado en 4. 000 millones de años."
+     "start": 5.04,
+     "end": 12.6,
+     "text": "Su superficie es la más densamente craterizada del Sistema Solar; en cuatro mil millones de años apenas ha cambiado."
     },
     {
-     "start": 12.22,
-     "end": 20.15,
-     "text": "Al estar lejos de Júpiter, no se ve afectada por el calentamiento por mareas y permanece fuera de los cinturones de radiación."
+     "start": 12.6,
+     "end": 19.11,
+     "text": "Al estar lejos de Júpiter, no le afecta el calentamiento mareal y queda fuera de los cinturones de radiación."
     },
     {
-     "start": 20.15,
-     "end": 25.01,
-     "text": "Esto la convierte en la candidata más segura para una base tripulada en el futuro."
-    },
-    {
-     "start": 25.01,
-     "end": 28.07,
-     "text": "También hay indicios de que debajo podría haber un océano."
+     "start": 19.11,
+     "end": 26.87,
+     "text": "Eso la convierte en la candidata más segura para una base tripulada en el futuro; también hay indicios de que debajo podría haber un océano."
     }
    ]
   },
   "europa": {
-   "hash": "51d867eb64d7",
-   "duration": 31.27,
+   "hash": "3950615989dc",
+   "duration": 32.95,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 3.98,
+     "start": 0.08,
+     "end": 4,
      "text": "Europa, el destino más prometedor en la búsqueda de vida."
     },
     {
-     "start": 3.98,
-     "end": 13,
-     "text": "Se cree que bajo su lisa corteza de hielo hay un océano global de agua salada que contiene el doble de agua que todos los océanos de la Tierra."
+     "start": 4,
+     "end": 14.88,
+     "text": "Es un poco más pequeña que nuestra Luna; pero se cree que, bajo su lisa corteza de hielo, hay un océano global que alberga el doble de agua que todos los océanos de la Tierra."
     },
     {
-     "start": 13,
-     "end": 20.11,
+     "start": 14.88,
+     "end": 22.05,
      "text": "Las líneas marrones de la superficie son lugares donde el hielo se agrieta y el agua de debajo se filtra hacia arriba."
     },
     {
-     "start": 20.11,
-     "end": 31.27,
-     "text": "La sonda Europa Clipper de la NASA se lanzó en 2024 y en 2030 investigará, con aproximadamente 50 sobrevuelos cercanos, si este océano es habitable."
+     "start": 22.05,
+     "end": 32.95,
+     "text": "La sonda Europa Clipper de la NASA se lanzó en dos mil veinticuatro y en dos mil treinta, con unos cincuenta sobrevuelos cercanos, investigará si este océano es habitable o no."
     }
    ]
   },
   "ganymede": {
-   "hash": "789838ce40a2",
-   "duration": 35.42,
+   "hash": "86f2c1a575b6",
+   "duration": 38.39,
    "sentences": [
     {
      "start": 0.1,
-     "end": 3.58,
+     "end": 3.68,
      "text": "Ganímedes, la luna más grande del Sistema Solar."
     },
     {
-     "start": 3.58,
-     "end": 6.52,
-     "text": "Es incluso más grande que el planeta Mercurio."
+     "start": 3.68,
+     "end": 9.76,
+     "text": "Es incluso más grande que el planeta Mercurio; si los colocamos uno junto al otro, podéis verlo."
     },
     {
-     "start": 6.52,
-     "end": 16.41,
-     "text": "Es la única luna conocida que tiene su propio campo magnético; este campo forma una pequeña burbuja dentro del de Júpiter y crea auroras en sus polos."
+     "start": 9.76,
+     "end": 19.35,
+     "text": "Es la única luna conocida con un campo magnético propio; este campo forma una pequeña burbuja dentro del de Júpiter y crea auroras en sus polos."
     },
     {
-     "start": 16.41,
-     "end": 26.24,
+     "start": 19.35,
+     "end": 29.03,
      "text": "Su superficie tiene dos edades distintas: regiones antiguas, oscuras y craterizadas, y regiones más jóvenes, de color claro y con surcos."
     },
     {
-     "start": 26.24,
-     "end": 29.28,
-     "text": "Bajo su corteza de hielo también hay un océano."
-    },
-    {
-     "start": 29.28,
-     "end": 35.42,
-     "text": "La sonda JUICE de la Agencia Espacial Europea entrará en órbita a su alrededor en 2031."
+     "start": 29.03,
+     "end": 38.39,
+     "text": "Bajo su corteza de hielo también tiene un océano; la sonda JUICE de la Agencia Espacial Europea entrará en órbita a su alrededor en dos mil treinta y uno."
     }
    ]
   },
   "io": {
-   "hash": "7bd81d7b4ed0",
-   "duration": 29.85,
+   "hash": "18c642082a86",
+   "duration": 33.91,
    "sentences": [
     {
      "start": 0.08,
-     "end": 3.62,
+     "end": 3.32,
      "text": "Ío, el mundo más volcánico del Sistema Solar."
     },
     {
-     "start": 3.62,
-     "end": 12.28,
-     "text": "Se comprime y se estira constantemente entre la gravedad de Júpiter y la de las otras lunas; este calentamiento por mareas funde su interior."
+     "start": 3.32,
+     "end": 11.66,
+     "text": "Se comprime y se estira constantemente entre la gravedad de Júpiter y la de las demás lunas; este calentamiento mareal funde su interior."
     },
     {
-     "start": 12.28,
-     "end": 19.55,
-     "text": "En su superficie hay más de 400 volcanes activos, y algunos lanzan lava a cientos de kilómetros de altura."
+     "start": 11.66,
+     "end": 23.95,
+     "text": "En su superficie hay más de cuatrocientos volcanes activos, y algunos lanzan lava a cientos de kilómetros de altura; el mayor, Loki Patera, es un lago de lava de doscientos kilómetros de ancho."
     },
     {
-     "start": 19.55,
-     "end": 25.35,
+     "start": 23.95,
+     "end": 29.59,
      "text": "Los colores amarillo, naranja y rojo proceden del azufre y de compuestos de azufre."
     },
     {
-     "start": 25.35,
-     "end": 29.85,
+     "start": 29.59,
+     "end": 33.91,
      "text": "Su superficie se renueva tan rápido que casi no tiene cráteres de impacto."
     }
    ]
   },
   "juno": {
-   "hash": "29bdad22f6d5",
-   "duration": 37.19,
+   "hash": "0f2cb9922783",
+   "duration": 41.59,
    "sentences": [
     {
      "start": 0.04,
-     "end": 2.44,
-     "text": "Por último, veamos a Juno."
+     "end": 8.22,
+     "text": "Por último, miremos a Juno: esta sonda de la NASA entró en órbita alrededor de Júpiter en julio de dos mil dieciséis."
     },
     {
-     "start": 2.44,
-     "end": 8.26,
-     "text": "Esta sonda de la NASA entró en órbita alrededor de Júpiter en julio de 2016."
-    },
-    {
-     "start": 8.26,
-     "end": 17.32,
+     "start": 8.22,
+     "end": 17.38,
      "text": "Es la primera sonda que funciona con energía solar tan lejos del Sol; sus tres paneles gigantes ocupan tanto espacio como una pista de baloncesto."
     },
     {
-     "start": 17.32,
-     "end": 27.41,
-     "text": "Para protegerse de la radiación, sigue una órbita larga y elíptica que pasa sobre los polos, y en cada paso sobrevuela las nubes a unos pocos miles de kilómetros."
+     "start": 17.38,
+     "end": 26.41,
+     "text": "Para protegerse de la radiación, gira en una órbita larga y elíptica que pasa por encima de los polos; aquí tenéis esa órbita, acelerada."
     },
     {
-     "start": 27.41,
-     "end": 34.79,
-     "text": "Descubrió ciclones gigantes en los polos de Júpiter y mostró que su núcleo es más grande y más difuso de lo que se pensaba."
+     "start": 26.41,
+     "end": 34.39,
+     "text": "En cada paso pasa a unos pocos miles de kilómetros por encima de las nubes y descubrió ciclones gigantes en los polos de Júpiter."
     },
     {
-     "start": 34.79,
-     "end": 37.19,
-     "text": "Aquí termina nuestro recorrido por Júpiter."
+     "start": 34.39,
+     "end": 41.59,
+     "text": "Demostró que el núcleo de Júpiter es más grande y más difuso de lo que se pensaba; aquí termina nuestro recorrido por Júpiter."
     }
    ]
   },
   "jupiter": {
-   "hash": "e056b0197c78",
-   "duration": 35.91,
+   "hash": "57d17d84c8a7",
+   "duration": 49.91,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 2.6,
-     "text": "Bienvenidos al sistema de Júpiter."
+     "start": 0.08,
+     "end": 5.88,
+     "text": "Bienvenidos al sistema de Júpiter; este gigante es casi como un pequeño sistema solar."
     },
     {
-     "start": 2.6,
-     "end": 9.54,
-     "text": "Este gigante es casi como un pequeño sistema solar: a su alrededor orbitan más de 95 lunas."
+     "start": 5.88,
+     "end": 12.76,
+     "text": "A su alrededor giran más de noventa y cinco lunas; veamos desde arriba las órbitas de las cuatro más grandes."
     },
     {
-     "start": 9.54,
-     "end": 22.89,
-     "text": "El planeta es tan grande que en su interior caben 1. 300 Tierras, y su fuerte campo magnético es la estructura más grande del Sistema Solar; si pudiera verse en el cielo, parecería más grande que la Luna llena."
+     "start": 12.76,
+     "end": 29.35,
+     "text": "Ío da una vuelta en dos días, Europa en tres días y medio, Ganímedes en siete días y Calisto en diecisiete días; las tres interiores están acopladas entre sí: cuando Ío completa cuatro vueltas, Europa completa dos y Ganímedes una."
     },
     {
-     "start": 22.89,
-     "end": 32.89,
-     "text": "En 1610, Galileo descubrió sus cuatro grandes lunas con su pequeño telescopio, y esto fue la primera prueba de que no todo gira alrededor de la Tierra."
+     "start": 29.35,
+     "end": 37.77,
+     "text": "El planeta es tan grande que en su interior caben mil trescientas Tierras, y su campo magnético es la estructura más grande del Sistema Solar."
     },
     {
-     "start": 32.89,
-     "end": 35.91,
-     "text": "Ahora visitaremos esas cuatro lunas una por una."
+     "start": 37.77,
+     "end": 47.05,
+     "text": "En mil seiscientos diez, Galileo descubrió estas cuatro lunas con su pequeño telescopio; fue la primera prueba de que no todo gira alrededor de la Tierra."
+    },
+    {
+     "start": 47.05,
+     "end": 49.91,
+     "text": "Ahora visitaremos esas cuatro lunas por orden."
     }
    ]
   }

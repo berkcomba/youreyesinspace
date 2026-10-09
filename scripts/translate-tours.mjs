@@ -58,6 +58,7 @@ Rules:
 - Use the standard {LANG} names of celestial objects (e.g. the Turkish "Ülker" is the Pleiades, "Yengeç Bulutsusu" is the Crab Nebula, "Halka Bulutsusu" is the Ring Nebula, "Üçgen Galaksisi" is the Triangulum Galaxy, "Büyük/Küçük Macellan Bulutu" are the Large/Small Magellanic Cloud, "Kutup Yıldızı" is Polaris / the North Star).
 - Keep designations as pronounced in the source: when Turkish spells out a catalogue number in words for the voice (e.g. "PSR B Bin Dokuz Yüz On Dokuz artı Yirmi Bir"), write it so a TTS voice reads it correctly in {LANG} (e.g. "PSR B1919+21" may be written as "PSR B 1919 plus 21"). "Cygnus X-Bir" is "Cygnus X-1", "M Seksen Yedi yıldız" is "M87 star" (M87*, say "M87 star").
 - Keep sentence boundaries roughly aligned with the source (one Turkish sentence → one or two target sentences) because subtitles are timed per sentence.
+- Some inputs are short on-screen labels rather than narration: map-pin names ("Olympus Mons"), card titles, headline figures ("1.300 Dünya", "88 gün") and one-line trivia. Translate these concisely, keeping digits as digits with the digit grouping of {LANG}.
 - Output ONLY a JSON object mapping each input key (the exact Turkish string) to its translation. No commentary, no markdown fences.`;
 
 async function translateBatch(items, lang) {
@@ -96,10 +97,20 @@ async function translateBatch(items, lang) {
   throw new Error('translation failed');
 }
 
+/** translatable strings of a step's cues: pin labels, card titles / headline figures / texts */
+const hasLetters = (s) => typeof s === 'string' && /\p{L}{2}/u.test(s);
+function cueStrings(step) {
+  const out = [];
+  for (const c of step.cues ?? []) {
+    for (const k of ['label', 'title', 'big', 'text']) if (hasLetters(c[k])) out.push(c[k]);
+  }
+  return out;
+}
+
 const strings = [];
 for (const t of TOURS) {
   strings.push(t.title, t.summary);
-  for (const s of t.steps) strings.push(s.text);
+  for (const s of t.steps) strings.push(s.text, ...cueStrings(s));
 }
 
 // one tour per request keeps the context coherent; requests run in parallel (the model is slow)
@@ -113,8 +124,8 @@ for (const lang of langs) {
   const todo = strings.filter((s) => force || !dict[s]);
   console.log(`${lang}: ${todo.length} strings`);
   for (const t of TOURS) {
-    const b = [t.title, t.summary, ...t.steps.map((s) => s.text)].filter((s) => todo.includes(s));
-    if (b.length) jobs.push({ lang, b });
+    const b = [t.title, t.summary, ...t.steps.flatMap((s) => [s.text, ...cueStrings(s)])].filter((s) => todo.includes(s));
+    if (b.length) jobs.push({ lang, b: Array.from(new Set(b)) });
   }
 }
 

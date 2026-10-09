@@ -4,8 +4,9 @@ import { Engine } from './core/Engine';
 import { TimeSystem } from './core/TimeSystem';
 import { Universe, catalogIndexOf, type StarId } from './core/Universe';
 import type { StarSystem } from './core/StarSystem';
-import type { CelestialBody } from './core/CelestialBody';
+import { CelestialBody } from './core/CelestialBody';
 import { StarCatalog } from './data/StarCatalog';
+import { LightPulse } from './render/TourEffects';
 import { BodyRenderer, type BodyView } from './render/BodyRenderer';
 import { BodyPoints } from './render/BodyPoints';
 import { OrbitLines } from './render/OrbitLines';
@@ -24,7 +25,7 @@ import { Input } from './input/Input';
 import { CameraController } from './camera/CameraController';
 import { UI, type UIHost } from './ui/UI';
 import { loadSettings, saveSettings, type Settings } from './ui/Settings';
-import { DEG, PARSEC_KM } from './core/constants';
+import { DAY_S, DEG, PARSEC_KM } from './core/constants';
 import { starLightColor } from './astro/stellar';
 import { fmtDuration, fmtLightYears } from './ui/format';
 import { _, applyDom, initI18n } from './i18n';
@@ -72,6 +73,9 @@ class App implements UIHost {
   /** labelled surface feature the overlay points at (tours) */
   private surfacePin: SurfacePin | null = null;
   private readonly pinScreen = { dir: new Vector3(), label: '', visible: false };
+  /** tour size comparison: a true-scale stand-in of `ref` kept at the screen-right of `beside` */
+  private ghost: { body: CelestialBody; ref: CelestialBody; beside: CelestialBody } | null = null;
+  private pulse: LightPulse | null = null;
   /** camera offset from the followed vehicle, kept across frame switches */
   private readonly followOffset = new Vector3();
   private followOffsetValid = false;
@@ -381,6 +385,94 @@ class App implements UIHost {
     this.camera.goTo(b, this.universe.star.position, TOUR_HOP_S);
   }
 
+  /** Camera `elev`° above the equator plane, `az`° around the pole from the noon meridian, `dist` radii out. */
+  goToVantageOf(bodyId: string, elev: number, az: number, dist: number): void {
+    const b = this.universe.get(bodyId);
+    if (!b) return;
+    const noon = this.noonDirection(b, new Vector3());
+    const east = new Vector3().crossVectors(b.pole, noon).normalize();
+    const ce = Math.cos(elev * DEG);
+    const dir = new Vector3()
+      .addScaledVector(noon, ce * Math.cos(az * DEG))
+      .addScaledVector(east, ce * Math.sin(az * DEG))
+      .addScaledVector(b.pole, Math.sin(elev * DEG))
+      .normalize();
+    const minD = b.data.rings ? Math.max(b.radius * dist, b.data.rings.outer * 1.15) : b.radius * dist;
+    this.select(b);
+    this.camera.goToVantage(b, dir, minD, TOUR_HOP_S * 1.5);
+  }
+
+  /** Unit vector from `b` toward the Sun, projected onto its equator plane (the sub-solar meridian). */
+  private noonDirection(b: CelestialBody, out: Vector3): Vector3 {
+    const star = this.universe.star;
+    if (star === b) {
+      const e = this.universe.get('earth');
+      out.copy(e ? e.position : new Vector3(1, 0, 0)).sub(b.position);
+    } else out.copy(star.position).sub(b.position);
+    out.addScaledVector(b.pole, -out.dot(b.pole));
+    if (out.lengthSq() < 1e-6) out.set(1, 0, 0).addScaledVector(b.pole, -b.pole.x);
+    return out.normalize();
+  }
+
+  setComparison(refId: string | null, besideId?: string): void {
+    if (this.ghost) {
+      this.bodies.removeBody(this.ghost.body.id);
+      this.points.setViews(this.bodies.views);
+      this.ghost = null;
+    }
+    if (!refId || !besideId) return;
+    const ref = this.universe.get(refId);
+    const beside = this.universe.get(besideId);
+    if (!ref || !beside || ref === beside) return;
+    // a detached copy: same appearance and radius, no orbit, positioned by hand every frame
+    const body = new CelestialBody({ ...ref.data, id: 'tour-ghost', orbit: undefined });
+    body.pole.copy(ref.pole);
+    body.rotation.copy(ref.rotation);
+    this.ghost = { body, ref, beside };
+    this.placeGhost();
+    this.bodies.addBody(body, this.universe.current);
+    this.points.setViews(this.bodies.views);
+    // back off until both fit side by side (≈ 60 % of a ~70° horizontal field)
+    const width = 2 * this.ghostAnchorRadius(beside) + 2.7 * ref.radius;
+    const need = width * 1.25;
+    const ap = this.camera.autopilot;
+    if (ap && ap.kind === 'goto' && ap.target === beside) {
+      // still on the way in: just stop the approach further out
+      ap.dist1 = Math.max(ap.dist1, need);
+      return;
+    }
+    const cur = this.camera.position.distanceTo(beside.position);
+    if (need > cur * 1.05) {
+      const dir = new Vector3().copy(this.camera.position).sub(beside.position).normalize();
+      this.camera.goToVantage(beside, dir, need, TOUR_HOP_S);
+    }
+  }
+
+  private ghostAnchorRadius(b: CelestialBody): number {
+    return b.data.rings ? Math.max(b.radius, b.data.rings.outer) : b.radius;
+  }
+
+  /** Keep the comparison body at the screen-right of its anchor, at the same depth, spinning like the original. */
+  private placeGhost(): void {
+    const g = this.ghost;
+    if (!g) return;
+    const right = new Vector3(1, 0, 0).applyQuaternion(this.camera.quaternion);
+    const gap = this.ghostAnchorRadius(g.beside) + g.ref.radius * 1.35;
+    g.body.position.copy(g.beside.position).addScaledVector(right, gap);
+    g.body.rotation.copy(g.ref.rotation);
+    g.body.pole.copy(g.ref.pole);
+    g.body.distanceToStar = g.body.position.distanceTo(this.universe.star.position);
+  }
+
+  setPulse(p: { from: string; to: string; seconds: number } | null): void {
+    if (!p) { this.pulse?.stop(); return; }
+    const a = this.universe.get(p.from);
+    const b = this.universe.get(p.to);
+    if (!a || !b) return;
+    this.pulse ??= new LightPulse(this.engine.scene);
+    this.pulse.start(a, b, p.seconds);
+  }
+
   /** Fly in above a surface point (lat/lon, degrees) of `bodyId`, looking down at it. */
   goToSurface(bodyId: string, lat: number, lon: number, storm = false): void {
     const b = this.universe.get(bodyId);
@@ -408,7 +500,10 @@ class App implements UIHost {
    * `dir` is rotated in place to where it will be after the jump.
    */
   private bringIntoDaylight(b: CelestialBody, dir: Vector3): void {
-    if (b.rotationPeriodS === 0 || this.universe.star === b) return;
+    // tidally locked moons spin once per orbit (prograde about the pole): the Sun sweeps their
+    // surface once per orbital period, so the same jump logic applies with that period
+    const spinS = b.data.rotationPeriod === 'sync' ? b.periodDays * DAY_S : b.rotationPeriodS;
+    if (!spinS || !Number.isFinite(spinS) || this.universe.star === b) return;
     const toSun = new Vector3().copy(this.universe.star.position).sub(b.position).normalize();
     if (dir.dot(toSun) > 0.5) return; // Sun already more than 30° up
     const sunT = toSun.clone().addScaledVector(b.pole, -toSun.dot(b.pole));
@@ -417,13 +512,42 @@ class App implements UIHost {
     sunT.normalize(); dirT.normalize();
     // signed angle from the feature to the sub-solar meridian about the pole (spin is +about pole)
     const phi = Math.atan2(b.pole.dot(new Vector3().crossVectors(dirT, sunT)), dirT.dot(sunT));
-    const omega = (2 * Math.PI) / b.rotationPeriodS;
+    const omega = (2 * Math.PI) / spinS;
     let dt = phi / omega;
-    const period = Math.abs(b.rotationPeriodS);
+    const period = Math.abs(spinS);
     while (dt < 0) dt += period;
     this.time.jump(dt);
     dir.applyQuaternion(new Quaternion().setFromAxisAngle(b.pole, omega * dt));
   }
+
+  /**
+   * While a tour pin is shown and the camera has settled, keep the feature in the upper right of
+   * the view — clear of the info panel, the tour bar and the corner card — whatever roll the
+   * camera ended the flight with. Eased, and suspended while the user is dragging.
+   */
+  private aimAtPin(dt: number, fovRad: number, aspect: number): void {
+    const pin = this.surfacePin;
+    const cam = this.camera;
+    if (!pin || cam.autopilot || this.input.dragging || !this.tours.state.tour || this.tours.state.paused) return;
+    const b = this.universe.get(pin.bodyId);
+    if (!b || cam.target !== b) return;
+    // the feature's direction in camera space
+    const d = this.pinDirection(b, pin.lat, pin.lon, pin.storm ?? false, this.aimDir).multiplyScalar(b.radius).add(b.position).sub(cam.position).normalize();
+    d.applyQuaternion(this.aimQ.copy(cam.quaternion).invert());
+    if (d.z > -0.3) return; // off to the side or behind: not ours to fix
+    // where it should sit: a fixed fraction of the half-field to the right and up
+    const th = Math.tan(fovRad / 2);
+    const t = this.aimTarget.set(th * aspect * 0.2, th * 0.26, -1).normalize();
+    if (d.distanceToSquared(t) < 1e-6) return;
+    // rotating the camera by R (local) moves the feature from d to R⁻¹·d; we need R⁻¹·d = t
+    this.aimQ.setFromUnitVectors(t, d);
+    this.aimEase.identity().slerp(this.aimQ, Math.min(1, dt * 3.5));
+    cam.quaternion.multiply(this.aimEase);
+  }
+  private readonly aimDir = new Vector3();
+  private readonly aimTarget = new Vector3();
+  private readonly aimQ = new Quaternion();
+  private readonly aimEase = new Quaternion();
 
   /** Outward unit vector of a surface point; gas-giant storms follow the shader's drifting spot. */
   private pinDirection(b: CelestialBody, lat: number, lon: number, storm: boolean, out: Vector3): Vector3 {
@@ -828,6 +952,7 @@ class App implements UIHost {
     const eng = this.engine;
     const fovRad = eng.camera.fov * DEG;
     this.camera.update(dt, this.input, eng.width, eng.height, fovRad);
+    this.aimAtPin(dt, fovRad, eng.width / Math.max(1, eng.height));
     this.checkFrameSwitch(dt);
     eng.camera.quaternion.copy(this.camera.quaternion);
     eng.camera.position.set(0, 0, 0);
@@ -849,6 +974,8 @@ class App implements UIHost {
 
     // Renderables
     const ov = this.tourOverrides;
+    if (this.ghost) this.placeGhost();
+    if (this.pulse?.active) this.pulse.update(dt, camPos, pxPerRad);
     this.bodies.update(camPos, this.camera.quaternion, eng.camera, eng.height, fovRad, star.position, star.radius, this.sunColor, this.time.t / 3600, {
       atmospheres: s.atmospheres, clouds: ov.clouds ?? s.clouds, rings: s.rings, shadows: s.shadows, imagery: s.imagery,
     });
