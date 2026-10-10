@@ -86,7 +86,7 @@ void main() {
   float NdotV = max(dot(N, V), 0.0);
   float limb = 0.5 + 0.5 * pow(NdotV, 0.45);
 
-  vec3 color = albedo * diffuse * limb * terminator * shadow;
+  vec3 color = albedo * fillLit(diffuse * terminator * shadow) * limb;
   color += albedo * 0.002;
 
   // Rim haze
@@ -95,7 +95,7 @@ void main() {
   color += uAtmColor * rim * dayFactor * uAtmDensity * 0.35 * shadow;
   color *= uSunColor;
 
-  gl_FragColor = vec4(color, 1.0);
+  gl_FragColor = vec4(color * uAlpha, 1.0);
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
 }

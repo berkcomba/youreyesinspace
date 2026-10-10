@@ -11,6 +11,15 @@ uniform vec4 uOccluders[4];   // xyz = position, w = radius (0 = none)
 uniform vec4 uRing;           // inner, outer, opacity, seed  (inner<=0 => no ring)
 uniform vec3 uRingNormal;
 uniform vec4 uRingGaps[4];
+// Tour "work light": 0 = physical lighting; 1 = the night side lit as if at noon (fades in when a
+// pinned feature would otherwise be invisible in the dark)
+uniform float uFill;
+// Overall brightness (1 = normal): tours fade comparison bodies in and out of the black of space
+uniform float uAlpha;
+
+float fillLit(float diffuse) {
+  return max(diffuse, uFill * 0.9);
+}
 
 float sunAngularRadius(vec3 P) {
   return uSunRadius / max(length(uSunPos - P), 1.0);

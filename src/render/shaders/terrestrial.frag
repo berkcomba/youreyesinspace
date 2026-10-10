@@ -135,7 +135,7 @@ void main() {
   float NdotLgeo = dot(Ngeo, L);
   float shadow = shadowAt(P, L);
   float terminator = smoothstep(-0.08, 0.15, NdotLgeo);
-  float diffuse = max(NdotL, 0.0) * terminator * shadow;
+  float diffuse = fillLit(max(NdotL, 0.0) * terminator * shadow);
 
   vec3 color = albedo * diffuse * uSunColor;
 
@@ -178,7 +178,7 @@ void main() {
     color += vec3(1.0, 0.35, 0.05) * lavaGlow * (0.6 + 0.4 * sin(uTime * 0.7 + h * 40.0));
   }
 
-  gl_FragColor = vec4(color, 1.0);
+  gl_FragColor = vec4(color * uAlpha, 1.0);
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
 }

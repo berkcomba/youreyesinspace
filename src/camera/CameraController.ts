@@ -28,6 +28,8 @@ interface Autopilot {
   dir1: Vector3; // end direction (unit) – for 'centerDir': the direction to look at
   dist1: number;
   q0: Quaternion;
+  /** 'goto': screen-up at arrival (unit); default keeps the roll the flight started with */
+  up1?: Vector3;
 }
 
 const _v = new Vector3();
@@ -188,21 +190,42 @@ export class CameraController {
   /**
    * Fly to an explicit vantage point around a body: `dir1` (unit, from the body) and `dist1` km
    * away, ending in orbit mode around it. Used by guided tours for overviews and surface close-ups.
-   * `durationS` overrides the distance-based flight time.
+   * `durationS` overrides the distance-based flight time; `up1` fixes the roll at arrival.
    */
-  goToVantage(body: CelestialBody, dir1: Vector3, dist1: number, durationS?: number): void {
+  goToVantage(body: CelestialBody, dir1: Vector3, dist1: number, durationS?: number, up1?: Vector3): void {
     const r0 = _v.copy(this.position).sub(body.position);
     const ratio = Math.max(r0.length(), 1) / dist1;
     const duration = durationS ?? 2.2 + Math.min(4.5, Math.abs(Math.log10(ratio)) * 0.9);
     this.autopilot = {
       kind: 'goto', target: body, point: null, t: 0, duration,
       r0: r0.clone(), dir1: dir1.clone().normalize(), dist1, q0: this.quaternion.clone(),
+      up1: up1?.clone().normalize(),
     };
     this.autoOrbit = 0;
     this.setReference(body);
     this.target = body;
     this.anchor = null;
     this.mode = 'orbit';
+  }
+
+  /**
+   * Tour close-up: arrive on the far side of the body from the Sun, a little above it, so the
+   * Sun (and the inner system) hangs in the sky just over the planet's limb. `elevRad` is the
+   * angle of the Sun above the body's centre as seen from the camera.
+   */
+  goToBacklit(body: CelestialBody, sunPos: Vector3, durationS?: number, elevRad = 0.36): void {
+    let dist1 = body.radius * 3.6;
+    if (body.data.rings) dist1 = Math.max(dist1, body.data.rings.outer * 2.2);
+    if (body.data.type === 'spacecraft') dist1 = body.radius * 4.5;
+    const toSun = new Vector3().copy(sunPos).sub(body.position).normalize();
+    // "up" = the body's pole, made perpendicular to the Sun direction (so the Sun rises straight up the screen)
+    const up = new Vector3().copy(body.pole).addScaledVector(toSun, -body.pole.dot(toSun));
+    if (up.lengthSq() < 1e-6) up.set(0, 1, 0).addScaledVector(toSun, -toSun.y);
+    up.normalize();
+    // camera a little above the body–Sun line, looking slightly down at the body: the Sun then
+    // sits `elevRad` above the body's centre on screen
+    const dir1 = new Vector3().copy(toSun).multiplyScalar(-Math.cos(elevRad)).addScaledVector(up, Math.sin(elevRad));
+    this.goToVantage(body, dir1, dist1, durationS, up);
   }
 
   /**
@@ -314,7 +337,7 @@ export class CameraController {
         }
         this.position.copy(tgtPos).addScaledVector(dir, dist);
         // orientation: blend toward looking at target
-        _m.lookAt(new Vector3(), _v.copy(tgtPos).sub(this.position), _v2.set(0, 1, 0).applyQuaternion(ap.q0));
+        _m.lookAt(new Vector3(), _v.copy(tgtPos).sub(this.position), ap.up1 ? _v2.copy(ap.up1) : _v2.set(0, 1, 0).applyQuaternion(ap.q0));
         _q.setFromRotationMatrix(_m);
         this.quaternion.copy(ap.q0).slerp(_q, smoothstep(Math.min(1, s * 1.6)));
       } else {

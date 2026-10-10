@@ -36,7 +36,7 @@ void main() {
   float NdotLgeo = dot(Ngeo, L);
   float shadow = shadowAt(P, L);
   float terminator = smoothstep(-0.08, 0.15, NdotLgeo);
-  float diffuse = max(NdotLgeo, 0.0) * terminator * shadow;
+  float diffuse = fillLit(max(NdotLgeo, 0.0) * terminator * shadow);
 
   vec3 color = albedo * diffuse * uSunColor;
 
@@ -76,7 +76,7 @@ void main() {
     color += lights * vec3(1.0, 0.9, 0.72) * night * 1.1;
   }
 
-  gl_FragColor = vec4(color, 1.0);
+  gl_FragColor = vec4(color * uAlpha, 1.0);
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
 }

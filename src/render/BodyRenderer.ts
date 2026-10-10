@@ -21,6 +21,10 @@ export interface RenderSettings {
   shadows: boolean;
   /** real imagery tiles (NASA GIBS / Solar System Treks) on bodies listed in IMAGERY */
   imagery: boolean;
+  /** tour work light: lift the night side of these bodies (0 = off, 1 = lit as at noon) */
+  fill?: ReadonlyMap<string, number> | null;
+  /** tour comparison body fading in / out (brightness 0..1) */
+  ghost?: { id: string; alpha: number } | null;
 }
 
 const _v = new Vector3();
@@ -49,6 +53,8 @@ function lightingUniforms(): Uniforms {
     uRing: { value: new Vector4(0, 0, 0, 0) },
     uRingNormal: { value: new Vector3(0, 1, 0) },
     uRingGaps: { value: [new Vector4(), new Vector4(), new Vector4(), new Vector4()] },
+    uFill: { value: 0 },
+    uAlpha: { value: 1 },
   };
 }
 
@@ -284,6 +290,7 @@ export class BodyView {
           uSunsetColor: { value: d.atmosphere.sunsetColor ? vec3(d.atmosphere.sunsetColor) : vec3(d.atmosphere.color) },
           uDensity: { value: d.atmosphere.density },
           uOccluders: { value: [new Vector4(), new Vector4(), new Vector4(), new Vector4()] },
+          uAlpha: { value: 1 },
         },
         transparent: true,
         blending: AdditiveBlending,
@@ -476,10 +483,14 @@ export class BodyView {
       this.clouds.visible = this.cloudFade > 0.002;
     }
 
+    const fill = settings.fill?.get(b.id) ?? 0;
+    const alpha = settings.ghost && settings.ghost.id === b.id ? settings.ghost.alpha : 1;
     for (const lit of this.lit) {
       lit.uSunPos.value.copy(_v);
       lit.uSunRadius.value = sunRadius;
       lit.uSunColor.value.copy(sunColor);
+      lit.uFill.value = fill;
+      lit.uAlpha.value = alpha;
       lit.uBodyPos.value.copy(this.relPos);
       lit.uBodyRadius.value = b.radius;
       const occ = lit.uOccluders.value as Vector4[];
@@ -541,6 +552,7 @@ export class BodyView {
         u.uSunRadius.value = sunRadius;
         u.uSunColor.value.copy(sunColor);
         u.uBodyPos.value.copy(this.relPos);
+        u.uAlpha.value = alpha;
         const occ = u.uOccluders.value as Vector4[];
         for (let i = 0; i < 4; i++) {
           const o = this.occluders[i];

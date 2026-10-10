@@ -10,6 +10,7 @@ uniform vec3 uColor;
 uniform vec3 uSunsetColor;
 uniform float uDensity;
 uniform vec4 uOccluders[4];
+uniform float uAlpha;   // brightness (tours fade comparison bodies in/out)
 
 varying vec3 vWorldPos;
 
@@ -72,7 +73,7 @@ void main() {
   // soften extreme values
   col = col / (1.0 + col * 0.6);
 
-  gl_FragColor = vec4(col, 1.0);
+  gl_FragColor = vec4(col * uAlpha, 1.0);
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
 }

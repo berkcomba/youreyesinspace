@@ -28,6 +28,8 @@ export interface TourHost {
   camera: CameraController;
   time: TimeSystem;
   goToBodyId(id: string): void;
+  /** tour step arrival: worlds framed with the Sun in the sky behind them */
+  goToTourBody(id: string): void;
   goToStar(id: StarId): void;
   goToGalaxy(i: number): void;
   goToLandmark(i: number): void;
@@ -504,7 +506,7 @@ export class TourPlayer {
     const h = this.host;
     const u = h.universe;
     switch (t.kind) {
-      case 'body': h.goToBodyId(t.ref); break;
+      case 'body': h.goToTourBody(t.ref); break;
       case 'blackhole': h.goToBlackHole(t.ref); break;
       case 'landmark': {
         const l = u.landmark(t.ref);

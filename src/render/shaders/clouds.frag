@@ -32,7 +32,7 @@ void main() {
   vec3 V = normalize(-P);
   float NdotL = dot(N, L);
   float shadow = shadowAt(P, L);
-  float diffuse = max(NdotL, 0.0) * smoothstep(-0.1, 0.2, NdotL) * shadow;
+  float diffuse = fillLit(max(NdotL, 0.0) * smoothstep(-0.1, 0.2, NdotL) * shadow);
   // self-shadowing within the cloud deck
   float thick = smoothstep(threshold, 1.0, cloud);
   vec3 col = uColor * (0.55 + 0.45 * (1.0 - thick * 0.6)) * diffuse;
@@ -42,7 +42,7 @@ void main() {
   col += uColor * 0.002;
   col *= uSunColor;
 
-  gl_FragColor = vec4(col, alpha);
+  gl_FragColor = vec4(col, alpha * uAlpha);
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
 }

@@ -19,6 +19,8 @@ export interface SurfacePinScreen {
   /** position relative to the camera (km) */
   dir: Vector3;
   label: string;
+  /** fade in / out (0..1) */
+  alpha: number;
 }
 
 export interface ScreenItem {
@@ -393,6 +395,7 @@ export class Overlay {
           ctx.font = '500 13px Inter, ui-sans-serif, system-ui, sans-serif';
           const tw = ctx.measureText(pin.label).width;
           const ex = lx + sx * (tw + 8);
+          ctx.globalAlpha = Math.max(0, Math.min(1, pin.alpha));
           ctx.strokeStyle = SELECTION_COLOR;
           ctx.fillStyle = SELECTION_COLOR;
           ctx.lineWidth = 1.25;
@@ -410,6 +413,7 @@ export class Overlay {
           ctx.textAlign = sx > 0 ? 'left' : 'right';
           ctx.fillStyle = 'rgba(255, 250, 240, 0.98)';
           ctx.fillText(pin.label, lx + sx * 4, ly - 9);
+          ctx.globalAlpha = 1;
           ctx.textAlign = 'left';
           ctx.font = '500 12px Inter, ui-sans-serif, system-ui, sans-serif';
         }

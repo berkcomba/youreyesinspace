@@ -39,8 +39,8 @@ void main() {
   vec3 tint = uColor * (0.85 + 0.3 * snoise(vec3(r01 * 12.0, uSeed * 2.0, 3.0)));
   tint = mix(tint, tint * vec3(0.9, 0.8, 0.7), smoothstep(0.0, 0.2, r01) * (1.0 - smoothstep(0.2, 0.4, r01)) * 0.5);
 
-  vec3 col = (tint * (direct + back) * shadow + tint * 0.003) * uSunColor;
-  gl_FragColor = vec4(col, alpha);
+  vec3 col = (tint * fillLit((direct + back) * shadow) + tint * 0.003) * uSunColor;
+  gl_FragColor = vec4(col, alpha * uAlpha);
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
 }
