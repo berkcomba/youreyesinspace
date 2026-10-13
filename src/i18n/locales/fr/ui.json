@@ -6,7 +6,6 @@
   "Evren hazırlanıyor…": "Préparation de l'univers…",
   "Yıldız kataloğu yükleniyor…": "Chargement du catalogue d'étoiles…",
   "Yükleme hatası": "Erreur de chargement",
-
   "Güneş Sistemi": "Système solaire",
   "Ara… (Titan, Sirius, Andromeda)": "Rechercher… (Titan, Sirius, Andromède)",
   "Seçili hedefe otomatik uçuş": "Pilote automatique vers la destination sélectionnée",
@@ -29,7 +28,6 @@
   "Takip": "Suivre",
   "Takipte": "Suivi",
   "Kaldır": "Retirer",
-
   "Görev Planlayıcı": "Planificateur de mission",
   "Kalkış": "Départ",
   "Hedef": "Cible",
@@ -145,7 +143,6 @@
   "{name} — varıldı": "{name} — arrivé",
   "Rota patched-conic yaklaşımıyla hesaplanmıştır.": "Route calculée avec l'approximation des coniques juxtaposées.",
   "Model özgün, şematik bir temsildir.": "Le modèle est une représentation originale et schématique.",
-
   "Geri hızlandır (J)": "Accélérer en arrière (J)",
   "Yavaşlat": "Ralentir",
   "Duraklat (K)": "Pause (K)",
@@ -183,7 +180,6 @@
   "G": "S",
   "D": "E",
   "B": "O",
-
   "Mod": "Mode",
   "Serbest": "Libre",
   "Serbest uçuş": "Vol libre",
@@ -193,7 +189,6 @@
   "Hız": "Vitesse",
   "Yükseklik": "Altitude",
   "© 2026 BigBrains · Açık kaynak (MIT)": "© 2026 BigBrains · Open source (MIT)",
-
   "Dil": "Langue",
   "Görüntü": "Affichage",
   "Kamera": "Caméra",
@@ -221,7 +216,6 @@
   "Y eksenini ters çevir": "Inverser l'axe Y",
   "açık": "activé",
   "kapalı": "désactivé",
-
   "{name} hedefine uçuluyor…": "Vol vers {name}…",
   "{name} hedefine uçuluyor… ({dist})": "Vol vers {name}… ({dist})",
   "{name} sistemine uçuluyor… ({dist})": "Vol vers le système {name}… ({dist})",
@@ -239,7 +233,6 @@
   "Ekran görüntüsü alınamadı": "Impossible de prendre la capture d'écran",
   "Serbest dolaşım: fare ile bak · W A S D uç · R F yukarı/aşağı · Q E yatış · tekerlek hız · Esc çık": "Vol libre : regardez avec la souris · W A S D voler · R F haut/bas · Q E roulis · molette vitesse · Échap quitter",
   "Serbest dolaşım kapatıldı": "Vol libre désactivé",
-
   "Kontroller": "Commandes",
   "Tek parmak": "Un doigt",
   "Bak / yörüngede dön": "Regarder / orbiter",
@@ -303,7 +296,6 @@
   "Your Eyes In Space bir": "Your Eyes In Space est un produit",
   "ürünüdür. Kod": ". Le code est open source sous licence MIT sur",
   "'da MIT lisansıyla açık kaynaktır; isim ve logo BigBrains markasıdır. © 2026": " ; le nom et le logo sont des marques de BigBrains. © 2026",
-
   "Dünya görüntüsü: NASA GIBS · Blue Marble NG, VIIRS Black Marble": "Image de la Terre : NASA GIBS · Blue Marble NG, VIIRS Black Marble",
   "Ay görüntüsü: NASA Trek · LRO WAC mozaiği (100 m/px)": "Image de la Lune : NASA Trek · mosaïque LRO WAC (100 m/px)",
   "Mars görüntüsü: NASA Trek · Viking MDIM 2.1 (232 m/px)": "Image de Mars : NASA Trek · Viking MDIM 2.1 (232 m/px)",
@@ -323,7 +315,6 @@
   "Iapetus görüntüsü: NASA Trek · Cassini / Voyager mozaiği (783 m/px)": "Image de Japet : NASA Trek · mosaïque Cassini / Voyager (783 m/px)",
   "Ceres görüntüsü: NASA Trek · Dawn FC mozaiği (140 m/px)": "Image de Cérès : NASA Trek · mosaïque Dawn FC (140 m/px)",
   "Vesta görüntüsü: NASA Trek · Dawn FC HAMO mozaiği (60 m/px)": "Image de Vesta : NASA Trek · mosaïque Dawn FC HAMO (60 m/px)",
-
   "Yıldız": "Étoile",
   "Gezegen": "Planète",
   "Cüce Gezegen": "Planète naine",
@@ -398,7 +389,6 @@
   "Prosedürel olarak üretilmiş galaksi; konumu kozmik ağ yoğunluk modelinden, yapısı Hubble tipinden türetildi.": "Galaxie générée de façon procédurale ; sa position provient du modèle de densité de la toile cosmique et sa structure du type de Hubble.",
   "Galaksi kümesi": "Amas de galaxies",
   "Süperküme kompleksi": "Complexe de superamas",
-
   "Uzaklık": "Distance",
   "Kadir (buradan)": "Magnitude (d'ici)",
   "Kadir (Dünya'dan)": "Magnitude (depuis la Terre)",
@@ -613,5 +603,7 @@
   "Yörünge": "Orbite",
   "Yörüngedeki yıldızlar": "Étoiles en orbite",
   "Yörüngedekiler": "Corps en orbite",
-  "Yüzeye uzaklık": "Distance à la surface"
+  "Yüzeye uzaklık": "Distance à la surface",
+  "Akademi": "Académie",
+  "Akademi: bölüm bölüm ilerleyen etkileşimli astrofizik dersleri": "Académie : leçons d’astrophysique interactives, chapitre par chapitre"
 }

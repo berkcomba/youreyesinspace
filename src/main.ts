@@ -32,6 +32,7 @@ import { _, applyDom, initI18n } from './i18n';
 import { Missions, type ActiveMission } from './core/Missions';
 import { TrajectoryLines } from './render/TrajectoryLines';
 import { TourPlayer, type SurfacePin, type TourOverrides } from './core/TourPlayer';
+import { LessonPlayer } from './core/LessonPlayer';
 import type { MissionPlan } from './astro/mission';
 
 const IDENTITY = new Matrix3();
@@ -70,6 +71,7 @@ class App implements UIHost {
   readonly missions: Missions;
   readonly trajectories: TrajectoryLines;
   readonly tours: TourPlayer;
+  readonly lessons: LessonPlayer;
   /** render settings forced by the running tour (empty when none) */
   private tourOverrides: TourOverrides = {};
   /** labelled surface feature the overlay points at (tours) */
@@ -142,6 +144,7 @@ class App implements UIHost {
       // camera where the visitor sent it
       if (why === 'finished') this.showBackdrop(true);
     };
+    this.lessons = new LessonPlayer(this, this.tours);
     this.ui = new UI(this);
 
     this.loadSystemRenderables(this.universe.current);
@@ -666,6 +669,8 @@ class App implements UIHost {
 
   setTourOverrides(o: TourOverrides): void {
     this.tourOverrides = o;
+    const s = this.settings;
+    this.grid.setVisible(o.eclipticGrid ?? s.eclipticGrid, o.equatorialGrid ?? s.equatorialGrid);
   }
 
   setSurfacePin(pin: SurfacePin | null): void {
@@ -839,7 +844,8 @@ class App implements UIHost {
     this.overlay.showMarkers = s.markers;
     this.overlay.showStarNames = s.starNames;
     this.overlay.showGalaxyNames = s.galaxyNames;
-    this.grid.setVisible(s.eclipticGrid, s.equatorialGrid);
+    const ov = this.tourOverrides;
+    this.grid.setVisible(ov.eclipticGrid ?? s.eclipticGrid, ov.equatorialGrid ?? s.equatorialGrid);
     this.galaxySprites.setVisible(s.galaxies);
     for (const sp of this.farSprites) sp.setVisible(s.galaxies);
     // "what is real?" view: generated stars & galaxies in green
@@ -932,6 +938,7 @@ class App implements UIHost {
         break;
       case 'Escape':
         if (this.tours.active) { this.tours.stop(); this.ui.showToast(_('Tur bitirildi')); }
+        else if (this.lessons.active) this.ui.toggleAcademy(false);
         else if (this.camera.autopilot) this.camera.autopilot = null;
         else { this.select(null); this.selectStar(null); this.selectGalaxy(null); this.selectLandmark(null); }
         this.ui.toggleHelp(false);
@@ -1060,6 +1067,7 @@ class App implements UIHost {
     this.missions.update(this.time.jd, this.time.t);
     this.universe.update(this.time.jd, this.time.t);
     this.tours.update(dt);
+    this.lessons.update(dt);
 
     // Camera
     const eng = this.engine;

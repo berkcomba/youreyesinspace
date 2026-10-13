@@ -1,0 +1,822 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "aristarchus": {
+   "script": "Aristarchus of Samos put the Sun at the centre and let the Earth orbit it, eighteen centuries before Copernicus. Using the half-lit Moon, he tried to measure how far the Sun is. The geometry was sound, the angle was not, and he found a Sun about nineteen times farther than the Moon. The true figure is near three hundred ninety.\n\nLook with me behind the panel. The view has risen above Earth's orbit, orbit lines drawn. If the Earth moves on that path, a nearby star should shift against distant ones over the year. That shift is parallax. In radians, p is approximately one astronomical unit divided by d. p is the parallax angle, one astronomical unit is the size of Earth's orbit, and d is the star's distance. In radians a small angle is the baseline divided by the distance, so the relation has to look like this. No shift was seen, so either the Earth stood still or the stars were absurdly far. The Greeks chose the first. They were wrong, but the stars really are that far. Proxima Centauri has the largest parallax, zero point seven seven arcseconds, a coin seen from five kilometres, first measured in eighteen thirty-eight.\n\nMeanwhile Eratosthenes measured the Earth. At noon on the summer solstice the Sun was overhead at Syene, now Aswan, but seven point two degrees from the vertical at Alexandria, roughly five thousand stadia north. That is one fiftieth of a full circle, so the circumference C equals three hundred sixty degrees divided by seven point two degrees, times five thousand stadia. C is the distance around the Earth: two hundred fifty thousand stadia, about forty thousand kilometres, essentially the modern value.\n\nIn short, sky-watching became geometry: uniform circles about a fixed Earth. Eudoxus' nested spheres and Ptolemy's epicycles reproduced retrograde motion, and epicycles explained brightness changes. Hipparchus added a catalogue, magnitudes, and precession. Aristarchus' Sun-centred cosmos was rejected for lack of parallax, a correct argument with the wrong conclusion.",
+   "hash": "a5c6af29e010",
+   "duration": 125.43,
+   "sentences": [
+    {
+     "start": 0.12,
+     "end": 7.62,
+     "text": "Aristarchus of Samos put the Sun at the centre and let the Earth orbit it, eighteen centuries before Copernicus."
+    },
+    {
+     "start": 7.62,
+     "end": 11.58,
+     "text": "Using the half-lit Moon, he tried to measure how far the Sun is."
+    },
+    {
+     "start": 11.58,
+     "end": 18.02,
+     "text": "The geometry was sound, the angle was not, and he found a Sun about nineteen times farther than the Moon."
+    },
+    {
+     "start": 18.02,
+     "end": 20.72,
+     "text": "The true figure is near three hundred ninety."
+    },
+    {
+     "start": 20.72,
+     "end": 22.46,
+     "text": "Look with me behind the panel."
+    },
+    {
+     "start": 22.46,
+     "end": 26.26,
+     "text": "The view has risen above Earth's orbit, orbit lines drawn."
+    },
+    {
+     "start": 26.26,
+     "end": 31.64,
+     "text": "If the Earth moves on that path, a nearby star should shift against distant ones over the year."
+    },
+    {
+     "start": 31.64,
+     "end": 33.4,
+     "text": "That shift is parallax."
+    },
+    {
+     "start": 33.4,
+     "end": 38.34,
+     "text": "In radians, p is approximately one astronomical unit divided by d."
+    },
+    {
+     "start": 38.34,
+     "end": 45.4,
+     "text": "p is the parallax angle, one astronomical unit is the size of Earth's orbit, and d is the star's distance."
+    },
+    {
+     "start": 45.4,
+     "end": 51.44,
+     "text": "In radians a small angle is the baseline divided by the distance, so the relation has to look like this."
+    },
+    {
+     "start": 51.44,
+     "end": 56.64,
+     "text": "No shift was seen, so either the Earth stood still or the stars were absurdly far."
+    },
+    {
+     "start": 56.64,
+     "end": 58.3,
+     "text": "The Greeks chose the first."
+    },
+    {
+     "start": 58.3,
+     "end": 61.52,
+     "text": "They were wrong, but the stars really are that far."
+    },
+    {
+     "start": 61.52,
+     "end": 71.19,
+     "text": "Proxima Centauri has the largest parallax, zero point seven seven arcseconds, a coin seen from five kilometres, first measured in eighteen thirty-eight."
+    },
+    {
+     "start": 71.19,
+     "end": 73.95,
+     "text": "Meanwhile Eratosthenes measured the Earth."
+    },
+    {
+     "start": 73.95,
+     "end": 84.35,
+     "text": "At noon on the summer solstice the Sun was overhead at Syene, now Aswan, but seven point two degrees from the vertical at Alexandria, roughly five thousand stadia north."
+    },
+    {
+     "start": 84.35,
+     "end": 93.93,
+     "text": "That is one fiftieth of a full circle, so the circumference C equals three hundred sixty degrees divided by seven point two degrees, times five thousand stadia."
+    },
+    {
+     "start": 93.93,
+     "end": 101.83,
+     "text": "C is the distance around the Earth: two hundred fifty thousand stadia, about forty thousand kilometres, essentially the modern value."
+    },
+    {
+     "start": 101.83,
+     "end": 107.11,
+     "text": "In short, sky-watching became geometry: uniform circles about a fixed Earth."
+    },
+    {
+     "start": 107.11,
+     "end": 115.07,
+     "text": "Eudoxus' nested spheres and Ptolemy's epicycles reproduced retrograde motion, and epicycles explained brightness changes."
+    },
+    {
+     "start": 115.07,
+     "end": 118.97,
+     "text": "Hipparchus added a catalogue, magnitudes, and precession."
+    },
+    {
+     "start": 118.97,
+     "end": 125.43,
+     "text": "Aristarchus' Sun-centred cosmos was rejected for lack of parallax, a correct argument with the wrong conclusion."
+    }
+   ],
+   "voicedHash": "3ee09b3d7698"
+  },
+  "eudoxus": {
+   "script": "Plato had asked for uniform circular motions, and Eudoxus of Cnidus, around four hundred BCE, answered with a beautiful piece of geometry. Picture the Earth fixed at the centre, wrapped in transparent spheres, one inside another, all sharing that centre. Each spins at a steady rate about its own axis. The outermost gives the daily rotation of the sky. The next gives the planet's slow drift along the zodiac. That only buys you steady motion.\n\nWhat I love is the two innermost spheres. They rotate at equal and opposite rates, about axes tilted just a little relative to each other. Think of two turntables spinning against each other, slightly askew. A point on the inner sphere traces a figure-eight on the sky. Eudoxus called it the hippopede, the horse fetter. Fold that figure-eight into the steady eastward drift, and the planet hesitates, stands still, and for a short stretch runs backwards, before turning east again. Retrograde motion, from pure geometry, with no sphere ever changing its speed.\n\nI want you to try the model. Change the tilt between the two axes and watch the loop grow. A small tilt makes a tight eight; widen the tilt and the loop swells. Then move the zodiacal drift and look at the plot of apparent longitude against time. The curve should flatten and dip backwards right where the planet is on the returning half of the hippopede.\n\nThe price was a lot of spheres. Twenty-seven for the whole sky: four for each planet, three each for the Sun and Moon, and one for the stars. Aristotle later added more, reaching fifty-five. Even so, the model failed where it mattered. Planets become noticeably brighter during retrograde, which means they come closer. But every sphere is centred on the Earth, so a planet's distance never changes. The hippopede can imitate the backwards loop. It cannot imitate a changing distance. That single failure is what would eventually bring the scheme down.",
+   "hash": "320eb00aea15",
+   "duration": 117.75,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 9.96,
+     "text": "Plato had asked for uniform circular motions, and Eudoxus of Cnidus, around four hundred BCE, answered with a beautiful piece of geometry."
+    },
+    {
+     "start": 9.96,
+     "end": 17.5,
+     "text": "Picture the Earth fixed at the centre, wrapped in transparent spheres, one inside another, all sharing that centre."
+    },
+    {
+     "start": 17.5,
+     "end": 20.78,
+     "text": "Each spins at a steady rate about its own axis."
+    },
+    {
+     "start": 20.78,
+     "end": 24.04,
+     "text": "The outermost gives the daily rotation of the sky."
+    },
+    {
+     "start": 24.04,
+     "end": 27.56,
+     "text": "The next gives the planet's slow drift along the zodiac."
+    },
+    {
+     "start": 27.56,
+     "end": 29.84,
+     "text": "That only buys you steady motion."
+    },
+    {
+     "start": 29.84,
+     "end": 32.6,
+     "text": "What I love is the two innermost spheres."
+    },
+    {
+     "start": 32.6,
+     "end": 38.54,
+     "text": "They rotate at equal and opposite rates, about axes tilted just a little relative to each other."
+    },
+    {
+     "start": 38.54,
+     "end": 42.84,
+     "text": "Think of two turntables spinning against each other, slightly askew."
+    },
+    {
+     "start": 42.84,
+     "end": 46.4,
+     "text": "A point on the inner sphere traces a figure-eight on the sky."
+    },
+    {
+     "start": 46.4,
+     "end": 49.76,
+     "text": "Eudoxus called it the hippopede, the horse fetter."
+    },
+    {
+     "start": 49.76,
+     "end": 59.55,
+     "text": "Fold that figure-eight into the steady eastward drift, and the planet hesitates, stands still, and for a short stretch runs backwards, before turning east again."
+    },
+    {
+     "start": 59.55,
+     "end": 65.01,
+     "text": "Retrograde motion, from pure geometry, with no sphere ever changing its speed."
+    },
+    {
+     "start": 65.01,
+     "end": 66.69,
+     "text": "I want you to try the model."
+    },
+    {
+     "start": 66.69,
+     "end": 70.37,
+     "text": "Change the tilt between the two axes and watch the loop grow."
+    },
+    {
+     "start": 70.37,
+     "end": 74.67,
+     "text": "A small tilt makes a tight eight; widen the tilt and the loop swells."
+    },
+    {
+     "start": 74.67,
+     "end": 79.45,
+     "text": "Then move the zodiacal drift and look at the plot of apparent longitude against time."
+    },
+    {
+     "start": 79.45,
+     "end": 84.85,
+     "text": "The curve should flatten and dip backwards right where the planet is on the returning half of the hippopede."
+    },
+    {
+     "start": 84.85,
+     "end": 86.79,
+     "text": "The price was a lot of spheres."
+    },
+    {
+     "start": 86.79,
+     "end": 94.01,
+     "text": "Twenty-seven for the whole sky: four for each planet, three each for the Sun and Moon, and one for the stars."
+    },
+    {
+     "start": 94.01,
+     "end": 97.47,
+     "text": "Aristotle later added more, reaching fifty-five."
+    },
+    {
+     "start": 97.47,
+     "end": 100.29,
+     "text": "Even so, the model failed where it mattered."
+    },
+    {
+     "start": 100.29,
+     "end": 105.05,
+     "text": "Planets become noticeably brighter during retrograde, which means they come closer."
+    },
+    {
+     "start": 105.05,
+     "end": 109.67,
+     "text": "But every sphere is centred on the Earth, so a planet's distance never changes."
+    },
+    {
+     "start": 109.67,
+     "end": 112.23,
+     "text": "The hippopede can imitate the backwards loop."
+    },
+    {
+     "start": 112.23,
+     "end": 114.61,
+     "text": "It cannot imitate a changing distance."
+    },
+    {
+     "start": 114.61,
+     "end": 117.75,
+     "text": "That single failure is what would eventually bring the scheme down."
+    }
+   ],
+   "voicedHash": "4bc45674f4fb"
+  },
+  "hipparchus-ptolemy": {
+   "script": "Look over at Mars behind the panel. That steady red light is what Hipparchus and Ptolemy spent their lives trying to pin down with nothing but eyes and geometry. Hipparchus of Nicaea, around one hundred ninety to one hundred twenty BCE, was the greatest observer of antiquity. He compiled a catalogue of about eight hundred fifty stars, with positions and a six-step brightness scale. That scale is the ancestor of the magnitude system we still use. Comparing his positions with records a hundred fifty years older, he found the whole sky had shifted slightly. That is the precession of the equinoxes, which we will meet in section one point three. Three centuries later Claudius Ptolemy, around one hundred to one hundred seventy CE, gathered everything into the Mathematike Syntaxis, known through its Arabic title as the Almagest. To match the data he gave each deferent an off-centre Earth, the eccentric, and introduced the equant. The equant is a point from which the epicycle’s centre appeared to move uniformly, even though it did not from the Earth. Picture standing off to one side of a circular track: a runner at constant speed seems to speed up and slow down. It was a quiet betrayal of Plato’s rule, but it worked, predicting planetary positions to about a degree. The Almagest was translated into Arabic in the ninth century and refined for centuries by astronomers in Baghdad, Cairo, Maragha and Samarkand. Latin Europe received it back through those translations in the twelfth century. When Copernicus wrote, the model he was arguing against was Ptolemy’s, fourteen hundred years old and still in daily use. Ptolemy’s model was wrong about the structure of the cosmos but right in its predictions. Is a model that predicts well but describes reality badly a good model? Astronomers argued about exactly this for the next millennium and a half.",
+   "hash": "2236394c68ea",
+   "duration": 109.43,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.4,
+     "text": "Look over at Mars behind the panel."
+    },
+    {
+     "start": 2.4,
+     "end": 9.7,
+     "text": "That steady red light is what Hipparchus and Ptolemy spent their lives trying to pin down with nothing but eyes and geometry."
+    },
+    {
+     "start": 9.7,
+     "end": 17,
+     "text": "Hipparchus of Nicaea, around one hundred ninety to one hundred twenty BCE, was the greatest observer of antiquity."
+    },
+    {
+     "start": 17,
+     "end": 23.22,
+     "text": "He compiled a catalogue of about eight hundred fifty stars, with positions and a six-step brightness scale."
+    },
+    {
+     "start": 23.22,
+     "end": 27.32,
+     "text": "That scale is the ancestor of the magnitude system we still use."
+    },
+    {
+     "start": 27.32,
+     "end": 33.58,
+     "text": "Comparing his positions with records a hundred fifty years older, he found the whole sky had shifted slightly."
+    },
+    {
+     "start": 33.58,
+     "end": 38.54,
+     "text": "That is the precession of the equinoxes, which we will meet in section one point three."
+    },
+    {
+     "start": 38.54,
+     "end": 50,
+     "text": "Three centuries later Claudius Ptolemy, around one hundred to one hundred seventy CE, gathered everything into the Mathematike Syntaxis, known through its Arabic title as the Almagest."
+    },
+    {
+     "start": 50,
+     "end": 56.31,
+     "text": "To match the data he gave each deferent an off-centre Earth, the eccentric, and introduced the equant."
+    },
+    {
+     "start": 56.31,
+     "end": 62.93,
+     "text": "The equant is a point from which the epicycle’s centre appeared to move uniformly, even though it did not from the Earth."
+    },
+    {
+     "start": 62.93,
+     "end": 69.69,
+     "text": "Picture standing off to one side of a circular track: a runner at constant speed seems to speed up and slow down."
+    },
+    {
+     "start": 69.69,
+     "end": 76.05,
+     "text": "It was a quiet betrayal of Plato’s rule, but it worked, predicting planetary positions to about a degree."
+    },
+    {
+     "start": 76.05,
+     "end": 85.39,
+     "text": "The Almagest was translated into Arabic in the ninth century and refined for centuries by astronomers in Baghdad, Cairo, Maragha and Samarkand."
+    },
+    {
+     "start": 85.39,
+     "end": 89.33,
+     "text": "Latin Europe received it back through those translations in the twelfth century."
+    },
+    {
+     "start": 89.33,
+     "end": 95.83,
+     "text": "When Copernicus wrote, the model he was arguing against was Ptolemy’s, fourteen hundred years old and still in daily use."
+    },
+    {
+     "start": 95.83,
+     "end": 101.53,
+     "text": "Ptolemy’s model was wrong about the structure of the cosmos but right in its predictions."
+    },
+    {
+     "start": 101.53,
+     "end": 105.83,
+     "text": "Is a model that predicts well but describes reality badly a good model?"
+    },
+    {
+     "start": 105.83,
+     "end": 109.43,
+     "text": "Astronomers argued about exactly this for the next millennium and a half."
+    }
+   ],
+   "voicedHash": "baf6387ce5c0"
+  },
+  "look-up": {
+   "script": "Welcome. Let's start where astronomy itself started, with nothing but eyes and a dark sky. Look at the Earth behind the panel for a moment. From down there the night sky is a dome, and if you watch it for a few nights you notice patterns that are almost suspiciously regular. The whole field of stars swings around once a night, pivoting on a fixed point in the north. The Sun is slower. Night after night it drifts eastward against those stars, and after a full year it is back where it began. The Moon is fussier still: it changes shape on a cycle of about twenty-nine and a half days, from thin crescent to full and back again.\n\nAnd then there are five lights that refuse to keep the rules. They look like stars, but they wander among the constellations. They speed up, they slow down, and sometimes they stop and go backwards for a few weeks. The Greeks called them planētai, which simply means wanderers, and we still use that word. Mercury, Venus, Mars, Jupiter, and Saturn: the five bodies you can see with the naked eye that move against the fixed stars. Those fixed stars keep their relative positions. They turn together as if they were painted on one great sphere.\n\nThe Sun's yearly path through the constellations is the ecliptic, and the planets stay close to it. The band of constellations along that path, the ones the Sun, Moon, and planets pass through, is the zodiac. Think of the ecliptic as a road, and the zodiac as the towns strung along it.\n\nHere is the idea I want you to hold onto. Regularity is an invitation. A sky that repeats can be predicted, and anything that can be predicted can be described with numbers. That is the step the Greeks took, and it is the step we are about to follow them on.",
+   "hash": "6f4bfdf1f493",
+   "duration": 100.15,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 1.12,
+     "text": "Welcome."
+    },
+    {
+     "start": 1.12,
+     "end": 6.4,
+     "text": "Let's start where astronomy itself started, with nothing but eyes and a dark sky."
+    },
+    {
+     "start": 6.4,
+     "end": 9.06,
+     "text": "Look at the Earth behind the panel for a moment."
+    },
+    {
+     "start": 9.06,
+     "end": 16.44,
+     "text": "From down there the night sky is a dome, and if you watch it for a few nights you notice patterns that are almost suspiciously regular."
+    },
+    {
+     "start": 16.44,
+     "end": 21.8,
+     "text": "The whole field of stars swings around once a night, pivoting on a fixed point in the north."
+    },
+    {
+     "start": 21.8,
+     "end": 23.3,
+     "text": "The Sun is slower."
+    },
+    {
+     "start": 23.3,
+     "end": 29.34,
+     "text": "Night after night it drifts eastward against those stars, and after a full year it is back where it began."
+    },
+    {
+     "start": 29.34,
+     "end": 37.46,
+     "text": "The Moon is fussier still: it changes shape on a cycle of about twenty-nine and a half days, from thin crescent to full and back again."
+    },
+    {
+     "start": 37.46,
+     "end": 40.52,
+     "text": "And then there are five lights that refuse to keep the rules."
+    },
+    {
+     "start": 40.52,
+     "end": 44.28,
+     "text": "They look like stars, but they wander among the constellations."
+    },
+    {
+     "start": 44.28,
+     "end": 49.62,
+     "text": "They speed up, they slow down, and sometimes they stop and go backwards for a few weeks."
+    },
+    {
+     "start": 49.62,
+     "end": 55.19,
+     "text": "The Greeks called them planētai, which simply means wanderers, and we still use that word."
+    },
+    {
+     "start": 55.19,
+     "end": 62.89,
+     "text": "Mercury, Venus, Mars, Jupiter, and Saturn: the five bodies you can see with the naked eye that move against the fixed stars."
+    },
+    {
+     "start": 62.89,
+     "end": 65.65,
+     "text": "Those fixed stars keep their relative positions."
+    },
+    {
+     "start": 65.65,
+     "end": 69.15,
+     "text": "They turn together as if they were painted on one great sphere."
+    },
+    {
+     "start": 69.15,
+     "end": 74.63,
+     "text": "The Sun's yearly path through the constellations is the ecliptic, and the planets stay close to it."
+    },
+    {
+     "start": 74.63,
+     "end": 81.35,
+     "text": "The band of constellations along that path, the ones the Sun, Moon, and planets pass through, is the zodiac."
+    },
+    {
+     "start": 81.35,
+     "end": 85.91,
+     "text": "Think of the ecliptic as a road, and the zodiac as the towns strung along it."
+    },
+    {
+     "start": 85.91,
+     "end": 88.33,
+     "text": "Here is the idea I want you to hold onto."
+    },
+    {
+     "start": 88.33,
+     "end": 90.43,
+     "text": "Regularity is an invitation."
+    },
+    {
+     "start": 90.43,
+     "end": 96.01,
+     "text": "A sky that repeats can be predicted, and anything that can be predicted can be described with numbers."
+    },
+    {
+     "start": 96.01,
+     "end": 100.15,
+     "text": "That is the step the Greeks took, and it is the step we are about to follow them on."
+    }
+   ],
+   "voicedHash": "d9b7c09862e0"
+  },
+  "plato": {
+   "script": "I want you to look behind the panel — the view is flying in toward Earth. From out here it is just another world, but put yourself on its surface the way Plato's students had to. Plato, more than two thousand years ago, took sky-watching and turned it into a research programme. He asked a precise question: what combination of uniform, circular motions can reproduce the movements of the planets as we actually see them? And the Earth sat motionless at the centre. We feel no motion under our feet, and nothing flies off into space, so that seemed obvious.\n\nWhy circles, and why uniform speed? To the Greeks the heavens were the realm of perfection and permanence. A circle has no beginning and no end — think of it as a ring with no clasp, a path you can follow forever without ever arriving or departing. Uniform motion never changes its pace. Anything else would have been an imperfection, and the heavens had none. This assumption is the single most important thing to keep in mind for the next two thousand years of astronomy. Every model was forced to obey it.\n\nNow try the thought on the screen. Imagine you had never seen a photograph of the Solar System. You stand on ground that feels perfectly still and watch everything in the sky go around you once a day. Which model would you propose first? The geocentric picture was not naive. It was the straightforward reading of the evidence.\n\nHere is the key idea. A scientific model is judged by whether it reproduces what is observed — that is what saving the phenomena means — and by the assumptions it is willing to make. The Greeks had the first part right. They were locked in by the second.",
+   "hash": "9156797bf012",
+   "duration": 95.03,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 4.38,
+     "text": "I want you to look behind the panel — the view is flying in toward Earth."
+    },
+    {
+     "start": 4.38,
+     "end": 10.42,
+     "text": "From out here it is just another world, but put yourself on its surface the way Plato's students had to."
+    },
+    {
+     "start": 10.42,
+     "end": 16.36,
+     "text": "Plato, more than two thousand years ago, took sky-watching and turned it into a research programme."
+    },
+    {
+     "start": 16.36,
+     "end": 24.78,
+     "text": "He asked a precise question: what combination of uniform, circular motions can reproduce the movements of the planets as we actually see them?"
+    },
+    {
+     "start": 24.78,
+     "end": 27.32,
+     "text": "And the Earth sat motionless at the centre."
+    },
+    {
+     "start": 27.32,
+     "end": 33.22,
+     "text": "We feel no motion under our feet, and nothing flies off into space, so that seemed obvious."
+    },
+    {
+     "start": 33.22,
+     "end": 36.08,
+     "text": "Why circles, and why uniform speed?"
+    },
+    {
+     "start": 36.08,
+     "end": 39.68,
+     "text": "To the Greeks the heavens were the realm of perfection and permanence."
+    },
+    {
+     "start": 39.68,
+     "end": 48.31,
+     "text": "A circle has no beginning and no end — think of it as a ring with no clasp, a path you can follow forever without ever arriving or departing."
+    },
+    {
+     "start": 48.31,
+     "end": 50.95,
+     "text": "Uniform motion never changes its pace."
+    },
+    {
+     "start": 50.95,
+     "end": 54.87,
+     "text": "Anything else would have been an imperfection, and the heavens had none."
+    },
+    {
+     "start": 54.87,
+     "end": 60.45,
+     "text": "This assumption is the single most important thing to keep in mind for the next two thousand years of astronomy."
+    },
+    {
+     "start": 60.45,
+     "end": 62.69,
+     "text": "Every model was forced to obey it."
+    },
+    {
+     "start": 62.69,
+     "end": 64.61,
+     "text": "Now try the thought on the screen."
+    },
+    {
+     "start": 64.61,
+     "end": 67.93,
+     "text": "Imagine you had never seen a photograph of the Solar System."
+    },
+    {
+     "start": 67.93,
+     "end": 73.81,
+     "text": "You stand on ground that feels perfectly still and watch everything in the sky go around you once a day."
+    },
+    {
+     "start": 73.81,
+     "end": 75.97,
+     "text": "Which model would you propose first?"
+    },
+    {
+     "start": 75.97,
+     "end": 78.47,
+     "text": "The geocentric picture was not naive."
+    },
+    {
+     "start": 78.47,
+     "end": 80.99,
+     "text": "It was the straightforward reading of the evidence."
+    },
+    {
+     "start": 80.99,
+     "end": 82.65,
+     "text": "Here is the key idea."
+    },
+    {
+     "start": 82.65,
+     "end": 91.43,
+     "text": "A scientific model is judged by whether it reproduces what is observed — that is what saving the phenomena means — and by the assumptions it is willing to make."
+    },
+    {
+     "start": 91.43,
+     "end": 93.41,
+     "text": "The Greeks had the first part right."
+    },
+    {
+     "start": 93.41,
+     "end": 95.03,
+     "text": "They were locked in by the second."
+    }
+   ],
+   "voicedHash": "ee7494f5094d"
+  },
+  "pythagoras": {
+   "script": "Look at the Moon behind the panel, and picture our shadow crossing that face. Around five hundred and thirty BCE, Pythagoras and his followers made a claim that still drives physics: the world is fundamentally mathematical. They had found that musical harmony follows simple ratios of string lengths. Two to one is the octave: halve the string, and the pitch jumps an octave. Three to two is the fifth. Four to three is the fourth. The numbers are the harmony. They assumed the heavens were built the same way, the music of the spheres. Not a tune you could hum, but a cosmos whose motions stand in the same clean proportions as a well-tuned lyre.\n\nThey were also among the first to argue that the Earth is a sphere. The evidence was already in the sky, and Aristotle later listed it cleanly. During a lunar eclipse the Earth's shadow on the Moon is always a circular arc. Only a sphere casts a round shadow from every direction. Travel south and new stars rise above the southern horizon while northern stars sink. On a flat Earth everyone would see the same sky. A ship sailing away disappears hull first, mast last.\n\nHold those two ideas. The next centuries are a fight over how to use them. Around three hundred and eighty BCE Plato set the problem: explain the sky with uniform circular motion. Around three hundred and seventy Eudoxus answered with nested homocentric spheres, all sharing one centre, the first geometric model. Around two hundred and seventy Aristarchus proposed a Sun-centred cosmos, and was mostly ignored. Around two hundred and forty Eratosthenes measured the Earth's circumference. Around one hundred and thirty Hipparchus left a star catalogue, magnitudes, precession, and epicycles. And around one hundred and fifty of the common era, Ptolemy's Almagest fixed the geocentric model that lasted about fourteen hundred years. Number had become the language. The question from here is which centre those numbers belong to.",
+   "hash": "2c57ab16024f",
+   "duration": 116.47,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.26,
+     "text": "Look at the Moon behind the panel, and picture our shadow crossing that face."
+    },
+    {
+     "start": 5.26,
+     "end": 15.06,
+     "text": "Around five hundred and thirty BCE, Pythagoras and his followers made a claim that still drives physics: the world is fundamentally mathematical."
+    },
+    {
+     "start": 15.06,
+     "end": 19.46,
+     "text": "They had found that musical harmony follows simple ratios of string lengths."
+    },
+    {
+     "start": 19.46,
+     "end": 24.16,
+     "text": "Two to one is the octave: halve the string, and the pitch jumps an octave."
+    },
+    {
+     "start": 24.16,
+     "end": 25.84,
+     "text": "Three to two is the fifth."
+    },
+    {
+     "start": 25.84,
+     "end": 27.56,
+     "text": "Four to three is the fourth."
+    },
+    {
+     "start": 27.56,
+     "end": 29.28,
+     "text": "The numbers are the harmony."
+    },
+    {
+     "start": 29.28,
+     "end": 33.5,
+     "text": "They assumed the heavens were built the same way, the music of the spheres."
+    },
+    {
+     "start": 33.5,
+     "end": 40.12,
+     "text": "Not a tune you could hum, but a cosmos whose motions stand in the same clean proportions as a well-tuned lyre."
+    },
+    {
+     "start": 40.12,
+     "end": 43.5,
+     "text": "They were also among the first to argue that the Earth is a sphere."
+    },
+    {
+     "start": 43.5,
+     "end": 48.04,
+     "text": "The evidence was already in the sky, and Aristotle later listed it cleanly."
+    },
+    {
+     "start": 48.04,
+     "end": 52.46,
+     "text": "During a lunar eclipse the Earth's shadow on the Moon is always a circular arc."
+    },
+    {
+     "start": 52.46,
+     "end": 55.82,
+     "text": "Only a sphere casts a round shadow from every direction."
+    },
+    {
+     "start": 55.82,
+     "end": 60.81,
+     "text": "Travel south and new stars rise above the southern horizon while northern stars sink."
+    },
+    {
+     "start": 60.81,
+     "end": 63.79,
+     "text": "On a flat Earth everyone would see the same sky."
+    },
+    {
+     "start": 63.79,
+     "end": 67.77,
+     "text": "A ship sailing away disappears hull first, mast last."
+    },
+    {
+     "start": 67.77,
+     "end": 69.33,
+     "text": "Hold those two ideas."
+    },
+    {
+     "start": 69.33,
+     "end": 72.09,
+     "text": "The next centuries are a fight over how to use them."
+    },
+    {
+     "start": 72.09,
+     "end": 79.01,
+     "text": "Around three hundred and eighty BCE Plato set the problem: explain the sky with uniform circular motion."
+    },
+    {
+     "start": 79.01,
+     "end": 87.45,
+     "text": "Around three hundred and seventy Eudoxus answered with nested homocentric spheres, all sharing one centre, the first geometric model."
+    },
+    {
+     "start": 87.45,
+     "end": 93.63,
+     "text": "Around two hundred and seventy Aristarchus proposed a Sun-centred cosmos, and was mostly ignored."
+    },
+    {
+     "start": 93.63,
+     "end": 97.67,
+     "text": "Around two hundred and forty Eratosthenes measured the Earth's circumference."
+    },
+    {
+     "start": 97.67,
+     "end": 103.81,
+     "text": "Around one hundred and thirty Hipparchus left a star catalogue, magnitudes, precession, and epicycles."
+    },
+    {
+     "start": 103.81,
+     "end": 111.37,
+     "text": "And around one hundred and fifty of the common era, Ptolemy's Almagest fixed the geocentric model that lasted about fourteen hundred years."
+    },
+    {
+     "start": 111.37,
+     "end": 113.17,
+     "text": "Number had become the language."
+    },
+    {
+     "start": 113.17,
+     "end": 116.47,
+     "text": "The question from here is which centre those numbers belong to."
+    }
+   ],
+   "voicedHash": "3d02145191f4"
+  },
+  "retrograde": {
+   "script": "What you are looking at is the behaviour every model of the planets had to explain, and I want you to watch it carefully. Run the animation and keep your eye on the sky strip at the bottom. Mars creeps eastward against the stars, then slows, stops, and reverses for about two months before it turns around and resumes. That reversal comes roughly every twenty-six months, and Mars is at its brightest right in the middle of the backward stretch.\n\nThe solution worked out by Apollonius and Hipparchus in the third and second centuries BCE, and later perfected by Ptolemy, was the epicycle. The planet rides on a small circle, the epicycle, while the centre of that small circle travels around a large circle, the deferent, centred on or near the Earth. When the planet swings onto the inner part of the epicycle, its motion opposes the steady advance of the deferent, so against the stars it appears to go backwards, and at that same moment it is closest to us and therefore brightest. Two problems solved with one circle.\n\nTry switching the top-down view between Ptolemy’s epicycle and the Copernican orbits, and notice that both can trace the same loop in the strip below. The deferent is simply that large carrying circle; the epicycle is the small circle the planet actually moves on. Retrograde motion is the apparent east-to-west reversal we see, and opposition, when the planet stands opposite the Sun, falls in the middle of that reversal for an outer planet like Mars.\n\nNotice how natural the picture looks once it is drawn. The epicycle was not a desperate patch; it was an elegant answer to Plato’s question, and it worked for fourteen centuries.",
+   "hash": "5a09e923ae2f",
+   "duration": 96.63,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 7.2,
+     "text": "What you are looking at is the behaviour every model of the planets had to explain, and I want you to watch it carefully."
+    },
+    {
+     "start": 7.2,
+     "end": 11.16,
+     "text": "Run the animation and keep your eye on the sky strip at the bottom."
+    },
+    {
+     "start": 11.16,
+     "end": 20.06,
+     "text": "Mars creeps eastward against the stars, then slows, stops, and reverses for about two months before it turns around and resumes."
+    },
+    {
+     "start": 20.06,
+     "end": 26.98,
+     "text": "That reversal comes roughly every twenty-six months, and Mars is at its brightest right in the middle of the backward stretch."
+    },
+    {
+     "start": 26.98,
+     "end": 35.88,
+     "text": "The solution worked out by Apollonius and Hipparchus in the third and second centuries BCE, and later perfected by Ptolemy, was the epicycle."
+    },
+    {
+     "start": 35.88,
+     "end": 45.8,
+     "text": "The planet rides on a small circle, the epicycle, while the centre of that small circle travels around a large circle, the deferent, centred on or near the Earth."
+    },
+    {
+     "start": 45.8,
+     "end": 58.69,
+     "text": "When the planet swings onto the inner part of the epicycle, its motion opposes the steady advance of the deferent, so against the stars it appears to go backwards, and at that same moment it is closest to us and therefore brightest."
+    },
+    {
+     "start": 58.69,
+     "end": 61.09,
+     "text": "Two problems solved with one circle."
+    },
+    {
+     "start": 61.09,
+     "end": 69.63,
+     "text": "Try switching the top-down view between Ptolemy’s epicycle and the Copernican orbits, and notice that both can trace the same loop in the strip below."
+    },
+    {
+     "start": 69.63,
+     "end": 76.35,
+     "text": "The deferent is simply that large carrying circle; the epicycle is the small circle the planet actually moves on."
+    },
+    {
+     "start": 76.35,
+     "end": 86.91,
+     "text": "Retrograde motion is the apparent east-to-west reversal we see, and opposition, when the planet stands opposite the Sun, falls in the middle of that reversal for an outer planet like Mars."
+    },
+    {
+     "start": 86.91,
+     "end": 89.87,
+     "text": "Notice how natural the picture looks once it is drawn."
+    },
+    {
+     "start": 89.87,
+     "end": 96.63,
+     "text": "The epicycle was not a desperate patch; it was an elegant answer to Plato’s question, and it worked for fourteen centuries."
+    }
+   ],
+   "voicedHash": "241e41c7a3e0"
+  }
+ }
+}

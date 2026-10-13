@@ -1,0 +1,867 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "aftermath": {
+   "script": "Tycho, Kepler and Galileo turned the idea into fact. Tycho built the finest instruments before the telescope and measured positions to about one arcminute, ten times better than anyone before. Kepler inherited the numbers, failed for years to fit circles to Mars, and abandoned Plato's rule: orbits are ellipses, planets speed up near the Sun. I will walk you through his three laws in Chapter Two.\n\nLook behind the panel. Those orbit lines rising above Ganymede are the four moons Galileo found circling Jupiter in sixteen oh nine, proof that not everything orbits the Earth. Venus ran through every phase, crescent to nearly full, impossible if she always sits between Earth and Sun as Ptolemy held, and required by Copernicus. The debate was over by the sixteen thirties; the Church took longer.\n\nIn short, Copernicus set the Sun at the centre and Earth revolving and rotating. Retrograde motion is simple overtaking; elongations and planetary order follow automatically; angles alone give the system's relative scale. Synodic periods we observe convert to sidereal ones by one over S equals the absolute value of one over P-Earth minus one over P. S is the observed synodic period, P-Earth Earth's year, P the planet's true period. Accuracy came later. The model won first by explanatory economy, then by Galileo's sights and Kepler's ellipses.",
+   "hash": "9f7617885a7d",
+   "duration": 87.03,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4.3,
+     "text": "Tycho, Kepler and Galileo turned the idea into fact."
+    },
+    {
+     "start": 4.3,
+     "end": 12.88,
+     "text": "Tycho built the finest instruments before the telescope and measured positions to about one arcminute, ten times better than anyone before."
+    },
+    {
+     "start": 12.88,
+     "end": 23.14,
+     "text": "Kepler inherited the numbers, failed for years to fit circles to Mars, and abandoned Plato's rule: orbits are ellipses, planets speed up near the Sun."
+    },
+    {
+     "start": 23.14,
+     "end": 26.38,
+     "text": "I will walk you through his three laws in Chapter Two."
+    },
+    {
+     "start": 26.38,
+     "end": 27.9,
+     "text": "Look behind the panel."
+    },
+    {
+     "start": 27.9,
+     "end": 37.48,
+     "text": "Those orbit lines rising above Ganymede are the four moons Galileo found circling Jupiter in sixteen oh nine, proof that not everything orbits the Earth."
+    },
+    {
+     "start": 37.48,
+     "end": 47.25,
+     "text": "Venus ran through every phase, crescent to nearly full, impossible if she always sits between Earth and Sun as Ptolemy held, and required by Copernicus."
+    },
+    {
+     "start": 47.25,
+     "end": 51.39,
+     "text": "The debate was over by the sixteen thirties; the Church took longer."
+    },
+    {
+     "start": 51.39,
+     "end": 56.33,
+     "text": "In short, Copernicus set the Sun at the centre and Earth revolving and rotating."
+    },
+    {
+     "start": 56.33,
+     "end": 65.49,
+     "text": "Retrograde motion is simple overtaking; elongations and planetary order follow automatically; angles alone give the system's relative scale."
+    },
+    {
+     "start": 65.49,
+     "end": 74.01,
+     "text": "Synodic periods we observe convert to sidereal ones by one over S equals the absolute value of one over P-Earth minus one over P."
+    },
+    {
+     "start": 74.01,
+     "end": 79.79,
+     "text": "S is the observed synodic period, P-Earth Earth's year, P the planet's true period."
+    },
+    {
+     "start": 79.79,
+     "end": 81.39,
+     "text": "Accuracy came later."
+    },
+    {
+     "start": 81.39,
+     "end": 87.03,
+     "text": "The model won first by explanatory economy, then by Galileo's sights and Kepler's ellipses."
+    }
+   ],
+   "voicedHash": "c67c132aaa4a"
+  },
+  "cracks": {
+   "script": "Welcome. Take a look behind the panel. The whole planetary system is slowly circling the Sun. That picture feels natural to us, but by the fifteen hundreds the older picture was already under serious strain, and replacing it was anything but obvious.\n\nPtolemy's system had been patched and re-patched for more than a thousand years. The Alfonsine Tables, worked out from that system in twelve fifty-two, had drifted from the real sky by several degrees over the centuries. The calendar had drifted as well. The Julian year was eleven minutes too long, so by the sixteenth century the spring equinox fell on March eleventh instead of March twenty-first. The Church needed a trustworthy date for Easter, and it needed trustworthy astronomy to fix that date. Practical life and the heavens had come apart.\n\nThere was an aesthetic problem too. Each planet's epicycles, eccentrics, and equants were fitted on their own. Nothing tied one planet to another. The order of the planets, and their distances, were essentially guesses. Imagine a piece of music in which every instrument is tuned separately, with no shared key and no score. For a Renaissance scholar steeped in Plato's love of harmony, that was deeply unsatisfying.\n\nNicolaus Copernicus lived from fourteen seventy-three to fifteen forty-three. He was a Polish canon, a physician, and an administrator, and he worked on a Sun-centered system for about thirty years. Around fifteen fourteen he circulated a short summary, the Commentariolus. He held back the full book, De revolutionibus orbium coelestium, until fifteen forty-three, the year he died. Legend has it he saw the first printed copy on his deathbed. A reluctant revolutionary, and yet the idea turning slowly behind this panel is the one he spent a lifetime preparing to publish.",
+   "hash": "b72dd4ff1455",
+   "duration": 105.91,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 0.82,
+     "text": "Welcome."
+    },
+    {
+     "start": 0.82,
+     "end": 2.66,
+     "text": "Take a look behind the panel."
+    },
+    {
+     "start": 2.66,
+     "end": 6.2,
+     "text": "The whole planetary system is slowly circling the Sun."
+    },
+    {
+     "start": 6.2,
+     "end": 15.3,
+     "text": "That picture feels natural to us, but by the fifteen hundreds the older picture was already under serious strain, and replacing it was anything but obvious."
+    },
+    {
+     "start": 15.3,
+     "end": 19.58,
+     "text": "Ptolemy's system had been patched and re-patched for more than a thousand years."
+    },
+    {
+     "start": 19.58,
+     "end": 27.88,
+     "text": "The Alfonsine Tables, worked out from that system in twelve fifty-two, had drifted from the real sky by several degrees over the centuries."
+    },
+    {
+     "start": 27.88,
+     "end": 29.9,
+     "text": "The calendar had drifted as well."
+    },
+    {
+     "start": 29.9,
+     "end": 38.16,
+     "text": "The Julian year was eleven minutes too long, so by the sixteenth century the spring equinox fell on March eleventh instead of March twenty-first."
+    },
+    {
+     "start": 38.16,
+     "end": 44,
+     "text": "The Church needed a trustworthy date for Easter, and it needed trustworthy astronomy to fix that date."
+    },
+    {
+     "start": 44,
+     "end": 46.64,
+     "text": "Practical life and the heavens had come apart."
+    },
+    {
+     "start": 46.64,
+     "end": 48.76,
+     "text": "There was an aesthetic problem too."
+    },
+    {
+     "start": 48.76,
+     "end": 53.35,
+     "text": "Each planet's epicycles, eccentrics, and equants were fitted on their own."
+    },
+    {
+     "start": 53.35,
+     "end": 55.67,
+     "text": "Nothing tied one planet to another."
+    },
+    {
+     "start": 55.67,
+     "end": 59.67,
+     "text": "The order of the planets, and their distances, were essentially guesses."
+    },
+    {
+     "start": 59.67,
+     "end": 65.95,
+     "text": "Imagine a piece of music in which every instrument is tuned separately, with no shared key and no score."
+    },
+    {
+     "start": 65.95,
+     "end": 71.51,
+     "text": "For a Renaissance scholar steeped in Plato's love of harmony, that was deeply unsatisfying."
+    },
+    {
+     "start": 71.51,
+     "end": 76.01,
+     "text": "Nicolaus Copernicus lived from fourteen seventy-three to fifteen forty-three."
+    },
+    {
+     "start": 76.01,
+     "end": 82.95,
+     "text": "He was a Polish canon, a physician, and an administrator, and he worked on a Sun-centered system for about thirty years."
+    },
+    {
+     "start": 82.95,
+     "end": 87.77,
+     "text": "Around fifteen fourteen he circulated a short summary, the Commentariolus."
+    },
+    {
+     "start": 87.77,
+     "end": 95.25,
+     "text": "He held back the full book, De revolutionibus orbium coelestium, until fifteen forty-three, the year he died."
+    },
+    {
+     "start": 95.25,
+     "end": 98.89,
+     "text": "Legend has it he saw the first printed copy on his deathbed."
+    },
+    {
+     "start": 98.89,
+     "end": 105.91,
+     "text": "A reluctant revolutionary, and yet the idea turning slowly behind this panel is the one he spent a lifetime preparing to publish."
+    }
+   ],
+   "voicedHash": "f8d8c8f1b080"
+  },
+  "distances": {
+   "script": "Putting the Sun at the centre does something Ptolemy never could. It lets you measure the relative sizes of the orbits with nothing but angles seen from Earth. A protractor is enough.\n\nLook at Venus's orbit behind the panel, with the orbit lines shown. Venus circles inside us, so from Earth it never wanders more than about forty-six degrees from the Sun. That farthest angle is called greatest elongation. At that moment the line from Earth to Venus is tangent to Venus's orbit, so Earth, Venus and the Sun form a right angle at Venus.\n\nWe have a right triangle, and the relation is straightforward. Sine of theta max equals a of Venus over a of Earth, which means a of Venus equals the sine of forty-six degrees, about zero point seven two astronomical units. Theta max is the greatest elongation. a of Venus is the orbital radius of Venus, and a of Earth, marked with the Earth symbol, is our own orbital radius, which we set equal to one astronomical unit. Sine of the angle at Earth is the opposite side over the hypotenuse, Venus's radius over ours. That is why one measured angle fixes the orbit in astronomical units.\n\nFor the outer planets the geometry runs a little longer. You use the time between opposition and the next quadrature, but the idea is the same: one well-timed angle, one right triangle. Copernicus got all five planets to within a few percent of the modern values you see listed. The pairs sit remarkably close.\n\nWhat stayed unknown until the seventeenth century was how long an astronomical unit is in kilometres. He knew the shape of the Solar System to good accuracy without knowing its absolute size, a map with no scale bar. It is like sketching a city purely from the angles between rooftops. Every proportion comes out right, and you still cannot say how long a block is.",
+   "hash": "87c6340098d8",
+   "duration": 110.07,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4,
+     "text": "Putting the Sun at the centre does something Ptolemy never could."
+    },
+    {
+     "start": 4,
+     "end": 9.4,
+     "text": "It lets you measure the relative sizes of the orbits with nothing but angles seen from Earth."
+    },
+    {
+     "start": 9.4,
+     "end": 11.26,
+     "text": "A protractor is enough."
+    },
+    {
+     "start": 11.26,
+     "end": 15.56,
+     "text": "Look at Venus's orbit behind the panel, with the orbit lines shown."
+    },
+    {
+     "start": 15.56,
+     "end": 21.94,
+     "text": "Venus circles inside us, so from Earth it never wanders more than about forty-six degrees from the Sun."
+    },
+    {
+     "start": 21.94,
+     "end": 25.28,
+     "text": "That farthest angle is called greatest elongation."
+    },
+    {
+     "start": 25.28,
+     "end": 33.34,
+     "text": "At that moment the line from Earth to Venus is tangent to Venus's orbit, so Earth, Venus and the Sun form a right angle at Venus."
+    },
+    {
+     "start": 33.34,
+     "end": 36.96,
+     "text": "We have a right triangle, and the relation is straightforward."
+    },
+    {
+     "start": 36.96,
+     "end": 47.44,
+     "text": "Sine of theta max equals a of Venus over a of Earth, which means a of Venus equals the sine of forty-six degrees, about zero point seven two astronomical units."
+    },
+    {
+     "start": 47.44,
+     "end": 50.1,
+     "text": "Theta max is the greatest elongation."
+    },
+    {
+     "start": 50.1,
+     "end": 60.35,
+     "text": "a of Venus is the orbital radius of Venus, and a of Earth, marked with the Earth symbol, is our own orbital radius, which we set equal to one astronomical unit."
+    },
+    {
+     "start": 60.35,
+     "end": 66.41,
+     "text": "Sine of the angle at Earth is the opposite side over the hypotenuse, Venus's radius over ours."
+    },
+    {
+     "start": 66.41,
+     "end": 70.61,
+     "text": "That is why one measured angle fixes the orbit in astronomical units."
+    },
+    {
+     "start": 70.61,
+     "end": 73.87,
+     "text": "For the outer planets the geometry runs a little longer."
+    },
+    {
+     "start": 73.87,
+     "end": 82.01,
+     "text": "You use the time between opposition and the next quadrature, but the idea is the same: one well-timed angle, one right triangle."
+    },
+    {
+     "start": 82.01,
+     "end": 87.17,
+     "text": "Copernicus got all five planets to within a few percent of the modern values you see listed."
+    },
+    {
+     "start": 87.17,
+     "end": 89.41,
+     "text": "The pairs sit remarkably close."
+    },
+    {
+     "start": 89.41,
+     "end": 95.15,
+     "text": "What stayed unknown until the seventeenth century was how long an astronomical unit is in kilometres."
+    },
+    {
+     "start": 95.15,
+     "end": 101.95,
+     "text": "He knew the shape of the Solar System to good accuracy without knowing its absolute size, a map with no scale bar."
+    },
+    {
+     "start": 101.95,
+     "end": 105.77,
+     "text": "It is like sketching a city purely from the angles between rooftops."
+    },
+    {
+     "start": 105.77,
+     "end": 110.07,
+     "text": "Every proportion comes out right, and you still cannot say how long a block is."
+    }
+   ],
+   "voicedHash": "b7aef997b843"
+  },
+  "not-a-win": {
+   "script": "Look at Earth behind the panel. That quiet world under our feet is why the victory was not obvious. It is tempting to tell the story as truth defeating error. In fifteen forty-three it did not look that way.\n\nCopernicus kept perfect circles, so to match the data he still needed small epicycles, about as many as Ptolemy. His tables were not noticeably more accurate. And he faced serious physical objections that nobody could answer yet.\n\nPtolemy's picture matches everyday experience. The ground is still. It is consistent with Aristotle's physics: heavy things fall toward the centre of the universe, and that centre is the Earth. No stellar parallax is expected, and none was seen. He needs epicycles, eccentrics and equants, fitted planet by planet, and he cannot explain why Mercury and Venus hug the Sun. But the world you can feel seemed to side with him.\n\nCopernicus offers one arrangement that explains retrograde motion, the elongations of Mercury and Venus, and the order of the planets, and it gives their relative distances. That is explaining more with less. But the Earth must move at about thirty kilometres per second. Why do we not feel it, and why does a dropped stone fall straight down? The model predicts stellar parallax. None was seen, so the stars must be enormously far. And he still uses circles and epicycles, with accuracy no better than Ptolemy.\n\nThose objections were real science, not stubbornness. They were answered only later. Galileo's relativity of motion, in sixteen thirty-two, shared motion you cannot feel from inside, accounts for the falling stone. Newton's mechanics, in sixteen eighty-seven, supplies the physics. Bessel's parallax measurement, in eighteen thirty-eight, answers it for the stars.\n\nA new theory rarely wins on accuracy alone. It wins when it explains more with less, and when the objections against it are gradually answered. Copernicus supplied the first. The century after him supplied the second.",
+   "hash": "aa606fc3a7dd",
+   "duration": 118.39,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.14,
+     "text": "Look at Earth behind the panel."
+    },
+    {
+     "start": 2.14,
+     "end": 6.42,
+     "text": "That quiet world under our feet is why the victory was not obvious."
+    },
+    {
+     "start": 6.42,
+     "end": 9.92,
+     "text": "It is tempting to tell the story as truth defeating error."
+    },
+    {
+     "start": 9.92,
+     "end": 12.94,
+     "text": "In fifteen forty-three it did not look that way."
+    },
+    {
+     "start": 12.94,
+     "end": 20.52,
+     "text": "Copernicus kept perfect circles, so to match the data he still needed small epicycles, about as many as Ptolemy."
+    },
+    {
+     "start": 20.52,
+     "end": 23.18,
+     "text": "His tables were not noticeably more accurate."
+    },
+    {
+     "start": 23.18,
+     "end": 27.14,
+     "text": "And he faced serious physical objections that nobody could answer yet."
+    },
+    {
+     "start": 27.14,
+     "end": 30.12,
+     "text": "Ptolemy's picture matches everyday experience."
+    },
+    {
+     "start": 30.12,
+     "end": 31.78,
+     "text": "The ground is still."
+    },
+    {
+     "start": 31.78,
+     "end": 38.84,
+     "text": "It is consistent with Aristotle's physics: heavy things fall toward the centre of the universe, and that centre is the Earth."
+    },
+    {
+     "start": 38.84,
+     "end": 42.56,
+     "text": "No stellar parallax is expected, and none was seen."
+    },
+    {
+     "start": 42.56,
+     "end": 50.78,
+     "text": "He needs epicycles, eccentrics and equants, fitted planet by planet, and he cannot explain why Mercury and Venus hug the Sun."
+    },
+    {
+     "start": 50.78,
+     "end": 53.7,
+     "text": "But the world you can feel seemed to side with him."
+    },
+    {
+     "start": 53.7,
+     "end": 63.73,
+     "text": "Copernicus offers one arrangement that explains retrograde motion, the elongations of Mercury and Venus, and the order of the planets, and it gives their relative distances."
+    },
+    {
+     "start": 63.73,
+     "end": 65.85,
+     "text": "That is explaining more with less."
+    },
+    {
+     "start": 65.85,
+     "end": 69.25,
+     "text": "But the Earth must move at about thirty kilometres per second."
+    },
+    {
+     "start": 69.25,
+     "end": 73.29,
+     "text": "Why do we not feel it, and why does a dropped stone fall straight down?"
+    },
+    {
+     "start": 73.29,
+     "end": 75.65,
+     "text": "The model predicts stellar parallax."
+    },
+    {
+     "start": 75.65,
+     "end": 79.29,
+     "text": "None was seen, so the stars must be enormously far."
+    },
+    {
+     "start": 79.29,
+     "end": 84.11,
+     "text": "And he still uses circles and epicycles, with accuracy no better than Ptolemy."
+    },
+    {
+     "start": 84.11,
+     "end": 87.37,
+     "text": "Those objections were real science, not stubbornness."
+    },
+    {
+     "start": 87.37,
+     "end": 89.23,
+     "text": "They were answered only later."
+    },
+    {
+     "start": 89.23,
+     "end": 97.31,
+     "text": "Galileo's relativity of motion, in sixteen thirty-two, shared motion you cannot feel from inside, accounts for the falling stone."
+    },
+    {
+     "start": 97.31,
+     "end": 101.37,
+     "text": "Newton's mechanics, in sixteen eighty-seven, supplies the physics."
+    },
+    {
+     "start": 101.37,
+     "end": 106.05,
+     "text": "Bessel's parallax measurement, in eighteen thirty-eight, answers it for the stars."
+    },
+    {
+     "start": 106.05,
+     "end": 109.05,
+     "text": "A new theory rarely wins on accuracy alone."
+    },
+    {
+     "start": 109.05,
+     "end": 114.43,
+     "text": "It wins when it explains more with less, and when the objections against it are gradually answered."
+    },
+    {
+     "start": 114.43,
+     "end": 116.31,
+     "text": "Copernicus supplied the first."
+    },
+    {
+     "start": 116.31,
+     "end": 118.39,
+     "text": "The century after him supplied the second."
+    }
+   ],
+   "voicedHash": "b53fd9754f99"
+  },
+  "retrograde-explained": {
+   "script": "Look at Mars behind the panel, with the orbit lines drawn in. You are seeing the same loop we met in the last section, but I want you to switch the model over to Copernicus and watch what changes, and what does not.\n\nIn this picture the Earth is on the inner track, and it is the faster one: one full lap every year. Mars is outside us, moving more slowly, one lap in one point eight eight years, nearly two years. Every twenty-six months we catch Mars up and overtake it on the inside. While we are passing, our line of sight out to Mars swings backwards against the distant stars. That is the whole of retrograde motion. Think of a slower car on the motorway: as you pull past it, for a moment it seems to drift backwards relative to the horizon, even though both of you are still going forwards. No epicycle. The loop is just the shape of that changing line of sight.\n\nAnd notice the timing. We overtake Mars when the two planets are closest, so Mars is brightest right in the middle of the backwards loop. That brightness peak is something Eudoxus and his nested spheres could never account for.\n\nNow try this with the animation. Let it run, and flip back and forth between Ptolemy's epicycle and the Copernican orbits. Watch the sky strip along the bottom. It is the same strip in both models. Mars traces the same path against the zodiac either way. The models do not differ in what they predict for the sky. They differ in what they assume about the machinery underneath.\n\nSo here is the question I want you to sit with. If both models give you the same sky, how would you decide between them? Copernicus's contemporaries asked exactly that, and for sixty years, honestly, there was no decisive observation. Hold onto that. We will need it when we get to Galileo.",
+   "hash": "10de63caa6e5",
+   "duration": 102.39,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 4.16,
+     "text": "Look at Mars behind the panel, with the orbit lines drawn in."
+    },
+    {
+     "start": 4.16,
+     "end": 12.8,
+     "text": "You are seeing the same loop we met in the last section, but I want you to switch the model over to Copernicus and watch what changes, and what does not."
+    },
+    {
+     "start": 12.8,
+     "end": 18.98,
+     "text": "In this picture the Earth is on the inner track, and it is the faster one: one full lap every year."
+    },
+    {
+     "start": 18.98,
+     "end": 25.66,
+     "text": "Mars is outside us, moving more slowly, one lap in one point eight eight years, nearly two years."
+    },
+    {
+     "start": 25.66,
+     "end": 29.88,
+     "text": "Every twenty-six months we catch Mars up and overtake it on the inside."
+    },
+    {
+     "start": 29.88,
+     "end": 35.3,
+     "text": "While we are passing, our line of sight out to Mars swings backwards against the distant stars."
+    },
+    {
+     "start": 35.3,
+     "end": 37.68,
+     "text": "That is the whole of retrograde motion."
+    },
+    {
+     "start": 37.68,
+     "end": 47.16,
+     "text": "Think of a slower car on the motorway: as you pull past it, for a moment it seems to drift backwards relative to the horizon, even though both of you are still going forwards."
+    },
+    {
+     "start": 47.16,
+     "end": 48.48,
+     "text": "No epicycle."
+    },
+    {
+     "start": 48.48,
+     "end": 51.59,
+     "text": "The loop is just the shape of that changing line of sight."
+    },
+    {
+     "start": 51.59,
+     "end": 53.01,
+     "text": "And notice the timing."
+    },
+    {
+     "start": 53.01,
+     "end": 59.23,
+     "text": "We overtake Mars when the two planets are closest, so Mars is brightest right in the middle of the backwards loop."
+    },
+    {
+     "start": 59.23,
+     "end": 64.17,
+     "text": "That brightness peak is something Eudoxus and his nested spheres could never account for."
+    },
+    {
+     "start": 64.17,
+     "end": 66.09,
+     "text": "Now try this with the animation."
+    },
+    {
+     "start": 66.09,
+     "end": 71.65,
+     "text": "Let it run, and flip back and forth between Ptolemy's epicycle and the Copernican orbits."
+    },
+    {
+     "start": 71.65,
+     "end": 73.81,
+     "text": "Watch the sky strip along the bottom."
+    },
+    {
+     "start": 73.81,
+     "end": 76.11,
+     "text": "It is the same strip in both models."
+    },
+    {
+     "start": 76.11,
+     "end": 79.49,
+     "text": "Mars traces the same path against the zodiac either way."
+    },
+    {
+     "start": 79.49,
+     "end": 82.55,
+     "text": "The models do not differ in what they predict for the sky."
+    },
+    {
+     "start": 82.55,
+     "end": 85.71,
+     "text": "They differ in what they assume about the machinery underneath."
+    },
+    {
+     "start": 85.71,
+     "end": 88.13,
+     "text": "So here is the question I want you to sit with."
+    },
+    {
+     "start": 88.13,
+     "end": 92.29,
+     "text": "If both models give you the same sky, how would you decide between them?"
+    },
+    {
+     "start": 92.29,
+     "end": 99.49,
+     "text": "Copernicus's contemporaries asked exactly that, and for sixty years, honestly, there was no decisive observation."
+    },
+    {
+     "start": 99.49,
+     "end": 100.59,
+     "text": "Hold onto that."
+    },
+    {
+     "start": 100.59,
+     "end": 102.39,
+     "text": "We will need it when we get to Galileo."
+    }
+   ],
+   "voicedHash": "16d4b7bf2153"
+  },
+  "synodic": {
+   "script": "Copernicus had a subtlety to untangle. What we observe directly is a planet's synodic period, S, the time between two successive identical alignments with the Sun, opposition to opposition, say. What the model needs is the sidereal period, P, the true time for one orbit around the Sun, measured against the stars. They are not the same, because the Earth is moving too.\n\nI picture two runners on circular tracks. Earth completes one over P-Earth laps per unit time, the planet one over P. They line up again when the faster one has gained exactly one lap. For a superior planet the Earth is faster, so one over S equals one over P-Earth minus one over P. S is the synodic period we time between alignments. P-Earth is Earth's sidereal year. P is the planet's true period around the Sun. Subtracting the rates gives how fast Earth gains a lap, and that gain is one lap per synodic period.\n\nFor an inferior planet the planet is faster, so one over S equals one over P minus one over P-Earth. Now the planet is the one lapping us.\n\nMars returns to opposition every S of about seven hundred eighty days, roughly two point one four years. Rearrange, with P-Earth equal to one year. One over P equals one minus one over two point one four, about zero point five three, so P is near one point eight eight years, six hundred eighty-seven days.\n\nOn the widget, start the stopwatch at one opposition and run it to the next. Watch it count the synodic period while the planet completes a different number of sidereal laps. Change the planet from Mars toward Jupiter and the wait between alignments gets shorter.\n\nWhy is Mars's synodic period the longest of the planets, when Jupiter and Saturn are slower? The formula is a difference of two rates. Mars moves at a speed closest to Earth's, so Earth takes longest to gain that one lap.",
+   "hash": "464483d8416f",
+   "duration": 115.83,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 2.94,
+     "text": "Copernicus had a subtlety to untangle."
+    },
+    {
+     "start": 2.94,
+     "end": 13.46,
+     "text": "What we observe directly is a planet's synodic period, S, the time between two successive identical alignments with the Sun, opposition to opposition, say."
+    },
+    {
+     "start": 13.46,
+     "end": 21.54,
+     "text": "What the model needs is the sidereal period, P, the true time for one orbit around the Sun, measured against the stars."
+    },
+    {
+     "start": 21.54,
+     "end": 25.06,
+     "text": "They are not the same, because the Earth is moving too."
+    },
+    {
+     "start": 25.06,
+     "end": 27.9,
+     "text": "I picture two runners on circular tracks."
+    },
+    {
+     "start": 27.9,
+     "end": 33.68,
+     "text": "Earth completes one over P-Earth laps per unit time, the planet one over P."
+    },
+    {
+     "start": 33.68,
+     "end": 37.6,
+     "text": "They line up again when the faster one has gained exactly one lap."
+    },
+    {
+     "start": 37.6,
+     "end": 44.8,
+     "text": "For a superior planet the Earth is faster, so one over S equals one over P-Earth minus one over P."
+    },
+    {
+     "start": 44.8,
+     "end": 47.94,
+     "text": "S is the synodic period we time between alignments."
+    },
+    {
+     "start": 47.94,
+     "end": 50.42,
+     "text": "P-Earth is Earth's sidereal year."
+    },
+    {
+     "start": 50.42,
+     "end": 53.28,
+     "text": "P is the planet's true period around the Sun."
+    },
+    {
+     "start": 53.28,
+     "end": 59.43,
+     "text": "Subtracting the rates gives how fast Earth gains a lap, and that gain is one lap per synodic period."
+    },
+    {
+     "start": 59.43,
+     "end": 66.25,
+     "text": "For an inferior planet the planet is faster, so one over S equals one over P minus one over P-Earth."
+    },
+    {
+     "start": 66.25,
+     "end": 68.61,
+     "text": "Now the planet is the one lapping us."
+    },
+    {
+     "start": 68.61,
+     "end": 75.05,
+     "text": "Mars returns to opposition every S of about seven hundred eighty days, roughly two point one four years."
+    },
+    {
+     "start": 75.05,
+     "end": 78.19,
+     "text": "Rearrange, with P-Earth equal to one year."
+    },
+    {
+     "start": 78.19,
+     "end": 88.53,
+     "text": "One over P equals one minus one over two point one four, about zero point five three, so P is near one point eight eight years, six hundred eighty-seven days."
+    },
+    {
+     "start": 88.53,
+     "end": 92.97,
+     "text": "On the widget, start the stopwatch at one opposition and run it to the next."
+    },
+    {
+     "start": 92.97,
+     "end": 97.89,
+     "text": "Watch it count the synodic period while the planet completes a different number of sidereal laps."
+    },
+    {
+     "start": 97.89,
+     "end": 102.77,
+     "text": "Change the planet from Mars toward Jupiter and the wait between alignments gets shorter."
+    },
+    {
+     "start": 102.77,
+     "end": 108.23,
+     "text": "Why is Mars's synodic period the longest of the planets, when Jupiter and Saturn are slower?"
+    },
+    {
+     "start": 108.23,
+     "end": 110.67,
+     "text": "The formula is a difference of two rates."
+    },
+    {
+     "start": 110.67,
+     "end": 115.83,
+     "text": "Mars moves at a speed closest to Earth's, so Earth takes longest to gain that one lap."
+    }
+   ],
+   "voicedHash": "8ae38c4cec1e"
+  },
+  "the-model": {
+   "script": "Look behind the panel for a moment. The view has risen above the orbit of Mars, and the orbit lines are drawn out in space. That picture is Copernicus’s whole move, and it is almost embarrassingly simple.\n\nHe did not throw away the old rules. Plato had insisted on uniform circular motion, circles travelled at constant speed, and Copernicus kept that. He changed only one thing. He moved the centre. The Sun sits nearly in the middle. The Earth is a planet, third from the Sun, and it does two things at once. It rotates on its axis once a day, and it revolves around the Sun once a year. Only the Moon still orbits the Earth.\n\nOnce that arrangement is in place, a familiar list of facts stops needing a separate story for each one. The daily turning of the whole sky is an illusion, caused by our rotation. The Sun’s yearly drift along the ecliptic is an illusion too, caused by our revolution. Mercury and Venus never stray far from the Sun because their orbits lie inside ours. Mars, Jupiter and Saturn can appear opposite the Sun because their orbits lie outside ours. You can see those outer paths behind the panel. And the slower a planet moves, the farther it is from the Sun. A natural ordering appears for the first time. We no longer have to impose the order. It falls out of the geometry.\n\nThink of a train. If you insist the carriage is still, every tree needs its own reason for sliding past the window. Admit that you are moving, and all those motions become one fact. Ptolemy knew every fact on that list, and he gave each one its own device. In the heliocentric model they all follow from one arrangement. That economy, many facts from one idea, is what scientists mean when they call a theory beautiful.",
+   "hash": "13a18416e25a",
+   "duration": 105.27,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.34,
+     "text": "Look behind the panel for a moment."
+    },
+    {
+     "start": 2.34,
+     "end": 7.92,
+     "text": "The view has risen above the orbit of Mars, and the orbit lines are drawn out in space."
+    },
+    {
+     "start": 7.92,
+     "end": 13.22,
+     "text": "That picture is Copernicus’s whole move, and it is almost embarrassingly simple."
+    },
+    {
+     "start": 13.22,
+     "end": 15.58,
+     "text": "He did not throw away the old rules."
+    },
+    {
+     "start": 15.58,
+     "end": 22.72,
+     "text": "Plato had insisted on uniform circular motion, circles travelled at constant speed, and Copernicus kept that."
+    },
+    {
+     "start": 22.72,
+     "end": 24.6,
+     "text": "He changed only one thing."
+    },
+    {
+     "start": 24.6,
+     "end": 26.02,
+     "text": "He moved the centre."
+    },
+    {
+     "start": 26.02,
+     "end": 28.06,
+     "text": "The Sun sits nearly in the middle."
+    },
+    {
+     "start": 28.06,
+     "end": 32.62,
+     "text": "The Earth is a planet, third from the Sun, and it does two things at once."
+    },
+    {
+     "start": 32.62,
+     "end": 37.56,
+     "text": "It rotates on its axis once a day, and it revolves around the Sun once a year."
+    },
+    {
+     "start": 37.56,
+     "end": 39.96,
+     "text": "Only the Moon still orbits the Earth."
+    },
+    {
+     "start": 39.96,
+     "end": 45.82,
+     "text": "Once that arrangement is in place, a familiar list of facts stops needing a separate story for each one."
+    },
+    {
+     "start": 45.82,
+     "end": 50.48,
+     "text": "The daily turning of the whole sky is an illusion, caused by our rotation."
+    },
+    {
+     "start": 50.48,
+     "end": 55.91,
+     "text": "The Sun’s yearly drift along the ecliptic is an illusion too, caused by our revolution."
+    },
+    {
+     "start": 55.91,
+     "end": 61.27,
+     "text": "Mercury and Venus never stray far from the Sun because their orbits lie inside ours."
+    },
+    {
+     "start": 61.27,
+     "end": 67.09,
+     "text": "Mars, Jupiter and Saturn can appear opposite the Sun because their orbits lie outside ours."
+    },
+    {
+     "start": 67.09,
+     "end": 69.81,
+     "text": "You can see those outer paths behind the panel."
+    },
+    {
+     "start": 69.81,
+     "end": 73.49,
+     "text": "And the slower a planet moves, the farther it is from the Sun."
+    },
+    {
+     "start": 73.49,
+     "end": 76.19,
+     "text": "A natural ordering appears for the first time."
+    },
+    {
+     "start": 76.19,
+     "end": 78.49,
+     "text": "We no longer have to impose the order."
+    },
+    {
+     "start": 78.49,
+     "end": 80.41,
+     "text": "It falls out of the geometry."
+    },
+    {
+     "start": 80.41,
+     "end": 81.69,
+     "text": "Think of a train."
+    },
+    {
+     "start": 81.69,
+     "end": 87.17,
+     "text": "If you insist the carriage is still, every tree needs its own reason for sliding past the window."
+    },
+    {
+     "start": 87.17,
+     "end": 91.17,
+     "text": "Admit that you are moving, and all those motions become one fact."
+    },
+    {
+     "start": 91.17,
+     "end": 95.93,
+     "text": "Ptolemy knew every fact on that list, and he gave each one its own device."
+    },
+    {
+     "start": 95.93,
+     "end": 99.49,
+     "text": "In the heliocentric model they all follow from one arrangement."
+    },
+    {
+     "start": 99.49,
+     "end": 105.27,
+     "text": "That economy, many facts from one idea, is what scientists mean when they call a theory beautiful."
+    }
+   ],
+   "voicedHash": "116d4abaeec0"
+  }
+ }
+}

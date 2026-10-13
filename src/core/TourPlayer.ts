@@ -10,6 +10,8 @@ export interface TourOverrides {
   clouds?: boolean;
   orbits?: boolean;
   moonOrbits?: boolean;
+  eclipticGrid?: boolean;
+  equatorialGrid?: boolean;
 }
 
 /** A labelled surface feature the overlay points at during a tour */
@@ -48,6 +50,8 @@ export interface TourHost {
   setPulse(p: { from: string; to: string; seconds: number } | null): void;
   setTourOverrides(o: TourOverrides): void;
   setSurfacePin(pin: SurfacePin | null): void;
+  /** the slowly circling planetary-system view used when nothing is selected */
+  showBackdrop(fly: boolean): void;
 }
 
 /** Inset shown in the corner during a step (see the `card` cue) */

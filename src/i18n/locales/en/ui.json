@@ -6,7 +6,6 @@
   "Evren hazırlanıyor…": "Preparing the universe…",
   "Yıldız kataloğu yükleniyor…": "Loading the star catalogue…",
   "Yükleme hatası": "Loading error",
-
   "Güneş Sistemi": "Solar System",
   "Ara… (Titan, Sirius, Andromeda)": "Search… (Titan, Sirius, Andromeda)",
   "Seçili hedefe otomatik uçuş": "Autopilot to the selected destination",
@@ -29,7 +28,6 @@
   "Takip": "Follow",
   "Takipte": "Following",
   "Kaldır": "Remove",
-
   "Görev Planlayıcı": "Mission Planner",
   "Kalkış": "Departure",
   "Hedef": "Target",
@@ -145,7 +143,6 @@
   "{name} — varıldı": "{name} — arrived",
   "Rota patched-conic yaklaşımıyla hesaplanmıştır.": "Route computed with the patched-conic approximation.",
   "Model özgün, şematik bir temsildir.": "The model is an original, schematic representation.",
-
   "Geri hızlandır (J)": "Faster backwards (J)",
   "Yavaşlat": "Slower",
   "Duraklat (K)": "Pause (K)",
@@ -183,7 +180,6 @@
   "G": "S",
   "D": "E",
   "B": "W",
-
   "Mod": "Mode",
   "Serbest": "Free",
   "Serbest uçuş": "Free flight",
@@ -193,7 +189,6 @@
   "Hız": "Speed",
   "Yükseklik": "Altitude",
   "© 2026 BigBrains · Açık kaynak (MIT)": "© 2026 BigBrains · Open source (MIT)",
-
   "Dil": "Language",
   "Görüntü": "Display",
   "Kamera": "Camera",
@@ -221,7 +216,6 @@
   "Y eksenini ters çevir": "Invert Y axis",
   "açık": "on",
   "kapalı": "off",
-
   "{name} hedefine uçuluyor…": "Flying to {name}…",
   "{name} hedefine uçuluyor… ({dist})": "Flying to {name}… ({dist})",
   "{name} sistemine uçuluyor… ({dist})": "Flying to the {name} system… ({dist})",
@@ -239,7 +233,6 @@
   "Ekran görüntüsü alınamadı": "Could not take a screenshot",
   "Serbest dolaşım: fare ile bak · W A S D uç · R F yukarı/aşağı · Q E yatış · tekerlek hız · Esc çık": "Free roam: look with the mouse · W A S D fly · R F up/down · Q E roll · wheel speed · Esc exit",
   "Serbest dolaşım kapatıldı": "Free roam disabled",
-
   "Kontroller": "Controls",
   "Tek parmak": "One finger",
   "Bak / yörüngede dön": "Look / orbit",
@@ -303,7 +296,6 @@
   "Your Eyes In Space bir": "Your Eyes In Space is a",
   "ürünüdür. Kod": "product. The code is open source under the MIT licence on",
   "'da MIT lisansıyla açık kaynaktır; isim ve logo BigBrains markasıdır. © 2026": "; the name and logo are BigBrains trademarks. © 2026",
-
   "Dünya görüntüsü: NASA GIBS · Blue Marble NG, VIIRS Black Marble": "Earth imagery: NASA GIBS · Blue Marble NG, VIIRS Black Marble",
   "Ay görüntüsü: NASA Trek · LRO WAC mozaiği (100 m/px)": "Moon imagery: NASA Trek · LRO WAC mosaic (100 m/px)",
   "Mars görüntüsü: NASA Trek · Viking MDIM 2.1 (232 m/px)": "Mars imagery: NASA Trek · Viking MDIM 2.1 (232 m/px)",
@@ -323,7 +315,6 @@
   "Iapetus görüntüsü: NASA Trek · Cassini / Voyager mozaiği (783 m/px)": "Iapetus imagery: NASA Trek · Cassini / Voyager mosaic (783 m/px)",
   "Ceres görüntüsü: NASA Trek · Dawn FC mozaiği (140 m/px)": "Ceres imagery: NASA Trek · Dawn FC mosaic (140 m/px)",
   "Vesta görüntüsü: NASA Trek · Dawn FC HAMO mozaiği (60 m/px)": "Vesta imagery: NASA Trek · Dawn FC HAMO mosaic (60 m/px)",
-
   "Yıldız": "Star",
   "Gezegen": "Planet",
   "Cüce Gezegen": "Dwarf Planet",
@@ -398,7 +389,6 @@
   "Prosedürel olarak üretilmiş galaksi; konumu kozmik ağ yoğunluk modelinden, yapısı Hubble tipinden türetildi.": "Procedurally generated galaxy; its position comes from the cosmic-web density model, its structure from the Hubble type.",
   "Galaksi kümesi": "Galaxy cluster",
   "Süperküme kompleksi": "Supercluster complex",
-
   "Uzaklık": "Distance",
   "Kadir (buradan)": "Magnitude (from here)",
   "Kadir (Dünya'dan)": "Magnitude (from Earth)",
@@ -613,5 +603,7 @@
   "Yörünge": "Orbit",
   "Yörüngedeki yıldızlar": "Orbiting stars",
   "Yörüngedekiler": "Orbiting bodies",
-  "Yüzeye uzaklık": "Distance to surface"
+  "Yüzeye uzaklık": "Distance to surface",
+  "Akademi": "Academy",
+  "Akademi: bölüm bölüm ilerleyen etkileşimli astrofizik dersleri": "Academy: interactive astrophysics lessons, chapter by chapter"
 }

@@ -1,0 +1,694 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "describe-to-explain": {
+   "script": "Welcome to the turning point.\n\nLook at the Sun behind the panel. Everything we have done so far has been description: where things are, how they move, and how to write it down. Kepler's laws, which we meet next, are the summit of that tradition. They are exact rules for planetary motion, with no idea of why.\n\nThe why arrived in sixteen eighty-seven. Isaac Newton showed that a single law of gravitation, together with his laws of motion, produces Kepler's ellipses, the tides, the fall of an apple, and the orbit of the Moon. It reads, F equals G times m one times m two, divided by r squared. F is the gravitational pull between two bodies. G is a universal constant, the same number everywhere. m one and m two are the two masses, and r is the distance between their centres. The pull grows with each mass, and it falls off as one over r squared. Twice as far means a quarter of the force. We measure masses in kilograms, distance in metres, and force in newtons. This was the first time a law tested on Earth was shown to run the heavens. We derive Kepler's laws from it in Chapter two.\n\nA second door opened in the nineteenth century. In eighteen thirty-five the philosopher Auguste Comte declared that the chemical composition of stars was something humanity could never know. Within a generation, Kirchhoff and Bunsen, in eighteen fifty-nine, showed that each element imprints its own pattern of dark lines on the spectrum of light passing through it. Those lines were already visible in sunlight, mapped by Fraunhofer in eighteen fourteen. Starlight carries a chemical fingerprint. The science of reading it, spectroscopy, created astrophysics.\n\nI picture gravity as a hand on the heavens, and light as the letter they send back. Astronomy asks where and when. Astrophysics asks why, and what is it made of. The tools that made those questions answerable were gravity and light.",
+   "hash": "4a17fcced74b",
+   "duration": 118.39,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 1.84,
+     "text": "Welcome to the turning point."
+    },
+    {
+     "start": 1.84,
+     "end": 4.02,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 4.02,
+     "end": 10.98,
+     "text": "Everything we have done so far has been description: where things are, how they move, and how to write it down."
+    },
+    {
+     "start": 10.98,
+     "end": 15.28,
+     "text": "Kepler's laws, which we meet next, are the summit of that tradition."
+    },
+    {
+     "start": 15.28,
+     "end": 19.94,
+     "text": "They are exact rules for planetary motion, with no idea of why."
+    },
+    {
+     "start": 19.94,
+     "end": 22.88,
+     "text": "The why arrived in sixteen eighty-seven."
+    },
+    {
+     "start": 22.88,
+     "end": 34.04,
+     "text": "Isaac Newton showed that a single law of gravitation, together with his laws of motion, produces Kepler's ellipses, the tides, the fall of an apple, and the orbit of the Moon."
+    },
+    {
+     "start": 34.04,
+     "end": 40.28,
+     "text": "It reads, F equals G times m one times m two, divided by r squared."
+    },
+    {
+     "start": 40.28,
+     "end": 43.24,
+     "text": "F is the gravitational pull between two bodies."
+    },
+    {
+     "start": 43.24,
+     "end": 47.14,
+     "text": "G is a universal constant, the same number everywhere."
+    },
+    {
+     "start": 47.14,
+     "end": 52.5,
+     "text": "m one and m two are the two masses, and r is the distance between their centres."
+    },
+    {
+     "start": 52.5,
+     "end": 57.4,
+     "text": "The pull grows with each mass, and it falls off as one over r squared."
+    },
+    {
+     "start": 57.4,
+     "end": 60.19,
+     "text": "Twice as far means a quarter of the force."
+    },
+    {
+     "start": 60.19,
+     "end": 65.33,
+     "text": "We measure masses in kilograms, distance in metres, and force in newtons."
+    },
+    {
+     "start": 65.33,
+     "end": 69.45,
+     "text": "This was the first time a law tested on Earth was shown to run the heavens."
+    },
+    {
+     "start": 69.45,
+     "end": 72.47,
+     "text": "We derive Kepler's laws from it in Chapter two."
+    },
+    {
+     "start": 72.47,
+     "end": 75.11,
+     "text": "A second door opened in the nineteenth century."
+    },
+    {
+     "start": 75.11,
+     "end": 82.81,
+     "text": "In eighteen thirty-five the philosopher Auguste Comte declared that the chemical composition of stars was something humanity could never know."
+    },
+    {
+     "start": 82.81,
+     "end": 92.81,
+     "text": "Within a generation, Kirchhoff and Bunsen, in eighteen fifty-nine, showed that each element imprints its own pattern of dark lines on the spectrum of light passing through it."
+    },
+    {
+     "start": 92.81,
+     "end": 98.11,
+     "text": "Those lines were already visible in sunlight, mapped by Fraunhofer in eighteen fourteen."
+    },
+    {
+     "start": 98.11,
+     "end": 100.43,
+     "text": "Starlight carries a chemical fingerprint."
+    },
+    {
+     "start": 100.43,
+     "end": 104.69,
+     "text": "The science of reading it, spectroscopy, created astrophysics."
+    },
+    {
+     "start": 104.69,
+     "end": 109.35,
+     "text": "I picture gravity as a hand on the heavens, and light as the letter they send back."
+    },
+    {
+     "start": 109.35,
+     "end": 111.71,
+     "text": "Astronomy asks where and when."
+    },
+    {
+     "start": 111.71,
+     "end": 115.07,
+     "text": "Astrophysics asks why, and what is it made of."
+    },
+    {
+     "start": 115.07,
+     "end": 118.39,
+     "text": "The tools that made those questions answerable were gravity and light."
+    }
+   ],
+   "voicedHash": "d0c52e97167f"
+  },
+  "light": {
+   "script": "Look behind the panel for a moment. That is the James Webb Space Telescope, and it is out there for a reason we are about to make precise. With a handful of exceptions, every piece of information about the universe reaches us as electromagnetic radiation, light in the broad sense. Visible light is only a thin slice of that. Radio waves metres long, infrared heat, ultraviolet, X-rays and gamma rays are all the same phenomenon at different wavelengths, and they all travel at the same speed, c.\n\nThe first relation is c equals lambda times nu. c is the speed of light, about three hundred million metres per second. Lambda is the wavelength, the distance from one crest to the next. Nu is the frequency, how many wave crests pass you each second. Their product is fixed at c, so a shorter wavelength means a higher frequency.\n\nThe energy of one photon is E equals h times nu, which is the same as h times c divided by lambda. h is Planck's constant, roughly six point six times ten to the minus thirty-four joule seconds. Shorter wavelength, higher frequency, more energetic photons. An X-ray photon carries far more energy than a radio photon.\n\nDrag the slider. The readouts move together: wavelength, frequency, photon energy, and the blackbody temperature that peaks there. Notice the telescope bands along the spectrum. Cold dust glows only in the far infrared. Ordinary stars peak in the visible. Gas at millions of degrees radiates X-rays. The leftover heat of the Big Bang is a microwave hiss. Temperature largely decides where an object shines. That connection is Wien's law, which we quantify in Chapter Three.\n\nThe curve sitting above the spectrum is the atmosphere's transparency. Air is clear only in the visible, a few infrared windows, and the radio. Everything else, most of the infrared, all ultraviolet, X-rays and gamma rays, never reaches the ground. That is why we launch telescopes.",
+   "hash": "4962975dfaa8",
+   "duration": 119.35,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.36,
+     "text": "Look behind the panel for a moment."
+    },
+    {
+     "start": 2.36,
+     "end": 8.5,
+     "text": "That is the James Webb Space Telescope, and it is out there for a reason we are about to make precise."
+    },
+    {
+     "start": 8.5,
+     "end": 17.16,
+     "text": "With a handful of exceptions, every piece of information about the universe reaches us as electromagnetic radiation, light in the broad sense."
+    },
+    {
+     "start": 17.16,
+     "end": 19.86,
+     "text": "Visible light is only a thin slice of that."
+    },
+    {
+     "start": 19.86,
+     "end": 31.16,
+     "text": "Radio waves metres long, infrared heat, ultraviolet, X-rays and gamma rays are all the same phenomenon at different wavelengths, and they all travel at the same speed, c."
+    },
+    {
+     "start": 31.16,
+     "end": 34.58,
+     "text": "The first relation is c equals lambda times nu."
+    },
+    {
+     "start": 34.58,
+     "end": 38.56,
+     "text": "c is the speed of light, about three hundred million metres per second."
+    },
+    {
+     "start": 38.56,
+     "end": 42.56,
+     "text": "Lambda is the wavelength, the distance from one crest to the next."
+    },
+    {
+     "start": 42.56,
+     "end": 46.68,
+     "text": "Nu is the frequency, how many wave crests pass you each second."
+    },
+    {
+     "start": 46.68,
+     "end": 51.58,
+     "text": "Their product is fixed at c, so a shorter wavelength means a higher frequency."
+    },
+    {
+     "start": 51.58,
+     "end": 58.92,
+     "text": "The energy of one photon is E equals h times nu, which is the same as h times c divided by lambda."
+    },
+    {
+     "start": 58.92,
+     "end": 64.79,
+     "text": "h is Planck's constant, roughly six point six times ten to the minus thirty-four joule seconds."
+    },
+    {
+     "start": 64.79,
+     "end": 69.07,
+     "text": "Shorter wavelength, higher frequency, more energetic photons."
+    },
+    {
+     "start": 69.07,
+     "end": 73.03,
+     "text": "An X-ray photon carries far more energy than a radio photon."
+    },
+    {
+     "start": 73.03,
+     "end": 74.29,
+     "text": "Drag the slider."
+    },
+    {
+     "start": 74.29,
+     "end": 81.41,
+     "text": "The readouts move together: wavelength, frequency, photon energy, and the blackbody temperature that peaks there."
+    },
+    {
+     "start": 81.41,
+     "end": 84.03,
+     "text": "Notice the telescope bands along the spectrum."
+    },
+    {
+     "start": 84.03,
+     "end": 86.91,
+     "text": "Cold dust glows only in the far infrared."
+    },
+    {
+     "start": 86.91,
+     "end": 89.09,
+     "text": "Ordinary stars peak in the visible."
+    },
+    {
+     "start": 89.09,
+     "end": 91.99,
+     "text": "Gas at millions of degrees radiates X-rays."
+    },
+    {
+     "start": 91.99,
+     "end": 95.29,
+     "text": "The leftover heat of the Big Bang is a microwave hiss."
+    },
+    {
+     "start": 95.29,
+     "end": 98.37,
+     "text": "Temperature largely decides where an object shines."
+    },
+    {
+     "start": 98.37,
+     "end": 102.47,
+     "text": "That connection is Wien's law, which we quantify in Chapter Three."
+    },
+    {
+     "start": 102.47,
+     "end": 106.39,
+     "text": "The curve sitting above the spectrum is the atmosphere's transparency."
+    },
+    {
+     "start": 106.39,
+     "end": 110.97,
+     "text": "Air is clear only in the visible, a few infrared windows, and the radio."
+    },
+    {
+     "start": 110.97,
+     "end": 117.59,
+     "text": "Everything else, most of the infrared, all ultraviolet, X-rays and gamma rays, never reaches the ground."
+    },
+    {
+     "start": 117.59,
+     "end": 119.35,
+     "text": "That is why we launch telescopes."
+    }
+   ],
+   "voicedHash": "234e364f5d8e"
+  },
+  "messengers": {
+   "script": "Look behind the panel for a moment. That is SN 1987A, the supernova in the Large Magellanic Cloud. For all of history until the twentieth century, astronomy was simply the study of light. Photons were our only messengers. That has changed, and this explosion is one of the reasons why.\n\nOn the twenty-third of February 1987 a star blew apart. Three hours before its light brightened, detectors in Japan and the United States caught about two dozen neutrinos, ghostly particles released as the core collapsed. Neutrinos barely interact with ordinary matter, so they stream out while the light is still trapped. For the first time we had looked inside a dying star, not merely at its surface.\n\nWe now collect several messengers beyond light. Cosmic rays are atomic nuclei accelerated to nearly the speed of light, raining on Earth from supernova remnants and beyond; they were discovered in 1912. Neutrinos arrive from the Sun’s core, from SN 1987A, and, since 2013, from distant active galaxies, recorded by IceCube. Gravitational waves are ripples in spacetime, predicted by Einstein in 1916 and first detected by LIGO on the fourteenth of September 2015, from two black holes merging 1.3 billion light years away. And meteorites and returned samples are the only astronomy you can hold in your hand.\n\nCombining these channels is called multi-messenger astronomy. Its showcase came on the seventeenth of August 2017: a gravitational-wave signal from two merging neutron stars, followed 1.7 seconds later by a gamma-ray burst and, within days, by light at every wavelength. That single event showed that such mergers forge heavy elements like gold and platinum. The universe no longer speaks only in light; it also speaks in particles, spacetime ripples, and rocks we can touch.",
+   "hash": "ee9b184d9db1",
+   "duration": 114.87,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.36,
+     "text": "Look behind the panel for a moment."
+    },
+    {
+     "start": 2.36,
+     "end": 8.48,
+     "text": "That is SN 1987A, the supernova in the Large Magellanic Cloud."
+    },
+    {
+     "start": 8.48,
+     "end": 13.56,
+     "text": "For all of history until the twentieth century, astronomy was simply the study of light."
+    },
+    {
+     "start": 13.56,
+     "end": 15.86,
+     "text": "Photons were our only messengers."
+    },
+    {
+     "start": 15.86,
+     "end": 19.82,
+     "text": "That has changed, and this explosion is one of the reasons why."
+    },
+    {
+     "start": 19.82,
+     "end": 24.2,
+     "text": "On the twenty-third of February 1987 a star blew apart."
+    },
+    {
+     "start": 24.2,
+     "end": 33.46,
+     "text": "Three hours before its light brightened, detectors in Japan and the United States caught about two dozen neutrinos, ghostly particles released as the core collapsed."
+    },
+    {
+     "start": 33.46,
+     "end": 38.96,
+     "text": "Neutrinos barely interact with ordinary matter, so they stream out while the light is still trapped."
+    },
+    {
+     "start": 38.96,
+     "end": 43.8,
+     "text": "For the first time we had looked inside a dying star, not merely at its surface."
+    },
+    {
+     "start": 43.8,
+     "end": 46.6,
+     "text": "We now collect several messengers beyond light."
+    },
+    {
+     "start": 46.6,
+     "end": 56.44,
+     "text": "Cosmic rays are atomic nuclei accelerated to nearly the speed of light, raining on Earth from supernova remnants and beyond; they were discovered in 1912."
+    },
+    {
+     "start": 56.44,
+     "end": 67.15,
+     "text": "Neutrinos arrive from the Sun’s core, from SN 1987A, and, since 2013, from distant active galaxies, recorded by IceCube."
+    },
+    {
+     "start": 67.15,
+     "end": 80.75,
+     "text": "Gravitational waves are ripples in spacetime, predicted by Einstein in 1916 and first detected by LIGO on the fourteenth of September 2015, from two black holes merging 1. 3 billion light years away."
+    },
+    {
+     "start": 80.75,
+     "end": 85.23,
+     "text": "And meteorites and returned samples are the only astronomy you can hold in your hand."
+    },
+    {
+     "start": 85.23,
+     "end": 88.79,
+     "text": "Combining these channels is called multi-messenger astronomy."
+    },
+    {
+     "start": 88.79,
+     "end": 102.77,
+     "text": "Its showcase came on the seventeenth of August 2017: a gravitational-wave signal from two merging neutron stars, followed 1. 7 seconds later by a gamma-ray burst and, within days, by light at every wavelength."
+    },
+    {
+     "start": 102.77,
+     "end": 107.67,
+     "text": "That single event showed that such mergers forge heavy elements like gold and platinum."
+    },
+    {
+     "start": 107.67,
+     "end": 114.87,
+     "text": "The universe no longer speaks only in light; it also speaks in particles, spacetime ripples, and rocks we can touch."
+    }
+   ],
+   "voicedHash": "096947e861ba"
+  },
+  "physics-explains": {
+   "script": "Let me show you a taste of what the rest of this course will do. We take a law tested in a laboratory and apply it to something we can never touch.\n\nStart with the Sun. Its luminosity, the total power it radiates, is about 3.8 times ten to the twenty-six watts. Einstein's relation says energy equals mass times c squared, so dee m by dee t, the mass lost each second, equals L, the solar luminosity, over c squared. c is the speed of light, nearly three hundred million metres per second. Divide, and the Sun loses about 4.3 billion kilograms per second, some 4.3 million tonnes of matter turned into light. It has done so for 4.6 billion years, losing only about three hundredths of a percent of its mass. A candle spends wax; the Sun spends mass.\n\nI want you to look behind the panel as the view flies toward the galactic centre. There is Sagittarius A star, unseen directly, but stars orbit it. Kepler's third law, Newton's gravity, turns those orbits into a mass. The star S2 has a semi-major axis of about a thousand astronomical units and a period of sixteen point zero five years. M equals four pi squared a cubed, all over G times P squared. M is the mass, a the semi-major axis, P the period, G the gravitational constant. That is about four million solar masses inside a region smaller than our Solar System. The twenty twenty Nobel Prize in Physics was awarded for this measurement.\n\nGeneral relativity, tested with clocks and satellites around the Earth, predicted the glowing ring photographed around this black hole by the Event Horizon Telescope in twenty twenty-two. The same equations, from GPS to the galactic centre.\n\nThe laws of physics are assumed to be the same everywhere and at all times. That universality lets a measurement on Earth tell us the mass of a black hole twenty-six thousand light years away.",
+   "hash": "ff7b1fc6c3b6",
+   "duration": 116.47,
+   "sentences": [
+    {
+     "start": 0,
+     "end": 4.118,
+     "text": "Let me show you a taste of what the rest of this course will do."
+    },
+    {
+     "start": 4.118,
+     "end": 9.395,
+     "text": "We take a law tested in a laboratory and apply it to something we can never touch."
+    },
+    {
+     "start": 9.395,
+     "end": 10.617,
+     "text": "Start with the Sun."
+    },
+    {
+     "start": 10.617,
+     "end": 16.602,
+     "text": "Its luminosity, the total power it radiates, is about 3. 8 times ten to the twenty-six watts."
+    },
+    {
+     "start": 16.602,
+     "end": 26.511,
+     "text": "Einstein's relation says energy equals mass times c squared, so dee m by dee t, the mass lost each second, equals L, the solar luminosity, over c squared."
+    },
+    {
+     "start": 26.511,
+     "end": 31.144,
+     "text": "c is the speed of light, nearly three hundred million metres per second."
+    },
+    {
+     "start": 31.144,
+     "end": 38.866,
+     "text": "Divide, and the Sun loses about 4. 3 billion kilograms per second, some 4. 3 million tonnes of matter turned into light."
+    },
+    {
+     "start": 38.866,
+     "end": 45.237,
+     "text": "It has done so for 4. 6 billion years, losing only about three hundredths of a percent of its mass."
+    },
+    {
+     "start": 45.237,
+     "end": 47.875,
+     "text": "A candle spends wax; the Sun spends mass."
+    },
+    {
+     "start": 47.875,
+     "end": 53.087,
+     "text": "I want you to look behind the panel as the view flies toward the galactic centre."
+    },
+    {
+     "start": 53.087,
+     "end": 57.27,
+     "text": "There is Sagittarius A star, unseen directly, but stars orbit it."
+    },
+    {
+     "start": 57.27,
+     "end": 61.71,
+     "text": "Kepler's third law, Newton's gravity, turns those orbits into a mass."
+    },
+    {
+     "start": 61.71,
+     "end": 69.367,
+     "text": "The star S2 has a semi-major axis of about a thousand astronomical units and a period of sixteen point zero five years."
+    },
+    {
+     "start": 69.367,
+     "end": 73.292,
+     "text": "M equals four pi squared a cubed, all over G times P squared."
+    },
+    {
+     "start": 73.292,
+     "end": 78.505,
+     "text": "M is the mass, a the semi-major axis, P the period, G the gravitational constant."
+    },
+    {
+     "start": 78.505,
+     "end": 84.039,
+     "text": "That is about four million solar masses inside a region smaller than our Solar System."
+    },
+    {
+     "start": 84.039,
+     "end": 88.8,
+     "text": "The twenty twenty Nobel Prize in Physics was awarded for this measurement."
+    },
+    {
+     "start": 88.8,
+     "end": 100.833,
+     "text": "General relativity, tested with clocks and satellites around the Earth, predicted the glowing ring photographed around this black hole by the Event Horizon Telescope in twenty twenty-two."
+    },
+    {
+     "start": 100.833,
+     "end": 104.18,
+     "text": "The same equations, from GPS to the galactic centre."
+    },
+    {
+     "start": 104.18,
+     "end": 109.006,
+     "text": "The laws of physics are assumed to be the same everywhere and at all times."
+    },
+    {
+     "start": 109.006,
+     "end": 116.47,
+     "text": "That universality lets a measurement on Earth tell us the mass of a black hole twenty-six thousand light years away."
+    }
+   ],
+   "voicedHash": "a6d714a838f8"
+  },
+  "road-ahead": {
+   "script": "Look behind the panel at the whole planetary system slowly circling the Sun. None of this is strictly necessary for survival. We study the universe because we are the kind of creature that wants to know where it is. Every culture has looked up and told stories. What the Greeks began, and what Copernicus, Kepler, Newton and the spectroscopists continued, is the long project of replacing stories with explanations that can be tested, and of finding that those explanations are stranger and more beautiful than the stories.\n\nThe course ahead follows that path. We put the Solar System on a firm footing with elliptical orbits and Kepler’s laws derived from Newton’s gravity, then learn to read light as brightness, colour and spectra so we can turn it into temperatures, distances and compositions. With those tools we build stars from the inside out, follow their births and deaths, and step outside the Milky Way to galaxies and the expanding universe.\n\nNewton’s gravitation in sixteen eighty-seven turned a description of orbits into an explanation; spectroscopy from eighteen fourteen to eighteen fifty-nine made the composition of stars knowable. Almost all our information arrives as electromagnetic radiation. The speed of light c equals wavelength lambda times frequency nu: c is that fixed speed in vacuum, lambda the distance between wave crests, nu how many crests pass each second, and their product stays constant because the wave travels at one speed. Photon energy E equals Planck’s constant h times frequency nu: h sets the scale, so higher-frequency light carries more energy per photon, which is why colour and spectrum reveal temperature and composition. The atmosphere blocks most wavelengths, so each band needs its own telescope, many of them in space. Neutrinos, cosmic rays and gravitational waves are new messengers; combining them is multi-messenger astronomy. The universality of physical law lets laboratory physics measure the Sun’s mass loss and weigh a black hole. That is the road we take next.",
+   "hash": "5d4a5d7acfb9",
+   "duration": 119.35,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 5.04,
+     "text": "Look behind the panel at the whole planetary system slowly circling the Sun."
+    },
+    {
+     "start": 5.04,
+     "end": 8.06,
+     "text": "None of this is strictly necessary for survival."
+    },
+    {
+     "start": 8.06,
+     "end": 12.66,
+     "text": "We study the universe because we are the kind of creature that wants to know where it is."
+    },
+    {
+     "start": 12.66,
+     "end": 15.5,
+     "text": "Every culture has looked up and told stories."
+    },
+    {
+     "start": 15.5,
+     "end": 30.48,
+     "text": "What the Greeks began, and what Copernicus, Kepler, Newton and the spectroscopists continued, is the long project of replacing stories with explanations that can be tested, and of finding that those explanations are stranger and more beautiful than the stories."
+    },
+    {
+     "start": 30.48,
+     "end": 32.72,
+     "text": "The course ahead follows that path."
+    },
+    {
+     "start": 32.72,
+     "end": 45.92,
+     "text": "We put the Solar System on a firm footing with elliptical orbits and Kepler’s laws derived from Newton’s gravity, then learn to read light as brightness, colour and spectra so we can turn it into temperatures, distances and compositions."
+    },
+    {
+     "start": 45.92,
+     "end": 54.86,
+     "text": "With those tools we build stars from the inside out, follow their births and deaths, and step outside the Milky Way to galaxies and the expanding universe."
+    },
+    {
+     "start": 54.86,
+     "end": 65.61,
+     "text": "Newton’s gravitation in sixteen eighty-seven turned a description of orbits into an explanation; spectroscopy from eighteen fourteen to eighteen fifty-nine made the composition of stars knowable."
+    },
+    {
+     "start": 65.61,
+     "end": 69.43,
+     "text": "Almost all our information arrives as electromagnetic radiation."
+    },
+    {
+     "start": 69.43,
+     "end": 85.03,
+     "text": "The speed of light c equals wavelength lambda times frequency nu: c is that fixed speed in vacuum, lambda the distance between wave crests, nu how many crests pass each second, and their product stays constant because the wave travels at one speed."
+    },
+    {
+     "start": 85.03,
+     "end": 97.99,
+     "text": "Photon energy E equals Planck’s constant h times frequency nu: h sets the scale, so higher-frequency light carries more energy per photon, which is why colour and spectrum reveal temperature and composition."
+    },
+    {
+     "start": 97.99,
+     "end": 104.21,
+     "text": "The atmosphere blocks most wavelengths, so each band needs its own telescope, many of them in space."
+    },
+    {
+     "start": 104.21,
+     "end": 111.27,
+     "text": "Neutrinos, cosmic rays and gravitational waves are new messengers; combining them is multi-messenger astronomy."
+    },
+    {
+     "start": 111.27,
+     "end": 117.61,
+     "text": "The universality of physical law lets laboratory physics measure the Sun’s mass loss and weigh a black hole."
+    },
+    {
+     "start": 117.61,
+     "end": 119.35,
+     "text": "That is the road we take next."
+    }
+   ],
+   "voicedHash": "ca4ca4d3723a"
+  },
+  "telescopes": {
+   "script": "Look with me behind the panel. That is Hubble, launched in nineteen ninety, above the blurring of the atmosphere, seeing from the near ultraviolet into the near infrared. Its successor, the James Webb Space Telescope, launched in twenty twenty-one, carries a six and a half metre mirror cooled to minus two hundred thirty-three degrees Celsius. Cool it that far, or the telescope's own warmth drowns the faint infrared glow of the first galaxies. Neither of them could do that job from the ground.\n\nThe table tells you why. Our air is not a clear pane; it is a set of windows. Radio waves, from metres down to centimetres, get through, so the VLA, FAST, LOFAR, and the Event Horizon Telescope can study pulsars, cold hydrogen, jets, and black hole shadows. Millimetre and sub-millimetre light needs high, dry sites such as ALMA, or space, as with Planck, and it shows molecular clouds, planets still forming, and the cosmic microwave background. Infrared only partly arrives, which is why Webb, Spitzer, and the VLT matter for dust-shrouded stars, exoplanets, and the earliest galaxies. Visible light is the friendly window: Hubble, Keck, Rubin, and Gaia, for stars, galaxies, positions, and spectra. Ultraviolet does not reach the ground; Hubble and GALEX catch hot young stars and stellar atmospheres. X-rays need Chandra and XMM-Newton: million-degree gas, accretion onto black holes, supernova remnants. Gamma rays need Fermi and Swift: bursts, pulsars, and matter annihilating with antimatter.\n\nTechnology set the pace of discovery. Radio astronomy began with an accidental detection in nineteen thirty-two, then pulsars in nineteen sixty-seven and the cosmic microwave background in nineteen sixty-five. X-ray astronomy had to wait for rockets and satellites, and it found the first black hole candidate, Cygnus X-1, between nineteen sixty-four and nineteen seventy-one. Each new window opened a new astronomy.\n\nEvery band in that table is the same physics, electromagnetic waves, seen with a different instrument. A complete picture of any object needs several of them at once.",
+   "hash": "8c40ec0f15dd",
+   "duration": 133.11,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.1,
+     "text": "Look with me behind the panel."
+    },
+    {
+     "start": 2.1,
+     "end": 10.34,
+     "text": "That is Hubble, launched in nineteen ninety, above the blurring of the atmosphere, seeing from the near ultraviolet into the near infrared."
+    },
+    {
+     "start": 10.34,
+     "end": 20.64,
+     "text": "Its successor, the James Webb Space Telescope, launched in twenty twenty-one, carries a six and a half metre mirror cooled to minus two hundred thirty-three degrees Celsius."
+    },
+    {
+     "start": 20.64,
+     "end": 26.78,
+     "text": "Cool it that far, or the telescope's own warmth drowns the faint infrared glow of the first galaxies."
+    },
+    {
+     "start": 26.78,
+     "end": 29.44,
+     "text": "Neither of them could do that job from the ground."
+    },
+    {
+     "start": 29.44,
+     "end": 31.2,
+     "text": "The table tells you why."
+    },
+    {
+     "start": 31.2,
+     "end": 34.86,
+     "text": "Our air is not a clear pane; it is a set of windows."
+    },
+    {
+     "start": 34.86,
+     "end": 48.94,
+     "text": "Radio waves, from metres down to centimetres, get through, so the VLA, FAST, LOFAR, and the Event Horizon Telescope can study pulsars, cold hydrogen, jets, and black hole shadows."
+    },
+    {
+     "start": 48.94,
+     "end": 61.94,
+     "text": "Millimetre and sub-millimetre light needs high, dry sites such as ALMA, or space, as with Planck, and it shows molecular clouds, planets still forming, and the cosmic microwave background."
+    },
+    {
+     "start": 61.94,
+     "end": 71.51,
+     "text": "Infrared only partly arrives, which is why Webb, Spitzer, and the VLT matter for dust-shrouded stars, exoplanets, and the earliest galaxies."
+    },
+    {
+     "start": 71.51,
+     "end": 79.05,
+     "text": "Visible light is the friendly window: Hubble, Keck, Rubin, and Gaia, for stars, galaxies, positions, and spectra."
+    },
+    {
+     "start": 79.05,
+     "end": 85.37,
+     "text": "Ultraviolet does not reach the ground; Hubble and GALEX catch hot young stars and stellar atmospheres."
+    },
+    {
+     "start": 85.37,
+     "end": 92.95,
+     "text": "X-rays need Chandra and XMM-Newton: million-degree gas, accretion onto black holes, supernova remnants."
+    },
+    {
+     "start": 92.95,
+     "end": 98.97,
+     "text": "Gamma rays need Fermi and Swift: bursts, pulsars, and matter annihilating with antimatter."
+    },
+    {
+     "start": 98.97,
+     "end": 101.39,
+     "text": "Technology set the pace of discovery."
+    },
+    {
+     "start": 101.39,
+     "end": 111.53,
+     "text": "Radio astronomy began with an accidental detection in nineteen thirty-two, then pulsars in nineteen sixty-seven and the cosmic microwave background in nineteen sixty-five."
+    },
+    {
+     "start": 111.53,
+     "end": 121.23,
+     "text": "X-ray astronomy had to wait for rockets and satellites, and it found the first black hole candidate, Cygnus X-1, between nineteen sixty-four and nineteen seventy-one."
+    },
+    {
+     "start": 121.23,
+     "end": 123.79,
+     "text": "Each new window opened a new astronomy."
+    },
+    {
+     "start": 123.79,
+     "end": 129.79,
+     "text": "Every band in that table is the same physics, electromagnetic waves, seen with a different instrument."
+    },
+    {
+     "start": 129.79,
+     "end": 133.11,
+     "text": "A complete picture of any object needs several of them at once."
+    }
+   ],
+   "voicedHash": "1a13464aa6fd"
+  }
+ }
+}

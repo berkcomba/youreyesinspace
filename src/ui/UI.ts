@@ -1,7 +1,9 @@
 import type { CelestialBody } from '../core/CelestialBody';
 import { MissionPanel, type MissionPanelHost } from './MissionPanel';
 import { TourPanel } from './TourPanel';
+import { LessonPanel } from './LessonPanel';
 import type { TourPlayer } from '../core/TourPlayer';
+import type { LessonPlayer } from '../core/LessonPlayer';
 import { phaseLabel } from '../astro/mission';
 import { binaryPartner } from '../astro/binary';
 import { _, fixed, fmtNum, LOCALES, currentLocale, setLocale, type Locale } from '../i18n';
@@ -33,6 +35,7 @@ export interface UIHost extends MissionPanelHost {
   camera: CameraController;
   settings: Settings;
   tours: TourPlayer;
+  lessons: LessonPlayer;
   starPoints: StarPoints;
   galaxySprites: GalaxySprites;
   landmarkSprites: LandmarkSprites;
@@ -142,6 +145,7 @@ export class UI {
   private readonly placesMenu = $('places-menu');
   readonly missionPanel: MissionPanel;
   readonly tourPanel: TourPanel;
+  readonly lessonPanel: LessonPanel;
   private lastInfoUpdate = 0;
   private toastTimer = 0;
   private searchIndex = -1;
@@ -162,8 +166,9 @@ export class UI {
     $('btn-settings').addEventListener('click', () => this.toggleSettings());
     this.missionPanel = new MissionPanel(host);
     $('btn-mission').addEventListener('click', () => this.toggleMission());
-    this.tourPanel = new TourPanel(host.tours, (show) => { if (show) { this.toggleSettings(false); this.missionPanel.toggle(false); } });
+    this.tourPanel = new TourPanel(host.tours, (show) => { if (show) { this.toggleSettings(false); this.missionPanel.toggle(false); this.lessonPanel.toggle(false); } });
     $('btn-tours').addEventListener('click', () => this.toggleTours());
+    this.lessonPanel = new LessonPanel(host.lessons, (show) => { if (show) { this.toggleSettings(false); this.missionPanel.toggle(false); this.tourPanel.toggle(false); } });
     // phones: the info sheet starts folded (name + actions) so the view stays visible
     if (window.matchMedia('(max-width: 700px)').matches) this.info.classList.add('collapsed');
     $('info-expand').addEventListener('click', () => this.info.classList.toggle('collapsed'));
@@ -479,7 +484,7 @@ export class UI {
 
   toggleMission(force?: boolean): void {
     const show = force ?? this.missionPanel.panel.hidden === true;
-    if (show) { this.toggleSettings(false); this.tourPanel.toggle(false); }
+    if (show) { this.toggleSettings(false); this.tourPanel.toggle(false); this.lessonPanel.toggle(false); }
     this.missionPanel.toggle(show);
   }
 
@@ -488,9 +493,14 @@ export class UI {
     this.tourPanel.toggle(show);
   }
 
+  toggleAcademy(force?: boolean): void {
+    const show = force ?? this.lessonPanel.panel.hidden === true;
+    this.lessonPanel.toggle(show);
+  }
+
   toggleSettings(force?: boolean): void {
     const show = force ?? this.settingsPanel.hidden === true;
-    if (show) { this.missionPanel.toggle(false); this.tourPanel.toggle(false); }
+    if (show) { this.missionPanel.toggle(false); this.tourPanel.toggle(false); this.lessonPanel.toggle(false); }
     this.settingsPanel.hidden = !show;
     $('btn-settings').classList.toggle('active', show);
   }

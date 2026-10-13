@@ -1,0 +1,1025 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "altaz": {
+   "script": "When I want to show a friend a star, I do not reach for a catalogue. I say how high it is, and which compass direction to face. That everyday description is the altitude-azimuth system, also called the horizon system.\n\nLook at the sphere behind the panel. The horizon is the great circle where the sky meets the ground. The zenith is the point straight overhead, and its opposite, under your feet, is the nadir. The meridian is the north-south great circle through the zenith and the north and south points. A star reaches its highest point when it crosses that meridian.\n\nAltitude, h, is the angle of the star above the horizon. Zero degrees means the star sits on the horizon, and ninety degrees means it is at the zenith. Azimuth, A, is the compass angle measured along the horizon from north, through east. North is zero degrees, east is ninety degrees, south is a hundred and eighty degrees, and west is two hundred and seventy degrees.\n\nDrag the sky in the widget until you can see the star and the arcs that mark its altitude and azimuth, and read those numbers off. Then press play. Both coordinates change continuously, because the Earth is turning. Move the latitude slider and the same star sits at a different height and a different bearing. Nudge the sidereal time and you are simply choosing a different moment, so the numbers move again.\n\nAltitude and azimuth describe where a star is for you, right now. That is useful for pointing a telescope and useless for a catalogue. Horizon coordinates depend on the observer's latitude, longitude, and the time, down to the second. Two astronomers comparing notes need a system that does not.",
+   "hash": "29586456a342",
+   "duration": 97.59,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4.34,
+     "text": "When I want to show a friend a star, I do not reach for a catalogue."
+    },
+    {
+     "start": 4.34,
+     "end": 8.38,
+     "text": "I say how high it is, and which compass direction to face."
+    },
+    {
+     "start": 8.38,
+     "end": 14.44,
+     "text": "That everyday description is the altitude-azimuth system, also called the horizon system."
+    },
+    {
+     "start": 14.44,
+     "end": 16.54,
+     "text": "Look at the sphere behind the panel."
+    },
+    {
+     "start": 16.54,
+     "end": 20.26,
+     "text": "The horizon is the great circle where the sky meets the ground."
+    },
+    {
+     "start": 20.26,
+     "end": 25.78,
+     "text": "The zenith is the point straight overhead, and its opposite, under your feet, is the nadir."
+    },
+    {
+     "start": 25.78,
+     "end": 30.9,
+     "text": "The meridian is the north-south great circle through the zenith and the north and south points."
+    },
+    {
+     "start": 30.9,
+     "end": 34.56,
+     "text": "A star reaches its highest point when it crosses that meridian."
+    },
+    {
+     "start": 34.56,
+     "end": 38.84,
+     "text": "Altitude, h, is the angle of the star above the horizon."
+    },
+    {
+     "start": 38.84,
+     "end": 44.42,
+     "text": "Zero degrees means the star sits on the horizon, and ninety degrees means it is at the zenith."
+    },
+    {
+     "start": 44.42,
+     "end": 50.03,
+     "text": "Azimuth, A, is the compass angle measured along the horizon from north, through east."
+    },
+    {
+     "start": 50.03,
+     "end": 57.83,
+     "text": "North is zero degrees, east is ninety degrees, south is a hundred and eighty degrees, and west is two hundred and seventy degrees."
+    },
+    {
+     "start": 57.83,
+     "end": 64.87,
+     "text": "Drag the sky in the widget until you can see the star and the arcs that mark its altitude and azimuth, and read those numbers off."
+    },
+    {
+     "start": 64.87,
+     "end": 66.23,
+     "text": "Then press play."
+    },
+    {
+     "start": 66.23,
+     "end": 70.29,
+     "text": "Both coordinates change continuously, because the Earth is turning."
+    },
+    {
+     "start": 70.29,
+     "end": 75.03,
+     "text": "Move the latitude slider and the same star sits at a different height and a different bearing."
+    },
+    {
+     "start": 75.03,
+     "end": 80.47,
+     "text": "Nudge the sidereal time and you are simply choosing a different moment, so the numbers move again."
+    },
+    {
+     "start": 80.47,
+     "end": 84.69,
+     "text": "Altitude and azimuth describe where a star is for you, right now."
+    },
+    {
+     "start": 84.69,
+     "end": 88.45,
+     "text": "That is useful for pointing a telescope and useless for a catalogue."
+    },
+    {
+     "start": 88.45,
+     "end": 94.55,
+     "text": "Horizon coordinates depend on the observer's latitude, longitude, and the time, down to the second."
+    },
+    {
+     "start": 94.55,
+     "end": 97.59,
+     "text": "Two astronomers comparing notes need a system that does not."
+    }
+   ],
+   "voicedHash": "328f269a3aad"
+  },
+  "diurnal": {
+   "script": "Look at the celestial sphere you can drag. Spin it, then move the latitude and sidereal-time sliders. You will see the horizon, the zenith overhead, the meridian, the celestial pole and equator, and a star with its altitude and azimuth arcs. Watch the dotted daily track as you change latitude.\n\nEarth turns eastward, so the whole sky appears to wheel westward about an axis through the celestial poles, the points where our spin axis, extended, pierces the sky. Every star traces a circle around the pole once a day. Stars close enough to the pole never set; they are circumpolar. Raise the latitude and that track stays above the horizon. Drop it toward the equator and almost everything rises and sets.\n\nThere is a simple relation. The altitude of the north celestial pole equals your latitude: h pole equals phi. h pole is how high the pole stands above your horizon, and phi is your geographic latitude. The relation holds because the pole is the sky’s image of Earth’s axis, so its height above the horizon is exactly how far you are from the equator. At the north pole the celestial pole is overhead; at the equator it lies on the horizon. Sailors measured the height of Polaris and read off their latitude. A star is circumpolar when its declination delta is greater than ninety degrees minus phi. Declination is the star’s sky latitude, so if it lies closer to the pole than your co-latitude, its circle never meets the horizon.\n\nOne rotation relative to the stars takes twenty-three hours, fifty-six minutes, and about four seconds, a sidereal day. One rotation relative to the Sun takes twenty-four hours, a solar day. While Earth turns once it also moves along its orbit by three hundred sixty degrees divided by about three hundred sixty-five days, roughly one degree a day, more precisely about zero point nine eight six degrees. Twenty-four hours times that fraction of a circle is about four minutes, the three minutes and fifty-six seconds on the screen. Over a year those extras add up to one whole extra turn: about three hundred sixty-six and a quarter sidereal days equal three hundred sixty-five and a quarter solar days. A star therefore rises about four minutes earlier each night, winter constellations differ from summer ones, and observatories keep sidereal time.",
+   "hash": "7ec2d11fb8c3",
+   "duration": 139.51,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.78,
+     "text": "Look at the celestial sphere you can drag."
+    },
+    {
+     "start": 2.78,
+     "end": 6.86,
+     "text": "Spin it, then move the latitude and sidereal-time sliders."
+    },
+    {
+     "start": 6.86,
+     "end": 16.42,
+     "text": "You will see the horizon, the zenith overhead, the meridian, the celestial pole and equator, and a star with its altitude and azimuth arcs."
+    },
+    {
+     "start": 16.42,
+     "end": 19.72,
+     "text": "Watch the dotted daily track as you change latitude."
+    },
+    {
+     "start": 19.72,
+     "end": 30.26,
+     "text": "Earth turns eastward, so the whole sky appears to wheel westward about an axis through the celestial poles, the points where our spin axis, extended, pierces the sky."
+    },
+    {
+     "start": 30.26,
+     "end": 33.68,
+     "text": "Every star traces a circle around the pole once a day."
+    },
+    {
+     "start": 33.68,
+     "end": 37.88,
+     "text": "Stars close enough to the pole never set; they are circumpolar."
+    },
+    {
+     "start": 37.88,
+     "end": 41.32,
+     "text": "Raise the latitude and that track stays above the horizon."
+    },
+    {
+     "start": 41.32,
+     "end": 45.24,
+     "text": "Drop it toward the equator and almost everything rises and sets."
+    },
+    {
+     "start": 45.24,
+     "end": 46.94,
+     "text": "There is a simple relation."
+    },
+    {
+     "start": 46.94,
+     "end": 52.88,
+     "text": "The altitude of the north celestial pole equals your latitude: h pole equals phi."
+    },
+    {
+     "start": 52.88,
+     "end": 58.62,
+     "text": "h pole is how high the pole stands above your horizon, and phi is your geographic latitude."
+    },
+    {
+     "start": 58.62,
+     "end": 67.06,
+     "text": "The relation holds because the pole is the sky’s image of Earth’s axis, so its height above the horizon is exactly how far you are from the equator."
+    },
+    {
+     "start": 67.06,
+     "end": 72.49,
+     "text": "At the north pole the celestial pole is overhead; at the equator it lies on the horizon."
+    },
+    {
+     "start": 72.49,
+     "end": 76.15,
+     "text": "Sailors measured the height of Polaris and read off their latitude."
+    },
+    {
+     "start": 76.15,
+     "end": 81.67,
+     "text": "A star is circumpolar when its declination delta is greater than ninety degrees minus phi."
+    },
+    {
+     "start": 81.67,
+     "end": 89.83,
+     "text": "Declination is the star’s sky latitude, so if it lies closer to the pole than your co-latitude, its circle never meets the horizon."
+    },
+    {
+     "start": 89.83,
+     "end": 97.65,
+     "text": "One rotation relative to the stars takes twenty-three hours, fifty-six minutes, and about four seconds, a sidereal day."
+    },
+    {
+     "start": 97.65,
+     "end": 102.15,
+     "text": "One rotation relative to the Sun takes twenty-four hours, a solar day."
+    },
+    {
+     "start": 102.15,
+     "end": 114.41,
+     "text": "While Earth turns once it also moves along its orbit by three hundred sixty degrees divided by about three hundred sixty-five days, roughly one degree a day, more precisely about zero point nine eight six degrees."
+    },
+    {
+     "start": 114.41,
+     "end": 121.27,
+     "text": "Twenty-four hours times that fraction of a circle is about four minutes, the three minutes and fifty-six seconds on the screen."
+    },
+    {
+     "start": 121.27,
+     "end": 130.97,
+     "text": "Over a year those extras add up to one whole extra turn: about three hundred sixty-six and a quarter sidereal days equal three hundred sixty-five and a quarter solar days."
+    },
+    {
+     "start": 130.97,
+     "end": 139.51,
+     "text": "A star therefore rises about four minutes earlier each night, winter constellations differ from summer ones, and observatories keep sidereal time."
+    }
+   ],
+   "voicedHash": "7b81b19a6e09"
+  },
+  "ecliptic": {
+   "script": "Look behind the panel. Near Earth, the equatorial and ecliptic grids cross on the sky. Earth's rotation axis tilts twenty-three point four four degrees from the perpendicular to its orbit, so the Sun's path, the ecliptic, leans that far from the celestial equator. The circles meet at the vernal and autumnal equinoxes. The Sun is farthest north at the summer solstice, declination plus twenty-three point four four degrees, around the twenty-first of June, and farthest south at the winter solstice, declination minus twenty-three point four four degrees, around the twenty-first of December.\n\nSine of delta-sun equals sine of epsilon times sine of lambda-sun. Delta-sun is the Sun's declination, north or south of the celestial equator. Epsilon is the obliquity, twenty-three point four four degrees. Lambda-sun is the Sun's ecliptic longitude, zero at the vernal equinox. Sine of lambda-sun measures progress from the equinox; sine of epsilon scales it by the tilt. So declination is zero at the equinoxes and plus or minus epsilon at the solstices.\n\nDeclination drives the seasons. A higher Sun means longer days and steeper, more concentrated sunlight. Noon altitude is ninety degrees minus latitude plus declination. At latitude phi of forty-one degrees, June noon is ninety minus forty-one plus twenty-three point four four, seventy-two point four degrees up. December noon is ninety minus forty-one minus twenty-three point four four, twenty-five point six degrees. I picture a flashlight tipped toward the floor: the same light spreads thin. And here is the surprise. Distance barely matters. Earth is actually closest to the Sun in early January.\n\nThe twelve zodiac constellations are the ones the ecliptic passes through. Precession, next, puts the Sun about a month later in each sign than twenty-five hundred years ago, and it crosses a thirteenth, Ophiuchus.\n\nEquatorial coordinates are tied to Earth's equator. The ecliptic is tied to its orbit. The twenty-three point four four degrees between them is the single angle behind the seasons, the solstices, and the zodiac.",
+   "hash": "6161df781085",
+   "duration": 127.99,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 1.84,
+     "text": "Look behind the panel."
+    },
+    {
+     "start": 1.84,
+     "end": 6.42,
+     "text": "Near Earth, the equatorial and ecliptic grids cross on the sky."
+    },
+    {
+     "start": 6.42,
+     "end": 17.12,
+     "text": "Earth's rotation axis tilts twenty-three point four four degrees from the perpendicular to its orbit, so the Sun's path, the ecliptic, leans that far from the celestial equator."
+    },
+    {
+     "start": 17.12,
+     "end": 20.58,
+     "text": "The circles meet at the vernal and autumnal equinoxes."
+    },
+    {
+     "start": 20.58,
+     "end": 36.28,
+     "text": "The Sun is farthest north at the summer solstice, declination plus twenty-three point four four degrees, around the twenty-first of June, and farthest south at the winter solstice, declination minus twenty-three point four four degrees, around the twenty-first of December."
+    },
+    {
+     "start": 36.28,
+     "end": 40.86,
+     "text": "Sine of delta-sun equals sine of epsilon times sine of lambda-sun."
+    },
+    {
+     "start": 40.86,
+     "end": 45.76,
+     "text": "Delta-sun is the Sun's declination, north or south of the celestial equator."
+    },
+    {
+     "start": 45.76,
+     "end": 49.8,
+     "text": "Epsilon is the obliquity, twenty-three point four four degrees."
+    },
+    {
+     "start": 49.8,
+     "end": 54.6,
+     "text": "Lambda-sun is the Sun's ecliptic longitude, zero at the vernal equinox."
+    },
+    {
+     "start": 54.6,
+     "end": 60.36,
+     "text": "Sine of lambda-sun measures progress from the equinox; sine of epsilon scales it by the tilt."
+    },
+    {
+     "start": 60.36,
+     "end": 65.85,
+     "text": "So declination is zero at the equinoxes and plus or minus epsilon at the solstices."
+    },
+    {
+     "start": 65.85,
+     "end": 67.97,
+     "text": "Declination drives the seasons."
+    },
+    {
+     "start": 67.97,
+     "end": 72.37,
+     "text": "A higher Sun means longer days and steeper, more concentrated sunlight."
+    },
+    {
+     "start": 72.37,
+     "end": 76.81,
+     "text": "Noon altitude is ninety degrees minus latitude plus declination."
+    },
+    {
+     "start": 76.81,
+     "end": 85.83,
+     "text": "At latitude phi of forty-one degrees, June noon is ninety minus forty-one plus twenty-three point four four, seventy-two point four degrees up."
+    },
+    {
+     "start": 85.83,
+     "end": 92.59,
+     "text": "December noon is ninety minus forty-one minus twenty-three point four four, twenty-five point six degrees."
+    },
+    {
+     "start": 92.59,
+     "end": 96.89,
+     "text": "I picture a flashlight tipped toward the floor: the same light spreads thin."
+    },
+    {
+     "start": 96.89,
+     "end": 98.49,
+     "text": "And here is the surprise."
+    },
+    {
+     "start": 98.49,
+     "end": 100.25,
+     "text": "Distance barely matters."
+    },
+    {
+     "start": 100.25,
+     "end": 103.57,
+     "text": "Earth is actually closest to the Sun in early January."
+    },
+    {
+     "start": 103.57,
+     "end": 107.65,
+     "text": "The twelve zodiac constellations are the ones the ecliptic passes through."
+    },
+    {
+     "start": 107.65,
+     "end": 116.39,
+     "text": "Precession, next, puts the Sun about a month later in each sign than twenty-five hundred years ago, and it crosses a thirteenth, Ophiuchus."
+    },
+    {
+     "start": 116.39,
+     "end": 119.25,
+     "text": "Equatorial coordinates are tied to Earth's equator."
+    },
+    {
+     "start": 119.25,
+     "end": 121.35,
+     "text": "The ecliptic is tied to its orbit."
+    },
+    {
+     "start": 121.35,
+     "end": 127.99,
+     "text": "The twenty-three point four four degrees between them is the single angle behind the seasons, the solstices, and the zodiac."
+    }
+   ],
+   "voicedHash": "2e561802c0cb"
+  },
+  "equatorial": {
+   "script": "Look behind the panel. We have flown in to Earth, and the equatorial grid and the ecliptic are drawn on the sky.\n\nAltitude and azimuth change with the clock. Attach the grid to the sky itself, like ink on a spinning globe, and let it rotate with the stars. Project the Earth's equator onto the celestial sphere. That is the celestial equator. Project the poles: the celestial poles. A star's place on this grid is fixed. It does not change as the Earth turns. Slower changes we will come to in a moment.\n\nDeclination, delta, is the angle north or south of the celestial equator. North is positive, south is negative, from minus ninety degrees to plus ninety degrees. It is the celestial equivalent of latitude.\n\nRight ascension, alpha, is measured eastward along the celestial equator from the vernal equinox. We give it in hours, minutes and seconds. Twenty-four hours equal three hundred and sixty degrees, so one hour equals fifteen degrees, one minute of time equals fifteen arcminutes, and one second of time equals fifteen arcseconds.\n\nWhy hours? Because the sky turns fifteen degrees per hour. Right ascension is a clock reading as much as an angle. A star with alpha equal to six hours crosses your meridian six sidereal hours after the vernal equinox does.\n\nThe vernal equinox is where the Sun crosses the celestial equator heading north, around the twentieth of March. It is the zero of right ascension, the sky's Greenwich. The ecliptic is the Sun's annual path, a great circle tilted twenty-three point four four degrees to the celestial equator, crossing it at the two equinoxes.\n\nSwitch the widget to the equatorial view. Drag the sphere, and try the latitude and sidereal time sliders. As the sky turns, alpha and delta stay fixed while altitude, h, and azimuth, A, run. Polaris, on the table, sits within a degree of the north celestial pole.",
+   "hash": "f30325df5eb2",
+   "duration": 113.91,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 1.76,
+     "text": "Look behind the panel."
+    },
+    {
+     "start": 1.76,
+     "end": 7.3,
+     "text": "We have flown in to Earth, and the equatorial grid and the ecliptic are drawn on the sky."
+    },
+    {
+     "start": 7.3,
+     "end": 10.3,
+     "text": "Altitude and azimuth change with the clock."
+    },
+    {
+     "start": 10.3,
+     "end": 16.8,
+     "text": "Attach the grid to the sky itself, like ink on a spinning globe, and let it rotate with the stars."
+    },
+    {
+     "start": 16.8,
+     "end": 20,
+     "text": "Project the Earth's equator onto the celestial sphere."
+    },
+    {
+     "start": 20,
+     "end": 22.1,
+     "text": "That is the celestial equator."
+    },
+    {
+     "start": 22.1,
+     "end": 25.06,
+     "text": "Project the poles: the celestial poles."
+    },
+    {
+     "start": 25.06,
+     "end": 27.52,
+     "text": "A star's place on this grid is fixed."
+    },
+    {
+     "start": 27.52,
+     "end": 29.9,
+     "text": "It does not change as the Earth turns."
+    },
+    {
+     "start": 29.9,
+     "end": 32.42,
+     "text": "Slower changes we will come to in a moment."
+    },
+    {
+     "start": 32.42,
+     "end": 37.34,
+     "text": "Declination, delta, is the angle north or south of the celestial equator."
+    },
+    {
+     "start": 37.34,
+     "end": 42.9,
+     "text": "North is positive, south is negative, from minus ninety degrees to plus ninety degrees."
+    },
+    {
+     "start": 42.9,
+     "end": 45.5,
+     "text": "It is the celestial equivalent of latitude."
+    },
+    {
+     "start": 45.5,
+     "end": 51.26,
+     "text": "Right ascension, alpha, is measured eastward along the celestial equator from the vernal equinox."
+    },
+    {
+     "start": 51.26,
+     "end": 53.86,
+     "text": "We give it in hours, minutes and seconds."
+    },
+    {
+     "start": 53.86,
+     "end": 66.29,
+     "text": "Twenty-four hours equal three hundred and sixty degrees, so one hour equals fifteen degrees, one minute of time equals fifteen arcminutes, and one second of time equals fifteen arcseconds. Why hours?"
+    },
+    {
+     "start": 66.29,
+     "end": 69.23,
+     "text": "Because the sky turns fifteen degrees per hour."
+    },
+    {
+     "start": 69.23,
+     "end": 72.27,
+     "text": "Right ascension is a clock reading as much as an angle."
+    },
+    {
+     "start": 72.27,
+     "end": 78.73,
+     "text": "A star with alpha equal to six hours crosses your meridian six sidereal hours after the vernal equinox does."
+    },
+    {
+     "start": 78.73,
+     "end": 84.69,
+     "text": "The vernal equinox is where the Sun crosses the celestial equator heading north, around the twentieth of March."
+    },
+    {
+     "start": 84.69,
+     "end": 88.05,
+     "text": "It is the zero of right ascension, the sky's Greenwich."
+    },
+    {
+     "start": 88.05,
+     "end": 97.15,
+     "text": "The ecliptic is the Sun's annual path, a great circle tilted twenty-three point four four degrees to the celestial equator, crossing it at the two equinoxes."
+    },
+    {
+     "start": 97.15,
+     "end": 99.51,
+     "text": "Switch the widget to the equatorial view."
+    },
+    {
+     "start": 99.51,
+     "end": 103.63,
+     "text": "Drag the sphere, and try the latitude and sidereal time sliders."
+    },
+    {
+     "start": 103.63,
+     "end": 109.95,
+     "text": "As the sky turns, alpha and delta stay fixed while altitude, h, and azimuth, A, run."
+    },
+    {
+     "start": 109.95,
+     "end": 113.91,
+     "text": "Polaris, on the table, sits within a degree of the north celestial pole."
+    }
+   ],
+   "voicedHash": "01f4c3fd5e5b"
+  },
+  "hour-angle": {
+   "script": "The stars carry a fixed grid, and your horizon does not. What joins them is the local sidereal time, the right ascension crossing your meridian.\n\nI read hour angle as how far that clock has run past the star. H equals local sidereal time minus alpha, and alpha is the catalogue right ascension. H is zero at transit, the highest point. If H is negative, the star is still rising toward the meridian. Use hours or degrees, matched to the sidereal time.\n\nAltitude comes from the spherical law of cosines on the triangle of pole, zenith, and star. Sine of h equals sine of phi times sine of delta, plus cosine of phi times cosine of delta times cosine of H. h is altitude above the horizon, phi is your latitude, delta is declination. This is what a telescope-pointing computer runs when it slews.\n\nAzimuth is the companion formula. Tangent of A equals sine of H, divided by the whole denominator: cosine of H times sine of phi, minus tangent of delta times cosine of phi. A is measured from north through east. Read the quadrant from the signs of numerator and denominator.\n\nAt transit, cosine of H is one, so sine of h equals the cosine of the difference phi minus delta. That is why maximum altitude is ninety degrees minus the absolute value of phi minus delta. If declination is less than your latitude, the star culminates south of the zenith.\n\nSirius, declination about minus seventeen degrees, reaches about thirty-two degrees due south from Istanbul, latitude forty-one degrees. From Sydney, latitude about minus thirty-four degrees, it reaches nearly seventy-three degrees, almost overhead. Same catalogue numbers, different sky.\n\nDrag the sphere until you see the horizon, the zenith, the meridian, and the pole. Slide latitude and watch the pole tilt and the peak altitude shift. Sweep sidereal time. I want you to notice that altitude crests as the star crosses the meridian and H passes through zero, then falls.",
+   "hash": "e728e4688335",
+   "duration": 125.43,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4.3,
+     "text": "The stars carry a fixed grid, and your horizon does not."
+    },
+    {
+     "start": 4.3,
+     "end": 9.8,
+     "text": "What joins them is the local sidereal time, the right ascension crossing your meridian."
+    },
+    {
+     "start": 9.8,
+     "end": 14.44,
+     "text": "I read hour angle as how far that clock has run past the star."
+    },
+    {
+     "start": 14.44,
+     "end": 20.52,
+     "text": "H equals local sidereal time minus alpha, and alpha is the catalogue right ascension."
+    },
+    {
+     "start": 20.52,
+     "end": 23.32,
+     "text": "H is zero at transit, the highest point."
+    },
+    {
+     "start": 23.32,
+     "end": 27.5,
+     "text": "If H is negative, the star is still rising toward the meridian."
+    },
+    {
+     "start": 27.5,
+     "end": 31.06,
+     "text": "Use hours or degrees, matched to the sidereal time."
+    },
+    {
+     "start": 31.06,
+     "end": 37.1,
+     "text": "Altitude comes from the spherical law of cosines on the triangle of pole, zenith, and star."
+    },
+    {
+     "start": 37.1,
+     "end": 45.26,
+     "text": "Sine of h equals sine of phi times sine of delta, plus cosine of phi times cosine of delta times cosine of H."
+    },
+    {
+     "start": 45.26,
+     "end": 50.72,
+     "text": "h is altitude above the horizon, phi is your latitude, delta is declination."
+    },
+    {
+     "start": 50.72,
+     "end": 54.32,
+     "text": "This is what a telescope-pointing computer runs when it slews."
+    },
+    {
+     "start": 54.32,
+     "end": 56.58,
+     "text": "Azimuth is the companion formula."
+    },
+    {
+     "start": 56.58,
+     "end": 66.37,
+     "text": "Tangent of A equals sine of H, divided by the whole denominator: cosine of H times sine of phi, minus tangent of delta times cosine of phi."
+    },
+    {
+     "start": 66.37,
+     "end": 68.69,
+     "text": "A is measured from north through east."
+    },
+    {
+     "start": 68.69,
+     "end": 72.07,
+     "text": "Read the quadrant from the signs of numerator and denominator."
+    },
+    {
+     "start": 72.07,
+     "end": 78.95,
+     "text": "At transit, cosine of H is one, so sine of h equals the cosine of the difference phi minus delta."
+    },
+    {
+     "start": 78.95,
+     "end": 84.67,
+     "text": "That is why maximum altitude is ninety degrees minus the absolute value of phi minus delta."
+    },
+    {
+     "start": 84.67,
+     "end": 89.63,
+     "text": "If declination is less than your latitude, the star culminates south of the zenith."
+    },
+    {
+     "start": 89.63,
+     "end": 98.45,
+     "text": "Sirius, declination about minus seventeen degrees, reaches about thirty-two degrees due south from Istanbul, latitude forty-one degrees."
+    },
+    {
+     "start": 98.45,
+     "end": 105.53,
+     "text": "From Sydney, latitude about minus thirty-four degrees, it reaches nearly seventy-three degrees, almost overhead."
+    },
+    {
+     "start": 105.53,
+     "end": 108.23,
+     "text": "Same catalogue numbers, different sky."
+    },
+    {
+     "start": 108.23,
+     "end": 113.33,
+     "text": "Drag the sphere until you see the horizon, the zenith, the meridian, and the pole."
+    },
+    {
+     "start": 113.33,
+     "end": 117.37,
+     "text": "Slide latitude and watch the pole tilt and the peak altitude shift."
+    },
+    {
+     "start": 117.37,
+     "end": 119.05,
+     "text": "Sweep sidereal time."
+    },
+    {
+     "start": 119.05,
+     "end": 125.43,
+     "text": "I want you to notice that altitude crests as the star crosses the meridian and H passes through zero, then falls."
+    }
+   ],
+   "voicedHash": "a18b64e88955"
+  },
+  "precession": {
+   "script": "Drag the year slider. Looking down on the north ecliptic pole, that circle is the celestial pole's path. Slide from thirteen thousand BCE to fifteen thousand CE. Pause near four thousand seven hundred years ago for Thuban, near Polaris today, and twelve thousand years ahead for Vega. One loop takes about twenty-five thousand eight hundred years, radius twenty-three point four degrees.\n\nHipparchus noticed the shift in one hundred thirty BCE. The Earth's axis, like a spinning top nudged by gravity, sweeps a cone. The Sun and Moon tug the equatorial bulge toward the ecliptic, and spin turns that tug into a sideways drift called precession. The vernal equinox slides west along the ecliptic by fifty point three arcseconds a year, so every star's coordinates change even though the stars do not move.\n\nDelta alpha, the change in right ascension, is approximately M plus N times the sine of alpha times the tangent of delta. Delta delta, the change in declination, is approximately N times the cosine of alpha. Alpha and delta are the starting coordinates, and those trig factors share the drift between them.\n\nT is the interval in Julian centuries. M equals one point two eight one degrees times T, plus a few ten-thousandths of a degree times T squared. N equals zero point five five seven degrees times T, minus a smaller T-squared term. In one century a star near the equator moves about one point two eight degrees in right ascension.\n\nEvery catalogue position carries an epoch. We use J two thousand point zero. B nineteen fifty differs by about seven tenths of a degree.\n\nFor Vega over one century, M is one point two eight degrees and N is zero point five six degrees. Sine of alpha is negative, so delta alpha is near zero point eight degrees, just over three minutes of time, and delta delta near nine hundredths of a degree. By twenty-one hundred Vega is listed near eighteen hours forty minutes, plus thirty-eight degrees fifty-two arcminutes.",
+   "hash": "5ef3b5f631ac",
+   "duration": 121.59,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 1.8,
+     "text": "Drag the year slider."
+    },
+    {
+     "start": 1.8,
+     "end": 7.26,
+     "text": "Looking down on the north ecliptic pole, that circle is the celestial pole's path."
+    },
+    {
+     "start": 7.26,
+     "end": 11.84,
+     "text": "Slide from thirteen thousand BCE to fifteen thousand CE."
+    },
+    {
+     "start": 11.84,
+     "end": 19.74,
+     "text": "Pause near four thousand seven hundred years ago for Thuban, near Polaris today, and twelve thousand years ahead for Vega."
+    },
+    {
+     "start": 19.74,
+     "end": 25.7,
+     "text": "One loop takes about twenty-five thousand eight hundred years, radius twenty-three point four degrees."
+    },
+    {
+     "start": 25.7,
+     "end": 29.2,
+     "text": "Hipparchus noticed the shift in one hundred thirty BCE."
+    },
+    {
+     "start": 29.2,
+     "end": 33.96,
+     "text": "The Earth's axis, like a spinning top nudged by gravity, sweeps a cone."
+    },
+    {
+     "start": 33.96,
+     "end": 41.6,
+     "text": "The Sun and Moon tug the equatorial bulge toward the ecliptic, and spin turns that tug into a sideways drift called precession."
+    },
+    {
+     "start": 41.6,
+     "end": 50.8,
+     "text": "The vernal equinox slides west along the ecliptic by fifty point three arcseconds a year, so every star's coordinates change even though the stars do not move."
+    },
+    {
+     "start": 50.8,
+     "end": 58.8,
+     "text": "Delta alpha, the change in right ascension, is approximately M plus N times the sine of alpha times the tangent of delta."
+    },
+    {
+     "start": 58.8,
+     "end": 64.51,
+     "text": "Delta delta, the change in declination, is approximately N times the cosine of alpha."
+    },
+    {
+     "start": 64.51,
+     "end": 69.91,
+     "text": "Alpha and delta are the starting coordinates, and those trig factors share the drift between them."
+    },
+    {
+     "start": 69.91,
+     "end": 72.75,
+     "text": "T is the interval in Julian centuries."
+    },
+    {
+     "start": 72.75,
+     "end": 79.47,
+     "text": "M equals one point two eight one degrees times T, plus a few ten-thousandths of a degree times T squared."
+    },
+    {
+     "start": 79.47,
+     "end": 85.21,
+     "text": "N equals zero point five five seven degrees times T, minus a smaller T-squared term."
+    },
+    {
+     "start": 85.21,
+     "end": 90.51,
+     "text": "In one century a star near the equator moves about one point two eight degrees in right ascension."
+    },
+    {
+     "start": 90.51,
+     "end": 93.11,
+     "text": "Every catalogue position carries an epoch."
+    },
+    {
+     "start": 93.11,
+     "end": 95.55,
+     "text": "We use J two thousand point zero."
+    },
+    {
+     "start": 95.55,
+     "end": 99.11,
+     "text": "B nineteen fifty differs by about seven tenths of a degree."
+    },
+    {
+     "start": 99.11,
+     "end": 105.65,
+     "text": "For Vega over one century, M is one point two eight degrees and N is zero point five six degrees."
+    },
+    {
+     "start": 105.65,
+     "end": 115.09,
+     "text": "Sine of alpha is negative, so delta alpha is near zero point eight degrees, just over three minutes of time, and delta delta near nine hundredths of a degree."
+    },
+    {
+     "start": 115.09,
+     "end": 121.59,
+     "text": "By twenty-one hundred Vega is listed near eighteen hours forty minutes, plus thirty-eight degrees fifty-two arcminutes."
+    }
+   ],
+   "voicedHash": "ee4aed3a9943"
+  },
+  "time": {
+   "script": "Look at the Earth behind the panel. We have come home, and there is no grid drawn on the sky, which is the right reminder: the sphere we have been using is a map of directions, not something painted on the heavens.\n\nAstronomers still need a calendar without the irregularities of months and leap years. The Julian Date is a running count of days since noon on the first of January, 4713 BCE. Think of it as one long tape measure for time. A star catalogue, an eclipse record from Babylon and a spacecraft telemetry packet can all be laid on the same axis.\n\nJ2000.0 sits at Julian Date two million, four hundred and fifty-one thousand, five hundred and forty-five point zero. The time argument used throughout positional astronomy is T equals JD minus that number, the whole difference divided by thirty-six thousand five hundred and twenty-five. T is the number of Julian centuries since J2000.0. JD is the Julian Date of the instant you care about. The divisor is one Julian century, a hundred years of three hundred and sixty-five and a quarter days. Precession formulas are written as a slow change in centuries, so T is the natural unit.\n\nOne last caveat. The stars themselves move. Proper motion is tiny — Barnard's Star, the record holder, shifts ten point three arcseconds a year — but over centuries it is measurable and must be applied on top of precession. We will return to it when we measure stellar distances.\n\nWhat to keep. Positions are angles: degrees, arcminutes, arcseconds. For a small angle, theta is about D over d, size over distance. Altitude and azimuth are local and change every second as the Earth turns. The sidereal day, twenty-three hours, fifty-six minutes and four seconds, is shorter than the solar day because the Earth also orbits the Sun. Right ascension, in hours from the vernal equinox, and declination ride with the sky. Hour angle H equals local sidereal time minus right ascension, and that joins the two systems. At transit, altitude is ninety degrees minus the absolute difference of latitude and declination. The ecliptic is tilted twenty-three point four four degrees, which gives us seasons, solstices and the zodiac. Precession carries the pole once around in twenty-five thousand seven hundred and seventy-two years, so coordinates need an epoch, J2000.0.\n\nThat is the map. Hold onto it.",
+   "hash": "ab3645fcea51",
+   "duration": 150.07,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.4,
+     "text": "Look at the Earth behind the panel."
+    },
+    {
+     "start": 2.4,
+     "end": 13.56,
+     "text": "We have come home, and there is no grid drawn on the sky, which is the right reminder: the sphere we have been using is a map of directions, not something painted on the heavens."
+    },
+    {
+     "start": 13.56,
+     "end": 18.42,
+     "text": "Astronomers still need a calendar without the irregularities of months and leap years."
+    },
+    {
+     "start": 18.42,
+     "end": 26.12,
+     "text": "The Julian Date is a running count of days since noon on the first of January, 4713 BCE."
+    },
+    {
+     "start": 26.12,
+     "end": 29.02,
+     "text": "Think of it as one long tape measure for time."
+    },
+    {
+     "start": 29.02,
+     "end": 45.28,
+     "text": "A star catalogue, an eclipse record from Babylon and a spacecraft telemetry packet can all be laid on the same axis. J2000. 0 sits at Julian Date two million, four hundred and fifty-one thousand, five hundred and forty-five point zero."
+    },
+    {
+     "start": 45.28,
+     "end": 55.18,
+     "text": "The time argument used throughout positional astronomy is T equals JD minus that number, the whole difference divided by thirty-six thousand five hundred and twenty-five."
+    },
+    {
+     "start": 55.18,
+     "end": 59.52,
+     "text": "T is the number of Julian centuries since J2000. 0."
+    },
+    {
+     "start": 59.52,
+     "end": 62.86,
+     "text": "JD is the Julian Date of the instant you care about."
+    },
+    {
+     "start": 62.86,
+     "end": 68.9,
+     "text": "The divisor is one Julian century, a hundred years of three hundred and sixty-five and a quarter days."
+    },
+    {
+     "start": 68.9,
+     "end": 74.56,
+     "text": "Precession formulas are written as a slow change in centuries, so T is the natural unit."
+    },
+    {
+     "start": 74.56,
+     "end": 75.93,
+     "text": "One last caveat."
+    },
+    {
+     "start": 75.93,
+     "end": 77.83,
+     "text": "The stars themselves move."
+    },
+    {
+     "start": 77.83,
+     "end": 88.93,
+     "text": "Proper motion is tiny — Barnard's Star, the record holder, shifts ten point three arcseconds a year — but over centuries it is measurable and must be applied on top of precession."
+    },
+    {
+     "start": 88.93,
+     "end": 91.99,
+     "text": "We will return to it when we measure stellar distances."
+    },
+    {
+     "start": 91.99,
+     "end": 93.11,
+     "text": "What to keep."
+    },
+    {
+     "start": 93.11,
+     "end": 97.21,
+     "text": "Positions are angles: degrees, arcminutes, arcseconds."
+    },
+    {
+     "start": 97.21,
+     "end": 102.33,
+     "text": "For a small angle, theta is about D over d, size over distance."
+    },
+    {
+     "start": 102.33,
+     "end": 106.67,
+     "text": "Altitude and azimuth are local and change every second as the Earth turns."
+    },
+    {
+     "start": 106.67,
+     "end": 115.29,
+     "text": "The sidereal day, twenty-three hours, fifty-six minutes and four seconds, is shorter than the solar day because the Earth also orbits the Sun."
+    },
+    {
+     "start": 115.29,
+     "end": 120.65,
+     "text": "Right ascension, in hours from the vernal equinox, and declination ride with the sky."
+    },
+    {
+     "start": 120.65,
+     "end": 126.85,
+     "text": "Hour angle H equals local sidereal time minus right ascension, and that joins the two systems."
+    },
+    {
+     "start": 126.85,
+     "end": 132.63,
+     "text": "At transit, altitude is ninety degrees minus the absolute difference of latitude and declination."
+    },
+    {
+     "start": 132.63,
+     "end": 139.15,
+     "text": "The ecliptic is tilted twenty-three point four four degrees, which gives us seasons, solstices and the zodiac."
+    },
+    {
+     "start": 139.15,
+     "end": 148.23,
+     "text": "Precession carries the pole once around in twenty-five thousand seven hundred and seventy-two years, so coordinates need an epoch, J2000. 0."
+    },
+    {
+     "start": 148.23,
+     "end": 149.21,
+     "text": "That is the map."
+    },
+    {
+     "start": 149.21,
+     "end": 150.07,
+     "text": "Hold onto it."
+    }
+   ],
+   "voicedHash": "bc5a60024606"
+  },
+  "why-a-sphere": {
+   "script": "Look behind the panel. We have flown to Earth, and the equatorial grid is drawn on the sky around us. We know the Earth orbits the Sun, and the stars lie at wildly different distances. Yet we picture every object painted inside a giant sphere centred on the Earth. Call that the celestial sphere, an honest fiction, not a step backwards. For locating things it is exactly right. From Earth we see only directions, and a direction is a point on a sphere. Distance is a separate question, answered by separate methods.\n\nPositions on a sphere are angles. A full circle is three hundred and sixty degrees. Each degree splits into sixty arcminutes, and each arcminute into sixty arcseconds, so one degree equals sixty arcminutes, or three thousand six hundred arcseconds. One radian equals one hundred and eighty degrees divided by pi, about fifty-seven point three degrees, roughly two hundred and six thousand arcseconds. A radian is the angle where the arc equals the radius.\n\nIf an object of size D lies at distance d, with d much larger than D, its angular size theta in radians is approximately D divided by d. Theta is the angle on the sky, D the true size, d the distance. A small angle makes the patch of sky nearly flat, so theta in radians really is size over distance, and an angle we measure becomes a size or a distance.\n\nThe Moon is about three and a half thousand kilometres across and about three hundred and eighty-four thousand kilometres away. Divide and theta is near nine thousandths of a radian, about half a degree. Your little finger at arm's length is about one degree, a fist about ten degrees. The Moon fits twice inside your fingertip.\n\nEverything in observational astronomy starts as an angle. Learning the sky means learning to think in degrees, arcminutes and arcseconds.",
+   "hash": "b9e0f4ca7a8d",
+   "duration": 110.39,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 1.74,
+     "text": "Look behind the panel."
+    },
+    {
+     "start": 1.74,
+     "end": 6.8,
+     "text": "We have flown to Earth, and the equatorial grid is drawn on the sky around us."
+    },
+    {
+     "start": 6.8,
+     "end": 11.98,
+     "text": "We know the Earth orbits the Sun, and the stars lie at wildly different distances."
+    },
+    {
+     "start": 11.98,
+     "end": 16.86,
+     "text": "Yet we picture every object painted inside a giant sphere centred on the Earth."
+    },
+    {
+     "start": 16.86,
+     "end": 22,
+     "text": "Call that the celestial sphere, an honest fiction, not a step backwards."
+    },
+    {
+     "start": 22,
+     "end": 24.56,
+     "text": "For locating things it is exactly right."
+    },
+    {
+     "start": 24.56,
+     "end": 29.22,
+     "text": "From Earth we see only directions, and a direction is a point on a sphere."
+    },
+    {
+     "start": 29.22,
+     "end": 33.06,
+     "text": "Distance is a separate question, answered by separate methods."
+    },
+    {
+     "start": 33.06,
+     "end": 35.3,
+     "text": "Positions on a sphere are angles."
+    },
+    {
+     "start": 35.3,
+     "end": 38.18,
+     "text": "A full circle is three hundred and sixty degrees."
+    },
+    {
+     "start": 38.18,
+     "end": 48.48,
+     "text": "Each degree splits into sixty arcminutes, and each arcminute into sixty arcseconds, so one degree equals sixty arcminutes, or three thousand six hundred arcseconds."
+    },
+    {
+     "start": 48.48,
+     "end": 57.29,
+     "text": "One radian equals one hundred and eighty degrees divided by pi, about fifty-seven point three degrees, roughly two hundred and six thousand arcseconds."
+    },
+    {
+     "start": 57.29,
+     "end": 60.47,
+     "text": "A radian is the angle where the arc equals the radius."
+    },
+    {
+     "start": 60.47,
+     "end": 70.19,
+     "text": "If an object of size D lies at distance d, with d much larger than D, its angular size theta in radians is approximately D divided by d."
+    },
+    {
+     "start": 70.19,
+     "end": 75.07,
+     "text": "Theta is the angle on the sky, D the true size, d the distance."
+    },
+    {
+     "start": 75.07,
+     "end": 84.23,
+     "text": "A small angle makes the patch of sky nearly flat, so theta in radians really is size over distance, and an angle we measure becomes a size or a distance."
+    },
+    {
+     "start": 84.23,
+     "end": 90.61,
+     "text": "The Moon is about three and a half thousand kilometres across and about three hundred and eighty-four thousand kilometres away."
+    },
+    {
+     "start": 90.61,
+     "end": 95.27,
+     "text": "Divide and theta is near nine thousandths of a radian, about half a degree."
+    },
+    {
+     "start": 95.27,
+     "end": 100.07,
+     "text": "Your little finger at arm's length is about one degree, a fist about ten degrees."
+    },
+    {
+     "start": 100.07,
+     "end": 102.71,
+     "text": "The Moon fits twice inside your fingertip."
+    },
+    {
+     "start": 102.71,
+     "end": 105.95,
+     "text": "Everything in observational astronomy starts as an angle."
+    },
+    {
+     "start": 105.95,
+     "end": 110.39,
+     "text": "Learning the sky means learning to think in degrees, arcminutes and arcseconds."
+    }
+   ],
+   "voicedHash": "329265b4b62d"
+  }
+ }
+}
