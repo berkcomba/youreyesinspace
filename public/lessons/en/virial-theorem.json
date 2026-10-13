@@ -1,0 +1,714 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "many-bodies": {
+   "script": "Welcome. I want you looking at Omega Centauri behind the panel.\n\nTwo bodies we can solve exactly. Three cannot be solved in closed form at all. Newton himself said the problem made his head ache, and the globular cluster in front of you contains about ten million stars. Nobody will ever write down their orbits. There are simply too many bodies, each pulling on all the others.\n\nYet we can say precise things about the cluster as a whole, because of a theorem about averages. Think of the air in this room. Averages, not each molecule, tell the story. The idea is to stop asking where each star is, and ask instead how the system's total kinetic energy compares with its total gravitational potential energy.\n\nWe call the total kinetic energy K. It is the sum, over all the stars, of one half times m times v squared. m is the mass of one star, v is its speed, and one half times m times v squared is the ordinary energy of motion. Summed over every star, that is K.\n\nWe call the total gravitational potential energy U. It is the sum, over all pairs, of minus G times m one times m two, all over r. G is Newton's gravitational constant, m one and m two are the masses of the two stars in a pair, and r is the distance between them. The minus sign means the energy is negative: the stars are gravitationally bound. Every pair contributes one such term.\n\nFor a system that is bound, so it holds together, and stable, so it is not collapsing or flying apart on average, the relation between those two energies is fixed. The virial theorem relates the kinetic and potential energies, averaged over time, of any stable, self-gravitating system, meaning one held together by its own gravity, no matter how many bodies it has. It is to clusters and galaxies what Kepler's third law is to a single orbit: a way to weigh them.",
+   "hash": "1d3f30a5b647",
+   "duration": 112.95,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 1.2,
+     "text": "Welcome."
+    },
+    {
+     "start": 1.2,
+     "end": 4.42,
+     "text": "I want you looking at Omega Centauri behind the panel."
+    },
+    {
+     "start": 4.42,
+     "end": 6.84,
+     "text": "Two bodies we can solve exactly."
+    },
+    {
+     "start": 6.84,
+     "end": 10,
+     "text": "Three cannot be solved in closed form at all."
+    },
+    {
+     "start": 10,
+     "end": 16.92,
+     "text": "Newton himself said the problem made his head ache, and the globular cluster in front of you contains about ten million stars."
+    },
+    {
+     "start": 16.92,
+     "end": 19.28,
+     "text": "Nobody will ever write down their orbits."
+    },
+    {
+     "start": 19.28,
+     "end": 23.26,
+     "text": "There are simply too many bodies, each pulling on all the others."
+    },
+    {
+     "start": 23.26,
+     "end": 28.68,
+     "text": "Yet we can say precise things about the cluster as a whole, because of a theorem about averages."
+    },
+    {
+     "start": 28.68,
+     "end": 30.54,
+     "text": "Think of the air in this room."
+    },
+    {
+     "start": 30.54,
+     "end": 33.72,
+     "text": "Averages, not each molecule, tell the story."
+    },
+    {
+     "start": 33.72,
+     "end": 42.76,
+     "text": "The idea is to stop asking where each star is, and ask instead how the system's total kinetic energy compares with its total gravitational potential energy."
+    },
+    {
+     "start": 42.76,
+     "end": 45.26,
+     "text": "We call the total kinetic energy K."
+    },
+    {
+     "start": 45.26,
+     "end": 50.48,
+     "text": "It is the sum, over all the stars, of one half times m times v squared."
+    },
+    {
+     "start": 50.48,
+     "end": 58.49,
+     "text": "m is the mass of one star, v is its speed, and one half times m times v squared is the ordinary energy of motion."
+    },
+    {
+     "start": 58.49,
+     "end": 61.27,
+     "text": "Summed over every star, that is K."
+    },
+    {
+     "start": 61.27,
+     "end": 64.53,
+     "text": "We call the total gravitational potential energy U."
+    },
+    {
+     "start": 64.53,
+     "end": 70.97,
+     "text": "It is the sum, over all pairs, of minus G times m one times m two, all over r."
+    },
+    {
+     "start": 70.97,
+     "end": 79.23,
+     "text": "G is Newton's gravitational constant, m one and m two are the masses of the two stars in a pair, and r is the distance between them."
+    },
+    {
+     "start": 79.23,
+     "end": 84.11,
+     "text": "The minus sign means the energy is negative: the stars are gravitationally bound."
+    },
+    {
+     "start": 84.11,
+     "end": 86.59,
+     "text": "Every pair contributes one such term."
+    },
+    {
+     "start": 86.59,
+     "end": 95.79,
+     "text": "For a system that is bound, so it holds together, and stable, so it is not collapsing or flying apart on average, the relation between those two energies is fixed."
+    },
+    {
+     "start": 95.79,
+     "end": 107.65,
+     "text": "The virial theorem relates the kinetic and potential energies, averaged over time, of any stable, self-gravitating system, meaning one held together by its own gravity, no matter how many bodies it has."
+    },
+    {
+     "start": 107.65,
+     "end": 112.95,
+     "text": "It is to clusters and galaxies what Kepler's third law is to a single orbit: a way to weigh them."
+    }
+   ],
+   "voicedHash": "63399e4201ec"
+  },
+  "proof": {
+   "script": "Look at forty-seven Tucanae behind the panel, a bound cluster together for billions of years. The proof uses nothing beyond Newton's second law.\n\nCall Q the sum over particles of momentum dotted with position, p-i dot r-i. Q is half the time derivative of the moment of inertia: half of d by dt of the sum of m-i r-i squared. m-i is the mass, r-i the position. Q measures whether the system is expanding or contracting.\n\nDifferentiate. The product rule gives momenta dotted with velocities, plus forces dotted with positions. The first sum is m-i v-i squared, twice the kinetic energy K; v-i is velocity. The second uses Newton's second law, d p-i over dt equals the force F-i. So dQ over dt equals two K plus the sum of F-i dot r-i.\n\nAverage over a long time T. The left side is Q at T minus Q at zero, divided by T. Bound systems keep Q finite — nothing runs to infinity — so as T grows that average vanishes. What remains is two times the average of K, plus the average of the sum of F-i dot r-i, equals zero. That is the general virial theorem, for any force law.\n\nFor gravity, pairwise forces that fall as one over r squared make that sum exactly the potential energy U. One pair: F dot r equals minus G M m over r squared, times r. G is Newton's gravitational constant, M and m the masses, r the separation. Cancel one r and you have minus G M m over r, which is U. So two times the average of K plus the average of U equals zero, and the average kinetic energy is minus one half the average potential energy.\n\nTwo assumptions: the system is bound, so Q is finite, and we averaged long enough. A cluster formed billions of years ago satisfies both. A system collapsing or being torn apart does not — and that failure is a useful diagnostic.",
+   "hash": "e74c1c111ce9",
+   "duration": 124.47,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.2,
+     "text": "Look at forty-seven Tucanae behind the panel, a bound cluster together for billions of years."
+    },
+    {
+     "start": 6.2,
+     "end": 9.46,
+     "text": "The proof uses nothing beyond Newton's second law."
+    },
+    {
+     "start": 9.46,
+     "end": 16.16,
+     "text": "Call Q the sum over particles of momentum dotted with position, p-i dot r-i."
+    },
+    {
+     "start": 16.16,
+     "end": 23.96,
+     "text": "Q is half the time derivative of the moment of inertia: half of d by dt of the sum of m-i r-i squared."
+    },
+    {
+     "start": 23.96,
+     "end": 26.92,
+     "text": "m-i is the mass, r-i the position."
+    },
+    {
+     "start": 26.92,
+     "end": 30.46,
+     "text": "Q measures whether the system is expanding or contracting."
+    },
+    {
+     "start": 30.46,
+     "end": 31.52,
+     "text": "Differentiate."
+    },
+    {
+     "start": 31.52,
+     "end": 37.06,
+     "text": "The product rule gives momenta dotted with velocities, plus forces dotted with positions."
+    },
+    {
+     "start": 37.06,
+     "end": 43.7,
+     "text": "The first sum is m-i v-i squared, twice the kinetic energy K; v-i is velocity."
+    },
+    {
+     "start": 43.7,
+     "end": 49.38,
+     "text": "The second uses Newton's second law, d p-i over dt equals the force F-i."
+    },
+    {
+     "start": 49.38,
+     "end": 54.74,
+     "text": "So dQ over dt equals two K plus the sum of F-i dot r-i."
+    },
+    {
+     "start": 54.74,
+     "end": 56.88,
+     "text": "Average over a long time T."
+    },
+    {
+     "start": 56.88,
+     "end": 61.34,
+     "text": "The left side is Q at T minus Q at zero, divided by T."
+    },
+    {
+     "start": 61.34,
+     "end": 67.95,
+     "text": "Bound systems keep Q finite — nothing runs to infinity — so as T grows that average vanishes."
+    },
+    {
+     "start": 67.95,
+     "end": 75.07,
+     "text": "What remains is two times the average of K, plus the average of the sum of F-i dot r-i, equals zero."
+    },
+    {
+     "start": 75.07,
+     "end": 78.51,
+     "text": "That is the general virial theorem, for any force law."
+    },
+    {
+     "start": 78.51,
+     "end": 85.81,
+     "text": "For gravity, pairwise forces that fall as one over r squared make that sum exactly the potential energy U."
+    },
+    {
+     "start": 85.81,
+     "end": 91.59,
+     "text": "One pair: F dot r equals minus G M m over r squared, times r."
+    },
+    {
+     "start": 91.59,
+     "end": 97.05,
+     "text": "G is Newton's gravitational constant, M and m the masses, r the separation."
+    },
+    {
+     "start": 97.05,
+     "end": 101.69,
+     "text": "Cancel one r and you have minus G M m over r, which is U."
+    },
+    {
+     "start": 101.69,
+     "end": 110.15,
+     "text": "So two times the average of K plus the average of U equals zero, and the average kinetic energy is minus one half the average potential energy."
+    },
+    {
+     "start": 110.15,
+     "end": 115.95,
+     "text": "Two assumptions: the system is bound, so Q is finite, and we averaged long enough."
+    },
+    {
+     "start": 115.95,
+     "end": 119.21,
+     "text": "A cluster formed billions of years ago satisfies both."
+    },
+    {
+     "start": 119.21,
+     "end": 124.47,
+     "text": "A system collapsing or being torn apart does not — and that failure is a useful diagnostic."
+    }
+   ],
+   "voicedHash": "88922f0c91bc"
+  },
+  "stars": {
+   "script": "Look behind the panel at Messier 42, in Orion. This is where the virial theorem matters most. A cold cloud of gas contracts under its own gravity. As it shrinks, its potential energy U, equal to minus G M squared over R, becomes more negative. U is the potential energy, G is Newton's constant, M is the mass, and R is the radius. A smaller R is a deeper well, so energy is released. Where does it go?\n\nThe theorem forces an exact split. Delta K equals minus one half times delta U, and E radiated equals minus one half delta U as well. Delta K is the change in kinetic energy, delta U the change in potential energy, and E radiated is what must leave as light. Contraction makes delta U negative, so minus delta U is energy set free. Half heats the gas and half is radiated away. Of the gravitational energy released by contraction, half heats the object and half leaves as light.\n\nSo the protostar heats up as it collapses. Higher temperature means higher pressure, which slows the collapse, until the centre reaches about ten million kelvin and hydrogen fusion ignites, replacing the lost energy. Contraction stops. The star is a gravitationally bound ball of gas in virial equilibrium, fusion paying the radiation bill. I will build that star with you from Chapter 10 on.\n\nKelvin and Helmholtz, in the eighteen fifties, asked how long the Sun could shine on contraction alone. The Sun's potential energy is roughly minus G times solar mass squared over solar radius, about minus three point eight times ten to the forty-one joules. Half of that, radiated at the Sun's present luminosity, about three point eight times ten to the twenty-six watts, lasts about ten to the fifteen seconds, roughly thirty million years. Geologists already knew Earth was far older. Nuclear fusion resolved the contradiction in the nineteen thirties. The virial estimate, the Kelvin-Helmholtz timescale, is still how we estimate how long a star takes to form.",
+   "hash": "ce636efcfa0c",
+   "duration": 125.75,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.98,
+     "text": "Look behind the panel at Messier 42, in Orion."
+    },
+    {
+     "start": 3.98,
+     "end": 6.9,
+     "text": "This is where the virial theorem matters most."
+    },
+    {
+     "start": 6.9,
+     "end": 10.42,
+     "text": "A cold cloud of gas contracts under its own gravity."
+    },
+    {
+     "start": 10.42,
+     "end": 17.82,
+     "text": "As it shrinks, its potential energy U, equal to minus G M squared over R, becomes more negative."
+    },
+    {
+     "start": 17.82,
+     "end": 24.12,
+     "text": "U is the potential energy, G is Newton's constant, M is the mass, and R is the radius."
+    },
+    {
+     "start": 24.12,
+     "end": 27.92,
+     "text": "A smaller R is a deeper well, so energy is released."
+    },
+    {
+     "start": 27.92,
+     "end": 29.2,
+     "text": "Where does it go?"
+    },
+    {
+     "start": 29.2,
+     "end": 31.64,
+     "text": "The theorem forces an exact split."
+    },
+    {
+     "start": 31.64,
+     "end": 39.1,
+     "text": "Delta K equals minus one half times delta U, and E radiated equals minus one half delta U as well."
+    },
+    {
+     "start": 39.1,
+     "end": 47.1,
+     "text": "Delta K is the change in kinetic energy, delta U the change in potential energy, and E radiated is what must leave as light."
+    },
+    {
+     "start": 47.1,
+     "end": 52.28,
+     "text": "Contraction makes delta U negative, so minus delta U is energy set free."
+    },
+    {
+     "start": 52.28,
+     "end": 55.46,
+     "text": "Half heats the gas and half is radiated away."
+    },
+    {
+     "start": 55.46,
+     "end": 61.26,
+     "text": "Of the gravitational energy released by contraction, half heats the object and half leaves as light."
+    },
+    {
+     "start": 61.26,
+     "end": 63.93,
+     "text": "So the protostar heats up as it collapses."
+    },
+    {
+     "start": 63.93,
+     "end": 74.05,
+     "text": "Higher temperature means higher pressure, which slows the collapse, until the centre reaches about ten million kelvin and hydrogen fusion ignites, replacing the lost energy."
+    },
+    {
+     "start": 74.05,
+     "end": 75.55,
+     "text": "Contraction stops."
+    },
+    {
+     "start": 75.55,
+     "end": 82.17,
+     "text": "The star is a gravitationally bound ball of gas in virial equilibrium, fusion paying the radiation bill."
+    },
+    {
+     "start": 82.17,
+     "end": 85.17,
+     "text": "I will build that star with you from Chapter 10 on."
+    },
+    {
+     "start": 85.17,
+     "end": 91.37,
+     "text": "Kelvin and Helmholtz, in the eighteen fifties, asked how long the Sun could shine on contraction alone."
+    },
+    {
+     "start": 91.37,
+     "end": 101.07,
+     "text": "The Sun's potential energy is roughly minus G times solar mass squared over solar radius, about minus three point eight times ten to the forty-one joules."
+    },
+    {
+     "start": 101.07,
+     "end": 112.91,
+     "text": "Half of that, radiated at the Sun's present luminosity, about three point eight times ten to the twenty-six watts, lasts about ten to the fifteen seconds, roughly thirty million years."
+    },
+    {
+     "start": 112.91,
+     "end": 115.73,
+     "text": "Geologists already knew Earth was far older."
+    },
+    {
+     "start": 115.73,
+     "end": 119.27,
+     "text": "Nuclear fusion resolved the contradiction in the nineteen thirties."
+    },
+    {
+     "start": 119.27,
+     "end": 125.75,
+     "text": "The virial estimate, the Kelvin-Helmholtz timescale, is still how we estimate how long a star takes to form."
+    }
+   ],
+   "voicedHash": "cb71807793a0"
+  },
+  "statement": {
+   "script": "Let me state the theorem. For a stable system bound by gravity, or by any inverse-square force, the time average of the kinetic energy is minus one half the time average of the potential energy. In words, the average of K equals minus one half times the average of U. The angle brackets mean long time averages. For a single Kepler orbit, one period is enough. K is kinetic energy. U is gravitational potential energy, negative for a bound system.\n\nTotal energy follows by substitution. E equals the average of K plus the average of U. Replace the average of K by minus one half the average of U, and those terms add to one half the average of U. That same quantity is minus the average of K. So E is negative for a bound system, equal to half the potential energy and minus the kinetic energy.\n\nTake a circular orbit of radius r. From section two point two, v squared equals G times M over r. v is orbital speed, G the gravitational constant, M the central mass, r the radius. K is one half times m times v squared, with m the orbiting mass, and that equals G times M times m over two r. U is minus G times M times m over r. So K equals minus U over two at every instant.\n\nFor an ellipse it holds only on average. Run the elliptical orbit in the widget. Notice K and U swinging up and down as the planet moves, while the dashed running averages settle onto the virial ratio within one orbit.\n\nSuppose a bound system loses energy, a star cluster radiates, a gas cloud cools. E becomes more negative, so minus the average of K becomes more negative, and the average of K increases. The system gets hotter by losing energy. Gravitating systems have negative heat capacity, and this is why stars shine steadily for billions of years instead of cooling off.",
+   "hash": "aff68c2fe991",
+   "duration": 118.07,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 1.86,
+     "text": "Let me state the theorem."
+    },
+    {
+     "start": 1.86,
+     "end": 12.54,
+     "text": "For a stable system bound by gravity, or by any inverse-square force, the time average of the kinetic energy is minus one half the time average of the potential energy."
+    },
+    {
+     "start": 12.54,
+     "end": 17.9,
+     "text": "In words, the average of K equals minus one half times the average of U."
+    },
+    {
+     "start": 17.9,
+     "end": 21,
+     "text": "The angle brackets mean long time averages."
+    },
+    {
+     "start": 21,
+     "end": 24.56,
+     "text": "For a single Kepler orbit, one period is enough."
+    },
+    {
+     "start": 24.56,
+     "end": 26.44,
+     "text": "K is kinetic energy."
+    },
+    {
+     "start": 26.44,
+     "end": 30.96,
+     "text": "U is gravitational potential energy, negative for a bound system."
+    },
+    {
+     "start": 30.96,
+     "end": 33.74,
+     "text": "Total energy follows by substitution."
+    },
+    {
+     "start": 33.74,
+     "end": 37.1,
+     "text": "E equals the average of K plus the average of U."
+    },
+    {
+     "start": 37.1,
+     "end": 44.18,
+     "text": "Replace the average of K by minus one half the average of U, and those terms add to one half the average of U."
+    },
+    {
+     "start": 44.18,
+     "end": 47.28,
+     "text": "That same quantity is minus the average of K."
+    },
+    {
+     "start": 47.28,
+     "end": 53.52,
+     "text": "So E is negative for a bound system, equal to half the potential energy and minus the kinetic energy."
+    },
+    {
+     "start": 53.52,
+     "end": 55.98,
+     "text": "Take a circular orbit of radius r."
+    },
+    {
+     "start": 55.98,
+     "end": 61.01,
+     "text": "From section two point two, v squared equals G times M over r."
+    },
+    {
+     "start": 61.01,
+     "end": 67.47,
+     "text": "v is orbital speed, G the gravitational constant, M the central mass, r the radius."
+    },
+    {
+     "start": 67.47,
+     "end": 76.13,
+     "text": "K is one half times m times v squared, with m the orbiting mass, and that equals G times M times m over two r."
+    },
+    {
+     "start": 76.13,
+     "end": 79.51,
+     "text": "U is minus G times M times m over r."
+    },
+    {
+     "start": 79.51,
+     "end": 83.05,
+     "text": "So K equals minus U over two at every instant."
+    },
+    {
+     "start": 83.05,
+     "end": 85.55,
+     "text": "For an ellipse it holds only on average."
+    },
+    {
+     "start": 85.55,
+     "end": 87.73,
+     "text": "Run the elliptical orbit in the widget."
+    },
+    {
+     "start": 87.73,
+     "end": 95.83,
+     "text": "Notice K and U swinging up and down as the planet moves, while the dashed running averages settle onto the virial ratio within one orbit."
+    },
+    {
+     "start": 95.83,
+     "end": 101.87,
+     "text": "Suppose a bound system loses energy, a star cluster radiates, a gas cloud cools."
+    },
+    {
+     "start": 101.87,
+     "end": 108.55,
+     "text": "E becomes more negative, so minus the average of K becomes more negative, and the average of K increases."
+    },
+    {
+     "start": 108.55,
+     "end": 111.09,
+     "text": "The system gets hotter by losing energy."
+    },
+    {
+     "start": 111.09,
+     "end": 118.07,
+     "text": "Gravitating systems have negative heat capacity, and this is why stars shine steadily for billions of years instead of cooling off."
+    }
+   ],
+   "voicedHash": "fe387ec0a4f4"
+  },
+  "virial-summary": {
+   "script": "Look behind the panel: planets circling the Sun. From Tycho's arcminutes to a theorem that weighs galaxy clusters. Motion in the heavens obeys the same laws as motion on Earth, and those laws become tools. Kepler: ellipses with the Sun at a focus, equal areas in equal times, and P squared equals a cubed. P is the period in years, a the semi-major axis in astronomical units. Newton: F equals m a, force equals mass times acceleration, and F equals G M m over r squared. G, the gravitational constant, M and m the masses, r the separation. The Moon falls like an apple, thirty-six hundred times gentler. In the centre-of-mass frame, conserved angular momentum L gives planar orbits and equal areas. Inverse-square force gives conic sections. P squared equals four pi squared a cubed over G times m one plus m two, the two masses. Energy E equals minus G M m over two a, bound for E less than zero. Vis-viva: speed v squared equals G M times two over r minus one over a. Virial theorem: average kinetic energy K equals minus one half average potential energy U, for stable bound systems. It weighs clusters and dark matter, heats contracting clouds, keeps stars stable. Kuhn and Westfall. Next: continuous spectrum, parallax, magnitudes, star colours. I'll see you.",
+   "hash": "1d68bed5fcfa",
+   "duration": 94.07,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 3.9,
+     "text": "Look behind the panel: planets circling the Sun."
+    },
+    {
+     "start": 3.9,
+     "end": 8.42,
+     "text": "From Tycho's arcminutes to a theorem that weighs galaxy clusters."
+    },
+    {
+     "start": 8.42,
+     "end": 14.54,
+     "text": "Motion in the heavens obeys the same laws as motion on Earth, and those laws become tools."
+    },
+    {
+     "start": 14.54,
+     "end": 22.42,
+     "text": "Kepler: ellipses with the Sun at a focus, equal areas in equal times, and P squared equals a cubed."
+    },
+    {
+     "start": 22.42,
+     "end": 27.82,
+     "text": "P is the period in years, a the semi-major axis in astronomical units."
+    },
+    {
+     "start": 27.82,
+     "end": 35.88,
+     "text": "Newton: F equals m a, force equals mass times acceleration, and F equals G M m over r squared."
+    },
+    {
+     "start": 35.88,
+     "end": 41.46,
+     "text": "G, the gravitational constant, M and m the masses, r the separation."
+    },
+    {
+     "start": 41.46,
+     "end": 45.92,
+     "text": "The Moon falls like an apple, thirty-six hundred times gentler."
+    },
+    {
+     "start": 45.92,
+     "end": 52.35,
+     "text": "In the centre-of-mass frame, conserved angular momentum L gives planar orbits and equal areas."
+    },
+    {
+     "start": 52.35,
+     "end": 55.23,
+     "text": "Inverse-square force gives conic sections."
+    },
+    {
+     "start": 55.23,
+     "end": 61.99,
+     "text": "P squared equals four pi squared a cubed over G times m one plus m two, the two masses."
+    },
+    {
+     "start": 61.99,
+     "end": 67.65,
+     "text": "Energy E equals minus G M m over two a, bound for E less than zero."
+    },
+    {
+     "start": 67.65,
+     "end": 73.51,
+     "text": "Vis-viva: speed v squared equals G M times two over r minus one over a."
+    },
+    {
+     "start": 73.51,
+     "end": 81.41,
+     "text": "Virial theorem: average kinetic energy K equals minus one half average potential energy U, for stable bound systems."
+    },
+    {
+     "start": 81.41,
+     "end": 86.79,
+     "text": "It weighs clusters and dark matter, heats contracting clouds, keeps stars stable."
+    },
+    {
+     "start": 86.79,
+     "end": 88.23,
+     "text": "Kuhn and Westfall."
+    },
+    {
+     "start": 88.23,
+     "end": 93.29,
+     "text": "Next: continuous spectrum, parallax, magnitudes, star colours."
+    },
+    {
+     "start": 93.29,
+     "end": 94.07,
+     "text": "I'll see you."
+    }
+   ],
+   "voicedHash": "7f608bed9414"
+  },
+  "weighing": {
+   "script": "Look at Omega Centauri behind the panel. For a cluster of N stars or galaxies, total mass M and radius R, the kinetic energy is roughly one half M times the average of v squared, and the potential energy roughly minus G times M squared over R. The exact coefficient depends on how the mass is distributed. In virial equilibrium, twice the kinetic energy balances the potential, and we read off the mass.\n\nM is approximately the average of v squared, times R, divided by G. M is the total mass, the brackets around v squared are the mean square speed, R is the radius, and G is the gravitational constant. It holds because half M times that mean square speed balances about half of G times M squared over R, so the mass is speed squared times radius, over G. Velocities come from Doppler shifts of spectral lines, and R from the angular size and the distance. Neither requires seeing the mass itself, only its gravitational effect on the motions.\n\nOmega Centauri's velocity dispersion is about seventeen kilometres per second, so the three-dimensional mean square speed is three times seventeen squared, about eight hundred and seventy square kilometres per second squared. The half-mass radius is about ten light years. We get about six hundred thousand solar masses, within a factor of a few of the detailed value, about four million solar masses.\n\nIn nineteen thirty-three Fritz Zwicky applied the same reasoning to the Coma cluster of galaxies. Galaxies moving at about a thousand kilometres per second required a virial mass hundreds of times the mass in visible stars. He called the missing part dunkle Materie, dark matter. It took forty years, and Vera Rubin's rotation curves of spiral galaxies in the nineteen seventies, before astronomers took him seriously. The first evidence for dark matter was the virial theorem applied to a cluster.\n\nA theorem about time averages, proved in six lines, weighs clusters, galaxies, and the universe's dark matter.",
+   "hash": "4bffd3beb000",
+   "duration": 123.19,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.98,
+     "text": "Look at Omega Centauri behind the panel."
+    },
+    {
+     "start": 2.98,
+     "end": 17.66,
+     "text": "For a cluster of N stars or galaxies, total mass M and radius R, the kinetic energy is roughly one half M times the average of v squared, and the potential energy roughly minus G times M squared over R."
+    },
+    {
+     "start": 17.66,
+     "end": 21.28,
+     "text": "The exact coefficient depends on how the mass is distributed."
+    },
+    {
+     "start": 21.28,
+     "end": 27.92,
+     "text": "In virial equilibrium, twice the kinetic energy balances the potential, and we read off the mass."
+    },
+    {
+     "start": 27.92,
+     "end": 33.18,
+     "text": "M is approximately the average of v squared, times R, divided by G."
+    },
+    {
+     "start": 33.18,
+     "end": 41.76,
+     "text": "M is the total mass, the brackets around v squared are the mean square speed, R is the radius, and G is the gravitational constant."
+    },
+    {
+     "start": 41.76,
+     "end": 52.22,
+     "text": "It holds because half M times that mean square speed balances about half of G times M squared over R, so the mass is speed squared times radius, over G."
+    },
+    {
+     "start": 52.22,
+     "end": 58.38,
+     "text": "Velocities come from Doppler shifts of spectral lines, and R from the angular size and the distance."
+    },
+    {
+     "start": 58.38,
+     "end": 63.69,
+     "text": "Neither requires seeing the mass itself, only its gravitational effect on the motions."
+    },
+    {
+     "start": 63.69,
+     "end": 76.33,
+     "text": "Omega Centauri's velocity dispersion is about seventeen kilometres per second, so the three-dimensional mean square speed is three times seventeen squared, about eight hundred and seventy square kilometres per second squared."
+    },
+    {
+     "start": 76.33,
+     "end": 79.35,
+     "text": "The half-mass radius is about ten light years."
+    },
+    {
+     "start": 79.35,
+     "end": 87.05,
+     "text": "We get about six hundred thousand solar masses, within a factor of a few of the detailed value, about four million solar masses."
+    },
+    {
+     "start": 87.05,
+     "end": 92.59,
+     "text": "In nineteen thirty-three Fritz Zwicky applied the same reasoning to the Coma cluster of galaxies."
+    },
+    {
+     "start": 92.59,
+     "end": 99.83,
+     "text": "Galaxies moving at about a thousand kilometres per second required a virial mass hundreds of times the mass in visible stars."
+    },
+    {
+     "start": 99.83,
+     "end": 103.49,
+     "text": "He called the missing part dunkle Materie, dark matter."
+    },
+    {
+     "start": 103.49,
+     "end": 111.69,
+     "text": "It took forty years, and Vera Rubin's rotation curves of spiral galaxies in the nineteen seventies, before astronomers took him seriously."
+    },
+    {
+     "start": 111.69,
+     "end": 116.09,
+     "text": "The first evidence for dark matter was the virial theorem applied to a cluster."
+    },
+    {
+     "start": 116.09,
+     "end": 123.19,
+     "text": "A theorem about time averages, proved in six lines, weighs clusters, galaxies, and the universe's dark matter."
+    }
+   ],
+   "voicedHash": "cc13aee9e315"
+  }
+ }
+}

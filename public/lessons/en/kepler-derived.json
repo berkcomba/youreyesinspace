@@ -1,0 +1,654 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "angular-momentum": {
+   "script": "Look at Mercury behind the panel. The view has risen above the orbit, lines drawn, and the path is stretched. That is where the second law shows itself.\n\nGravity always pulls along the line between the bodies. It is a central force, and that one fact gives us Kepler's second law at once. The inverse-square strength can wait.\n\nAngular momentum of the reduced particle: L vector equals r vector cross p vector, the same as mu times r vector cross v vector. L is angular momentum, r is position from the focus, p is linear momentum, mu is the reduced mass, and v is velocity. The cross product keeps only the swinging part of the motion.\n\nDifferentiate in time. dL by dt equals v cross mu v, plus r cross F. A vector crossed into itself is zero, so the first term drops out. F, the force, is minus G, Newton's constant, times masses m-one and m-two, over r squared, times r-hat, the unit vector along r. It points straight back along r, so that cross product is zero too. Hence dL by dt vanishes. Angular momentum is conserved because the force is central.\n\nI get two consequences from that. L is fixed, and r stays perpendicular to it, so the motion stays in one plane for ever. Orbits are flat. The little triangle swept by r in a short time dt has area one half the magnitude of r cross v dt. So dA by dt, where A is the area, equals one half the magnitude of r cross v, which equals L over two mu, a constant. Equal areas in equal times is conservation of angular momentum, nothing more.\n\nMercury shows it best. Eccentricity zero point two zero six: fifty-nine kilometres per second at perihelion, thirty-nine at aphelion. The ratio one point five one is exactly one plus the eccentricity over one minus the eccentricity. Closer in, the lever arm is shorter, so the planet runs faster and still sweeps the same area each second.",
+   "hash": "ec436d6de217",
+   "duration": 125.43,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.34,
+     "text": "Look at Mercury behind the panel."
+    },
+    {
+     "start": 2.34,
+     "end": 7.12,
+     "text": "The view has risen above the orbit, lines drawn, and the path is stretched."
+    },
+    {
+     "start": 7.12,
+     "end": 9.72,
+     "text": "That is where the second law shows itself."
+    },
+    {
+     "start": 9.72,
+     "end": 13.02,
+     "text": "Gravity always pulls along the line between the bodies."
+    },
+    {
+     "start": 13.02,
+     "end": 18.22,
+     "text": "It is a central force, and that one fact gives us Kepler's second law at once."
+    },
+    {
+     "start": 18.22,
+     "end": 20.64,
+     "text": "The inverse-square strength can wait."
+    },
+    {
+     "start": 20.64,
+     "end": 29.74,
+     "text": "Angular momentum of the reduced particle: L vector equals r vector cross p vector, the same as mu times r vector cross v vector."
+    },
+    {
+     "start": 29.74,
+     "end": 38.34,
+     "text": "L is angular momentum, r is position from the focus, p is linear momentum, mu is the reduced mass, and v is velocity."
+    },
+    {
+     "start": 38.34,
+     "end": 41.64,
+     "text": "The cross product keeps only the swinging part of the motion."
+    },
+    {
+     "start": 41.64,
+     "end": 43.36,
+     "text": "Differentiate in time."
+    },
+    {
+     "start": 43.36,
+     "end": 48.24,
+     "text": "dL by dt equals v cross mu v, plus r cross F."
+    },
+    {
+     "start": 48.24,
+     "end": 52.74,
+     "text": "A vector crossed into itself is zero, so the first term drops out."
+    },
+    {
+     "start": 52.74,
+     "end": 62.85,
+     "text": "F, the force, is minus G, Newton's constant, times masses m-one and m-two, over r squared, times r-hat, the unit vector along r."
+    },
+    {
+     "start": 62.85,
+     "end": 67.27,
+     "text": "It points straight back along r, so that cross product is zero too."
+    },
+    {
+     "start": 67.27,
+     "end": 69.85,
+     "text": "Hence dL by dt vanishes."
+    },
+    {
+     "start": 69.85,
+     "end": 73.31,
+     "text": "Angular momentum is conserved because the force is central."
+    },
+    {
+     "start": 73.31,
+     "end": 75.51,
+     "text": "I get two consequences from that."
+    },
+    {
+     "start": 75.51,
+     "end": 81.05,
+     "text": "L is fixed, and r stays perpendicular to it, so the motion stays in one plane for ever."
+    },
+    {
+     "start": 81.05,
+     "end": 82.29,
+     "text": "Orbits are flat."
+    },
+    {
+     "start": 82.29,
+     "end": 89.41,
+     "text": "The little triangle swept by r in a short time dt has area one half the magnitude of r cross v dt."
+    },
+    {
+     "start": 89.41,
+     "end": 98.57,
+     "text": "So dA by dt, where A is the area, equals one half the magnitude of r cross v, which equals L over two mu, a constant."
+    },
+    {
+     "start": 98.57,
+     "end": 103.47,
+     "text": "Equal areas in equal times is conservation of angular momentum, nothing more."
+    },
+    {
+     "start": 103.47,
+     "end": 105.25,
+     "text": "Mercury shows it best."
+    },
+    {
+     "start": 105.25,
+     "end": 112.63,
+     "text": "Eccentricity zero point two zero six: fifty-nine kilometres per second at perihelion, thirty-nine at aphelion."
+    },
+    {
+     "start": 112.63,
+     "end": 118.93,
+     "text": "The ratio one point five one is exactly one plus the eccentricity over one minus the eccentricity."
+    },
+    {
+     "start": 118.93,
+     "end": 125.43,
+     "text": "Closer in, the lever arm is shorter, so the planet runs faster and still sweeps the same area each second."
+    }
+   ],
+   "voicedHash": "b43d0bd02d0a"
+  },
+  "derived-summary": {
+   "script": "Look at the planets circling the Sun behind the panel. Kepler's laws were a discovery about the planets. Newton showed us they follow from one universal force, and turned them into tools.\n\nWe fold two bodies into one. The reduced mass mu equals m one times m two, the two masses, over m one plus m two. In the centre-of-mass frame, mu orbits a fixed centre.\n\nA central force conserves angular momentum L. Orbits are planar and sweep equal areas, and d A by d t, the area rate, equals L over two mu.\n\nInverse-square gravity gives conic sections. Radius r equals L squared over G M mu squared, divided by one plus e cosine theta. G is Newton's constant, M the central mass, theta the angle from closest approach. e is set by energy E and L: below one an ellipse, equal to one a parabola, above one a hyperbola.\n\nWith masses kept, P squared equals four pi squared a cubed over G times m one plus m two. P is the period, a the semi-major axis, the astronomer's scale for weighing worlds.\n\nVis-viva, from energy: v squared equals G M times two over r minus one over a. v is the speed, r the distance, a the orbit size.\n\nThree discoveries, now three theorems we can use.",
+   "hash": "ed0d15cdf6ab",
+   "duration": 83.51,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.36,
+     "text": "Look at the planets circling the Sun behind the panel."
+    },
+    {
+     "start": 3.36,
+     "end": 6.64,
+     "text": "Kepler's laws were a discovery about the planets."
+    },
+    {
+     "start": 6.64,
+     "end": 11.64,
+     "text": "Newton showed us they follow from one universal force, and turned them into tools."
+    },
+    {
+     "start": 11.64,
+     "end": 13.9,
+     "text": "We fold two bodies into one."
+    },
+    {
+     "start": 13.9,
+     "end": 21,
+     "text": "The reduced mass mu equals m one times m two, the two masses, over m one plus m two."
+    },
+    {
+     "start": 21,
+     "end": 24.82,
+     "text": "In the centre-of-mass frame, mu orbits a fixed centre."
+    },
+    {
+     "start": 24.82,
+     "end": 28.04,
+     "text": "A central force conserves angular momentum L."
+    },
+    {
+     "start": 28.04,
+     "end": 35.4,
+     "text": "Orbits are planar and sweep equal areas, and d A by d t, the area rate, equals L over two mu."
+    },
+    {
+     "start": 35.4,
+     "end": 38.26,
+     "text": "Inverse-square gravity gives conic sections."
+    },
+    {
+     "start": 38.26,
+     "end": 44.89,
+     "text": "Radius r equals L squared over G M mu squared, divided by one plus e cosine theta."
+    },
+    {
+     "start": 44.89,
+     "end": 50.57,
+     "text": "G is Newton's constant, M the central mass, theta the angle from closest approach."
+    },
+    {
+     "start": 50.57,
+     "end": 57.97,
+     "text": "e is set by energy E and L: below one an ellipse, equal to one a parabola, above one a hyperbola."
+    },
+    {
+     "start": 57.97,
+     "end": 64.63,
+     "text": "With masses kept, P squared equals four pi squared a cubed over G times m one plus m two."
+    },
+    {
+     "start": 64.63,
+     "end": 70.39,
+     "text": "P is the period, a the semi-major axis, the astronomer's scale for weighing worlds."
+    },
+    {
+     "start": 70.39,
+     "end": 76.61,
+     "text": "Vis-viva, from energy: v squared equals G M times two over r minus one over a."
+    },
+    {
+     "start": 76.61,
+     "end": 80.73,
+     "text": "v is the speed, r the distance, a the orbit size."
+    },
+    {
+     "start": 80.73,
+     "end": 83.51,
+     "text": "Three discoveries, now three theorems we can use."
+    }
+   ],
+   "voicedHash": "5013cec0cf3b"
+  },
+  "first-law-derived": {
+   "script": "Deriving the orbit's shape takes a little more algebra. In polar coordinates r and theta we eliminate time with the constant angular momentum L equals mu r squared d theta by d t. The radial equation becomes one for u equals one over r. Notice that the second derivative of u with respect to theta plus u equals G M mu squared over L squared. u means one over r, M is m one plus m two, G the gravitational constant, mu the reduced mass, L the angular momentum. It is a harmonic oscillator plus a constant force, like a mass on a spring with gravity, so the solution is a cosine plus a constant. Thus r of theta equals the quantity L squared over G M mu squared, divided by one plus e cosine theta. This is the polar form of an ellipse, where a times one minus e squared equals L squared over G M mu squared, and the force centre, the Sun, lies at the focus as Kepler required. e equals the square root of one plus two E L squared over mu cubed G squared M squared, with E the energy. Negative E means e below one, an ellipse. Zero E means e of one, a parabola. Positive E means e above one, a hyperbola. Drag the slider past one and see the orbit open and escape. These are the conic sections, and nature uses all of them. Planets and periodic comets travel on ellipses. Long-period comets often look nearly parabolic. 'Oumuamua and comet Borisov arrived on hyperbolas and will not return. Only two force laws close their orbits: Newton's inverse square law, and the spring force proportional to r. Any other power lets the ellipse precess. General relativity supplies a small precession, advancing Mercury's perihelion by forty-three arcseconds each century, Einstein's first great test.",
+   "hash": "67a32fab85db",
+   "duration": 113.27,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.42,
+     "text": "Deriving the orbit's shape takes a little more algebra."
+    },
+    {
+     "start": 3.42,
+     "end": 12.34,
+     "text": "In polar coordinates r and theta we eliminate time with the constant angular momentum L equals mu r squared d theta by d t."
+    },
+    {
+     "start": 12.34,
+     "end": 16.46,
+     "text": "The radial equation becomes one for u equals one over r."
+    },
+    {
+     "start": 16.46,
+     "end": 23.22,
+     "text": "Notice that the second derivative of u with respect to theta plus u equals G M mu squared over L squared."
+    },
+    {
+     "start": 23.22,
+     "end": 32.8,
+     "text": "u means one over r, M is m one plus m two, G the gravitational constant, mu the reduced mass, L the angular momentum."
+    },
+    {
+     "start": 32.8,
+     "end": 41.06,
+     "text": "It is a harmonic oscillator plus a constant force, like a mass on a spring with gravity, so the solution is a cosine plus a constant."
+    },
+    {
+     "start": 41.06,
+     "end": 48.42,
+     "text": "Thus r of theta equals the quantity L squared over G M mu squared, divided by one plus e cosine theta."
+    },
+    {
+     "start": 48.42,
+     "end": 60.05,
+     "text": "This is the polar form of an ellipse, where a times one minus e squared equals L squared over G M mu squared, and the force centre, the Sun, lies at the focus as Kepler required."
+    },
+    {
+     "start": 60.05,
+     "end": 67.39,
+     "text": "e equals the square root of one plus two E L squared over mu cubed G squared M squared, with E the energy."
+    },
+    {
+     "start": 67.39,
+     "end": 70.55,
+     "text": "Negative E means e below one, an ellipse."
+    },
+    {
+     "start": 70.55,
+     "end": 73.49,
+     "text": "Zero E means e of one, a parabola."
+    },
+    {
+     "start": 73.49,
+     "end": 76.89,
+     "text": "Positive E means e above one, a hyperbola."
+    },
+    {
+     "start": 76.89,
+     "end": 80.65,
+     "text": "Drag the slider past one and see the orbit open and escape."
+    },
+    {
+     "start": 80.65,
+     "end": 84.13,
+     "text": "These are the conic sections, and nature uses all of them."
+    },
+    {
+     "start": 84.13,
+     "end": 87.19,
+     "text": "Planets and periodic comets travel on ellipses."
+    },
+    {
+     "start": 87.19,
+     "end": 89.99,
+     "text": "Long-period comets often look nearly parabolic."
+    },
+    {
+     "start": 89.99,
+     "end": 95.15,
+     "text": "'Oumuamua and comet Borisov arrived on hyperbolas and will not return."
+    },
+    {
+     "start": 95.15,
+     "end": 101.77,
+     "text": "Only two force laws close their orbits: Newton's inverse square law, and the spring force proportional to r."
+    },
+    {
+     "start": 101.77,
+     "end": 104.31,
+     "text": "Any other power lets the ellipse precess."
+    },
+    {
+     "start": 104.31,
+     "end": 113.27,
+     "text": "General relativity supplies a small precession, advancing Mercury's perihelion by forty-three arcseconds each century, Einstein's first great test."
+    }
+   ],
+   "voicedHash": "c6cba4f8926e"
+  },
+  "third-law-derived": {
+   "script": "Look at Io behind the panel. Those orbit lines now let us weigh Jupiter.\n\nAn ellipse has area pi a b, a the semi-major, b the semi-minor. Areal velocity, L over two mu, is angular momentum over twice the reduced mass, so pi a b equals L over two mu times the period P. Square it. Use b squared equals a squared times one minus e squared, and a times one minus e squared equals L squared over G M mu squared. L and e cancel, M the total mass.\n\nP squared equals four pi squared, over G times m one plus m two, times a cubed. P is the orbital period, a the semi-major axis, G Newton's gravitational constant, and m one and m two the two masses. Only size and total mass fix the period, so shape drops out.\n\nKepler's P squared equals a cubed is this law for a solar mass, P in years and a in astronomical units, where four pi squared over G M Sun equals one.\n\nThis is one of the most useful equations in astronomy, the only general way we have to weigh things. Period and semi-major axis give the sum of the masses.\n\nIo, one point eight days at four hundred twenty-two thousand kilometres. Jupiter's mass is four pi squared a cubed over G P squared. With a of four hundred twenty-two million metres, P of about one hundred fifty-three thousand seconds, and G six point seven times ten to the minus eleven, you get one point nine times ten to the twenty-seven kilograms. Three hundred eighteen Earth masses, a stopwatch and an angle, exactly as Galileo's moons allowed in sixteen ten.\n\nThe Sun, same formula, one hundred fifty million kilometres and one year, is two times ten to the thirty kilograms. Earth is negligible, three ten-thousandths of one percent. A binary gives the sum; the widget from the first step splits it by the ellipses about the centre of mass.",
+   "hash": "90b0bca01233",
+   "duration": 120.63,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.36,
+     "text": "Look at Io behind the panel."
+    },
+    {
+     "start": 2.36,
+     "end": 5.2,
+     "text": "Those orbit lines now let us weigh Jupiter."
+    },
+    {
+     "start": 5.2,
+     "end": 10.98,
+     "text": "An ellipse has area pi a b, a the semi-major, b the semi-minor."
+    },
+    {
+     "start": 10.98,
+     "end": 22.46,
+     "text": "Areal velocity, L over two mu, is angular momentum over twice the reduced mass, so pi a b equals L over two mu times the period P. Square it."
+    },
+    {
+     "start": 22.46,
+     "end": 31.64,
+     "text": "Use b squared equals a squared times one minus e squared, and a times one minus e squared equals L squared over G M mu squared."
+    },
+    {
+     "start": 31.64,
+     "end": 34.64,
+     "text": "L and e cancel, M the total mass."
+    },
+    {
+     "start": 34.64,
+     "end": 41.04,
+     "text": "P squared equals four pi squared, over G times m one plus m two, times a cubed."
+    },
+    {
+     "start": 41.04,
+     "end": 50.06,
+     "text": "P is the orbital period, a the semi-major axis, G Newton's gravitational constant, and m one and m two the two masses."
+    },
+    {
+     "start": 50.06,
+     "end": 54.4,
+     "text": "Only size and total mass fix the period, so shape drops out."
+    },
+    {
+     "start": 54.4,
+     "end": 65.09,
+     "text": "Kepler's P squared equals a cubed is this law for a solar mass, P in years and a in astronomical units, where four pi squared over G M Sun equals one."
+    },
+    {
+     "start": 65.09,
+     "end": 70.79,
+     "text": "This is one of the most useful equations in astronomy, the only general way we have to weigh things."
+    },
+    {
+     "start": 70.79,
+     "end": 74.53,
+     "text": "Period and semi-major axis give the sum of the masses."
+    },
+    {
+     "start": 74.53,
+     "end": 78.81,
+     "text": "Io, one point eight days at four hundred twenty-two thousand kilometres."
+    },
+    {
+     "start": 78.81,
+     "end": 83.25,
+     "text": "Jupiter's mass is four pi squared a cubed over G P squared."
+    },
+    {
+     "start": 83.25,
+     "end": 96.19,
+     "text": "With a of four hundred twenty-two million metres, P of about one hundred fifty-three thousand seconds, and G six point seven times ten to the minus eleven, you get one point nine times ten to the twenty-seven kilograms."
+    },
+    {
+     "start": 96.19,
+     "end": 103.59,
+     "text": "Three hundred eighteen Earth masses, a stopwatch and an angle, exactly as Galileo's moons allowed in sixteen ten."
+    },
+    {
+     "start": 103.59,
+     "end": 111.01,
+     "text": "The Sun, same formula, one hundred fifty million kilometres and one year, is two times ten to the thirty kilograms."
+    },
+    {
+     "start": 111.01,
+     "end": 114.77,
+     "text": "Earth is negligible, three ten-thousandths of one percent."
+    },
+    {
+     "start": 114.77,
+     "end": 120.63,
+     "text": "A binary gives the sum; the widget from the first step splits it by the ellipses about the centre of mass."
+    }
+   ],
+   "voicedHash": "fedae4754aa9"
+  },
+  "two-body": {
+   "script": "Kepler put the Sun at a focus and let the planet move, but Newton's third law says that cannot be right: the planet pulls the Sun, so the Sun must move too. We describe both bodies relative to their centre of mass, the mass-weighted average position.\n\nVector R equals m one times vector r one plus m two times vector r two, divided by m one plus m two. R is that centre-of-mass position, the m's are the masses, and the r's their positions. With no external forces it moves in a straight line at constant speed, so we may sit on it and treat it as fixed.\n\nFrom the centre of mass both bodies trace similar ellipses of equal period, always opposite, sizes inverse to mass — heavy one small, light one large. Try the presets in the widget. Earth and Moon: the centre of mass lies inside the Earth, about four thousand seven hundred kilometres from its centre. Pluto and Charon: it sits in open space between them.\n\nSeparation vector r is vector r two minus vector r one, and reduced mass mu is m one times m two over m one plus m two. Newton's second law for each body, subtracted, gives mu times the second derivative of vector r with respect to time equals minus G m one m two over r squared times the unit vector r-hat. G is the gravitational constant, r the distance, r-hat the direction. The two-body problem has become a one-body problem — a fictitious particle of mass mu around a fixed centre under the full force. Solve this and you have both real orbits.\n\nWhen m two is much less than m one, as for a planet and the Sun, mu is about m two and the centre of mass is essentially at the Sun, so Kepler's picture returns. For two stars of similar mass it does not, and this treatment is essential. Nearly half of all stars are in such pairs.",
+   "hash": "7287048081ed",
+   "duration": 112.31,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 10.48,
+     "text": "Kepler put the Sun at a focus and let the planet move, but Newton's third law says that cannot be right: the planet pulls the Sun, so the Sun must move too."
+    },
+    {
+     "start": 10.48,
+     "end": 16.16,
+     "text": "We describe both bodies relative to their centre of mass, the mass-weighted average position."
+    },
+    {
+     "start": 16.16,
+     "end": 24.74,
+     "text": "Vector R equals m one times vector r one plus m two times vector r two, divided by m one plus m two."
+    },
+    {
+     "start": 24.74,
+     "end": 30.44,
+     "text": "R is that centre-of-mass position, the m's are the masses, and the r's their positions."
+    },
+    {
+     "start": 30.44,
+     "end": 37.04,
+     "text": "With no external forces it moves in a straight line at constant speed, so we may sit on it and treat it as fixed."
+    },
+    {
+     "start": 37.04,
+     "end": 46.98,
+     "text": "From the centre of mass both bodies trace similar ellipses of equal period, always opposite, sizes inverse to mass — heavy one small, light one large."
+    },
+    {
+     "start": 46.98,
+     "end": 48.8,
+     "text": "Try the presets in the widget."
+    },
+    {
+     "start": 48.8,
+     "end": 55.58,
+     "text": "Earth and Moon: the centre of mass lies inside the Earth, about four thousand seven hundred kilometres from its centre."
+    },
+    {
+     "start": 55.58,
+     "end": 59.31,
+     "text": "Pluto and Charon: it sits in open space between them."
+    },
+    {
+     "start": 59.31,
+     "end": 68.55,
+     "text": "Separation vector r is vector r two minus vector r one, and reduced mass mu is m one times m two over m one plus m two."
+    },
+    {
+     "start": 68.55,
+     "end": 81.05,
+     "text": "Newton's second law for each body, subtracted, gives mu times the second derivative of vector r with respect to time equals minus G m one m two over r squared times the unit vector r-hat."
+    },
+    {
+     "start": 81.05,
+     "end": 85.85,
+     "text": "G is the gravitational constant, r the distance, r-hat the direction."
+    },
+    {
+     "start": 85.85,
+     "end": 93.37,
+     "text": "The two-body problem has become a one-body problem — a fictitious particle of mass mu around a fixed centre under the full force."
+    },
+    {
+     "start": 93.37,
+     "end": 95.83,
+     "text": "Solve this and you have both real orbits."
+    },
+    {
+     "start": 95.83,
+     "end": 105.69,
+     "text": "When m two is much less than m one, as for a planet and the Sun, mu is about m two and the centre of mass is essentially at the Sun, so Kepler's picture returns."
+    },
+    {
+     "start": 105.69,
+     "end": 109.97,
+     "text": "For two stars of similar mass it does not, and this treatment is essential."
+    },
+    {
+     "start": 109.97,
+     "end": 112.31,
+     "text": "Nearly half of all stars are in such pairs."
+    }
+   ],
+   "voicedHash": "d5a5d5a67b07"
+  },
+  "vis-viva": {
+   "script": "Look at Halley's comet behind the panel. It races in, then almost stalls. We combine energy conservation with a total energy of minus G M m over two a, and the speed at any point follows from the distance alone.\n\nOne half v squared, minus G M over r, equals minus G M over two a. v is the speed, r the distance from the Sun, G Newton's constant, M the Sun's mass, a the semi-major axis. So the energy per unit mass never changes, and a sets its value. The comet's mass cancels, and v squared equals G M times the quantity two over r minus one over a. That is the vis-viva equation, the old living force equation.\n\nOn a circle r equals a, so v squared equals G M over a, the circular speed. Let a run to infinity, as on a parabola, and v squared equals two G M over r, escape speed.\n\nAt the ends of the ellipse, distance is set by a and the eccentricity e. Perihelion speed, v sub p, equals the square root of G M over a times the fraction one plus e over one minus e. Aphelion speed, v sub a, equals the square root of G M over a times the fraction one minus e over one plus e.\n\nHalley has a of seventeen point eight astronomical units and e of zero point nine six seven. The square root of G M of the Sun over a is about seven kilometres per second. At perihelion that becomes about fifty-five kilometres per second, and under one kilometre per second at aphelion. Earth, e under two hundredths, shifts from about thirty kilometres per second in January to about twenty-nine in July. A roller coaster reads speed from height.\n\nMission planners live by this equation. Change speed at one point and let vis-viva do the rest. The Hohmann transfer that the Mission panel in this app computes uses nothing else.",
+   "hash": "58c37fafd4d5",
+   "duration": 114.87,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.68,
+     "text": "Look at Halley's comet behind the panel."
+    },
+    {
+     "start": 2.68,
+     "end": 5.4,
+     "text": "It races in, then almost stalls."
+    },
+    {
+     "start": 5.4,
+     "end": 14.36,
+     "text": "We combine energy conservation with a total energy of minus G M m over two a, and the speed at any point follows from the distance alone."
+    },
+    {
+     "start": 14.36,
+     "end": 20.54,
+     "text": "One half v squared, minus G M over r, equals minus G M over two a."
+    },
+    {
+     "start": 20.54,
+     "end": 28.94,
+     "text": "v is the speed, r the distance from the Sun, G Newton's constant, M the Sun's mass, a the semi-major axis."
+    },
+    {
+     "start": 28.94,
+     "end": 33.34,
+     "text": "So the energy per unit mass never changes, and a sets its value."
+    },
+    {
+     "start": 33.34,
+     "end": 40.24,
+     "text": "The comet's mass cancels, and v squared equals G M times the quantity two over r minus one over a."
+    },
+    {
+     "start": 40.24,
+     "end": 44.36,
+     "text": "That is the vis-viva equation, the old living force equation."
+    },
+    {
+     "start": 44.36,
+     "end": 50.24,
+     "text": "On a circle r equals a, so v squared equals G M over a, the circular speed."
+    },
+    {
+     "start": 50.24,
+     "end": 56.82,
+     "text": "Let a run to infinity, as on a parabola, and v squared equals two G M over r, escape speed."
+    },
+    {
+     "start": 56.82,
+     "end": 61.51,
+     "text": "At the ends of the ellipse, distance is set by a and the eccentricity e."
+    },
+    {
+     "start": 61.51,
+     "end": 69.85,
+     "text": "Perihelion speed, v sub p, equals the square root of G M over a times the fraction one plus e over one minus e."
+    },
+    {
+     "start": 69.85,
+     "end": 77.87,
+     "text": "Aphelion speed, v sub a, equals the square root of G M over a times the fraction one minus e over one plus e."
+    },
+    {
+     "start": 77.87,
+     "end": 83.61,
+     "text": "Halley has a of seventeen point eight astronomical units and e of zero point nine six seven."
+    },
+    {
+     "start": 83.61,
+     "end": 88.47,
+     "text": "The square root of G M of the Sun over a is about seven kilometres per second."
+    },
+    {
+     "start": 88.47,
+     "end": 95.25,
+     "text": "At perihelion that becomes about fifty-five kilometres per second, and under one kilometre per second at aphelion."
+    },
+    {
+     "start": 95.25,
+     "end": 102.31,
+     "text": "Earth, e under two hundredths, shifts from about thirty kilometres per second in January to about twenty-nine in July."
+    },
+    {
+     "start": 102.31,
+     "end": 104.67,
+     "text": "A roller coaster reads speed from height."
+    },
+    {
+     "start": 104.67,
+     "end": 106.97,
+     "text": "Mission planners live by this equation."
+    },
+    {
+     "start": 106.97,
+     "end": 110.39,
+     "text": "Change speed at one point and let vis-viva do the rest."
+    },
+    {
+     "start": 110.39,
+     "end": 114.87,
+     "text": "The Hohmann transfer that the Mission panel in this app computes uses nothing else."
+    }
+   ],
+   "voicedHash": "005c0c41dec9"
+  }
+ }
+}

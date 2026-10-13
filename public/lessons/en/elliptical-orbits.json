@@ -1,0 +1,802 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "ellipse": {
+   "script": "Kepler's breakthrough was a shape. An ellipse is the set of points whose distances to two fixed points, the foci, add up to a constant, two a. Pin a string to two nails and trace it with a pencil kept taut: that is an ellipse. Drag the eccentricity slider and watch the two foci move apart.\n\nSemi-major axis a is half the longest diameter. It sets the size of the orbit and, as we will see, its period. Semi-minor axis b is half the shortest diameter, and b equals a times the square root of one minus e squared. Eccentricity e is how far each focus sits from the centre, as a fraction of a. Zero is a circle; values near one are long and thin.\n\nThe Sun sits at one focus. Perihelion, the closest point, has r p equal to a times the quantity one minus e. Aphelion, the farthest, has r a equal to a times the quantity one plus e. Their sum, r p plus r a, equals two a, the length of the string.\n\nThe polar equation measured from a focus is r equals a times the quantity one minus e squared, all divided by one plus e times the cosine of theta. r is the distance from the Sun, a and e are as before, and theta, the true anomaly, is the angle from perihelion. At theta equals zero the cosine is one, so the denominator is largest and r is smallest.\n\nFor Mars, a is about one point five two astronomical units and e about zero point zero nine. Perihelion comes to about one point three eight astronomical units and aphelion to about one point six seven astronomical units. b is only four tenths of a percent less than a. Mars's orbit is very nearly a circle; what gives it away is that the Sun sits about zero point one four astronomical units off centre, not the shape.",
+   "hash": "bcc909063f78",
+   "duration": 113.91,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 2.42,
+     "text": "Kepler's breakthrough was a shape."
+    },
+    {
+     "start": 2.42,
+     "end": 10.4,
+     "text": "An ellipse is the set of points whose distances to two fixed points, the foci, add up to a constant, two a."
+    },
+    {
+     "start": 10.4,
+     "end": 15.76,
+     "text": "Pin a string to two nails and trace it with a pencil kept taut: that is an ellipse."
+    },
+    {
+     "start": 15.76,
+     "end": 20.06,
+     "text": "Drag the eccentricity slider and watch the two foci move apart."
+    },
+    {
+     "start": 20.06,
+     "end": 23.66,
+     "text": "Semi-major axis a is half the longest diameter."
+    },
+    {
+     "start": 23.66,
+     "end": 28.2,
+     "text": "It sets the size of the orbit and, as we will see, its period."
+    },
+    {
+     "start": 28.2,
+     "end": 35.92,
+     "text": "Semi-minor axis b is half the shortest diameter, and b equals a times the square root of one minus e squared."
+    },
+    {
+     "start": 35.92,
+     "end": 41.34,
+     "text": "Eccentricity e is how far each focus sits from the centre, as a fraction of a."
+    },
+    {
+     "start": 41.34,
+     "end": 45.54,
+     "text": "Zero is a circle; values near one are long and thin."
+    },
+    {
+     "start": 45.54,
+     "end": 47.7,
+     "text": "The Sun sits at one focus."
+    },
+    {
+     "start": 47.7,
+     "end": 53.98,
+     "text": "Perihelion, the closest point, has r p equal to a times the quantity one minus e."
+    },
+    {
+     "start": 53.98,
+     "end": 59.47,
+     "text": "Aphelion, the farthest, has r a equal to a times the quantity one plus e."
+    },
+    {
+     "start": 59.47,
+     "end": 64.49,
+     "text": "Their sum, r p plus r a, equals two a, the length of the string."
+    },
+    {
+     "start": 64.49,
+     "end": 74.25,
+     "text": "The polar equation measured from a focus is r equals a times the quantity one minus e squared, all divided by one plus e times the cosine of theta."
+    },
+    {
+     "start": 74.25,
+     "end": 82.09,
+     "text": "r is the distance from the Sun, a and e are as before, and theta, the true anomaly, is the angle from perihelion."
+    },
+    {
+     "start": 82.09,
+     "end": 87.89,
+     "text": "At theta equals zero the cosine is one, so the denominator is largest and r is smallest."
+    },
+    {
+     "start": 87.89,
+     "end": 94.43,
+     "text": "For Mars, a is about one point five two astronomical units and e about zero point zero nine."
+    },
+    {
+     "start": 94.43,
+     "end": 102.43,
+     "text": "Perihelion comes to about one point three eight astronomical units and aphelion to about one point six seven astronomical units."
+    },
+    {
+     "start": 102.43,
+     "end": 105.41,
+     "text": "b is only four tenths of a percent less than a."
+    },
+    {
+     "start": 105.41,
+     "end": 113.91,
+     "text": "Mars's orbit is very nearly a circle; what gives it away is that the Sun sits about zero point one four astronomical units off centre, not the shape."
+    }
+   ],
+   "voicedHash": "cdd55cc7d61e"
+  },
+  "first-law": {
+   "script": "Look at the orbit rising behind the panel. That long thin loop is Halley's Comet, and it shows Kepler's first law better than any planet can. In 1609, in Astronomia Nova, Kepler wrote that each planet moves on an ellipse, with the Sun at one focus. Not at the centre. At a focus. The other focus is empty. Picture two pins and a loop of string. The pencil traces an ellipse, one pin is the Sun, and the other pin has nothing on it. That single statement swept away two thousand years of circles, epicycles and equants.\n\nFor the planets the ellipses are so nearly circular that the shape is hard to see. The off-centre Sun is the visible effect. In the table, a is the semi-major axis, half the long axis of the ellipse, measured in astronomical units, and e is the eccentricity. Zero would be a perfect circle. Closer to one means a skinny orbit. Mercury's e is about zero point two one. Venus is almost round, e about zero point zero zero seven. Earth is about zero point zero one seven. Mars is about zero point zero nine three.\n\nHalley is unmistakable. e equals zero point nine six seven, so the orbit is wildly stretched. Every seventy-six years it dives from beyond Neptune, aphelion about thirty-five astronomical units, to inside the orbit of Venus, perihelion a bit over half an astronomical unit. Perihelion is the closest point to the Sun. Aphelion is the farthest.\n\nPluto's eccentricity, about a quarter, is large enough that Pluto sat inside Neptune's orbit from 1979 to 1999.\n\nWhy did nobody see this earlier? The planets' eccentricities are tiny, and the sky was never measured to better than ten arcminutes. Tycho's data reached about one arcminute, and Mars's relatively large e of zero point zero nine three made the ellipse just barely visible. Kepler found it in the one planet where it could be found.",
+   "hash": "075ad6a1906b",
+   "duration": 119.03,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.78,
+     "text": "Look at the orbit rising behind the panel."
+    },
+    {
+     "start": 2.78,
+     "end": 9.26,
+     "text": "That long thin loop is Halley's Comet, and it shows Kepler's first law better than any planet can."
+    },
+    {
+     "start": 9.26,
+     "end": 17.28,
+     "text": "In 1609, in Astronomia Nova, Kepler wrote that each planet moves on an ellipse, with the Sun at one focus."
+    },
+    {
+     "start": 17.28,
+     "end": 19.66,
+     "text": "Not at the centre. At a focus."
+    },
+    {
+     "start": 19.66,
+     "end": 21.6,
+     "text": "The other focus is empty."
+    },
+    {
+     "start": 21.6,
+     "end": 24.1,
+     "text": "Picture two pins and a loop of string."
+    },
+    {
+     "start": 24.1,
+     "end": 29.54,
+     "text": "The pencil traces an ellipse, one pin is the Sun, and the other pin has nothing on it."
+    },
+    {
+     "start": 29.54,
+     "end": 35.28,
+     "text": "That single statement swept away two thousand years of circles, epicycles and equants."
+    },
+    {
+     "start": 35.28,
+     "end": 40.1,
+     "text": "For the planets the ellipses are so nearly circular that the shape is hard to see."
+    },
+    {
+     "start": 40.1,
+     "end": 42.82,
+     "text": "The off-centre Sun is the visible effect."
+    },
+    {
+     "start": 42.82,
+     "end": 52.1,
+     "text": "In the table, a is the semi-major axis, half the long axis of the ellipse, measured in astronomical units, and e is the eccentricity."
+    },
+    {
+     "start": 52.1,
+     "end": 54.14,
+     "text": "Zero would be a perfect circle."
+    },
+    {
+     "start": 54.14,
+     "end": 56.54,
+     "text": "Closer to one means a skinny orbit."
+    },
+    {
+     "start": 56.54,
+     "end": 59.4,
+     "text": "Mercury's e is about zero point two one."
+    },
+    {
+     "start": 59.4,
+     "end": 63.65,
+     "text": "Venus is almost round, e about zero point zero zero seven."
+    },
+    {
+     "start": 63.65,
+     "end": 66.33,
+     "text": "Earth is about zero point zero one seven."
+    },
+    {
+     "start": 66.33,
+     "end": 69.15,
+     "text": "Mars is about zero point zero nine three."
+    },
+    {
+     "start": 69.15,
+     "end": 70.97,
+     "text": "Halley is unmistakable."
+    },
+    {
+     "start": 70.97,
+     "end": 75.61,
+     "text": "e equals zero point nine six seven, so the orbit is wildly stretched."
+    },
+    {
+     "start": 75.61,
+     "end": 86.97,
+     "text": "Every seventy-six years it dives from beyond Neptune, aphelion about thirty-five astronomical units, to inside the orbit of Venus, perihelion a bit over half an astronomical unit."
+    },
+    {
+     "start": 86.97,
+     "end": 89.71,
+     "text": "Perihelion is the closest point to the Sun."
+    },
+    {
+     "start": 89.71,
+     "end": 91.61,
+     "text": "Aphelion is the farthest."
+    },
+    {
+     "start": 91.61,
+     "end": 100.05,
+     "text": "Pluto's eccentricity, about a quarter, is large enough that Pluto sat inside Neptune's orbit from 1979 to 1999."
+    },
+    {
+     "start": 100.05,
+     "end": 101.91,
+     "text": "Why did nobody see this earlier?"
+    },
+    {
+     "start": 101.91,
+     "end": 107.59,
+     "text": "The planets' eccentricities are tiny, and the sky was never measured to better than ten arcminutes."
+    },
+    {
+     "start": 107.59,
+     "end": 116.09,
+     "text": "Tycho's data reached about one arcminute, and Mars's relatively large e of zero point zero nine three made the ellipse just barely visible."
+    },
+    {
+     "start": 116.09,
+     "end": 119.03,
+     "text": "Kepler found it in the one planet where it could be found."
+    }
+   ],
+   "voicedHash": "31166e34ee08"
+  },
+  "kepler-summary": {
+   "script": "Look behind the panel. The system slowly circles the Sun. Kepler's 1619 laws were the first exact description, to the limit of Tycho's data. The Rudolphine Tables of 1627 were thirty times more accurate, purely descriptive. Why ellipses, equal areas, the three-halves power? Kepler guessed a magnetic influence from the rotating Sun, close in spirit, wrong in detail. Kuhn called this a paradigm shift, not smooth accumulation. Circles were not disproved by one measurement; they were abandoned when a new framework explained more. Dark matter, dark energy, and inflation are a paradigm; parts may be revised the same way. Tycho's one-arcminute positions showed circles fail; Kepler's refusal to ignore an eight-arcminute error made it happen. First law, Sun at one focus. r equals a times one minus e squared, divided by one plus e cosine theta. r, the distance from the Sun, a the semi-major axis, e the eccentricity, theta the angle from perihelion: its polar form. Second law, equal areas in equal times, fastest at perihelion. vee-p over vee-a equals one plus e over one minus e. vee-p is perihelion speed, vee-a aphelion speed, and there speed times distance is constant. Third law, P squared equals a cubed. P, the period in years, a the semi-major axis in astronomical units. A stopwatch becomes a ruler. They describe, not explain.",
+   "hash": "e46827811bcc",
+   "duration": 95.35,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 1.42,
+     "text": "Look behind the panel."
+    },
+    {
+     "start": 1.42,
+     "end": 4.04,
+     "text": "The system slowly circles the Sun."
+    },
+    {
+     "start": 4.04,
+     "end": 10.1,
+     "text": "Kepler's 1619 laws were the first exact description, to the limit of Tycho's data."
+    },
+    {
+     "start": 10.1,
+     "end": 16.14,
+     "text": "The Rudolphine Tables of 1627 were thirty times more accurate, purely descriptive."
+    },
+    {
+     "start": 16.14,
+     "end": 20.04,
+     "text": "Why ellipses, equal areas, the three-halves power?"
+    },
+    {
+     "start": 20.04,
+     "end": 26.08,
+     "text": "Kepler guessed a magnetic influence from the rotating Sun, close in spirit, wrong in detail."
+    },
+    {
+     "start": 26.08,
+     "end": 30.2,
+     "text": "Kuhn called this a paradigm shift, not smooth accumulation."
+    },
+    {
+     "start": 30.2,
+     "end": 35.98,
+     "text": "Circles were not disproved by one measurement; they were abandoned when a new framework explained more."
+    },
+    {
+     "start": 35.98,
+     "end": 41.98,
+     "text": "Dark matter, dark energy, and inflation are a paradigm; parts may be revised the same way."
+    },
+    {
+     "start": 41.98,
+     "end": 49.71,
+     "text": "Tycho's one-arcminute positions showed circles fail; Kepler's refusal to ignore an eight-arcminute error made it happen."
+    },
+    {
+     "start": 49.71,
+     "end": 52.47,
+     "text": "First law, Sun at one focus."
+    },
+    {
+     "start": 52.47,
+     "end": 58.31,
+     "text": "r equals a times one minus e squared, divided by one plus e cosine theta."
+    },
+    {
+     "start": 58.31,
+     "end": 67.37,
+     "text": "r, the distance from the Sun, a the semi-major axis, e the eccentricity, theta the angle from perihelion: its polar form."
+    },
+    {
+     "start": 67.37,
+     "end": 72.29,
+     "text": "Second law, equal areas in equal times, fastest at perihelion."
+    },
+    {
+     "start": 72.29,
+     "end": 76.61,
+     "text": "vee-p over vee-a equals one plus e over one minus e."
+    },
+    {
+     "start": 76.61,
+     "end": 83.29,
+     "text": "vee-p is perihelion speed, vee-a aphelion speed, and there speed times distance is constant."
+    },
+    {
+     "start": 83.29,
+     "end": 86.35,
+     "text": "Third law, P squared equals a cubed."
+    },
+    {
+     "start": 86.35,
+     "end": 91.35,
+     "text": "P, the period in years, a the semi-major axis in astronomical units."
+    },
+    {
+     "start": 91.35,
+     "end": 93.35,
+     "text": "A stopwatch becomes a ruler."
+    },
+    {
+     "start": 93.35,
+     "end": 95.35,
+     "text": "They describe, not explain."
+    }
+   ],
+   "voicedHash": "2305d9bcb93b"
+  },
+  "second-law": {
+   "script": "What strikes me is that Kepler discovered his second law first, still fighting with circles. It describes how fast a planet moves on its ellipse: the line from the Sun to the planet sweeps equal areas in equal times. Near perihelion the line is short, so the planet must move far to sweep the same area and it speeds up. Near aphelion the line is long and the planet dawdles. Watch the shaded sectors in the animation. Different shapes, identical areas, each swept in the same number of days. Raise the eccentricity and the contrast becomes dramatic.\n\nThat constant sweep is the areal velocity: d A over d t equals one half r squared times d theta over d t, and the whole thing is constant. A is area, t time, r the distance from the Sun, theta the angle. A thin triangle with base r d theta and height r has area one half r squared d theta; divide by the time and you get the rate at which area is swept, and that rate stays fixed.\n\nAt perihelion and aphelion the velocity is perpendicular to r, so equal areas give v sub p over v sub a equals r sub a over r sub p, or one plus e over one minus e. v sub p and v sub a are the speeds at closest and farthest point, r sub a and r sub p those distances, e the eccentricity. Halley's Comet has e about zero point nine seven, so the ratio is about sixty. It races through the inner Solar System at fifty four kilometres per second and crawls at aphelion under one kilometre per second. Of its seventy six year orbit it spends about seventy years beyond Saturn.\n\nKepler never knew why the areas match. Later you will see the second law is just conservation of angular momentum, physics hiding inside geometry.",
+   "hash": "385e6d80bb54",
+   "duration": 108.47,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 5.98,
+     "text": "What strikes me is that Kepler discovered his second law first, still fighting with circles."
+    },
+    {
+     "start": 5.98,
+     "end": 13.7,
+     "text": "It describes how fast a planet moves on its ellipse: the line from the Sun to the planet sweeps equal areas in equal times."
+    },
+    {
+     "start": 13.7,
+     "end": 20.14,
+     "text": "Near perihelion the line is short, so the planet must move far to sweep the same area and it speeds up."
+    },
+    {
+     "start": 20.14,
+     "end": 23.88,
+     "text": "Near aphelion the line is long and the planet dawdles."
+    },
+    {
+     "start": 23.88,
+     "end": 26.42,
+     "text": "Watch the shaded sectors in the animation."
+    },
+    {
+     "start": 26.42,
+     "end": 31.06,
+     "text": "Different shapes, identical areas, each swept in the same number of days."
+    },
+    {
+     "start": 31.06,
+     "end": 34.58,
+     "text": "Raise the eccentricity and the contrast becomes dramatic."
+    },
+    {
+     "start": 34.58,
+     "end": 44.62,
+     "text": "That constant sweep is the areal velocity: d A over d t equals one half r squared times d theta over d t, and the whole thing is constant."
+    },
+    {
+     "start": 44.62,
+     "end": 50,
+     "text": "A is area, t time, r the distance from the Sun, theta the angle."
+    },
+    {
+     "start": 50,
+     "end": 61.47,
+     "text": "A thin triangle with base r d theta and height r has area one half r squared d theta; divide by the time and you get the rate at which area is swept, and that rate stays fixed."
+    },
+    {
+     "start": 61.47,
+     "end": 73.89,
+     "text": "At perihelion and aphelion the velocity is perpendicular to r, so equal areas give v sub p over v sub a equals r sub a over r sub p, or one plus e over one minus e."
+    },
+    {
+     "start": 73.89,
+     "end": 82.81,
+     "text": "v sub p and v sub a are the speeds at closest and farthest point, r sub a and r sub p those distances, e the eccentricity."
+    },
+    {
+     "start": 82.81,
+     "end": 88.09,
+     "text": "Halley's Comet has e about zero point nine seven, so the ratio is about sixty."
+    },
+    {
+     "start": 88.09,
+     "end": 95.49,
+     "text": "It races through the inner Solar System at fifty four kilometres per second and crawls at aphelion under one kilometre per second."
+    },
+    {
+     "start": 95.49,
+     "end": 99.85,
+     "text": "Of its seventy six year orbit it spends about seventy years beyond Saturn."
+    },
+    {
+     "start": 99.85,
+     "end": 102.35,
+     "text": "Kepler never knew why the areas match."
+    },
+    {
+     "start": 102.35,
+     "end": 108.47,
+     "text": "Later you will see the second law is just conservation of angular momentum, physics hiding inside geometry."
+    }
+   ],
+   "voicedHash": "e44aba44e569"
+  },
+  "third-law": {
+   "script": "Ten years after the first two laws, Kepler published Harmonices Mundi in sixteen nineteen and found the rule that ties all the planets together. Comparing each orbital period P with the semi-major axis a, he noticed that the square of the period is proportional to the cube of the distance. With P in years and a in astronomical units the constant is exactly one, so the formula is P squared equals a cubed. P is the orbital period, the time to circle the Sun once, in years. a is the semi-major axis, the size of the orbit, in astronomical units. Physically, a more distant planet simply takes longer, and the period scales as distance to the power three over two. Kepler saw it in the numbers; he had no physics yet for why.\n\nLook at the plot. Every planet lies on logarithmic axes, where a power law is a straight line and the slope is the exponent, three over two. Drag the test point along the line and read off the period of an imaginary planet at any distance. Notice that every real planet, every asteroid, every comet sits on this one line. The table shows the match. Earth gives one and one. Mars, roughly one and a half astronomical units and just under two years, gives about three and a half on both sides. Jupiter, a little past five astronomical units, takes nearly twelve years, and both a cubed and P squared read near one hundred and forty. Neptune, thirty astronomical units out, taking about one hundred and sixty-five years, still agrees.\n\nThe third law turns a stopwatch into a ruler. Measure how long something takes to go around the Sun, easy, you just wait, and you know how far away it is. Kepler had no physics for it. Newton would show it follows from gravity, with the Sun's mass hidden in the constant.",
+   "hash": "3dfa37472b84",
+   "duration": 108.47,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 9.32,
+     "text": "Ten years after the first two laws, Kepler published Harmonices Mundi in sixteen nineteen and found the rule that ties all the planets together."
+    },
+    {
+     "start": 9.32,
+     "end": 18.32,
+     "text": "Comparing each orbital period P with the semi-major axis a, he noticed that the square of the period is proportional to the cube of the distance."
+    },
+    {
+     "start": 18.32,
+     "end": 26.86,
+     "text": "With P in years and a in astronomical units the constant is exactly one, so the formula is P squared equals a cubed."
+    },
+    {
+     "start": 26.86,
+     "end": 31.48,
+     "text": "P is the orbital period, the time to circle the Sun once, in years."
+    },
+    {
+     "start": 31.48,
+     "end": 36.58,
+     "text": "a is the semi-major axis, the size of the orbit, in astronomical units."
+    },
+    {
+     "start": 36.58,
+     "end": 43.6,
+     "text": "Physically, a more distant planet simply takes longer, and the period scales as distance to the power three over two."
+    },
+    {
+     "start": 43.6,
+     "end": 47.56,
+     "text": "Kepler saw it in the numbers; he had no physics yet for why."
+    },
+    {
+     "start": 47.56,
+     "end": 48.76,
+     "text": "Look at the plot."
+    },
+    {
+     "start": 48.76,
+     "end": 56.37,
+     "text": "Every planet lies on logarithmic axes, where a power law is a straight line and the slope is the exponent, three over two."
+    },
+    {
+     "start": 56.37,
+     "end": 61.93,
+     "text": "Drag the test point along the line and read off the period of an imaginary planet at any distance."
+    },
+    {
+     "start": 61.93,
+     "end": 67.31,
+     "text": "Notice that every real planet, every asteroid, every comet sits on this one line."
+    },
+    {
+     "start": 67.31,
+     "end": 69.05,
+     "text": "The table shows the match."
+    },
+    {
+     "start": 69.05,
+     "end": 70.73,
+     "text": "Earth gives one and one."
+    },
+    {
+     "start": 70.73,
+     "end": 77.75,
+     "text": "Mars, roughly one and a half astronomical units and just under two years, gives about three and a half on both sides."
+    },
+    {
+     "start": 77.75,
+     "end": 86.37,
+     "text": "Jupiter, a little past five astronomical units, takes nearly twelve years, and both a cubed and P squared read near one hundred and forty."
+    },
+    {
+     "start": 86.37,
+     "end": 92.85,
+     "text": "Neptune, thirty astronomical units out, taking about one hundred and sixty-five years, still agrees."
+    },
+    {
+     "start": 92.85,
+     "end": 95.83,
+     "text": "The third law turns a stopwatch into a ruler."
+    },
+    {
+     "start": 95.83,
+     "end": 102.21,
+     "text": "Measure how long something takes to go around the Sun, easy, you just wait, and you know how far away it is."
+    },
+    {
+     "start": 102.21,
+     "end": 104.23,
+     "text": "Kepler had no physics for it."
+    },
+    {
+     "start": 104.23,
+     "end": 108.47,
+     "text": "Newton would show it follows from gravity, with the Sun's mass hidden in the constant."
+    }
+   ],
+   "voicedHash": "1d661826ee67"
+  },
+  "tycho": {
+   "script": "I want you to look behind the panel. The view is rising above the orbit of Mars, orbit lines drawn in. That planet is why we are here. Its path refused to be a circle, and we only know that because the measurements were better than the theory.\n\nEvery good theory starts with good data. Tycho Brahe, a Danish nobleman who lived from 1546 to 1601, lost his nose in a duel and wore a gold-and-silver replacement. The useful part of the story is quieter. For twenty years on the island of Hven he measured planetary positions with giant quadrants and sextants. No telescope. Enormous instruments, carefully calibrated, used over and over. His positions were good to about one arcminute, one sixtieth of a degree, ten times better than anyone before him.\n\nIn 1600 he hired Johannes Kepler, 1571 to 1630, and handed him the hardest object in the data: Mars. Kepler spent years fitting circles. Eccentrics, circles centred away from the Earth or the Sun. Equants, the old trick for uneven angular speed. Every device Ptolemy and Copernicus had used. His best circular model still missed Tycho by eight arcminutes. For any earlier astronomer that would have been a triumph.\n\nKepler refused it. He knew the instruments were good to one arcminute, so eight arcminutes was not noise. Like a tailor who trusts the tape measure more than the old pattern, he let the numbers win. He wrote that those eight minutes pointed the road to a complete reformation of astronomy. That is how science is supposed to work.\n\nTycho himself never accepted Copernicus. His compromise put the Sun in orbit around the Earth and the other planets in orbit around the Sun. Geometrically that matches Copernicus, and it avoids the parallax problem, the tiny stellar shift a moving Earth should produce, which nobody had seen. Kepler, a convinced Copernican, inherited the archive when Tycho died in 1601. The measurements outlived the model their maker preferred.",
+   "hash": "c243490f29f1",
+   "duration": 121.27,
+   "sentences": [
+    {
+     "start": 0.12,
+     "end": 2.4,
+     "text": "I want you to look behind the panel."
+    },
+    {
+     "start": 2.4,
+     "end": 7.08,
+     "text": "The view is rising above the orbit of Mars, orbit lines drawn in."
+    },
+    {
+     "start": 7.08,
+     "end": 9.36,
+     "text": "That planet is why we are here."
+    },
+    {
+     "start": 9.36,
+     "end": 15.5,
+     "text": "Its path refused to be a circle, and we only know that because the measurements were better than the theory."
+    },
+    {
+     "start": 15.5,
+     "end": 18.1,
+     "text": "Every good theory starts with good data."
+    },
+    {
+     "start": 18.1,
+     "end": 27.9,
+     "text": "Tycho Brahe, a Danish nobleman who lived from 1546 to 1601, lost his nose in a duel and wore a gold-and-silver replacement."
+    },
+    {
+     "start": 27.9,
+     "end": 30.42,
+     "text": "The useful part of the story is quieter."
+    },
+    {
+     "start": 30.42,
+     "end": 36.52,
+     "text": "For twenty years on the island of Hven he measured planetary positions with giant quadrants and sextants."
+    },
+    {
+     "start": 36.52,
+     "end": 37.84,
+     "text": "No telescope."
+    },
+    {
+     "start": 37.84,
+     "end": 42.38,
+     "text": "Enormous instruments, carefully calibrated, used over and over."
+    },
+    {
+     "start": 42.38,
+     "end": 49.66,
+     "text": "His positions were good to about one arcminute, one sixtieth of a degree, ten times better than anyone before him."
+    },
+    {
+     "start": 49.66,
+     "end": 58.46,
+     "text": "In 1600 he hired Johannes Kepler, 1571 to 1630, and handed him the hardest object in the data: Mars."
+    },
+    {
+     "start": 58.46,
+     "end": 60.79,
+     "text": "Kepler spent years fitting circles."
+    },
+    {
+     "start": 60.79,
+     "end": 64.47,
+     "text": "Eccentrics, circles centred away from the Earth or the Sun."
+    },
+    {
+     "start": 64.47,
+     "end": 68.03,
+     "text": "Equants, the old trick for uneven angular speed."
+    },
+    {
+     "start": 68.03,
+     "end": 70.91,
+     "text": "Every device Ptolemy and Copernicus had used."
+    },
+    {
+     "start": 70.91,
+     "end": 74.65,
+     "text": "His best circular model still missed Tycho by eight arcminutes."
+    },
+    {
+     "start": 74.65,
+     "end": 77.61,
+     "text": "For any earlier astronomer that would have been a triumph."
+    },
+    {
+     "start": 77.61,
+     "end": 78.95,
+     "text": "Kepler refused it."
+    },
+    {
+     "start": 78.95,
+     "end": 83.75,
+     "text": "He knew the instruments were good to one arcminute, so eight arcminutes was not noise."
+    },
+    {
+     "start": 83.75,
+     "end": 88.71,
+     "text": "Like a tailor who trusts the tape measure more than the old pattern, he let the numbers win."
+    },
+    {
+     "start": 88.71,
+     "end": 93.35,
+     "text": "He wrote that those eight minutes pointed the road to a complete reformation of astronomy."
+    },
+    {
+     "start": 93.35,
+     "end": 95.73,
+     "text": "That is how science is supposed to work."
+    },
+    {
+     "start": 95.73,
+     "end": 98.47,
+     "text": "Tycho himself never accepted Copernicus."
+    },
+    {
+     "start": 98.47,
+     "end": 103.83,
+     "text": "His compromise put the Sun in orbit around the Earth and the other planets in orbit around the Sun."
+    },
+    {
+     "start": 103.83,
+     "end": 112.81,
+     "text": "Geometrically that matches Copernicus, and it avoids the parallax problem, the tiny stellar shift a moving Earth should produce, which nobody had seen."
+    },
+    {
+     "start": 112.81,
+     "end": 118.51,
+     "text": "Kepler, a convinced Copernican, inherited the archive when Tycho died in 1601."
+    },
+    {
+     "start": 118.51,
+     "end": 121.27,
+     "text": "The measurements outlived the model their maker preferred."
+    }
+   ],
+   "voicedHash": "7f1779a2e0a0"
+  },
+  "worked": {
+   "script": "Kepler's laws let us rebuild an entire orbit from two numbers alone. For Halley's Comet those are the period, seventy-six years, and the closest solar approach, zero point five eight six astronomical units. Look at the dark potato-shaped nucleus in front of you, only fifteen kilometres long, as the view flies along its path.\n\nFrom the third law the semi-major axis a equals P to the two-thirds. Seventy-six to the two-thirds equals about seventeen point nine astronomical units. a is half the long axis, P the period in years; since a cubed equals P squared in these units, the period alone fixes the orbit's size.\n\nThe eccentricity comes from r sub p equals a times one minus e, so e equals one minus r sub p over a. That is one minus zero point five eight six divided by seventeen point nine, equalling zero point nine six seven. e near one means a highly elongated ellipse, and r sub p is the perihelion distance.\n\nAphelion follows as r sub a equals a times one plus e: seventeen point nine times one point nine six seven is about thirty-five point two astronomical units, beyond Neptune at thirty point one.\n\nThe semi-minor axis b equals a times the square root of one minus e squared. With e squared near zero point nine three five, b is only about four point six astronomical units, so the orbit is thirty-six astronomical units long and nine wide.\n\nIn seventeen oh five Edmond Halley used Newton's mechanics to identify the comets of fifteen thirty-one, sixteen oh seven and sixteen eighty-two as this same object, predicting its return in seventeen fifty-eight. It returned on schedule, sixteen years after his death — the first successful comet prediction and a public victory for Newton's physics.\n\nSeventy-six years is approximate because giant planets tug the comet each pass; returns have ranged from seventy-four to seventy-nine years. Kepler's laws solve the two-body problem exactly, while the Solar System is only approximately two bodies at a time.",
+   "hash": "56af0080e773",
+   "duration": 125.43,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4.74,
+     "text": "Kepler's laws let us rebuild an entire orbit from two numbers alone."
+    },
+    {
+     "start": 4.74,
+     "end": 14.26,
+     "text": "For Halley's Comet those are the period, seventy-six years, and the closest solar approach, zero point five eight six astronomical units."
+    },
+    {
+     "start": 14.26,
+     "end": 21.6,
+     "text": "Look at the dark potato-shaped nucleus in front of you, only fifteen kilometres long, as the view flies along its path."
+    },
+    {
+     "start": 21.6,
+     "end": 26.72,
+     "text": "From the third law the semi-major axis a equals P to the two-thirds."
+    },
+    {
+     "start": 26.72,
+     "end": 31.76,
+     "text": "Seventy-six to the two-thirds equals about seventeen point nine astronomical units."
+    },
+    {
+     "start": 31.76,
+     "end": 41.34,
+     "text": "a is half the long axis, P the period in years; since a cubed equals P squared in these units, the period alone fixes the orbit's size."
+    },
+    {
+     "start": 41.34,
+     "end": 49.32,
+     "text": "The eccentricity comes from r sub p equals a times one minus e, so e equals one minus r sub p over a."
+    },
+    {
+     "start": 49.32,
+     "end": 56.58,
+     "text": "That is one minus zero point five eight six divided by seventeen point nine, equalling zero point nine six seven."
+    },
+    {
+     "start": 56.58,
+     "end": 62.56,
+     "text": "e near one means a highly elongated ellipse, and r sub p is the perihelion distance."
+    },
+    {
+     "start": 62.56,
+     "end": 75.65,
+     "text": "Aphelion follows as r sub a equals a times one plus e: seventeen point nine times one point nine six seven is about thirty-five point two astronomical units, beyond Neptune at thirty point one."
+    },
+    {
+     "start": 75.65,
+     "end": 80.75,
+     "text": "The semi-minor axis b equals a times the square root of one minus e squared."
+    },
+    {
+     "start": 80.75,
+     "end": 91.01,
+     "text": "With e squared near zero point nine three five, b is only about four point six astronomical units, so the orbit is thirty-six astronomical units long and nine wide."
+    },
+    {
+     "start": 91.01,
+     "end": 103.27,
+     "text": "In seventeen oh five Edmond Halley used Newton's mechanics to identify the comets of fifteen thirty-one, sixteen oh seven and sixteen eighty-two as this same object, predicting its return in seventeen fifty-eight."
+    },
+    {
+     "start": 103.27,
+     "end": 110.91,
+     "text": "It returned on schedule, sixteen years after his death — the first successful comet prediction and a public victory for Newton's physics."
+    },
+    {
+     "start": 110.91,
+     "end": 118.93,
+     "text": "Seventy-six years is approximate because giant planets tug the comet each pass; returns have ranged from seventy-four to seventy-nine years."
+    },
+    {
+     "start": 118.93,
+     "end": 125.43,
+     "text": "Kepler's laws solve the two-body problem exactly, while the Solar System is only approximately two bodies at a time."
+    }
+   ],
+   "voicedHash": "5e230c6284b3"
+  }
+ }
+}

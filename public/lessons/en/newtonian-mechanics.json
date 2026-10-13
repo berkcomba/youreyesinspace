@@ -1,0 +1,852 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "circular": {
+   "script": "Look at Earth behind the panel. We sit beside that central mass. Set gravity equal to the centripetal force, and circular orbits fall out in two lines.\n\nFor a small mass m orbiting a large mass M at radius r, the gravitational pull is G M m over r squared, and the centripetal force at speed v is m v squared over r. Set them equal: G M m over r squared equals m v squared over r. Cancel m, cancel one power of r, and the circular speed is the square root of the quantity G M over r. G is the gravitational constant, M the central mass, r the distance from the centre. The speed depends only on M and r, not on the orbiting mass.\n\nThe period is the circumference divided by that speed: P equals two pi r over v. Substitute the speed, square both sides, and P squared equals four pi squared over G M, times r cubed. Kepler's third law, derived, with the constant made explicit. The one in P squared equals a cubed was the Sun's mass in disguise.\n\nThe International Space Station flies about four hundred and twenty kilometres up, so the radius is roughly six thousand eight hundred kilometres. Earth's G M is known far more precisely than G or Earth's mass separately. The speed is near seven point seven kilometres per second, the period near ninety-three minutes. Sixteen sunrises a day.\n\nA geostationary satellite must match one sidereal day, about eighty-six thousand seconds. The radius is then about forty-two thousand kilometres, some thirty-six thousand kilometres above the equator. Every television satellite sits on that one circle.\n\nFarther out, slower. Station seven point seven, Moon about one, Neptune five point four around the Sun, Mercury forty-seven, all in kilometres per second. Slow and far, fast and close — the pattern Copernicus noticed, now with a formula. Picture a marble in a funnel: close in, you race; farther out, you dawdle.",
+   "hash": "6cc9c838f921",
+   "duration": 124.47,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.14,
+     "text": "Look at Earth behind the panel."
+    },
+    {
+     "start": 2.14,
+     "end": 4.6,
+     "text": "We sit beside that central mass."
+    },
+    {
+     "start": 4.6,
+     "end": 10.12,
+     "text": "Set gravity equal to the centripetal force, and circular orbits fall out in two lines."
+    },
+    {
+     "start": 10.12,
+     "end": 23.1,
+     "text": "For a small mass m orbiting a large mass M at radius r, the gravitational pull is G M m over r squared, and the centripetal force at speed v is m v squared over r."
+    },
+    {
+     "start": 23.1,
+     "end": 28.64,
+     "text": "Set them equal: G M m over r squared equals m v squared over r."
+    },
+    {
+     "start": 28.64,
+     "end": 36.02,
+     "text": "Cancel m, cancel one power of r, and the circular speed is the square root of the quantity G M over r."
+    },
+    {
+     "start": 36.02,
+     "end": 41.68,
+     "text": "G is the gravitational constant, M the central mass, r the distance from the centre."
+    },
+    {
+     "start": 41.68,
+     "end": 45.76,
+     "text": "The speed depends only on M and r, not on the orbiting mass."
+    },
+    {
+     "start": 45.76,
+     "end": 51.58,
+     "text": "The period is the circumference divided by that speed: P equals two pi r over v."
+    },
+    {
+     "start": 51.58,
+     "end": 59.24,
+     "text": "Substitute the speed, square both sides, and P squared equals four pi squared over G M, times r cubed."
+    },
+    {
+     "start": 59.24,
+     "end": 63.35,
+     "text": "Kepler's third law, derived, with the constant made explicit."
+    },
+    {
+     "start": 63.35,
+     "end": 67.75,
+     "text": "The one in P squared equals a cubed was the Sun's mass in disguise."
+    },
+    {
+     "start": 67.75,
+     "end": 75.45,
+     "text": "The International Space Station flies about four hundred and twenty kilometres up, so the radius is roughly six thousand eight hundred kilometres."
+    },
+    {
+     "start": 75.45,
+     "end": 80.37,
+     "text": "Earth's G M is known far more precisely than G or Earth's mass separately."
+    },
+    {
+     "start": 80.37,
+     "end": 85.89,
+     "text": "The speed is near seven point seven kilometres per second, the period near ninety-three minutes."
+    },
+    {
+     "start": 85.89,
+     "end": 87.83,
+     "text": "Sixteen sunrises a day."
+    },
+    {
+     "start": 87.83,
+     "end": 93.59,
+     "text": "A geostationary satellite must match one sidereal day, about eighty-six thousand seconds."
+    },
+    {
+     "start": 93.59,
+     "end": 99.83,
+     "text": "The radius is then about forty-two thousand kilometres, some thirty-six thousand kilometres above the equator."
+    },
+    {
+     "start": 99.83,
+     "end": 102.97,
+     "text": "Every television satellite sits on that one circle."
+    },
+    {
+     "start": 102.97,
+     "end": 104.75,
+     "text": "Farther out, slower."
+    },
+    {
+     "start": 104.75,
+     "end": 113.93,
+     "text": "Station seven point seven, Moon about one, Neptune five point four around the Sun, Mercury forty-seven, all in kilometres per second."
+    },
+    {
+     "start": 113.93,
+     "end": 119.75,
+     "text": "Slow and far, fast and close — the pattern Copernicus noticed, now with a formula."
+    },
+    {
+     "start": 119.75,
+     "end": 124.47,
+     "text": "Picture a marble in a funnel: close in, you race; farther out, you dawdle."
+    }
+   ],
+   "voicedHash": "68583a688d36"
+  },
+  "energy": {
+   "script": "There's a second way I like to think about orbits: energy. Look at Voyager 1 behind the panel.\n\nKinetic energy K equals one half m v squared. m is the mass, v the speed. Gravity does work on a body falling in from infinitely far away, so we put the zero of potential at infinity, and the potential energy U is negative everywhere else: U equals minus G M m over r. G is the gravitational constant, M the central mass, r the distance from its centre. Total mechanical energy E equals K plus U, conserved along the orbit. As r shrinks, U drops and K rises by the same amount, so the body speeds up. That is Kepler's second law, in the language of energy.\n\nThe sign of E decides the fate, like a ball in a bowl. If E is negative, the body is bound on an ellipse and never clears the rim. Exactly zero is a parabola, the escape case. Above zero is a hyperbola, gone for good. For an ellipse, E equals minus G M m over two a. a is the semi-major axis. Every orbit with the same a has the same energy, whatever its eccentricity.\n\nSet E to zero and K cancels U. The mass drops out, one half v squared equals G M over r, and v escape, the escape speed, equals the square root of two G M over r. That is the square root of two times v circular, the circular speed at the same r. From Earth's surface, eleven point two kilometres per second. From the Sun at Earth's distance, forty-two point one kilometres per second.\n\nVoyager 1 has positive E with respect to the Sun. Launched in nineteen seventy-seven, flung outward by Jupiter and Saturn, it rides a hyperbola and will never come back. At seventeen kilometres per second it crossed into interstellar space in twenty twelve, carrying a golden record for whoever finds it.",
+   "hash": "677fa292633c",
+   "duration": 114.55,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 3.86,
+     "text": "There's a second way I like to think about orbits: energy."
+    },
+    {
+     "start": 3.86,
+     "end": 6.28,
+     "text": "Look at Voyager 1 behind the panel."
+    },
+    {
+     "start": 6.28,
+     "end": 10.12,
+     "text": "Kinetic energy K equals one half m v squared."
+    },
+    {
+     "start": 10.12,
+     "end": 12.42,
+     "text": "m is the mass, v the speed."
+    },
+    {
+     "start": 12.42,
+     "end": 25.7,
+     "text": "Gravity does work on a body falling in from infinitely far away, so we put the zero of potential at infinity, and the potential energy U is negative everywhere else: U equals minus G M m over r."
+    },
+    {
+     "start": 25.7,
+     "end": 31.56,
+     "text": "G is the gravitational constant, M the central mass, r the distance from its centre."
+    },
+    {
+     "start": 31.56,
+     "end": 36.62,
+     "text": "Total mechanical energy E equals K plus U, conserved along the orbit."
+    },
+    {
+     "start": 36.62,
+     "end": 42.22,
+     "text": "As r shrinks, U drops and K rises by the same amount, so the body speeds up."
+    },
+    {
+     "start": 42.22,
+     "end": 45.62,
+     "text": "That is Kepler's second law, in the language of energy."
+    },
+    {
+     "start": 45.62,
+     "end": 49.22,
+     "text": "The sign of E decides the fate, like a ball in a bowl."
+    },
+    {
+     "start": 49.22,
+     "end": 53.7,
+     "text": "If E is negative, the body is bound on an ellipse and never clears the rim."
+    },
+    {
+     "start": 53.7,
+     "end": 57.2,
+     "text": "Exactly zero is a parabola, the escape case."
+    },
+    {
+     "start": 57.2,
+     "end": 60.25,
+     "text": "Above zero is a hyperbola, gone for good."
+    },
+    {
+     "start": 60.25,
+     "end": 64.37,
+     "text": "For an ellipse, E equals minus G M m over two a."
+    },
+    {
+     "start": 64.37,
+     "end": 66.53,
+     "text": "a is the semi-major axis."
+    },
+    {
+     "start": 66.53,
+     "end": 71.23,
+     "text": "Every orbit with the same a has the same energy, whatever its eccentricity."
+    },
+    {
+     "start": 71.23,
+     "end": 73.87,
+     "text": "Set E to zero and K cancels U."
+    },
+    {
+     "start": 73.87,
+     "end": 83.53,
+     "text": "The mass drops out, one half v squared equals G M over r, and v escape, the escape speed, equals the square root of two G M over r."
+    },
+    {
+     "start": 83.53,
+     "end": 88.71,
+     "text": "That is the square root of two times v circular, the circular speed at the same r."
+    },
+    {
+     "start": 88.71,
+     "end": 92.15,
+     "text": "From Earth's surface, eleven point two kilometres per second."
+    },
+    {
+     "start": 92.15,
+     "end": 96.79,
+     "text": "From the Sun at Earth's distance, forty-two point one kilometres per second."
+    },
+    {
+     "start": 96.79,
+     "end": 100.15,
+     "text": "Voyager 1 has positive E with respect to the Sun."
+    },
+    {
+     "start": 100.15,
+     "end": 107.33,
+     "text": "Launched in nineteen seventy-seven, flung outward by Jupiter and Saturn, it rides a hyperbola and will never come back."
+    },
+    {
+     "start": 107.33,
+     "end": 114.55,
+     "text": "At seventeen kilometres per second it crossed into interstellar space in twenty twelve, carrying a golden record for whoever finds it."
+    }
+   ],
+   "voicedHash": "cb744bc12818"
+  },
+  "gravitation": {
+   "script": "Look at the Earth behind the panel. Newton's law of gravity says every mass attracts every other mass, along the line joining them. The force grows with each mass and shrinks with the square of their separation. We write F equals G times M times m, over r squared. F is the force, in newtons. M and m are the two masses, in kilograms. r is the distance between their centres, in metres. G is the gravitational constant, the same everywhere, about six point seven times ten to the minus eleven newton metres squared per kilogram squared. So everyday pulls go unnoticed, and only a planet's mass makes gravity obvious.\n\nNewton proved a result that makes the law usable. A spherically symmetric body attracts outside objects as if all its mass sat at its centre. So for an apple on the ground, r is not the few metres to the soil. It is the radius of the Earth, about six thousand four hundred kilometres.\n\nPut that into the second law. Since force is also m times g, m cancels, as Galileo found by experiment. Little g equals G times the Earth's mass, divided by the Earth's radius squared. With a mass near six times ten to the twenty-four kilograms, that gives nine point eight two metres per second squared.\n\nI want you to see your weight as just this force. At seventy kilograms, F equals m times g, six hundred and eighty-seven newtons. On Mars, radius near three thousand four hundred kilometres, g is three point seven two metres per second squared, and you weigh two hundred and sixty newtons. You could lift a friend. On the Sun's surface, if you could stand there, g is two hundred and seventy-four metres per second squared.\n\nG is not a property of the Earth or the Sun. Cavendish measured it in seventeen ninety-eight with lead balls and a torsion balance. It is the same constant that holds galaxies together.",
+   "hash": "14c48ecaec38",
+   "duration": 113.27,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.4,
+     "text": "Look at the Earth behind the panel."
+    },
+    {
+     "start": 2.4,
+     "end": 8.38,
+     "text": "Newton's law of gravity says every mass attracts every other mass, along the line joining them."
+    },
+    {
+     "start": 8.38,
+     "end": 12.8,
+     "text": "The force grows with each mass and shrinks with the square of their separation."
+    },
+    {
+     "start": 12.8,
+     "end": 17.84,
+     "text": "We write F equals G times M times m, over r squared."
+    },
+    {
+     "start": 17.84,
+     "end": 20.06,
+     "text": "F is the force, in newtons."
+    },
+    {
+     "start": 20.06,
+     "end": 23.3,
+     "text": "M and m are the two masses, in kilograms."
+    },
+    {
+     "start": 23.3,
+     "end": 26.34,
+     "text": "r is the distance between their centres, in metres."
+    },
+    {
+     "start": 26.34,
+     "end": 35.4,
+     "text": "G is the gravitational constant, the same everywhere, about six point seven times ten to the minus eleven newton metres squared per kilogram squared."
+    },
+    {
+     "start": 35.4,
+     "end": 40.78,
+     "text": "So everyday pulls go unnoticed, and only a planet's mass makes gravity obvious."
+    },
+    {
+     "start": 40.78,
+     "end": 43.68,
+     "text": "Newton proved a result that makes the law usable."
+    },
+    {
+     "start": 43.68,
+     "end": 49.22,
+     "text": "A spherically symmetric body attracts outside objects as if all its mass sat at its centre."
+    },
+    {
+     "start": 49.22,
+     "end": 53.44,
+     "text": "So for an apple on the ground, r is not the few metres to the soil."
+    },
+    {
+     "start": 53.44,
+     "end": 57.83,
+     "text": "It is the radius of the Earth, about six thousand four hundred kilometres."
+    },
+    {
+     "start": 57.83,
+     "end": 59.65,
+     "text": "Put that into the second law."
+    },
+    {
+     "start": 59.65,
+     "end": 65.67,
+     "text": "Since force is also m times g, m cancels, as Galileo found by experiment."
+    },
+    {
+     "start": 65.67,
+     "end": 70.69,
+     "text": "Little g equals G times the Earth's mass, divided by the Earth's radius squared."
+    },
+    {
+     "start": 70.69,
+     "end": 77.47,
+     "text": "With a mass near six times ten to the twenty-four kilograms, that gives nine point eight two metres per second squared."
+    },
+    {
+     "start": 77.47,
+     "end": 80.09,
+     "text": "I want you to see your weight as just this force."
+    },
+    {
+     "start": 80.09,
+     "end": 85.83,
+     "text": "At seventy kilograms, F equals m times g, six hundred and eighty-seven newtons."
+    },
+    {
+     "start": 85.83,
+     "end": 95.35,
+     "text": "On Mars, radius near three thousand four hundred kilometres, g is three point seven two metres per second squared, and you weigh two hundred and sixty newtons."
+    },
+    {
+     "start": 95.35,
+     "end": 96.85,
+     "text": "You could lift a friend."
+    },
+    {
+     "start": 96.85,
+     "end": 103.05,
+     "text": "On the Sun's surface, if you could stand there, g is two hundred and seventy-four metres per second squared."
+    },
+    {
+     "start": 103.05,
+     "end": 105.77,
+     "text": "G is not a property of the Earth or the Sun."
+    },
+    {
+     "start": 105.77,
+     "end": 110.47,
+     "text": "Cavendish measured it in seventeen ninety-eight with lead balls and a torsion balance."
+    },
+    {
+     "start": 110.47,
+     "end": 113.27,
+     "text": "It is the same constant that holds galaxies together."
+    }
+   ],
+   "voicedHash": "d1bb04579904"
+  },
+  "moon-test": {
+   "script": "Let me walk you through the calculation that convinced Newton. A body moving on a circle of radius r at speed v is accelerating toward the centre, because its velocity changes direction even though its speed does not. The centripetal acceleration, a sub c, equals v squared over r, which equals four pi squared times r over P squared. a sub c is that inward acceleration, v is the speed along the path, r is the radius, and P is the period for one lap. The second form uses v equals two pi r over P, one circumference per period. Square that, divide by r, and the extra r drops out, leaving four pi squared r over P squared.\n\nFor the Moon, write a sub Moon equals four pi squared times r over P squared, with r about three hundred eighty-four million metres and P about two point four million seconds, twenty-seven point three days. That comes out to two point seven two times ten to the minus three metres per second squared.\n\nAn apple at the surface accelerates at nine point eight one metres per second squared. The Moon is sixty point three Earth radii away. If gravity weakens as one over r squared, the Moon should feel nine point eight one divided by sixty point three squared. That denominator is about three thousand six hundred, so the quotient is two point seven zero times ten to the minus three metres per second squared. The two numbers agree to one percent. The same force that drops an apple holds the Moon in orbit, diluted exactly as the inverse square predicts.\n\nTry the widget above, Newton's own cannon from a high mountain. Fire slowly and the ball drops nearby. Faster, it lands farther. At seven point nine kilometres per second it falls at just the rate the ground curves away and never lands: it is in orbit. Faster still, the path opens into an ellipse, and at eleven point two kilometres per second it escapes. Notice the ball is always falling. An orbit is not the absence of gravity. It is a perpetual fall that keeps missing the ground.",
+   "hash": "095b4ae3a234",
+   "duration": 119.67,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.42,
+     "text": "Let me walk you through the calculation that convinced Newton."
+    },
+    {
+     "start": 3.42,
+     "end": 12.84,
+     "text": "A body moving on a circle of radius r at speed v is accelerating toward the centre, because its velocity changes direction even though its speed does not."
+    },
+    {
+     "start": 12.84,
+     "end": 21.72,
+     "text": "The centripetal acceleration, a sub c, equals v squared over r, which equals four pi squared times r over P squared."
+    },
+    {
+     "start": 21.72,
+     "end": 30.2,
+     "text": "a sub c is that inward acceleration, v is the speed along the path, r is the radius, and P is the period for one lap."
+    },
+    {
+     "start": 30.2,
+     "end": 35.76,
+     "text": "The second form uses v equals two pi r over P, one circumference per period."
+    },
+    {
+     "start": 35.76,
+     "end": 42.7,
+     "text": "Square that, divide by r, and the extra r drops out, leaving four pi squared r over P squared."
+    },
+    {
+     "start": 42.7,
+     "end": 55.48,
+     "text": "For the Moon, write a sub Moon equals four pi squared times r over P squared, with r about three hundred eighty-four million metres and P about two point four million seconds, twenty-seven point three days."
+    },
+    {
+     "start": 55.48,
+     "end": 60.39,
+     "text": "That comes out to two point seven two times ten to the minus three metres per second squared."
+    },
+    {
+     "start": 60.39,
+     "end": 64.89,
+     "text": "An apple at the surface accelerates at nine point eight one metres per second squared."
+    },
+    {
+     "start": 64.89,
+     "end": 67.93,
+     "text": "The Moon is sixty point three Earth radii away."
+    },
+    {
+     "start": 67.93,
+     "end": 74.89,
+     "text": "If gravity weakens as one over r squared, the Moon should feel nine point eight one divided by sixty point three squared."
+    },
+    {
+     "start": 74.89,
+     "end": 82.99,
+     "text": "That denominator is about three thousand six hundred, so the quotient is two point seven zero times ten to the minus three metres per second squared."
+    },
+    {
+     "start": 82.99,
+     "end": 85.19,
+     "text": "The two numbers agree to one percent."
+    },
+    {
+     "start": 85.19,
+     "end": 91.27,
+     "text": "The same force that drops an apple holds the Moon in orbit, diluted exactly as the inverse square predicts."
+    },
+    {
+     "start": 91.27,
+     "end": 95.07,
+     "text": "Try the widget above, Newton's own cannon from a high mountain."
+    },
+    {
+     "start": 95.07,
+     "end": 97.69,
+     "text": "Fire slowly and the ball drops nearby."
+    },
+    {
+     "start": 97.69,
+     "end": 99.59,
+     "text": "Faster, it lands farther."
+    },
+    {
+     "start": 99.59,
+     "end": 106.37,
+     "text": "At seven point nine kilometres per second it falls at just the rate the ground curves away and never lands: it is in orbit."
+    },
+    {
+     "start": 106.37,
+     "end": 112.73,
+     "text": "Faster still, the path opens into an ellipse, and at eleven point two kilometres per second it escapes."
+    },
+    {
+     "start": 112.73,
+     "end": 114.73,
+     "text": "Notice the ball is always falling."
+    },
+    {
+     "start": 114.73,
+     "end": 117.09,
+     "text": "An orbit is not the absence of gravity."
+    },
+    {
+     "start": 117.09,
+     "end": 119.67,
+     "text": "It is a perpetual fall that keeps missing the ground."
+    }
+   ],
+   "voicedHash": "12c5e4f25403"
+  },
+  "newton-summary": {
+   "script": "Look behind the panel: the whole system circling the Sun. Three laws of motion and one of gravity explain falling apples, the Moon, planets, comets and tides. The first law: no force, no change in velocity. Orbits are bent, not pushed. The second law: F equals dee p over dee t, p is momentum, t is time, which equals m a, mass times acceleration. The third law: forces come in equal and opposite pairs. Gravity is F equals G M m over r squared. G is universal, M and m the masses, r the distance. A sphere attracts as if its mass were at the centre. The Moon's acceleration is two point seven two times ten to the minus three metres per second squared, equal to surface gravity g over sixty squared. Inverse square, confirmed. Circular speed v is the square root of G M over r. The period P obeys P squared equals four pi squared r cubed over G M. Kepler's third law, mass visible. Energy E equals minus G M m over two a, a the semi-major axis. Negative means bound; zero or above, it escapes. Escape speed is the square root of two times circular speed. Next we derive the ellipses, equal areas and the harmonic law from force equals mass times acceleration and the inverse square.",
+   "hash": "52c3346e795d",
+   "duration": 84.47,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 4.06,
+     "text": "Look behind the panel: the whole system circling the Sun."
+    },
+    {
+     "start": 4.06,
+     "end": 11.26,
+     "text": "Three laws of motion and one of gravity explain falling apples, the Moon, planets, comets and tides."
+    },
+    {
+     "start": 11.26,
+     "end": 15.02,
+     "text": "The first law: no force, no change in velocity."
+    },
+    {
+     "start": 15.02,
+     "end": 17.06,
+     "text": "Orbits are bent, not pushed."
+    },
+    {
+     "start": 17.06,
+     "end": 26.86,
+     "text": "The second law: F equals dee p over dee t, p is momentum, t is time, which equals m a, mass times acceleration."
+    },
+    {
+     "start": 26.86,
+     "end": 30.64,
+     "text": "The third law: forces come in equal and opposite pairs."
+    },
+    {
+     "start": 30.64,
+     "end": 34.52,
+     "text": "Gravity is F equals G M m over r squared."
+    },
+    {
+     "start": 34.52,
+     "end": 39.1,
+     "text": "G is universal, M and m the masses, r the distance."
+    },
+    {
+     "start": 39.1,
+     "end": 42.06,
+     "text": "A sphere attracts as if its mass were at the centre."
+    },
+    {
+     "start": 42.06,
+     "end": 50.79,
+     "text": "The Moon's acceleration is two point seven two times ten to the minus three metres per second squared, equal to surface gravity g over sixty squared."
+    },
+    {
+     "start": 50.79,
+     "end": 52.83,
+     "text": "Inverse square, confirmed."
+    },
+    {
+     "start": 52.83,
+     "end": 56.55,
+     "text": "Circular speed v is the square root of G M over r."
+    },
+    {
+     "start": 56.55,
+     "end": 61.91,
+     "text": "The period P obeys P squared equals four pi squared r cubed over G M."
+    },
+    {
+     "start": 61.91,
+     "end": 64.51,
+     "text": "Kepler's third law, mass visible."
+    },
+    {
+     "start": 64.51,
+     "end": 70.09,
+     "text": "Energy E equals minus G M m over two a, a the semi-major axis."
+    },
+    {
+     "start": 70.09,
+     "end": 73.85,
+     "text": "Negative means bound; zero or above, it escapes."
+    },
+    {
+     "start": 73.85,
+     "end": 77.45,
+     "text": "Escape speed is the square root of two times circular speed."
+    },
+    {
+     "start": 77.45,
+     "end": 84.47,
+     "text": "Next we derive the ellipses, equal areas and the harmonic law from force equals mass times acceleration and the inverse square."
+    }
+   ],
+   "voicedHash": "90756f4a1789"
+  },
+  "principia": {
+   "script": "Welcome to the heart of how we actually do mechanics.\n\nLook at the Moon behind the panel for a moment. In August sixteen eighty-four Edmond Halley walked into Isaac Newton's rooms in Cambridge with a question that had been bouncing around London's coffee houses. If the Sun pulls on the planets with a force that falls off as the inverse square of distance, twice as far away and only a quarter of the force, what path does a planet follow? Newton answered at once: an ellipse. He had worked it out years earlier, and then lost the notes. Halley did not let that go. He pushed Newton to write the argument down properly. Three years later Newton delivered the Philosophiae Naturalis Principia Mathematica, the mathematical principles of natural philosophy, and Halley paid for the printing himself.\n\nThe Principia did something no book had done before. Newton stated a small set of laws about force and motion, added one law of gravity, and then derived, from those same equations, Kepler's three laws, the tides, the precession of the equinoxes, the flattened shape of the Earth, and the paths of comets. The behaviour of the heavens and of ordinary objects on Earth came out of one physics.\n\nThat is the real break. Before Newton, celestial physics and terrestrial physics were different subjects. After him there was one physics. The Moon you are looking at is falling toward the Earth in exactly the way an apple falls. It simply moves sideways fast enough to keep missing the ground, lap after lap. Think of it as a throw that never lands. Gravity does not change its nature between the orchard and the orbit. Same force, same equations.",
+   "hash": "3ee1908a5047",
+   "duration": 97.27,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 3.36,
+     "text": "Welcome to the heart of how we actually do mechanics."
+    },
+    {
+     "start": 3.36,
+     "end": 6.1,
+     "text": "Look at the Moon behind the panel for a moment."
+    },
+    {
+     "start": 6.1,
+     "end": 15.32,
+     "text": "In August sixteen eighty-four Edmond Halley walked into Isaac Newton's rooms in Cambridge with a question that had been bouncing around London's coffee houses."
+    },
+    {
+     "start": 15.32,
+     "end": 25.8,
+     "text": "If the Sun pulls on the planets with a force that falls off as the inverse square of distance, twice as far away and only a quarter of the force, what path does a planet follow?"
+    },
+    {
+     "start": 25.8,
+     "end": 28.4,
+     "text": "Newton answered at once: an ellipse."
+    },
+    {
+     "start": 28.4,
+     "end": 32.1,
+     "text": "He had worked it out years earlier, and then lost the notes."
+    },
+    {
+     "start": 32.1,
+     "end": 33.98,
+     "text": "Halley did not let that go."
+    },
+    {
+     "start": 33.98,
+     "end": 37.02,
+     "text": "He pushed Newton to write the argument down properly."
+    },
+    {
+     "start": 37.02,
+     "end": 47.34,
+     "text": "Three years later Newton delivered the Philosophiae Naturalis Principia Mathematica, the mathematical principles of natural philosophy, and Halley paid for the printing himself."
+    },
+    {
+     "start": 47.34,
+     "end": 50.49,
+     "text": "The Principia did something no book had done before."
+    },
+    {
+     "start": 50.49,
+     "end": 66.25,
+     "text": "Newton stated a small set of laws about force and motion, added one law of gravity, and then derived, from those same equations, Kepler's three laws, the tides, the precession of the equinoxes, the flattened shape of the Earth, and the paths of comets."
+    },
+    {
+     "start": 66.25,
+     "end": 71.23,
+     "text": "The behaviour of the heavens and of ordinary objects on Earth came out of one physics."
+    },
+    {
+     "start": 71.23,
+     "end": 72.77,
+     "text": "That is the real break."
+    },
+    {
+     "start": 72.77,
+     "end": 77.31,
+     "text": "Before Newton, celestial physics and terrestrial physics were different subjects."
+    },
+    {
+     "start": 77.31,
+     "end": 79.51,
+     "text": "After him there was one physics."
+    },
+    {
+     "start": 79.51,
+     "end": 84.29,
+     "text": "The Moon you are looking at is falling toward the Earth in exactly the way an apple falls."
+    },
+    {
+     "start": 84.29,
+     "end": 89.23,
+     "text": "It simply moves sideways fast enough to keep missing the ground, lap after lap."
+    },
+    {
+     "start": 89.23,
+     "end": 91.55,
+     "text": "Think of it as a throw that never lands."
+    },
+    {
+     "start": 91.55,
+     "end": 95.19,
+     "text": "Gravity does not change its nature between the orchard and the orbit."
+    },
+    {
+     "start": 95.19,
+     "end": 97.27,
+     "text": "Same force, same equations."
+    }
+   ],
+   "voicedHash": "9cb595b9b322"
+  },
+  "three-laws": {
+   "script": "Look at the station behind the panel. That is the International Space Station, going around Earth about once every ninety minutes, and it is the cleanest picture I know of what these three laws actually say.\n\nThe first law is the one that took Aristotle's physics apart. To Aristotle, motion needed a continual push; a planet needed something to keep it going. Newton says a body at rest stays at rest, and a body in motion keeps moving in a straight line at constant speed, unless a net force acts on it. Uniform motion needs no cause. Only a change of motion does. So a planet needs no push to keep moving. It only needs a force to turn. The question stops being what keeps the planets going, and becomes what keeps bending their paths.\n\nThe second law answers that. The net force equals the rate of change of momentum. Momentum, p, is mass times velocity, so p equals m v. Force F is d p over d t, how fast that momentum is changing. If the mass is constant, this becomes F equals m a: force equals mass times acceleration. Force and acceleration are vectors, and they point the same way. A bigger force, or a smaller mass, means a bigger acceleration.\n\nThe third law says forces always come in pairs, on different bodies. The force of A on B equals minus the force of B on A. Equal size, opposite direction. The Earth pulls the Moon, and the Moon pulls the Earth back with exactly the same force, which is why we have tides.\n\nAnd the astronauts? The station feels no push from the ground and no air drag, only gravity, and gravity bends its straight-line motion into that ninety-minute circle. Inside, they float not because gravity is absent. Up there it is still about ninety percent of its value on the ground. They float because they and the station are falling together.",
+   "hash": "6ea8b257918b",
+   "duration": 110.39,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.36,
+     "text": "Look at the station behind the panel."
+    },
+    {
+     "start": 2.36,
+     "end": 12.22,
+     "text": "That is the International Space Station, going around Earth about once every ninety minutes, and it is the cleanest picture I know of what these three laws actually say."
+    },
+    {
+     "start": 12.22,
+     "end": 15.78,
+     "text": "The first law is the one that took Aristotle's physics apart."
+    },
+    {
+     "start": 15.78,
+     "end": 21.74,
+     "text": "To Aristotle, motion needed a continual push; a planet needed something to keep it going."
+    },
+    {
+     "start": 21.74,
+     "end": 30.56,
+     "text": "Newton says a body at rest stays at rest, and a body in motion keeps moving in a straight line at constant speed, unless a net force acts on it."
+    },
+    {
+     "start": 30.56,
+     "end": 32.84,
+     "text": "Uniform motion needs no cause."
+    },
+    {
+     "start": 32.84,
+     "end": 34.82,
+     "text": "Only a change of motion does."
+    },
+    {
+     "start": 34.82,
+     "end": 37.32,
+     "text": "So a planet needs no push to keep moving."
+    },
+    {
+     "start": 37.32,
+     "end": 39.4,
+     "text": "It only needs a force to turn."
+    },
+    {
+     "start": 39.4,
+     "end": 44.82,
+     "text": "The question stops being what keeps the planets going, and becomes what keeps bending their paths."
+    },
+    {
+     "start": 44.82,
+     "end": 46.6,
+     "text": "The second law answers that."
+    },
+    {
+     "start": 46.6,
+     "end": 49.54,
+     "text": "The net force equals the rate of change of momentum."
+    },
+    {
+     "start": 49.54,
+     "end": 54.9,
+     "text": "Momentum, p, is mass times velocity, so p equals m v."
+    },
+    {
+     "start": 54.9,
+     "end": 59.97,
+     "text": "Force F is d p over d t, how fast that momentum is changing."
+    },
+    {
+     "start": 59.97,
+     "end": 66.47,
+     "text": "If the mass is constant, this becomes F equals m a: force equals mass times acceleration."
+    },
+    {
+     "start": 66.47,
+     "end": 70.29,
+     "text": "Force and acceleration are vectors, and they point the same way."
+    },
+    {
+     "start": 70.29,
+     "end": 74.33,
+     "text": "A bigger force, or a smaller mass, means a bigger acceleration."
+    },
+    {
+     "start": 74.33,
+     "end": 78.59,
+     "text": "The third law says forces always come in pairs, on different bodies."
+    },
+    {
+     "start": 78.59,
+     "end": 82.39,
+     "text": "The force of A on B equals minus the force of B on A."
+    },
+    {
+     "start": 82.39,
+     "end": 84.61,
+     "text": "Equal size, opposite direction."
+    },
+    {
+     "start": 84.61,
+     "end": 91.01,
+     "text": "The Earth pulls the Moon, and the Moon pulls the Earth back with exactly the same force, which is why we have tides."
+    },
+    {
+     "start": 91.01,
+     "end": 92.29,
+     "text": "And the astronauts?"
+    },
+    {
+     "start": 92.29,
+     "end": 100.95,
+     "text": "The station feels no push from the ground and no air drag, only gravity, and gravity bends its straight-line motion into that ninety-minute circle."
+    },
+    {
+     "start": 100.95,
+     "end": 104.03,
+     "text": "Inside, they float not because gravity is absent."
+    },
+    {
+     "start": 104.03,
+     "end": 107.49,
+     "text": "Up there it is still about ninety percent of its value on the ground."
+    },
+    {
+     "start": 107.49,
+     "end": 110.39,
+     "text": "They float because they and the station are falling together."
+    }
+   ],
+   "voicedHash": "20e936763f3d"
+  }
+ }
+}

@@ -971,6 +971,502 @@ class SpectrumWidget extends CanvasWidget {
 }
 const sup = (n: number) => String(n).replace('-', '⁻').replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[+d]);
 
+/* ===================================================== Chapter 2 widgets ==== */
+
+/** Kepler's equation: mean anomaly M (rad) → true anomaly θ and r/a for eccentricity e < 1 */
+function kepler(M: number, e: number): { theta: number; r: number } {
+  let E = e < 0.8 ? M : Math.PI;
+  for (let i = 0; i < 12; i++) E -= (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E));
+  const theta = 2 * Math.atan2(Math.sqrt(1 + e) * Math.sin(E / 2), Math.sqrt(1 - e) * Math.cos(E / 2));
+  return { theta, r: 1 - e * Math.cos(E) };
+}
+
+/* ------------------------------------------------------- 7. the ellipse ---- */
+
+class EllipseWidget extends CanvasWidget {
+  private e = 0.5;
+  private M = 0;
+  private theta = 0;
+  private speed = 0.25;   // orbits per second
+
+  constructor(conics: boolean) {
+    super(480 / 380);
+    this.playButton();
+    this.slider('Eccentricity e', 0, conics ? 1.6 : 0.95, 0.01, this.e, (v) => fmt(v, 2), (v) => { this.e = v; });
+    this.slider('Speed', 0.05, 1, 0.05, this.speed, (v) => fmt(v, 2), (v) => { this.speed = v; });
+  }
+
+  protected draw(dt: number) {
+    const c = this.ctx;
+    const e = this.e;
+    c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const open = e >= 1;
+    // scale: keep the semi-latus rectum p = a(1−e²) fixed on screen so all conics pass through the same point
+    const Sx = this.w * 0.56, Sy = this.h / 2;
+    const pPx = Math.min(this.w, this.h) * 0.27;
+    const a = open ? NaN : pPx / (1 - e * e);
+    const b = open ? NaN : a * Math.sqrt(1 - e * e);
+    const cx = open ? NaN : Sx - a * e;
+    const R = (th: number) => pPx / (1 + e * Math.cos(th));
+
+    if (dt > 0) {
+      if (!open) { this.M = (this.M + dt * this.speed * TAU) % TAU; this.theta = kepler(this.M, e).theta; }
+      else {
+        const lim = Math.acos(-1 / e) - 0.05;
+        this.theta += dt * this.speed * 1.2 * (1 + e * Math.cos(this.theta)) ** 2 / (1 + e) ** 2;
+        if (this.theta > lim) this.theta = -lim;
+      }
+    }
+
+    // axes & centre
+    if (!open) {
+      this.line(cx - a, Sy, cx + a, Sy, C.grid);
+      this.line(cx, Sy - b, cx, Sy + b, C.grid);
+      this.circle(cx, Sy, 2, undefined, C.dim);
+      this.text('centre', cx, Sy + 12, C.dim, 10, 'center');
+      // a and b labels
+      this.line(cx, Sy - b - 10, cx + a, Sy - b - 10, C.accent, 1);
+      this.text('a', cx + a / 2, Sy - b - 18, C.accent, 11, 'center', 'serif');
+      this.line(cx - a - 10, Sy, cx - a - 10, Sy - b, C.blue, 1);
+      this.text('b', cx - a - 18, Sy - b / 2, C.blue, 11, 'center', 'serif');
+      // second focus
+      const F2 = cx - a * e;
+      this.circle(F2, Sy, 3, C.faint, undefined, 1);
+      this.text('empty focus', F2, Sy + 13, C.faint, 10, 'center');
+    } else {
+      this.line(Sx - this.w, Sy, Sx + this.w, Sy, C.grid);
+    }
+    // the curve
+    c.beginPath();
+    const lim = open ? Math.acos(-1 / e) - 0.02 : Math.PI;
+    for (let i = 0; i <= 400; i++) {
+      const th = -lim + (2 * lim * i) / 400;
+      const r = R(th);
+      if (r < 0 || r > 4000) continue;
+      const x = Sx + r * Math.cos(th), y = Sy - r * Math.sin(th);
+      if (i === 0) c.moveTo(x, y); else c.lineTo(x, y);
+    }
+    if (!open) c.closePath();
+    c.strokeStyle = C.text; c.lineWidth = 1.5; c.stroke();
+    if (open && e === 1) this.text('parabola', Sx - pPx * 1.0, Sy - pPx * 1.6, C.dim, 10, 'center', 'serif');
+
+    // planet
+    const r = R(this.theta);
+    const px = Sx + r * Math.cos(this.theta), py = Sy - r * Math.sin(this.theta);
+    this.line(Sx, Sy, px, py, C.red, 1.2);
+    this.text('r', (Sx + px) / 2 + 6, (Sy + py) / 2 - 6, C.red, 11, 'center', 'serif');
+    // θ arc
+    c.beginPath(); c.arc(Sx, Sy, 22, -this.theta, 0, this.theta < 0); c.strokeStyle = C.green; c.lineWidth = 1; c.stroke();
+    this.text('θ', Sx + 30 * Math.cos(this.theta / 2), Sy - 30 * Math.sin(this.theta / 2), C.green, 11, 'center', 'serif');
+    if (!open) {
+      const F2 = cx - a * e;
+      this.line(F2, Sy, px, py, 'rgba(255,255,255,0.18)', 1, [3, 3]);
+    }
+    this.glow(Sx, Sy, 16, 'rgba(242,196,90,0.55)');
+    this.circle(Sx, Sy, 5, undefined, C.sun);
+    this.text('Sun · focus', Sx, Sy + 14, C.dim, 10, 'center');
+    this.circle(px, py, 4, undefined, C.earth);
+    // perihelion / aphelion marks
+    if (!open) {
+      this.text('perihelion', Sx + R(0) + 6, Sy, C.dim, 10, 'left');
+      this.text('aphelion', Sx + R(Math.PI) * Math.cos(Math.PI) - 6, Sy, C.dim, 10, 'right');
+    }
+
+    const kind = e < 1 ? (e < 0.005 ? 'circle' : 'ellipse') : e === 1 ? 'parabola' : 'hyperbola';
+    const ro: Array<[string, string, string?]> = [
+      ['Curve', `${kind} · e = ${fmt(e, 2)}`, e < 1 ? C.green : e === 1 ? C.accent : C.red],
+      ['r / a now', open ? '—' : fmt(r / a, 3)],
+    ];
+    if (!open) {
+      ro.push(['b / a = √(1 − e²)', fmt(Math.sqrt(1 - e * e), 3)], ['Perihelion r_p / a', fmt(1 - e, 3)], ['Aphelion r_a / a', fmt(1 + e, 3)], ['Sun off centre by', `${fmt(e * 100, 0)} % of a`]);
+    } else ro.push(['Total energy', e > 1 ? 'positive — unbound' : 'zero — barely unbound', C.red], ['Asymptote angle', e > 1 ? `±${fmt(Math.acos(-1 / e) / DEG, 0)}°` : '±180°']);
+    this.setReadout(ro);
+  }
+}
+
+/* ------------------------------------------------ 8. Kepler's second law ---- */
+
+class Kepler2Widget extends CanvasWidget {
+  private e = 0.6;
+  private M = 0;
+  private speed = 0.12;
+  private readonly N = 10;
+
+  constructor() {
+    super(480 / 360);
+    this.playButton();
+    this.slider('Eccentricity e', 0, 0.9, 0.01, this.e, (v) => fmt(v, 2), (v) => { this.e = v; });
+    this.slider('Speed', 0.03, 0.5, 0.01, this.speed, (v) => fmt(v, 2), (v) => { this.speed = v; });
+  }
+
+  protected draw(dt: number) {
+    const c = this.ctx;
+    const e = this.e;
+    c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    if (dt > 0) this.M = (this.M + dt * this.speed * TAU) % TAU;
+    const a = Math.min(this.w * 0.42, this.h * 0.44);
+    const cx = this.w / 2, Sy = this.h / 2;   // ellipse centred on the canvas, Sun at the right-hand focus
+    const Sx = cx + a * e;
+    const b = a * Math.sqrt(1 - e * e);
+    const pos = (M: number) => { const k = kepler(M, e); const r = k.r * a; return { x: Sx + r * Math.cos(k.theta), y: Sy - r * Math.sin(k.theta), r: k.r, theta: k.theta }; };
+
+    // orbit
+    c.beginPath(); c.ellipse(cx, Sy, a, b, 0, 0, TAU); c.strokeStyle = C.line; c.lineWidth = 1; c.stroke();
+
+    // equal-time sectors: N per orbit; the current one fills live, all others shown faintly
+    const seg = TAU / this.N;
+    const cur = Math.floor(this.M / seg);
+    for (let i = 0; i < this.N; i++) {
+      const m0 = i * seg, m1 = i === cur ? this.M : (i + 1) * seg;
+      if (i > cur) continue;
+      c.beginPath(); c.moveTo(Sx, Sy);
+      for (let j = 0; j <= 24; j++) { const p = pos(m0 + ((m1 - m0) * j) / 24); c.lineTo(p.x, p.y); }
+      c.closePath();
+      c.fillStyle = i === cur ? 'rgba(189,155,108,0.45)' : i % 2 ? 'rgba(111,163,214,0.16)' : 'rgba(127,191,138,0.16)';
+      c.fill();
+      c.strokeStyle = 'rgba(255,255,255,0.12)'; c.stroke();
+    }
+    const p = pos(this.M);
+    this.line(Sx, Sy, p.x, p.y, C.accent, 1.2);
+    this.glow(Sx, Sy, 16, 'rgba(242,196,90,0.55)');
+    this.circle(Sx, Sy, 5, undefined, C.sun);
+    // velocity arrow ∝ speed
+    const v = Math.sqrt(2 / p.r - 1);                 // in units of circular speed at a
+    const p2 = pos(this.M + 0.01);
+    const tx = p2.x - p.x, ty = p2.y - p.y, tl = Math.hypot(tx, ty) || 1;
+    const L = 14 + 26 * v;
+    this.line(p.x, p.y, p.x + (tx / tl) * L, p.y + (ty / tl) * L, C.green, 2);
+    this.circle(p.x, p.y, 4.5, undefined, C.earth);
+    this.text(`sector ${cur + 1} of ${this.N} · each takes P/${this.N}`, 10, this.h - 12, C.dim, 10);
+    this.text('every shaded sector has the same area', this.w - 10, this.h - 12, C.dim, 10, 'right');
+
+    const vp = Math.sqrt((1 + e) / (1 - e));
+    this.setReadout([
+      ['Distance r / a', fmt(p.r, 3)],
+      ['Speed v / v_circ', fmt(v, 3), C.green],
+      ['v_p / v_a = (1+e)/(1−e)', fmt((1 + e) / (1 - e), 2)],
+      ['Sector area', `πab / ${this.N} = ${fmt((Math.PI * Math.sqrt(1 - e * e)) / this.N, 3)} a²`],
+      ['Perihelion speed', `${fmt(vp, 2)} v_circ`],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 9. Kepler's third law ---- */
+
+const K3_BODIES: Array<[string, number, number, string]> = [
+  ['Mercury', 0.387, 0.2408, '#b9b2a8'], ['Venus', 0.723, 0.6152, C.venus], ['Earth', 1, 1, C.earth], ['Mars', 1.524, 1.8808, C.mars],
+  ['Ceres', 2.77, 4.60, '#9a9690'], ['Jupiter', 5.203, 11.862, '#d8b48a'], ['Saturn', 9.537, 29.457, '#e0d2a8'], ['Uranus', 19.19, 84.01, '#9fd3dc'],
+  ['Neptune', 30.07, 164.8, '#6f8fd6'], ['Pluto', 39.48, 247.9, '#c9b8a8'], ['Halley', 17.83, 75.3, C.dim], ['Eris', 67.9, 559, '#d8d8d8'],
+];
+
+class Kepler3Widget extends CanvasWidget {
+  private aTest = 2.5;
+
+  constructor() {
+    super(480 / 360);
+    this.playing = false;
+    this.slider('Test orbit a', -1, 2.1, 0.01, Math.log10(this.aTest), (v) => `${(10 ** v).toPrecision(3)} AU`, (v) => { this.aTest = 10 ** v; });
+  }
+
+  protected draw() {
+    const c = this.ctx;
+    c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const L = 54, Rm = 16, T = 16, B = 36;
+    const x0 = L, x1 = this.w - Rm, y0 = T, y1 = this.h - B;
+    const la0 = -1, la1 = 2.1, lp0 = -1.5, lp1 = 3.15;
+    const X = (a: number) => x0 + ((Math.log10(a) - la0) / (la1 - la0)) * (x1 - x0);
+    const Y = (P: number) => y1 - ((Math.log10(P) - lp0) / (lp1 - lp0)) * (y1 - y0);
+    // grid
+    for (let d = -1; d <= 2; d++) { const x = X(10 ** d); this.line(x, y0, x, y1, C.grid); this.text(`${10 ** d} AU`, x, y1 + 10, C.dim, 9, 'center', 'mono'); }
+    for (let d = -1; d <= 3; d++) { const y = Y(10 ** d); this.line(x0, y, x1, y, C.grid); this.text(d < 0 ? `${10 ** d} yr` : `${10 ** d} yr`, x0 - 4, y, C.dim, 9, 'right', 'mono'); }
+    this.text('semi-major axis a (log)', (x0 + x1) / 2, y1 + 24, C.dim, 10, 'center');
+    c.save(); c.translate(12, (y0 + y1) / 2); c.rotate(-Math.PI / 2); this.text('period P (log)', 0, 0, C.dim, 10, 'center'); c.restore();
+    // the law
+    c.beginPath();
+    for (let i = 0; i <= 100; i++) { const a = 10 ** (la0 + ((la1 - la0) * i) / 100); const x = X(a), y = Y(a ** 1.5); if (i === 0) c.moveTo(x, y); else c.lineTo(x, y); }
+    c.strokeStyle = C.accent; c.lineWidth = 1.5; c.stroke();
+    this.text('P² = a³  (slope 3/2)', X(0.2) + 6, Y(0.2 ** 1.5) - 12, C.accent, 11, 'left', 'serif');
+    // bodies
+    for (const [name, a, P, col] of K3_BODIES) {
+      const x = X(a), y = Y(P);
+      this.glow(x, y, 7, 'rgba(255,255,255,0.25)');
+      this.circle(x, y, 3, undefined, col);
+      const right = a < 20;
+      this.text(name, x + (right ? 7 : -7), y + (name === 'Halley' ? 9 : -8), C.text, 10, right ? 'left' : 'right');
+    }
+    // test point
+    const a = this.aTest, P = a ** 1.5;
+    const tx = X(a), ty = Y(P);
+    this.line(tx, ty, tx, y1, 'rgba(212,106,90,0.5)', 1, [3, 3]);
+    this.line(x0, ty, tx, ty, 'rgba(212,106,90,0.5)', 1, [3, 3]);
+    this.circle(tx, ty, 5, C.red, 'rgba(212,106,90,0.3)', 1.5);
+
+    this.setReadout([
+      ['Test a', `${a.toPrecision(3)} AU`],
+      ['P = a^(3/2)', `${P.toPrecision(3)} yr = ${(P * 365.25).toPrecision(3)} d`, C.red],
+      ['a³ / P²', fmt((a ** 3) / (P * P), 3)],
+      ['Mean orbital speed', `${fmt((29.78 * TAU * a) / (P * TAU), 1)} km/s`],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 10. Newton's cannon ---- */
+
+class CannonWidget extends CanvasWidget {
+  private vKm = 6.5;
+  private readonly h0 = 0.08;   // mountain height in Earth radii
+  private pos = { x: 0, y: 1.08 };
+  private vel = { x: 0, y: 0 };
+  private trail: Array<{ x: number; y: number }> = [];
+  private state: 'flying' | 'landed' | 'escaped' = 'flying';
+  private tSince = 0;
+  private readonly VC = 7.905;  // km/s, circular speed at the surface (sets the unit)
+
+  constructor() {
+    super(480 / 400);
+    this.slider('Launch speed', 0, 12, 0.1, this.vKm, (v) => `${fmt(v, 1)} km/s`, (v) => { this.vKm = v; this.reset(); });
+    const b = $('button', 'lw-play', '↺'); b.title = 'Fire again';
+    b.addEventListener('click', () => this.reset());
+    this.controls.appendChild(b);
+    this.reset();
+  }
+
+  private reset() {
+    this.pos = { x: 0, y: 1 + this.h0 };
+    this.vel = { x: this.vKm / this.VC, y: 0 };
+    this.trail = [{ ...this.pos }];
+    this.state = 'flying';
+    this.tSince = 0;
+  }
+
+  protected draw(dt: number) {
+    const c = this.ctx;
+    c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const r0 = 1 + this.h0;
+    const vcirc = Math.sqrt(1 / r0), vesc = Math.sqrt(2 / r0);
+    const v = this.vKm / this.VC;
+    const invA = 2 / r0 - v * v;                      // 1/a
+    const eOrb = Math.abs(r0 * v * v - 1);
+    // physics: GM = 1, R = 1
+    if (this.state === 'flying' && dt > 0) {
+      let steps = 40;
+      const h = (dt * 2.2) / steps;
+      for (let i = 0; i < steps; i++) {
+        const r = Math.hypot(this.pos.x, this.pos.y);
+        const ax = -this.pos.x / (r * r * r), ay = -this.pos.y / (r * r * r);
+        this.vel.x += ax * h / 2; this.vel.y += ay * h / 2;
+        this.pos.x += this.vel.x * h; this.pos.y += this.vel.y * h;
+        const r2 = Math.hypot(this.pos.x, this.pos.y);
+        this.vel.x += -this.pos.x / (r2 ** 3) * h / 2; this.vel.y += -this.pos.y / (r2 ** 3) * h / 2;
+        if (r2 < 1) { this.state = 'landed'; break; }
+        if (r2 > 9) { this.state = 'escaped'; break; }
+      }
+      const last = this.trail[this.trail.length - 1];
+      if (Math.hypot(this.pos.x - last.x, this.pos.y - last.y) > 0.01) this.trail.push({ ...this.pos });
+      if (this.trail.length > 1200) this.trail.shift();
+    } else if (dt > 0) {
+      this.tSince += dt;
+      if (this.tSince > 1.6) this.reset();
+    }
+
+    const apo = invA > 0 ? (2 / invA - r0) : Infinity;
+    // frame the whole orbit: launch point at the top (r0), far side at the bottom (apogee, capped)
+    const bottom = Math.min(Math.max(1.4, Number.isFinite(apo) ? apo * 1.04 : 3.6), 4.4);
+    const aOrb = (r0 + Math.min(Number.isFinite(apo) ? apo : 3.6, 4.4)) / 2;
+    const eFit = Math.abs(aOrb - r0) / aOrb;
+    const bOrb = Math.max(1.05, aOrb * Math.sqrt(Math.max(0, 1 - eFit * eFit)));
+    const S = Math.min((this.h - 36) / (r0 + bottom), (this.w / 2 - 12) / bOrb);
+    const cx = this.w / 2, cy = 18 + r0 * S;
+    const P = (p: { x: number; y: number }) => ({ x: cx + p.x * S, y: cy - p.y * S });
+    // predicted conic (faint)
+    if (v > 0.05) {
+      c.beginPath();
+      const peri = v >= vcirc;                          // launch point is periapsis when faster than circular
+      const p = r0 * (1 + (peri ? eOrb : -eOrb));       // semi-latus rectum from r0 = p/(1 ± e)
+      let started = false;
+      for (let i = 0; i <= 400; i++) {
+        const th = -Math.PI + (TAU * i) / 400;
+        const r = p / (1 + (peri ? eOrb : -eOrb) * Math.cos(th));
+        if (r < 0 || r > 20) { started = false; continue; }
+        // launch point at angle 90° (top), moving +x
+        const ang = Math.PI / 2 - th;
+        const q = P({ x: r * Math.cos(ang), y: r * Math.sin(ang) });
+        if (!started) { c.moveTo(q.x, q.y); started = true; } else c.lineTo(q.x, q.y);
+      }
+      c.strokeStyle = 'rgba(255,255,255,0.12)'; c.lineWidth = 1; c.setLineDash([3, 4]); c.stroke(); c.setLineDash([]);
+    }
+    // Earth
+    const E = P({ x: 0, y: 0 });
+    this.circle(E.x, E.y, S, undefined, 'rgba(95,154,216,0.22)');
+    this.circle(E.x, E.y, S, C.earth, undefined, 1.2);
+    // atmosphere hint & mountain
+    const M = P({ x: 0, y: r0 });
+    c.beginPath(); c.moveTo(E.x - 0.06 * S, E.y - S + 2); c.lineTo(M.x, M.y); c.lineTo(E.x + 0.06 * S, E.y - S + 2); c.closePath(); c.fillStyle = '#6d6a63'; c.fill();
+    // trail
+    c.beginPath();
+    this.trail.forEach((t, i) => { const q = P(t); if (i === 0) c.moveTo(q.x, q.y); else c.lineTo(q.x, q.y); });
+    c.strokeStyle = C.accent; c.lineWidth = 1.6; c.stroke();
+    const B = P(this.pos);
+    if (this.state !== 'landed') { this.glow(B.x, B.y, 8, 'rgba(189,155,108,0.6)'); this.circle(B.x, B.y, 3, undefined, C.text); }
+    this.text(this.state === 'landed' ? 'hit the ground' : this.state === 'escaped' ? 'gone — escape trajectory' : '', cx, this.h - 14, this.state === 'landed' ? C.red : C.green, 11, 'center');
+
+    const kind = v < vcirc * 0.999 ? (invA > 0 && 2 / invA - r0 < 1 ? 'sub-orbital — falls back' : 'elliptical orbit (launch at apogee)') : v < vcirc * 1.001 ? 'circular orbit' : v < vesc ? 'elliptical orbit (launch at perigee)' : v === vesc ? 'parabola — just escapes' : 'hyperbola — escapes';
+    this.setReadout([
+      ['Launch speed', `${fmt(this.vKm, 1)} km/s`],
+      ['Circular speed here', `${fmt(vcirc * this.VC, 2)} km/s`, C.green],
+      ['Escape speed here', `${fmt(vesc * this.VC, 2)} km/s`, C.red],
+      ['Result', kind, v >= vesc ? C.red : v >= vcirc * 0.999 ? C.green : C.accent],
+      ['Total energy E', `${fmt((v * v / 2 - 1 / r0), 3)} (units GMm/R)`, invA > 0 ? C.green : C.red],
+      ['Highest point', Number.isFinite(apo) && invA > 0 ? `${fmt((Math.max(apo, r0) - 1) * 6371, 0)} km up` : '∞'],
+    ]);
+  }
+}
+
+/* ----------------------------------------------------- 11. two bodies ---- */
+
+const PAIRS: Record<string, { q: number; r1: number; r2: number; e: number; c1: string; c2: string; note: string }> = {
+  'Earth–Moon': { q: 81.3, r1: 0.0166, r2: 0.0045, e: 0.055, c1: C.earth, c2: '#c9c4b8', note: 'centre of mass 4 670 km from Earth\'s centre — inside the Earth' },
+  'Pluto–Charon': { q: 8.2, r1: 0.061, r2: 0.031, e: 0.0, c1: '#c9b8a8', c2: '#8f8a84', note: 'centre of mass 2 130 km above Pluto\'s surface — a true double planet' },
+  'Sirius A–B': { q: 2.02, r1: 0.004, r2: 0.002, e: 0.59, c1: '#dfe8ff', c2: '#aab8d8', note: 'a 50-year binary: a 2.0 M☉ star and a 1.0 M☉ white dwarf' },
+  'Equal masses': { q: 1, r1: 0.03, r2: 0.03, e: 0.3, c1: C.sun, c2: C.mars, note: 'identical ellipses, always diametrically opposite' },
+};
+
+class TwoBodyWidget extends CanvasWidget {
+  private pair = 'Pluto–Charon';
+  private M = 0;
+  private speed = 0.2;
+
+  constructor() {
+    super(480 / 360);
+    this.segmented(Object.keys(PAIRS).map((k) => [k, k] as [string, string]), this.pair, (p) => { this.pair = p; });
+    this.playButton();
+    this.slider('Speed', 0.05, 0.6, 0.05, this.speed, (v) => fmt(v, 2), (v) => { this.speed = v; });
+  }
+
+  protected draw(dt: number) {
+    const c = this.ctx;
+    const P = PAIRS[this.pair];
+    const q = P.q, e = P.e;
+    c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    if (dt > 0) this.M = (this.M + dt * this.speed * TAU) % TAU;
+    const a = Math.min(this.w, this.h) * 0.4;                // separation semi-major axis in px
+    const f1 = 1 / (q + 1), f2 = q / (q + 1);                // a1 = a·m2/(m1+m2), a2 = a·m1/(m1+m2)
+    const cx = this.w / 2, cy = this.h / 2;
+    const k = kepler(this.M, e);
+    const dx = k.r * a * Math.cos(k.theta), dy = -k.r * a * Math.sin(k.theta);
+    const b1 = { x: cx - dx * f1, y: cy - dy * f1 }, b2 = { x: cx + dx * f2, y: cy + dy * f2 };
+    // ellipses about the COM (offset: COM is at a focus of each)
+    const drawOrbit = (A: number, sign: number, col: string) => {
+      const B = A * Math.sqrt(1 - e * e);
+      c.beginPath(); c.ellipse(cx - sign * A * e, cy, A, B, 0, 0, TAU); c.strokeStyle = col; c.lineWidth = 1; c.setLineDash([3, 3]); c.stroke(); c.setLineDash([]);
+    };
+    drawOrbit(a * f1, -1, 'rgba(255,255,255,0.3)');
+    drawOrbit(a * f2, 1, 'rgba(255,255,255,0.3)');
+    this.line(b1.x, b1.y, b2.x, b2.y, 'rgba(255,255,255,0.18)', 1);
+    // bodies
+    const R1 = Math.max(3, P.r1 * a), R2 = Math.max(2.5, P.r2 * a);
+    this.circle(b1.x, b1.y, R1, undefined, P.c1);
+    this.circle(b2.x, b2.y, R2, undefined, P.c2);
+    // COM
+    this.line(cx - 7, cy, cx + 7, cy, C.accent, 1.4); this.line(cx, cy - 7, cx, cy + 7, C.accent, 1.4);
+    this.text('centre of mass', cx + 10, cy - 10, C.accent, 10);
+    const [n1, n2] = this.pair.split('–');
+    this.text(n1, b1.x, b1.y - R1 - 9, C.text, 10, 'center');
+    this.text(n2 ?? '', b2.x, b2.y - R2 - 9, C.text, 10, 'center');
+    this.text(P.note, this.w / 2, this.h - 12, C.dim, 10, 'center');
+    const insideR1 = a * f1 * (1 + e) < R1;
+    this.setReadout([
+      ['Mass ratio m₁ / m₂', fmt(q, 2)],
+      ['a₁ / a₂ = m₂ / m₁', `${fmt(f1, 3)} / ${fmt(f2, 3)}`],
+      ['Eccentricity', fmt(e, 2)],
+      ['Centre of mass', insideR1 ? `inside ${n1}` : 'in open space', insideR1 ? C.green : C.accent],
+      ['Same period', 'both bodies, always opposite'],
+    ]);
+  }
+}
+
+/* -------------------------------------------------- 12. virial theorem ---- */
+
+class VirialWidget extends CanvasWidget {
+  private e = 0.6;
+  private M = 0;
+  private speed = 0.15;
+  private hist: Array<{ t: number; K: number; U: number }> = [];
+  private t = 0;
+  private sumK = 0; private sumU = 0; private n = 0;
+
+  constructor() {
+    super(480 / 360);
+    this.playButton();
+    this.slider('Eccentricity e', 0, 0.85, 0.01, this.e, (v) => fmt(v, 2), (v) => { this.e = v; this.reset(); });
+    this.slider('Speed', 0.03, 0.5, 0.01, this.speed, (v) => fmt(v, 2), (v) => { this.speed = v; });
+  }
+  private reset() { this.hist = []; this.t = 0; this.sumK = this.sumU = 0; this.n = 0; this.M = 0; }
+
+  protected draw(dt: number) {
+    const c = this.ctx;
+    const e = this.e;
+    c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    // units: GM = 1, a = 1, m = 1  → U = −1/r, K = (2/r − 1)/2, E = −1/2
+    const k = kepler(this.M, e);
+    const U = -1 / k.r, K = (2 / k.r - 1) / 2;
+    if (dt > 0) {
+      this.M = (this.M + dt * this.speed * TAU) % TAU;
+      this.t += dt * this.speed;                    // in orbits
+      this.sumK += K * dt; this.sumU += U * dt; this.n += dt;
+      this.hist.push({ t: this.t, K, U });
+      while (this.hist.length && this.t - this.hist[0].t > 3) this.hist.shift();
+    }
+    const avgK = this.n ? this.sumK / this.n : K, avgU = this.n ? this.sumU / this.n : U;
+
+    // left: orbit
+    const ox = this.w * 0.2, oy = this.h * 0.42, A = this.w * 0.13, B = A * Math.sqrt(1 - e * e);
+    c.beginPath(); c.ellipse(ox - A * e, oy, A, B, 0, 0, TAU); c.strokeStyle = C.line; c.lineWidth = 1; c.stroke();
+    const px = ox + k.r * A * Math.cos(k.theta), py = oy - k.r * A * Math.sin(k.theta);
+    this.line(ox, oy, px, py, 'rgba(255,255,255,0.2)');
+    this.glow(ox, oy, 12, 'rgba(242,196,90,0.5)'); this.circle(ox, oy, 4, undefined, C.sun); this.circle(px, py, 3.5, undefined, C.earth);
+    // energy bars
+    const bx = ox - 60, by = this.h * 0.62, bw = 120, scale = 40;
+    const bar = (label: string, val: number, y: number, col: string) => {
+      const zero = bx + bw / 2;
+      c.fillStyle = col; c.fillRect(Math.min(zero, zero + val * scale), y, Math.abs(val * scale), 10);
+      this.text(label, bx - 6, y + 5, C.dim, 10, 'right', 'serif');
+      this.text(fmt(val, 2), bx + bw + 6, y + 5, col, 10, 'left', 'mono');
+    };
+    this.line(bx + bw / 2, by - 6, bx + bw / 2, by + 48, C.faint);
+    bar('K', K, by, C.green); bar('U', U, by + 16, C.blue); bar('E', K + U, by + 32, C.text);
+    this.text('units of GMm/a', bx + bw / 2, by + 58, C.faint, 9, 'center');
+
+    // right: time series
+    const gx0 = this.w * 0.42, gx1 = this.w - 12, gy0 = 14, gy1 = this.h - 30;
+    const Y = (v: number) => gy1 - ((v + 2.6) / 3.6) * (gy1 - gy0);
+    const t0 = Math.max(0, this.t - 3);
+    const X = (t: number) => gx0 + ((t - t0) / 3) * (gx1 - gx0);
+    for (const v of [1, 0.5, 0, -0.5, -1, -1.5, -2, -2.5]) { this.line(gx0, Y(v), gx1, Y(v), C.grid); this.text(fmt(v, 1), gx0 - 4, Y(v), C.faint, 9, 'right', 'mono'); }
+    this.text('time (orbits) →', gx1, gy1 + 12, C.faint, 9, 'right');
+    const series = (key: 'K' | 'U', col: string) => {
+      c.beginPath();
+      this.hist.forEach((h, i) => { const x = X(h.t), y = Y(h[key]); if (i === 0) c.moveTo(x, y); else c.lineTo(x, y); });
+      c.strokeStyle = col; c.lineWidth = 1.5; c.stroke();
+    };
+    series('K', C.green); series('U', C.blue);
+    this.line(gx0, Y(-0.5), gx1, Y(-0.5), C.text, 1);
+    this.text('E = −½', gx0 + 4, Y(-0.5) - 8, C.text, 10, 'left', 'serif');
+    this.line(gx0, Y(avgK), gx1, Y(avgK), C.green, 1, [4, 4]);
+    this.text('⟨K⟩', gx1 - 4, Y(avgK) - 8, C.green, 10, 'right', 'serif');
+    this.line(gx0, Y(avgU), gx1, Y(avgU), C.blue, 1, [4, 4]);
+    this.text('⟨U⟩', gx1 - 4, Y(avgU) + 9, C.blue, 10, 'right', 'serif');
+    this.line(gx0, Y(-avgU / 2), gx1, Y(-avgU / 2), C.accent, 1, [2, 3]);
+    this.text('−½⟨U⟩', gx1 - 40, Y(-avgU / 2) - 8, C.accent, 10, 'right', 'serif');
+
+    this.setReadout([
+      ['K now', fmt(K, 3), C.green], ['U now', fmt(U, 3), C.blue], ['E = K + U', fmt(K + U, 3)],
+      ['⟨K⟩', fmt(avgK, 3), C.green], ['−½⟨U⟩', fmt(-avgU / 2, 3), C.accent],
+      ['⟨K⟩ / ⟨U⟩', this.n > 0.05 ? fmt(avgK / avgU, 3) + '  (→ −0.5)' : '—'],
+    ]);
+  }
+}
+
 /* ------------------------------------------------------------ factory ---- */
 
 export function createWidget(spec: WidgetSpec): Widget {
@@ -981,5 +1477,11 @@ export function createWidget(spec: WidgetSpec): Widget {
     case 'sphere': return new SphereWidget(spec.mode);
     case 'precession': return new PrecessionWidget();
     case 'spectrum': return new SpectrumWidget();
+    case 'ellipse': return new EllipseWidget(spec.conics ?? false);
+    case 'kepler2': return new Kepler2Widget();
+    case 'kepler3': return new Kepler3Widget();
+    case 'cannon': return new CannonWidget();
+    case 'twobody': return new TwoBodyWidget();
+    case 'virial': return new VirialWidget();
   }
 }

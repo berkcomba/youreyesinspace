@@ -174,7 +174,7 @@ export class LessonPanel {
       scroll.appendChild(chEl);
     }
     const soon = el('div', 'ac-soon');
-    soon.innerHTML = `<span class="ac-ch-num">Coming next</span><ul><li>Chapter 2 · Celestial Mechanics — elliptical orbits, Kepler's laws derived, the virial theorem</li><li>Chapter 3 · The Continuous Spectrum of Light</li></ul>`;
+    soon.innerHTML = `<span class="ac-ch-num">Coming next</span><ul><li>Chapter 3 · The Continuous Spectrum of Light — parallax, magnitudes, blackbody radiation, colour</li><li>Chapter 4 · Special Relativity</li></ul>`;
     scroll.appendChild(soon);
   }
 

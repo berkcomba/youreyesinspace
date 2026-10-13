@@ -168,7 +168,7 @@ class Parser {
 
   private command(name: string): string {
     switch (name) {
-      case 'frac': case 'dfrac': { const a = this.arg(); const b = this.arg(); return `<mfrac>${a}${b}</mfrac>`; }
+      case 'frac': case 'dfrac': case 'tfrac': { const a = this.arg(); const b = this.arg(); return `<mfrac>${a}${b}</mfrac>`; }
       case 'sqrt': {
         if (this.toks[this.i]?.t === 'op' && (this.toks[this.i] as { v: string }).v === '[') {
           this.i++;
