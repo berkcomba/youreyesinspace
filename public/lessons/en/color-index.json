@@ -1,0 +1,754 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "bolometric": {
+   "script": "Look at Betelgeuse behind the panel. Most of its energy is infrared. The magnitudes we have used miss most of the spectrum. The bolometric magnitude, m bol, counts the flux at all wavelengths. It connects to luminosity, total power, through the inverse-square law.\n\nThe bolometric correction BC equals m bol minus V, and that equals M bol minus M V. Apparent versus absolute, bolometric versus visual. BC is always zero or negative, because total light is at least what V sees, so m bol is at most V.\n\nFor the Sun, peaking near V, BC is minus zero point zero seven, and M bol is plus four point seven four. Betelgeuse has BC about minus one point six. A hot O star, radiating mainly in the ultraviolet, can have BC about minus four. Once B minus V gives the temperature, a table gives BC, which depends almost entirely on temperature.\n\nWe get luminosity from the only exact magnitude–luminosity relation. L over L sun equals ten to the power of zero point four times M bol of the Sun minus M bol, which is ten to the zero point four times four point seven four minus M bol. Four point seven four is the Sun's bolometric absolute magnitude, and zero point four is there because two and a half magnitudes means a factor of ten.\n\nV about plus zero point four five and BC about minus one point six give m bol about minus one point one five. At about one hundred sixty-eight parsecs the distance modulus is six point one three, so M bol is about minus seven point three. L over L sun is then ten to the zero point four times four point seven four plus seven point three, ten to the four point eight, about sixty-five thousand. Including the infrared quadruples the fifteen thousand from Section three point two, and matches about a hundred thousand solar luminosities in Section three point four, within the distance uncertainty.",
+   "hash": "1d37a1f37fa9",
+   "duration": 122.23,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.58,
+     "text": "Look at Betelgeuse behind the panel."
+    },
+    {
+     "start": 2.58,
+     "end": 4.82,
+     "text": "Most of its energy is infrared."
+    },
+    {
+     "start": 4.82,
+     "end": 8.34,
+     "text": "The magnitudes we have used miss most of the spectrum."
+    },
+    {
+     "start": 8.34,
+     "end": 13.46,
+     "text": "The bolometric magnitude, m bol, counts the flux at all wavelengths."
+    },
+    {
+     "start": 13.46,
+     "end": 18.42,
+     "text": "It connects to luminosity, total power, through the inverse-square law."
+    },
+    {
+     "start": 18.42,
+     "end": 25.42,
+     "text": "The bolometric correction BC equals m bol minus V, and that equals M bol minus M V."
+    },
+    {
+     "start": 25.42,
+     "end": 29.28,
+     "text": "Apparent versus absolute, bolometric versus visual."
+    },
+    {
+     "start": 29.28,
+     "end": 36.78,
+     "text": "BC is always zero or negative, because total light is at least what V sees, so m bol is at most V."
+    },
+    {
+     "start": 36.78,
+     "end": 45.1,
+     "text": "For the Sun, peaking near V, BC is minus zero point zero seven, and M bol is plus four point seven four."
+    },
+    {
+     "start": 45.1,
+     "end": 48.64,
+     "text": "Betelgeuse has BC about minus one point six."
+    },
+    {
+     "start": 48.64,
+     "end": 54.82,
+     "text": "A hot O star, radiating mainly in the ultraviolet, can have BC about minus four."
+    },
+    {
+     "start": 54.82,
+     "end": 61.69,
+     "text": "Once B minus V gives the temperature, a table gives BC, which depends almost entirely on temperature."
+    },
+    {
+     "start": 61.69,
+     "end": 66.35,
+     "text": "We get luminosity from the only exact magnitude–luminosity relation."
+    },
+    {
+     "start": 66.35,
+     "end": 77.05,
+     "text": "L over L sun equals ten to the power of zero point four times M bol of the Sun minus M bol, which is ten to the zero point four times four point seven four minus M bol."
+    },
+    {
+     "start": 77.05,
+     "end": 85.81,
+     "text": "Four point seven four is the Sun's bolometric absolute magnitude, and zero point four is there because two and a half magnitudes means a factor of ten."
+    },
+    {
+     "start": 85.81,
+     "end": 93.91,
+     "text": "V about plus zero point four five and BC about minus one point six give m bol about minus one point one five."
+    },
+    {
+     "start": 93.91,
+     "end": 102.05,
+     "text": "At about one hundred sixty-eight parsecs the distance modulus is six point one three, so M bol is about minus seven point three."
+    },
+    {
+     "start": 102.05,
+     "end": 111.49,
+     "text": "L over L sun is then ten to the zero point four times four point seven four plus seven point three, ten to the four point eight, about sixty-five thousand."
+    },
+    {
+     "start": 111.49,
+     "end": 122.23,
+     "text": "Including the infrared quadruples the fifteen thousand from Section three point two, and matches about a hundred thousand solar luminosities in Section three point four, within the distance uncertainty."
+    }
+   ],
+   "voicedHash": "d4951f65ae37"
+  },
+  "chapter-close": {
+   "script": "Behind the panel the planetary system slowly circles the Sun. Distance d equals one over parallax p, parsecs if p is in arcseconds, smaller if farther. One parsec is three point two six light years. Gaia measures about two billion stars to tens of microarcseconds. Five magnitudes is a factor of one hundred in flux. m minus M equals five log base ten of d over ten parsecs, apparent minus absolute at ten parsecs. F equals L over four pi r squared, an inverse square. Our Sun's absolute magnitude is plus four point seven four. Young and Maxwell: speed c equals wavelength lambda times frequency nu. Interference: spacing d times sine theta equals order n times lambda. Wien: lambda max times T equals two point nine million nanometre kelvin, hotter peaks bluer. L equals four pi R squared Stefan-Boltzmann sigma effective temperature to the fourth. Planck's B lambda equals two h c squared over lambda to the fifth, over e to the h c over lambda k T, minus one. h Planck's constant, k Boltzmann's. Photon energy E equals h nu. The classical limit is h nu much less than k T. Colour index B minus V measures temperature. Bolometric correction recovers light outside V, so bolometric magnitude gives luminosity exactly. Try the problems. That is our continuous spectrum.",
+   "hash": "da6f48028348",
+   "duration": 89.91,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4.38,
+     "text": "Behind the panel the planetary system slowly circles the Sun."
+    },
+    {
+     "start": 4.38,
+     "end": 11.6,
+     "text": "Distance d equals one over parallax p, parsecs if p is in arcseconds, smaller if farther."
+    },
+    {
+     "start": 11.6,
+     "end": 14.8,
+     "text": "One parsec is three point two six light years."
+    },
+    {
+     "start": 14.8,
+     "end": 19.08,
+     "text": "Gaia measures about two billion stars to tens of microarcseconds."
+    },
+    {
+     "start": 19.08,
+     "end": 22.74,
+     "text": "Five magnitudes is a factor of one hundred in flux."
+    },
+    {
+     "start": 22.74,
+     "end": 30.14,
+     "text": "m minus M equals five log base ten of d over ten parsecs, apparent minus absolute at ten parsecs."
+    },
+    {
+     "start": 30.14,
+     "end": 34.38,
+     "text": "F equals L over four pi r squared, an inverse square."
+    },
+    {
+     "start": 34.38,
+     "end": 38.28,
+     "text": "Our Sun's absolute magnitude is plus four point seven four."
+    },
+    {
+     "start": 38.28,
+     "end": 43.32,
+     "text": "Young and Maxwell: speed c equals wavelength lambda times frequency nu."
+    },
+    {
+     "start": 43.32,
+     "end": 48.23,
+     "text": "Interference: spacing d times sine theta equals order n times lambda."
+    },
+    {
+     "start": 48.23,
+     "end": 55.01,
+     "text": "Wien: lambda max times T equals two point nine million nanometre kelvin, hotter peaks bluer."
+    },
+    {
+     "start": 55.01,
+     "end": 60.19,
+     "text": "L equals four pi R squared Stefan-Boltzmann sigma effective temperature to the fourth."
+    },
+    {
+     "start": 60.19,
+     "end": 68.75,
+     "text": "Planck's B lambda equals two h c squared over lambda to the fifth, over e to the h c over lambda k T, minus one."
+    },
+    {
+     "start": 68.75,
+     "end": 71.25,
+     "text": "h Planck's constant, k Boltzmann's."
+    },
+    {
+     "start": 71.25,
+     "end": 73.75,
+     "text": "Photon energy E equals h nu."
+    },
+    {
+     "start": 73.75,
+     "end": 77.17,
+     "text": "The classical limit is h nu much less than k T."
+    },
+    {
+     "start": 77.17,
+     "end": 80.25,
+     "text": "Colour index B minus V measures temperature."
+    },
+    {
+     "start": 80.25,
+     "end": 86.81,
+     "text": "Bolometric correction recovers light outside V, so bolometric magnitude gives luminosity exactly."
+    },
+    {
+     "start": 86.81,
+     "end": 88.13,
+     "text": "Try the problems."
+    },
+    {
+     "start": 88.13,
+     "end": 89.91,
+     "text": "That is our continuous spectrum."
+    }
+   ],
+   "voicedHash": "d291902dcd4c"
+  },
+  "color-color": {
+   "script": "Look out behind the panel for a moment. We are flying toward the Pleiades, that tight little cluster, and those stars are exactly the kind of sample we drop onto a colour–colour diagram.\n\nTake the three magnitudes we already have and form two colours. U minus B is the ultraviolet magnitude minus the blue one. B minus V is blue minus visual. Plot U minus B up the vertical axis against B minus V along the horizontal, and every star becomes a single point. That plot is the colour–colour diagram.\n\nIf stars were perfect blackbodies, every temperature would fall on one smooth curve, hot stars toward the blue end and cool stars toward the red. Real stars hug that line, but they wiggle, and the wiggles are the science. Hot O and B stars sit close to the blackbody track. A stars, and Vega is the textbook case, sit above it in U minus B, because the Balmer jump swallows ultraviolet light and makes U fainter than a blackbody of the same temperature would predict. Cooler stars drift away because molecules in their atmospheres carve bands out of the spectrum.\n\nThose departures are not noise. The vertical offset from the blackbody line measures how strong the Balmer jump is, and that strength depends on surface gravity, so a giant and a dwarf at the same temperature pull apart. Dust does something else. It reddens both indices together and slides the star along a known diagonal. For a cluster like the Pleiades, that shift tells you how much dust lies between us and the stars.\n\nThree magnitudes give two colours. One colour is a thermometer. Two colours together begin to say what kind of star you are looking at, and what lies in front of it. This is the cheapest spectroscopy there is, and for the faintest stars it is the only kind we can do.\n\nThe same idea runs past U, B, and V. We add R and I, red and near-infrared, and we use the Sloan u g r i z filters, the Gaia G, BP, and RP bands, and the 2MASS J, H, and K infrared bands. A magnitude difference between bands always measures spectral shape, and because distance shifts both magnitudes the same way, the colour itself is free of distance.",
+   "hash": "849acaa3253b",
+   "duration": 130.87,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.54,
+     "text": "Look out behind the panel for a moment."
+    },
+    {
+     "start": 2.54,
+     "end": 11.32,
+     "text": "We are flying toward the Pleiades, that tight little cluster, and those stars are exactly the kind of sample we drop onto a colour–colour diagram."
+    },
+    {
+     "start": 11.32,
+     "end": 15.34,
+     "text": "Take the three magnitudes we already have and form two colours."
+    },
+    {
+     "start": 15.34,
+     "end": 19.64,
+     "text": "U minus B is the ultraviolet magnitude minus the blue one."
+    },
+    {
+     "start": 19.64,
+     "end": 22.5,
+     "text": "B minus V is blue minus visual."
+    },
+    {
+     "start": 22.5,
+     "end": 30.3,
+     "text": "Plot U minus B up the vertical axis against B minus V along the horizontal, and every star becomes a single point."
+    },
+    {
+     "start": 30.3,
+     "end": 32.86,
+     "text": "That plot is the colour–colour diagram."
+    },
+    {
+     "start": 32.86,
+     "end": 41.88,
+     "text": "If stars were perfect blackbodies, every temperature would fall on one smooth curve, hot stars toward the blue end and cool stars toward the red."
+    },
+    {
+     "start": 41.88,
+     "end": 46.64,
+     "text": "Real stars hug that line, but they wiggle, and the wiggles are the science."
+    },
+    {
+     "start": 46.64,
+     "end": 50.24,
+     "text": "Hot O and B stars sit close to the blackbody track."
+    },
+    {
+     "start": 50.24,
+     "end": 61.66,
+     "text": "A stars, and Vega is the textbook case, sit above it in U minus B, because the Balmer jump swallows ultraviolet light and makes U fainter than a blackbody of the same temperature would predict."
+    },
+    {
+     "start": 61.66,
+     "end": 67.37,
+     "text": "Cooler stars drift away because molecules in their atmospheres carve bands out of the spectrum."
+    },
+    {
+     "start": 67.37,
+     "end": 69.35,
+     "text": "Those departures are not noise."
+    },
+    {
+     "start": 69.35,
+     "end": 80.09,
+     "text": "The vertical offset from the blackbody line measures how strong the Balmer jump is, and that strength depends on surface gravity, so a giant and a dwarf at the same temperature pull apart."
+    },
+    {
+     "start": 80.09,
+     "end": 81.69,
+     "text": "Dust does something else."
+    },
+    {
+     "start": 81.69,
+     "end": 86.33,
+     "text": "It reddens both indices together and slides the star along a known diagonal."
+    },
+    {
+     "start": 86.33,
+     "end": 91.79,
+     "text": "For a cluster like the Pleiades, that shift tells you how much dust lies between us and the stars."
+    },
+    {
+     "start": 91.79,
+     "end": 94.07,
+     "text": "Three magnitudes give two colours."
+    },
+    {
+     "start": 94.07,
+     "end": 95.81,
+     "text": "One colour is a thermometer."
+    },
+    {
+     "start": 95.81,
+     "end": 100.97,
+     "text": "Two colours together begin to say what kind of star you are looking at, and what lies in front of it."
+    },
+    {
+     "start": 100.97,
+     "end": 106.59,
+     "text": "This is the cheapest spectroscopy there is, and for the faintest stars it is the only kind we can do."
+    },
+    {
+     "start": 106.59,
+     "end": 109.83,
+     "text": "The same idea runs past U, B, and V."
+    },
+    {
+     "start": 109.83,
+     "end": 122.01,
+     "text": "We add R and I, red and near-infrared, and we use the Sloan u g r i z filters, the Gaia G, BP, and RP bands, and the 2MASS J, H, and K infrared bands."
+    },
+    {
+     "start": 122.01,
+     "end": 130.87,
+     "text": "A magnitude difference between bands always measures spectral shape, and because distance shifts both magnitudes the same way, the colour itself is free of distance."
+    }
+   ],
+   "voicedHash": "a80e556a672a"
+  },
+  "color-index": {
+   "script": "The colour index is a thermometer you read with two measurements, and the reason it works is right here. U minus B equals M sub U minus M sub B, and B minus V equals M sub B minus M sub V. Those M symbols are the magnitudes through the ultraviolet, blue and visual filters. By convention we take the shorter wavelength minus the longer. Magnitudes run backwards, so a large B minus V means the star is fainter in blue than in visual: it is red. A negative B minus V means more blue light than yellow light: a blue star. Distance dims every band by the same amount, so the difference does not care how far away the star is.\n\nNow use the widget. Three filter bands sit over a blackbody curve. Slide the temperature up. For a hot star the curve rises toward the blue, more light gets through B than through V, the B magnitude is numerically smaller, and B minus V goes negative. Slide it down. For a cool star the curve climbs toward the red, and B minus V becomes large and positive. One index, two measurements, temperature.\n\nThe table is that same story with real names. Rigel, about twelve thousand kelvin, is slightly negative in B minus V, blue-white. Vega defines the zero point, white. The Sun, just under six thousand kelvin, sits at plus zero point six five, yellow. Betelgeuse, about thirty-six hundred kelvin, is near plus two, red. Across real stars, B minus V runs from about minus zero point three to about plus two.\n\nWork the example. B is ten point five two, V is nine point eight seven, so B minus V is plus zero point six five, the same as the Sun. A blackbody of that colour is about fifty-eight hundred kelvin. The fit on the screen says temperature is about four thousand six hundred kelvin times one over zero point nine two times B minus V plus one point seven zero, plus one over zero point nine two times B minus V plus zero point six two. That returns about five thousand seven hundred seventy kelvin. Distance never entered.\n\nStars are not perfect blackbodies. For an A star like Vega the widget’s U minus B sits a little off the real value, because hydrogen near ten thousand kelvin absorbs just shortward of three hundred sixty-five nanometres, the Balmer jump, and steals light from the U band. That extra faintness is a fingerprint of the atmosphere, which is why a colour-colour diagram sorts spectral type as well as temperature.",
+   "hash": "b9f5e5bbab47",
+   "duration": 149.75,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 6.08,
+     "text": "The colour index is a thermometer you read with two measurements, and the reason it works is right here."
+    },
+    {
+     "start": 6.08,
+     "end": 13.94,
+     "text": "U minus B equals M sub U minus M sub B, and B minus V equals M sub B minus M sub V."
+    },
+    {
+     "start": 13.94,
+     "end": 19,
+     "text": "Those M symbols are the magnitudes through the ultraviolet, blue and visual filters."
+    },
+    {
+     "start": 19,
+     "end": 22.56,
+     "text": "By convention we take the shorter wavelength minus the longer."
+    },
+    {
+     "start": 22.56,
+     "end": 30,
+     "text": "Magnitudes run backwards, so a large B minus V means the star is fainter in blue than in visual: it is red."
+    },
+    {
+     "start": 30,
+     "end": 34.74,
+     "text": "A negative B minus V means more blue light than yellow light: a blue star."
+    },
+    {
+     "start": 34.74,
+     "end": 40.7,
+     "text": "Distance dims every band by the same amount, so the difference does not care how far away the star is."
+    },
+    {
+     "start": 40.7,
+     "end": 42.08,
+     "text": "Now use the widget."
+    },
+    {
+     "start": 42.08,
+     "end": 45.08,
+     "text": "Three filter bands sit over a blackbody curve."
+    },
+    {
+     "start": 45.08,
+     "end": 46.58,
+     "text": "Slide the temperature up."
+    },
+    {
+     "start": 46.58,
+     "end": 56.4,
+     "text": "For a hot star the curve rises toward the blue, more light gets through B than through V, the B magnitude is numerically smaller, and B minus V goes negative."
+    },
+    {
+     "start": 56.4,
+     "end": 57.52,
+     "text": "Slide it down."
+    },
+    {
+     "start": 57.52,
+     "end": 63.26,
+     "text": "For a cool star the curve climbs toward the red, and B minus V becomes large and positive."
+    },
+    {
+     "start": 63.26,
+     "end": 66.04,
+     "text": "One index, two measurements, temperature."
+    },
+    {
+     "start": 66.04,
+     "end": 68.94,
+     "text": "The table is that same story with real names."
+    },
+    {
+     "start": 68.94,
+     "end": 74.76,
+     "text": "Rigel, about twelve thousand kelvin, is slightly negative in B minus V, blue-white."
+    },
+    {
+     "start": 74.76,
+     "end": 77.21,
+     "text": "Vega defines the zero point, white."
+    },
+    {
+     "start": 77.21,
+     "end": 82.81,
+     "text": "The Sun, just under six thousand kelvin, sits at plus zero point six five, yellow."
+    },
+    {
+     "start": 82.81,
+     "end": 87.61,
+     "text": "Betelgeuse, about thirty-six hundred kelvin, is near plus two, red."
+    },
+    {
+     "start": 87.61,
+     "end": 93.89,
+     "text": "Across real stars, B minus V runs from about minus zero point three to about plus two."
+    },
+    {
+     "start": 93.89,
+     "end": 95.25,
+     "text": "Work the example."
+    },
+    {
+     "start": 95.25,
+     "end": 103.57,
+     "text": "B is ten point five two, V is nine point eight seven, so B minus V is plus zero point six five, the same as the Sun."
+    },
+    {
+     "start": 103.57,
+     "end": 107.03,
+     "text": "A blackbody of that colour is about fifty-eight hundred kelvin."
+    },
+    {
+     "start": 107.03,
+     "end": 121.99,
+     "text": "The fit on the screen says temperature is about four thousand six hundred kelvin times one over zero point nine two times B minus V plus one point seven zero, plus one over zero point nine two times B minus V plus zero point six two."
+    },
+    {
+     "start": 121.99,
+     "end": 125.47,
+     "text": "That returns about five thousand seven hundred seventy kelvin."
+    },
+    {
+     "start": 125.47,
+     "end": 127.01,
+     "text": "Distance never entered."
+    },
+    {
+     "start": 127.01,
+     "end": 129.15,
+     "text": "Stars are not perfect blackbodies."
+    },
+    {
+     "start": 129.15,
+     "end": 142.69,
+     "text": "For an A star like Vega the widget’s U minus B sits a little off the real value, because hydrogen near ten thousand kelvin absorbs just shortward of three hundred sixty-five nanometres, the Balmer jump, and steals light from the U band."
+    },
+    {
+     "start": 142.69,
+     "end": 149.75,
+     "text": "That extra faintness is a fingerprint of the atmosphere, which is why a colour-colour diagram sorts spectral type as well as temperature."
+    }
+   ],
+   "voicedHash": "b1c27986d5ab"
+  },
+  "the-toolkit": {
+   "script": "Look at Rigel behind the panel. We will never visit that blue-white point, but this chain turns its light into distance, temperature, power, and size.\n\nParallax p is about 3.8 milliarcseconds, a few thousandths of an arcsecond. Distance in parsecs is one over the parallax in arcseconds, about 260 parsecs.\n\nVisual magnitude V is plus 0.13. The colour index B minus V is minus 0.03. A negative index means extra blue light, so the calibration gives an effective temperature T sub e of about twelve thousand kelvin.\n\nThe bolometric correction BC is about minus 0.8, since much of the energy misses the visual band. Apparent bolometric magnitude m bol is V plus BC, about minus 0.67. The distance modulus is 7.1, so absolute bolometric magnitude M bol is m bol minus 7.1, about minus 7.8. Luminosity is ten to the power of 0.4 times 12.5, about one hundred thousand solar luminosities. That 12.5 is the magnitude gap to the Sun, and 0.4 converts a magnitude gap into a power of ten.\n\nStefan–Boltzmann gives the size. Luminosity L equals four pi R squared sigma T to the fourth, where R is radius, sigma the Stefan–Boltzmann constant, and T the effective temperature. A hotter surface pours out more power per square metre. Radius R is the square root of L over four pi sigma T to the fourth: about fifty-five billion metres, roughly seventy-nine solar radii.\n\nWien's law places the peak. Lambda max, in nanometres, equals about 2.9 million divided by twelve thousand kelvin, about 240 nanometres. Rigel peaks in the ultraviolet; we see only its blue tail.\n\nBetelgeuse and Rigel, Orion's shoulders, share that luminosity in opposite ways: cool and vast, or hot and merely large. Both are supergiants near the ends of their lives, and both will end as supernovae. Direction gave distance. Amount of light, with the inverse square law, gave luminosity. Colour gave temperature. Together, luminosity and temperature gave size. Later chapters stand on that chain.",
+   "hash": "32d0416aa790",
+   "duration": 141.75,
+   "sentences": [
+    {
+     "start": 0,
+     "end": 2.266,
+     "text": "Look at Rigel behind the panel."
+    },
+    {
+     "start": 2.266,
+     "end": 10.893,
+     "text": "We will never visit that blue-white point, but this chain turns its light into distance, temperature, power, and size."
+    },
+    {
+     "start": 10.893,
+     "end": 16.449,
+     "text": "Parallax p is about 3. 8 milliarcseconds, a few thousandths of an arcsecond."
+    },
+    {
+     "start": 16.449,
+     "end": 22.151,
+     "text": "Distance in parsecs is one over the parallax in arcseconds, about 260 parsecs."
+    },
+    {
+     "start": 22.151,
+     "end": 24.563,
+     "text": "Visual magnitude V is plus 0. 13."
+    },
+    {
+     "start": 24.563,
+     "end": 27.634,
+     "text": "The colour index B minus V is minus 0. 03."
+    },
+    {
+     "start": 27.634,
+     "end": 37.21,
+     "text": "A negative index means extra blue light, so the calibration gives an effective temperature T sub e of about twelve thousand kelvin."
+    },
+    {
+     "start": 37.21,
+     "end": 44.375,
+     "text": "The bolometric correction BC is about minus 0. 8, since much of the energy misses the visual band."
+    },
+    {
+     "start": 44.375,
+     "end": 49.346,
+     "text": "Apparent bolometric magnitude m bol is V plus BC, about minus 0. 67."
+    },
+    {
+     "start": 49.346,
+     "end": 57.168,
+     "text": "The distance modulus is 7. 1, so absolute bolometric magnitude M bol is m bol minus 7. 1, about minus 7. 8."
+    },
+    {
+     "start": 57.168,
+     "end": 71.569,
+     "text": "Luminosity is ten to the power of 0. 4 times 12. 5, about one hundred thousand solar luminosities. That 12. 5 is the magnitude gap to the Sun, and 0. 4 converts a magnitude gap into a power of ten."
+    },
+    {
+     "start": 71.569,
+     "end": 73.909,
+     "text": "Stefan–Boltzmann gives the size."
+    },
+    {
+     "start": 73.909,
+     "end": 84.801,
+     "text": "Luminosity L equals four pi R squared sigma T to the fourth, where R is radius, sigma the Stefan–Boltzmann constant, and T the effective temperature."
+    },
+    {
+     "start": 84.801,
+     "end": 88.822,
+     "text": "A hotter surface pours out more power per square metre."
+    },
+    {
+     "start": 88.822,
+     "end": 98.691,
+     "text": "Radius R is the square root of L over four pi sigma T to the fourth: about fifty-five billion metres, roughly seventy-nine solar radii."
+    },
+    {
+     "start": 98.691,
+     "end": 100.665,
+     "text": "Wien's law places the peak."
+    },
+    {
+     "start": 100.665,
+     "end": 108.634,
+     "text": "Lambda max, in nanometres, equals about 2. 9 million divided by twelve thousand kelvin, about 240 nanometres."
+    },
+    {
+     "start": 108.634,
+     "end": 112.874,
+     "text": "Rigel peaks in the ultraviolet; we see only its blue tail."
+    },
+    {
+     "start": 112.874,
+     "end": 121.646,
+     "text": "Betelgeuse and Rigel, Orion's shoulders, share that luminosity in opposite ways: cool and vast, or hot and merely large."
+    },
+    {
+     "start": 121.646,
+     "end": 127.714,
+     "text": "Both are supergiants near the ends of their lives, and both will end as supernovae."
+    },
+    {
+     "start": 127.714,
+     "end": 129.468,
+     "text": "Direction gave distance."
+    },
+    {
+     "start": 129.468,
+     "end": 134.001,
+     "text": "Amount of light, with the inverse square law, gave luminosity."
+    },
+    {
+     "start": 134.001,
+     "end": 135.755,
+     "text": "Colour gave temperature."
+    },
+    {
+     "start": 135.755,
+     "end": 139.191,
+     "text": "Together, luminosity and temperature gave size."
+    },
+    {
+     "start": 139.191,
+     "end": 141.75,
+     "text": "Later chapters stand on that chain."
+    }
+   ],
+   "voicedHash": "d6e5a43a6beb"
+  },
+  "ubv": {
+   "script": "Look at Vega behind the panel, our reference star. A full spectrum of every star is expensive. A cheaper way to capture the shape of the blackbody curve is to measure a star's brightness through a few standard coloured filters and compare the results.\n\nHarold Johnson and William Morgan defined the standard set in nineteen fifty-three. Three filters, each passing a band roughly a hundred nanometres wide. U is ultraviolet, centred near three hundred and sixty-five nanometres, bandwidth about sixty-eight nanometres. B is blue, near four hundred and forty nanometres, about ninety-eight nanometres wide. V is visual, yellow-green light matching the eye, near five hundred and fifty nanometres, about eighty-nine nanometres wide.\n\nA star's U, B and V magnitudes are its apparent magnitudes through each filter. The zero points are set so that an A zero star like Vega has U equal to B equal to V. Its colours are all zero by definition. V magnitudes sit close to the eye's apparent magnitude from section three point two. The Sun has V about minus twenty-six point seven.\n\nAbsolute magnitudes exist for each filter too: M sub U, M sub B and M sub V. Distance does not care about colour, so the distance modulus is the same for all of them. U minus M sub U equals B minus M sub B equals V minus M sub V equals five times the logarithm base ten of d divided by ten parsecs. U, B and V are the apparent magnitudes. The M symbols are the absolute magnitudes in those same filters. d is the distance in parsecs, and ten parsecs is the reference distance. The right-hand side is that shared distance modulus.\n\nSubtract two filter magnitudes and the distance cancels entirely. What remains measures only the shape of the spectrum, and for a blackbody that shape is set by temperature. Think of coloured glass on a stove: distance drops out, heat remains.",
+   "hash": "92baa2ac2282",
+   "duration": 117.11,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.36,
+     "text": "Look at Vega behind the panel, our reference star."
+    },
+    {
+     "start": 3.36,
+     "end": 6.48,
+     "text": "A full spectrum of every star is expensive."
+    },
+    {
+     "start": 6.48,
+     "end": 14.66,
+     "text": "A cheaper way to capture the shape of the blackbody curve is to measure a star's brightness through a few standard coloured filters and compare the results."
+    },
+    {
+     "start": 14.66,
+     "end": 19.32,
+     "text": "Harold Johnson and William Morgan defined the standard set in nineteen fifty-three."
+    },
+    {
+     "start": 19.32,
+     "end": 24.02,
+     "text": "Three filters, each passing a band roughly a hundred nanometres wide."
+    },
+    {
+     "start": 24.02,
+     "end": 30.86,
+     "text": "U is ultraviolet, centred near three hundred and sixty-five nanometres, bandwidth about sixty-eight nanometres."
+    },
+    {
+     "start": 30.86,
+     "end": 36.64,
+     "text": "B is blue, near four hundred and forty nanometres, about ninety-eight nanometres wide."
+    },
+    {
+     "start": 36.64,
+     "end": 44.56,
+     "text": "V is visual, yellow-green light matching the eye, near five hundred and fifty nanometres, about eighty-nine nanometres wide."
+    },
+    {
+     "start": 44.56,
+     "end": 49.7,
+     "text": "A star's U, B and V magnitudes are its apparent magnitudes through each filter."
+    },
+    {
+     "start": 49.7,
+     "end": 55.52,
+     "text": "The zero points are set so that an A zero star like Vega has U equal to B equal to V."
+    },
+    {
+     "start": 55.52,
+     "end": 58.14,
+     "text": "Its colours are all zero by definition."
+    },
+    {
+     "start": 58.14,
+     "end": 63.13,
+     "text": "V magnitudes sit close to the eye's apparent magnitude from section three point two."
+    },
+    {
+     "start": 63.13,
+     "end": 66.45,
+     "text": "The Sun has V about minus twenty-six point seven."
+    },
+    {
+     "start": 66.45,
+     "end": 73.33,
+     "text": "Absolute magnitudes exist for each filter too: M sub U, M sub B and M sub V."
+    },
+    {
+     "start": 73.33,
+     "end": 78.65,
+     "text": "Distance does not care about colour, so the distance modulus is the same for all of them."
+    },
+    {
+     "start": 78.65,
+     "end": 88.97,
+     "text": "U minus M sub U equals B minus M sub B equals V minus M sub V equals five times the logarithm base ten of d divided by ten parsecs."
+    },
+    {
+     "start": 88.97,
+     "end": 91.67,
+     "text": "U, B and V are the apparent magnitudes."
+    },
+    {
+     "start": 91.67,
+     "end": 95.53,
+     "text": "The M symbols are the absolute magnitudes in those same filters."
+    },
+    {
+     "start": 95.53,
+     "end": 100.03,
+     "text": "d is the distance in parsecs, and ten parsecs is the reference distance."
+    },
+    {
+     "start": 100.03,
+     "end": 103.17,
+     "text": "The right-hand side is that shared distance modulus."
+    },
+    {
+     "start": 103.17,
+     "end": 106.97,
+     "text": "Subtract two filter magnitudes and the distance cancels entirely."
+    },
+    {
+     "start": 106.97,
+     "end": 112.85,
+     "text": "What remains measures only the shape of the spectrum, and for a blackbody that shape is set by temperature."
+    },
+    {
+     "start": 112.85,
+     "end": 117.11,
+     "text": "Think of coloured glass on a stove: distance drops out, heat remains."
+    }
+   ],
+   "voicedHash": "d8b695c63cd8"
+  }
+ }
+}

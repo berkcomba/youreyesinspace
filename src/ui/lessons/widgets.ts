@@ -1467,6 +1467,739 @@ class VirialWidget extends CanvasWidget {
   }
 }
 
+/* ------------------------------------------------- physics helpers (ch. 3) ---- */
+
+const H_PLANCK = 6.62607015e-34, C_LIGHT = 2.99792458e8, K_B = 1.380649e-23, SIGMA_SB = 5.670374419e-8;
+const EV = 1.602176634e-19;
+const PC_M = 3.0857e16;
+const SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+/** 1.23 × 10⁻⁷ */
+function sci(x: number, d = 2): string {
+  if (x === 0 || !Number.isFinite(x)) return String(x);
+  const e = Math.floor(Math.log10(Math.abs(x)));
+  const m = x / 10 ** e;
+  if (e >= -2 && e <= 3) return x.toFixed(Math.max(0, d - e));
+  const es = String(Math.abs(e)).split('').map((ch) => SUP[+ch]).join('');
+  return `${m.toFixed(d)} × 10${e < 0 ? '⁻' : ''}${es}`;
+}
+/** Planck function B_λ(T) in W m⁻³ sr⁻¹; λ in metres */
+function planck(lam: number, T: number): number {
+  const x = (H_PLANCK * C_LIGHT) / (lam * K_B * T);
+  if (x > 700) return 0;
+  return (2 * H_PLANCK * C_LIGHT * C_LIGHT) / lam ** 5 / Math.expm1(x);
+}
+/** approximate sRGB colour of a blackbody at temperature T (K) */
+function tempRGB(T: number): [number, number, number] {
+  const t = Math.min(40000, Math.max(1000, T)) / 100;
+  let r: number, g: number, b: number;
+  if (t <= 66) {
+    r = 255;
+    g = 99.4708025861 * Math.log(t) - 161.1195681661;
+    b = t <= 19 ? 0 : 138.5177312231 * Math.log(t - 10) - 305.0447927307;
+  } else {
+    r = 329.698727446 * Math.pow(t - 60, -0.1332047592);
+    g = 288.1221695283 * Math.pow(t - 60, -0.0755148492);
+    b = 255;
+  }
+  const cl = (v: number) => Math.max(0, Math.min(255, v));
+  return [cl(r), cl(g), cl(b)];
+}
+/** approximate colour of monochromatic light of wavelength nm (380–780) */
+function waveRGB(nm: number): [number, number, number] {
+  let r = 0, g = 0, b = 0;
+  if (nm >= 380 && nm < 440) { r = -(nm - 440) / 60; b = 1; }
+  else if (nm < 490) { g = (nm - 440) / 50; b = 1; }
+  else if (nm < 510) { g = 1; b = -(nm - 510) / 20; }
+  else if (nm < 580) { r = (nm - 510) / 70; g = 1; }
+  else if (nm < 645) { r = 1; g = -(nm - 645) / 65; }
+  else if (nm <= 780) { r = 1; }
+  let f = 1;
+  if (nm < 420) f = 0.3 + 0.7 * (nm - 380) / 40; else if (nm > 700) f = 0.3 + 0.7 * (780 - nm) / 80;
+  if (nm < 380 || nm > 780) f = 0;
+  return [255 * r * f, 255 * g * f, 255 * b * f];
+}
+const rgba = (c: [number, number, number], a = 1) => `rgba(${c[0] | 0},${c[1] | 0},${c[2] | 0},${a})`;
+const hexA = (hex: string, a: number) => `rgba(${parseInt(hex.slice(1, 3), 16)},${parseInt(hex.slice(3, 5), 16)},${parseInt(hex.slice(5, 7), 16)},${a})`;
+/** draw the visible rainbow between two x positions mapped from λ₀..λ₁ nm */
+function rainbow(ctx: CanvasRenderingContext2D, X: (nm: number) => number, y: number, h: number, alpha = 0.55) {
+  for (let nm = 380; nm < 780; nm += 2) {
+    ctx.fillStyle = rgba(waveRGB(nm), alpha);
+    ctx.fillRect(X(nm), y, Math.max(1, X(nm + 2) - X(nm) + 0.5), h);
+  }
+}
+const log10 = Math.log10;
+
+/* ------------------------------------------------- 13. stellar parallax ---- */
+
+class ParallaxWidget extends CanvasWidget {
+  private dpc = 2.5;         // distance in parsecs
+  private phase = 0;         // Earth's orbital phase
+  private speed = 0.25;      // orbits per second
+  private bgStars: Array<{ x: number; y: number; s: number }> = [];
+
+  constructor() {
+    super(480 / 360);
+    this.playButton();
+    this.slider('Distance to star', log10(1.3), 2, 0.01, log10(this.dpc), (v) => `${fmt(10 ** v, 10 ** v < 10 ? 2 : 1)} pc`, (v) => { this.dpc = 10 ** v; });
+    this.slider('Speed', 0.05, 1, 0.05, this.speed, (v) => `${fmt(v, 2)} yr/s`, (v) => { this.speed = v; });
+    let seed = 7;
+    const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+    for (let i = 0; i < 70; i++) this.bgStars.push({ x: rnd(), y: rnd(), s: 0.6 + rnd() * 1.4 });
+  }
+
+  protected draw(dt: number) {
+    const c = this.ctx;
+    c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    if (dt > 0) this.phase = (this.phase + dt * this.speed * TAU) % TAU;
+    const p = 1 / this.dpc;                   // arcsec
+    const ex = Math.cos(this.phase), ey = Math.sin(this.phase);
+
+    /* left: geometry (exaggerated) */
+    const gw = this.w * 0.56;
+    const sx = gw / 2, sy = this.h - 54, Ro = 30;
+    const starY = this.h * 0.30;
+    const E = { x: sx + ex * Ro, y: sy - ey * Ro * 0.35 };     // orbit seen obliquely
+    // far background stars band
+    for (const s of this.bgStars.slice(0, 25)) this.circle(10 + s.x * (gw - 20), 6 + s.y * 10, s.s * 0.6, undefined, 'rgba(220,220,230,0.5)');
+    this.text('background stars (effectively at infinity)', gw / 2, 20, C.faint, 9, 'center');
+    // orbit
+    c.beginPath(); c.ellipse(sx, sy, Ro, Ro * 0.35, 0, 0, TAU); c.strokeStyle = C.line; c.lineWidth = 1; c.stroke();
+    this.glow(sx, sy, 12, 'rgba(242,196,90,0.5)'); this.circle(sx, sy, 4, undefined, C.sun);
+    this.text('Sun', sx + 8, sy + 10, C.dim, 9);
+    // star
+    const S = { x: sx, y: starY + 22 };
+    this.glow(S.x, S.y, 10, 'rgba(239,233,216,0.5)'); this.circle(S.x, S.y, 3, undefined, C.star);
+    this.text('nearby star', S.x + 10, S.y, C.text, 10);
+    // lines of sight from the two extremes and from Earth now
+    this.line(sx - Ro, sy, S.x, S.y, 'rgba(255,255,255,0.14)', 1, [3, 3]);
+    this.line(sx + Ro, sy, S.x, S.y, 'rgba(255,255,255,0.14)', 1, [3, 3]);
+    this.line(E.x, E.y, S.x, S.y, C.accent, 1.2);
+    // extend current line of sight past the star to the background
+    const dx = S.x - E.x, dy = S.y - E.y, L = Math.hypot(dx, dy);
+    const far = { x: S.x + (dx / L) * (S.y - 8) / Math.max(0.3, -dy / L), y: 8 };
+    this.line(S.x, S.y, far.x, far.y, 'rgba(189,155,108,0.35)', 1, [2, 3]);
+    // baseline and angle label
+    this.line(sx - Ro, sy + 14, sx + Ro, sy + 14, C.dim, 1);
+    this.text('2 AU baseline', sx, sy + 24, C.dim, 9, 'center');
+    c.beginPath(); c.arc(S.x, S.y, 26, Math.PI / 2 - 0.42, Math.PI / 2 + 0.42); c.strokeStyle = C.green; c.lineWidth = 1; c.stroke();
+    this.text('2p', S.x, S.y + 36, C.green, 10, 'center', 'serif');
+    this.circle(E.x, E.y, 3.5, undefined, C.earth);
+    this.text('Earth', E.x + 7, E.y - 7, C.earth, 9);
+    this.text('(angles hugely exaggerated)', gw / 2, this.h - 12, C.faint, 9, 'center');
+
+    /* right: through the telescope */
+    const vx0 = gw + 8, vw = this.w - vx0 - 8, vcx = vx0 + vw / 2, vcy = this.h / 2, R = Math.min(vw, this.h) / 2 - 10;
+    c.save(); c.beginPath(); c.arc(vcx, vcy, R, 0, TAU); c.clip();
+    c.fillStyle = '#05070b'; c.fillRect(vx0, 0, vw, this.h);
+    for (const s of this.bgStars) this.circle(vcx - R + s.x * 2 * R, vcy - R + s.y * 2 * R, s.s * 0.8, undefined, 'rgba(220,220,230,0.75)');
+    const K = Math.min(R * 0.6, 70 / this.dpc);                    // screen exaggeration
+    // yearly trace
+    c.beginPath(); c.ellipse(vcx, vcy, K, K * 0.35, 0, 0, TAU); c.strokeStyle = 'rgba(189,155,108,0.35)'; c.lineWidth = 1; c.setLineDash([2, 3]); c.stroke(); c.setLineDash([]);
+    const nx = vcx - ex * K, ny = vcy + ey * K * 0.35;             // opposite to Earth's displacement
+    this.glow(nx, ny, 12, 'rgba(239,233,216,0.7)'); this.circle(nx, ny, 3.2, undefined, '#fff');
+    c.restore();
+    this.circle(vcx, vcy, R, C.line, undefined, 1.2);
+    this.line(vcx - 8, vcy, vcx + 8, vcy, 'rgba(255,255,255,0.15)'); this.line(vcx, vcy - 8, vcx, vcy + 8, 'rgba(255,255,255,0.15)');
+    this.text('through the telescope · one year', vcx, 10, C.dim, 9, 'center');
+    this.text('shift exaggerated ≈ 10⁵ × for visibility', vcx, this.h - 10, C.faint, 8, 'center');
+
+    const d = this.dpc;
+    this.setReadout([
+      ['Distance d', `${fmt(d, 2)} pc = ${fmt(d * 3.2616, 2)} ly = ${sci(d * PC_M / 1e3, 2)} km`],
+      ['Parallax p = 1/d', p >= 0.1 ? `${fmt(p, 3)}″` : `${fmt(p * 1000, 1)} mas`, C.green],
+      ['Full yearly swing 2p', p >= 0.1 ? `${fmt(2 * p, 3)}″` : `${fmt(2000 * p, 1)} mas`],
+      ['Gaia error 25 µas → distance error', `${fmt(100 * 25e-6 / p, p > 0.025 ? 2 : 1)} %`, 25e-6 / p < 0.1 ? C.green : C.red],
+      ['Light travel time', `${fmt(d * 3.2616, 2)} years`],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 14. the magnitude scale ---- */
+
+const MAG_OBJECTS: Array<[string, number]> = [
+  ['Sun', -26.83], ['Full Moon', -12.7], ['Venus', -4.9], ['Jupiter', -2.9], ['Sirius', -1.46], ['Vega', 0.03],
+  ['Polaris', 1.98], ['Naked eye', 6.5], ['Binoculars', 10], ['Pluto', 14], ['Hubble / JWST', 31],
+];
+
+class MagnitudeWidget extends CanvasWidget {
+  private m1 = -1.46;
+  private m2 = 6.5;
+  constructor() {
+    super(480 / 300);
+    this.slider('Star A magnitude', -27, 32, 0.1, this.m1, (v) => fmt(v, 1), (v) => { this.m1 = v; });
+    this.slider('Star B magnitude', -27, 32, 0.1, this.m2, (v) => fmt(v, 1), (v) => { this.m2 = v; });
+    this.playing = false;
+  }
+  protected draw() {
+    const c = this.ctx;
+    c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const x0 = 24, x1 = this.w - 24, ry = 92;
+    const X = (m: number) => x0 + ((m + 27) / 59) * (x1 - x0);
+    // ruler
+    this.line(x0, ry, x1, ry, C.text, 1.2);
+    for (let m = -25; m <= 30; m += 5) { this.line(X(m), ry - 5, X(m), ry + 5, C.text); this.text(fmt(m, 0), X(m), ry + 14, C.dim, 9, 'center', 'mono'); }
+    this.text('brighter ←', x0, ry - 34, C.faint, 9, 'left'); this.text('→ fainter', x1, ry - 34, C.faint, 9, 'right');
+    MAG_OBJECTS.forEach(([name, m], i) => {
+      const x = X(m), up = i % 2 === 0;
+      this.line(x, ry, x, up ? ry - 12 : ry + 20, C.faint);
+      this.text(name, x, up ? ry - 19 : ry + 29, C.dim, 8, 'center');
+    });
+    // markers
+    const mark = (m: number, label: string, col: string) => {
+      const x = X(m);
+      c.beginPath(); c.moveTo(x, ry - 8); c.lineTo(x - 5, ry - 16); c.lineTo(x + 5, ry - 16); c.closePath(); c.fillStyle = col; c.fill();
+      this.text(label, x, ry - 44, col, 10, 'center', 'serif');
+    };
+    mark(this.m1, 'A', C.accent); mark(this.m2, 'B', C.blue);
+    // brightness comparison
+    const dm = this.m2 - this.m1;                    // B − A; positive → A brighter
+    const ratio = 100 ** (dm / 5);                   // F_A / F_B
+    const by = this.h * 0.66;
+    const draw = (x: number, rel: number, col: [number, number, number], label: string, m: number) => {
+      // disc area ∝ flux relative to the brighter one; floor for visibility
+      const r = Math.max(1.2, 26 * Math.sqrt(rel));
+      this.glow(x, by, r * 1.9, rgba(col, 0.5));
+      this.circle(x, by, r, undefined, '#fff');
+      this.text(label, x, by + 44, C.text, 10, 'center', 'serif');
+      this.text(`m = ${fmt(m, 2)}`, x, by + 57, C.dim, 9, 'center', 'mono');
+      if (rel < 0.002) this.text('(too faint to draw to scale)', x, by + 69, C.faint, 8, 'center');
+    };
+    const relA = dm >= 0 ? 1 : 1 / 100 ** (-dm / 5), relB = dm >= 0 ? 1 / ratio : 1;
+    draw(this.w * 0.3, relA, [189, 155, 108], 'Star A', this.m1);
+    draw(this.w * 0.7, relB, [111, 163, 214], 'Star B', this.m2);
+    const txt = ratio >= 1 ? `A is ${ratio < 1e4 ? fmt(ratio, ratio < 10 ? 2 : 0) : sci(ratio, 1)} × brighter` : `B is ${1 / ratio < 1e4 ? fmt(1 / ratio, 1 / ratio < 10 ? 2 : 0) : sci(1 / ratio, 1)} × brighter`;
+    this.text(txt, this.w / 2, by - 4, C.text, 12, 'center', 'serif');
+    this.text(`Δm = ${fmt(Math.abs(dm), 1)} mag`, this.w / 2, by + 12, C.dim, 10, 'center', 'mono');
+    this.setReadout([
+      ['Magnitude difference Δm = m_B − m_A', fmt(dm, 2)],
+      ['Flux ratio F_A / F_B = 100^(Δm/5)', ratio >= 1e4 || ratio <= 1e-4 ? sci(ratio, 2) : fmt(ratio, 3), C.green],
+      ['log₁₀(F_A / F_B) = 0.4 Δm', fmt(0.4 * dm, 2)],
+      ['One magnitude', '× 2.512 in flux · five magnitudes = × 100'],
+    ]);
+  }
+}
+
+/* --------------------------------------------- 15. inverse square & distance modulus ---- */
+
+class DistModWidget extends CanvasWidget {
+  private M = 4.74;          // absolute magnitude
+  private logd = 1;          // log10 distance in pc
+  private t = 0;
+  constructor() {
+    super(480 / 340);
+    this.slider('Absolute magnitude M', -10, 16, 0.1, this.M, (v) => fmt(v, 1), (v) => { this.M = v; });
+    this.slider('Distance', -1, 4, 0.01, this.logd, (v) => { const d = 10 ** v; return d < 1 ? `${fmt(d, 2)} pc` : d < 1000 ? `${fmt(d, 1)} pc` : `${fmt(d / 1000, 2)} kpc`; }, (v) => { this.logd = v; });
+  }
+  protected draw(dt: number) {
+    const c = this.ctx;
+    c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    this.t += dt;
+    const d = 10 ** this.logd;
+    const m = this.M + 5 * (this.logd - 1);
+    const L = 10 ** (0.4 * (4.74 - this.M));
+    const x0 = 46, x1 = this.w - 90, sy = this.h * 0.42;
+    const X = (ld: number) => x0 + ((ld + 1) / 5) * (x1 - x0);
+    // flux rays: density falls as the rays diverge (2-D stand-in for 1/r²)
+    const n = 28;
+    for (let i = 0; i < n; i++) {
+      const a = -0.55 + (1.1 * i) / (n - 1);
+      c.beginPath(); c.moveTo(x0, sy); c.lineTo(x0 + (x1 - x0 + 40) * Math.cos(a), sy + (x1 - x0 + 40) * Math.sin(a));
+      c.strokeStyle = 'rgba(189,155,108,0.10)'; c.lineWidth = 1; c.stroke();
+    }
+    // shells
+    for (const ld of [0, 1, 2, 3]) {
+      const r = X(ld) - x0;
+      c.beginPath(); c.arc(x0, sy, r, -0.6, 0.6); c.strokeStyle = C.line; c.lineWidth = 1; c.setLineDash([3, 4]); c.stroke(); c.setLineDash([]);
+      this.text(ld === 0 ? '1 pc' : ld === 1 ? '10 pc' : ld === 2 ? '100 pc' : '1 kpc', X(ld), sy - r * Math.sin(0.6) - 8, ld === 1 ? C.accent : C.faint, 9, 'center');
+    }
+    this.text('each shell carries the same total power L', x0 + 10, this.h * 0.08, C.dim, 9);
+    this.text('area 4πr² grows → flux per m² falls', x0 + 10, this.h * 0.08 + 12, C.dim, 9);
+    // star
+    const sr = 5 + 7 * Math.max(0, Math.min(1, (10 - this.M) / 20));
+    const pulse = 1 + 0.05 * Math.sin(this.t * 3);
+    this.glow(x0, sy, sr * 4 * pulse, 'rgba(242,196,90,0.5)'); this.circle(x0, sy, sr, undefined, '#fff3c4');
+    this.text(`M = ${fmt(this.M, 1)}`, x0, sy + 22, C.sun, 10, 'center', 'mono');
+    this.text(`L = ${sci(L, 1)} L☉`, x0, sy + 34, C.dim, 9, 'center', 'mono');
+    // detector
+    const dx = X(this.logd);
+    c.fillStyle = '#2a2f3a'; c.fillRect(dx - 5, sy - 14, 10, 28);
+    c.strokeStyle = C.text; c.lineWidth = 1; c.strokeRect(dx - 5, sy - 14, 10, 28);
+    const rel = Math.min(1, 10 ** (-0.4 * (m + 2)));        // glow saturates near m ≈ −2
+    this.glow(dx, sy, 14 + 30 * rel, `rgba(255,255,255,${0.15 + 0.6 * rel})`);
+    this.text('detector', dx, sy + 24, C.text, 9, 'center');
+    this.text(`m = ${fmt(m, 2)}`, dx, sy + 36, C.accent, 11, 'center', 'mono');
+    // magnitude meter (right)
+    const mx = this.w - 44, my0 = 16, my1 = this.h - 36;
+    const Y = (mm: number) => my0 + ((mm + 27) / 58) * (my1 - my0);
+    this.line(mx, my0, mx, my1, C.line, 2);
+    for (const mm of [-26.8, -12.7, -1.5, 0, 6.5, 14, 31]) { this.line(mx - 4, Y(mm), mx + 4, Y(mm), C.faint); }
+    this.text('Sun', mx + 8, Y(-26.8), C.faint, 8); this.text('Moon', mx + 8, Y(-12.7), C.faint, 8); this.text('Sirius', mx + 8, Y(-1.5), C.faint, 8);
+    this.text('eye limit', mx + 8, Y(6.5), C.faint, 8); this.text('JWST', mx + 8, Y(31), C.faint, 8);
+    const ym = Y(Math.max(-27, Math.min(31, m)));
+    c.beginPath(); c.moveTo(mx - 6, ym); c.lineTo(mx - 14, ym - 5); c.lineTo(mx - 14, ym + 5); c.closePath(); c.fillStyle = C.accent; c.fill();
+    this.text('apparent magnitude', mx, my1 + 12, C.dim, 8, 'center');
+    const visible = m <= 6.5;
+    this.setReadout([
+      ['Distance d', d < 1000 ? `${fmt(d, 2)} pc = ${fmt(d * 3.2616, 1)} ly` : `${fmt(d / 1000, 2)} kpc = ${fmt(d * 3.2616 / 1000, 1)} kly`],
+      ['Distance modulus m − M = 5 log₁₀(d/10 pc)', fmt(m - this.M, 2)],
+      ['Apparent magnitude m', fmt(m, 2), C.accent],
+      ['Flux relative to 10 pc', sci(10 ** (-0.4 * (m - this.M)), 2)],
+      ['Visible to the naked eye?', visible ? `yes (m ≤ 6.5)` : `no — ${fmt(m - 6.5, 1)} mag too faint`, visible ? C.green : C.red],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 16. Young's double slit ---- */
+
+class DoubleSlitWidget extends CanvasWidget {
+  private lam = 550;         // nm
+  private dum = 50;          // slit separation, µm
+  private readonly aum = 10; // slit width, µm
+  private readonly Lm = 1;   // screen distance, m
+  private t = 0;
+  constructor() {
+    super(480 / 360);
+    this.playButton();
+    this.slider('Wavelength λ', 380, 750, 1, this.lam, (v) => `${fmt(v, 0)} nm`, (v) => { this.lam = v; });
+    this.slider('Slit separation d', 20, 150, 1, this.dum, (v) => `${fmt(v, 0)} µm`, (v) => { this.dum = v; });
+  }
+  protected draw(dt: number) {
+    const c = this.ctx;
+    this.t += dt;
+    c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const col = waveRGB(this.lam);
+    const xb = this.w * 0.26, xs = this.w * 0.80, cy = this.h / 2;
+    const slitGap = 34;                                 // px, drawing only
+    const s1 = { x: xb, y: cy - slitGap / 2 }, s2 = { x: xb, y: cy + slitGap / 2 };
+    const lamPx = 12 * (this.lam / 550);
+    const phase = (this.t * 1.6 * lamPx) % lamPx;
+    // incoming plane waves
+    for (let x = xb - phase; x > 8; x -= lamPx) this.line(x, 20, x, this.h - 20, rgba(col, 0.35), 1.2);
+    this.text('plane waves', 12, 12, C.faint, 9);
+    // barrier
+    c.fillStyle = '#4a515c';
+    c.fillRect(xb - 3, 10, 6, s1.y - 4 - 10); c.fillRect(xb - 3, s1.y + 4, 6, s2.y - 4 - (s1.y + 4)); c.fillRect(xb - 3, s2.y + 4, 6, this.h - 10 - (s2.y + 4));
+    this.text('d', xb - 10, cy, C.text, 11, 'right', 'serif');
+    // wavelets from each slit (clipped to the region between barrier and screen)
+    c.save(); c.beginPath(); c.rect(xb, 0, xs - xb, this.h); c.clip();
+    const maxR = Math.hypot(xs - xb, this.h / 2) + lamPx;
+    for (const s of [s1, s2]) {
+      for (let r = phase; r < maxR; r += lamPx) {
+        c.beginPath(); c.arc(s.x, s.y, r, -Math.PI / 2, Math.PI / 2);
+        c.strokeStyle = rgba(col, 0.28 * (1 - r / maxR) + 0.04); c.lineWidth = 1; c.stroke();
+      }
+    }
+    c.restore();
+    // physics on the screen: y in metres, screen shows ±60 mm
+    const ymax = 0.06;
+    const d = this.dum * 1e-6, a = this.aum * 1e-6, lam = this.lam * 1e-9;
+    const I = (y: number) => {
+      const sin = y / Math.hypot(this.Lm, y);
+      const b = Math.PI * a * sin / lam, g = Math.PI * d * sin / lam;
+      const env = b === 0 ? 1 : (Math.sin(b) / b) ** 2;
+      return env * Math.cos(g) ** 2;
+    };
+    const stripW = 22;
+    for (let py = 12; py < this.h - 12; py++) {
+      const y = ((py - cy) / (this.h / 2 - 12)) * ymax;
+      const v = I(y);
+      c.fillStyle = rgba(col, 0.08 + 0.92 * v); c.fillRect(xs, py, stripW, 1);
+    }
+    c.strokeStyle = C.line; c.strokeRect(xs, 12, stripW, this.h - 24);
+    // intensity graph to the right of the strip
+    const gx0 = xs + stripW + 6, gw = this.w - gx0 - 6;
+    c.beginPath();
+    for (let py = 12; py < this.h - 12; py++) { const y = ((py - cy) / (this.h / 2 - 12)) * ymax; const x = gx0 + I(y) * gw; if (py === 12) c.moveTo(x, py); else c.lineTo(x, py); }
+    c.strokeStyle = rgba(col, 0.9); c.lineWidth = 1.2; c.stroke();
+    this.text('screen', xs + stripW / 2, 6, C.faint, 8, 'center'); this.text('I(y)', gx0 + gw / 2, 6, C.faint, 8, 'center');
+    // first-order rays
+    const dy = lam * this.Lm / d;                                   // fringe spacing, m
+    const py1 = cy - (dy / ymax) * (this.h / 2 - 12);
+    if (py1 > 14) {
+      this.line(s1.x, s1.y, xs, py1, 'rgba(255,255,255,0.35)', 1, [2, 3]); this.line(s2.x, s2.y, xs, py1, 'rgba(255,255,255,0.35)', 1, [2, 3]);
+      this.text('n = 1', xs - 6, py1 - 8, C.text, 9, 'right');
+      this.text('path difference = λ', (xb + xs) / 2, py1 - 14, C.dim, 9, 'center');
+    }
+    this.text('n = 0', xs - 6, cy - 8, C.text, 9, 'right');
+    const theta1 = Math.asin(Math.min(1, lam / d)) / DEG;
+    this.setReadout([
+      ['Wavelength λ', `${fmt(this.lam, 0)} nm`, rgba(col)],
+      ['Fringe spacing Δy = λL/d  (L = 1 m)', `${fmt(dy * 1e3, 2)} mm`, C.green],
+      ['First bright fringe  d sin θ = λ', `θ₁ = ${fmt(theta1, 3)}°`],
+      ['Bright fringes within ±60 mm', `${2 * Math.floor(ymax / dy) + 1}`],
+      ['Single-slit envelope (a = 10 µm) first zero', `±${fmt(lam * this.Lm / a * 1e3, 0)} mm`],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 17. electromagnetic wave ---- */
+
+class EMWaveWidget extends CanvasWidget {
+  private lam = 550;
+  private t = 0;
+  private show: 'both' | 'E' | 'B' = 'both';
+  constructor() {
+    super(480 / 280);
+    this.playButton();
+    this.segmented<'both' | 'E' | 'B'>([['both', 'E and B'], ['E', 'E only'], ['B', 'B only']], 'both', (v) => { this.show = v; });
+    this.slider('Wavelength λ', 380, 750, 1, this.lam, (v) => `${fmt(v, 0)} nm`, (v) => { this.lam = v; });
+  }
+  protected draw(dt: number) {
+    const c = this.ctx;
+    this.t += dt;
+    c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const col = waveRGB(this.lam);
+    const x0 = 30, x1 = this.w - 30, y0 = this.h * 0.5;
+    const lamPx = 110 * (this.lam / 550);
+    const k = TAU / lamPx, omega = k * 90;             // 90 px/s "c"
+    const A = this.h * 0.3;
+    const skx = 0.55, sky = 0.28;                      // projection of the depth axis
+    // axes
+    this.line(x0, y0, x1 + 10, y0, C.line, 1);
+    c.beginPath(); c.moveTo(x1 + 10, y0); c.lineTo(x1 + 2, y0 - 4); c.lineTo(x1 + 2, y0 + 4); c.closePath(); c.fillStyle = C.line; c.fill();
+    this.text('direction of travel →  speed c', x1 - 4, y0 + 14, C.dim, 9, 'right');
+    this.line(x0, y0 - A - 8, x0, y0 + A + 8, C.grid); this.text('E', x0 - 10, y0 - A - 4, C.red, 11, 'center', 'serif');
+    this.line(x0 - skx * 40, y0 + sky * 40, x0 + skx * 40, y0 - sky * 40, C.grid); this.text('B', x0 + skx * 40 + 10, y0 - sky * 40 - 4, C.blue, 11, 'center', 'serif');
+    const Ecol = C.red, Bcol = C.blue;
+    // field vectors
+    const step = 9;
+    for (let x = x0; x <= x1; x += step) {
+      const v = Math.sin(k * (x - x0) - omega * this.t);
+      if (this.show !== 'E') { // B in the depth plane
+        const bx = x + skx * A * v, by = y0 - sky * A * v;
+        this.line(x, y0, bx, by, rgba([111, 163, 214], 0.35 + 0.35 * Math.abs(v)), 1.3);
+      }
+      if (this.show !== 'B') this.line(x, y0, x, y0 - A * v, rgba([212, 106, 90], 0.35 + 0.4 * Math.abs(v)), 1.3);
+    }
+    // envelopes
+    const curve = (fn: (v: number, x: number) => [number, number], stroke: string) => {
+      c.beginPath();
+      for (let x = x0; x <= x1; x += 2) { const v = Math.sin(k * (x - x0) - omega * this.t); const [px, py] = fn(v, x); if (x === x0) c.moveTo(px, py); else c.lineTo(px, py); }
+      c.strokeStyle = stroke; c.lineWidth = 1.6; c.stroke();
+    };
+    if (this.show !== 'B') curve((v, x) => [x, y0 - A * v], Ecol);
+    if (this.show !== 'E') curve((v, x) => [x + skx * A * v, y0 - sky * A * v], Bcol);
+    // wavelength bracket between two crests
+    const crest0 = x0 + ((omega * this.t) % lamPx) + lamPx * 0.25;
+    const cx0 = crest0 > x1 - lamPx - 10 ? crest0 - lamPx : crest0;
+    if (cx0 > x0 && cx0 + lamPx < x1) {
+      const yb = y0 - A - 12;
+      this.line(cx0, yb, cx0 + lamPx, yb, rgba(col), 1); this.line(cx0, yb - 4, cx0, yb + 4, rgba(col)); this.line(cx0 + lamPx, yb - 4, cx0 + lamPx, yb + 4, rgba(col));
+      this.text(`λ = ${fmt(this.lam, 0)} nm`, cx0 + lamPx / 2, yb - 9, rgba(col), 10, 'center', 'serif');
+    }
+    // colour swatch
+    c.fillStyle = rgba(col); c.fillRect(this.w - 46, 10, 36, 10); this.text('colour', this.w - 28, 28, C.faint, 8, 'center');
+    const lam = this.lam * 1e-9, nu = C_LIGHT / lam;
+    this.setReadout([
+      ['Frequency ν = c/λ', `${sci(nu, 3)} Hz`],
+      ['Period 1/ν', `${sci(1 / nu, 2)} s`],
+      ['Photon energy hc/λ', `${fmt(1239.84 / this.lam, 2)} eV`, C.green],
+      ['E ⟂ B ⟂ direction of travel; E and B in phase', `|E| / |B| = c`],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 18. blackbody curves ---- */
+
+class BlackbodyWidget extends CanvasWidget {
+  private T = 5772;
+  private scale: 'fit' | 'fixed' = 'fit';
+  constructor(private mode: 'planck' | 'catastrophe') {
+    super(480 / 380);
+    this.playing = false;
+    if (mode === 'planck') this.segmented<'fit' | 'fixed'>([['fit', 'Scale: fit to curve'], ['fixed', 'Scale: fixed (compare)']], 'fit', (v) => { this.scale = v; });
+    this.slider('Temperature T', log10(2000), log10(25000), 0.005, log10(this.T), (v) => `${fmt(10 ** v, 0)} K`, (v) => { this.T = 10 ** v; });
+  }
+  protected draw() {
+    const c = this.ctx;
+    c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const T = this.T;
+    const lam0 = 50, lam1 = this.mode === 'planck' ? 2500 : 2000;        // nm
+    const gx0 = 44, gx1 = this.w - 14, gy0 = 18, gy1 = this.h - 46;
+    const X = (nm: number) => gx0 + ((nm - lam0) / (lam1 - lam0)) * (gx1 - gx0);
+    const lamMax = 2.897771955e6 / T;                                     // nm
+    const peak = planck(lamMax * 1e-9, T);
+    const yMax = this.scale === 'fixed' && this.mode === 'planck' ? planck(2.897771955e6 / 7000 * 1e-9, 7000) * 1.1 : peak * 1.12;
+    const Y = (B: number) => gy1 - Math.min(1.5, B / yMax) * (gy1 - gy0);
+    // visible band + axes
+    rainbow(c, X, gy1 + 1, 7, 0.75);
+    this.line(gx0, gy1, gx1, gy1, C.text, 1); this.line(gx0, gy0, gx0, gy1, C.line, 1);
+    for (let nm = 0; nm <= lam1; nm += 500) if (nm >= lam0) { this.line(X(nm), gy1, X(nm), gy1 + 3, C.text); this.text(fmt(nm, 0), X(nm), gy1 + 16, C.dim, 9, 'center', 'mono'); }
+    this.text('wavelength λ (nm)', gx1, gy1 + 28, C.dim, 9, 'right');
+    c.save(); c.translate(12, (gy0 + gy1) / 2); c.rotate(-Math.PI / 2); this.text(this.scale === 'fixed' ? 'B_λ (fixed scale)' : 'B_λ (relative)', 0, 0, C.dim, 9, 'center'); c.restore();
+    c.save(); c.beginPath(); c.rect(gx0, gy0 - 4, gx1 - gx0, gy1 - gy0 + 4); c.clip();
+    // reference stars (planck mode)
+    if (this.mode === 'planck') {
+      for (const [name, Tr, colr] of [['Betelgeuse 3600 K', 3600, C.red], ['Sun 5772 K', 5772, C.sun], ['Rigel 12 000 K', 12000, C.blue]] as Array<[string, number, string]>) {
+        c.beginPath();
+        for (let nm = lam0; nm <= lam1; nm += 4) { const y = Y(planck(nm * 1e-9, Tr)); if (nm === lam0) c.moveTo(X(nm), y); else c.lineTo(X(nm), y); }
+        c.strokeStyle = colr; c.globalAlpha = 0.35; c.lineWidth = 1; c.setLineDash([3, 3]); c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
+        const lmr = 2.897771955e6 / Tr + 320; const yl = Y(planck(lmr * 1e-9, Tr));
+        if (yl > gy0 + 6) this.text(name, X(lmr) + 4, yl - 7, colr, 8, 'left');
+      }
+    }
+    // classical approximations (catastrophe mode)
+    if (this.mode === 'catastrophe') {
+      const rj = (nm: number) => (2 * C_LIGHT * K_B * T) / (nm * 1e-9) ** 4;
+      const wien = (nm: number) => (2 * H_PLANCK * C_LIGHT ** 2) / (nm * 1e-9) ** 5 * Math.exp(-(H_PLANCK * C_LIGHT) / (nm * 1e-9 * K_B * T));
+      c.beginPath();
+      for (let nm = lam0; nm <= lam1; nm += 3) { const y = Y(rj(nm)); if (nm === lam0) c.moveTo(X(nm), y); else c.lineTo(X(nm), y); }
+      c.strokeStyle = C.red; c.lineWidth = 1.4; c.setLineDash([5, 4]); c.stroke(); c.setLineDash([]);
+      c.beginPath();
+      for (let nm = lam0; nm <= lam1; nm += 3) { const y = Y(wien(nm)); if (nm === lam0) c.moveTo(X(nm), y); else c.lineTo(X(nm), y); }
+      c.strokeStyle = C.purple; c.lineWidth = 1.2; c.setLineDash([1, 3]); c.stroke(); c.setLineDash([]);
+      this.text('Rayleigh–Jeans  2ckT/λ⁴  → ∞', gx1 - 6, gy0 + 10, C.red, 10, 'right', 'serif');
+      this.text('Wien approximation  (fails at long λ)', gx1 - 6, gy0 + 24, C.purple, 10, 'right', 'serif');
+      this.text('Planck  (measured)', gx1 - 6, gy0 + 38, C.text, 10, 'right', 'serif');
+    }
+    // current curve with fill
+    const col = tempRGB(T);
+    c.beginPath(); c.moveTo(X(lam0), gy1);
+    for (let nm = lam0; nm <= lam1; nm += 3) c.lineTo(X(nm), Y(planck(nm * 1e-9, T)));
+    c.lineTo(X(lam1), gy1); c.closePath(); c.fillStyle = rgba(col, 0.10); c.fill();
+    c.beginPath();
+    for (let nm = lam0; nm <= lam1; nm += 3) { const y = Y(planck(nm * 1e-9, T)); if (nm === lam0) c.moveTo(X(nm), y); else c.lineTo(X(nm), y); }
+    c.strokeStyle = rgba(col); c.lineWidth = 2; c.stroke();
+    // Wien peak
+    const yp = Y(peak);
+    this.line(X(lamMax), gy1, X(lamMax), Math.max(gy0, yp), rgba(col, 0.6), 1, [3, 3]);
+    this.text(`λ_max = ${fmt(lamMax, 0)} nm`, X(lamMax) + 5, Math.max(gy0 + 8, yp) + (yp < gy0 + 14 ? 14 : -10), rgba(col), 10, 'left', 'serif');
+    c.restore();
+    // star swatch
+    this.glow(gx1 - 22, gy0 + 60 + (this.mode === 'catastrophe' ? 20 : 0), 22, rgba(col, 0.6)); this.circle(gx1 - 22, gy0 + 60 + (this.mode === 'catastrophe' ? 20 : 0), 9, undefined, rgba(col));
+    const band = lamMax < 10 ? 'X-ray' : lamMax < 380 ? 'ultraviolet' : lamMax < 450 ? 'violet / blue' : lamMax < 495 ? 'blue' : lamMax < 570 ? 'green' : lamMax < 590 ? 'yellow' : lamMax < 620 ? 'orange' : lamMax < 750 ? 'red' : lamMax < 1e6 ? 'infrared' : 'radio';
+    const ro: Array<[string, string, string?]> = [
+      ['Temperature T', `${fmt(T, 0)} K`, rgba(col)],
+      ['Peak wavelength λ_max = 2.898×10⁶ nm K / T', `${fmt(lamMax, 0)} nm  (${band})`],
+      ['Surface flux σT⁴', `${sci(SIGMA_SB * T ** 4, 2)} W/m²`, C.green],
+      ['Relative to the Sun', `× ${sci((T / 5772) ** 4, 2)} per m²`],
+    ];
+    if (this.mode === 'catastrophe') ro.push(['Rayleigh–Jeans / Planck at 200 nm', sci((2 * C_LIGHT * K_B * T) / (200e-9) ** 4 / Math.max(1e-300, planck(200e-9, T)), 1), C.red]);
+    this.setReadout(ro);
+  }
+}
+
+/* ------------------------------------------------- 19. L = 4πR²σT⁴ ---- */
+
+const LRT_PRESETS: Array<[string, number, number]> = [
+  ['Sun', 1, 5772], ['Betelgeuse', 890, 3600], ['Rigel', 79, 12100], ['Sirius A', 1.71, 9940], ['Sirius B (white dwarf)', 0.0084, 25000], ['Proxima Cen', 0.15, 3040],
+];
+
+class LRTWidget extends CanvasWidget {
+  private logR = 0;
+  private logT = log10(5772);
+  private sR: { set: (v: number) => void }; private sT: { set: (v: number) => void };
+  private t = 0;
+  constructor() {
+    super(480 / 300);
+    this.segmented(LRT_PRESETS.map(([n], i) => [String(i), n] as [string, string]), '0', (i) => {
+      const [, R, T] = LRT_PRESETS[+i]; this.logR = log10(R); this.logT = log10(T); this.sR.set(this.logR); this.sT.set(this.logT);
+    });
+    this.sR = this.slider('Radius R', -2.2, 3.1, 0.01, this.logR, (v) => `${(10 ** v) < 0.1 ? fmt(10 ** v, 3) : fmt(10 ** v, 10 ** v < 10 ? 2 : 0)} R☉`, (v) => { this.logR = v; });
+    this.sT = this.slider('Temperature T', log10(2500), log10(40000), 0.005, this.logT, (v) => `${fmt(10 ** v, 0)} K`, (v) => { this.logT = v; });
+  }
+  protected draw(dt: number) {
+    const c = this.ctx;
+    this.t += dt;
+    c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const R = 10 ** this.logR, T = 10 ** this.logT;
+    const L = R * R * (T / 5772) ** 4;
+    const Mbol = 4.74 - 2.5 * log10(L);
+    const col = tempRGB(T);
+    // left: star vs Sun (radius drawn on a log scale)
+    const rpx = (r: number) => 3 + 58 * (log10(r) + 2.2) / 5.3;
+    const cx = this.w * 0.3, cy = this.h * 0.48;
+    const rs = rpx(R), rsun = rpx(1);
+    this.circle(cx, cy, rsun, 'rgba(242,196,90,0.5)', undefined, 1, [3, 3]);
+    this.text('Sun, to the same (log) scale', cx, cy + Math.max(rs, rsun) + 16, C.faint, 8, 'center');
+    const flick = 1 + 0.03 * Math.sin(this.t * 2.3);
+    this.glow(cx, cy, rs * 1.8 * flick + 6, rgba(col, 0.55)); this.circle(cx, cy, rs, undefined, rgba(col));
+    this.text(`R = ${R < 0.1 ? fmt(R, 3) : fmt(R, R < 10 ? 2 : 0)} R☉`, cx, 16, C.text, 10, 'center', 'mono');
+    this.text(`T = ${fmt(T, 0)} K`, cx, 30, rgba(col), 10, 'center', 'mono');
+    this.text('radius drawn on a log scale', cx, this.h - 10, C.faint, 8, 'center');
+    // right: log luminosity bar
+    const bx = this.w * 0.62, bw = this.w * 0.3, by0 = 24, by1 = this.h - 34;
+    const Yl = (lg: number) => by1 - ((lg + 5) / 11) * (by1 - by0);
+    for (let lg = -5; lg <= 6; lg++) { this.line(bx, Yl(lg), bx + bw, Yl(lg), lg === 0 ? C.line : C.grid); this.text(lg === 0 ? '1 L☉' : `10${lg < 0 ? '⁻' : ''}${SUP[Math.abs(lg)]}`, bx - 6, Yl(lg), lg === 0 ? C.sun : C.faint, 8, 'right', 'mono'); }
+    const lgL = Math.max(-5, Math.min(6, log10(L)));
+    const top = Yl(lgL);
+    const grad = c.createLinearGradient(0, by1, 0, top); grad.addColorStop(0, rgba(col, 0.15)); grad.addColorStop(1, rgba(col, 0.75));
+    c.fillStyle = grad; c.fillRect(bx + bw * 0.25, Math.min(top, Yl(0)), bw * 0.5, Math.abs(Yl(0) - top));
+    this.line(bx + bw * 0.2, top, bx + bw * 0.8, top, rgba(col), 2);
+    this.text(`L = ${L >= 1e4 || L < 1e-2 ? sci(L, 2) : fmt(L, L < 10 ? 2 : 0)} L☉`, bx + bw / 2, Math.max(by0 - 8, top - 12), C.text, 10, 'center', 'mono');
+    this.text('luminosity L = 4πR²σT⁴', bx + bw / 2, by1 + 14, C.dim, 9, 'center');
+    this.text(`R² → × ${sci(R * R, 1)}`, bx + bw / 2, by1 + 26, C.faint, 8, 'center');
+    this.text(`T⁴ → × ${sci((T / 5772) ** 4, 1)}`, bx + bw / 2 + 0, by1 + 36, C.faint, 8, 'center');
+    this.setReadout([
+      ['Luminosity L / L☉ = (R/R☉)² (T/5772 K)⁴', L >= 1e4 || L < 1e-2 ? sci(L, 3) : fmt(L, 3), C.green],
+      ['Luminosity in watts', `${sci(L * 3.828e26, 2)} W`],
+      ['Absolute bolometric magnitude M_bol', fmt(Mbol, 2)],
+      ['Surface flux σT⁴', `${sci(SIGMA_SB * T ** 4, 2)} W/m²`],
+      ['Peak wavelength λ_max', `${fmt(2.897771955e6 / T, 0)} nm`, rgba(col)],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 20. Planck's quantum ladder ---- */
+
+class QuantumWidget extends CanvasWidget {
+  private logLam = log10(2000);   // nm
+  private logT = log10(5772);
+  constructor() {
+    super(480 / 320);
+    this.playing = false;
+    this.slider('Wavelength of the mode λ', 2, 5, 0.01, this.logLam, (v) => { const nm = 10 ** v; return nm < 1000 ? `${fmt(nm, 0)} nm` : `${fmt(nm / 1000, 2)} µm`; }, (v) => { this.logLam = v; });
+    this.slider('Temperature T', log10(300), log10(20000), 0.005, this.logT, (v) => `${fmt(10 ** v, 0)} K`, (v) => { this.logT = v; });
+  }
+  protected draw() {
+    const c = this.ctx;
+    c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const lam = 10 ** this.logLam * 1e-9, T = 10 ** this.logT;
+    const nu = C_LIGHT / lam, hnu = H_PLANCK * nu, kT = K_B * T;
+    const x = hnu / kT;
+    const meanE = x > 500 ? 0 : hnu / Math.expm1(x);          // J
+    const nm = lam * 1e9;
+    const col: [number, number, number] = nm > 780 ? [214, 120, 90] : nm < 380 ? [165, 138, 214] : waveRGB(nm);
+    /* left: ladder in units of kT, 0..8 */
+    const lx = 40, lw = this.w * 0.36, ly0 = 16, ly1 = this.h - 30;
+    const Y = (ekT: number) => ly1 - (ekT / 8) * (ly1 - ly0);
+    this.line(lx, ly0, lx, ly1, C.line, 1);
+    for (let e = 0; e <= 8; e += 2) { this.line(lx - 3, Y(e), lx, Y(e), C.text); this.text(`${e} kT`, lx - 6, Y(e), C.faint, 8, 'right', 'mono'); }
+    this.line(lx, Y(1), lx + lw, Y(1), C.accent, 1, [4, 3]); this.text('kT (classical average)', lx + lw, Y(1) - 7, C.accent, 8, 'right');
+    const P0 = 1 - Math.exp(-x);                                // normalisation of the geometric distribution
+    let n = 0;
+    for (; n * x <= 8 && n < 400; n++) {
+      const y = Y(n * x), prob = P0 * Math.exp(-n * x);
+      if (y < ly0) break;
+      this.line(lx, y, lx + lw * 0.3, y, rgba(col, 0.9), x < 0.08 ? 0.5 : 1.2);
+      c.fillStyle = rgba(col, 0.55); c.fillRect(lx + lw * 0.34, y - Math.max(1, Math.min(4, (x / 8) * (ly1 - ly0) * 0.6)), lw * 0.62 * prob, Math.max(2, Math.min(8, (x / 8) * (ly1 - ly0) * 0.6)));
+      if (x > 0.5 && n < 9) this.text(`n = ${n}`, lx + lw * 0.32, y - 7, C.faint, 8, 'left');
+    }
+    this.text(`rungs every hν = ${fmt(x, x < 0.1 ? 3 : 2)} kT`, lx + lw / 2, ly1 + 12, C.text, 9, 'center');
+    this.text('bars: probability of being on each rung', lx + lw / 2, ly1 + 22, C.faint, 8, 'center');
+    const ym = Y(meanE / kT); this.line(lx, ym, lx + lw, ym, C.green, 1.5); this.text('⟨E⟩', lx + lw + 4, ym, C.green, 9, 'left', 'serif');
+    /* right: ⟨E⟩/kT against x = hν/kT */
+    const gx0 = this.w * 0.52, gx1 = this.w - 14, gy0 = 16, gy1 = this.h - 30;
+    const GX = (xx: number) => gx0 + (xx / 8) * (gx1 - gx0), GY = (v: number) => gy1 - (v / 1.15) * (gy1 - gy0);
+    this.line(gx0, gy1, gx1, gy1, C.text, 1); this.line(gx0, gy0, gx0, gy1, C.line, 1);
+    for (let xx = 0; xx <= 8; xx += 2) this.text(fmt(xx, 0), GX(xx), gy1 + 10, C.faint, 8, 'center', 'mono');
+    this.text('x = hν / kT →', gx1, gy1 + 22, C.dim, 9, 'right');
+    this.line(gx0, GY(1), gx1, GY(1), C.accent, 1, [4, 3]); this.text('classical: ⟨E⟩ = kT for every mode', gx0 + 4, GY(1) - 8, C.accent, 8, 'left');
+    c.beginPath();
+    for (let xx = 0.01; xx <= 8; xx += 0.05) { const v = xx / Math.expm1(xx); const px = GX(xx), py = GY(v); if (xx <= 0.011) c.moveTo(px, py); else c.lineTo(px, py); }
+    c.strokeStyle = C.green; c.lineWidth = 1.8; c.stroke();
+    this.text('quantum: ⟨E⟩ = hν / (e^x − 1)', gx0 + 4, GY(0.42), C.green, 9, 'left', 'serif');
+    const mx = GX(Math.min(8, x)), my = GY(x > 500 ? 0 : x / Math.expm1(x));
+    this.glow(mx, my, 10, rgba(col, 0.7)); this.circle(mx, my, 3.5, undefined, '#fff');
+    c.save(); c.translate(gx0 - 10, (gy0 + gy1) / 2); c.rotate(-Math.PI / 2); this.text('⟨E⟩ / kT', 0, 0, C.dim, 9, 'center'); c.restore();
+    this.setReadout([
+      ['Mode: λ, ν', `${lam * 1e9 < 1000 ? fmt(lam * 1e9, 0) + ' nm' : fmt(lam * 1e6, 2) + ' µm'},  ${sci(nu, 2)} Hz`],
+      ['Quantum of energy hν', `${fmt(hnu / EV, hnu / EV < 0.1 ? 4 : 3)} eV`, rgba(col)],
+      ['Thermal energy kT', `${fmt(kT / EV, 3)} eV`, C.accent],
+      ['x = hν / kT', fmt(x, 2)],
+      ['Average energy ⟨E⟩ / kT', `${fmt(meanE / kT, 3)}  ${x < 0.3 ? '≈ classical' : x > 3 ? '— frozen out' : ''}`, C.green],
+      ['Probability of any excitation, e^(−x)', x > 100 ? sci(Math.exp(-x), 1) : fmt(Math.exp(-x), 4)],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 21. colour index (UBV) ---- */
+
+const UBV: Array<[string, number, number, string]> = [['U', 365, 68, '#a58ad6'], ['B', 440, 98, '#6fa3d6'], ['V', 550, 89, '#b7cf7a']];
+const CI_STARS: Array<[string, number, number, number]> = [          // name, T, B−V, U−B (observed)
+  ['Rigel', 12100, -0.03, -0.66], ['Vega', 9600, 0.00, 0.00], ['Sirius', 9940, 0.00, -0.05], ['Sun', 5772, 0.65, 0.17], ['Arcturus', 4290, 1.23, 1.27], ['Betelgeuse', 3600, 1.85, 2.06],
+];
+
+class ColorIndexWidget extends CanvasWidget {
+  private logT = log10(5772);
+  private zp = [0, 0, 0];
+  private bbLine: Array<{ T: number; bv: number; ub: number }> = [];
+  private cache: { T: number; mags: number[] } | null = null;
+  constructor() {
+    super(480 / 400);
+    this.playing = false;
+    this.zp = this.rawMags(9600).map((m) => -m);                    // Vega-like zero point
+    for (let lt = log10(2500); lt <= log10(40000) + 1e-9; lt += 0.03) { const T = 10 ** lt; const m = this.mags(T); this.bbLine.push({ T, bv: m[1] - m[2], ub: m[0] - m[1] }); }
+    const s = this.slider('Temperature T', log10(2500), log10(30000), 0.005, this.logT, (v) => `${fmt(10 ** v, 0)} K`, (v) => { this.logT = v; });
+    this.segmented(CI_STARS.map(([n, T]) => [String(T), n] as [string, string]), '5772', (v) => { this.logT = log10(+v); s.set(this.logT); });
+  }
+  private band(nm: number, i: number) { const [, c0, fwhm] = UBV[i]; const s = fwhm / 2.355; return Math.exp(-0.5 * ((nm - c0) / s) ** 2); }
+  private rawMags(T: number): number[] {
+    const out = [0, 0, 0];
+    for (let i = 0; i < 3; i++) {
+      let sum = 0;
+      for (let nm = 250; nm <= 800; nm += 2) sum += planck(nm * 1e-9, T) * this.band(nm, i);
+      out[i] = -2.5 * log10(sum);
+    }
+    return out;
+  }
+  private mags(T: number): number[] { return this.rawMags(T).map((m, i) => m + this.zp[i]); }
+  protected draw() {
+    const c = this.ctx;
+    c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const T = 10 ** this.logT;
+    if (!this.cache || Math.abs(this.cache.T - T) > 0.5) this.cache = { T, mags: this.mags(T) };
+    const [U, B, V] = this.cache.mags;
+    const bv = B - V, ub = U - B;
+    const col = tempRGB(T);
+    /* top: spectrum with filter bands */
+    const gx0 = 30, gx1 = this.w - 14, gy0 = 14, gy1 = this.h * 0.5;
+    const lam0 = 250, lam1 = 900;
+    const X = (nm: number) => gx0 + ((nm - lam0) / (lam1 - lam0)) * (gx1 - gx0);
+    let pk = 0; for (let nm = lam0; nm <= lam1; nm += 5) pk = Math.max(pk, planck(nm * 1e-9, T));
+    const Y = (b: number) => gy1 - (b / (pk * 1.08)) * (gy1 - gy0);
+    rainbow(c, X, gy1 + 1, 6, 0.7);
+    this.line(gx0, gy1, gx1, gy1, C.text, 1);
+    for (const nm of [300, 400, 500, 600, 700, 800]) this.text(fmt(nm, 0), X(nm), gy1 + 15, C.faint, 8, 'center', 'mono');
+    UBV.forEach(([name, c0, fwhm, fc], i) => {
+      c.beginPath(); c.moveTo(X(c0 - 2 * fwhm), gy1);
+      for (let nm = c0 - 2 * fwhm; nm <= c0 + 2 * fwhm; nm += 2) c.lineTo(X(nm), gy1 - this.band(nm, i) * (gy1 - gy0) * 0.55);
+      c.lineTo(X(c0 + 2 * fwhm), gy1); c.closePath(); c.fillStyle = hexA(fc, 0.18); c.fill();
+      this.text(name, X(c0), gy1 - (gy1 - gy0) * 0.55 - 8, fc, 11, 'center', 'serif');
+    });
+    c.beginPath();
+    for (let nm = lam0; nm <= lam1; nm += 3) { const y = Y(planck(nm * 1e-9, T)); if (nm === lam0) c.moveTo(X(nm), y); else c.lineTo(X(nm), y); }
+    c.strokeStyle = rgba(col); c.lineWidth = 2; c.stroke();
+    this.text(`blackbody ${fmt(T, 0)} K`, gx1 - 4, gy0 + 6, rgba(col), 10, 'right', 'serif');
+    /* bottom-left: the three magnitudes as bars */
+    const bx = 30, by0 = gy1 + 34, bw = this.w * 0.34;
+    this.text('magnitudes through each filter (Vega = 0)', bx, by0 - 10, C.dim, 9);
+    [U, B, V].forEach((m, i) => {
+      const y = by0 + i * 26;
+      const len = Math.max(0, Math.min(1, (3 - m) / 6)) * bw;       // brighter (smaller m) → longer bar
+      c.fillStyle = UBV[i][3]; c.globalAlpha = 0.65; c.fillRect(bx + 16, y, len, 12); c.globalAlpha = 1;
+      this.text(UBV[i][0], bx + 4, y + 6, UBV[i][3], 11, 'center', 'serif');
+      this.text(fmt(m, 2), bx + 20 + len, y + 6, C.text, 9, 'left', 'mono');
+    });
+    this.text(`B − V = ${fmt(bv, 2)}`, bx, by0 + 92, C.text, 12, 'left', 'serif');
+    this.text(`U − B = ${fmt(ub, 2)}`, bx, by0 + 110, C.text, 12, 'left', 'serif');
+    this.glow(bx + bw + 30, by0 + 100, 22, rgba(col, 0.6)); this.circle(bx + bw + 30, by0 + 100, 9, undefined, rgba(col));
+    /* bottom-right: colour–colour diagram */
+    const dx0 = this.w * 0.55, dx1 = this.w - 14, dy0 = gy1 + 30, dy1 = this.h - 24;
+    const DX = (v: number) => dx0 + ((v + 0.5) / 2.8) * (dx1 - dx0), DY = (v: number) => dy0 + ((v + 1.3) / 3.7) * (dy1 - dy0);   // U−B increases downward (convention)
+    c.strokeStyle = C.line; c.strokeRect(dx0, dy0, dx1 - dx0, dy1 - dy0);
+    for (const v of [0, 1, 2]) { this.text(fmt(v, 0), DX(v), dy1 + 9, C.faint, 8, 'center', 'mono'); this.line(DX(v), dy0, DX(v), dy1, C.grid); }
+    for (const v of [-1, 0, 1, 2]) { this.text(fmt(v, 0), dx0 - 4, DY(v), C.faint, 8, 'right', 'mono'); this.line(dx0, DY(v), dx1, DY(v), C.grid); }
+    this.text('B − V', (dx0 + dx1) / 2, dy1 + 18, C.dim, 9, 'center'); c.save(); c.translate(dx0 - 16, (dy0 + dy1) / 2); c.rotate(-Math.PI / 2); this.text('U − B', 0, 0, C.dim, 9, 'center'); c.restore();
+    c.save(); c.beginPath(); c.rect(dx0, dy0, dx1 - dx0, dy1 - dy0); c.clip();
+    c.beginPath(); this.bbLine.forEach((q, i) => { const x = DX(q.bv), y = DY(q.ub); if (i === 0) c.moveTo(x, y); else c.lineTo(x, y); });
+    c.strokeStyle = 'rgba(255,255,255,0.45)'; c.lineWidth = 1.2; c.stroke();
+    this.text('blackbodies', DX(1.6), DY(1.0), C.dim, 8, 'left');
+    for (const [name, , sbv, sub] of CI_STARS) { this.circle(DX(sbv), DY(sub), 2.5, undefined, C.accent); this.text(name, DX(sbv) + 5, DY(sub) - 5, C.accent, 7, 'left'); }
+    this.glow(DX(bv), DY(ub), 10, rgba(col, 0.8)); this.circle(DX(bv), DY(ub), 3.5, undefined, '#fff');
+    c.restore();
+    this.text('real stars (orange) vs blackbody line', (dx0 + dx1) / 2, dy0 - 8, C.faint, 8, 'center');
+    const Tfit = 4600 * (1 / (0.92 * bv + 1.7) + 1 / (0.92 * bv + 0.62));
+    this.setReadout([
+      ['Temperature (set)', `${fmt(T, 0)} K`, rgba(col)],
+      ['B − V (blackbody, Vega zero point)', fmt(bv, 3), C.green],
+      ['U − B', fmt(ub, 3)],
+      ['T from B − V (empirical fit)', `${fmt(Tfit, 0)} K`],
+      ['Peak wavelength λ_max', `${fmt(2.897771955e6 / T, 0)} nm`],
+    ]);
+  }
+}
+
 /* ------------------------------------------------------------ factory ---- */
 
 export function createWidget(spec: WidgetSpec): Widget {
@@ -1483,5 +2216,14 @@ export function createWidget(spec: WidgetSpec): Widget {
     case 'cannon': return new CannonWidget();
     case 'twobody': return new TwoBodyWidget();
     case 'virial': return new VirialWidget();
+    case 'parallax': return new ParallaxWidget();
+    case 'magnitude': return new MagnitudeWidget();
+    case 'distmod': return new DistModWidget();
+    case 'doubleslit': return new DoubleSlitWidget();
+    case 'emwave': return new EMWaveWidget();
+    case 'blackbody': return new BlackbodyWidget(spec.mode ?? 'planck');
+    case 'lrt': return new LRTWidget();
+    case 'quantum': return new QuantumWidget();
+    case 'colorindex': return new ColorIndexWidget();
   }
 }

@@ -1,0 +1,561 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "betelgeuse": {
+   "script": "Look behind the panel as we fly out to Betelgeuse. Parallax of about six milliarcseconds gives distance roughly one hundred and seventy parsecs. Bolometric flux is about one point three times ten to the minus seven watts per square metre. Effective temperature is about thirty-six hundred kelvin. These yield luminosity, radius and peak wavelength.\n\nL equals four pi d squared times F. L means luminosity, the total power emitted, d the distance, F the flux at Earth. This is the inverse-square law run backwards from flux and distance to luminosity. The distance is about five times ten to the eighteen metres, so L is about four times ten to the thirty-one watts, or one hundred and twenty thousand solar luminosities.\n\nR equals the square root of L divided by four pi sigma T e to the fourth. R is the radius, sigma the Stefan-Boltzmann constant, and T e the effective temperature. Being cool, it radiates feebly per square metre and so must be huge, about six times ten to the eleven metres, nearly nine hundred solar radii or about four astronomical units.\n\nLambda max equals two point nine million nanometre kelvin divided by the temperature. Lambda max is the peak wavelength from Wien’s law, falling near eight hundred nanometres in the near infrared.\n\nPut Betelgeuse where the Sun is and the surface reaches beyond Mars, swallowing Earth. It is a red supergiant near the end of its life, with density a ten-millionth of the air you breathe. Cool temperature makes it red and a feeble radiator per square metre, luminous only from vast area.\n\nThe distance is uncertain, from about one hundred and fifty to two hundred and twenty parsecs, as the disc confuses parallax. Luminosity scales as distance squared and radius as distance, so a thirty percent distance error becomes a seventy percent luminosity error. In twenty nineteen to twenty ejected dust dimmed the star by more than a magnitude, so its brightness is a moving target.",
+   "hash": "243945ca45b7",
+   "duration": 122.23,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 3.64,
+     "text": "Look behind the panel as we fly out to Betelgeuse."
+    },
+    {
+     "start": 3.64,
+     "end": 10.16,
+     "text": "Parallax of about six milliarcseconds gives distance roughly one hundred and seventy parsecs."
+    },
+    {
+     "start": 10.16,
+     "end": 15.84,
+     "text": "Bolometric flux is about one point three times ten to the minus seven watts per square metre."
+    },
+    {
+     "start": 15.84,
+     "end": 19.32,
+     "text": "Effective temperature is about thirty-six hundred kelvin."
+    },
+    {
+     "start": 19.32,
+     "end": 23.12,
+     "text": "These yield luminosity, radius and peak wavelength."
+    },
+    {
+     "start": 23.12,
+     "end": 26.44,
+     "text": "L equals four pi d squared times F."
+    },
+    {
+     "start": 26.44,
+     "end": 32.56,
+     "text": "L means luminosity, the total power emitted, d the distance, F the flux at Earth."
+    },
+    {
+     "start": 32.56,
+     "end": 37.48,
+     "text": "This is the inverse-square law run backwards from flux and distance to luminosity."
+    },
+    {
+     "start": 37.48,
+     "end": 48.36,
+     "text": "The distance is about five times ten to the eighteen metres, so L is about four times ten to the thirty-one watts, or one hundred and twenty thousand solar luminosities."
+    },
+    {
+     "start": 48.36,
+     "end": 53.5,
+     "text": "R equals the square root of L divided by four pi sigma T e to the fourth."
+    },
+    {
+     "start": 53.5,
+     "end": 59.34,
+     "text": "R is the radius, sigma the Stefan-Boltzmann constant, and T e the effective temperature."
+    },
+    {
+     "start": 59.34,
+     "end": 71.37,
+     "text": "Being cool, it radiates feebly per square metre and so must be huge, about six times ten to the eleven metres, nearly nine hundred solar radii or about four astronomical units."
+    },
+    {
+     "start": 71.37,
+     "end": 76.73,
+     "text": "Lambda max equals two point nine million nanometre kelvin divided by the temperature."
+    },
+    {
+     "start": 76.73,
+     "end": 83.15,
+     "text": "Lambda max is the peak wavelength from Wien’s law, falling near eight hundred nanometres in the near infrared."
+    },
+    {
+     "start": 83.15,
+     "end": 88.53,
+     "text": "Put Betelgeuse where the Sun is and the surface reaches beyond Mars, swallowing Earth."
+    },
+    {
+     "start": 88.53,
+     "end": 94.25,
+     "text": "It is a red supergiant near the end of its life, with density a ten-millionth of the air you breathe."
+    },
+    {
+     "start": 94.25,
+     "end": 100.37,
+     "text": "Cool temperature makes it red and a feeble radiator per square metre, luminous only from vast area."
+    },
+    {
+     "start": 100.37,
+     "end": 107.69,
+     "text": "The distance is uncertain, from about one hundred and fifty to two hundred and twenty parsecs, as the disc confuses parallax."
+    },
+    {
+     "start": 107.69,
+     "end": 115.89,
+     "text": "Luminosity scales as distance squared and radius as distance, so a thirty percent distance error becomes a seventy percent luminosity error."
+    },
+    {
+     "start": 115.89,
+     "end": 122.23,
+     "text": "In twenty nineteen to twenty ejected dust dimmed the star by more than a magnitude, so its brightness is a moving target."
+    }
+   ],
+   "voicedHash": "f051fe940b22"
+  },
+  "blackbody": {
+   "script": "Look at these curves. A perfect absorber, sitting in equilibrium, must also be a perfect emitter, and that emission is what we call blackbody radiation. Its spectrum has a universal shape: a hump that rises steeply from short wavelengths, reaches a peak, and then falls more slowly toward long ones. Raise the temperature and two things happen at once. The whole curve lifts, so there is more energy at every wavelength, and the peak itself slides toward shorter wavelengths. Drag the temperature in the widget and watch that hump march through the rainbow band.\n\nThe relation that fixes the peak is Wien's displacement law. Lambda max times T equals zero point zero zero two eight nine eight metre kelvin, the same as about two point nine million nanometre kelvin. Lambda max is the wavelength of peak emission, T is the absolute temperature, and their product is constant, so the peak wavelength is inversely proportional to temperature. Hotter means a bluer peak. Wien reached this in eighteen ninety-three by a thermodynamic argument about radiation in a slowly compressed cavity, without yet knowing the full shape of the curve.\n\nFor the Sun, near fifty-eight hundred kelvin, that gives a peak around five hundred nanometres, green-blue, right where human eyes are most sensitive. That is no coincidence. Betelgeuse, around thirty-six hundred kelvin, peaks near eight hundred nanometres, in the near infrared. Most of its light is invisible to us; the red we see is only the long tail. Rigel, at twelve thousand kelvin, peaks near two hundred forty nanometres, deep in the ultraviolet, so we see only its blue shoulder.\n\nNotice what the curves never do: they never cross. A hotter blackbody emits more at every wavelength, red included. Betelgeuse looks red not because it is feeble in the blue compared with a cool object, but because it pours out so much more red than blue. Rigel looks blue because its blue light overwhelms the rest. Think of a choir singing louder in every part, yet with the balance of voices shifted. Stars are not perfect blackbodies. Absorption lines and atmospheric structure leave fingerprints we will study later. But the overall shape is close enough that these laws are the working tools of the subject. Wien won the Nobel Prize for the law in nineteen eleven, ironically the year after Planck's formula had shown exactly where Wien's own guess for the full spectrum went wrong.",
+   "hash": "2d30696085a4",
+   "duration": 140.15,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 1.6,
+     "text": "Look at these curves."
+    },
+    {
+     "start": 1.6,
+     "end": 9.82,
+     "text": "A perfect absorber, sitting in equilibrium, must also be a perfect emitter, and that emission is what we call blackbody radiation."
+    },
+    {
+     "start": 9.82,
+     "end": 18.98,
+     "text": "Its spectrum has a universal shape: a hump that rises steeply from short wavelengths, reaches a peak, and then falls more slowly toward long ones."
+    },
+    {
+     "start": 18.98,
+     "end": 21.86,
+     "text": "Raise the temperature and two things happen at once."
+    },
+    {
+     "start": 21.86,
+     "end": 28.9,
+     "text": "The whole curve lifts, so there is more energy at every wavelength, and the peak itself slides toward shorter wavelengths."
+    },
+    {
+     "start": 28.9,
+     "end": 33.42,
+     "text": "Drag the temperature in the widget and watch that hump march through the rainbow band."
+    },
+    {
+     "start": 33.42,
+     "end": 37.28,
+     "text": "The relation that fixes the peak is Wien's displacement law."
+    },
+    {
+     "start": 37.28,
+     "end": 45.76,
+     "text": "Lambda max times T equals zero point zero zero two eight nine eight metre kelvin, the same as about two point nine million nanometre kelvin."
+    },
+    {
+     "start": 45.76,
+     "end": 55.48,
+     "text": "Lambda max is the wavelength of peak emission, T is the absolute temperature, and their product is constant, so the peak wavelength is inversely proportional to temperature."
+    },
+    {
+     "start": 55.48,
+     "end": 57.42,
+     "text": "Hotter means a bluer peak."
+    },
+    {
+     "start": 57.42,
+     "end": 66.28,
+     "text": "Wien reached this in eighteen ninety-three by a thermodynamic argument about radiation in a slowly compressed cavity, without yet knowing the full shape of the curve."
+    },
+    {
+     "start": 66.28,
+     "end": 75.51,
+     "text": "For the Sun, near fifty-eight hundred kelvin, that gives a peak around five hundred nanometres, green-blue, right where human eyes are most sensitive."
+    },
+    {
+     "start": 75.51,
+     "end": 77.21,
+     "text": "That is no coincidence."
+    },
+    {
+     "start": 77.21,
+     "end": 83.39,
+     "text": "Betelgeuse, around thirty-six hundred kelvin, peaks near eight hundred nanometres, in the near infrared."
+    },
+    {
+     "start": 83.39,
+     "end": 88.11,
+     "text": "Most of its light is invisible to us; the red we see is only the long tail."
+    },
+    {
+     "start": 88.11,
+     "end": 96.43,
+     "text": "Rigel, at twelve thousand kelvin, peaks near two hundred forty nanometres, deep in the ultraviolet, so we see only its blue shoulder."
+    },
+    {
+     "start": 96.43,
+     "end": 99.69,
+     "text": "Notice what the curves never do: they never cross."
+    },
+    {
+     "start": 99.69,
+     "end": 103.85,
+     "text": "A hotter blackbody emits more at every wavelength, red included."
+    },
+    {
+     "start": 103.85,
+     "end": 111.53,
+     "text": "Betelgeuse looks red not because it is feeble in the blue compared with a cool object, but because it pours out so much more red than blue."
+    },
+    {
+     "start": 111.53,
+     "end": 115.01,
+     "text": "Rigel looks blue because its blue light overwhelms the rest."
+    },
+    {
+     "start": 115.01,
+     "end": 119.85,
+     "text": "Think of a choir singing louder in every part, yet with the balance of voices shifted."
+    },
+    {
+     "start": 119.85,
+     "end": 122.07,
+     "text": "Stars are not perfect blackbodies."
+    },
+    {
+     "start": 122.07,
+     "end": 126.45,
+     "text": "Absorption lines and atmospheric structure leave fingerprints we will study later."
+    },
+    {
+     "start": 126.45,
+     "end": 131.05,
+     "text": "But the overall shape is close enough that these laws are the working tools of the subject."
+    },
+    {
+     "start": 131.05,
+     "end": 140.15,
+     "text": "Wien won the Nobel Prize for the law in nineteen eleven, ironically the year after Planck's formula had shown exactly where Wien's own guess for the full spectrum went wrong."
+    }
+   ],
+   "voicedHash": "7a7295eb4dd5"
+  },
+  "blackbody-summary": {
+   "script": "Look behind the panel. The whole planetary system is slowly circling the Sun. That star is close enough to a blackbody that these laws are the ones we use.\n\nA blackbody absorbs everything and emits a continuous spectrum fixed by temperature alone. Stars are approximate blackbodies.\n\nWien's law says lambda-max times T equals two point nine times ten to the six nanometre kelvin. Lambda-max is the peak wavelength, T the temperature. The product is constant, so hotter means bluer. The Sun peaks near five hundred nanometres, Betelgeuse near eight hundred, Rigel near two hundred and forty.\n\nStefan-Boltzmann says the surface flux is sigma T to the fourth. Sigma is the Stefan-Boltzmann constant. Luminosity L equals four pi R squared sigma T-e to the fourth. R is radius, T-e the effective temperature, defined by that equation. Hotter curves lie above cooler ones at every wavelength, and they never cross.\n\nFlux plus distance gives luminosity. Luminosity plus temperature gives radius. Betelgeuse is about a hundred and twenty thousand solar luminosities, radius near eight hundred and ninety solar radii, about four astronomical units.\n\nThese laws were found by experiment and thermodynamics. Nobody could derive the blackbody curve from first principles. Classical physics, when it tried, gave an answer so wrong it has been called a catastrophe.\n\nThat failure is where quantum physics begins.",
+   "hash": "6a9b1c43d1f4",
+   "duration": 87.99,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 1.66,
+     "text": "Look behind the panel."
+    },
+    {
+     "start": 1.66,
+     "end": 5.4,
+     "text": "The whole planetary system is slowly circling the Sun."
+    },
+    {
+     "start": 5.4,
+     "end": 10.3,
+     "text": "That star is close enough to a blackbody that these laws are the ones we use."
+    },
+    {
+     "start": 10.3,
+     "end": 15.92,
+     "text": "A blackbody absorbs everything and emits a continuous spectrum fixed by temperature alone."
+    },
+    {
+     "start": 15.92,
+     "end": 18.4,
+     "text": "Stars are approximate blackbodies."
+    },
+    {
+     "start": 18.4,
+     "end": 24.88,
+     "text": "Wien's law says lambda-max times T equals two point nine times ten to the six nanometre kelvin."
+    },
+    {
+     "start": 24.88,
+     "end": 28.54,
+     "text": "Lambda-max is the peak wavelength, T the temperature."
+    },
+    {
+     "start": 28.54,
+     "end": 31.7,
+     "text": "The product is constant, so hotter means bluer."
+    },
+    {
+     "start": 31.7,
+     "end": 38.34,
+     "text": "The Sun peaks near five hundred nanometres, Betelgeuse near eight hundred, Rigel near two hundred and forty."
+    },
+    {
+     "start": 38.34,
+     "end": 42.44,
+     "text": "Stefan-Boltzmann says the surface flux is sigma T to the fourth."
+    },
+    {
+     "start": 42.44,
+     "end": 45.01,
+     "text": "Sigma is the Stefan-Boltzmann constant."
+    },
+    {
+     "start": 45.01,
+     "end": 49.83,
+     "text": "Luminosity L equals four pi R squared sigma T-e to the fourth."
+    },
+    {
+     "start": 49.83,
+     "end": 54.65,
+     "text": "R is radius, T-e the effective temperature, defined by that equation."
+    },
+    {
+     "start": 54.65,
+     "end": 59.35,
+     "text": "Hotter curves lie above cooler ones at every wavelength, and they never cross."
+    },
+    {
+     "start": 59.35,
+     "end": 61.93,
+     "text": "Flux plus distance gives luminosity."
+    },
+    {
+     "start": 61.93,
+     "end": 64.67,
+     "text": "Luminosity plus temperature gives radius."
+    },
+    {
+     "start": 64.67,
+     "end": 73.49,
+     "text": "Betelgeuse is about a hundred and twenty thousand solar luminosities, radius near eight hundred and ninety solar radii, about four astronomical units."
+    },
+    {
+     "start": 73.49,
+     "end": 76.81,
+     "text": "These laws were found by experiment and thermodynamics."
+    },
+    {
+     "start": 76.81,
+     "end": 80.29,
+     "text": "Nobody could derive the blackbody curve from first principles."
+    },
+    {
+     "start": 80.29,
+     "end": 85.59,
+     "text": "Classical physics, when it tried, gave an answer so wrong it has been called a catastrophe."
+    },
+    {
+     "start": 85.59,
+     "end": 87.99,
+     "text": "That failure is where quantum physics begins."
+    }
+   ],
+   "voicedHash": "83c8c6ae614c"
+  },
+  "colours-of-stars": {
+   "script": "I want you to look at the view behind the panel — we're closing in on Betelgeuse. On a winter night Orion is easy to find, and its two brightest stars are plainly different colours. Betelgeuse, at the hunter's shoulder, is a deep orange-red. Rigel, at his foot, is a brilliant blue-white. You can see that contrast with the naked eye. Ancient observers noted it, but only in the nineteenth century did anyone understand they were looking at a thermometer.\n\nYou know the effect from everyday life. Heat a piece of iron and it first glows dull red, then orange, then yellow, and at the temperatures of a welding arc, blue-white. The colour of a glowing object depends on its temperature, and hardly at all on what it is made of. A heated iron bar, the filament of an old light bulb, molten glass and the surface of a star all follow the same curve. I always think of it as a cosmic colour chart: hotter means bluer, cooler means redder, and the material barely gets a vote.\n\nThe colour of a hot, opaque object is set by its temperature. Betelgeuse is red because its surface is about three thousand six hundred kelvin. Rigel is blue because its surface is about twelve thousand kelvin. Reading the colour of a star is taking its temperature from hundreds of light years away.\n\nThat light is thermal radiation — light emitted by matter because of its temperature, produced by the thermal jiggling of charged particles. The cleanest version is a blackbody: an idealised object that absorbs all light falling on it, which is why we call it black, and, in thermal equilibrium, re-emits a spectrum that depends only on its temperature. That spectrum is continuous, emission at all wavelengths without gaps or lines. A blackbody has the smoothest continuous spectrum there is, and real stars come close enough that we can use the idea.",
+   "hash": "9b032d68d073",
+   "duration": 105.91,
+   "sentences": [
+    {
+     "start": 0.14,
+     "end": 4.96,
+     "text": "I want you to look at the view behind the panel — we're closing in on Betelgeuse."
+    },
+    {
+     "start": 4.96,
+     "end": 11.06,
+     "text": "On a winter night Orion is easy to find, and its two brightest stars are plainly different colours."
+    },
+    {
+     "start": 11.06,
+     "end": 15.22,
+     "text": "Betelgeuse, at the hunter's shoulder, is a deep orange-red."
+    },
+    {
+     "start": 15.22,
+     "end": 18.7,
+     "text": "Rigel, at his foot, is a brilliant blue-white."
+    },
+    {
+     "start": 18.7,
+     "end": 21.4,
+     "text": "You can see that contrast with the naked eye."
+    },
+    {
+     "start": 21.4,
+     "end": 27.64,
+     "text": "Ancient observers noted it, but only in the nineteenth century did anyone understand they were looking at a thermometer."
+    },
+    {
+     "start": 27.64,
+     "end": 29.84,
+     "text": "You know the effect from everyday life."
+    },
+    {
+     "start": 29.84,
+     "end": 37.74,
+     "text": "Heat a piece of iron and it first glows dull red, then orange, then yellow, and at the temperatures of a welding arc, blue-white."
+    },
+    {
+     "start": 37.74,
+     "end": 43.08,
+     "text": "The colour of a glowing object depends on its temperature, and hardly at all on what it is made of."
+    },
+    {
+     "start": 43.08,
+     "end": 50.42,
+     "text": "A heated iron bar, the filament of an old light bulb, molten glass and the surface of a star all follow the same curve."
+    },
+    {
+     "start": 50.42,
+     "end": 58.03,
+     "text": "I always think of it as a cosmic colour chart: hotter means bluer, cooler means redder, and the material barely gets a vote."
+    },
+    {
+     "start": 58.03,
+     "end": 61.69,
+     "text": "The colour of a hot, opaque object is set by its temperature."
+    },
+    {
+     "start": 61.69,
+     "end": 66.17,
+     "text": "Betelgeuse is red because its surface is about three thousand six hundred kelvin."
+    },
+    {
+     "start": 66.17,
+     "end": 69.99,
+     "text": "Rigel is blue because its surface is about twelve thousand kelvin."
+    },
+    {
+     "start": 69.99,
+     "end": 74.35,
+     "text": "Reading the colour of a star is taking its temperature from hundreds of light years away."
+    },
+    {
+     "start": 74.35,
+     "end": 82.15,
+     "text": "That light is thermal radiation — light emitted by matter because of its temperature, produced by the thermal jiggling of charged particles."
+    },
+    {
+     "start": 82.15,
+     "end": 94.55,
+     "text": "The cleanest version is a blackbody: an idealised object that absorbs all light falling on it, which is why we call it black, and, in thermal equilibrium, re-emits a spectrum that depends only on its temperature."
+    },
+    {
+     "start": 94.55,
+     "end": 99.61,
+     "text": "That spectrum is continuous, emission at all wavelengths without gaps or lines."
+    },
+    {
+     "start": 99.61,
+     "end": 105.91,
+     "text": "A blackbody has the smoothest continuous spectrum there is, and real stars come close enough that we can use the idea."
+    }
+   ],
+   "voicedHash": "050929157ed3"
+  },
+  "stefan-boltzmann": {
+   "script": "The total power a blackbody radiates is the area under the whole curve, and it rises very fast with temperature. Josef Stefan found the rule empirically in eighteen seventy-nine, and Ludwig Boltzmann derived it from thermodynamics in eighteen eighty-four. The energy emitted each second from each square metre, the surface flux F surf, equals sigma times T to the fourth. Sigma is the Stefan Boltzmann constant, about five point six seven times ten to the minus eight watts per square metre per kelvin to the fourth, and T is the temperature in kelvin. Double the temperature and each square metre radiates sixteen times as much, because two to the fourth is sixteen.\n\nFor a spherical star we multiply that flux by the surface area. Luminosity L, the star's total power, equals four pi R squared times sigma times T sub e to the fourth. R is the radius, four pi R squared is the area of the sphere, and T sub e is the effective temperature, the temperature of the blackbody that would radiate the star's luminosity from the star's surface.\n\nI want you to play with the widget. Luminosity depends on size and temperature, and the fourth power makes temperature dominate. Same radius as the Sun, twice as hot: sixteen solar luminosities. The Sun's temperature, twice the radius: only four solar luminosities. Try the presets. A white dwarf is hotter than the Sun yet a thousand times fainter, because it is only the size of the Earth.\n\nFor the Sun, luminosity is about three point eight times ten to the twenty-six watts, and the radius is about seven hundred thousand kilometres. The effective temperature equals that luminosity divided by four pi R squared sigma, all to the power one quarter. That comes out to about fifty-eight hundred kelvin. Each square metre of the solar surface radiates about sixty-three million watts, a small power station from a patch the size of a dining table.",
+   "hash": "9f8339b3c955",
+   "duration": 115.19,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 7.54,
+     "text": "The total power a blackbody radiates is the area under the whole curve, and it rises very fast with temperature."
+    },
+    {
+     "start": 7.54,
+     "end": 16.22,
+     "text": "Josef Stefan found the rule empirically in eighteen seventy-nine, and Ludwig Boltzmann derived it from thermodynamics in eighteen eighty-four."
+    },
+    {
+     "start": 16.22,
+     "end": 24.22,
+     "text": "The energy emitted each second from each square metre, the surface flux F surf, equals sigma times T to the fourth."
+    },
+    {
+     "start": 24.22,
+     "end": 35.02,
+     "text": "Sigma is the Stefan Boltzmann constant, about five point six seven times ten to the minus eight watts per square metre per kelvin to the fourth, and T is the temperature in kelvin."
+    },
+    {
+     "start": 35.02,
+     "end": 41.58,
+     "text": "Double the temperature and each square metre radiates sixteen times as much, because two to the fourth is sixteen."
+    },
+    {
+     "start": 41.58,
+     "end": 45.56,
+     "text": "For a spherical star we multiply that flux by the surface area."
+    },
+    {
+     "start": 45.56,
+     "end": 53.54,
+     "text": "Luminosity L, the star's total power, equals four pi R squared times sigma times T sub e to the fourth."
+    },
+    {
+     "start": 53.54,
+     "end": 65.07,
+     "text": "R is the radius, four pi R squared is the area of the sphere, and T sub e is the effective temperature, the temperature of the blackbody that would radiate the star's luminosity from the star's surface."
+    },
+    {
+     "start": 65.07,
+     "end": 66.79,
+     "text": "I want you to play with the widget."
+    },
+    {
+     "start": 66.79,
+     "end": 72.17,
+     "text": "Luminosity depends on size and temperature, and the fourth power makes temperature dominate."
+    },
+    {
+     "start": 72.17,
+     "end": 77.11,
+     "text": "Same radius as the Sun, twice as hot: sixteen solar luminosities."
+    },
+    {
+     "start": 77.11,
+     "end": 82.01,
+     "text": "The Sun's temperature, twice the radius: only four solar luminosities."
+    },
+    {
+     "start": 82.01,
+     "end": 83.35,
+     "text": "Try the presets."
+    },
+    {
+     "start": 83.35,
+     "end": 89.33,
+     "text": "A white dwarf is hotter than the Sun yet a thousand times fainter, because it is only the size of the Earth."
+    },
+    {
+     "start": 89.33,
+     "end": 97.69,
+     "text": "For the Sun, luminosity is about three point eight times ten to the twenty-six watts, and the radius is about seven hundred thousand kilometres."
+    },
+    {
+     "start": 97.69,
+     "end": 104.71,
+     "text": "The effective temperature equals that luminosity divided by four pi R squared sigma, all to the power one quarter."
+    },
+    {
+     "start": 104.71,
+     "end": 107.69,
+     "text": "That comes out to about fifty-eight hundred kelvin."
+    },
+    {
+     "start": 107.69,
+     "end": 115.19,
+     "text": "Each square metre of the solar surface radiates about sixty-three million watts, a small power station from a patch the size of a dining table."
+    }
+   ],
+   "voicedHash": "99252f998c3a"
+  }
+ }
+}

@@ -1,0 +1,551 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "catastrophe": {
+   "script": "Let me start with the crisis that forced physics to change.\n\nBy nineteen hundred the blackbody curve had been measured precisely in Berlin, and the theorists set out to derive it. Lord Rayleigh, and later James Jeans, counted the standing electromagnetic waves that fit inside a hot cavity. They gave each one the average thermal energy k times T that classical statistical mechanics assigns to every oscillator. k is Boltzmann's constant, T the temperature. Their result is the Rayleigh–Jeans law. The intensity B sub lambda of T is approximately two times c times k times T, over lambda to the fourth. B sub lambda is the intensity at wavelength lambda and temperature T. c is the speed of light, lambda the wavelength. It holds because short waves pack far more modes into the box, each still carrying energy k times T, so the brightness rises as one over lambda to the fourth.\n\nCompare the dashed and dotted curves in the widget. The dashed one hugs the data at long wavelengths. Nothing limits how many short waves fit in a box, so as lambda goes to zero the prediction climbs without bound into the ultraviolet. Integrate over all wavelengths and every warm object should radiate infinite power. Your coffee cup should vaporise you with gamma rays. Ehrenfest later called this the ultraviolet catastrophe.\n\nWilhelm Wien had earlier guessed B sub lambda proportional to lambda to the minus five, times e raised to the power of minus b divided by lambda times T, where b is a constant. That dotted curve works at short wavelengths and fails at long ones. Two half-right formulas, each wrong where the other was right.\n\nMax Planck, after years on the thermodynamics of radiation, set out in October nineteen hundred to join them in one expression. The Rayleigh–Jeans law is not a mistake in algebra. It is the correct consequence of classical physics, and its failure showed that something fundamental about energy and oscillators was missing.",
+   "hash": "b4b81fbc7f02",
+   "duration": 115.83,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.46,
+     "text": "Let me start with the crisis that forced physics to change."
+    },
+    {
+     "start": 3.46,
+     "end": 10.18,
+     "text": "By nineteen hundred the blackbody curve had been measured precisely in Berlin, and the theorists set out to derive it."
+    },
+    {
+     "start": 10.18,
+     "end": 17,
+     "text": "Lord Rayleigh, and later James Jeans, counted the standing electromagnetic waves that fit inside a hot cavity."
+    },
+    {
+     "start": 17,
+     "end": 24.5,
+     "text": "They gave each one the average thermal energy k times T that classical statistical mechanics assigns to every oscillator."
+    },
+    {
+     "start": 24.5,
+     "end": 27.9,
+     "text": "k is Boltzmann's constant, T the temperature."
+    },
+    {
+     "start": 27.9,
+     "end": 30.28,
+     "text": "Their result is the Rayleigh–Jeans law."
+    },
+    {
+     "start": 30.28,
+     "end": 37.92,
+     "text": "The intensity B sub lambda of T is approximately two times c times k times T, over lambda to the fourth."
+    },
+    {
+     "start": 37.92,
+     "end": 42.3,
+     "text": "B sub lambda is the intensity at wavelength lambda and temperature T."
+    },
+    {
+     "start": 42.3,
+     "end": 45.42,
+     "text": "c is the speed of light, lambda the wavelength."
+    },
+    {
+     "start": 45.42,
+     "end": 55.14,
+     "text": "It holds because short waves pack far more modes into the box, each still carrying energy k times T, so the brightness rises as one over lambda to the fourth."
+    },
+    {
+     "start": 55.14,
+     "end": 57.9,
+     "text": "Compare the dashed and dotted curves in the widget."
+    },
+    {
+     "start": 57.9,
+     "end": 60.87,
+     "text": "The dashed one hugs the data at long wavelengths."
+    },
+    {
+     "start": 60.87,
+     "end": 68.57,
+     "text": "Nothing limits how many short waves fit in a box, so as lambda goes to zero the prediction climbs without bound into the ultraviolet."
+    },
+    {
+     "start": 68.57,
+     "end": 73.29,
+     "text": "Integrate over all wavelengths and every warm object should radiate infinite power."
+    },
+    {
+     "start": 73.29,
+     "end": 76.35,
+     "text": "Your coffee cup should vaporise you with gamma rays."
+    },
+    {
+     "start": 76.35,
+     "end": 79.77,
+     "text": "Ehrenfest later called this the ultraviolet catastrophe."
+    },
+    {
+     "start": 79.77,
+     "end": 90.95,
+     "text": "Wilhelm Wien had earlier guessed B sub lambda proportional to lambda to the minus five, times e raised to the power of minus b divided by lambda times T, where b is a constant."
+    },
+    {
+     "start": 90.95,
+     "end": 94.85,
+     "text": "That dotted curve works at short wavelengths and fails at long ones."
+    },
+    {
+     "start": 94.85,
+     "end": 98.59,
+     "text": "Two half-right formulas, each wrong where the other was right."
+    },
+    {
+     "start": 98.59,
+     "end": 105.83,
+     "text": "Max Planck, after years on the thermodynamics of radiation, set out in October nineteen hundred to join them in one expression."
+    },
+    {
+     "start": 105.83,
+     "end": 108.81,
+     "text": "The Rayleigh–Jeans law is not a mistake in algebra."
+    },
+    {
+     "start": 108.81,
+     "end": 115.83,
+     "text": "It is the correct consequence of classical physics, and its failure showed that something fundamental about energy and oscillators was missing."
+    }
+   ],
+   "voicedHash": "f53064b07e52"
+  },
+  "consequences": {
+   "script": "Look at the Sun behind the panel. That disk is close to a perfect blackbody, and every empirical law from the last section is already inside Planck’s function. It is not a curve we fitted by hand. Differentiate the spectral radiance B sub lambda with respect to wavelength and set the derivative to zero. The peak sits where the dimensionless combination x, equal to h c over lambda k T, satisfies x equals five times one minus e to the minus x. The solution is x about four point nine six five. Rearrange and lambda max times T equals h c over four point nine six five k, which is about two point nine times ten to the minus three metre kelvin. That is Wien’s displacement law, now derived. Lambda max is the wavelength of the peak, T the temperature, h Planck’s constant, c the speed of light, and k Boltzmann’s constant. Hotter bodies peak at shorter wavelengths, which is why the Sun looks yellow-white rather than red.\n\nIntegrate pi B sub lambda from zero to infinity and the power per unit area is sigma T to the fourth. Sigma equals two pi to the fifth k to the fourth, over fifteen c squared h cubed. The factor of pi comes from integrating over the outward hemisphere. That is the Stefan–Boltzmann law, with sigma built from fundamental constants. Measuring sigma and the Wien constant is therefore a way to measure h and k.\n\nFor astronomy we want the power in a narrow interval d lambda. For a sphere of radius R the monochromatic luminosity is L sub lambda d lambda equals four pi R squared times pi B sub lambda d lambda: surface area times emitted flux per wavelength. At distance r the flux we receive is F sub lambda d lambda equals pi B sub lambda times R over r, squared, times d lambda. Inverse-square law, wavelength by wavelength. Those are what a spectrograph measures.\n\nPlanck’s law is the bridge from the quantum h to the colours and luminosities of stars. A spectrum gives a temperature, and that temperature with a radius gives a luminosity.",
+   "hash": "afefbe886051",
+   "duration": 125.43,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.38,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 2.38,
+     "end": 10.14,
+     "text": "That disk is close to a perfect blackbody, and every empirical law from the last section is already inside Planck’s function."
+    },
+    {
+     "start": 10.14,
+     "end": 12.58,
+     "text": "It is not a curve we fitted by hand."
+    },
+    {
+     "start": 12.58,
+     "end": 19.34,
+     "text": "Differentiate the spectral radiance B sub lambda with respect to wavelength and set the derivative to zero."
+    },
+    {
+     "start": 19.34,
+     "end": 29.68,
+     "text": "The peak sits where the dimensionless combination x, equal to h c over lambda k T, satisfies x equals five times one minus e to the minus x."
+    },
+    {
+     "start": 29.68,
+     "end": 33.06,
+     "text": "The solution is x about four point nine six five."
+    },
+    {
+     "start": 33.06,
+     "end": 42.62,
+     "text": "Rearrange and lambda max times T equals h c over four point nine six five k, which is about two point nine times ten to the minus three metre kelvin."
+    },
+    {
+     "start": 42.62,
+     "end": 45.92,
+     "text": "That is Wien’s displacement law, now derived."
+    },
+    {
+     "start": 45.92,
+     "end": 54.62,
+     "text": "Lambda max is the wavelength of the peak, T the temperature, h Planck’s constant, c the speed of light, and k Boltzmann’s constant."
+    },
+    {
+     "start": 54.62,
+     "end": 60.12,
+     "text": "Hotter bodies peak at shorter wavelengths, which is why the Sun looks yellow-white rather than red."
+    },
+    {
+     "start": 60.12,
+     "end": 66.87,
+     "text": "Integrate pi B sub lambda from zero to infinity and the power per unit area is sigma T to the fourth."
+    },
+    {
+     "start": 66.87,
+     "end": 72.43,
+     "text": "Sigma equals two pi to the fifth k to the fourth, over fifteen c squared h cubed."
+    },
+    {
+     "start": 72.43,
+     "end": 76.07,
+     "text": "The factor of pi comes from integrating over the outward hemisphere."
+    },
+    {
+     "start": 76.07,
+     "end": 80.73,
+     "text": "That is the Stefan–Boltzmann law, with sigma built from fundamental constants."
+    },
+    {
+     "start": 80.73,
+     "end": 85.19,
+     "text": "Measuring sigma and the Wien constant is therefore a way to measure h and k."
+    },
+    {
+     "start": 85.19,
+     "end": 89.09,
+     "text": "For astronomy we want the power in a narrow interval d lambda."
+    },
+    {
+     "start": 89.09,
+     "end": 102.09,
+     "text": "For a sphere of radius R the monochromatic luminosity is L sub lambda d lambda equals four pi R squared times pi B sub lambda d lambda: surface area times emitted flux per wavelength."
+    },
+    {
+     "start": 102.09,
+     "end": 111.07,
+     "text": "At distance r the flux we receive is F sub lambda d lambda equals pi B sub lambda times R over r, squared, times d lambda."
+    },
+    {
+     "start": 111.07,
+     "end": 114.19,
+     "text": "Inverse-square law, wavelength by wavelength."
+    },
+    {
+     "start": 114.19,
+     "end": 116.27,
+     "text": "Those are what a spectrograph measures."
+    },
+    {
+     "start": 116.27,
+     "end": 121.09,
+     "text": "Planck’s law is the bridge from the quantum h to the colours and luminosities of stars."
+    },
+    {
+     "start": 121.09,
+     "end": 125.43,
+     "text": "A spectrum gives a temperature, and that temperature with a radius gives a luminosity."
+    }
+   ],
+   "voicedHash": "5522e010ea93"
+  },
+  "planck": {
+   "script": "Look at the Sun behind the panel. Planck got the formula by interpolating Wien and Rayleigh–Jeans, his lucky guess. Deriving it took the most strenuous weeks of his life. He called it an act of desperation: no arbitrary energy, only whole multiples of a unit proportional to frequency.\n\nI write that as E equals n h nu, n equals zero, one, two, and so on. E is energy, n the packet count, nu the frequency, h Planck's constant, about six point six times ten to the minus thirty-four joule seconds. New to physics, and it sets the quantum scale.\n\nB sub lambda of T equals two h c squared over lambda to the fifth, divided by e to the h c over lambda k T, minus one. Intensity per unit wavelength per unit solid angle, watts per cubic metre per steradian. c, the speed of light; lambda, wavelength; k, Boltzmann's constant; T, temperature. The minus one is the whole story.\n\nSame law per frequency: B sub nu of T equals two h nu cubed over c squared, divided by e to the h nu over k T, minus one. B sub nu d nu equals B sub lambda d lambda, and d nu is minus c over lambda squared d lambda, so its peak is not at nu equals c over lambda max.\n\nLong wavelengths, h c over lambda k T much less than one, so the exponential minus one is roughly that small number, and B sub lambda becomes two c k T over lambda to the fourth. h cancels: Rayleigh–Jeans, classical physics as the low-frequency limit of quantum physics. Short wavelengths, the minus one negligible, recover Wien's exponential. In between the exponential wins over lambda to the minus five, the curve turns over, catastrophe gone.\n\nFourteenth of December nineteen hundred, German Physical Society, the usual birth of quantum theory. He spent years hoping to remove the quantisation, a mathematical device. He never could. Nobel Prize in nineteen eighteen.",
+   "hash": "c932e7541438",
+   "duration": 124.79,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.4,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 2.4,
+     "end": 7.88,
+     "text": "Planck got the formula by interpolating Wien and Rayleigh–Jeans, his lucky guess."
+    },
+    {
+     "start": 7.88,
+     "end": 11.06,
+     "text": "Deriving it took the most strenuous weeks of his life."
+    },
+    {
+     "start": 11.06,
+     "end": 18.78,
+     "text": "He called it an act of desperation: no arbitrary energy, only whole multiples of a unit proportional to frequency."
+    },
+    {
+     "start": 18.78,
+     "end": 24.8,
+     "text": "I write that as E equals n h nu, n equals zero, one, two, and so on."
+    },
+    {
+     "start": 24.8,
+     "end": 34.78,
+     "text": "E is energy, n the packet count, nu the frequency, h Planck's constant, about six point six times ten to the minus thirty-four joule seconds."
+    },
+    {
+     "start": 34.78,
+     "end": 37.68,
+     "text": "New to physics, and it sets the quantum scale."
+    },
+    {
+     "start": 37.68,
+     "end": 46.86,
+     "text": "B sub lambda of T equals two h c squared over lambda to the fifth, divided by e to the h c over lambda k T, minus one."
+    },
+    {
+     "start": 46.86,
+     "end": 52.68,
+     "text": "Intensity per unit wavelength per unit solid angle, watts per cubic metre per steradian."
+    },
+    {
+     "start": 52.68,
+     "end": 58.98,
+     "text": "c, the speed of light; lambda, wavelength; k, Boltzmann's constant; T, temperature."
+    },
+    {
+     "start": 58.98,
+     "end": 61.18,
+     "text": "The minus one is the whole story."
+    },
+    {
+     "start": 61.18,
+     "end": 71.27,
+     "text": "Same law per frequency: B sub nu of T equals two h nu cubed over c squared, divided by e to the h nu over k T, minus one."
+    },
+    {
+     "start": 71.27,
+     "end": 81.97,
+     "text": "B sub nu d nu equals B sub lambda d lambda, and d nu is minus c over lambda squared d lambda, so its peak is not at nu equals c over lambda max."
+    },
+    {
+     "start": 81.97,
+     "end": 94.09,
+     "text": "Long wavelengths, h c over lambda k T much less than one, so the exponential minus one is roughly that small number, and B sub lambda becomes two c k T over lambda to the fourth."
+    },
+    {
+     "start": 94.09,
+     "end": 100.01,
+     "text": "h cancels: Rayleigh–Jeans, classical physics as the low-frequency limit of quantum physics."
+    },
+    {
+     "start": 100.01,
+     "end": 104.89,
+     "text": "Short wavelengths, the minus one negligible, recover Wien's exponential."
+    },
+    {
+     "start": 104.89,
+     "end": 111.29,
+     "text": "In between the exponential wins over lambda to the minus five, the curve turns over, catastrophe gone."
+    },
+    {
+     "start": 111.29,
+     "end": 117.27,
+     "text": "Fourteenth of December nineteen hundred, German Physical Society, the usual birth of quantum theory."
+    },
+    {
+     "start": 117.27,
+     "end": 121.63,
+     "text": "He spent years hoping to remove the quantisation, a mathematical device."
+    },
+    {
+     "start": 121.63,
+     "end": 122.81,
+     "text": "He never could."
+    },
+    {
+     "start": 122.81,
+     "end": 124.79,
+     "text": "Nobel Prize in nineteen eighteen."
+    }
+   ],
+   "voicedHash": "955ab5318c4b"
+  },
+  "quantization-summary": {
+   "script": "Look behind the panel: the whole planetary system slowly circles the Sun. Unlike those planets, a star radiates its own light, and we can predict that light from its temperature. Rayleigh–Jeans set B lambda to two c k T over lambda to the fourth, with c the speed of light, k Boltzmann’s constant, T temperature and lambda wavelength. Correct for long lambda, infinite for short lambda — the ultraviolet catastrophe. Planck quantised energy as E equals n h nu: energy, integer n, h about six point six times ten to the minus thirty-four joule seconds, nu frequency. The function is two h c squared over lambda to the fifth over e to the h c over lambda k T minus one. Rayleigh–Jeans returns when h c over lambda k T is much less than one; Wien when much greater. High-frequency modes freeze out for h nu much greater than k T, with mean energy h nu over e to the h nu over k T minus one. Photon energy is E equals h nu equals h c over lambda, h c being twelve hundred forty electron-volt nanometres. Wien’s law and sigma equals two pi to the fifth k to the fourth over fifteen c squared h cubed both follow. Measure through a few coloured filters and read the temperature off.",
+   "hash": "d4e239704718",
+   "duration": 80.31,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.9,
+     "text": "Look behind the panel: the whole planetary system slowly circles the Sun."
+    },
+    {
+     "start": 4.9,
+     "end": 10.92,
+     "text": "Unlike those planets, a star radiates its own light, and we can predict that light from its temperature."
+    },
+    {
+     "start": 10.92,
+     "end": 21.86,
+     "text": "Rayleigh–Jeans set B lambda to two c k T over lambda to the fourth, with c the speed of light, k Boltzmann’s constant, T temperature and lambda wavelength."
+    },
+    {
+     "start": 21.86,
+     "end": 27.54,
+     "text": "Correct for long lambda, infinite for short lambda — the ultraviolet catastrophe."
+    },
+    {
+     "start": 27.54,
+     "end": 39.58,
+     "text": "Planck quantised energy as E equals n h nu: energy, integer n, h about six point six times ten to the minus thirty-four joule seconds, nu frequency."
+    },
+    {
+     "start": 39.58,
+     "end": 46.81,
+     "text": "The function is two h c squared over lambda to the fifth over e to the h c over lambda k T minus one."
+    },
+    {
+     "start": 46.81,
+     "end": 53.35,
+     "text": "Rayleigh–Jeans returns when h c over lambda k T is much less than one; Wien when much greater."
+    },
+    {
+     "start": 53.35,
+     "end": 62.23,
+     "text": "High-frequency modes freeze out for h nu much greater than k T, with mean energy h nu over e to the h nu over k T minus one."
+    },
+    {
+     "start": 62.23,
+     "end": 70.37,
+     "text": "Photon energy is E equals h nu equals h c over lambda, h c being twelve hundred forty electron-volt nanometres."
+    },
+    {
+     "start": 70.37,
+     "end": 77.27,
+     "text": "Wien’s law and sigma equals two pi to the fifth k to the fourth over fifteen c squared h cubed both follow."
+    },
+    {
+     "start": 77.27,
+     "end": 80.31,
+     "text": "Measure through a few coloured filters and read the temperature off."
+    }
+   ],
+   "voicedHash": "dc8be00d903a"
+  },
+  "why-it-works": {
+   "script": "So why do packets of h nu cure the catastrophe? The rungs no longer match the available heat. In a cavity at temperature T, the chance an oscillator has energy E goes as the Boltzmann factor, e to the minus E over k T. E is energy, k Boltzmann's constant, T temperature. Classically E is continuous and the average is always k T.\n\nQuantised rungs sit at zero, h nu, two h nu and so on. The average energy equals h nu divided by e to the h nu over k T, minus one. h is Planck's constant, nu the frequency, and that numerator is one packet. Once h nu exceeds k T those modes freeze out. We multiply by the number of modes per unit volume and recover Planck's law.\n\nUse the widget. At low frequency the rungs are close compared with k T, many occupied, and the average is almost k T, as classical physics says. Raise the frequency until h nu sits above k T. The chance of even one packet collapses and the average plunges toward zero. Infinitely many modes remain, carrying no energy.\n\nIn nineteen oh five Einstein took this more seriously than Planck. Packets of h nu suggested packets in the light. Those quanta, later photons, explained the photoelectric effect and earned his Nobel Prize. Newton's corpuscles were back, with a wavelength attached.\n\nPhoton energy E equals h nu equals h c over lambda. Lambda is wavelength, c the speed of light, and h c is about twelve hundred forty electron-volt nanometres. Green light at five hundred nanometres is two and a half electron-volts, a one-nanometre X-ray twelve hundred forty electron-volts, a twenty-one centimetre radio photon six micro-electron-volts.\n\nA bright star gives about ten to the minus eight watts per square metre at five hundred nanometres. A seven millimetre pupil collects about a hundred thousand photons a second, so we never notice the grain. A magnitude thirty galaxy in a six and a half metre telescope yields a few photons a minute.",
+   "hash": "d1d4f483ca15",
+   "duration": 129.59,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.9,
+     "text": "So why do packets of h nu cure the catastrophe?"
+    },
+    {
+     "start": 3.9,
+     "end": 6.88,
+     "text": "The rungs no longer match the available heat."
+    },
+    {
+     "start": 6.88,
+     "end": 16.24,
+     "text": "In a cavity at temperature T, the chance an oscillator has energy E goes as the Boltzmann factor, e to the minus E over k T."
+    },
+    {
+     "start": 16.24,
+     "end": 20.66,
+     "text": "E is energy, k Boltzmann's constant, T temperature."
+    },
+    {
+     "start": 20.66,
+     "end": 24.76,
+     "text": "Classically E is continuous and the average is always k T."
+    },
+    {
+     "start": 24.76,
+     "end": 30.08,
+     "text": "Quantised rungs sit at zero, h nu, two h nu and so on."
+    },
+    {
+     "start": 30.08,
+     "end": 36.3,
+     "text": "The average energy equals h nu divided by e to the h nu over k T, minus one."
+    },
+    {
+     "start": 36.3,
+     "end": 41.52,
+     "text": "h is Planck's constant, nu the frequency, and that numerator is one packet."
+    },
+    {
+     "start": 41.52,
+     "end": 45.28,
+     "text": "Once h nu exceeds k T those modes freeze out."
+    },
+    {
+     "start": 45.28,
+     "end": 50.16,
+     "text": "We multiply by the number of modes per unit volume and recover Planck's law."
+    },
+    {
+     "start": 50.16,
+     "end": 51.28,
+     "text": "Use the widget."
+    },
+    {
+     "start": 51.28,
+     "end": 60.14,
+     "text": "At low frequency the rungs are close compared with k T, many occupied, and the average is almost k T, as classical physics says."
+    },
+    {
+     "start": 60.14,
+     "end": 63.6,
+     "text": "Raise the frequency until h nu sits above k T."
+    },
+    {
+     "start": 63.6,
+     "end": 68.51,
+     "text": "The chance of even one packet collapses and the average plunges toward zero."
+    },
+    {
+     "start": 68.51,
+     "end": 72.19,
+     "text": "Infinitely many modes remain, carrying no energy."
+    },
+    {
+     "start": 72.19,
+     "end": 76.07,
+     "text": "In nineteen oh five Einstein took this more seriously than Planck."
+    },
+    {
+     "start": 76.07,
+     "end": 79.15,
+     "text": "Packets of h nu suggested packets in the light."
+    },
+    {
+     "start": 79.15,
+     "end": 85.25,
+     "text": "Those quanta, later photons, explained the photoelectric effect and earned his Nobel Prize."
+    },
+    {
+     "start": 85.25,
+     "end": 88.87,
+     "text": "Newton's corpuscles were back, with a wavelength attached."
+    },
+    {
+     "start": 88.87,
+     "end": 93.13,
+     "text": "Photon energy E equals h nu equals h c over lambda."
+    },
+    {
+     "start": 93.13,
+     "end": 100.09,
+     "text": "Lambda is wavelength, c the speed of light, and h c is about twelve hundred forty electron-volt nanometres."
+    },
+    {
+     "start": 100.09,
+     "end": 111.77,
+     "text": "Green light at five hundred nanometres is two and a half electron-volts, a one-nanometre X-ray twelve hundred forty electron-volts, a twenty-one centimetre radio photon six micro-electron-volts."
+    },
+    {
+     "start": 111.77,
+     "end": 118.11,
+     "text": "A bright star gives about ten to the minus eight watts per square metre at five hundred nanometres."
+    },
+    {
+     "start": 118.11,
+     "end": 124.29,
+     "text": "A seven millimetre pupil collects about a hundred thousand photons a second, so we never notice the grain."
+    },
+    {
+     "start": 124.29,
+     "end": 129.59,
+     "text": "A magnitude thirty galaxy in a six and a half metre telescope yields a few photons a minute."
+    }
+   ],
+   "voicedHash": "5ae9a8b11c1b"
+  }
+ }
+}

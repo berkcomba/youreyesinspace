@@ -1,0 +1,624 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "absolute": {
+   "script": "Look behind the panel. We are flying out toward Vega, almost exactly apparent magnitude zero. Is that brilliance intrinsic, or is Vega simply nearby? To compare stars fairly, imagine lining them up at one standard distance, the way you would line athletes at a single starting line before judging who is actually fast. That distance is ten parsecs, and the apparent magnitude a star would have there is its absolute magnitude, M.\n\nFlux falls as one over distance squared, so the inverse square law and Pogson's rule combine into one relation. One hundred, raised to the power of the quantity m minus M, all divided by five, equals F ten over F, which equals d over ten parsecs, squared. m is the apparent magnitude we measure, M the absolute magnitude, F the flux at the true distance d, and F ten the flux the star would deliver from ten parsecs. Farther than ten parsecs, the star looks fainter, so m exceeds M and F ten exceeds F.\n\nTake logarithms and you have the distance modulus. m minus M equals five times the log base ten of d over ten parsecs, which equals five log base ten of d, minus five, with d in parsecs. The modulus depends only on distance. For every factor of ten in d, m minus M grows by five.\n\nKnow any two of m, M and d and you have the third. Measure m and the parallax and you get M, the star's true brightness. Later we will infer M from a spectrum or a pulsation period; then measuring m gives the distance, and the distance ladder climbs past the reach of parallax.\n\nLook down the table. Sirius looks brightest because it is close. Rigel, a hundred times farther, is intrinsically ten thousand times more luminous than Sirius. Proxima Centauri, the nearest star of all, is invisible to the naked eye. Vega, under eight parsecs away, has absolute magnitude about plus zero point six.",
+   "hash": "e3504a099e08",
+   "duration": 121.59,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 1.74,
+     "text": "Look behind the panel."
+    },
+    {
+     "start": 1.74,
+     "end": 6.92,
+     "text": "We are flying out toward Vega, almost exactly apparent magnitude zero."
+    },
+    {
+     "start": 6.92,
+     "end": 11.02,
+     "text": "Is that brilliance intrinsic, or is Vega simply nearby?"
+    },
+    {
+     "start": 11.02,
+     "end": 20.94,
+     "text": "To compare stars fairly, imagine lining them up at one standard distance, the way you would line athletes at a single starting line before judging who is actually fast."
+    },
+    {
+     "start": 20.94,
+     "end": 28.3,
+     "text": "That distance is ten parsecs, and the apparent magnitude a star would have there is its absolute magnitude, M."
+    },
+    {
+     "start": 28.3,
+     "end": 35.7,
+     "text": "Flux falls as one over distance squared, so the inverse square law and Pogson's rule combine into one relation."
+    },
+    {
+     "start": 35.7,
+     "end": 46.44,
+     "text": "One hundred, raised to the power of the quantity m minus M, all divided by five, equals F ten over F, which equals d over ten parsecs, squared."
+    },
+    {
+     "start": 46.44,
+     "end": 57.06,
+     "text": "m is the apparent magnitude we measure, M the absolute magnitude, F the flux at the true distance d, and F ten the flux the star would deliver from ten parsecs."
+    },
+    {
+     "start": 57.06,
+     "end": 63.47,
+     "text": "Farther than ten parsecs, the star looks fainter, so m exceeds M and F ten exceeds F."
+    },
+    {
+     "start": 63.47,
+     "end": 66.63,
+     "text": "Take logarithms and you have the distance modulus."
+    },
+    {
+     "start": 66.63,
+     "end": 76.85,
+     "text": "m minus M equals five times the log base ten of d over ten parsecs, which equals five log base ten of d, minus five, with d in parsecs."
+    },
+    {
+     "start": 76.85,
+     "end": 79.33,
+     "text": "The modulus depends only on distance."
+    },
+    {
+     "start": 79.33,
+     "end": 83.81,
+     "text": "For every factor of ten in d, m minus M grows by five."
+    },
+    {
+     "start": 83.81,
+     "end": 87.35,
+     "text": "Know any two of m, M and d and you have the third."
+    },
+    {
+     "start": 87.35,
+     "end": 91.77,
+     "text": "Measure m and the parallax and you get M, the star's true brightness."
+    },
+    {
+     "start": 91.77,
+     "end": 101.13,
+     "text": "Later we will infer M from a spectrum or a pulsation period; then measuring m gives the distance, and the distance ladder climbs past the reach of parallax."
+    },
+    {
+     "start": 101.13,
+     "end": 102.55,
+     "text": "Look down the table."
+    },
+    {
+     "start": 102.55,
+     "end": 105.11,
+     "text": "Sirius looks brightest because it is close."
+    },
+    {
+     "start": 105.11,
+     "end": 110.99,
+     "text": "Rigel, a hundred times farther, is intrinsically ten thousand times more luminous than Sirius."
+    },
+    {
+     "start": 110.99,
+     "end": 116.05,
+     "text": "Proxima Centauri, the nearest star of all, is invisible to the naked eye."
+    },
+    {
+     "start": 116.05,
+     "end": 121.59,
+     "text": "Vega, under eight parsecs away, has absolute magnitude about plus zero point six."
+    }
+   ],
+   "voicedHash": "afd724699d6b"
+  },
+  "apparent": {
+   "script": "Apparent magnitude, m, is how bright a star looks from Earth. What it records is the radiant flux, F: the energy per second crossing each square metre of your telescope's aperture, in watts per square metre. More flux means a brighter object. But the number runs backwards, and Pogson's rule is how we convert.\n\nThe flux of star two over the flux of star one equals one hundred raised to the power of m one minus m two, all over five. Equivalently, m one minus m two equals minus two point five times the base-ten logarithm of F one over F two. F is the flux, m is the apparent magnitude, and the subscripts label the two stars. Five magnitudes were defined to be a factor of one hundred, so one magnitude is the fifth root of one hundred, about two point five, and a tenth of a magnitude is roughly ten percent. The minus sign means a brighter star gets a smaller m. The brightest objects go negative.\n\nSet the two markers in the widget to any pair and watch the ratio. The Sun near minus twenty-seven and the full Moon near minus thirteen differ by about fourteen magnitudes, a factor of roughly four hundred and forty thousand. The faintest things the James Webb Space Telescope has imaged, near plus thirty-one, are something like ten to the twenty-three times fainter than the Sun. The table is that same ladder: Venus, Sirius, the naked-eye limit near plus six and a half, Pluto near plus fourteen. Vega sits near zero because the scale was anchored there. Today the zero point is a set of standard stars.\n\nTwo stars differ by one magnitude, and a third is one magnitude fainter than the second. The first is about six point three times brighter than the third, not five. Magnitudes add. Fluxes multiply. Two steps of two point five is two point five squared, not two times two point five.",
+   "hash": "2e90c3d27308",
+   "duration": 115.19,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 4.64,
+     "text": "Apparent magnitude, m, is how bright a star looks from Earth."
+    },
+    {
+     "start": 4.64,
+     "end": 14,
+     "text": "What it records is the radiant flux, F: the energy per second crossing each square metre of your telescope's aperture, in watts per square metre."
+    },
+    {
+     "start": 14,
+     "end": 16.3,
+     "text": "More flux means a brighter object."
+    },
+    {
+     "start": 16.3,
+     "end": 20.62,
+     "text": "But the number runs backwards, and Pogson's rule is how we convert."
+    },
+    {
+     "start": 20.62,
+     "end": 29.28,
+     "text": "The flux of star two over the flux of star one equals one hundred raised to the power of m one minus m two, all over five."
+    },
+    {
+     "start": 29.28,
+     "end": 37.66,
+     "text": "Equivalently, m one minus m two equals minus two point five times the base-ten logarithm of F one over F two."
+    },
+    {
+     "start": 37.66,
+     "end": 43.38,
+     "text": "F is the flux, m is the apparent magnitude, and the subscripts label the two stars."
+    },
+    {
+     "start": 43.38,
+     "end": 54.48,
+     "text": "Five magnitudes were defined to be a factor of one hundred, so one magnitude is the fifth root of one hundred, about two point five, and a tenth of a magnitude is roughly ten percent."
+    },
+    {
+     "start": 54.48,
+     "end": 57.91,
+     "text": "The minus sign means a brighter star gets a smaller m."
+    },
+    {
+     "start": 57.91,
+     "end": 60.07,
+     "text": "The brightest objects go negative."
+    },
+    {
+     "start": 60.07,
+     "end": 63.83,
+     "text": "Set the two markers in the widget to any pair and watch the ratio."
+    },
+    {
+     "start": 63.83,
+     "end": 73.51,
+     "text": "The Sun near minus twenty-seven and the full Moon near minus thirteen differ by about fourteen magnitudes, a factor of roughly four hundred and forty thousand."
+    },
+    {
+     "start": 73.51,
+     "end": 82.53,
+     "text": "The faintest things the James Webb Space Telescope has imaged, near plus thirty-one, are something like ten to the twenty-three times fainter than the Sun."
+    },
+    {
+     "start": 82.53,
+     "end": 90.99,
+     "text": "The table is that same ladder: Venus, Sirius, the naked-eye limit near plus six and a half, Pluto near plus fourteen."
+    },
+    {
+     "start": 90.99,
+     "end": 94.33,
+     "text": "Vega sits near zero because the scale was anchored there."
+    },
+    {
+     "start": 94.33,
+     "end": 97.41,
+     "text": "Today the zero point is a set of standard stars."
+    },
+    {
+     "start": 97.41,
+     "end": 102.77,
+     "text": "Two stars differ by one magnitude, and a third is one magnitude fainter than the second."
+    },
+    {
+     "start": 102.77,
+     "end": 107.29,
+     "text": "The first is about six point three times brighter than the third, not five."
+    },
+    {
+     "start": 107.29,
+     "end": 108.69,
+     "text": "Magnitudes add."
+    },
+    {
+     "start": 108.69,
+     "end": 110.23,
+     "text": "Fluxes multiply."
+    },
+    {
+     "start": 110.23,
+     "end": 115.19,
+     "text": "Two steps of two point five is two point five squared, not two times two point five."
+    }
+   ],
+   "voicedHash": "c734062133f7"
+  },
+  "hipparchus": {
+   "script": "Welcome, everyone. We are about to meet a ruler for the brightness of stars that we inherited from antiquity, quirks and all. Look at Sirius behind the panel — that is the star Hipparchus would have called one of the brightest in the sky.\n\nAround one hundred and thirty BC he sorted the stars he could see into six classes. The brightest twenty or so were first magnitude, and the faintest the eye could just make out were sixth. It was a ranking, not a measurement, and it ran backwards, with bigger numbers for fainter stars. Both of those quirks survive today, and every astronomer still lives with them.\n\nWhen photometry became quantitative in the nineteenth century, astronomers found that the eye responds roughly to the logarithm of brightness. Each of Hipparchus's steps corresponded to a fairly constant ratio of light, and his first-magnitude stars delivered about a hundred times more light than his sixth. In eighteen fifty-six Norman Pogson turned that empirical fact into a definition.\n\nHere is Pogson's rule: a difference of five magnitudes is exactly a factor of one hundred in brightness. One magnitude is therefore a factor of one hundred raised to the power of one fifth, which equals about two point five one two. The scale is logarithmic and inverted, so the larger the magnitude, the fainter the star. A difference of one magnitude means a brightness ratio of roughly two and a half; five magnitudes means a factor of one hundred.\n\nHipparchus's catalogue of about eight hundred and fifty stars, complete with positions and magnitudes, was the first of its kind and survived through Ptolemy's Almagest. The same observer discovered precession, which we met back in chapter one, by comparing his positions with older records. Sirius, right there in front of you, was a first-magnitude star to him; on the modern scale it sits at minus one point four six, brighter than first.",
+   "hash": "bef836c1e4fd",
+   "duration": 111.03,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 1.44,
+     "text": "Welcome, everyone."
+    },
+    {
+     "start": 1.44,
+     "end": 7.58,
+     "text": "We are about to meet a ruler for the brightness of stars that we inherited from antiquity, quirks and all."
+    },
+    {
+     "start": 7.58,
+     "end": 13.64,
+     "text": "Look at Sirius behind the panel — that is the star Hipparchus would have called one of the brightest in the sky."
+    },
+    {
+     "start": 13.64,
+     "end": 19.12,
+     "text": "Around one hundred and thirty BC he sorted the stars he could see into six classes."
+    },
+    {
+     "start": 19.12,
+     "end": 25.1,
+     "text": "The brightest twenty or so were first magnitude, and the faintest the eye could just make out were sixth."
+    },
+    {
+     "start": 25.1,
+     "end": 31.04,
+     "text": "It was a ranking, not a measurement, and it ran backwards, with bigger numbers for fainter stars."
+    },
+    {
+     "start": 31.04,
+     "end": 35.8,
+     "text": "Both of those quirks survive today, and every astronomer still lives with them."
+    },
+    {
+     "start": 35.8,
+     "end": 43.82,
+     "text": "When photometry became quantitative in the nineteenth century, astronomers found that the eye responds roughly to the logarithm of brightness."
+    },
+    {
+     "start": 43.82,
+     "end": 53.3,
+     "text": "Each of Hipparchus's steps corresponded to a fairly constant ratio of light, and his first-magnitude stars delivered about a hundred times more light than his sixth."
+    },
+    {
+     "start": 53.3,
+     "end": 58.67,
+     "text": "In eighteen fifty-six Norman Pogson turned that empirical fact into a definition."
+    },
+    {
+     "start": 58.67,
+     "end": 65.17,
+     "text": "Here is Pogson's rule: a difference of five magnitudes is exactly a factor of one hundred in brightness."
+    },
+    {
+     "start": 65.17,
+     "end": 72.55,
+     "text": "One magnitude is therefore a factor of one hundred raised to the power of one fifth, which equals about two point five one two."
+    },
+    {
+     "start": 72.55,
+     "end": 78.09,
+     "text": "The scale is logarithmic and inverted, so the larger the magnitude, the fainter the star."
+    },
+    {
+     "start": 78.09,
+     "end": 85.53,
+     "text": "A difference of one magnitude means a brightness ratio of roughly two and a half; five magnitudes means a factor of one hundred."
+    },
+    {
+     "start": 85.53,
+     "end": 95.13,
+     "text": "Hipparchus's catalogue of about eight hundred and fifty stars, complete with positions and magnitudes, was the first of its kind and survived through Ptolemy's Almagest."
+    },
+    {
+     "start": 95.13,
+     "end": 102.27,
+     "text": "The same observer discovered precession, which we met back in chapter one, by comparing his positions with older records."
+    },
+    {
+     "start": 102.27,
+     "end": 111.03,
+     "text": "Sirius, right there in front of you, was a first-magnitude star to him; on the modern scale it sits at minus one point four six, brighter than first."
+    }
+   ],
+   "voicedHash": "ba042599d68c"
+  },
+  "inverse-square": {
+   "script": "Apparent magnitude mixes two very different things: how much light a star emits, and how far away it is. To separate them we need the luminosity L, the total energy the star radiates every second, in watts, and the rule that spreads that energy out.\n\nPicture a soap bubble with the star at its centre. At distance r the light crosses a sphere of area four pi r squared. If none is absorbed on the way, that power is shared over every square metre. The flux F, energy per second on each square metre, equals L divided by four pi r squared. L is the luminosity in watts, r is the distance, and four pi r squared is the sphere's area. Double the distance and the area grows by four, so the flux drops to a quarter.\n\nLook at the shells in the widget. They all carry the same total power. The farther one is simply bigger, so each square metre receives less. Drag the star away and watch the detector reading fall as one over r squared. Notice the magnitude climb by five for every factor of ten in distance, because a factor of a hundred in flux is five magnitudes.\n\nThe Sun's luminosity is about three point eight times ten to the twenty-six watts, and Earth is one astronomical unit away, roughly one hundred and fifty billion metres. The formula gives about thirteen hundred and sixty watts per square metre, the solar constant measured above the atmosphere. At Neptune, thirty astronomical units out, the area is nine hundred times larger, so the flux is only about one and a half watts per square metre, still four hundred times brighter than the full Moon on Earth.\n\nFlux is what we measure. Luminosity is what we want. The inverse-square law connects them, but only if we know the distance, which is why section three point one had to come first.",
+   "hash": "d826c0343b57",
+   "duration": 107.51,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 7.3,
+     "text": "Apparent magnitude mixes two very different things: how much light a star emits, and how far away it is."
+    },
+    {
+     "start": 7.3,
+     "end": 16.52,
+     "text": "To separate them we need the luminosity L, the total energy the star radiates every second, in watts, and the rule that spreads that energy out."
+    },
+    {
+     "start": 16.52,
+     "end": 19.32,
+     "text": "Picture a soap bubble with the star at its centre."
+    },
+    {
+     "start": 19.32,
+     "end": 23.98,
+     "text": "At distance r the light crosses a sphere of area four pi r squared."
+    },
+    {
+     "start": 23.98,
+     "end": 28.62,
+     "text": "If none is absorbed on the way, that power is shared over every square metre."
+    },
+    {
+     "start": 28.62,
+     "end": 35.74,
+     "text": "The flux F, energy per second on each square metre, equals L divided by four pi r squared."
+    },
+    {
+     "start": 35.74,
+     "end": 42.28,
+     "text": "L is the luminosity in watts, r is the distance, and four pi r squared is the sphere's area."
+    },
+    {
+     "start": 42.28,
+     "end": 47.26,
+     "text": "Double the distance and the area grows by four, so the flux drops to a quarter."
+    },
+    {
+     "start": 47.26,
+     "end": 48.96,
+     "text": "Look at the shells in the widget."
+    },
+    {
+     "start": 48.96,
+     "end": 51.3,
+     "text": "They all carry the same total power."
+    },
+    {
+     "start": 51.3,
+     "end": 55.61,
+     "text": "The farther one is simply bigger, so each square metre receives less."
+    },
+    {
+     "start": 55.61,
+     "end": 60.41,
+     "text": "Drag the star away and watch the detector reading fall as one over r squared."
+    },
+    {
+     "start": 60.41,
+     "end": 68.03,
+     "text": "Notice the magnitude climb by five for every factor of ten in distance, because a factor of a hundred in flux is five magnitudes."
+    },
+    {
+     "start": 68.03,
+     "end": 78.01,
+     "text": "The Sun's luminosity is about three point eight times ten to the twenty-six watts, and Earth is one astronomical unit away, roughly one hundred and fifty billion metres."
+    },
+    {
+     "start": 78.01,
+     "end": 84.83,
+     "text": "The formula gives about thirteen hundred and sixty watts per square metre, the solar constant measured above the atmosphere."
+    },
+    {
+     "start": 84.83,
+     "end": 97.19,
+     "text": "At Neptune, thirty astronomical units out, the area is nine hundred times larger, so the flux is only about one and a half watts per square metre, still four hundred times brighter than the full Moon on Earth."
+    },
+    {
+     "start": 97.19,
+     "end": 98.75,
+     "text": "Flux is what we measure."
+    },
+    {
+     "start": 98.75,
+     "end": 100.75,
+     "text": "Luminosity is what we want."
+    },
+    {
+     "start": 100.75,
+     "end": 107.51,
+     "text": "The inverse-square law connects them, but only if we know the distance, which is why section three point one had to come first."
+    }
+   ],
+   "voicedHash": "e66fcba3b985"
+  },
+  "luminosity-ratio": {
+   "script": "Look at Betelgeuse behind the panel. Let me turn magnitudes into luminosities. Absolute magnitudes compare stars at one common distance, ten parsecs, so a difference in M is a difference in luminosity. Fluxes scale with luminosity, so Pogson's rule applies.\n\nL two over L one equals one hundred raised to the power of M one minus M two, all divided by five. L is luminosity and M is absolute magnitude. A brighter star has the smaller M, so a positive exponent means star two is more luminous. Flipped around, M one minus M two equals minus two point five times the base ten logarithm of L one over L two. That minus sign is the convention: fainter light, larger number.\n\nThe Sun has absolute magnitude plus four point seven four. A star at minus zero point two six differs by five magnitudes, so it is one hundred times more luminous. Betelgeuse has apparent magnitude about plus zero point four five, parallax about six milliarcseconds, distance about one hundred and seventy parsecs. Apparent minus absolute equals five times the log of sixteen point eight, about six point one, so M is about minus five point seven. One hundred to the power of four point seven four plus five point seven, over five, is about two point one, giving fifteen thousand in visible light alone. Most of its energy is infrared, which the eye does not count, so the true total of about a hundred thousand solar luminosities waits for section three point six.\n\nVisual magnitudes count only what the eye, or a V filter, receives. Hot stars radiate mostly ultraviolet, cool stars mostly infrared, and both are undercounted. The bolometric magnitude needs the next four sections. The distance modulus assumes no light is lost on the way. Dust dims and reddens starlight by a few tenths of a magnitude per kiloparsec in the Galactic plane. Ignore it, and a star of known M looks too faint, so you overestimate the distance.",
+   "hash": "6154f2e4eb2b",
+   "duration": 124.47,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.5,
+     "text": "Look at Betelgeuse behind the panel."
+    },
+    {
+     "start": 2.5,
+     "end": 5.54,
+     "text": "Let me turn magnitudes into luminosities."
+    },
+    {
+     "start": 5.54,
+     "end": 14.06,
+     "text": "Absolute magnitudes compare stars at one common distance, ten parsecs, so a difference in M is a difference in luminosity."
+    },
+    {
+     "start": 14.06,
+     "end": 18.46,
+     "text": "Fluxes scale with luminosity, so Pogson's rule applies."
+    },
+    {
+     "start": 18.46,
+     "end": 25.82,
+     "text": "L two over L one equals one hundred raised to the power of M one minus M two, all divided by five."
+    },
+    {
+     "start": 25.82,
+     "end": 29.22,
+     "text": "L is luminosity and M is absolute magnitude."
+    },
+    {
+     "start": 29.22,
+     "end": 35.1,
+     "text": "A brighter star has the smaller M, so a positive exponent means star two is more luminous."
+    },
+    {
+     "start": 35.1,
+     "end": 43.28,
+     "text": "Flipped around, M one minus M two equals minus two point five times the base ten logarithm of L one over L two."
+    },
+    {
+     "start": 43.28,
+     "end": 47.74,
+     "text": "That minus sign is the convention: fainter light, larger number."
+    },
+    {
+     "start": 47.74,
+     "end": 51.64,
+     "text": "The Sun has absolute magnitude plus four point seven four."
+    },
+    {
+     "start": 51.64,
+     "end": 58.7,
+     "text": "A star at minus zero point two six differs by five magnitudes, so it is one hundred times more luminous."
+    },
+    {
+     "start": 58.7,
+     "end": 68.27,
+     "text": "Betelgeuse has apparent magnitude about plus zero point four five, parallax about six milliarcseconds, distance about one hundred and seventy parsecs."
+    },
+    {
+     "start": 68.27,
+     "end": 77.05,
+     "text": "Apparent minus absolute equals five times the log of sixteen point eight, about six point one, so M is about minus five point seven."
+    },
+    {
+     "start": 77.05,
+     "end": 86.57,
+     "text": "One hundred to the power of four point seven four plus five point seven, over five, is about two point one, giving fifteen thousand in visible light alone."
+    },
+    {
+     "start": 86.57,
+     "end": 95.81,
+     "text": "Most of its energy is infrared, which the eye does not count, so the true total of about a hundred thousand solar luminosities waits for section three point six."
+    },
+    {
+     "start": 95.81,
+     "end": 100.29,
+     "text": "Visual magnitudes count only what the eye, or a V filter, receives."
+    },
+    {
+     "start": 100.29,
+     "end": 106.55,
+     "text": "Hot stars radiate mostly ultraviolet, cool stars mostly infrared, and both are undercounted."
+    },
+    {
+     "start": 106.55,
+     "end": 109.77,
+     "text": "The bolometric magnitude needs the next four sections."
+    },
+    {
+     "start": 109.77,
+     "end": 113.37,
+     "text": "The distance modulus assumes no light is lost on the way."
+    },
+    {
+     "start": 113.37,
+     "end": 119.27,
+     "text": "Dust dims and reddens starlight by a few tenths of a magnitude per kiloparsec in the Galactic plane."
+    },
+    {
+     "start": 119.27,
+     "end": 124.47,
+     "text": "Ignore it, and a star of known M looks too faint, so you overestimate the distance."
+    }
+   ],
+   "voicedHash": "7e17d48d11c4"
+  },
+  "magnitude-summary": {
+   "script": "Look with me behind the panel. The whole planetary system is slowly circling the Sun.\n\nApparent magnitude m is logarithmic and inverted: brighter means smaller. Five magnitudes means a factor of one hundred in flux, and one magnitude is a factor of two point five one two. So F two over F one equals one hundred to the power of m one minus m two, over five, where F is flux. m one minus m two equals minus two point five times the base ten logarithm of F one over F two.\n\nF equals L divided by four pi r squared: luminosity L spread over a sphere of radius r. At Earth the solar constant is thirteen hundred sixty-one watts per square metre.\n\nAbsolute magnitude M is apparent magnitude at ten parsecs. The Sun's M is plus four point seven four. The distance modulus, m minus M, equals five times the base ten log of distance d over ten parsecs. L two over L one equals one hundred to the power of M one minus M two, over five.\n\nMagnitudes tell us how much light arrives. To learn what the light is, and what it says about the emitting surface's temperature, we have to understand light itself. That story starts with a dispute between Newton and Huygens.",
+   "hash": "c03acfac00db",
+   "duration": 77.11,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.08,
+     "text": "Look with me behind the panel."
+    },
+    {
+     "start": 2.08,
+     "end": 5.64,
+     "text": "The whole planetary system is slowly circling the Sun."
+    },
+    {
+     "start": 5.64,
+     "end": 10.82,
+     "text": "Apparent magnitude m is logarithmic and inverted: brighter means smaller."
+    },
+    {
+     "start": 10.82,
+     "end": 18.04,
+     "text": "Five magnitudes means a factor of one hundred in flux, and one magnitude is a factor of two point five one two."
+    },
+    {
+     "start": 18.04,
+     "end": 26.14,
+     "text": "So F two over F one equals one hundred to the power of m one minus m two, over five, where F is flux."
+    },
+    {
+     "start": 26.14,
+     "end": 32.9,
+     "text": "m one minus m two equals minus two point five times the base ten logarithm of F one over F two."
+    },
+    {
+     "start": 32.9,
+     "end": 39.65,
+     "text": "F equals L divided by four pi r squared: luminosity L spread over a sphere of radius r."
+    },
+    {
+     "start": 39.65,
+     "end": 44.37,
+     "text": "At Earth the solar constant is thirteen hundred sixty-one watts per square metre."
+    },
+    {
+     "start": 44.37,
+     "end": 48.41,
+     "text": "Absolute magnitude M is apparent magnitude at ten parsecs."
+    },
+    {
+     "start": 48.41,
+     "end": 51.55,
+     "text": "The Sun's M is plus four point seven four."
+    },
+    {
+     "start": 51.55,
+     "end": 58.85,
+     "text": "The distance modulus, m minus M, equals five times the base ten log of distance d over ten parsecs."
+    },
+    {
+     "start": 58.85,
+     "end": 64.73,
+     "text": "L two over L one equals one hundred to the power of M one minus M two, over five."
+    },
+    {
+     "start": 64.73,
+     "end": 67.31,
+     "text": "Magnitudes tell us how much light arrives."
+    },
+    {
+     "start": 67.31,
+     "end": 73.71,
+     "text": "To learn what the light is, and what it says about the emitting surface's temperature, we have to understand light itself."
+    },
+    {
+     "start": 73.71,
+     "end": 77.11,
+     "text": "That story starts with a dispute between Newton and Huygens."
+    }
+   ],
+   "voicedHash": "6d27cf1f05db"
+  }
+ }
+}

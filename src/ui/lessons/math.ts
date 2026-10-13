@@ -17,6 +17,7 @@ const GREEK: Record<string, string> = {
 const SYMBOL: Record<string, string> = {
   cdot: '·', times: '×', pm: '±', mp: '∓', approx: '≈', simeq: '≃', sim: '∼', propto: '∝', neq: '≠', ne: '≠',
   le: '≤', leq: '≤', ge: '≥', geq: '≥', ll: '≪', gg: '≫', to: '→', rightarrow: '→', Rightarrow: '⇒', leftarrow: '←',
+  Leftrightarrow: '⇔', Longleftrightarrow: '⟺', iff: '⟺', longrightarrow: '⟶', Longrightarrow: '⟹',
   infty: '∞', partial: '∂', nabla: '∇', int: '∫', sum: '∑', prod: '∏', circ: '∘', degree: '°', deg: '°',
   ldots: '…', cdots: '⋯', dots: '…', equiv: '≡', in: '∈', langle: '⟨', rangle: '⟩', vert: '|', mid: '|',
   odot: '⊙', oplus: '⊕', hbar: 'ℏ', ell: 'ℓ', prime: '′', star: '⋆',

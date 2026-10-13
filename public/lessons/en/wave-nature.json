@@ -1,0 +1,591 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "maxwell": {
+   "script": "Waves usually need a medium, but light crosses empty space. In the eighteen sixties Maxwell gathered the laws of electricity and magnetism into four equations and found they permit a travelling wave. Changing electric and magnetic fields create each other, so the wave sustains itself in empty space. The speed comes straight out of two laboratory constants: c equals one over the square root of epsilon-zero times mu-zero. Here c is the speed of the wave, epsilon-zero the electric constant measured with capacitors, and mu-zero the magnetic constant measured with coils. When I insert the measured values I recover about three hundred million metres per second, matching the speed of light already found by Fizeau and Foucault. Maxwell therefore identified light as an electromagnetic wave.\nWatch the widget. Notice the electric field vertical and the magnetic field horizontal, oscillating in phase, perpendicular to each other and to the travel direction. The whole pattern slides forward at c. The spacing of the crests is the wavelength lambda, the number of crests passing each second is the frequency nu, and therefore c equals lambda times nu. A longer wave means a lower frequency at fixed speed. Visible light has wavelengths of roughly four hundred to seven hundred nanometres and frequencies between four and eight hundred trillion hertz.\nThese waves transport energy and momentum. The energy flow per unit area is the Poynting vector, S equals E cross B over mu-zero. An absorbed beam of flux F exerts a pressure F over c, or twice that if reflected. Sunlight at Earth gives only about four and a half micropascals, too faint to feel, yet enough to drive a solar sail or blow a comet’s dust tail away from the Sun.\nHertz generated and detected Maxwell's waves with spark gaps and showed they reflect, refract and interfere just like light. Asked what use they were, he said nothing, I guess. Radio followed within a decade.",
+   "hash": "02625e85e22c",
+   "duration": 116.47,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 4.38,
+     "text": "Waves usually need a medium, but light crosses empty space."
+    },
+    {
+     "start": 4.38,
+     "end": 12.28,
+     "text": "In the eighteen sixties Maxwell gathered the laws of electricity and magnetism into four equations and found they permit a travelling wave."
+    },
+    {
+     "start": 12.28,
+     "end": 18.34,
+     "text": "Changing electric and magnetic fields create each other, so the wave sustains itself in empty space."
+    },
+    {
+     "start": 18.34,
+     "end": 26.12,
+     "text": "The speed comes straight out of two laboratory constants: c equals one over the square root of epsilon-zero times mu-zero."
+    },
+    {
+     "start": 26.12,
+     "end": 35.08,
+     "text": "Here c is the speed of the wave, epsilon-zero the electric constant measured with capacitors, and mu-zero the magnetic constant measured with coils."
+    },
+    {
+     "start": 35.08,
+     "end": 43.62,
+     "text": "When I insert the measured values I recover about three hundred million metres per second, matching the speed of light already found by Fizeau and Foucault."
+    },
+    {
+     "start": 43.62,
+     "end": 47.42,
+     "text": "Maxwell therefore identified light as an electromagnetic wave."
+    },
+    {
+     "start": 47.42,
+     "end": 48.64,
+     "text": "Watch the widget."
+    },
+    {
+     "start": 48.64,
+     "end": 57.02,
+     "text": "Notice the electric field vertical and the magnetic field horizontal, oscillating in phase, perpendicular to each other and to the travel direction."
+    },
+    {
+     "start": 57.02,
+     "end": 59.57,
+     "text": "The whole pattern slides forward at c."
+    },
+    {
+     "start": 59.57,
+     "end": 68.95,
+     "text": "The spacing of the crests is the wavelength lambda, the number of crests passing each second is the frequency nu, and therefore c equals lambda times nu."
+    },
+    {
+     "start": 68.95,
+     "end": 72.29,
+     "text": "A longer wave means a lower frequency at fixed speed."
+    },
+    {
+     "start": 72.29,
+     "end": 79.99,
+     "text": "Visible light has wavelengths of roughly four hundred to seven hundred nanometres and frequencies between four and eight hundred trillion hertz."
+    },
+    {
+     "start": 79.99,
+     "end": 82.73,
+     "text": "These waves transport energy and momentum."
+    },
+    {
+     "start": 82.73,
+     "end": 89.01,
+     "text": "The energy flow per unit area is the Poynting vector, S equals E cross B over mu-zero."
+    },
+    {
+     "start": 89.01,
+     "end": 94.99,
+     "text": "An absorbed beam of flux F exerts a pressure F over c, or twice that if reflected."
+    },
+    {
+     "start": 94.99,
+     "end": 104.57,
+     "text": "Sunlight at Earth gives only about four and a half micropascals, too faint to feel, yet enough to drive a solar sail or blow a comet’s dust tail away from the Sun."
+    },
+    {
+     "start": 104.57,
+     "end": 111.81,
+     "text": "Hertz generated and detected Maxwell's waves with spark gaps and showed they reflect, refract and interfere just like light."
+    },
+    {
+     "start": 111.81,
+     "end": 114.73,
+     "text": "Asked what use they were, he said nothing, I guess."
+    },
+    {
+     "start": 114.73,
+     "end": 116.47,
+     "text": "Radio followed within a decade."
+    }
+   ],
+   "voicedHash": "55ba579bbab6"
+  },
+  "newton-huygens": {
+   "script": "Welcome to the wave nature of light. Look at the Sun behind the panel for a moment. That light has crossed about a hundred and fifty million kilometres of empty space and arrived in a straight line, throwing a sharp edge wherever something blocks it. For Isaac Newton, writing his Opticks in 1704, that was decisive. Light, he argued, is a stream of tiny particles, which he called corpuscles. Waves, he thought, spread around corners and would not cast a clean shadow, so particles it must be. On his picture, different colours were simply particles of different sizes. And when light entered glass, the denser medium pulled those particles in, which meant light ought to travel faster in glass than in air.\n\nChristiaan Huygens had already said the opposite, in 1678. Light, he claimed, is a wave in an all-pervading medium. His principle is beautifully simple: every point on a wavefront acts as a source of little secondary wavelets, and the new wavefront is just the envelope of those wavelets. That single idea explained reflection and refraction. Colours, for him, were different wavelengths, and waves slow down in glass, bending toward the normal as they enter. Huygens was no armchair theorist. He built the best telescopes of his day, discovered Titan, and showed that Saturn’s mysterious handles were a ring. His Traité de la Lumière, of 1690, is the first real wave theory of light, and it even accounts for the strange double refraction of Iceland spar.\n\nNewton’s authority won anyway, for about a hundred years. The two theories made one clean, opposite prediction: is light faster or slower in water and glass? Nobody could measure it until Foucault, in 1850, found light slower in water. Waves win. Long before that, in 1801, Thomas Young found a simpler test: send light through two slits, and ask whether it adds like particles or like waves. That is where we go next.",
+   "hash": "539ed44ba96e",
+   "duration": 117.43,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.38,
+     "text": "Welcome to the wave nature of light."
+    },
+    {
+     "start": 2.38,
+     "end": 4.94,
+     "text": "Look at the Sun behind the panel for a moment."
+    },
+    {
+     "start": 4.94,
+     "end": 14.22,
+     "text": "That light has crossed about a hundred and fifty million kilometres of empty space and arrived in a straight line, throwing a sharp edge wherever something blocks it."
+    },
+    {
+     "start": 14.22,
+     "end": 19.68,
+     "text": "For Isaac Newton, writing his Opticks in 1704, that was decisive."
+    },
+    {
+     "start": 19.68,
+     "end": 24.84,
+     "text": "Light, he argued, is a stream of tiny particles, which he called corpuscles."
+    },
+    {
+     "start": 24.84,
+     "end": 30.94,
+     "text": "Waves, he thought, spread around corners and would not cast a clean shadow, so particles it must be."
+    },
+    {
+     "start": 30.94,
+     "end": 35.26,
+     "text": "On his picture, different colours were simply particles of different sizes."
+    },
+    {
+     "start": 35.26,
+     "end": 42.98,
+     "text": "And when light entered glass, the denser medium pulled those particles in, which meant light ought to travel faster in glass than in air."
+    },
+    {
+     "start": 42.98,
+     "end": 47.56,
+     "text": "Christiaan Huygens had already said the opposite, in 1678."
+    },
+    {
+     "start": 47.56,
+     "end": 51.04,
+     "text": "Light, he claimed, is a wave in an all-pervading medium."
+    },
+    {
+     "start": 51.04,
+     "end": 60.83,
+     "text": "His principle is beautifully simple: every point on a wavefront acts as a source of little secondary wavelets, and the new wavefront is just the envelope of those wavelets."
+    },
+    {
+     "start": 60.83,
+     "end": 64.11,
+     "text": "That single idea explained reflection and refraction."
+    },
+    {
+     "start": 64.11,
+     "end": 70.87,
+     "text": "Colours, for him, were different wavelengths, and waves slow down in glass, bending toward the normal as they enter."
+    },
+    {
+     "start": 70.87,
+     "end": 73.09,
+     "text": "Huygens was no armchair theorist."
+    },
+    {
+     "start": 73.09,
+     "end": 79.87,
+     "text": "He built the best telescopes of his day, discovered Titan, and showed that Saturn’s mysterious handles were a ring."
+    },
+    {
+     "start": 79.87,
+     "end": 89.19,
+     "text": "His Traité de la Lumière, of 1690, is the first real wave theory of light, and it even accounts for the strange double refraction of Iceland spar."
+    },
+    {
+     "start": 89.19,
+     "end": 92.63,
+     "text": "Newton’s authority won anyway, for about a hundred years."
+    },
+    {
+     "start": 92.63,
+     "end": 98.91,
+     "text": "The two theories made one clean, opposite prediction: is light faster or slower in water and glass?"
+    },
+    {
+     "start": 98.91,
+     "end": 106.07,
+     "text": "Nobody could measure it until Foucault, in 1850, found light slower in water. Waves win."
+    },
+    {
+     "start": 106.07,
+     "end": 115.91,
+     "text": "Long before that, in 1801, Thomas Young found a simpler test: send light through two slits, and ask whether it adds like particles or like waves."
+    },
+    {
+     "start": 115.91,
+     "end": 117.43,
+     "text": "That is where we go next."
+    }
+   ],
+   "voicedHash": "da6cc1d36523"
+  },
+  "the-spectrum": {
+   "script": "Look at JWST behind the panel. We have flown out here because most of the spectrum never reaches the ground. If light is an electromagnetic wave, nothing forces its wavelength into the narrow band our eyes evolved to use. Herschel found invisible calorific rays just beyond the red in eighteen hundred, and Ritter found ultraviolet just beyond the violet in eighteen hundred and one. Maxwell's theory then predicted a continuum from arbitrarily long waves to arbitrarily short ones, and every part of it has since been found in the sky.\n\nDrag the slider from long waves toward short and watch the readouts. As wavelength falls, frequency and photon energy rise, and so does the temperature of a blackbody peaking there. Cool at the long end, hot at the short. Now watch the atmosphere's transparency curve. Think of the air as a wall with only a few doorways. It is open in the visible, about four hundred to seven hundred nanometres, and open again for radio waves longer than about a millimetre. Infrared has only narrow windows. Ultraviolet, X-rays, and gamma rays are shut.\n\nThat is why this infrared telescope sits about one and a half million kilometres away, at the second Lagrange point. It is also why X-ray and gamma-ray astronomy had to wait for rockets and satellites. From the ground, radio comes through: pulsars, cold gas at twenty-one centimetres, jets. Microwaves only partly, including the cosmic microwave background. In the infrared we see dust, protostars, and redshifted galaxies. In the ultraviolet, hot stars and white dwarfs. In X-rays, accretion discs and hot cluster gas. In gamma rays, bursts and active galaxies.\n\nSweep across the telescope bands and notice the sources change with wavelength. The same galaxy looks like a smooth disc of old stars in the infrared and a scatter of hot young clusters in the ultraviolet. Wavelength is the organising variable of all astronomy. Next it will tell us a star's temperature, and later its composition, its velocity, and its distance.",
+   "hash": "40b36053b93e",
+   "duration": 121.91,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.84,
+     "text": "Look at JWST behind the panel."
+    },
+    {
+     "start": 2.84,
+     "end": 6.92,
+     "text": "We have flown out here because most of the spectrum never reaches the ground."
+    },
+    {
+     "start": 6.92,
+     "end": 13.92,
+     "text": "If light is an electromagnetic wave, nothing forces its wavelength into the narrow band our eyes evolved to use."
+    },
+    {
+     "start": 13.92,
+     "end": 23.04,
+     "text": "Herschel found invisible calorific rays just beyond the red in eighteen hundred, and Ritter found ultraviolet just beyond the violet in eighteen hundred and one."
+    },
+    {
+     "start": 23.04,
+     "end": 32.04,
+     "text": "Maxwell's theory then predicted a continuum from arbitrarily long waves to arbitrarily short ones, and every part of it has since been found in the sky."
+    },
+    {
+     "start": 32.04,
+     "end": 36.24,
+     "text": "Drag the slider from long waves toward short and watch the readouts."
+    },
+    {
+     "start": 36.24,
+     "end": 43.3,
+     "text": "As wavelength falls, frequency and photon energy rise, and so does the temperature of a blackbody peaking there."
+    },
+    {
+     "start": 43.3,
+     "end": 45.98,
+     "text": "Cool at the long end, hot at the short."
+    },
+    {
+     "start": 45.98,
+     "end": 48.8,
+     "text": "Now watch the atmosphere's transparency curve."
+    },
+    {
+     "start": 48.8,
+     "end": 51.84,
+     "text": "Think of the air as a wall with only a few doorways."
+    },
+    {
+     "start": 51.84,
+     "end": 59.36,
+     "text": "It is open in the visible, about four hundred to seven hundred nanometres, and open again for radio waves longer than about a millimetre."
+    },
+    {
+     "start": 59.36,
+     "end": 61.71,
+     "text": "Infrared has only narrow windows."
+    },
+    {
+     "start": 61.71,
+     "end": 65.01,
+     "text": "Ultraviolet, X-rays, and gamma rays are shut."
+    },
+    {
+     "start": 65.01,
+     "end": 71.41,
+     "text": "That is why this infrared telescope sits about one and a half million kilometres away, at the second Lagrange point."
+    },
+    {
+     "start": 71.41,
+     "end": 76.23,
+     "text": "It is also why X-ray and gamma-ray astronomy had to wait for rockets and satellites."
+    },
+    {
+     "start": 76.23,
+     "end": 83.03,
+     "text": "From the ground, radio comes through: pulsars, cold gas at twenty-one centimetres, jets."
+    },
+    {
+     "start": 83.03,
+     "end": 87.29,
+     "text": "Microwaves only partly, including the cosmic microwave background."
+    },
+    {
+     "start": 87.29,
+     "end": 91.85,
+     "text": "In the infrared we see dust, protostars, and redshifted galaxies."
+    },
+    {
+     "start": 91.85,
+     "end": 94.95,
+     "text": "In the ultraviolet, hot stars and white dwarfs."
+    },
+    {
+     "start": 94.95,
+     "end": 98.33,
+     "text": "In X-rays, accretion discs and hot cluster gas."
+    },
+    {
+     "start": 98.33,
+     "end": 101.57,
+     "text": "In gamma rays, bursts and active galaxies."
+    },
+    {
+     "start": 101.57,
+     "end": 105.95,
+     "text": "Sweep across the telescope bands and notice the sources change with wavelength."
+    },
+    {
+     "start": 105.95,
+     "end": 113.01,
+     "text": "The same galaxy looks like a smooth disc of old stars in the infrared and a scatter of hot young clusters in the ultraviolet."
+    },
+    {
+     "start": 113.01,
+     "end": 116.45,
+     "text": "Wavelength is the organising variable of all astronomy."
+    },
+    {
+     "start": 116.45,
+     "end": 121.91,
+     "text": "Next it will tell us a star's temperature, and later its composition, its velocity, and its distance."
+    }
+   ],
+   "voicedHash": "5f5b29ce44a2"
+  },
+  "wave-summary": {
+   "script": "Look behind the panel at the whole planetary system circling the Sun. Newton thought of light as corpuscles; Huygens thought of waves. Young's double slit, in 1801, showed interference, a wave property. Bright fringes fall where d sine theta equals n lambda. d is the slit separation, theta the angle from the centre, n the order, and lambda the wavelength. Fringe spacing is delta y equals lambda L over d. L is the screen distance, so a longer wavelength, or closer slits, spreads the bands. Colour is wavelength. Maxwell, in 1865, identified the wave. The electric field E stands perpendicular to the magnetic field B, and both stand perpendicular to the direction of travel. The speed is c, one over the square root of epsilon-nought times mu-nought: empty space itself sets that speed. And c equals lambda times nu, wavelength times frequency. Light carries energy, the Poynting vector, and momentum, felt as radiation pressure, F over c, force divided by the speed of light. The spectrum runs from radio to gamma rays; the atmosphere passes only the visible and radio windows. We now know what light is. Next we ask why a hot object glows, and why hotter things glow bluer, the physics that lets us take a star's temperature from across the Galaxy. I'll see you there.",
+   "hash": "9b97f1611b9e",
+   "duration": 85.43,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 4.46,
+     "text": "Look behind the panel at the whole planetary system circling the Sun."
+    },
+    {
+     "start": 4.46,
+     "end": 8.78,
+     "text": "Newton thought of light as corpuscles; Huygens thought of waves."
+    },
+    {
+     "start": 8.78,
+     "end": 14.74,
+     "text": "Young's double slit, in 1801, showed interference, a wave property."
+    },
+    {
+     "start": 14.74,
+     "end": 18.82,
+     "text": "Bright fringes fall where d sine theta equals n lambda."
+    },
+    {
+     "start": 18.82,
+     "end": 25.42,
+     "text": "d is the slit separation, theta the angle from the centre, n the order, and lambda the wavelength."
+    },
+    {
+     "start": 25.42,
+     "end": 29.46,
+     "text": "Fringe spacing is delta y equals lambda L over d."
+    },
+    {
+     "start": 29.46,
+     "end": 34.88,
+     "text": "L is the screen distance, so a longer wavelength, or closer slits, spreads the bands."
+    },
+    {
+     "start": 34.88,
+     "end": 36.44,
+     "text": "Colour is wavelength."
+    },
+    {
+     "start": 36.44,
+     "end": 40.78,
+     "text": "Maxwell, in 1865, identified the wave."
+    },
+    {
+     "start": 40.78,
+     "end": 47.97,
+     "text": "The electric field E stands perpendicular to the magnetic field B, and both stand perpendicular to the direction of travel."
+    },
+    {
+     "start": 47.97,
+     "end": 55.15,
+     "text": "The speed is c, one over the square root of epsilon-nought times mu-nought: empty space itself sets that speed."
+    },
+    {
+     "start": 55.15,
+     "end": 59.37,
+     "text": "And c equals lambda times nu, wavelength times frequency."
+    },
+    {
+     "start": 59.37,
+     "end": 68.23,
+     "text": "Light carries energy, the Poynting vector, and momentum, felt as radiation pressure, F over c, force divided by the speed of light."
+    },
+    {
+     "start": 68.23,
+     "end": 74.31,
+     "text": "The spectrum runs from radio to gamma rays; the atmosphere passes only the visible and radio windows."
+    },
+    {
+     "start": 74.31,
+     "end": 76.11,
+     "text": "We now know what light is."
+    },
+    {
+     "start": 76.11,
+     "end": 84.45,
+     "text": "Next we ask why a hot object glows, and why hotter things glow bluer, the physics that lets us take a star's temperature from across the Galaxy."
+    },
+    {
+     "start": 84.45,
+     "end": 85.43,
+     "text": "I'll see you there."
+    }
+   ],
+   "voicedHash": "4ed41fc0c973"
+  },
+  "young": {
+   "script": "Monochromatic light falls on two narrow slits a distance d apart. Each slit becomes a source of circular wavelets, Huygens again, and the two trains meet on a screen. Where crest meets crest, they reinforce and the screen is bright. Where crest meets trough, half a wavelength out of step, they cancel and the screen is dark. Particles cannot cancel. Waves can, like ripples from two pebbles in a pond.\n\nThe extra path to a point at angle theta is d sine theta, the slit separation times the sine of the angle. For a bright fringe, d sine theta equals n lambda. n is a whole number, zero, one, two, and so on, and lambda is the wavelength, so the waves arrive in step. For a dark fringe, d sine theta equals n plus one half, times lambda, and crest meets trough. d is the slit separation, theta the angle from straight ahead.\n\nPut the screen at distance L, much greater than d, and the bright fringes are evenly spaced. Their spacing, delta y, is approximately lambda L over d. Longer wavelength or narrower slits, and the pattern spreads.\n\nI want you to try it. Slide the wavelength from blue to red. The fringes spread, so colour is wavelength. Push the slits closer and the pattern spreads too. Young measured those spacings with a candle, two pinholes and a ruler, and obtained the first wavelengths of visible light, about four-tenths of a micrometre for violet and seven-tenths of a micrometre for red.\n\nInterference is the signature of a wave. The double slit showed that light has wavelength and phase. Fresnel's mathematics in 1818 then explained diffraction and sharp shadows, and Newton's corpuscles were abandoned until Einstein brought them back in a new form in 1905, section 3.5.\n\nPoisson argued Fresnel predicted something absurd, a bright spot at the centre of a round disc's shadow. Arago looked. The spot was there. What does it take for a theory's most absurd prediction to become its best confirmation?",
+   "hash": "8cb50985bd56",
+   "duration": 123.51,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.98,
+     "text": "Monochromatic light falls on two narrow slits a distance d apart."
+    },
+    {
+     "start": 4.98,
+     "end": 11.56,
+     "text": "Each slit becomes a source of circular wavelets, Huygens again, and the two trains meet on a screen."
+    },
+    {
+     "start": 11.56,
+     "end": 15.76,
+     "text": "Where crest meets crest, they reinforce and the screen is bright."
+    },
+    {
+     "start": 15.76,
+     "end": 21.7,
+     "text": "Where crest meets trough, half a wavelength out of step, they cancel and the screen is dark."
+    },
+    {
+     "start": 21.7,
+     "end": 23.48,
+     "text": "Particles cannot cancel."
+    },
+    {
+     "start": 23.48,
+     "end": 27.08,
+     "text": "Waves can, like ripples from two pebbles in a pond."
+    },
+    {
+     "start": 27.08,
+     "end": 34.04,
+     "text": "The extra path to a point at angle theta is d sine theta, the slit separation times the sine of the angle."
+    },
+    {
+     "start": 34.04,
+     "end": 38.14,
+     "text": "For a bright fringe, d sine theta equals n lambda."
+    },
+    {
+     "start": 38.14,
+     "end": 45.26,
+     "text": "n is a whole number, zero, one, two, and so on, and lambda is the wavelength, so the waves arrive in step."
+    },
+    {
+     "start": 45.26,
+     "end": 52.1,
+     "text": "For a dark fringe, d sine theta equals n plus one half, times lambda, and crest meets trough."
+    },
+    {
+     "start": 52.1,
+     "end": 56.12,
+     "text": "d is the slit separation, theta the angle from straight ahead."
+    },
+    {
+     "start": 56.12,
+     "end": 61.74,
+     "text": "Put the screen at distance L, much greater than d, and the bright fringes are evenly spaced."
+    },
+    {
+     "start": 61.74,
+     "end": 66.05,
+     "text": "Their spacing, delta y, is approximately lambda L over d."
+    },
+    {
+     "start": 66.05,
+     "end": 69.93,
+     "text": "Longer wavelength or narrower slits, and the pattern spreads."
+    },
+    {
+     "start": 69.93,
+     "end": 71.21,
+     "text": "I want you to try it."
+    },
+    {
+     "start": 71.21,
+     "end": 73.39,
+     "text": "Slide the wavelength from blue to red."
+    },
+    {
+     "start": 73.39,
+     "end": 76.39,
+     "text": "The fringes spread, so colour is wavelength."
+    },
+    {
+     "start": 76.39,
+     "end": 79.37,
+     "text": "Push the slits closer and the pattern spreads too."
+    },
+    {
+     "start": 79.37,
+     "end": 90.97,
+     "text": "Young measured those spacings with a candle, two pinholes and a ruler, and obtained the first wavelengths of visible light, about four-tenths of a micrometre for violet and seven-tenths of a micrometre for red."
+    },
+    {
+     "start": 90.97,
+     "end": 93.27,
+     "text": "Interference is the signature of a wave."
+    },
+    {
+     "start": 93.27,
+     "end": 96.67,
+     "text": "The double slit showed that light has wavelength and phase."
+    },
+    {
+     "start": 96.67,
+     "end": 110.53,
+     "text": "Fresnel's mathematics in 1818 then explained diffraction and sharp shadows, and Newton's corpuscles were abandoned until Einstein brought them back in a new form in 1905, section 3. 5."
+    },
+    {
+     "start": 110.53,
+     "end": 116.71,
+     "text": "Poisson argued Fresnel predicted something absurd, a bright spot at the centre of a round disc's shadow."
+    },
+    {
+     "start": 116.71,
+     "end": 117.89,
+     "text": "Arago looked."
+    },
+    {
+     "start": 117.89,
+     "end": 119.25,
+     "text": "The spot was there."
+    },
+    {
+     "start": 119.25,
+     "end": 123.51,
+     "text": "What does it take for a theory's most absurd prediction to become its best confirmation?"
+    }
+   ],
+   "voicedHash": "d42ff8763280"
+  }
+ }
+}

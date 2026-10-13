@@ -1,0 +1,674 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "geometry": {
+   "script": "Let's watch the widget. As Earth orbits the Sun, our line of sight to a nearby star sweeps back and forth against the distant background stars. Those stars are so far away their parallax is negligible, so they stay fixed. Over a year the nearby star traces a tiny ellipse, a reflection of Earth's orbit. Half the full angular swing, the angle subtended by one astronomical unit as seen from the star, is the parallax angle p.\n\nThe tangent of p equals one astronomical unit over the distance d, so d is approximately one astronomical unit over p when p is in radians. p is that parallax angle, d the star's distance, and one astronomical unit the Earth-Sun distance. We get this from the right triangle, with opposite side one astronomical unit and adjacent side d. Because p is always tiny, the approximation that the tangent of p equals p holds far better than any real measurement.\n\nAstronomers invented the parsec for these minute angles. A parsec is the distance where one astronomical unit subtends one arcsecond. One radian is about two hundred six thousand arcseconds, so one parsec is about two hundred six thousand astronomical units — roughly three times ten to the sixteen metres, or a little over three light years.\n\nThe formula then becomes the simplest in astronomy: distance d in parsecs equals one over the parallax p in arcseconds. A star with a parallax of one tenth of an arcsecond is ten parsecs away.\n\nDrag the distance slider. You'll see the parallax shrink as one over d. At ten parsecs the full yearly swing is only two tenths of an arcsecond, about one nine-thousandth the Moon's diameter. No star is closer than one point three parsecs, so none has a parallax larger than one arcsecond. The widget exaggerates the shift so you can see it at all; the real motion is far smaller.",
+   "hash": "588ea0d48828",
+   "duration": 112.95,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 1.58,
+     "text": "Let's watch the widget."
+    },
+    {
+     "start": 1.58,
+     "end": 8.82,
+     "text": "As Earth orbits the Sun, our line of sight to a nearby star sweeps back and forth against the distant background stars."
+    },
+    {
+     "start": 8.82,
+     "end": 14.24,
+     "text": "Those stars are so far away their parallax is negligible, so they stay fixed."
+    },
+    {
+     "start": 14.24,
+     "end": 19.78,
+     "text": "Over a year the nearby star traces a tiny ellipse, a reflection of Earth's orbit."
+    },
+    {
+     "start": 19.78,
+     "end": 27.98,
+     "text": "Half the full angular swing, the angle subtended by one astronomical unit as seen from the star, is the parallax angle p."
+    },
+    {
+     "start": 27.98,
+     "end": 37.56,
+     "text": "The tangent of p equals one astronomical unit over the distance d, so d is approximately one astronomical unit over p when p is in radians."
+    },
+    {
+     "start": 37.56,
+     "end": 44.28,
+     "text": "p is that parallax angle, d the star's distance, and one astronomical unit the Earth-Sun distance."
+    },
+    {
+     "start": 44.28,
+     "end": 50.34,
+     "text": "We get this from the right triangle, with opposite side one astronomical unit and adjacent side d."
+    },
+    {
+     "start": 50.34,
+     "end": 57.83,
+     "text": "Because p is always tiny, the approximation that the tangent of p equals p holds far better than any real measurement."
+    },
+    {
+     "start": 57.83,
+     "end": 61.19,
+     "text": "Astronomers invented the parsec for these minute angles."
+    },
+    {
+     "start": 61.19,
+     "end": 66.15,
+     "text": "A parsec is the distance where one astronomical unit subtends one arcsecond."
+    },
+    {
+     "start": 66.15,
+     "end": 78.23,
+     "text": "One radian is about two hundred six thousand arcseconds, so one parsec is about two hundred six thousand astronomical units — roughly three times ten to the sixteen metres, or a little over three light years."
+    },
+    {
+     "start": 78.23,
+     "end": 85.93,
+     "text": "The formula then becomes the simplest in astronomy: distance d in parsecs equals one over the parallax p in arcseconds."
+    },
+    {
+     "start": 85.93,
+     "end": 90.53,
+     "text": "A star with a parallax of one tenth of an arcsecond is ten parsecs away."
+    },
+    {
+     "start": 90.53,
+     "end": 92.21,
+     "text": "Drag the distance slider."
+    },
+    {
+     "start": 92.21,
+     "end": 95.05,
+     "text": "You'll see the parallax shrink as one over d."
+    },
+    {
+     "start": 95.05,
+     "end": 102.03,
+     "text": "At ten parsecs the full yearly swing is only two tenths of an arcsecond, about one nine-thousandth the Moon's diameter."
+    },
+    {
+     "start": 102.03,
+     "end": 108.11,
+     "text": "No star is closer than one point three parsecs, so none has a parallax larger than one arcsecond."
+    },
+    {
+     "start": 108.11,
+     "end": 112.95,
+     "text": "The widget exaggerates the shift so you can see it at all; the real motion is far smaller."
+    }
+   ],
+   "voicedHash": "723f2458a541"
+  },
+  "limits": {
+   "script": "Look up for a moment. Behind the panel we have risen above the Sun’s orbit, and those orbit lines are a quiet reminder that we are measuring from a moving platform. That motion is about to pay us back, but first we have to be honest about how fragile a parallax can be.\n\nBecause distance is one over parallax, an error in p does not become a neat, symmetric error in d. A parallax of one milliarcsecond, plus or minus a tenth, puts the star somewhere between about nine hundred and about eleven hundred parsecs. The far side of that range stretches farther than the near side. Drop the parallax to a tenth of a milliarcsecond with the same uncertainty, and the lower bound hits zero. You have almost no distance at all. You cannot invert a measurement that is still consistent with no shift.\n\nSo we keep a rule of thumb. The fractional error in distance is roughly the fractional error in parallax: sigma-d over d is approximately sigma-p over p. Sigma-d and sigma-p are the uncertainties; d and p are the distance and the parallax. Want the distance good to about ten percent? The parallax must be at least ten times its own error. That sets a horizon: d-max is about one over ten sigma-p, in parsecs, when sigma-p is in arcseconds. For Gaia’s best stars that uncertainty is about twenty-five microarcseconds, so the useful reach is about four kiloparsecs. Past that, for a given instrument, you are guessing.\n\nThe same measurements bring a free gift. Over the years the star also drifts steadily across the sky — its proper motion, mu, in arcseconds per year — because it and the Sun move through the Galaxy at different speeds. Once you know the distance, that angular drift becomes a real speed across the line of sight. The transverse velocity, v-t, equals 4.74 times mu times d, with v-t in kilometres per second, mu in arcseconds per year, and d in parsecs. The 4.74 simply turns astronomical units per year into kilometres per second. Add the radial velocity from the Doppler shift and you have the star’s full velocity in space.\n\nBarnard’s star shows it cleanly. It has the largest proper motion known, 10.36 arcseconds per year, and a parallax of 547 milliarcseconds, so its distance is 1.83 parsecs. Then 4.74 times 10.36 times 1.83 is about ninety kilometres per second. At that clip it will cross the Moon’s diameter in about a hundred and eighty years.",
+   "hash": "999f8e07913f",
+   "duration": 151.35,
+   "sentences": [
+    {
+     "start": 0,
+     "end": 1.355,
+     "text": "Look up for a moment."
+    },
+    {
+     "start": 1.355,
+     "end": 10.52,
+     "text": "Behind the panel we have risen above the Sun’s orbit, and those orbit lines are a quiet reminder that we are measuring from a moving platform."
+    },
+    {
+     "start": 10.52,
+     "end": 17.233,
+     "text": "That motion is about to pay us back, but first we have to be honest about how fragile a parallax can be."
+    },
+    {
+     "start": 17.233,
+     "end": 23.558,
+     "text": "Because distance is one over parallax, an error in p does not become a neat, symmetric error in d."
+    },
+    {
+     "start": 23.558,
+     "end": 32.658,
+     "text": "A parallax of one milliarcsecond, plus or minus a tenth, puts the star somewhere between about nine hundred and about eleven hundred parsecs."
+    },
+    {
+     "start": 32.658,
+     "end": 36.789,
+     "text": "The far side of that range stretches farther than the near side."
+    },
+    {
+     "start": 36.789,
+     "end": 43.63,
+     "text": "Drop the parallax to a tenth of a milliarcsecond with the same uncertainty, and the lower bound hits zero."
+    },
+    {
+     "start": 43.63,
+     "end": 45.889,
+     "text": "You have almost no distance at all."
+    },
+    {
+     "start": 45.889,
+     "end": 50.472,
+     "text": "You cannot invert a measurement that is still consistent with no shift."
+    },
+    {
+     "start": 50.472,
+     "end": 52.214,
+     "text": "So we keep a rule of thumb."
+    },
+    {
+     "start": 52.214,
+     "end": 60.282,
+     "text": "The fractional error in distance is roughly the fractional error in parallax: sigma-d over d is approximately sigma-p over p."
+    },
+    {
+     "start": 60.282,
+     "end": 65.768,
+     "text": "Sigma-d and sigma-p are the uncertainties; d and p are the distance and the parallax."
+    },
+    {
+     "start": 65.768,
+     "end": 68.608,
+     "text": "Want the distance good to about ten percent?"
+    },
+    {
+     "start": 68.608,
+     "end": 72.093,
+     "text": "The parallax must be at least ten times its own error."
+    },
+    {
+     "start": 72.093,
+     "end": 78.547,
+     "text": "That sets a horizon: d-max is about one over ten sigma-p, in parsecs, when sigma-p is in arcseconds."
+    },
+    {
+     "start": 78.547,
+     "end": 86.486,
+     "text": "For Gaia’s best stars that uncertainty is about twenty-five microarcseconds, so the useful reach is about four kiloparsecs."
+    },
+    {
+     "start": 86.486,
+     "end": 89.842,
+     "text": "Past that, for a given instrument, you are guessing."
+    },
+    {
+     "start": 89.842,
+     "end": 92.424,
+     "text": "The same measurements bring a free gift."
+    },
+    {
+     "start": 92.424,
+     "end": 103.847,
+     "text": "Over the years the star also drifts steadily across the sky — its proper motion, mu, in arcseconds per year — because it and the Sun move through the Galaxy at different speeds."
+    },
+    {
+     "start": 103.847,
+     "end": 109.85,
+     "text": "Once you know the distance, that angular drift becomes a real speed across the line of sight."
+    },
+    {
+     "start": 109.85,
+     "end": 123.984,
+     "text": "The transverse velocity, v-t, equals 4. 74 times mu times d, with v-t in kilometres per second, mu in arcseconds per year, and d in parsecs. The 4. 74 simply turns astronomical units per year into kilometres per second."
+    },
+    {
+     "start": 123.984,
+     "end": 130.051,
+     "text": "Add the radial velocity from the Doppler shift and you have the star’s full velocity in space."
+    },
+    {
+     "start": 130.051,
+     "end": 132.117,
+     "text": "Barnard’s star shows it cleanly."
+    },
+    {
+     "start": 132.117,
+     "end": 145.993,
+     "text": "It has the largest proper motion known, 10. 36 arcseconds per year, and a parallax of 547 milliarcseconds, so its distance is 1. 83 parsecs. Then 4. 74 times 10. 36 times 1. 83 is about ninety kilometres per second."
+    },
+    {
+     "start": 145.993,
+     "end": 151.35,
+     "text": "At that clip it will cross the Moon’s diameter in about a hundred and eighty years."
+    }
+   ],
+   "voicedHash": "a7ac3fa25e41"
+  },
+  "parallax-summary": {
+   "script": "Look at the planetary system behind the panel, circling the Sun. That orbit, one astronomical unit, is the baseline.\n\nParallax is the yearly shift of a nearby star against distant ones. The formula is d equals one over p. d is the distance in parsecs, and p is the parallax in arcseconds. A smaller shift means a more distant star. One parsec is about two hundred six thousand astronomical units, or three point two six light years.\n\nNo star has a parallax bigger than one arcsecond. Proxima, the nearest, is about zero point seven seven arcseconds. Bessel measured the first, sixty-one Cygni, in eighteen thirty-eight.\n\nHipparcos, to one milliarcsecond, reached a hundred parsecs. Gaia, about twenty-five microarcseconds, reaches kiloparsecs for nearly two billion stars.\n\nThe fractional error in distance matches the fractional error in parallax. Proper motion mu gives the transverse velocity: v sub t equals four point seven four times mu times d. Mu is the angular drift in arcseconds per year, d the distance in parsecs, and v sub t the speed in kilometres per second.\n\nNow that we can put a distance on a star, we can finally ask the question that brightness alone could not answer: how much light does it really emit? That needs a scale for brightness, and astronomy's is two thousand years old.",
+   "hash": "758c1ed49653",
+   "duration": 85.11,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.3,
+     "text": "Look at the planetary system behind the panel, circling the Sun."
+    },
+    {
+     "start": 4.3,
+     "end": 8.44,
+     "text": "That orbit, one astronomical unit, is the baseline."
+    },
+    {
+     "start": 8.44,
+     "end": 12.88,
+     "text": "Parallax is the yearly shift of a nearby star against distant ones."
+    },
+    {
+     "start": 12.88,
+     "end": 15.98,
+     "text": "The formula is d equals one over p."
+    },
+    {
+     "start": 15.98,
+     "end": 20.94,
+     "text": "d is the distance in parsecs, and p is the parallax in arcseconds."
+    },
+    {
+     "start": 20.94,
+     "end": 23.86,
+     "text": "A smaller shift means a more distant star."
+    },
+    {
+     "start": 23.86,
+     "end": 30.16,
+     "text": "One parsec is about two hundred six thousand astronomical units, or three point two six light years."
+    },
+    {
+     "start": 30.16,
+     "end": 33.38,
+     "text": "No star has a parallax bigger than one arcsecond."
+    },
+    {
+     "start": 33.38,
+     "end": 37.96,
+     "text": "Proxima, the nearest, is about zero point seven seven arcseconds."
+    },
+    {
+     "start": 37.96,
+     "end": 42.5,
+     "text": "Bessel measured the first, sixty-one Cygni, in eighteen thirty-eight."
+    },
+    {
+     "start": 42.5,
+     "end": 46.79,
+     "text": "Hipparcos, to one milliarcsecond, reached a hundred parsecs."
+    },
+    {
+     "start": 46.79,
+     "end": 52.99,
+     "text": "Gaia, about twenty-five microarcseconds, reaches kiloparsecs for nearly two billion stars."
+    },
+    {
+     "start": 52.99,
+     "end": 57.31,
+     "text": "The fractional error in distance matches the fractional error in parallax."
+    },
+    {
+     "start": 57.31,
+     "end": 64.69,
+     "text": "Proper motion mu gives the transverse velocity: v sub t equals four point seven four times mu times d."
+    },
+    {
+     "start": 64.69,
+     "end": 72.83,
+     "text": "Mu is the angular drift in arcseconds per year, d the distance in parsecs, and v sub t the speed in kilometres per second."
+    },
+    {
+     "start": 72.83,
+     "end": 80.83,
+     "text": "Now that we can put a distance on a star, we can finally ask the question that brightness alone could not answer: how much light does it really emit?"
+    },
+    {
+     "start": 80.83,
+     "end": 85.11,
+     "text": "That needs a scale for brightness, and astronomy's is two thousand years old."
+    }
+   ],
+   "voicedHash": "a0ce4ec32d0d"
+  },
+  "space-astrometry": {
+   "script": "Watch Earth behind the panel. Above the atmosphere the blur disappears, and a telescope that scans the whole sky can measure every star against every other. That was ESA's Hipparcos, from 1989 to 1993: about a hundred and eighteen thousand stars, to about one milliarcsecond. Gaia, launched in 2013 and operating at the Sun-Earth L2 point, reaches twenty to thirty microarcseconds for bright stars.\n\nAcross the table, around 1900, a hundredth of an arcsecond got you ten parsecs and a few dozen stars. Hipparcos, at one milliarcsecond, reached a hundred parsecs and about a hundred and twenty thousand stars. Gaia in 2022, at about twenty-five microarcseconds for bright stars, reaches about four thousand parsecs and nearly two billion sources. Reach grows with precision. The ten percent column is the distance where the uncertainty equals a tenth of the parallax itself.\n\nTwenty-five microarcseconds is the angle a human hair subtends from a thousand kilometres away. Even a star on the far side of the Galactic centre still shows a parallax, so what once reached a few dozen stars now crosses a fair fraction of the Milky Way.\n\nFor Proxima Centauri, Gaia measures a parallax p of seven hundred and sixty-eight milliarcseconds, plus or minus five hundredths of a milliarcsecond. In arcseconds that is zero point seven six eight. Distance d equals one divided by zero point seven six eight: about one point three parsecs, four point two light years, roughly forty trillion kilometres. p is the parallax, d the distance in parsecs. One arcsecond of parallax is defined to be one parsec, so I invert it. Light from Proxima that reaches you tonight left it four point two years ago.\n\nParallax is the only geometric, assumption-free distance to anything beyond the solar system. Standard candles and the Hubble law are calibrated against stars whose parallax we have measured. It is the bottom rung of the distance ladder, and the whole ladder stands on it.",
+   "hash": "9ce98b1b1e1b",
+   "duration": 120.95,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.16,
+     "text": "Watch Earth behind the panel."
+    },
+    {
+     "start": 2.16,
+     "end": 9.66,
+     "text": "Above the atmosphere the blur disappears, and a telescope that scans the whole sky can measure every star against every other."
+    },
+    {
+     "start": 9.66,
+     "end": 18.98,
+     "text": "That was ESA's Hipparcos, from 1989 to 1993: about a hundred and eighteen thousand stars, to about one milliarcsecond."
+    },
+    {
+     "start": 18.98,
+     "end": 27.62,
+     "text": "Gaia, launched in 2013 and operating at the Sun-Earth L2 point, reaches twenty to thirty microarcseconds for bright stars."
+    },
+    {
+     "start": 27.62,
+     "end": 34.62,
+     "text": "Across the table, around 1900, a hundredth of an arcsecond got you ten parsecs and a few dozen stars."
+    },
+    {
+     "start": 34.62,
+     "end": 41.04,
+     "text": "Hipparcos, at one milliarcsecond, reached a hundred parsecs and about a hundred and twenty thousand stars."
+    },
+    {
+     "start": 41.04,
+     "end": 50.34,
+     "text": "Gaia in 2022, at about twenty-five microarcseconds for bright stars, reaches about four thousand parsecs and nearly two billion sources."
+    },
+    {
+     "start": 50.34,
+     "end": 52.24,
+     "text": "Reach grows with precision."
+    },
+    {
+     "start": 52.24,
+     "end": 57.74,
+     "text": "The ten percent column is the distance where the uncertainty equals a tenth of the parallax itself."
+    },
+    {
+     "start": 57.74,
+     "end": 63.47,
+     "text": "Twenty-five microarcseconds is the angle a human hair subtends from a thousand kilometres away."
+    },
+    {
+     "start": 63.47,
+     "end": 72.51,
+     "text": "Even a star on the far side of the Galactic centre still shows a parallax, so what once reached a few dozen stars now crosses a fair fraction of the Milky Way."
+    },
+    {
+     "start": 72.51,
+     "end": 81.45,
+     "text": "For Proxima Centauri, Gaia measures a parallax p of seven hundred and sixty-eight milliarcseconds, plus or minus five hundredths of a milliarcsecond."
+    },
+    {
+     "start": 81.45,
+     "end": 84.49,
+     "text": "In arcseconds that is zero point seven six eight."
+    },
+    {
+     "start": 84.49,
+     "end": 94.33,
+     "text": "Distance d equals one divided by zero point seven six eight: about one point three parsecs, four point two light years, roughly forty trillion kilometres."
+    },
+    {
+     "start": 94.33,
+     "end": 97.89,
+     "text": "p is the parallax, d the distance in parsecs."
+    },
+    {
+     "start": 97.89,
+     "end": 102.61,
+     "text": "One arcsecond of parallax is defined to be one parsec, so I invert it."
+    },
+    {
+     "start": 102.61,
+     "end": 106.81,
+     "text": "Light from Proxima that reaches you tonight left it four point two years ago."
+    },
+    {
+     "start": 106.81,
+     "end": 112.19,
+     "text": "Parallax is the only geometric, assumption-free distance to anything beyond the solar system."
+    },
+    {
+     "start": 112.19,
+     "end": 117.23,
+     "text": "Standard candles and the Hubble law are calibrated against stars whose parallax we have measured."
+    },
+    {
+     "start": 117.23,
+     "end": 120.95,
+     "text": "It is the bottom rung of the distance ladder, and the whole ladder stands on it."
+    }
+   ],
+   "voicedHash": "894fdb815cc4"
+  },
+  "the-problem": {
+   "script": "Welcome. Everything that deserves the name astrophysics in this course rests on one stubborn question: how far away is that object? Watch the view behind the panel as it flies out toward the Sun. Even that short trip already shows you the kind of distances we care about. A star's brightness in the sky tells you nothing about its true power until you know its distance. A galaxy's size, a supernova's energy, the age of the universe, all of them begin with a distance. And distance is exactly what the sky refuses to show. Stars are points. There is direction, but no depth. The one tool that works without any assumption about what a star actually is is the oldest one in surveying. You look at the object from two places, you measure how much its direction changes, and you use the baseline between those viewpoints to triangulate. Hold a finger at arm's length and blink one eye, then the other. The finger jumps against the far wall. That jump is parallax, the apparent shift in the direction of a nearby object when it is viewed from two different places. The separation between your eyes is the baseline. The larger the baseline, the larger the shift you measure. Triangulation means finding a distance from a known baseline and the measured angles at its ends. It is the method behind every survey map. For the stars, the biggest baseline we can use without leaving home is the diameter of the Earth's orbit: two astronomical units, about three hundred million kilometres. The Earth itself carries us from one end of that baseline to the other every six months. That slow ride around the Sun is our measuring stick.",
+   "hash": "27035b7a9c95",
+   "duration": 93.11,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 1.18,
+     "text": "Welcome."
+    },
+    {
+     "start": 1.18,
+     "end": 8.78,
+     "text": "Everything that deserves the name astrophysics in this course rests on one stubborn question: how far away is that object?"
+    },
+    {
+     "start": 8.78,
+     "end": 12.32,
+     "text": "Watch the view behind the panel as it flies out toward the Sun."
+    },
+    {
+     "start": 12.32,
+     "end": 16.38,
+     "text": "Even that short trip already shows you the kind of distances we care about."
+    },
+    {
+     "start": 16.38,
+     "end": 21.6,
+     "text": "A star's brightness in the sky tells you nothing about its true power until you know its distance."
+    },
+    {
+     "start": 21.6,
+     "end": 28.04,
+     "text": "A galaxy's size, a supernova's energy, the age of the universe, all of them begin with a distance."
+    },
+    {
+     "start": 28.04,
+     "end": 31.46,
+     "text": "And distance is exactly what the sky refuses to show."
+    },
+    {
+     "start": 31.46,
+     "end": 32.86,
+     "text": "Stars are points."
+    },
+    {
+     "start": 32.86,
+     "end": 35.26,
+     "text": "There is direction, but no depth."
+    },
+    {
+     "start": 35.26,
+     "end": 41.12,
+     "text": "The one tool that works without any assumption about what a star actually is is the oldest one in surveying."
+    },
+    {
+     "start": 41.12,
+     "end": 49.43,
+     "text": "You look at the object from two places, you measure how much its direction changes, and you use the baseline between those viewpoints to triangulate."
+    },
+    {
+     "start": 49.43,
+     "end": 52.99,
+     "text": "Hold a finger at arm's length and blink one eye, then the other."
+    },
+    {
+     "start": 52.99,
+     "end": 55.27,
+     "text": "The finger jumps against the far wall."
+    },
+    {
+     "start": 55.27,
+     "end": 61.93,
+     "text": "That jump is parallax, the apparent shift in the direction of a nearby object when it is viewed from two different places."
+    },
+    {
+     "start": 61.93,
+     "end": 64.75,
+     "text": "The separation between your eyes is the baseline."
+    },
+    {
+     "start": 64.75,
+     "end": 67.87,
+     "text": "The larger the baseline, the larger the shift you measure."
+    },
+    {
+     "start": 67.87,
+     "end": 73.43,
+     "text": "Triangulation means finding a distance from a known baseline and the measured angles at its ends."
+    },
+    {
+     "start": 73.43,
+     "end": 75.99,
+     "text": "It is the method behind every survey map."
+    },
+    {
+     "start": 75.99,
+     "end": 85.51,
+     "text": "For the stars, the biggest baseline we can use without leaving home is the diameter of the Earth's orbit: two astronomical units, about three hundred million kilometres."
+    },
+    {
+     "start": 85.51,
+     "end": 90.27,
+     "text": "The Earth itself carries us from one end of that baseline to the other every six months."
+    },
+    {
+     "start": 90.27,
+     "end": 93.11,
+     "text": "That slow ride around the Sun is our measuring stick."
+    }
+   ],
+   "voicedHash": "bab22a8fb545"
+  },
+  "why-so-hard": {
+   "script": "As we fly in toward Earth behind the panel, I want you to remember Aristarchus' prediction. If the Earth moves, the stars must show parallax. For two thousand years nobody saw any, and that absence was the strongest argument against a moving Earth. Copernicus answered that the stars are enormously far away. It sounded like an excuse, and it was exactly right.\n\nIn fifteen seventy-three Tycho Brahe measured to about one arcminute and found no parallax. He concluded, reasonably, that the Earth stands still. In seventeen twenty-nine James Bradley, hunting gamma Draconis, found aberration: a yearly shift of twenty arcseconds caused by the Earth's velocity, not its position. It proved the Earth moves, but it was not parallax.\n\nIn eighteen thirty-eight Friedrich Wilhelm Bessel chose sixty-one Cygni, drifting five arcseconds a year, because that large proper motion suggested it was near. With a Fraunhofer heliometer he measured p equals zero point three one four arcseconds. p is the parallax angle. Distance in parsecs is one divided by p in arcseconds, so that is about three parsecs. Modern values are zero point two eight six arcseconds and three point five parsecs. Within a year Henderson published alpha Centauri, today zero point seven five arcseconds, and Struve measured Vega. The distance scale existed.\n\nAn arcsecond is brutal, the width of a coin seen from four kilometres away. Blurring smears a star into a disc one or two arcseconds across, so the shift is smaller than the blob. Bessel compared sixty-one Cygni to two faint neighbours night after night and fitted a yearly sinusoid to hundreds of observations.\n\nA large proper motion hints a star is nearby because it is angular speed. For similar true speeds, a nearer star sweeps a bigger angle each year. Five arcseconds a year is not proof, but it showed Bessel where to look first.",
+   "hash": "b548a5b4de14",
+   "duration": 115.19,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.66,
+     "text": "As we fly in toward Earth behind the panel, I want you to remember Aristarchus' prediction."
+    },
+    {
+     "start": 5.66,
+     "end": 8.84,
+     "text": "If the Earth moves, the stars must show parallax."
+    },
+    {
+     "start": 8.84,
+     "end": 14.94,
+     "text": "For two thousand years nobody saw any, and that absence was the strongest argument against a moving Earth."
+    },
+    {
+     "start": 14.94,
+     "end": 18.38,
+     "text": "Copernicus answered that the stars are enormously far away."
+    },
+    {
+     "start": 18.38,
+     "end": 21.6,
+     "text": "It sounded like an excuse, and it was exactly right."
+    },
+    {
+     "start": 21.6,
+     "end": 27.76,
+     "text": "In fifteen seventy-three Tycho Brahe measured to about one arcminute and found no parallax."
+    },
+    {
+     "start": 27.76,
+     "end": 31.34,
+     "text": "He concluded, reasonably, that the Earth stands still."
+    },
+    {
+     "start": 31.34,
+     "end": 42.38,
+     "text": "In seventeen twenty-nine James Bradley, hunting gamma Draconis, found aberration: a yearly shift of twenty arcseconds caused by the Earth's velocity, not its position."
+    },
+    {
+     "start": 42.38,
+     "end": 45.72,
+     "text": "It proved the Earth moves, but it was not parallax."
+    },
+    {
+     "start": 45.72,
+     "end": 55.72,
+     "text": "In eighteen thirty-eight Friedrich Wilhelm Bessel chose sixty-one Cygni, drifting five arcseconds a year, because that large proper motion suggested it was near."
+    },
+    {
+     "start": 55.72,
+     "end": 61.39,
+     "text": "With a Fraunhofer heliometer he measured p equals zero point three one four arcseconds."
+    },
+    {
+     "start": 61.39,
+     "end": 63.31,
+     "text": "p is the parallax angle."
+    },
+    {
+     "start": 63.31,
+     "end": 69.05,
+     "text": "Distance in parsecs is one divided by p in arcseconds, so that is about three parsecs."
+    },
+    {
+     "start": 69.05,
+     "end": 74.29,
+     "text": "Modern values are zero point two eight six arcseconds and three point five parsecs."
+    },
+    {
+     "start": 74.29,
+     "end": 81.49,
+     "text": "Within a year Henderson published alpha Centauri, today zero point seven five arcseconds, and Struve measured Vega."
+    },
+    {
+     "start": 81.49,
+     "end": 83.33,
+     "text": "The distance scale existed."
+    },
+    {
+     "start": 83.33,
+     "end": 88.07,
+     "text": "An arcsecond is brutal, the width of a coin seen from four kilometres away."
+    },
+    {
+     "start": 88.07,
+     "end": 94.25,
+     "text": "Blurring smears a star into a disc one or two arcseconds across, so the shift is smaller than the blob."
+    },
+    {
+     "start": 94.25,
+     "end": 101.73,
+     "text": "Bessel compared sixty-one Cygni to two faint neighbours night after night and fitted a yearly sinusoid to hundreds of observations."
+    },
+    {
+     "start": 101.73,
+     "end": 106.43,
+     "text": "A large proper motion hints a star is nearby because it is angular speed."
+    },
+    {
+     "start": 106.43,
+     "end": 110.89,
+     "text": "For similar true speeds, a nearer star sweeps a bigger angle each year."
+    },
+    {
+     "start": 110.89,
+     "end": 115.19,
+     "text": "Five arcseconds a year is not proof, but it showed Bessel where to look first."
+    }
+   ],
+   "voicedHash": "dc0776bd68b9"
+  }
+ }
+}

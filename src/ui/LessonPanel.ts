@@ -174,7 +174,7 @@ export class LessonPanel {
       scroll.appendChild(chEl);
     }
     const soon = el('div', 'ac-soon');
-    soon.innerHTML = `<span class="ac-ch-num">Coming next</span><ul><li>Chapter 3 · The Continuous Spectrum of Light — parallax, magnitudes, blackbody radiation, colour</li><li>Chapter 4 · Special Relativity</li></ul>`;
+    soon.innerHTML = `<span class="ac-ch-num">Coming next</span><ul><li>Chapter 4 · The Theory of Special Relativity — the failure of the Galilean transformation, Lorentz transformations, relativistic momentum and energy</li><li>Chapter 5 · The Interaction of Light and Matter — spectral lines, photons, the Bohr atom</li></ul>`;
     scroll.appendChild(soon);
   }
 

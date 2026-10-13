@@ -48,7 +48,25 @@ export type WidgetSpec =
   /** two bodies orbiting their centre of mass; mass ratio presets */
   | { type: 'twobody' }
   /** kinetic, potential and total energy along an orbit with running time averages */
-  | { type: 'virial' };
+  | { type: 'virial' }
+  /** stellar parallax: Earth's orbit, the line of sight and the yearly shift against background stars */
+  | { type: 'parallax' }
+  /** the magnitude scale: two markers on a −27…+31 ruler and the brightness ratio between them */
+  | { type: 'magnitude' }
+  /** inverse-square law and the distance modulus: move a star of given M and watch m change */
+  | { type: 'distmod' }
+  /** Young's double slit: wavefronts from two slits and the interference pattern on a screen */
+  | { type: 'doubleslit' }
+  /** an electromagnetic wave: E and B fields in phase, perpendicular, moving at c */
+  | { type: 'emwave' }
+  /** Planck curves against wavelength; `mode: 'catastrophe'` overlays Rayleigh–Jeans and Wien approximations */
+  | { type: 'blackbody'; mode?: 'planck' | 'catastrophe' }
+  /** Stefan–Boltzmann: luminosity from radius and temperature, with real-star presets */
+  | { type: 'lrt' }
+  /** Planck's quantum ladder: an oscillator's allowed energies nhν and their Boltzmann occupation at T */
+  | { type: 'quantum' }
+  /** UBV filters over a blackbody spectrum → B−V, U−B and the colour–colour diagram */
+  | { type: 'colorindex' };
 
 export type SceneCue =
   | { action: 'goto'; ref: string; kind?: 'body' | 'blackhole' | 'star' | 'landmark' | 'galaxy' }
@@ -105,6 +123,9 @@ const example = (html: string, title = 'Worked example'): Block => ({ kind: 'cal
 const list = (...items: string[]): Block => ({ kind: 'list', items });
 const terms = (...items: Array<[string, string]>): Block => ({ kind: 'terms', items });
 const summary = (...items: string[]): Block => ({ kind: 'summary', items });
+const timeline = (items: Array<{ when: string; title: string; text: string }>): Block => ({ kind: 'timeline', items });
+const table = (head: string[], rows: string[][], caption?: string): Block => ({ kind: 'table', head, rows, caption });
+const compare = (left: { title: string; items: string[] }, right: { title: string; items: string[] }): Block => ({ kind: 'compare', left, right });
 const goto = (ref: string, kind?: 'body' | 'blackhole' | 'star' | 'landmark' | 'galaxy'): SceneCue => ({ action: 'goto', ref, kind });
 const overview = (ref: string): SceneCue => ({ action: 'overview', ref });
 const rate = (r: number): SceneCue => ({ action: 'rate', rate: r });
@@ -1048,6 +1069,581 @@ const S2_4: Section = {
   ],
 };
 
+/* ================================================================================ */
+/*  Chapter 3 — The Continuous Spectrum of Light                                     */
+/* ================================================================================ */
+
+const S3_1: Section = {
+  id: 'stellar-parallax',
+  number: '3.1',
+  title: 'Stellar Parallax',
+  summary: 'The first rung of the cosmic distance ladder: how the Earth\'s orbit becomes a surveyor\'s baseline, why it took until 1838 to see a star shift, and how Hipparcos and Gaia turned a handful of parallaxes into two billion.',
+  minutes: 16,
+  steps: [
+    {
+      id: 'the-problem',
+      kicker: 'The problem of distance',
+      title: 'Astronomy\'s hardest easy question: how far?',
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('Everything in this course that deserves the name <em>astrophysics</em> rests on knowing how far away things are. A star\'s brightness in the sky tells you nothing about its true power until you know its distance; a galaxy\'s size, a supernova\'s energy, the age of the universe — all of them begin with a distance. And distance is exactly what the sky refuses to show. Stars are points. There is no depth, only direction.'),
+        p('The one tool that works without any assumption about what a star <em>is</em> is the oldest one in surveying: look at the object from two places, measure how much its direction changes, and use the baseline between your two viewpoints to triangulate. Hold a finger at arm\'s length and blink one eye, then the other — the finger jumps against the far wall. That jump is <em>parallax</em>, and the distance between your eyes is the baseline.'),
+        terms(
+          ['Parallax', 'The apparent shift in the direction of a nearby object when it is viewed from two different places.'],
+          ['Baseline', 'The separation between the two viewpoints. The larger the baseline, the larger the shift.'],
+          ['Triangulation', 'Finding a distance from a known baseline and the measured angles at its ends — the method behind every survey map.'],
+        ),
+        key('For the stars, the biggest baseline we can use without leaving home is the diameter of the Earth\'s orbit: 2 AU, about 300 million kilometres. The Earth itself carries us from one end of it to the other every six months.'),
+      ],
+    },
+    {
+      id: 'geometry',
+      kicker: 'Interactive · geometry',
+      title: 'The parallax angle and the parsec',
+      widget: { type: 'parallax' },
+      body: [
+        p('Watch the widget. As the Earth goes round the Sun, the line of sight to a nearby star sweeps back and forth against the distant background stars, which are so far away that their own parallax is negligible. Over a year the nearby star traces a tiny ellipse — a reflection of the Earth\'s orbit. Half the full angular swing, the angle subtended by 1 AU as seen from the star, is the <em>parallax angle</em> p.'),
+        eq('\\tan p = \\frac{1\\,\\text{AU}}{d} \\quad\\Rightarrow\\quad d \\approx \\frac{1\\,\\text{AU}}{p} \\qquad (p \\text{ in radians})', 'For every star p is tiny, so the small-angle approximation tan p ≈ p is exact to far better than any measurement.'),
+        p('The angles are so small that astronomers invented a unit to match. The <em>parsec</em> — a <em>par</em>allax of one arc <em>sec</em>ond — is the distance at which 1 AU subtends 1″. Since one radian is 206 265″, that distance is 206 265 AU. With this unit the formula becomes the simplest in astronomy:'),
+        eq('d = \\frac{1}{p_{\\text{arcsec}}}\\ \\text{pc} \\qquad 1\\ \\text{pc} = 206\\,265\\ \\text{AU} = 3.086 \\times 10^{16}\\ \\text{m} = 3.262\\ \\text{ly}', 'Distance in parsecs is one over the parallax in arcseconds. A star with p = 0.1″ is 10 pc away.'),
+        note('Drag the distance slider. The parallax shrinks as 1/d — at 10 pc the star swings through only 0.2″ over the whole year, which is 1/9000 of the Moon\'s diameter. No star is closer than 1.3 pc, so <em>no star has a parallax larger than one arcsecond</em>. The widget exaggerates the shift so you can see it at all.', 'What the slider shows'),
+      ],
+    },
+    {
+      id: 'why-so-hard',
+      kicker: 'History',
+      title: 'Two thousand years without a parallax',
+      scene: [goto('earth'), rate(1)],
+      body: [
+        p('Aristarchus\' heliocentric idea (Chapter 1) made a sharp prediction: if the Earth moves, the stars must show parallax. Nobody could see any, and for two millennia that was the strongest scientific argument <em>against</em> a moving Earth. Copernicus\' only answer was that the stars must be enormously far away — which turned out to be exactly right, but at the time sounded like an excuse.'),
+        timeline([
+          { when: '1573', title: 'Tycho looks for it', text: 'Tycho Brahe measures to about 1′ and finds no parallax. He concludes, reasonably for his data, that the Earth stands still.' },
+          { when: '1729', title: 'Bradley finds something else', text: 'Hunting for the parallax of γ Draconis, James Bradley discovers aberration — a 20″ yearly shift caused by the Earth\'s velocity, not its position. It proves the Earth moves, but it is not parallax.' },
+          { when: '1838', title: 'Bessel: 61 Cygni', text: 'Friedrich Wilhelm Bessel, using a Fraunhofer heliometer, measures p = 0.314″ for 61 Cygni, chosen because its large proper motion suggested it was near. Distance: about 3 pc (modern value 0.286″, 3.5 pc).' },
+          { when: '1838–39', title: 'Henderson and Struve', text: 'Thomas Henderson publishes the parallax of α Centauri (0.75″ today), and Wilhelm Struve that of Vega. Within a year the stellar distance scale exists.' },
+        ]),
+        p('Why did it take so long? Because an arcsecond is a brutally small angle: the width of a coin seen from four kilometres away. Atmospheric blurring smears a star into a disc one or two arcseconds across, so you are trying to measure a shift smaller than the blob you are measuring. Bessel succeeded by measuring the <em>relative</em> position of 61 Cygni against two faint neighbours, night after night, and fitting a yearly sinusoid to hundreds of observations.'),
+        think('Bessel picked 61 Cygni because it drifts across the sky at 5″ per year — the "flying star". Why is a large proper motion a good hint that a star is nearby, even before you have measured its parallax?'),
+      ],
+    },
+    {
+      id: 'space-astrometry',
+      kicker: 'Modern methods',
+      title: 'From Hipparcos to Gaia',
+      scene: [goto('earth'), rate(1)],
+      body: [
+        p('Above the atmosphere the blur disappears, and a telescope that scans the whole sky can measure every star against every other. That was the idea behind ESA\'s <em>Hipparcos</em> (1989–1993), which measured 118 000 stars to a precision of about 1 milliarcsecond (0.001″). Its successor, <em>Gaia</em> (launched 2013, operating from the Sun–Earth L2 point), reached 20–30 microarcseconds for bright stars and has catalogued nearly two billion sources.'),
+        table(['Method', 'Precision', 'Distance at 10 % error', 'Reach'],
+          [
+            ['Ground, photographic (1900s)', '≈ 0.01″', '10 pc', 'a few dozen stars'],
+            ['Hipparcos (1993)', '≈ 0.001″ = 1 mas', '100 pc', '≈ 1.2 × 10⁵ stars'],
+            ['Gaia DR3 (2022)', '≈ 25 µas (bright stars)', '≈ 4 000 pc', '≈ 1.8 × 10⁹ sources'],
+          ], 'The reach of parallax grows with precision. The "10 % error" column is the distance at which the measurement uncertainty equals a tenth of the parallax itself.'),
+        p('Gaia\'s precision is almost absurd: 25 µas is the angle subtended by a human hair seen from 1000 km. At that level, the parallax of a star on the far side of the Galactic centre is still measurable, and the parallax method — once good for a few dozen stars — now reaches across a fair fraction of the Milky Way.'),
+        example('Proxima Centauri, the nearest star: Gaia measures p = 768.07 ± 0.05 mas. Distance d = 1/0.76807 = 1.302 pc = 4.246 ly = 4.02 × 10¹³ km. Light from Proxima that reaches you tonight left it 4.2 years ago.'),
+        key('Parallax is the <em>only</em> geometric, assumption-free distance to anything beyond the solar system. Every other method — standard candles, the Hubble law — is ultimately calibrated against stars whose parallax we have measured. It is the bottom rung of the distance ladder, and the whole ladder stands on it.'),
+      ],
+    },
+    {
+      id: 'limits',
+      kicker: 'Concept',
+      title: 'Errors, limits and a useful by-product',
+      scene: [overview('sun'), rate(1)],
+      body: [
+        p('Because d = 1/p, errors in parallax do not translate simply into errors in distance. A parallax of 1.0 ± 0.1 mas gives d between 909 and 1111 pc — an asymmetric range — while a parallax of 0.1 ± 0.1 mas gives almost no distance at all. Rule of thumb: a parallax is useful when its uncertainty is well under ten percent of its value, which limits each instrument to a certain radius around the Sun.'),
+        eq('\\frac{\\sigma_d}{d} \\approx \\frac{\\sigma_p}{p} \\qquad d_{\\text{max}} \\approx \\frac{1}{10\\,\\sigma_p}\\ \\text{pc} \\quad (\\sigma_p \\text{ in arcsec})', 'A 10 % distance needs a parallax ten times its own error. For Gaia\'s best stars, σ_p ≈ 25 µas gives d_max ≈ 4 kpc.'),
+        p('Parallax measurements come with a free gift. Over the years the same star also drifts steadily across the sky — its <em>proper motion</em> μ, in arcseconds per year — because it and the Sun are moving through the Galaxy at different velocities. Once you know the distance, that angular drift becomes a real speed across the line of sight:'),
+        eq('v_t = 4.74\\,\\mu\\,d \\qquad (v_t \\text{ in km/s},\\ \\mu \\text{ in arcsec/yr},\\ d \\text{ in pc})', 'The constant 4.74 converts AU per year into km/s. Together with the radial velocity from the Doppler shift, this gives the star\'s full velocity in space.'),
+        example('Barnard\'s star has the largest proper motion known, μ = 10.36″/yr, and a parallax of 547 mas, so d = 1.83 pc. Transverse speed: v_t = 4.74 × 10.36 × 1.83 = 90 km/s — it will cross the Moon\'s diameter in about 180 years.'),
+      ],
+    },
+    {
+      id: 'parallax-summary',
+      kicker: 'Section close',
+      title: 'What to remember',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Parallax is the yearly shift of a nearby star against distant ones, with the Earth\'s orbit (1 AU) as baseline.',
+          'd = 1/p: distance in parsecs equals one over the parallax in arcseconds. 1 pc = 206 265 AU = 3.26 ly.',
+          'No star has p > 1″; the nearest (Proxima) has 0.768″. Bessel measured the first one, 61 Cygni, in 1838.',
+          'Hipparcos (1 mas) reached 100 pc; Gaia (≈ 25 µas) reaches kiloparsecs for nearly two billion stars.',
+          'Distance error ≈ parallax error in fractional terms; proper motion μ gives the transverse velocity v_t = 4.74 μ d.',
+        ),
+        p('Now that we can put a distance on a star, we can finally ask the question that brightness alone could not answer: how much light does it really emit? That needs a scale for brightness, and astronomy\'s is two thousand years old.'),
+      ],
+    },
+  ],
+};
+
+const S3_2: Section = {
+  id: 'magnitude-scale',
+  number: '3.2',
+  title: 'The Magnitude Scale',
+  summary: 'Hipparchus\' six classes become a logarithmic ruler: apparent magnitude, the inverse-square law, absolute magnitude and the distance modulus that ties them together.',
+  minutes: 18,
+  steps: [
+    {
+      id: 'hipparchus',
+      kicker: 'History',
+      title: 'A ruler inherited from Hipparchus',
+      scene: [goto('Sirius', 'star'), rate(1)],
+      body: [
+        p('Around 130 BC Hipparchus sorted the stars he could see into six classes. The brightest twenty or so were "first magnitude"; the faintest the eye could make out were "sixth". The scale was a ranking, not a measurement — and it ran backwards, with bigger numbers for fainter stars. Both quirks survive today, and every astronomer lives with them.'),
+        p('When photometry became quantitative in the nineteenth century, astronomers found that the eye responds roughly to the <em>logarithm</em> of brightness: each of Hipparchus\' steps corresponded to a fairly constant <em>ratio</em> of light, and his first-magnitude stars delivered about a hundred times more light than his sixth. In 1856 Norman Pogson turned that into a definition.'),
+        key('Pogson\'s rule: a difference of 5 magnitudes is <em>exactly</em> a factor of 100 in brightness. One magnitude is therefore a factor of 100<sup>1/5</sup> = 2.512. The scale is logarithmic and inverted: the larger the magnitude, the fainter the star.'),
+        history('Hipparchus\' catalogue of about 850 stars, with positions and magnitudes, was the first of its kind and survived through Ptolemy\'s <em>Almagest</em>. The same man discovered precession (Chapter 1) by comparing his positions with older ones. Sirius, in front of you, was a first-magnitude star to him; on the modern scale it is −1.46, brighter than "first".'),
+      ],
+    },
+    {
+      id: 'apparent',
+      kicker: 'Interactive · the scale',
+      title: 'Apparent magnitude and the brightness ratio',
+      widget: { type: 'magnitude' },
+      body: [
+        p('The <em>apparent magnitude</em> m measures how bright a star looks from Earth — strictly, the <em>radiant flux</em> F it delivers: the energy per second crossing each square metre of your telescope\'s aperture, in W m⁻². Pogson\'s rule relates the flux ratio of two stars to their magnitude difference:'),
+        eq('\\frac{F_2}{F_1} = 100^{(m_1 - m_2)/5} \\qquad\\Longleftrightarrow\\qquad m_1 - m_2 = -2.5\\,\\log_{10}\\!\\left(\\frac{F_1}{F_2}\\right)', 'Five magnitudes = factor 100; one magnitude = factor 2.512; 0.1 mag ≈ 10 %. Note the sign: a <em>brighter</em> object has a <em>smaller</em> (or more negative) magnitude.'),
+        p('Set the two markers in the widget to any pair of objects. The Sun at −26.8 and the full Moon at −12.7 differ by 14.1 magnitudes — a factor of 100<sup>14.1/5</sup> = 440 000 in brightness. The faintest objects imaged by the James Webb Space Telescope, near magnitude +31, are 10<sup>(31 + 26.8)/2.5</sup> ≈ 10<sup>23</sup> times fainter than the Sun.'),
+        table(['Object', 'm', 'Object', 'm'],
+          [
+            ['Sun', '−26.83', 'Vega (defines ≈ 0)', '+0.03'],
+            ['Full Moon', '−12.7', 'Polaris', '+1.98'],
+            ['Venus at brightest', '−4.9', 'Naked-eye limit (dark sky)', '≈ +6.5'],
+            ['Jupiter at brightest', '−2.9', 'Pluto', '≈ +14'],
+            ['Sirius, brightest star', '−1.46', 'JWST deep field limit', '≈ +31'],
+          ], 'Apparent (visual) magnitudes. The scale was anchored so that Vega is close to zero; today the zero point is defined by a set of standard stars.'),
+        think('Two stars differ by exactly 1 magnitude. A third star is 1 magnitude fainter than the second. Is the first star 2 × 2.512 = 5.02 times brighter than the third, or 2.512² = 6.31 times? Why does the logarithmic scale make magnitudes <em>add</em> while fluxes <em>multiply</em>?'),
+      ],
+    },
+    {
+      id: 'inverse-square',
+      kicker: 'Interactive · physics',
+      title: 'The inverse-square law',
+      widget: { type: 'distmod' },
+      body: [
+        p('Apparent magnitude mixes two very different things: how much light a star emits, and how far away it is. To separate them we need the <em>luminosity</em> L — the total energy the star radiates per second, in watts — and the rule that spreads that energy out. Light from a star crosses, at distance r, a sphere of area 4πr². If none is absorbed on the way, the flux through each square metre of that sphere is:'),
+        eq('F = \\frac{L}{4\\pi r^2}', 'The inverse-square law. Double the distance and the same light is spread over four times the area, so the flux drops to a quarter.'),
+        p('In the widget the shells around the star all carry the <em>same</em> total power; the farther one is simply bigger, so each square metre of it receives less. Drag the star away and watch the detector reading fall as 1/r² and its magnitude climb by 5 for every factor of 10 in distance — because a factor 100 in flux is 5 magnitudes.'),
+        example('The Sun\'s luminosity is L☉ = 3.828 × 10²⁶ W and the Earth is 1 AU = 1.496 × 10¹¹ m away. F = 3.828 × 10²⁶ / (4π × (1.496 × 10¹¹)²) = 1361 W m⁻² — the <em>solar constant</em> measured by satellites above the atmosphere. At Neptune, 30 AU out, the Sun delivers 1361/900 = 1.5 W m⁻²: still 400 times brighter than the full Moon on Earth.', 'Worked example: the solar constant'),
+        key('Flux is what we measure; luminosity is what we want. The inverse-square law connects them, but only if we know the distance — which is why Section 3.1 had to come first.'),
+      ],
+    },
+    {
+      id: 'absolute',
+      kicker: 'Definition',
+      title: 'Absolute magnitude: putting every star at 10 parsecs',
+      scene: [goto('Vega', 'star'), rate(1)],
+      body: [
+        p('To compare stars fairly, astronomers imagine moving each one to the same standard distance and ask how bright it would look from there. The standard distance is 10 pc, and the apparent magnitude a star would have at 10 pc is its <em>absolute magnitude</em> M. Because the flux scales as 1/d², the inverse-square law and Pogson\'s rule combine into a single relation between m, M and d:'),
+        eq('100^{(m - M)/5} = \\frac{F_{10}}{F} = \\left(\\frac{d}{10\\ \\text{pc}}\\right)^2', 'F is the flux at the true distance d, F₁₀ the flux the star would deliver from 10 pc.'),
+        eq('m - M = 5\\,\\log_{10}\\!\\left(\\frac{d}{10\\ \\text{pc}}\\right) = 5\\log_{10} d - 5 \\qquad (d \\text{ in pc})', 'The <em>distance modulus</em>. It depends only on distance: for every factor of 10 in d, m − M grows by 5.'),
+        p('The distance modulus is one of the most used relations in astronomy. Know any two of m, M and d and you have the third. Measure m and the parallax and you get M, the star\'s true brightness. Later we will learn to <em>infer</em> M from a star\'s spectrum or pulsation period; then measuring m gives the distance — and the distance ladder climbs beyond the reach of parallax.'),
+        table(['Star', 'm', 'd (pc)', 'm − M', 'M'],
+          [
+            ['Sun', '−26.83', '4.85 × 10⁻⁶', '−31.57', '+4.74'],
+            ['Sirius', '−1.46', '2.64', '−2.89', '+1.43'],
+            ['Vega', '+0.03', '7.68', '−0.57', '+0.60'],
+            ['Betelgeuse', '+0.45 (var.)', '≈ 168', '+6.1', '≈ −5.7'],
+            ['Rigel', '+0.13', '≈ 260', '+7.1', '≈ −7.0'],
+            ['Proxima Centauri', '+11.1', '1.30', '−4.43', '+15.5'],
+          ], 'Sirius looks brightest because it is close. Rigel, 100 times farther, is intrinsically ten thousand times more luminous than Sirius. Proxima, the nearest star of all, is invisible to the naked eye.'),
+      ],
+    },
+    {
+      id: 'luminosity-ratio',
+      kicker: 'Derivation',
+      title: 'From magnitudes to luminosities',
+      scene: [goto('Betelgeuse', 'star'), rate(1)],
+      body: [
+        p('Since absolute magnitudes compare stars at a common distance, a difference in M is a difference in luminosity. Applying Pogson\'s rule to the fluxes at 10 pc, which are proportional to L:'),
+        eq('\\frac{L_2}{L_1} = 100^{(M_1 - M_2)/5} \\qquad M_1 - M_2 = -2.5\\,\\log_{10}\\!\\left(\\frac{L_1}{L_2}\\right)', 'With the Sun as reference, M☉ = +4.74: a star of M = −0.26 is exactly 100 times more luminous than the Sun.'),
+        example('Betelgeuse: m ≈ +0.45, parallax about 6 mas → d ≈ 168 pc. Distance modulus m − M = 5 log₁₀(16.8) = 6.13, so M ≈ −5.7. Luminosity ratio to the Sun: L/L☉ = 100<sup>(4.74 + 5.7)/5</sup> = 100<sup>2.09</sup> ≈ 15 000 — in visible light alone. Most of Betelgeuse\'s output is infrared, which the eye does not count; its true total luminosity is about 100 000 L☉, as we will see in Section 3.6.'),
+        p('A caution hides in that example. The magnitudes we have used so far are <em>visual</em>: they measure the light the eye (or a V filter) receives, not the total. Hot stars radiate mostly ultraviolet, cool stars mostly infrared, and both are undercounted by visual magnitudes. The full accounting — the <em>bolometric</em> magnitude — needs the physics of the next four sections.'),
+        think('The distance modulus formula assumes no light is lost on the way. Between the stars there is dust, which dims and reddens starlight by a few tenths of a magnitude per kiloparsec in the Galactic plane. If you ignore it, do you over- or under-estimate the distance to a star of known M?'),
+      ],
+    },
+    {
+      id: 'magnitude-summary',
+      kicker: 'Section close',
+      title: 'What to remember',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Apparent magnitude m: logarithmic, inverted (brighter = smaller). 5 mag = ×100 in flux; 1 mag = ×2.512.',
+          'F₂/F₁ = 100^((m₁−m₂)/5);  m₁ − m₂ = −2.5 log₁₀(F₁/F₂).',
+          'Inverse-square law: F = L/(4πr²). The solar constant is 1361 W m⁻².',
+          'Absolute magnitude M = apparent magnitude at 10 pc. M☉ = +4.74.',
+          'Distance modulus: m − M = 5 log₁₀(d/10 pc). Luminosity ratio: L₂/L₁ = 100^((M₁−M₂)/5).',
+        ),
+        p('Magnitudes tell us how much light arrives. To learn what the light <em>is</em>, and what it says about the temperature of the surface that emitted it, we have to understand light itself. That story starts with a dispute between Newton and Huygens.'),
+      ],
+    },
+  ],
+};
+
+const S3_3: Section = {
+  id: 'wave-nature',
+  number: '3.3',
+  title: 'The Wave Nature of Light',
+  summary: 'Particles or waves? Young\'s double slit settles it for a century, Maxwell shows light is an electromagnetic wave travelling at c, and the spectrum opens from radio to gamma rays.',
+  minutes: 18,
+  steps: [
+    {
+      id: 'newton-huygens',
+      kicker: 'History',
+      title: 'Corpuscles against waves',
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('What is light? Newton, in his <em>Opticks</em> (1704), argued that it is a stream of tiny particles — <em>corpuscles</em> — because light travels in straight lines and casts sharp shadows, which waves, spreading around corners, seemed unable to do. Christiaan Huygens had argued in 1678 that light is a wave in an all-pervading medium: every point on a wavefront acts as a source of secondary wavelets, and the new wavefront is their envelope. Huygens\' principle explained reflection and refraction beautifully. Newton\'s authority won anyway, for a hundred years.'),
+        compare({ title: 'Newton · corpuscles', items: ['Straight-line travel and sharp shadows', 'Different colours = different sized particles', 'Refraction: particles pulled into the denser medium, so light should be <em>faster</em> in glass'] },
+          { title: 'Huygens · waves', items: ['Wavefronts and secondary wavelets', 'Different colours = different wavelengths', 'Refraction: waves <em>slower</em> in glass, bending toward the normal'] }),
+        p('The two theories made one opposite prediction — the speed of light in glass or water — but nobody could measure it until Foucault in 1850 (slower in water: waves win). Long before that, in 1801, Thomas Young found a simpler test: let light pass through two slits and see whether it adds like particles or like waves.'),
+        history('Huygens also built the best telescopes of his day, discovered Titan and worked out that Saturn\'s "handles" were a ring. His <em>Traité de la Lumière</em> (1690) is the first wave theory of light; it even explains the double refraction of Iceland spar.'),
+      ],
+    },
+    {
+      id: 'young',
+      kicker: 'Interactive · experiment',
+      title: 'Young\'s double-slit experiment',
+      widget: { type: 'doubleslit' },
+      body: [
+        p('Monochromatic light falls on two narrow slits a distance d apart. Each slit becomes a source of circular wavelets (Huygens again). Where the two wave trains arrive <em>in step</em> — crest meeting crest — they reinforce, and the screen is bright. Where they arrive half a wavelength out of step — crest meeting trough — they cancel, and the screen is dark. Particles cannot cancel. Waves can, and do.'),
+        eq('d\\sin\\theta = n\\lambda \\quad \\text{(bright)} \\qquad d\\sin\\theta = \\left(n + \\tfrac{1}{2}\\right)\\lambda \\quad \\text{(dark)} \\qquad n = 0, 1, 2, \\ldots', 'The path difference between the two slits to a point at angle θ is d sin θ. A whole number of wavelengths → constructive; a half-integer → destructive.'),
+        eq('\\Delta y \\approx \\frac{\\lambda L}{d}', 'For a screen at distance L ≫ d, the bright fringes are evenly spaced. Long wavelengths and narrow slit separations spread the pattern out.'),
+        p('Try it. Slide the wavelength from blue to red: the fringes spread apart, so <em>colour is wavelength</em>. Push the slits closer together and the pattern spreads too. Young measured fringe spacings and obtained the first wavelengths of visible light — about 0.4 µm for violet and 0.7 µm for red — from a candle, two pinholes and a ruler.'),
+        key('Interference is the signature of a wave. The double slit showed that light has wavelength and phase; Fresnel\'s mathematics (1818) then explained diffraction and sharp shadows too, and Newton\'s corpuscles were abandoned — until Einstein brought them back in a new form in 1905 (Section 3.5).'),
+        think('In 1818 Poisson argued that Fresnel\'s theory predicted something absurd: a bright spot at the centre of the shadow of a round disc. Arago went and looked. The spot was there. What does it take for a theory\'s most "absurd" prediction to become its best confirmation?'),
+      ],
+    },
+    {
+      id: 'maxwell',
+      kicker: 'Interactive · theory',
+      title: 'Maxwell: light is an electromagnetic wave',
+      widget: { type: 'emwave' },
+      body: [
+        p('Waves need something to wave. In the 1860s James Clerk Maxwell gathered everything known about electricity and magnetism into four equations and noticed that they admit wave solutions: a changing electric field creates a magnetic field, a changing magnetic field creates an electric field, and the pair can sustain itself and travel through empty space. The speed of that wave came out of two laboratory constants:'),
+        eq('c = \\frac{1}{\\sqrt{\\varepsilon_0 \\mu_0}} = 2.998 \\times 10^{8}\\ \\text{m/s}', 'ε₀ and μ₀, the electric and magnetic constants, were measured with capacitors and coils. Their combination gave the speed of light — which had been measured quite separately by Fizeau and Foucault. Maxwell concluded that light <em>is</em> such a wave.'),
+        p('Watch the widget. The electric field E (vertical) and the magnetic field B (horizontal) oscillate in phase, perpendicular to each other and to the direction of travel; the whole pattern slides forward at c. The distance between crests is the wavelength λ, the number of crests passing per second is the frequency ν, and because the wave moves at c:'),
+        eq('c = \\lambda\\,\\nu', 'Wavelength and frequency are two labels for the same wave. Visible light: λ ≈ 400–700 nm, ν ≈ 4–7.5 × 10¹⁴ Hz.'),
+        p('Maxwell\'s waves carry energy and momentum. The energy flow per unit area is the Poynting vector S = E × B/μ₀, and a beam of flux F absorbed by a surface pushes on it with a pressure F/c (twice that if reflected). Sunlight at Earth pushes with 4.5 µPa — negligible for you, but enough to steer a solar sail and to blow the dust tail of a comet away from the Sun.'),
+        history('Heinrich Hertz generated and detected Maxwell\'s waves with spark gaps in 1887–88 and showed they reflect, refract and interfere just like light. Asked what use they were, he reportedly said "nothing, I guess." Radio followed within a decade.'),
+      ],
+    },
+    {
+      id: 'the-spectrum',
+      kicker: 'Interactive · the spectrum',
+      title: 'The electromagnetic spectrum',
+      widget: { type: 'spectrum' },
+      scene: [goto('jwst'), rate(1)],
+      body: [
+        p('If light is an electromagnetic wave, there is no reason its wavelength should be confined to the narrow band our eyes evolved to use. Herschel had already found invisible "calorific rays" beyond the red in 1800, and Ritter ultraviolet beyond the violet in 1801. Maxwell\'s theory predicted a continuum from arbitrarily long to arbitrarily short wavelengths, and every part of it has since been found in the sky.'),
+        table(['Band', 'Wavelength', 'Sources in the sky', 'From the ground?'],
+          [
+            ['Radio', '> 1 mm', 'pulsars, cold gas (21 cm), jets', 'yes'],
+            ['Microwave', '1 mm – 1 cm', 'cosmic microwave background', 'partly'],
+            ['Infrared', '700 nm – 1 mm', 'dust, protostars, redshifted galaxies', 'narrow windows'],
+            ['Visible', '400 – 700 nm', 'stars, nebulae, galaxies', 'yes'],
+            ['Ultraviolet', '10 – 400 nm', 'hot stars, white dwarfs', 'no'],
+            ['X-ray', '0.01 – 10 nm', 'accretion discs, hot cluster gas', 'no'],
+            ['Gamma ray', '< 0.01 nm', 'bursts, pulsars, active galaxies', 'no'],
+          ]),
+        p('The atmosphere is transparent only in the visible and radio windows, which is why the telescope in front of you — JWST, observing in the infrared — sits 1.5 million kilometres away at L2, and why X-ray and gamma-ray astronomy had to wait for rockets and satellites. Every band tells a different part of the story: the same galaxy looks like a smooth disc of old stars in the infrared and a scatter of hot young clusters in the ultraviolet.'),
+        key('Wavelength is the organising variable of all astronomy. In the next sections it will tell us a star\'s temperature; in later chapters its composition, its velocity and its distance.'),
+      ],
+    },
+    {
+      id: 'wave-summary',
+      kicker: 'Section close',
+      title: 'What to remember',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Newton\'s corpuscles vs Huygens\' waves; Young\'s double slit (1801) showed interference — a wave property.',
+          'Bright fringes at d sin θ = nλ; fringe spacing Δy = λL/d. Colour is wavelength.',
+          'Maxwell (1865): light is an electromagnetic wave with E ⟂ B ⟂ direction of travel, speed c = 1/√(ε₀μ₀).',
+          'c = λν. Light carries energy (Poynting vector) and momentum (radiation pressure F/c).',
+          'The spectrum runs from radio to gamma rays; the atmosphere passes only the visible and radio windows.',
+        ),
+        p('We now know what light is. The next question is why a hot object glows at all, and why hotter things glow bluer — the physics that lets us take a star\'s temperature from across the Galaxy.'),
+      ],
+    },
+  ],
+};
+
+const S3_4: Section = {
+  id: 'blackbody-radiation',
+  number: '3.4',
+  title: 'Blackbody Radiation',
+  summary: 'Why hot things glow and why colour tracks temperature: Wien\'s displacement law, the Stefan–Boltzmann law and the effective temperature — then Betelgeuse measured with them.',
+  minutes: 18,
+  steps: [
+    {
+      id: 'colours-of-stars',
+      kicker: 'Observation',
+      title: 'Orion\'s two shoulders',
+      scene: [goto('Betelgeuse', 'star'), rate(1)],
+      body: [
+        p('Look at Orion on a winter night and the two brightest stars are plainly different colours. Betelgeuse, at the hunter\'s shoulder, is a deep orange-red. Rigel, at his foot, is a brilliant blue-white. The contrast is visible to the naked eye and it was noted by ancient observers — but only in the nineteenth century did anyone understand that they were looking at a <em>thermometer</em>.'),
+        p('You know the effect from everyday life. Heat a piece of iron and it first glows dull red, then orange, then yellow, and at the temperatures of a welding arc, blue-white. The colour of a glowing object depends on its temperature, and hardly at all on what it is made of. A heated iron bar, the filament of an old light bulb, molten glass and the surface of a star all follow the same curve.'),
+        key('The colour of a hot, opaque object is set by its temperature. Betelgeuse is red because its surface is about 3 600 K; Rigel is blue because its surface is about 12 000 K. Reading the colour of a star is taking its temperature from hundreds of light years away.'),
+        terms(
+          ['Blackbody', 'An idealised object that absorbs all light falling on it (hence "black") and, in thermal equilibrium, re-emits a spectrum that depends only on its temperature.'],
+          ['Thermal radiation', 'Light emitted by matter because of its temperature — produced by the thermal jiggling of charged particles.'],
+          ['Continuous spectrum', 'Emission at all wavelengths, without gaps or lines. A blackbody has the smoothest continuous spectrum there is.'],
+        ),
+      ],
+    },
+    {
+      id: 'blackbody',
+      kicker: 'Interactive · the curves',
+      title: 'The blackbody spectrum and Wien\'s law',
+      widget: { type: 'blackbody' },
+      body: [
+        p('A perfect absorber is also, in equilibrium, a perfect emitter; its emission is called <em>blackbody radiation</em> and its spectrum has a universal shape — a hump that rises steeply from short wavelengths, peaks, and falls slowly toward long ones. Raise the temperature and two things happen at once: the whole curve rises at every wavelength, and the peak slides toward shorter wavelengths. Slide the temperature in the widget and watch the hump move through the rainbow band.'),
+        eq('\\lambda_{\\max}\\,T = 0.002898\\ \\text{m K} = 2.898 \\times 10^{6}\\ \\text{nm K}', 'Wien\'s displacement law (1893). The wavelength of peak emission is inversely proportional to temperature.'),
+        example('The Sun, T = 5772 K: λ_max = 2.898 × 10⁶ / 5772 = 502 nm — green-blue, near the peak sensitivity of the human eye, which is no coincidence. Betelgeuse, 3 600 K: λ_max = 805 nm, in the near infrared — most of its light is invisible to us, and what we see is the red tail. Rigel, 12 000 K: λ_max = 242 nm, in the ultraviolet; we see only its blue shoulder.'),
+        p('Note what the curves do <em>not</em> do: they never cross. A hotter blackbody emits more at <em>every</em> wavelength, red included. Betelgeuse looks red not because it emits little blue light compared with a cool object, but because it emits so much more red than blue; Rigel looks blue because its blue is overwhelming. Stars are not perfect blackbodies — absorption lines and the structure of their atmospheres leave fingerprints we will study later — but the overall shape of a stellar spectrum is close enough to make these laws the working tools of the subject.'),
+        history('Wien derived his law in 1893 by a thermodynamic argument about radiation in a slowly compressed cavity, without knowing the shape of the curve. He won the Nobel Prize for it in 1911 — ironically, the year after Planck\'s formula had shown exactly where Wien\'s own guess for the full spectrum went wrong.'),
+      ],
+    },
+    {
+      id: 'stefan-boltzmann',
+      kicker: 'Interactive · the law',
+      title: 'The Stefan–Boltzmann law and the effective temperature',
+      widget: { type: 'lrt' },
+      body: [
+        p('The <em>total</em> power a blackbody radiates — the area under the whole curve — rises very fast with temperature. Josef Stefan found the rule empirically in 1879 and Ludwig Boltzmann derived it from thermodynamics in 1884: the energy emitted per second from each square metre of surface goes as the <em>fourth power</em> of the temperature.'),
+        eq('F_{\\text{surf}} = \\sigma T^4 \\qquad \\sigma = 5.670 \\times 10^{-8}\\ \\text{W m}^{-2}\\text{K}^{-4}', 'Double the temperature and each square metre radiates sixteen times as much.'),
+        eq('L = 4\\pi R^2 \\sigma T_e^4', 'A spherical star of radius R: surface area times flux. This <em>defines</em> the effective temperature T_e — the temperature of the blackbody that would radiate the star\'s luminosity from the star\'s surface.'),
+        p('Play with the widget. Luminosity depends on two things, size and temperature, and the fourth power makes temperature dominate: a star twice as hot as the Sun with the same radius is 16 L☉; a star the Sun\'s temperature but twice its radius is only 4 L☉. The presets show how differently real stars combine the two — a white dwarf is hotter than the Sun yet a thousand times fainter, because it is the size of the Earth.'),
+        example('The Sun: L☉ = 3.828 × 10²⁶ W, R☉ = 6.957 × 10⁸ m. T_e = (L/(4πR²σ))^{1/4} = (3.828 × 10²⁶ / (4π × 4.840 × 10¹⁷ × 5.670 × 10⁻⁸))^{1/4} = (1.110 × 10¹⁵)^{1/4} = 5772 K. Each square metre of the solar surface radiates σT⁴ = 63 MW — the output of a small power station from a patch the size of a dining table.', 'Worked example: the Sun\'s effective temperature'),
+      ],
+    },
+    {
+      id: 'betelgeuse',
+      kicker: 'Worked example',
+      title: 'Measuring Betelgeuse',
+      scene: [goto('Betelgeuse', 'star'), rate(1)],
+      body: [
+        p('Now combine everything. Betelgeuse has a measured parallax of about 6 mas, so d ≈ 168 pc. Its total (bolometric) flux at Earth, adding up all wavelengths including the infrared, is about 1.3 × 10⁻⁷ W m⁻². From its colour (Section 3.6) its effective temperature is about 3 600 K. Three numbers — and we can find its luminosity, its radius and the wavelength at which it shines brightest.'),
+        eq('L = 4\\pi d^2 F = 4\\pi\\,(5.18 \\times 10^{18}\\ \\text{m})^2 \\times 1.3 \\times 10^{-7}\\ \\text{W m}^{-2} \\approx 4.4 \\times 10^{31}\\ \\text{W} \\approx 1.2 \\times 10^{5}\\ L_\\odot', 'Inverse-square law, run backwards: from flux and distance to luminosity.'),
+        eq('R = \\sqrt{\\frac{L}{4\\pi\\sigma T_e^4}} = \\sqrt{\\frac{4.4 \\times 10^{31}}{4\\pi \\times 5.67 \\times 10^{-8} \\times (3600)^4}} \\approx 6.2 \\times 10^{11}\\ \\text{m} \\approx 890\\ R_\\odot \\approx 4.1\\ \\text{AU}', 'Stefan–Boltzmann, run backwards: a star that cool and that luminous must be enormous.'),
+        eq('\\lambda_{\\max} = \\frac{2.898 \\times 10^{6}\\ \\text{nm K}}{3600\\ \\text{K}} \\approx 805\\ \\text{nm}', 'Wien\'s law: the peak is in the near infrared.'),
+        p('Put Betelgeuse where the Sun is and its surface would reach beyond the orbit of Mars, swallowing the Earth. It is a red supergiant — a star near the end of its life, puffed up to a size at which its average density is a ten-millionth of the air you are breathing. The temperature that makes it red also makes it, square metre for square metre, a feeble radiator; it is luminous only because it has an almost unimaginable number of square metres.'),
+        note('Betelgeuse\'s distance is genuinely uncertain — estimates range from about 150 to 220 pc, and the star is so large that its own disc confuses the parallax measurement. Since L ∝ d² and R ∝ d, a 30 % error in distance becomes a 70 % error in luminosity. In 2019–20 the star dimmed by more than a magnitude when it ejected a cloud of dust; such episodes make its "true" brightness a moving target.', 'A caution about the numbers'),
+      ],
+    },
+    {
+      id: 'blackbody-summary',
+      kicker: 'Section close',
+      title: 'What to remember',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'A blackbody absorbs everything and emits a continuous spectrum fixed by its temperature alone. Stars are approximate blackbodies.',
+          'Wien\'s law: λ_max T = 2.898 × 10⁶ nm K. Hotter → bluer. Sun 502 nm, Betelgeuse 805 nm, Rigel 242 nm.',
+          'Stefan–Boltzmann: surface flux σT⁴; luminosity L = 4πR²σT_e⁴. This defines the effective temperature.',
+          'Hotter curves lie above cooler ones at every wavelength; they never cross.',
+          'Flux + distance → L; L + T → R. Betelgeuse: 1.2 × 10⁵ L☉, R ≈ 890 R☉ ≈ 4 AU.',
+        ),
+        p('These laws were found by experiment and thermodynamics. Nobody could derive the <em>shape</em> of the blackbody curve from first principles — and when they tried, classical physics gave an answer so wrong it has been called a catastrophe.'),
+      ],
+    },
+  ],
+};
+
+const S3_5: Section = {
+  id: 'quantization',
+  number: '3.5',
+  title: 'The Quantization of Energy',
+  summary: 'Classical physics predicts infinite ultraviolet light from every warm object. Planck\'s desperate fix — energy in packets of hν — gives the correct blackbody formula and starts quantum mechanics.',
+  minutes: 18,
+  steps: [
+    {
+      id: 'catastrophe',
+      kicker: 'Interactive · the crisis',
+      title: 'The ultraviolet catastrophe',
+      widget: { type: 'blackbody', mode: 'catastrophe' },
+      body: [
+        p('By 1900 the blackbody curve had been measured precisely in Berlin, and the theorists set out to derive it. Lord Rayleigh (and later James Jeans) did it the honest classical way: count the standing electromagnetic waves that fit inside a hot cavity, and give each one the average thermal energy kT that classical statistical mechanics assigns to every oscillator. The result:'),
+        eq('B_\\lambda(T) \\approx \\frac{2ckT}{\\lambda^4}', 'The Rayleigh–Jeans law. It fits the measurements beautifully at long wavelengths — and goes to infinity as λ → 0.'),
+        p('Look at the dashed curve in the widget. At long wavelengths it hugs the data. But there is no limit to how many short-wavelength waves fit in a box, and each gets the same kT, so the predicted intensity climbs without bound into the ultraviolet. Integrate over all wavelengths and every warm object should radiate <em>infinite</em> power — your coffee cup should vaporise you with gamma rays. Ehrenfest later called this the <em>ultraviolet catastrophe</em>. The failure was not of a detail but of classical physics itself.'),
+        p('Wilhelm Wien had earlier guessed a formula, B_λ ∝ λ⁻⁵ e^{−b/λT}, that worked at <em>short</em> wavelengths and failed at long ones (the dotted curve). Two half-right formulas, each wrong where the other was right. Max Planck, who had spent years on the thermodynamics of radiation, set out in October 1900 to find a single expression that joined them.'),
+        key('The Rayleigh–Jeans law is not a mistake in algebra; it is the correct consequence of classical physics. Its failure showed that something fundamental about energy and oscillators was missing.'),
+      ],
+    },
+    {
+      id: 'planck',
+      kicker: 'The formula',
+      title: 'Planck\'s function',
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('Planck first found the right formula by interpolating between Wien and Rayleigh–Jeans — "a lucky guess", he called it. Then he spent the "most strenuous weeks of my life" trying to derive it. He succeeded only by making an assumption he himself called "an act of desperation": the oscillators in the cavity walls could not have any energy they liked. Their energy had to be a whole-number multiple of a smallest unit proportional to the frequency.'),
+        eq('E = n\\,h\\nu \\qquad n = 0, 1, 2, \\ldots \\qquad h = 6.626 \\times 10^{-34}\\ \\text{J s}', 'Planck\'s quantum hypothesis. The constant h — Planck\'s constant — is new to physics and sets the scale of the quantum world.'),
+        eq('B_\\lambda(T) = \\frac{2hc^2/\\lambda^5}{e^{hc/(\\lambda k T)} - 1}', 'The Planck function in wavelength form: intensity per unit wavelength, per unit solid angle, in W m⁻³ sr⁻¹. The −1 in the denominator is the whole story.'),
+        eq('B_\\nu(T) = \\frac{2h\\nu^3/c^2}{e^{h\\nu/(kT)} - 1}', 'The same function per unit frequency. Note B_ν dν = B_λ dλ with dν = −(c/λ²) dλ, so the peak of B_ν is <em>not</em> at ν = c/λ_max.'),
+        p('Check its two ends. For long wavelengths, hc/λkT ≪ 1, and e^x − 1 ≈ x, so B_λ → 2hc²/λ⁵ × λkT/hc = 2ckT/λ⁴: Rayleigh–Jeans, with Planck\'s constant cancelling out — classical physics is the low-frequency limit of quantum physics. For short wavelengths, hc/λkT ≫ 1 and the −1 is negligible, giving Wien\'s exponential. In between, the exponential wins over the λ⁻⁵ and the curve turns over: the catastrophe is gone.'),
+        history('Planck presented the formula to the German Physical Society on 14 December 1900 — the date usually given as the birth of quantum theory. He regarded the quantisation as a mathematical device and spent years hoping to remove it. He never could. He received the Nobel Prize in 1918.'),
+      ],
+    },
+    {
+      id: 'why-it-works',
+      kicker: 'Interactive · the mechanism',
+      title: 'Why quantisation tames the ultraviolet',
+      widget: { type: 'quantum' },
+      body: [
+        p('Why does chopping energy into packets of hν cure the catastrophe? Because of a mismatch between the rungs of the ladder and the thermal energy available to climb it. In a cavity at temperature T, the chance that an oscillator has energy E is proportional to the Boltzmann factor e^{−E/kT}. Classically E is continuous and the <em>average</em> energy is always kT, whatever the frequency. With rungs at 0, hν, 2hν, … the average becomes:'),
+        eq('\\langle E \\rangle = \\frac{h\\nu}{e^{h\\nu/(kT)} - 1}', 'The average energy of a quantised oscillator in thermal equilibrium. Multiply by the number of modes per unit volume and you have Planck\'s law.'),
+        p('Use the widget. At low frequency the rungs are close together compared with kT; many are occupied and the average is almost exactly kT, as classical physics says. Raise the frequency: the first rung, hν, moves above kT. Now the oscillator almost never has enough energy to reach even the first step — the Boltzmann factor e^{−hν/kT} crushes it — and its average energy plunges toward zero. High-frequency modes are <em>frozen out</em>. There are still infinitely many of them, but they carry no energy.'),
+        p('Five years later, in 1905, Einstein took the hypothesis more seriously than Planck did. If oscillators exchange energy in packets of hν, perhaps the light <em>itself</em> comes in packets. His light quanta — later called <em>photons</em> — explained the photoelectric effect and earned him his Nobel Prize. Newton\'s corpuscles were back, now with a wavelength attached.'),
+        eq('E_{\\text{photon}} = h\\nu = \\frac{hc}{\\lambda} \\qquad hc = 1240\\ \\text{eV nm}', 'A photon of green light (500 nm) carries 2.5 eV; an X-ray photon of 1 nm carries 1240 eV; a 21-cm radio photon 6 µeV. The electron-volt, 1.602 × 10⁻¹⁹ J, is the natural unit.'),
+        think('Starlight at 500 nm delivers about 10⁻⁸ W m⁻² to your eye from a bright star. How many photons per second enter a 7 mm pupil? (About 10⁵ — enough that you never notice the graininess. Now repeat for a magnitude-30 galaxy in a 6.5-m telescope: a few photons per <em>minute</em>.)'),
+      ],
+    },
+    {
+      id: 'consequences',
+      kicker: 'Derivation',
+      title: 'Everything in Section 3.4 falls out of Planck\'s law',
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('Planck\'s function is not just a curve-fit; it <em>contains</em> the empirical laws. Set the derivative of B_λ with respect to λ to zero and you find the peak, where the dimensionless combination x = hc/(λkT) satisfies x = 5(1 − e^{−x}), whose solution is x = 4.965:'),
+        eq('\\lambda_{\\max} T = \\frac{hc}{4.965\\,k} = 2.898 \\times 10^{-3}\\ \\text{m K}', 'Wien\'s displacement law, now derived, with its constant expressed in h, c and k.'),
+        eq('\\int_0^\\infty \\pi B_\\lambda(T)\\,d\\lambda = \\sigma T^4 \\qquad \\sigma = \\frac{2\\pi^5 k^4}{15\\,c^2 h^3}', 'Integrate over all wavelengths (and over the hemisphere, which gives the factor π) and the Stefan–Boltzmann law appears, with σ built from fundamental constants. Measuring σ and the Wien constant is thus a way to measure h and k.'),
+        p('For astronomy the useful quantities are the <em>monochromatic</em> luminosity and flux — the power emitted or received in a narrow wavelength interval dλ. For a spherical blackbody of radius R, seen from distance r:'),
+        eq('L_\\lambda\\,d\\lambda = 4\\pi R^2\\,\\pi B_\\lambda\\,d\\lambda \\qquad F_\\lambda\\,d\\lambda = \\pi B_\\lambda \\left(\\frac{R}{r}\\right)^2 d\\lambda', 'Surface area × emitted flux per wavelength; and the inverse-square law applied wavelength by wavelength. These are what a spectrograph measures.'),
+        key('Planck\'s law is the bridge between the microscopic (h, the quantum) and the astronomical (the colours and luminosities of stars). It is why a measured spectrum can be converted to a temperature, and why that temperature, with a radius, gives a luminosity.'),
+      ],
+    },
+    {
+      id: 'quantization-summary',
+      kicker: 'Section close',
+      title: 'What to remember',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Rayleigh–Jeans (classical): B_λ = 2ckT/λ⁴ — right at long λ, infinite at short λ: the ultraviolet catastrophe.',
+          'Planck (1900): oscillator energies are quantised, E = nhν, h = 6.626 × 10⁻³⁴ J s.',
+          'Planck function: B_λ = (2hc²/λ⁵)/(e^{hc/λkT} − 1). Limits: Rayleigh–Jeans for hc/λkT ≪ 1, Wien for ≫ 1.',
+          'High-frequency modes are frozen out because hν ≫ kT; ⟨E⟩ = hν/(e^{hν/kT} − 1).',
+          'Photons: E = hν = hc/λ (hc = 1240 eV nm). Wien\'s law and σ = 2π⁵k⁴/(15c²h³) follow from Planck\'s law.',
+        ),
+        p('We can now predict exactly how much light a star of given temperature emits at every wavelength. The last step is to turn that around: measure a star through a few coloured filters and read off its temperature.'),
+      ],
+    },
+  ],
+};
+
+const S3_6: Section = {
+  id: 'color-index',
+  number: '3.6',
+  title: 'The Color Index',
+  summary: 'Three filters, two numbers: the UBV system, how B−V measures temperature, the colour–colour diagram, and the bolometric correction that recovers the light our eyes cannot see.',
+  minutes: 18,
+  steps: [
+    {
+      id: 'ubv',
+      kicker: 'The system',
+      title: 'Measuring colour with filters: the UBV system',
+      scene: [goto('Vega', 'star'), rate(1)],
+      body: [
+        p('A full spectrum of every star is expensive. A cheaper way to capture the <em>shape</em> of the blackbody curve is to measure a star\'s brightness through a few standard coloured filters and compare the results. The standard set, defined by Harold Johnson and William Morgan in 1953, has three: U for ultraviolet, B for blue and V for "visual" (yellow-green, matching the eye). Each filter passes a band roughly 100 nm wide.'),
+        table(['Filter', 'Central wavelength', 'Bandwidth', 'Magnitude'],
+          [
+            ['U — ultraviolet', '365 nm', '≈ 68 nm', 'U'],
+            ['B — blue', '440 nm', '≈ 98 nm', 'B'],
+            ['V — visual', '550 nm', '≈ 89 nm', 'V'],
+          ], 'The Johnson–Morgan UBV system. V magnitudes are close to the eye\'s "apparent magnitude" of Section 3.2; the Sun has V = −26.74.'),
+        p('A star\'s U, B and V magnitudes are its apparent magnitudes through each filter. The zero points are set so that an A0 star like Vega has U = B = V — its colours are all zero by definition. Absolute magnitudes exist for each filter too (M_U, M_B, M_V); the distance modulus is the same for all of them, since distance does not care about colour:'),
+        eq('U - M_U = B - M_B = V - M_V = 5\\log_{10}\\!\\left(\\frac{d}{10\\ \\text{pc}}\\right)', 'One distance modulus for all filters — which is why magnitude <em>differences</em> between filters are distance-independent.'),
+        key('Subtracting two filter magnitudes cancels the distance entirely. What remains measures only the <em>shape</em> of the spectrum — and the shape of a blackbody spectrum is set by temperature.'),
+      ],
+    },
+    {
+      id: 'color-index',
+      kicker: 'Interactive · colour and temperature',
+      title: 'B − V: a thermometer you can read with two measurements',
+      widget: { type: 'colorindex' },
+      body: [
+        p('The <em>colour indices</em> are the differences between filter magnitudes, by convention shorter wavelength minus longer:'),
+        eq('U - B = M_U - M_B \\qquad B - V = M_B - M_V', 'Independent of distance. Remember magnitudes run backwards: a <em>large</em> B − V means the star is fainter in B than in V — it is <em>red</em>. A negative B − V means more blue than yellow light: a blue star.'),
+        p('In the widget the three filter bands sit over a blackbody spectrum. Slide the temperature. For a hot star the curve rises toward the blue, so more light gets through B than V, B is numerically smaller, and B − V is negative. For a cool star the curve climbs toward the red and B − V becomes large and positive. One index, two photometric measurements, and you have the temperature.'),
+        table(['Star', 'T_e (K)', 'B − V', 'U − B', 'Colour'],
+          [
+            ['Rigel', '12 100', '−0.03', '−0.66', 'blue-white'],
+            ['Vega', '9 600', '0.00', '0.00', 'white (by definition)'],
+            ['Sirius', '9 940', '+0.00', '−0.05', 'white'],
+            ['Sun', '5 772', '+0.65', '+0.17', 'yellow'],
+            ['Arcturus', '4 290', '+1.23', '+1.27', 'orange'],
+            ['Betelgeuse', '3 600', '+1.85', '+2.06', 'red'],
+          ], 'Measured colour indices of real stars. B − V runs from about −0.3 for the hottest stars to about +2 for the coolest.'),
+        example('Suppose a star is measured at B = 10.52 and V = 9.87, so B − V = +0.65 — the same as the Sun. For a blackbody that colour corresponds to T ≈ 5 800 K (a widely used empirical fit is T ≈ 4600 K × [1/(0.92(B−V) + 1.70) + 1/(0.92(B−V) + 0.62)], which gives 5 770 K). Without knowing its distance we have taken its temperature.'),
+        think('Stars are not perfect blackbodies, and the widget\'s U − B for an A-type star like Vega is slightly off the real value. The culprit is hydrogen: at ≈ 10 000 K the atmosphere absorbs strongly just shortward of 365 nm (the <em>Balmer jump</em>), stealing light from the U band. Why does this make the <em>colour–colour</em> diagram useful for identifying a star\'s type as well as its temperature?'),
+      ],
+    },
+    {
+      id: 'color-color',
+      kicker: 'Concept',
+      title: 'The colour–colour diagram',
+      scene: [goto('l-pleiades', 'landmark'), rate(1)],
+      body: [
+        p('Plot U − B against B − V for a sample of stars and you get a <em>colour–colour diagram</em>. Blackbodies of every temperature fall on a single smooth line. Real stars trace a line that is close to it but wiggles: hot O and B stars lie near the blackbody line, A stars (like Vega) sit <em>above</em> it in U − B because the Balmer jump removes ultraviolet light, and cool stars drift away because molecular bands eat into their spectra.'),
+        p('Those departures are not noise; they are information. The vertical offset from the blackbody line measures the strength of the Balmer jump, which depends on the surface gravity of the star — a giant and a dwarf of the same temperature separate. Interstellar dust moves a star along a known diagonal (reddening both indices), so the diagram also measures how much dust lies in front of a star cluster like the Pleiades.'),
+        key('Three magnitudes give two colours. One colour is a thermometer; two colours together begin to tell you what <em>kind</em> of star you are looking at and what lies between you and it. This is the cheapest spectroscopy there is, and for faint stars it is the only kind possible.'),
+        note('The UBV system has been extended with R and I (red and near-infrared) and joined by many others — the Sloan ugriz filters, the Gaia G/BP/RP bands, the 2MASS JHK infrared bands. The idea is always the same: magnitude differences between bands measure spectral shape, free of distance.', 'Beyond UBV'),
+      ],
+    },
+    {
+      id: 'bolometric',
+      kicker: 'Definition',
+      title: 'The bolometric correction: counting all the light',
+      scene: [goto('Betelgeuse', 'star'), rate(1)],
+      body: [
+        p('All the magnitudes so far have been measured through filters, so each misses most of the spectrum. The <em>bolometric magnitude</em> m_bol counts the flux at <em>all</em> wavelengths — the quantity that connects to luminosity through the inverse-square law. The difference between it and the visual magnitude is the <em>bolometric correction</em> BC:'),
+        eq('BC = m_{\\text{bol}} - V = M_{\\text{bol}} - M_V', 'Always zero or negative in this convention: the total light is at least as much as what V alone sees, so m_bol ≤ V.'),
+        p('For a star like the Sun, whose spectrum peaks near the V band, the correction is tiny: BC☉ = −0.07, M_bol,☉ = +4.74. For stars whose light is mostly outside the visible it is large. Betelgeuse radiates mainly in the infrared and has BC ≈ −1.6; a hot O star radiates mainly in the ultraviolet and can have BC ≈ −4. The correction depends almost entirely on temperature, so once B − V has given you T, a table gives you BC.'),
+        eq('\\frac{L}{L_\\odot} = 10^{\\,0.4\\,(M_{\\text{bol},\\odot} - M_{\\text{bol}})} = 10^{\\,0.4\\,(4.74 - M_{\\text{bol}})}', 'Bolometric absolute magnitude to luminosity — the only version of the magnitude–luminosity relation that is exact.'),
+        example('Betelgeuse again, this time properly. V ≈ +0.45, BC ≈ −1.6 → m_bol ≈ −1.15. With d ≈ 168 pc the distance modulus is 6.13, so M_bol ≈ −7.3. Then L/L☉ = 10^{0.4 × (4.74 + 7.3)} = 10^{4.8} ≈ 65 000 — compared with the 15 000 we got from visual light alone in Section 3.2. Including the infrared quadruples the luminosity, and brings it in line with the 10⁵ L☉ of the Stefan–Boltzmann estimate in Section 3.4 (within the large uncertainty in Betelgeuse\'s distance).'),
+      ],
+    },
+    {
+      id: 'the-toolkit',
+      kicker: 'Synthesis',
+      title: 'The toolkit, assembled',
+      scene: [goto('Rigel', 'star'), rate(1)],
+      body: [
+        p('Step back and look at what this chapter has built. With a parallax, three filter magnitudes and the physics of blackbodies, we can take a point of light we will never visit and determine its distance, its temperature, its total power output and its size. Here is the chain, applied to Rigel in front of you:'),
+        list(
+          'Parallax p ≈ 3.8 mas → d = 1/p ≈ 260 pc (Section 3.1).',
+          'V = +0.13, B − V = −0.03 → T_e ≈ 12 000 K from the colour index (Section 3.6).',
+          'BC ≈ −0.8 at that temperature → m_bol ≈ −0.67; distance modulus 7.1 → M_bol ≈ −7.8 → L ≈ 10^{0.4 × 12.5} ≈ 10⁵ L☉ (Sections 3.2, 3.6).',
+          'L = 4πR²σT⁴ → R = √(L/4πσT⁴) ≈ 5.5 × 10¹⁰ m ≈ 79 R☉ (Section 3.4).',
+          'λ_max = 2.898 × 10⁶ / 12 000 ≈ 240 nm — Rigel\'s peak is in the ultraviolet; we see its blue tail (Section 3.4).',
+        ),
+        p('Betelgeuse and Rigel, the two shoulders of Orion, turn out to have nearly the same luminosity — about a hundred thousand Suns — delivered in opposite ways: Betelgeuse cool and vast, Rigel hot and merely large. Both are supergiants near the ends of their lives, and both will end as supernovae. Everything that let us say that came from measuring light: its direction, its amount and its colour.'),
+        key('Direction gives distance (parallax). Amount gives flux, and with distance, luminosity (magnitudes, inverse square). Colour gives temperature (blackbody laws, colour index). Luminosity and temperature together give size (Stefan–Boltzmann). This is the foundation on which every later chapter stands.'),
+      ],
+    },
+    {
+      id: 'chapter-close',
+      kicker: 'Chapter close',
+      title: 'The continuous spectrum in one page',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Parallax: d = 1/p (pc, arcsec). 1 pc = 3.26 ly. Gaia measures ≈ 2 × 10⁹ stars to tens of µas.',
+          'Magnitudes: 5 mag = ×100. m − M = 5 log₁₀(d/10 pc). F = L/4πr². M☉ = +4.74.',
+          'Light is an electromagnetic wave (Young, Maxwell): c = λν; interference d sin θ = nλ.',
+          'Blackbody: λ_max T = 2.898 × 10⁶ nm K; L = 4πR²σT_e⁴.',
+          'Planck: B_λ = (2hc²/λ⁵)/(e^{hc/λkT} − 1); E = hν; classical physics is the hν ≪ kT limit.',
+          'Colour index B − V measures T; bolometric correction recovers the light outside V; M_bol → L exactly.',
+        ),
+        { kind: 'callout', tone: 'history', title: 'Suggested reading', html: 'J. B. Hearnshaw, <em>The Measurement of Starlight: Two Centuries of Astronomical Photometry</em> (1996), for how magnitudes became a science; Thomas Kuhn, <em>Black-Body Theory and the Quantum Discontinuity, 1894–1912</em> (1978), on what Planck did and did not believe he had done; Alan Hirshfeld, <em>Parallax: The Race to Measure the Cosmos</em> (2001), on Bessel, Henderson and Struve. For the Gaia mission, the ESA Gaia archive and data-release papers (Gaia Collaboration 2016, 2023).' },
+        { kind: 'callout', tone: 'think', title: 'Problems to try', html: '(1) Gaia measures a parallax of 2.50 ± 0.03 mas. Find the distance in parsecs and light years, with its uncertainty. (2) Show that B_ν peaks at ν_max = 2.82 kT/h, and that c/ν_max ≠ λ_max. Why? (3) A star has U = 8.42, B = 8.11, V = 7.90. Compute its colour indices, estimate its temperature, and say roughly where it falls on the colour–colour diagram. (4) The Sun\'s surface flux is σT⁴ ≈ 63 MW m⁻². How much is radiated per square metre at the Earth\'s orbit? (5) How many photons per second does a 100 W light bulb emit if all its power were at 550 nm?' },
+      ],
+    },
+  ],
+};
+
 export const COURSE: Course = {
   id: 'astrophysics',
   title: 'Introduction to Astrophysics',
@@ -1066,6 +1662,13 @@ export const COURSE: Course = {
       title: 'Celestial Mechanics',
       summary: 'Kepler\'s laws of planetary motion, Newton\'s laws and gravity, how the one set follows from the other, and the virial theorem that weighs the universe.',
       sections: [S2_1, S2_2, S2_3, S2_4],
+    },
+    {
+      id: 'ch3',
+      number: 3,
+      title: 'The Continuous Spectrum of Light',
+      summary: 'Distance from parallax, brightness from magnitudes, temperature from colour: the physics of light that turns a point in the sky into a star with a size and a luminosity.',
+      sections: [S3_1, S3_2, S3_3, S3_4, S3_5, S3_6],
     },
   ],
 };
