@@ -66,7 +66,21 @@ export type WidgetSpec =
   /** Planck's quantum ladder: an oscillator's allowed energies nhν and their Boltzmann occupation at T */
   | { type: 'quantum' }
   /** UBV filters over a blackbody spectrum → B−V, U−B and the colour–colour diagram */
-  | { type: 'colorindex' };
+  | { type: 'colorindex' }
+  /** Michelson–Morley interferometer: ether-wind prediction vs the observed null result */
+  | { type: 'michelson' }
+  /** Galilean vs relativistic velocity addition */
+  | { type: 'velocityadd' }
+  /** Minkowski spacetime diagram with a boosted frame and a draggable event */
+  | { type: 'minkowski' }
+  /** Einstein's train: two lightning strikes, two observers, relativity of simultaneity */
+  | { type: 'train' }
+  /** two light clocks, one at rest and one moving: time dilation */
+  | { type: 'lightclock' }
+  /** cosmic-ray muons reaching the ground: classical vs relativistic survival */
+  | { type: 'muon' }
+  /** relativistic momentum, kinetic energy, γ against β; the energy–momentum triangle */
+  | { type: 'relenergy' };
 
 export type SceneCue =
   | { action: 'goto'; ref: string; kind?: 'body' | 'blackhole' | 'star' | 'landmark' | 'galaxy' }
@@ -1644,6 +1658,365 @@ const S3_6: Section = {
   ],
 };
 
+/* ================================================================================ */
+/*  Chapter 4 — The Theory of Special Relativity                                    */
+/* ================================================================================ */
+
+const S4_1: Section = {
+  id: 'galilean-failure',
+  number: '4.1',
+  title: 'The Failure of the Galilean Transformations',
+  summary: 'Light needed a medium, the medium needed a rest frame, and the rest frame refused to show itself: the ether, Galileo\'s relativity, and the experiment that found nothing.',
+  minutes: 16,
+  steps: [
+    {
+      id: 'ether',
+      kicker: 'The problem',
+      title: 'What does light wave in?',
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('Maxwell had shown (Section 3.3) that light is a wave of electric and magnetic fields travelling at c = 1/√(ε₀μ₀). Every wave physicists knew had a medium: sound waves in air, ripples on water, vibrations on a string. So light, they reasoned, must travel through a medium too — a weightless, perfectly transparent, perfectly rigid substance filling all of space. They called it the <em>luminiferous ether</em>.'),
+        p('The ether raised an immediate question. Maxwell\'s equations give one speed, c, with no reference to who is measuring. Speed relative to what? The natural answer was: relative to the ether. The ether would define a special frame of reference, the one truly at rest, and in that frame alone would light travel at exactly c in all directions. For anyone moving through the ether — and the Earth orbits the Sun at 30 km/s — light should appear a little faster in one direction and a little slower in the other.'),
+        terms(
+          ['Luminiferous ether', 'The hypothetical medium that carried light waves; "luminiferous" means light-bearing.'],
+          ['Inertial reference frame', 'A frame in which Newton\'s first law holds: an object with no net force moves in a straight line at constant speed. Any frame moving at constant velocity relative to an inertial frame is also inertial.'],
+          ['Absolute motion', 'Motion relative to a frame that is at rest in some absolute sense — which, if the ether existed, would be its rest frame.'],
+        ),
+        key('The ether promised something Newton\'s mechanics could never provide: a way to measure <em>absolute</em> motion. Detect the ether wind, and you have found the one frame in the universe that is truly standing still.'),
+      ],
+    },
+    {
+      id: 'galilean',
+      kicker: 'The old rules',
+      title: 'Galilean transformations',
+      scene: [goto('iss'), rate(1)],
+      body: [
+        p('Galileo already understood that mechanics cannot detect uniform motion. Below the deck of a smoothly sailing ship, he wrote, butterflies fly and water drips exactly as they do on land; no experiment inside tells you whether the ship is moving. The mathematics of that idea is the <em>Galilean transformation</em>. Let frame S′ move along the x-axis at speed u relative to frame S, with the origins coinciding at t = 0. Then an event seen at (x, y, z, t) in S is seen in S′ at:'),
+        eq('x\' = x - u\\,t \\qquad y\' = y \\qquad z\' = z \\qquad t\' = t', 'The Galilean transformation. Note the last equation: time is the same for everyone. Newton called it "absolute, true and mathematical time, which flows equably without regard to anything external."'),
+        eq('v_x\' = v_x - u \\qquad a_x\' = a_x', 'Differentiate once: velocities simply add and subtract. Differentiate twice: accelerations are the same in both frames, so F = ma holds in S′ if it holds in S. Newton\'s laws are <em>Galilean invariant</em>.'),
+        p('Now apply the same rule to light. If a flash travels at c in the ether frame S, then in a frame S′ moving at u through the ether it should travel at c − u in the forward direction and c + u backward. Maxwell\'s equations would not hold in S′; they would hold only in the ether frame. The space station in front of you orbits at 7.7 km/s; by the Galilean rule, a laser fired forward from it should outrun one fired backward by 15 km/s.'),
+        think('Galileo\'s ship argument says no <em>mechanical</em> experiment can detect uniform motion. The ether theory says an <em>optical</em> one can. Is there any good reason why the laws of mechanics should obey a relativity principle and the laws of light should not? Einstein thought not — and that single aesthetic judgement is where this chapter is going.'),
+      ],
+    },
+    {
+      id: 'michelson',
+      kicker: 'Interactive · the experiment',
+      title: 'The Michelson–Morley experiment',
+      widget: { type: 'michelson' },
+      scene: [goto('earth'), rate(1)],
+      body: [
+        p('A speed difference of 30 km/s against 300 000 km/s is one part in ten thousand — far too small to time directly. In 1881 Albert Michelson invented an instrument that could see it anyway: the <em>interferometer</em>. A half-silvered mirror splits a beam of light into two perpendicular arms of equal length L. The beams reflect off mirrors at the ends, recombine and interfere, producing fringes. If one arm lies along the ether wind and the other across it, the two round trips take slightly different times:'),
+        eq('t_\\parallel = \\frac{L}{c - u} + \\frac{L}{c + u} = \\frac{2L}{c}\\,\\frac{1}{1 - u^2/c^2} \\qquad t_\\perp = \\frac{2L}{\\sqrt{c^2 - u^2}} = \\frac{2L}{c}\\,\\frac{1}{\\sqrt{1 - u^2/c^2}}', 'Along the wind the light fights upstream and then is carried back; across it, the beam must aim slightly upwind to hit the mirror, like a swimmer crossing a river. The along-wind trip is always longer.'),
+        eq('\\Delta t = t_\\parallel - t_\\perp \\approx \\frac{L}{c}\\,\\frac{u^2}{c^2} \\qquad \\text{fringe shift on rotating by } 90°: \\quad \\frac{2L\\,u^2/c^2}{\\lambda}', 'With L = 11 m (Michelson and Morley folded the path with multiple reflections), λ = 590 nm and u = 30 km/s, the expected shift was about 0.4 fringe. Their instrument could detect 0.01.'),
+        p('Watch the widget. In the ether model the two pulses leave the splitter together and the along-wind pulse returns late; as the apparatus slowly turns, the fringes should march back and forth. Switch to <em>observed</em>: in July 1887, in the basement of a dormitory in Cleveland, on a stone slab floating in mercury to kill vibrations, Michelson and Edward Morley saw <em>nothing</em>. No shift, in any season, at any time of day. The most famous null result in physics.'),
+        history('Michelson was disappointed — he regarded the experiment as a failure and went on to other things, including the first measurement of a star\'s diameter. He received the 1907 Nobel Prize for his instruments. The null result was repeated with ever greater precision for a century; modern versions using optical resonators constrain any anisotropy in c to below one part in 10¹⁷.'),
+      ],
+    },
+    {
+      id: 'aftermath',
+      kicker: 'History',
+      title: 'Trying to save the ether',
+      scene: [goto('earth'), rate(1)],
+      body: [
+        p('Physicists did not give up the ether at once; they patched it. Perhaps the Earth dragged the ether along with it — but that contradicted stellar aberration (Bradley, 1729), which requires the ether to stream freely past the Earth. Perhaps, suggested George FitzGerald in 1889 and Hendrik Lorentz in 1892 independently, motion through the ether <em>physically compresses</em> matter along the direction of travel by exactly the factor √(1 − u²/c²), shortening the along-wind arm just enough to cancel the delay.'),
+        timeline([
+          { when: '1865', title: 'Maxwell', text: 'Light is an electromagnetic wave with a fixed speed c. Relative to what? Presumably the ether.' },
+          { when: '1887', title: 'Michelson & Morley', text: 'No ether wind detected; expected 0.4 fringe, observed < 0.01.' },
+          { when: '1889–92', title: 'FitzGerald, Lorentz', text: 'Hypothesis: moving bodies contract by √(1 − u²/c²). Ad hoc, but it saves the null result.' },
+          { when: '1904', title: 'Lorentz', text: 'Finds the full set of transformations under which Maxwell\'s equations keep their form, including a "local time" t′ that he treats as a mathematical fiction.' },
+          { when: '1905', title: 'Einstein', text: '"On the Electrodynamics of Moving Bodies." Drops the ether entirely, derives the same transformations from two postulates, and takes t′ seriously as real time.' },
+        ]),
+        p('Lorentz had, by 1904, essentially the right equations — but with the wrong story attached. Contraction was a real squeeze caused by the ether; his "local time" was a convenient variable, not what clocks read. Einstein\'s 1905 paper does not mention the Michelson–Morley experiment at all. He reached the same equations from a different direction: not "how does the ether hide itself?" but "what if there is nothing to hide?"'),
+        key('The patches worked, but every one of them was designed to make the ether <em>undetectable</em>. A medium that no experiment can ever reveal is a medium that physics does not need. The next section removes it.'),
+      ],
+    },
+    {
+      id: 'failure-summary',
+      kicker: 'Section close',
+      title: 'What to remember',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'The ether was the supposed medium for light and would have defined an absolute rest frame.',
+          'Galilean transformation: x′ = x − ut, t′ = t; velocities add; Newton\'s laws are invariant but Maxwell\'s equations are not.',
+          'Michelson–Morley (1887) looked for the Earth\'s 30 km/s motion through the ether with an interferometer sensitive to 0.01 fringe. Expected 0.4; found nothing.',
+          'Lorentz and FitzGerald saved the result with an ad hoc contraction √(1 − u²/c²); Lorentz found the full transformations by 1904 but kept the ether.',
+          'The experiment did not disprove the ether; it made it undetectable, which is worse.',
+        ),
+        p('A twenty-six-year-old patent clerk in Bern was about to ask a different question: what if the speed of light really is the same for everyone, and it is our ideas of space and time that have to give?'),
+      ],
+    },
+  ],
+};
+
+const S4_2: Section = {
+  id: 'lorentz-transformations',
+  number: '4.2',
+  title: 'The Lorentz Transformations',
+  summary: 'Two postulates, one set of equations: how Einstein replaced absolute time with the Lorentz transformations, what the factor γ means, and how velocities really add.',
+  minutes: 18,
+  steps: [
+    {
+      id: 'postulates',
+      kicker: 'The foundation',
+      title: 'Einstein\'s two postulates',
+      scene: [goto('earth'), rate(1)],
+      body: [
+        p('In 1905 Albert Einstein, then an examiner at the Swiss patent office, published a paper that began not with an experiment but with an asymmetry he found ugly. A magnet moved past a coil induces a current; a coil moved past a magnet induces the same current — yet Maxwell\'s theory explained the two cases with completely different mechanisms. Einstein decided that nature does not distinguish them, and that the same must be true of all uniform motion. He built the whole theory on two statements:'),
+        list(
+          '<b>The principle of relativity.</b> The laws of physics are the same in every inertial reference frame. No experiment — mechanical, optical, or any other — can detect absolute uniform motion.',
+          '<b>The constancy of the speed of light.</b> Light in vacuum travels at the same speed c in every inertial frame, regardless of the motion of the source or the observer.',
+        ),
+        p('The first postulate extends Galileo\'s ship to all of physics, and it is what makes the ether superfluous: if there is no way to detect the ether frame, it plays no role. The second postulate is the shocking one. It says that if you chase a light beam at 0.99c, you will still measure it passing you at c, not 0.01c. The Galilean rule v′ = v − u is simply wrong for light. And if it is wrong for light, it is wrong in general; it merely happens to be a very good approximation at the speeds we are used to.'),
+        key('Both postulates are statements about <em>symmetry</em>: no frame is special, and c is a constant of nature, not a speed relative to something. Everything strange in this chapter — slowed clocks, shortened rods, the end of simultaneity — is forced by these two sentences together.'),
+        history('Einstein published four landmark papers in 1905, his <em>annus mirabilis</em>: the photoelectric effect (light quanta), Brownian motion (the reality of atoms), special relativity, and E = mc². He was 26 and had been unable to get an academic job.'),
+      ],
+    },
+    {
+      id: 'derivation',
+      kicker: 'Derivation',
+      title: 'From the postulates to the transformations',
+      scene: [goto('earth'), rate(1)],
+      body: [
+        p('Let frame S′ move at speed u along the x-axis of frame S, origins coinciding at t = t′ = 0. Suppose a flash of light leaves the common origin at that instant. In S the light forms a sphere x² + y² + z² = c²t². By the second postulate it must <em>also</em> form a sphere in S′, centred on S′\'s origin: x′² + y′² + z′² = c²t′². The Galilean transformation cannot satisfy both. Ask instead for the most general linear transformation that does, and the answer is unique:'),
+        eq('x\' = \\gamma\\,(x - u\\,t) \\qquad y\' = y \\qquad z\' = z \\qquad t\' = \\gamma\\left(t - \\frac{u\\,x}{c^2}\\right)', 'The Lorentz transformation from S to S′.'),
+        eq('\\gamma \\equiv \\frac{1}{\\sqrt{1 - u^2/c^2}} \\geq 1', 'The Lorentz factor. It is 1 at rest and grows without bound as u → c. We will also write β = u/c, so γ = 1/√(1 − β²).'),
+        p('Two things leap out. First, time is no longer universal: t′ depends on t <em>and</em> on x. Two clocks at different places that agree in S do not agree in S′. Second, when u ≪ c, γ → 1 and ux/c² → 0, so the equations shrink back to Galileo\'s. Relativity does not overthrow Newton; it contains him as a low-speed limit. The inverse transformation is obtained by swapping primes and changing the sign of u — exactly as the first postulate demands, since S moves at −u relative to S′:'),
+        eq('x = \\gamma\\,(x\' + u\\,t\') \\qquad t = \\gamma\\left(t\' + \\frac{u\\,x\'}{c^2}\\right)', 'The inverse Lorentz transformation. Neither frame is privileged.'),
+        table(['u', 'β = u/c', 'γ', 'What it means'],
+          [
+            ['30 km/s (Earth\'s orbit)', '10⁻⁴', '1.000 000 005', 'Galileo is right to 9 decimal places'],
+            ['0.1 c', '0.1', '1.005', 'half a percent'],
+            ['0.5 c', '0.5', '1.155', 'noticeable'],
+            ['0.9 c', '0.9', '2.294', 'clocks run at less than half speed'],
+            ['0.99 c', '0.99', '7.09', 'a seven-fold stretch'],
+            ['0.9999 c', '0.9999', '70.7', 'LHC protons reach γ ≈ 7000'],
+          ]),
+      ],
+    },
+    {
+      id: 'spacetime',
+      kicker: 'Interactive · geometry',
+      title: 'Spacetime diagrams',
+      widget: { type: 'minkowski' },
+      body: [
+        p('The Lorentz transformation has a picture, invented by Einstein\'s former mathematics teacher Hermann Minkowski in 1908. Plot position x horizontally and time — multiplied by c so it has units of length — vertically. Every <em>event</em> (something happening at one place at one instant) is a point. A particle\'s history is a curve, its <em>world line</em>. Light moves one unit of x per unit of ct, so light rays are lines at 45°; together they form the <em>light cone</em> of an event.'),
+        p('Now add the moving frame S′. Its time axis (x′ = 0) is the world line of its origin, x = ut — a line tilted from vertical by the angle whose tangent is β. Its space axis (t′ = 0) is the set of events S′ calls simultaneous with the origin, ct = βx — a line tilted from horizontal by the <em>same</em> angle. The two axes close like scissors toward the light cone as β → 1. Drag the event in the widget and read off its coordinates in both frames.'),
+        eq('(c\\,t)^2 - x^2 = (c\\,t\')^2 - x\'^2 \\equiv s^2', 'The <em>spacetime interval</em>. Lengths and durations change between frames; this combination does not. It is the relativistic analogue of distance, with the crucial minus sign.'),
+        key('Two observers disagree about where and when an event happened, but they agree on the interval s². If s² > 0 the events are <em>timelike</em> separated — a clock could travel between them, and all observers agree on their order. If s² < 0 they are <em>spacelike</em> — nothing can connect them, and observers may disagree about which came first. The light cone, s² = 0, is the boundary.'),
+        think('The tilted x′-axis is the key to everything in Section 4.3. Events on it all happen "at the same time" for S′ — yet they lie at different heights, i.e. at different S-times. Which frame is right about simultaneity? Both. Neither. The question has no frame-independent answer.'),
+      ],
+    },
+    {
+      id: 'velocity-addition',
+      kicker: 'Interactive · consequence',
+      title: 'How velocities really add',
+      widget: { type: 'velocityadd' },
+      body: [
+        p('A rocket moves at u relative to you and fires a probe forward at v′ relative to itself. How fast is the probe relative to you? Galileo says u + v′. The Lorentz transformation says otherwise. Differentiate x = γ(x′ + ut′) and t = γ(t′ + ux′/c²), divide, and the γ cancels:'),
+        eq('v = \\frac{v\' + u}{1 + u\\,v\'/c^2}', 'Relativistic velocity addition for motion along the line of relative velocity. For u, v′ ≪ c the denominator is 1 and Galileo returns.'),
+        p('Try the extremes in the widget. Two speeds of 0.9c combine to 0.994c, not 1.8c. Set v′ = c — the probe is a light beam — and the result is c no matter what u is: the second postulate falls out of the formula automatically. No combination of sub-light speeds ever reaches c. The speed of light is not a fast speed; it is the structure of the addition rule itself.'),
+        example('A proton in the LHC moves at 0.999 999 991c. A second proton approaches head-on at the same speed. Galileo: closing speed 1.999 999 98c. Relativity: v = (2 × 0.999 999 991)/(1 + 0.999 999 982) c = 0.999 999 999 999 96c. The collision energy, however, is enormous — Section 4.4 explains why speed is the wrong thing to look at.'),
+        history('In 1851 Hippolyte Fizeau measured the speed of light in flowing water and found it was dragged along by the water, but only partially — by a fraction 1 − 1/n² of the water\'s speed, where n is the refractive index. Nobody could explain the fraction. The relativistic addition formula gives it exactly: add c/n (light in still water) to u (the water\'s speed) and expand for small u. Einstein said this experiment was one of his strongest guides.'),
+      ],
+    },
+    {
+      id: 'lorentz-summary',
+      kicker: 'Section close',
+      title: 'What to remember',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Postulate 1: the laws of physics are the same in all inertial frames. Postulate 2: c is the same in all inertial frames.',
+          'Lorentz transformation: x′ = γ(x − ut), t′ = γ(t − ux/c²), with γ = 1/√(1 − u²/c²). Inverse: swap primes, u → −u.',
+          'Time depends on position: t′ mixes t and x. Simultaneity is frame-dependent.',
+          'Spacetime diagrams: light at 45°; the moving frame\'s axes tilt toward the light cone. The interval (ct)² − x² is invariant.',
+          'Velocity addition: v = (v′ + u)/(1 + uv′/c²). Nothing combines to exceed c; c + anything = c.',
+        ),
+        p('The equations are in hand. Now we ask what they do to the two quantities we thought we understood best: how long things take, and how long things are.'),
+      ],
+    },
+  ],
+};
+
+const S4_3: Section = {
+  id: 'time-and-space',
+  number: '4.3',
+  title: 'Time and Space in Special Relativity',
+  summary: 'What the Lorentz transformations do to clocks and rulers: the relativity of simultaneity, time dilation and its proof in cosmic-ray muons, length contraction, and the relativistic Doppler shift.',
+  minutes: 22,
+  steps: [
+    {
+      id: 'simultaneity',
+      kicker: 'Interactive · the key idea',
+      title: 'The relativity of simultaneity',
+      widget: { type: 'train' },
+      body: [
+        p('Einstein\'s own thought experiment. A train moves along a platform. At the instant the two ends of the train pass marks A and B on the platform, lightning strikes both ends. An observer M standing on the platform midway between A and B receives both flashes at the same moment and, knowing the distances are equal, concludes the strikes were <em>simultaneous</em>. Fair enough.'),
+        p('Now consider an observer M′ sitting at the midpoint of the train. In the platform frame, M′ is moving toward the flash from B and away from the flash from A, so the flash from B reaches her first. But M′ has every right to use her own frame. In it, she is at rest, exactly midway between the two ends, and light from each end travels at the same speed c (postulate 2). If the flash from B arrives first, she must conclude that lightning <em>struck B first</em>. She is not mistaken. In her frame the strikes were not simultaneous.'),
+        eq('\\Delta t\' = -\\gamma\\,\\frac{u\\,\\Delta x}{c^2}', 'From the Lorentz transformation with Δt = 0: two events simultaneous in S and separated by Δx are separated in time by this amount in S′. The farther apart they are and the faster S′ moves, the bigger the disagreement.'),
+        key('Simultaneity is not a fact about the world; it is a fact about a reference frame. "At the same time" has no meaning for events at different places until you say in which frame. This single idea is what makes time dilation and length contraction consistent rather than paradoxical.'),
+        think('Both observers agree on the <em>physical</em> facts: which flash reached M′ first, what each clock read when a flash arrived. They disagree only about the interpretation "simultaneous". Can you find any experiment, in principle, that would settle who is right? (Postulate 1 says no — and that is the point.)'),
+      ],
+    },
+    {
+      id: 'time-dilation',
+      kicker: 'Interactive · time',
+      title: 'Proper time and time dilation',
+      widget: { type: 'lightclock' },
+      body: [
+        p('Build the simplest possible clock: two mirrors a distance h apart, with a light pulse bouncing between them. Each round trip is one tick, lasting Δt₀ = 2h/c. Now watch the same clock move past you at speed u. In your frame the pulse travels a zig-zag path, longer than 2h — but it still moves at c (postulate 2). So each tick takes longer in your frame. By Pythagoras:'),
+        eq('\\left(\\frac{c\\,\\Delta t}{2}\\right)^2 = h^2 + \\left(\\frac{u\\,\\Delta t}{2}\\right)^2 \\quad\\Rightarrow\\quad \\Delta t = \\frac{2h/c}{\\sqrt{1 - u^2/c^2}} = \\gamma\\,\\Delta t_0', 'Time dilation. A moving clock ticks slowly by the factor γ, as seen by an observer it is moving past.'),
+        p('The quantity Δt₀ — the time between two events measured by a clock that is <em>present at both</em> — is the <em>proper time</em> Δτ. It is the shortest time interval any observer can assign to those events, and it is invariant: everybody agrees what the moving clock reads, they just disagree about how much of their own time elapsed meanwhile. In the widget, both clocks\' pulses move at the same speed on your screen; the moving one simply has farther to go.'),
+        p('Is it a trick of light clocks? No. Any clock sitting beside the light clock in the moving frame must agree with it — otherwise the two clocks would drift apart and the observer in that frame could detect her own motion, violating postulate 1. Every process slows: pendulums, heartbeats, radioactive decay, ageing.'),
+        note('Time dilation is symmetric. You see her clock run slow; she sees <em>yours</em> run slow, by the same factor. This is not a contradiction, because the two of you disagree about simultaneity — about which of your ticks lines up with which of hers. The famous "twin paradox" arises only if one twin turns around, which breaks the symmetry: the travelling twin changes inertial frame and comes home younger. The effect is real and has been measured with atomic clocks on aircraft.', 'Whose clock is really slow?'),
+      ],
+    },
+    {
+      id: 'muons',
+      kicker: 'Interactive · the proof',
+      title: 'Muons from the sky',
+      widget: { type: 'muon' },
+      scene: [goto('earth'), rate(1)],
+      body: [
+        p('Cosmic rays striking the upper atmosphere about 15 km up produce <em>muons</em> — heavy cousins of the electron that decay with a mean lifetime of τ = 2.2 µs. Even at nearly the speed of light, 2.2 µs is enough to travel only c τ = 660 m. By classical reckoning, essentially none should survive the 15 km journey to the ground. Yet about 200 muons pass through every square metre of the Earth\'s surface every second. You are being hit by a few right now.'),
+        eq('N = N_0\\,e^{-t/\\tau} \\qquad t_{\\text{Earth}} = \\frac{h}{u} \\qquad t_{\\text{muon}} = \\frac{h}{u\\,\\gamma}', 'Exponential decay. The muon\'s own clock — its proper time — runs slow by γ in the Earth frame, so far fewer lifetimes elapse during the descent.'),
+        example('Frisch and Smith (1963) counted muons moving at 0.995c (γ ≈ 10) on top of Mount Washington (1907 m) and at sea level. Classical prediction: the 1907 m descent takes 6.4 µs ≈ 2.9 lifetimes, so only e^{−2.9} ≈ 5 % should survive — about 27 of their 563 muons per hour. Relativity: the muons experience only 0.64 µs ≈ 0.29 lifetimes, so 75 % survive — about 420. They measured 408 ± 9. Textbook agreement, and one of the clearest confirmations of time dilation ever made.', 'The Frisch–Smith experiment'),
+        p('Slide the speed in the widget and compare the two predictions. At 0.9999c the atmosphere is crossed in what the muon feels as 0.7 µs. Time dilation is not a philosophical nicety; it is why you are being irradiated by particles that, by Newton\'s clock, died ten kilometres above your head.'),
+        key('Time dilation has a thousand confirmations: muon lifetimes, atomic clocks on jets and satellites, the decay of fast particles in accelerators. GPS satellites move at 3.9 km/s and their clocks lose 7 µs per day to special relativity (and gain 45 µs from general relativity). Without the correction, your position would drift by 10 km a day.'),
+      ],
+    },
+    {
+      id: 'length-contraction',
+      kicker: 'Concept',
+      title: 'Length contraction',
+      scene: [goto('voyager1'), rate(1)],
+      body: [
+        p('Return to the muon, but this time ride along with it. In the muon\'s frame it is at rest and lives its ordinary 2.2 µs. How does it reach the ground? Because in its frame the atmosphere is rushing up at 0.995c — and a moving object is <em>shorter</em>. The 15 km of air is contracted to 15 km/γ ≈ 1.5 km, which the ground covers in 5 µs. Same physics, two descriptions: in the Earth frame the muon\'s time is dilated; in the muon\'s frame the Earth\'s length is contracted.'),
+        eq('L = \\frac{L_0}{\\gamma} = L_0\\sqrt{1 - u^2/c^2}', 'Length contraction. L₀ is the <em>proper length</em>, measured in the frame where the object is at rest; L is its length measured in a frame where it moves at u, along the direction of motion only. Perpendicular dimensions are unchanged.'),
+        p('Where does the formula come from? To measure the length of a moving rod you must locate both ends <em>at the same time</em> — and "at the same time" is frame-dependent. Set Δt = 0 in the Lorentz transformation for the two end-events: Δx′ = γ Δx, where Δx′ = L₀ is the rest length and Δx = L is what you measure. Length contraction is the relativity of simultaneity applied to a ruler.'),
+        p('This is the FitzGerald–Lorentz contraction of Section 4.1, but with the story changed. Nothing squeezes the rod; no ether presses on its atoms. Its rest length is unaffected and its own observers notice nothing. The contraction is a statement about how a frame slices spacetime, exactly as the shortening of a shadow is a statement about the angle of the Sun, not about the object.'),
+        think('Voyager 1, in front of you, is the fastest human-made object to leave the solar system: 17 km/s, β = 5.7 × 10⁻⁵. By how much is it contracted along its direction of motion? (About 1.6 × 10⁻⁹ — a few nanometres across its 3.7-metre dish. Relativity is real at every speed; it is just invisibly small at ours.)'),
+      ],
+    },
+    {
+      id: 'doppler',
+      kicker: 'Application',
+      title: 'The relativistic Doppler shift',
+      scene: [goto('Sirius', 'star'), rate(1)],
+      body: [
+        p('Astronomy\'s most used relativistic formula is the Doppler effect. A source emits light of frequency ν_rest in its own frame and moves away from you at speed u. Two things stretch the arriving wave: each successive crest has farther to travel (the classical Doppler effect), and the source\'s clock — which sets the rate at which crests are emitted — runs slow by γ (time dilation). Combined:'),
+        eq('\\nu_{\\text{obs}} = \\nu_{\\text{rest}}\\,\\frac{\\sqrt{1 - u/c}}{\\sqrt{1 + u/c}} \\qquad \\frac{\\lambda_{\\text{obs}}}{\\lambda_{\\text{rest}}} = \\sqrt{\\frac{1 + u/c}{1 - u/c}}', 'Relativistic longitudinal Doppler shift for a source receding at speed u. For approach, change the sign of u. For u ≪ c it reduces to Δλ/λ ≈ u/c.'),
+        eq('z \\equiv \\frac{\\lambda_{\\text{obs}} - \\lambda_{\\text{rest}}}{\\lambda_{\\text{rest}}} \\qquad 1 + z = \\sqrt{\\frac{1 + u/c}{1 - u/c}} \\quad\\Rightarrow\\quad \\frac{u}{c} = \\frac{(1+z)^2 - 1}{(1+z)^2 + 1}', 'The <em>redshift</em> z. A receding source has z > 0 (lines shifted to the red); approaching, z < 0 (blueshift). Note that z can exceed 1 while u stays below c.'),
+        p('Unlike sound, light has no medium, so only the <em>relative</em> velocity matters — there is no separate formula for "source moving" and "observer moving". And relativity predicts something sound cannot: a <em>transverse</em> Doppler shift. A source moving purely across your line of sight is still redshifted by the factor γ, purely from time dilation. This was measured in the 1938 Ives–Stilwell experiment with fast hydrogen atoms, another direct confirmation of the slowing of moving clocks.'),
+        example('A quasar\'s hydrogen line at 121.6 nm (rest) is observed at 486.4 nm: 1 + z = 4.0, z = 3. The naive classical formula u = cz gives three times the speed of light. The relativistic formula gives u/c = (16 − 1)/(16 + 1) = 0.88. (For cosmological distances the redshift is really due to the expansion of space rather than motion through it, and the conversion to a speed needs general relativity — but the lesson stands: z > 1 does not mean faster than light.)'),
+      ],
+    },
+    {
+      id: 'spacetime-summary',
+      kicker: 'Section close',
+      title: 'What to remember',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Simultaneity is relative: events simultaneous in S are separated by Δt′ = −γuΔx/c² in S′.',
+          'Time dilation: Δt = γΔτ. Proper time Δτ is read by a clock present at both events and is the shortest possible interval.',
+          'Proof: cosmic-ray muons (Frisch & Smith 1963), atomic clocks on aircraft, GPS (−7 µs/day).',
+          'Length contraction: L = L₀/γ along the motion. It is the relativity of simultaneity applied to measuring a rod.',
+          'Relativistic Doppler: 1 + z = √((1 + β)/(1 − β)) for recession; transverse shift from time dilation alone.',
+          'The effects are symmetric between frames; only the invariant interval s² = (cΔt)² − (Δx)² is agreed by all.',
+        ),
+        p('Space and time have been rebuilt. Newton\'s mechanics was built on the old ones, so it too needs rebuilding — and the rebuilding produces the most famous equation in physics.'),
+      ],
+    },
+  ],
+};
+
+const S4_4: Section = {
+  id: 'relativistic-energy',
+  number: '4.4',
+  title: 'Relativistic Momentum and Energy',
+  summary: 'Why p = mv cannot survive, what replaces it, how E = mc² falls out of the correction, and the energy–momentum relation that governs everything from the Sun\'s core to the LHC.',
+  minutes: 18,
+  steps: [
+    {
+      id: 'momentum',
+      kicker: 'Interactive · momentum',
+      title: 'Why p = mv has to go',
+      widget: { type: 'relenergy' },
+      body: [
+        p('Conservation of momentum is the backbone of mechanics, and by the first postulate it must hold in every inertial frame. But velocities no longer add Galileo\'s way, and a collision that conserves Σmv in one frame does <em>not</em> conserve it in another once the relativistic velocity addition is used. Either momentum conservation fails — unthinkable — or momentum is not mv. The quantity that <em>is</em> conserved in all frames is:'),
+        eq('\\vec p = \\gamma\\,m\\,\\vec v = \\frac{m\\,\\vec v}{\\sqrt{1 - v^2/c^2}}', 'Relativistic momentum. Here γ is built from the particle\'s own speed v, and m is its mass as measured at rest — the only mass we will ever use.'),
+        p('Look at the momentum curve in the widget. At low speed it hugs the classical line p = mv. Near c it turns upward and goes to infinity: pushing on a particle with a constant force keeps increasing its momentum, but its speed creeps toward c without ever arriving. The speed of light is unreachable not because of some cosmic prohibition but because momentum — the thing a force actually changes — becomes infinite there.'),
+        note('Older books speak of a "relativistic mass" m γ that grows with speed. Modern usage, and this course, keeps mass as an invariant property of the particle and puts the γ with the velocity. The physics is identical; the bookkeeping is cleaner.', 'A word about mass'),
+        key('Newton\'s second law survives in the form F = dp/dt, with the new p. What changes is not the law but the relation between momentum and velocity.'),
+      ],
+    },
+    {
+      id: 'energy',
+      kicker: 'Derivation',
+      title: 'Kinetic energy, rest energy, and E = mc²',
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('Kinetic energy is the work done to bring a particle from rest to speed v: K = ∫F dx = ∫(dp/dt) dx = ∫v dp. Insert the relativistic momentum and integrate (a few lines of calculus, with the substitution dp = m γ³ dv), and the result is startlingly simple:'),
+        eq('K = \\gamma\\,m c^2 - m c^2 = (\\gamma - 1)\\,m c^2', 'Relativistic kinetic energy. Check the low-speed limit: expand γ ≈ 1 + ½v²/c² + ⅜v⁴/c⁴ + …, and K ≈ ½mv² + (3/8)mv⁴/c² + … Newton\'s formula is the first term.'),
+        p('The expression γmc² − mc² invites an interpretation. Call γmc² the <em>total energy</em> E of the particle. Then K is the total energy minus a term that is present even at rest. That term — mc² — must be energy the particle has <em>simply by existing</em>:'),
+        eq('E = \\gamma\\,m c^2 \\qquad E_0 = m c^2 \\qquad E = E_0 + K', 'Total energy, rest energy, and their relation. For v = 0, γ = 1 and E = mc². The most famous equation in physics is the statement that mass is a form of energy.'),
+        p('How much energy? One gram of anything, converted completely, is 9 × 10¹³ J — the output of a large power station for a day. The Sun, in front of you, is running on this equation: fusing four protons into a helium nucleus releases 0.7 % of their mass as energy, and the Sun converts 4.3 million tonnes of mass into light every second (Section 1.4 found this number from L☉/c²). Chemical reactions release mass too — a charged battery is heavier than a dead one — but by parts in 10¹⁰, far too small to weigh.'),
+        history('Einstein published E = mc² (in the form "the mass of a body is a measure of its energy content") in a three-page follow-up to his relativity paper in September 1905. The first experimental confirmation came in 1932, when Cockcroft and Walton split lithium nuclei with protons and found the kinetic energy of the fragments matched the mass lost — to within the 1 % precision of the day.'),
+      ],
+    },
+    {
+      id: 'energy-momentum',
+      kicker: 'Derivation',
+      title: 'The energy–momentum relation',
+      scene: [goto('b0', 'blackhole'), rate(1)],
+      body: [
+        p('Energy and momentum both contain γ, and eliminating it between them gives the relation that physicists actually use. From E = γmc² and p = γmv, compute E² − p²c² = γ²m²c⁴(1 − v²/c²) = m²c⁴. So:'),
+        eq('E^2 = p^2 c^2 + m^2 c^4', 'The energy–momentum relation. The widget draws it as a right triangle: legs pc and mc², hypotenuse E. Boost the particle and the pc leg grows; the mc² leg never changes.'),
+        p('The right-hand side is a Lorentz invariant — every observer measures different E and p, but the same combination E² − p²c². Just as (ct)² − x² is the invariant "length" of a displacement in spacetime, m²c⁴ is the invariant "length" of the energy–momentum vector. Mass is the one thing about a particle that all frames agree on.'),
+        eq('E = p\\,c \\qquad (m = 0) \\qquad\\qquad v = \\frac{p\\,c^2}{E}', 'Set m = 0 and the relation gives E = pc: a massless particle carries momentum p = E/c and, by the second formula, always moves at exactly c. Photons have energy hν (Section 3.5) and therefore momentum hν/c = h/λ — the origin of radiation pressure.'),
+        example('A proton (mc² = 938.3 MeV) in the LHC has total energy 6.8 TeV = 6 800 000 MeV. Its γ is E/mc² = 7250, its speed is c√(1 − 1/γ²) = 0.999 999 990 c, and its momentum pc = √(E² − m²c⁴) ≈ 6.8 TeV — essentially E/c, as for a photon. Its kinetic energy is 6.8 TeV − 0.94 GeV ≈ 6.8 TeV: the rest energy is a rounding error. This is why accelerator physicists quote energies, not speeds; past about 0.99c the speed stops being informative.'),
+      ],
+    },
+    {
+      id: 'applications',
+      kicker: 'Application',
+      title: 'Where relativity runs the universe',
+      scene: [goto('l-sn1987a', 'landmark'), rate(1)],
+      body: [
+        p('Special relativity is sometimes presented as exotic. In astrophysics it is daily business. Every star shines by converting mass to energy. Every spectrum we measure is Doppler shifted and interpreted with the relativistic formula. And the universe is full of matter moving at speeds where γ is not 1.0001 but 10, 1000, or 10¹¹.'),
+        list(
+          '<b>Stellar energy.</b> The Sun\'s luminosity 3.8 × 10²⁶ W is mass loss at 4.3 × 10⁹ kg/s. Over its 10-billion-year life it will convert about 0.07 % of its mass to light.',
+          '<b>Supernovae.</b> The remnant in front of you, SN 1987A, released about 10⁴⁶ J in neutrinos — the rest energy of roughly 0.1 solar masses — in ten seconds. The neutrinos arrived at Earth three hours <em>before</em> the light, because the light had to fight its way out of the collapsing star.',
+          '<b>Jets and cosmic rays.</b> Black holes and pulsars launch particle jets with bulk γ of 10–100. The highest-energy cosmic ray ever detected (1991, the "Oh-My-God particle") was a proton with E ≈ 3 × 10²⁰ eV, γ ≈ 3 × 10¹¹ — the kinetic energy of a baseball at 100 km/h in a single nucleus. In its own frame the Galaxy was 300 light years thick.',
+          '<b>Pair creation and annihilation.</b> A photon with E > 2 m_e c² = 1.022 MeV can become an electron–positron pair; the pair can annihilate back into two 511 keV photons. The 511 keV line glows from the centre of our Galaxy.',
+          '<b>Technology.</b> GPS, particle accelerators, PET scanners, the colour of gold and the liquidity of mercury (relativistic effects on inner electrons) all depend on it.',
+        ),
+        key('Relativity does not replace Newtonian mechanics; it tells us where Newton\'s mechanics is a good approximation (γ ≈ 1) and takes over where it is not. In this course it will return whenever something moves fast: the Doppler shifts of Chapter 5, the degenerate electrons of white dwarfs, the jets of active galaxies, and the expansion of the universe itself.'),
+      ],
+    },
+    {
+      id: 'relativity-close',
+      kicker: 'Chapter close',
+      title: 'Special relativity in one page',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'The ether could not be detected (Michelson–Morley 1887); the Galilean transformation fails for light.',
+          'Einstein 1905: the laws of physics and the speed of light are the same in every inertial frame.',
+          'Lorentz transformation: x′ = γ(x − ut), t′ = γ(t − ux/c²), γ = 1/√(1 − u²/c²). Velocities: v = (v′ + u)/(1 + uv′/c²).',
+          'Simultaneity is relative. Moving clocks run slow (Δt = γΔτ); moving rods are short (L = L₀/γ). Muons prove it daily.',
+          'Doppler: 1 + z = √((1 + β)/(1 − β)). The interval (cΔt)² − (Δx)² is invariant.',
+          'p = γmv, E = γmc², K = (γ − 1)mc², E₀ = mc², E² = p²c² + m²c⁴. Massless particles move at c with E = pc.',
+        ),
+        { kind: 'callout', tone: 'history', title: 'Suggested reading', html: 'Einstein\'s 1905 paper "On the Electrodynamics of Moving Bodies" is short and surprisingly readable (in <em>The Principle of Relativity</em>, Dover). His popular book <em>Relativity: The Special and the General Theory</em> (1916) contains the train thought experiment. Edwin Taylor & John Archibald Wheeler, <em>Spacetime Physics</em> (1992), is the best way to make the spacetime diagram second nature; N. David Mermin, <em>It\'s About Time</em> (2005), builds the whole theory from simultaneity. For the history, Abraham Pais, <em>Subtle is the Lord</em> (1982).' },
+        { kind: 'callout', tone: 'think', title: 'Problems to try', html: '(1) Show that for u ≪ c the Lorentz transformation reduces to the Galilean one, and estimate the first correction term for u = 30 km/s. (2) A spacecraft passes Earth at 0.6c and its crew measures their ship as 100 m long. How long is it in Earth\'s frame, and how long does one hour of ship time take on Earth? (3) Two rockets approach each other, each at 0.75c relative to a space station. What is their relative speed? (4) An electron (mc² = 0.511 MeV) has kinetic energy 1.0 MeV. Find γ, v/c and pc. (5) A galaxy\'s Hα line (656.3 nm) is observed at 720 nm. Find z and, assuming pure Doppler motion, u/c. (6) Reread Einstein\'s train: write down the two strikes as events in the platform frame, Lorentz-transform them into the train frame, and show which came first and by how much.' },
+      ],
+    },
+  ],
+};
+
 export const COURSE: Course = {
   id: 'astrophysics',
   title: 'Introduction to Astrophysics',
@@ -1669,6 +2042,13 @@ export const COURSE: Course = {
       title: 'The Continuous Spectrum of Light',
       summary: 'Distance from parallax, brightness from magnitudes, temperature from colour: the physics of light that turns a point in the sky into a star with a size and a luminosity.',
       sections: [S3_1, S3_2, S3_3, S3_4, S3_5, S3_6],
+    },
+    {
+      id: 'ch4',
+      number: 4,
+      title: 'The Theory of Special Relativity',
+      summary: 'The ether that could not be found, Einstein\'s two postulates, what they do to time and space, and the equation that makes stars shine.',
+      sections: [S4_1, S4_2, S4_3, S4_4],
     },
   ],
 };

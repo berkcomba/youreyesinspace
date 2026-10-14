@@ -1,0 +1,536 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "aftermath": {
+   "script": "Look at the Earth behind the panel. That is where this argument lives: a moving planet.\n\nPhysicists did not give up the ether at once. They patched it. Perhaps the Earth drags the ether with it, so there is no wind. But that contradicts stellar aberration, measured by Bradley in seventeen twenty-nine, which requires the ether to stream freely past the Earth. You cannot have both.\n\nFitzGerald in eighteen eighty-nine, and Lorentz independently in eighteen ninety-two, offered a different patch. Motion through the ether, they proposed, physically compresses matter along the direction of travel by the factor the square root of one minus u squared over c squared. u is the speed of the apparatus through the ether. c is the speed of light. The square root is a little less than one, so the along-wind arm shortens by exactly enough to cancel the extra delay. The fringes stay put, and the null result is saved: Michelson and Morley had expected about four tenths of a fringe, and saw less than a hundredth. Ad hoc, but it works.\n\nMaxwell, in eighteen sixty-five, had called light an electromagnetic wave of fixed speed c, fixed relative to what? The ether, presumably. By nineteen oh four Lorentz had the full transformations under which Maxwell's equations keep their form, including a local time, t prime, which he treated as a mathematical fiction, not as what clocks read. Contraction, in his story, was a real squeeze caused by the ether.\n\nEinstein's nineteen oh five paper does not mention Michelson and Morley at all. He drops the ether, derives the same transformations from two postulates, and takes t prime seriously as real time. He was not asking how the ether hides itself, but what if there is nothing to hide.\n\nThe patches worked, but every one of them was designed to make the ether undetectable. A medium that no experiment can ever reveal is a medium that physics does not need.",
+   "hash": "1d7d124c99af",
+   "duration": 112.63,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.4,
+     "text": "Look at the Earth behind the panel."
+    },
+    {
+     "start": 2.4,
+     "end": 6.04,
+     "text": "That is where this argument lives: a moving planet."
+    },
+    {
+     "start": 6.04,
+     "end": 8.72,
+     "text": "Physicists did not give up the ether at once."
+    },
+    {
+     "start": 8.72,
+     "end": 9.98,
+     "text": "They patched it."
+    },
+    {
+     "start": 9.98,
+     "end": 13.88,
+     "text": "Perhaps the Earth drags the ether with it, so there is no wind."
+    },
+    {
+     "start": 13.88,
+     "end": 22.24,
+     "text": "But that contradicts stellar aberration, measured by Bradley in seventeen twenty-nine, which requires the ether to stream freely past the Earth."
+    },
+    {
+     "start": 22.24,
+     "end": 23.84,
+     "text": "You cannot have both."
+    },
+    {
+     "start": 23.84,
+     "end": 30.4,
+     "text": "FitzGerald in eighteen eighty-nine, and Lorentz independently in eighteen ninety-two, offered a different patch."
+    },
+    {
+     "start": 30.4,
+     "end": 40.06,
+     "text": "Motion through the ether, they proposed, physically compresses matter along the direction of travel by the factor the square root of one minus u squared over c squared."
+    },
+    {
+     "start": 40.06,
+     "end": 42.8,
+     "text": "u is the speed of the apparatus through the ether."
+    },
+    {
+     "start": 42.8,
+     "end": 44.46,
+     "text": "c is the speed of light."
+    },
+    {
+     "start": 44.46,
+     "end": 51.42,
+     "text": "The square root is a little less than one, so the along-wind arm shortens by exactly enough to cancel the extra delay."
+    },
+    {
+     "start": 51.42,
+     "end": 60.29,
+     "text": "The fringes stay put, and the null result is saved: Michelson and Morley had expected about four tenths of a fringe, and saw less than a hundredth."
+    },
+    {
+     "start": 60.29,
+     "end": 62.07,
+     "text": "Ad hoc, but it works."
+    },
+    {
+     "start": 62.07,
+     "end": 69.57,
+     "text": "Maxwell, in eighteen sixty-five, had called light an electromagnetic wave of fixed speed c, fixed relative to what?"
+    },
+    {
+     "start": 69.57,
+     "end": 71.15,
+     "text": "The ether, presumably."
+    },
+    {
+     "start": 71.15,
+     "end": 83.29,
+     "text": "By nineteen oh four Lorentz had the full transformations under which Maxwell's equations keep their form, including a local time, t prime, which he treated as a mathematical fiction, not as what clocks read."
+    },
+    {
+     "start": 83.29,
+     "end": 87.47,
+     "text": "Contraction, in his story, was a real squeeze caused by the ether."
+    },
+    {
+     "start": 87.47,
+     "end": 91.83,
+     "text": "Einstein's nineteen oh five paper does not mention Michelson and Morley at all."
+    },
+    {
+     "start": 91.83,
+     "end": 99.09,
+     "text": "He drops the ether, derives the same transformations from two postulates, and takes t prime seriously as real time."
+    },
+    {
+     "start": 99.09,
+     "end": 103.75,
+     "text": "He was not asking how the ether hides itself, but what if there is nothing to hide."
+    },
+    {
+     "start": 103.75,
+     "end": 108.25,
+     "text": "The patches worked, but every one of them was designed to make the ether undetectable."
+    },
+    {
+     "start": 108.25,
+     "end": 112.63,
+     "text": "A medium that no experiment can ever reveal is a medium that physics does not need."
+    }
+   ],
+   "voicedHash": "c61c5f47f19f"
+  },
+  "ether": {
+   "script": "Let's open on the problem that will force a change in physics. Glance behind the panel. The view is flying toward the Sun, and Earth's motion around it is about to matter.\n\nMaxwell had shown that light is a wave of electric and magnetic fields, travelling at a speed c equal to one divided by the square root of the product of epsilon-nought and mu-nought. c is the speed of light. Epsilon-nought is the permittivity of free space, how electric fields behave in a vacuum, and mu-nought is the permeability of free space, the matching constant for magnetic fields. Those two laboratory numbers fix one wave speed, and Maxwell's equations give that speed with no reference to who is measuring.\n\nEvery other wave had a medium: sound in air, ripples on water, a vibration on a string. So light, they reasoned, must have one too, a weightless, perfectly transparent, perfectly rigid substance filling all of space. They called it the luminiferous ether, luminiferous meaning light-bearing.\n\nSpeed relative to what, then? Relative to the ether. The ether would be the one frame truly at rest, and only there would light travel at exactly c in every direction. An inertial frame is one in which Newton's first law holds: no net force, straight line, constant speed. And any frame moving at constant velocity relative to an inertial frame is inertial too. Absolute motion would be motion relative to a frame at rest in some absolute sense. If the ether existed, that rest frame would be it.\n\nEarth orbits the Sun at thirty kilometres per second, so anyone on Earth is moving through the ether. Light should then look a little faster one way and a little slower the other, like a boat that speeds up downstream and slows upstream.\n\nThat is the promise Newton's mechanics could never make. Detect the ether wind, and you have found the one frame in the universe that is truly standing still.",
+   "hash": "d70abeecefc9",
+   "duration": 111.99,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.72,
+     "text": "Let's open on the problem that will force a change in physics."
+    },
+    {
+     "start": 3.72,
+     "end": 5.54,
+     "text": "Glance behind the panel."
+    },
+    {
+     "start": 5.54,
+     "end": 10.66,
+     "text": "The view is flying toward the Sun, and Earth's motion around it is about to matter."
+    },
+    {
+     "start": 10.66,
+     "end": 21.34,
+     "text": "Maxwell had shown that light is a wave of electric and magnetic fields, travelling at a speed c equal to one divided by the square root of the product of epsilon-nought and mu-nought."
+    },
+    {
+     "start": 21.34,
+     "end": 23.12,
+     "text": "c is the speed of light."
+    },
+    {
+     "start": 23.12,
+     "end": 33.74,
+     "text": "Epsilon-nought is the permittivity of free space, how electric fields behave in a vacuum, and mu-nought is the permeability of free space, the matching constant for magnetic fields."
+    },
+    {
+     "start": 33.74,
+     "end": 41.16,
+     "text": "Those two laboratory numbers fix one wave speed, and Maxwell's equations give that speed with no reference to who is measuring."
+    },
+    {
+     "start": 41.16,
+     "end": 47.26,
+     "text": "Every other wave had a medium: sound in air, ripples on water, a vibration on a string."
+    },
+    {
+     "start": 47.26,
+     "end": 55.52,
+     "text": "So light, they reasoned, must have one too, a weightless, perfectly transparent, perfectly rigid substance filling all of space."
+    },
+    {
+     "start": 55.52,
+     "end": 60.07,
+     "text": "They called it the luminiferous ether, luminiferous meaning light-bearing."
+    },
+    {
+     "start": 60.07,
+     "end": 62.03,
+     "text": "Speed relative to what, then?"
+    },
+    {
+     "start": 62.03,
+     "end": 63.57,
+     "text": "Relative to the ether."
+    },
+    {
+     "start": 63.57,
+     "end": 70.41,
+     "text": "The ether would be the one frame truly at rest, and only there would light travel at exactly c in every direction."
+    },
+    {
+     "start": 70.41,
+     "end": 77.27,
+     "text": "An inertial frame is one in which Newton's first law holds: no net force, straight line, constant speed."
+    },
+    {
+     "start": 77.27,
+     "end": 82.59,
+     "text": "And any frame moving at constant velocity relative to an inertial frame is inertial too."
+    },
+    {
+     "start": 82.59,
+     "end": 87.53,
+     "text": "Absolute motion would be motion relative to a frame at rest in some absolute sense."
+    },
+    {
+     "start": 87.53,
+     "end": 90.87,
+     "text": "If the ether existed, that rest frame would be it."
+    },
+    {
+     "start": 90.87,
+     "end": 96.47,
+     "text": "Earth orbits the Sun at thirty kilometres per second, so anyone on Earth is moving through the ether."
+    },
+    {
+     "start": 96.47,
+     "end": 103.75,
+     "text": "Light should then look a little faster one way and a little slower the other, like a boat that speeds up downstream and slows upstream."
+    },
+    {
+     "start": 103.75,
+     "end": 106.65,
+     "text": "That is the promise Newton's mechanics could never make."
+    },
+    {
+     "start": 106.65,
+     "end": 111.99,
+     "text": "Detect the ether wind, and you have found the one frame in the universe that is truly standing still."
+    }
+   ],
+   "voicedHash": "4d2a81b81601"
+  },
+  "failure-summary": {
+   "script": "Look behind the panel at planets circling the Sun. We pictured the ether, the supposed medium for light, and it would have defined one absolute rest frame. The Galilean transformation is x prime equals x minus u times t, and t prime equals t. x and x prime locate one event, u is the relative speed, and t is the shared time. Velocities add, so Newton's laws are invariant while Maxwell's equations are not. Eighteen eighty-seven, Michelson and Morley looked for Earth's motion through the ether, about thirty kilometres per second. Their interferometer was sensitive to one hundredth of a fringe. They expected about four tenths of a fringe, and found nothing. Lorentz and FitzGerald saved the result with an ad hoc contraction, the square root of one minus u squared over c squared. u is the speed through the ether and c is the speed of light, and lengths shrink along the motion by that factor. By nineteen four Lorentz had the full transformations but kept the ether. The experiment did not disprove the ether. It made it undetectable, which is worse. A twenty-six-year-old patent clerk in Bern was about to ask a different question: what if the speed of light is the same for everyone, and it is our ideas of space and time that have to give?",
+   "hash": "465f54622fc9",
+   "duration": 76.15,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.36,
+     "text": "Look behind the panel at planets circling the Sun."
+    },
+    {
+     "start": 3.36,
+     "end": 9.76,
+     "text": "We pictured the ether, the supposed medium for light, and it would have defined one absolute rest frame."
+    },
+    {
+     "start": 9.76,
+     "end": 17.08,
+     "text": "The Galilean transformation is x prime equals x minus u times t, and t prime equals t."
+    },
+    {
+     "start": 17.08,
+     "end": 23.18,
+     "text": "x and x prime locate one event, u is the relative speed, and t is the shared time."
+    },
+    {
+     "start": 23.18,
+     "end": 28.6,
+     "text": "Velocities add, so Newton's laws are invariant while Maxwell's equations are not."
+    },
+    {
+     "start": 28.6,
+     "end": 35.62,
+     "text": "Eighteen eighty-seven, Michelson and Morley looked for Earth's motion through the ether, about thirty kilometres per second."
+    },
+    {
+     "start": 35.62,
+     "end": 39.19,
+     "text": "Their interferometer was sensitive to one hundredth of a fringe."
+    },
+    {
+     "start": 39.19,
+     "end": 42.89,
+     "text": "They expected about four tenths of a fringe, and found nothing."
+    },
+    {
+     "start": 42.89,
+     "end": 50.59,
+     "text": "Lorentz and FitzGerald saved the result with an ad hoc contraction, the square root of one minus u squared over c squared."
+    },
+    {
+     "start": 50.59,
+     "end": 56.89,
+     "text": "u is the speed through the ether and c is the speed of light, and lengths shrink along the motion by that factor."
+    },
+    {
+     "start": 56.89,
+     "end": 61.15,
+     "text": "By nineteen four Lorentz had the full transformations but kept the ether."
+    },
+    {
+     "start": 61.15,
+     "end": 63.69,
+     "text": "The experiment did not disprove the ether."
+    },
+    {
+     "start": 63.69,
+     "end": 66.29,
+     "text": "It made it undetectable, which is worse."
+    },
+    {
+     "start": 66.29,
+     "end": 76.15,
+     "text": "A twenty-six-year-old patent clerk in Bern was about to ask a different question: what if the speed of light is the same for everyone, and it is our ideas of space and time that have to give?"
+    }
+   ],
+   "voicedHash": "001ca1fccfbc"
+  },
+  "galilean": {
+   "script": "Galileo already understood that no mechanical experiment can reveal uniform motion. Below the deck of a smoothly sailing ship, butterflies fly and water drips exactly as they do on land; nothing inside tells you the ship is moving. The mathematics of that idea is the Galilean transformation. Let frame S prime move along the x-axis at constant speed u relative to frame S, origins coinciding at time zero. An event at coordinates x, y, z, and t in S appears in S prime at x prime equals x minus u times t, y prime equals y, z prime equals z, and t prime equals t. The unprimed symbols are position and time in the first frame, the primes mark the moving frame, and u is their relative speed. Time is the same for everyone — what Newton called absolute, true and mathematical time, flowing equably without regard to anything external. Differentiate once and velocities simply subtract: v sub x prime equals v sub x minus u. Differentiate again and accelerations match, a sub x prime equals a sub x, so force equals mass times acceleration holds in S prime if it holds in S. Newton’s laws are Galilean invariant. Apply the same rule to light. A flash travelling at c in the ether frame S should travel at c minus u forward and c plus u backward in a frame moving at u through the ether. Maxwell’s equations would hold only in the ether frame. Look at the space station orbiting in front of you. It moves at about eight kilometres per second, so by this rule a laser fired forward should outrun one fired backward by roughly fifteen kilometres per second. Galileo’s ship says no mechanical experiment detects uniform motion; the ether theory says an optical one can. Is there any good reason mechanics should obey a relativity principle and light should not? Einstein thought not, and that judgement is where this chapter is going.",
+   "hash": "601cb3c374d5",
+   "duration": 119.67,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 5.62,
+     "text": "Galileo already understood that no mechanical experiment can reveal uniform motion."
+    },
+    {
+     "start": 5.62,
+     "end": 15.18,
+     "text": "Below the deck of a smoothly sailing ship, butterflies fly and water drips exactly as they do on land; nothing inside tells you the ship is moving."
+    },
+    {
+     "start": 15.18,
+     "end": 19.08,
+     "text": "The mathematics of that idea is the Galilean transformation."
+    },
+    {
+     "start": 19.08,
+     "end": 27.62,
+     "text": "Let frame S prime move along the x-axis at constant speed u relative to frame S, origins coinciding at time zero."
+    },
+    {
+     "start": 27.62,
+     "end": 41.24,
+     "text": "An event at coordinates x, y, z, and t in S appears in S prime at x prime equals x minus u times t, y prime equals y, z prime equals z, and t prime equals t."
+    },
+    {
+     "start": 41.24,
+     "end": 49.28,
+     "text": "The unprimed symbols are position and time in the first frame, the primes mark the moving frame, and u is their relative speed."
+    },
+    {
+     "start": 49.28,
+     "end": 58.2,
+     "text": "Time is the same for everyone — what Newton called absolute, true and mathematical time, flowing equably without regard to anything external."
+    },
+    {
+     "start": 58.2,
+     "end": 64.89,
+     "text": "Differentiate once and velocities simply subtract: v sub x prime equals v sub x minus u."
+    },
+    {
+     "start": 64.89,
+     "end": 75.69,
+     "text": "Differentiate again and accelerations match, a sub x prime equals a sub x, so force equals mass times acceleration holds in S prime if it holds in S."
+    },
+    {
+     "start": 75.69,
+     "end": 78.27,
+     "text": "Newton’s laws are Galilean invariant."
+    },
+    {
+     "start": 78.27,
+     "end": 80.15,
+     "text": "Apply the same rule to light."
+    },
+    {
+     "start": 80.15,
+     "end": 89.19,
+     "text": "A flash travelling at c in the ether frame S should travel at c minus u forward and c plus u backward in a frame moving at u through the ether."
+    },
+    {
+     "start": 89.19,
+     "end": 92.39,
+     "text": "Maxwell’s equations would hold only in the ether frame."
+    },
+    {
+     "start": 92.39,
+     "end": 94.87,
+     "text": "Look at the space station orbiting in front of you."
+    },
+    {
+     "start": 94.87,
+     "end": 104.07,
+     "text": "It moves at about eight kilometres per second, so by this rule a laser fired forward should outrun one fired backward by roughly fifteen kilometres per second."
+    },
+    {
+     "start": 104.07,
+     "end": 111.17,
+     "text": "Galileo’s ship says no mechanical experiment detects uniform motion; the ether theory says an optical one can."
+    },
+    {
+     "start": 111.17,
+     "end": 115.79,
+     "text": "Is there any good reason mechanics should obey a relativity principle and light should not?"
+    },
+    {
+     "start": 115.79,
+     "end": 119.67,
+     "text": "Einstein thought not, and that judgement is where this chapter is going."
+    }
+   ],
+   "voicedHash": "6c7a31f30e78"
+  },
+  "michelson": {
+   "script": "Look at Earth behind the panel — this is where the test was done. Earth's orbital speed is only about thirty kilometres per second against light's three hundred thousand, one part in ten thousand, far too small to time directly. In eighteen eighty-one Michelson built an interferometer that could still see it. A half-silvered mirror splits the beam into two equal arms of length L; the beams bounce back, recombine, and form fringes. If one arm lies along the ether wind and the other across it, the round trips take different times.\n\nThe along-wind time, t parallel, is L over c minus u, plus L over c plus u, which equals two L over c times one over one minus u squared over c squared. Here L is the arm length, c the speed of light, and u the wind speed. Upstream the light crawls; downstream it races. The slow leg costs more time than the fast leg saves, so the trip is always longer. Across the wind, t perpendicular is two L over the square root of c squared minus u squared, or two L over c times one over the square root of one minus u squared over c squared. The beam must aim slightly upwind to hit the mirror, like a swimmer crossing a river, so its speed along the arm is reduced.\n\nTheir difference, delta t, is about L over c times u squared over c squared. Rotate the apparatus by ninety degrees and the fringe shift is two L times u squared over c squared, divided by lambda, the wavelength. With L about eleven metres, lambda five hundred ninety nanometres, and u thirty kilometres per second, the expected shift was about four tenths of a fringe. The instrument could detect a hundredth.\n\nWatch the widget. In the ether model the pulses leave together and the along-wind pulse returns late; as the apparatus turns, the fringes should march. Switch to observed. In July eighteen eighty-seven, on a stone slab floating in mercury in a Cleveland basement, Michelson and Morley saw nothing — no shift, any season, any hour. The most famous null result in physics. Michelson called it a failure and moved on, later measuring a star's diameter; he won the nineteen oh seven Nobel for his instruments. The null has held ever since, and modern tests limit any anisotropy in c to below one part in ten to the seventeen.",
+   "hash": "71818bbd2c97",
+   "duration": 139.83,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 4.24,
+     "text": "Look at Earth behind the panel — this is where the test was done."
+    },
+    {
+     "start": 4.24,
+     "end": 14.5,
+     "text": "Earth's orbital speed is only about thirty kilometres per second against light's three hundred thousand, one part in ten thousand, far too small to time directly."
+    },
+    {
+     "start": 14.5,
+     "end": 19.1,
+     "text": "In eighteen eighty-one Michelson built an interferometer that could still see it."
+    },
+    {
+     "start": 19.1,
+     "end": 27.3,
+     "text": "A half-silvered mirror splits the beam into two equal arms of length L; the beams bounce back, recombine, and form fringes."
+    },
+    {
+     "start": 27.3,
+     "end": 33.3,
+     "text": "If one arm lies along the ether wind and the other across it, the round trips take different times."
+    },
+    {
+     "start": 33.3,
+     "end": 45.32,
+     "text": "The along-wind time, t parallel, is L over c minus u, plus L over c plus u, which equals two L over c times one over one minus u squared over c squared."
+    },
+    {
+     "start": 45.32,
+     "end": 50.04,
+     "text": "Here L is the arm length, c the speed of light, and u the wind speed."
+    },
+    {
+     "start": 50.04,
+     "end": 53.22,
+     "text": "Upstream the light crawls; downstream it races."
+    },
+    {
+     "start": 53.22,
+     "end": 58.44,
+     "text": "The slow leg costs more time than the fast leg saves, so the trip is always longer."
+    },
+    {
+     "start": 58.44,
+     "end": 69.82,
+     "text": "Across the wind, t perpendicular is two L over the square root of c squared minus u squared, or two L over c times one over the square root of one minus u squared over c squared."
+    },
+    {
+     "start": 69.82,
+     "end": 76.83,
+     "text": "The beam must aim slightly upwind to hit the mirror, like a swimmer crossing a river, so its speed along the arm is reduced."
+    },
+    {
+     "start": 76.83,
+     "end": 82.31,
+     "text": "Their difference, delta t, is about L over c times u squared over c squared."
+    },
+    {
+     "start": 82.31,
+     "end": 90.73,
+     "text": "Rotate the apparatus by ninety degrees and the fringe shift is two L times u squared over c squared, divided by lambda, the wavelength."
+    },
+    {
+     "start": 90.73,
+     "end": 100.15,
+     "text": "With L about eleven metres, lambda five hundred ninety nanometres, and u thirty kilometres per second, the expected shift was about four tenths of a fringe."
+    },
+    {
+     "start": 100.15,
+     "end": 102.25,
+     "text": "The instrument could detect a hundredth."
+    },
+    {
+     "start": 102.25,
+     "end": 103.51,
+     "text": "Watch the widget."
+    },
+    {
+     "start": 103.51,
+     "end": 111.17,
+     "text": "In the ether model the pulses leave together and the along-wind pulse returns late; as the apparatus turns, the fringes should march."
+    },
+    {
+     "start": 111.17,
+     "end": 112.59,
+     "text": "Switch to observed."
+    },
+    {
+     "start": 112.59,
+     "end": 122.33,
+     "text": "In July eighteen eighty-seven, on a stone slab floating in mercury in a Cleveland basement, Michelson and Morley saw nothing — no shift, any season, any hour."
+    },
+    {
+     "start": 122.33,
+     "end": 124.85,
+     "text": "The most famous null result in physics."
+    },
+    {
+     "start": 124.85,
+     "end": 132.57,
+     "text": "Michelson called it a failure and moved on, later measuring a star's diameter; he won the nineteen oh seven Nobel for his instruments."
+    },
+    {
+     "start": 132.57,
+     "end": 139.83,
+     "text": "The null has held ever since, and modern tests limit any anisotropy in c to below one part in ten to the seventeen."
+    }
+   ],
+   "voicedHash": "77d62ff21b8a"
+  }
+ }
+}

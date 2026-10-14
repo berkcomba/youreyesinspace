@@ -1,0 +1,591 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "derivation": {
+   "script": "Look at Earth behind the panel. We are about to leave the everyday world and ask what two observers must agree on when one of them is moving. Let frame S-prime slide past frame S at constant speed u along the x-axis, with the origins together at the instant both clocks read zero. A flash leaves that common origin. In S the light spreads as a sphere: x squared plus y squared plus z squared equals c squared t squared. The second postulate says the speed of light is the same in every inertial frame, so in S-prime the same flash must be a sphere centred on S-prime’s own origin: x-prime squared plus y-prime squared plus z-prime squared equals c squared t-prime squared. Galileo’s old rule cannot keep both spheres spherical. If we demand the most general linear map that does, the answer is unique.\n\nThe Lorentz transformation from S to S-prime reads: x-prime equals gamma times the quantity x minus u t; y-prime equals y; z-prime equals z; and t-prime equals gamma times the quantity t minus u x over c squared. Here x, y, z and t are position and time in S; the primed symbols are the same events as measured in S-prime; u is the relative speed; c is the speed of light. Gamma, the Lorentz factor, is defined as one over the square root of one minus u squared over c squared, and it is always at least one. It is one when you are at rest relative to the other frame, and it grows without bound as u approaches c. We also write beta for u over c, so gamma is one over the square root of one minus beta squared.\n\nTwo things leap out. Time is no longer universal: t-prime depends on t and on x, so two clocks that agree in S, if they sit at different places, do not agree in S-prime. And when u is much less than c, gamma tends to one and the term u x over c squared vanishes, so we recover Galileo. Relativity contains Newton as its low-speed limit. The inverse follows by swapping primes and flipping the sign of u, because S moves at minus u relative to S-prime: x equals gamma times x-prime plus u t-prime, and t equals gamma times t-prime plus u x-prime over c squared. Neither frame is privileged. Glance at the table: at Earth’s orbital speed, about thirty kilometres per second, gamma differs from one only in the ninth decimal place. At nine-tenths of c it is already more than two.",
+   "hash": "6962a4b268f2",
+   "duration": 152.31,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.16,
+     "text": "Look at Earth behind the panel."
+    },
+    {
+     "start": 2.16,
+     "end": 8.44,
+     "text": "We are about to leave the everyday world and ask what two observers must agree on when one of them is moving."
+    },
+    {
+     "start": 8.44,
+     "end": 18.32,
+     "text": "Let frame S-prime slide past frame S at constant speed u along the x-axis, with the origins together at the instant both clocks read zero."
+    },
+    {
+     "start": 18.32,
+     "end": 20.84,
+     "text": "A flash leaves that common origin."
+    },
+    {
+     "start": 20.84,
+     "end": 28.2,
+     "text": "In S the light spreads as a sphere: x squared plus y squared plus z squared equals c squared t squared."
+    },
+    {
+     "start": 28.2,
+     "end": 44.04,
+     "text": "The second postulate says the speed of light is the same in every inertial frame, so in S-prime the same flash must be a sphere centred on S-prime’s own origin: x-prime squared plus y-prime squared plus z-prime squared equals c squared t-prime squared."
+    },
+    {
+     "start": 44.04,
+     "end": 47.82,
+     "text": "Galileo’s old rule cannot keep both spheres spherical."
+    },
+    {
+     "start": 47.82,
+     "end": 52.32,
+     "text": "If we demand the most general linear map that does, the answer is unique."
+    },
+    {
+     "start": 52.32,
+     "end": 68.5,
+     "text": "The Lorentz transformation from S to S-prime reads: x-prime equals gamma times the quantity x minus u t; y-prime equals y; z-prime equals z; and t-prime equals gamma times the quantity t minus u x over c squared."
+    },
+    {
+     "start": 68.5,
+     "end": 79.31,
+     "text": "Here x, y, z and t are position and time in S; the primed symbols are the same events as measured in S-prime; u is the relative speed; c is the speed of light."
+    },
+    {
+     "start": 79.31,
+     "end": 87.91,
+     "text": "Gamma, the Lorentz factor, is defined as one over the square root of one minus u squared over c squared, and it is always at least one."
+    },
+    {
+     "start": 87.91,
+     "end": 94.19,
+     "text": "It is one when you are at rest relative to the other frame, and it grows without bound as u approaches c."
+    },
+    {
+     "start": 94.19,
+     "end": 100.71,
+     "text": "We also write beta for u over c, so gamma is one over the square root of one minus beta squared."
+    },
+    {
+     "start": 100.71,
+     "end": 102.21,
+     "text": "Two things leap out."
+    },
+    {
+     "start": 102.21,
+     "end": 112.61,
+     "text": "Time is no longer universal: t-prime depends on t and on x, so two clocks that agree in S, if they sit at different places, do not agree in S-prime."
+    },
+    {
+     "start": 112.61,
+     "end": 120.75,
+     "text": "And when u is much less than c, gamma tends to one and the term u x over c squared vanishes, so we recover Galileo."
+    },
+    {
+     "start": 120.75,
+     "end": 124.05,
+     "text": "Relativity contains Newton as its low-speed limit."
+    },
+    {
+     "start": 124.05,
+     "end": 139.47,
+     "text": "The inverse follows by swapping primes and flipping the sign of u, because S moves at minus u relative to S-prime: x equals gamma times x-prime plus u t-prime, and t equals gamma times t-prime plus u x-prime over c squared."
+    },
+    {
+     "start": 139.47,
+     "end": 141.31,
+     "text": "Neither frame is privileged."
+    },
+    {
+     "start": 141.31,
+     "end": 149.59,
+     "text": "Glance at the table: at Earth’s orbital speed, about thirty kilometres per second, gamma differs from one only in the ninth decimal place."
+    },
+    {
+     "start": 149.59,
+     "end": 152.31,
+     "text": "At nine-tenths of c it is already more than two."
+    }
+   ],
+   "voicedHash": "4e6c57596248"
+  },
+  "lorentz-summary": {
+   "script": "Look at the planets behind the panel, slowly circling the Sun. Each coasts in its own inertial frame.\n\nPostulate one: the laws of physics are the same in all inertial frames. Postulate two: c, the speed of light, is the same in all of them.\n\nThe Lorentz transformation is x prime equals gamma times x minus u t, and t prime equals gamma times t minus u times x over c squared. Gamma is one over the square root of one minus u squared over c squared. x and t are your position and time, u is the other frame's speed, and the primes are what that frame measures. The inverse swaps the primes and replaces u with minus u.\n\nt prime mixes t and x, so time depends on position, and simultaneity is frame-dependent.\n\nOn a spacetime diagram, light sits at forty-five degrees, and the moving frame's axes tilt toward the light cone. The interval, c t all squared minus x squared, never changes.\n\nVelocity addition is v equals v prime plus u, divided by one plus u times v prime over c squared. Nothing combines to exceed c, and c plus anything is still c.\n\nThe equations are in hand. Next we ask what they do to how long things take, and how long things are.",
+   "hash": "2e5f387fa33f",
+   "duration": 78.07,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.24,
+     "text": "Look at the planets behind the panel, slowly circling the Sun."
+    },
+    {
+     "start": 4.24,
+     "end": 6.96,
+     "text": "Each coasts in its own inertial frame."
+    },
+    {
+     "start": 6.96,
+     "end": 11.74,
+     "text": "Postulate one: the laws of physics are the same in all inertial frames."
+    },
+    {
+     "start": 11.74,
+     "end": 16.7,
+     "text": "Postulate two: c, the speed of light, is the same in all of them."
+    },
+    {
+     "start": 16.7,
+     "end": 26.82,
+     "text": "The Lorentz transformation is x prime equals gamma times x minus u t, and t prime equals gamma times t minus u times x over c squared."
+    },
+    {
+     "start": 26.82,
+     "end": 31.58,
+     "text": "Gamma is one over the square root of one minus u squared over c squared."
+    },
+    {
+     "start": 31.58,
+     "end": 38.34,
+     "text": "x and t are your position and time, u is the other frame's speed, and the primes are what that frame measures."
+    },
+    {
+     "start": 38.34,
+     "end": 42.15,
+     "text": "The inverse swaps the primes and replaces u with minus u."
+    },
+    {
+     "start": 42.15,
+     "end": 48.59,
+     "text": "t prime mixes t and x, so time depends on position, and simultaneity is frame-dependent."
+    },
+    {
+     "start": 48.59,
+     "end": 55.51,
+     "text": "On a spacetime diagram, light sits at forty-five degrees, and the moving frame's axes tilt toward the light cone."
+    },
+    {
+     "start": 55.51,
+     "end": 60.33,
+     "text": "The interval, c t all squared minus x squared, never changes."
+    },
+    {
+     "start": 60.33,
+     "end": 67.55,
+     "text": "Velocity addition is v equals v prime plus u, divided by one plus u times v prime over c squared."
+    },
+    {
+     "start": 67.55,
+     "end": 71.99,
+     "text": "Nothing combines to exceed c, and c plus anything is still c."
+    },
+    {
+     "start": 71.99,
+     "end": 73.73,
+     "text": "The equations are in hand."
+    },
+    {
+     "start": 73.73,
+     "end": 78.07,
+     "text": "Next we ask what they do to how long things take, and how long things are."
+    }
+   ],
+   "voicedHash": "c5c7a1d2e8c3"
+  },
+  "postulates": {
+   "script": "Welcome. Look behind the panel as we fly toward Earth. In 1905 a patent examiner named Albert Einstein published a paper that began not with an experiment but with an asymmetry he found ugly. Move a magnet past a coil and a current appears. Move the coil past the magnet and the same current appears. Maxwell's theory explained those two cases with completely different mechanisms. Einstein decided nature does not distinguish them, and that the same is true of all uniform motion. He built everything on two postulates. First, the principle of relativity. The laws of physics are the same in every inertial frame. No experiment, mechanical or optical or any other, can detect absolute uniform motion. That extends Galileo's ship to all of physics and makes the ether superfluous. If you cannot find the ether frame, the ether does nothing. Second, the constancy of the speed of light. Light in vacuum travels at the same speed c in every inertial frame, whatever the source or the observer is doing. Chase a beam at zero point nine nine c and you still measure it passing you at c, not at zero point zero one c. The Galilean rule v prime equals v minus u is simply wrong for light. v prime is the speed in your frame, v is the speed in the other frame, and u is the relative speed of the frames. If the rule fails for light, it fails in general. It is only a fine approximation at everyday speeds. Both postulates are statements about symmetry. No frame is special, and c is a constant of nature, not a speed relative to something. Slowed clocks, shortened rods, and the end of simultaneity are all forced by these two sentences together. That year, his annus mirabilis, brought four papers: the photoelectric effect, Brownian motion, special relativity, and E equals m c squared, energy equals mass times c squared. He was twenty-six and could not get an academic job.",
+   "hash": "8635f21d8d56",
+   "duration": 119.35,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 1.02,
+     "text": "Welcome."
+    },
+    {
+     "start": 1.02,
+     "end": 3.98,
+     "text": "Look behind the panel as we fly toward Earth."
+    },
+    {
+     "start": 3.98,
+     "end": 13.28,
+     "text": "In 1905 a patent examiner named Albert Einstein published a paper that began not with an experiment but with an asymmetry he found ugly."
+    },
+    {
+     "start": 13.28,
+     "end": 16.46,
+     "text": "Move a magnet past a coil and a current appears."
+    },
+    {
+     "start": 16.46,
+     "end": 20.22,
+     "text": "Move the coil past the magnet and the same current appears."
+    },
+    {
+     "start": 20.22,
+     "end": 24.84,
+     "text": "Maxwell's theory explained those two cases with completely different mechanisms."
+    },
+    {
+     "start": 24.84,
+     "end": 30.68,
+     "text": "Einstein decided nature does not distinguish them, and that the same is true of all uniform motion."
+    },
+    {
+     "start": 30.68,
+     "end": 33.1,
+     "text": "He built everything on two postulates."
+    },
+    {
+     "start": 33.1,
+     "end": 35.7,
+     "text": "First, the principle of relativity."
+    },
+    {
+     "start": 35.7,
+     "end": 39.04,
+     "text": "The laws of physics are the same in every inertial frame."
+    },
+    {
+     "start": 39.04,
+     "end": 44.96,
+     "text": "No experiment, mechanical or optical or any other, can detect absolute uniform motion."
+    },
+    {
+     "start": 44.96,
+     "end": 50.02,
+     "text": "That extends Galileo's ship to all of physics and makes the ether superfluous."
+    },
+    {
+     "start": 50.02,
+     "end": 53.66,
+     "text": "If you cannot find the ether frame, the ether does nothing."
+    },
+    {
+     "start": 53.66,
+     "end": 56.52,
+     "text": "Second, the constancy of the speed of light."
+    },
+    {
+     "start": 56.52,
+     "end": 63.55,
+     "text": "Light in vacuum travels at the same speed c in every inertial frame, whatever the source or the observer is doing."
+    },
+    {
+     "start": 63.55,
+     "end": 70.87,
+     "text": "Chase a beam at zero point nine nine c and you still measure it passing you at c, not at zero point zero one c."
+    },
+    {
+     "start": 70.87,
+     "end": 76.21,
+     "text": "The Galilean rule v prime equals v minus u is simply wrong for light."
+    },
+    {
+     "start": 76.21,
+     "end": 83.07,
+     "text": "v prime is the speed in your frame, v is the speed in the other frame, and u is the relative speed of the frames."
+    },
+    {
+     "start": 83.07,
+     "end": 86.01,
+     "text": "If the rule fails for light, it fails in general."
+    },
+    {
+     "start": 86.01,
+     "end": 89.21,
+     "text": "It is only a fine approximation at everyday speeds."
+    },
+    {
+     "start": 89.21,
+     "end": 91.93,
+     "text": "Both postulates are statements about symmetry."
+    },
+    {
+     "start": 91.93,
+     "end": 97.57,
+     "text": "No frame is special, and c is a constant of nature, not a speed relative to something."
+    },
+    {
+     "start": 97.57,
+     "end": 103.95,
+     "text": "Slowed clocks, shortened rods, and the end of simultaneity are all forced by these two sentences together."
+    },
+    {
+     "start": 103.95,
+     "end": 116.55,
+     "text": "That year, his annus mirabilis, brought four papers: the photoelectric effect, Brownian motion, special relativity, and E equals m c squared, energy equals mass times c squared."
+    },
+    {
+     "start": 116.55,
+     "end": 119.35,
+     "text": "He was twenty-six and could not get an academic job."
+    }
+   ],
+   "voicedHash": "69acf37fb0bc"
+  },
+  "spacetime": {
+   "script": "There is a picture of the Lorentz transformation, invented in 1908 by Hermann Minkowski, Einstein's former mathematics teacher. Plot position x horizontally, and time vertically, but multiply time by c so both axes carry units of length. An event, something happening at one place at one instant, is a point. A particle's history is a curve, its world line. Light moves one unit of x per unit of c t, so light rays run at forty-five degrees, and together they form the light cone of an event.\n\nNow add the moving frame S prime. Its time axis, where x prime is zero, is the world line of its origin, the line x equals u t, tilted from the vertical by the angle whose tangent is beta. Its space axis, where t prime is zero, is the set of events S prime calls simultaneous with the origin, the line c t equals beta x, tilted from the horizontal by that same angle. As beta approaches one, the two axes close like scissors toward the light cone.\n\nDrag the event in the widget and read its coordinates in both frames. Notice what changes, and what does not.\n\nThe thing that does not change is the spacetime interval. c t, all squared, minus x squared, equals c t prime, all squared, minus x prime squared, and that common value is s squared. c is the speed of light, t and t prime the times, x and x prime the positions. Lengths and durations change between frames; this combination does not. It is the relativistic analogue of distance, with the crucial minus sign.\n\nTwo observers disagree about where and when an event happened, but they agree on s squared. If s squared is positive, the events are timelike separated: a clock could travel between them, and all observers agree on their order. If s squared is negative, they are spacelike: nothing can connect them, and observers may disagree about which came first. The light cone, s squared equal to zero, is the boundary.\n\nThe tilted x prime axis is the key to everything in Section 4.3. Events on it all happen at the same time for S prime, yet they lie at different heights, different times for S. Which frame is right about simultaneity? Both. Neither. The question has no frame-independent answer.",
+   "hash": "1749e35ae3c4",
+   "duration": 140.15,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 9.1,
+     "text": "There is a picture of the Lorentz transformation, invented in 1908 by Hermann Minkowski, Einstein's former mathematics teacher."
+    },
+    {
+     "start": 9.1,
+     "end": 17.3,
+     "text": "Plot position x horizontally, and time vertically, but multiply time by c so both axes carry units of length."
+    },
+    {
+     "start": 17.3,
+     "end": 22.1,
+     "text": "An event, something happening at one place at one instant, is a point."
+    },
+    {
+     "start": 22.1,
+     "end": 25.58,
+     "text": "A particle's history is a curve, its world line."
+    },
+    {
+     "start": 25.58,
+     "end": 34.12,
+     "text": "Light moves one unit of x per unit of c t, so light rays run at forty-five degrees, and together they form the light cone of an event."
+    },
+    {
+     "start": 34.12,
+     "end": 36.6,
+     "text": "Now add the moving frame S prime."
+    },
+    {
+     "start": 36.6,
+     "end": 47.16,
+     "text": "Its time axis, where x prime is zero, is the world line of its origin, the line x equals u t, tilted from the vertical by the angle whose tangent is beta."
+    },
+    {
+     "start": 47.16,
+     "end": 59.42,
+     "text": "Its space axis, where t prime is zero, is the set of events S prime calls simultaneous with the origin, the line c t equals beta x, tilted from the horizontal by that same angle."
+    },
+    {
+     "start": 59.42,
+     "end": 64.46,
+     "text": "As beta approaches one, the two axes close like scissors toward the light cone."
+    },
+    {
+     "start": 64.46,
+     "end": 68.24,
+     "text": "Drag the event in the widget and read its coordinates in both frames."
+    },
+    {
+     "start": 68.24,
+     "end": 70.51,
+     "text": "Notice what changes, and what does not."
+    },
+    {
+     "start": 70.51,
+     "end": 73.65,
+     "text": "The thing that does not change is the spacetime interval."
+    },
+    {
+     "start": 73.65,
+     "end": 83.35,
+     "text": "c t, all squared, minus x squared, equals c t prime, all squared, minus x prime squared, and that common value is s squared."
+    },
+    {
+     "start": 83.35,
+     "end": 89.09,
+     "text": "c is the speed of light, t and t prime the times, x and x prime the positions."
+    },
+    {
+     "start": 89.09,
+     "end": 93.61,
+     "text": "Lengths and durations change between frames; this combination does not."
+    },
+    {
+     "start": 93.61,
+     "end": 97.95,
+     "text": "It is the relativistic analogue of distance, with the crucial minus sign."
+    },
+    {
+     "start": 97.95,
+     "end": 103.35,
+     "text": "Two observers disagree about where and when an event happened, but they agree on s squared."
+    },
+    {
+     "start": 103.35,
+     "end": 111.37,
+     "text": "If s squared is positive, the events are timelike separated: a clock could travel between them, and all observers agree on their order."
+    },
+    {
+     "start": 111.37,
+     "end": 118.73,
+     "text": "If s squared is negative, they are spacelike: nothing can connect them, and observers may disagree about which came first."
+    },
+    {
+     "start": 118.73,
+     "end": 122.81,
+     "text": "The light cone, s squared equal to zero, is the boundary."
+    },
+    {
+     "start": 122.81,
+     "end": 127.35,
+     "text": "The tilted x prime axis is the key to everything in Section 4. 3."
+    },
+    {
+     "start": 127.35,
+     "end": 133.81,
+     "text": "Events on it all happen at the same time for S prime, yet they lie at different heights, different times for S."
+    },
+    {
+     "start": 133.81,
+     "end": 137.75,
+     "text": "Which frame is right about simultaneity? Both. Neither."
+    },
+    {
+     "start": 137.75,
+     "end": 140.15,
+     "text": "The question has no frame-independent answer."
+    }
+   ],
+   "voicedHash": "8fa957da4739"
+  },
+  "velocity-addition": {
+   "script": "A rocket moves at u relative to you and fires a probe at v-prime relative to itself. How fast is the probe relative to you? Galileo says u plus v-prime. The Lorentz transformation says otherwise.\n\nIf I differentiate x equals gamma times x-prime plus u t-prime, and t equals gamma times t-prime plus u x-prime over c squared, c the speed of light, then divide them, and gamma cancels.\n\nv equals v-prime plus u, all divided by one plus u times v-prime over c squared, along the line of relative velocity. v is the probe's speed in your frame, v-prime its speed in the rocket, u the rocket's speed relative to you, and c the speed of light. When u and v-prime are much smaller than c, the denominator is one, and Galileo returns.\n\nTry the extremes in the widget. Two speeds of nine tenths of the speed of light give zero point nine nine four c, not one point eight c. Set v-prime equal to c, a light beam, and you get c no matter what u is. The second postulate falls out of the formula. No combination of sub-light speeds ever reaches c. The speed of light is not a fast speed. It is the structure of the addition rule itself.\n\nTwo protons at the Large Hadron Collider meet head-on, each nine parts in a billion below c. Galileo says nearly two c. Those numbers still give a hair under c. The collision energy is enormous. Section four point four explains why speed is the wrong thing to look at.\n\nIn eighteen fifty-one Hippolyte Fizeau found flowing water drags light only partially, by a fraction one minus one over n squared of the water's speed, n the refractive index. Nobody could explain the fraction. Add c over n, light in still water, to u, the water's speed, and expand for small u, and the formula gives it exactly. Einstein said the experiment was one of his strongest guides.",
+   "hash": "854dd1bb0032",
+   "duration": 119.03,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 6.24,
+     "text": "A rocket moves at u relative to you and fires a probe at v-prime relative to itself."
+    },
+    {
+     "start": 6.24,
+     "end": 9.02,
+     "text": "How fast is the probe relative to you?"
+    },
+    {
+     "start": 9.02,
+     "end": 11.88,
+     "text": "Galileo says u plus v-prime."
+    },
+    {
+     "start": 11.88,
+     "end": 14.58,
+     "text": "The Lorentz transformation says otherwise."
+    },
+    {
+     "start": 14.58,
+     "end": 28.54,
+     "text": "If I differentiate x equals gamma times x-prime plus u t-prime, and t equals gamma times t-prime plus u x-prime over c squared, c the speed of light, then divide them, and gamma cancels."
+    },
+    {
+     "start": 28.54,
+     "end": 37.34,
+     "text": "v equals v-prime plus u, all divided by one plus u times v-prime over c squared, along the line of relative velocity."
+    },
+    {
+     "start": 37.34,
+     "end": 45.82,
+     "text": "v is the probe's speed in your frame, v-prime its speed in the rocket, u the rocket's speed relative to you, and c the speed of light."
+    },
+    {
+     "start": 45.82,
+     "end": 51.96,
+     "text": "When u and v-prime are much smaller than c, the denominator is one, and Galileo returns."
+    },
+    {
+     "start": 51.96,
+     "end": 53.92,
+     "text": "Try the extremes in the widget."
+    },
+    {
+     "start": 53.92,
+     "end": 60.73,
+     "text": "Two speeds of nine tenths of the speed of light give zero point nine nine four c, not one point eight c."
+    },
+    {
+     "start": 60.73,
+     "end": 66.03,
+     "text": "Set v-prime equal to c, a light beam, and you get c no matter what u is."
+    },
+    {
+     "start": 66.03,
+     "end": 68.67,
+     "text": "The second postulate falls out of the formula."
+    },
+    {
+     "start": 68.67,
+     "end": 71.97,
+     "text": "No combination of sub-light speeds ever reaches c."
+    },
+    {
+     "start": 71.97,
+     "end": 74.29,
+     "text": "The speed of light is not a fast speed."
+    },
+    {
+     "start": 74.29,
+     "end": 76.95,
+     "text": "It is the structure of the addition rule itself."
+    },
+    {
+     "start": 76.95,
+     "end": 83.03,
+     "text": "Two protons at the Large Hadron Collider meet head-on, each nine parts in a billion below c."
+    },
+    {
+     "start": 83.03,
+     "end": 85.31,
+     "text": "Galileo says nearly two c."
+    },
+    {
+     "start": 85.31,
+     "end": 87.81,
+     "text": "Those numbers still give a hair under c."
+    },
+    {
+     "start": 87.81,
+     "end": 89.99,
+     "text": "The collision energy is enormous."
+    },
+    {
+     "start": 89.99,
+     "end": 94.15,
+     "text": "Section four point four explains why speed is the wrong thing to look at."
+    },
+    {
+     "start": 94.15,
+     "end": 105.39,
+     "text": "In eighteen fifty-one Hippolyte Fizeau found flowing water drags light only partially, by a fraction one minus one over n squared of the water's speed, n the refractive index."
+    },
+    {
+     "start": 105.39,
+     "end": 107.41,
+     "text": "Nobody could explain the fraction."
+    },
+    {
+     "start": 107.41,
+     "end": 115.97,
+     "text": "Add c over n, light in still water, to u, the water's speed, and expand for small u, and the formula gives it exactly."
+    },
+    {
+     "start": 115.97,
+     "end": 119.03,
+     "text": "Einstein said the experiment was one of his strongest guides."
+    }
+   ],
+   "voicedHash": "cd96a79a1d8b"
+  }
+ }
+}

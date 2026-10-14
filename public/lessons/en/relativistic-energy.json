@@ -1,0 +1,586 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "applications": {
+   "script": "Look at the remnant behind the panel, SN 1987A. I sometimes hear special relativity called exotic, but in astrophysics it is daily business. Stars shine by converting mass to energy. Spectra are Doppler shifted and read with the relativistic formula. Plenty of matter has gamma of ten, a thousand, or ten to the eleven.\n\nThe Sun's luminosity, about four times ten to the twenty-six watts, means a mass loss of about four billion kilograms each second. Over ten billion years it will convert only about seven hundredths of one percent of its mass into light.\n\nThat explosion released about ten to the forty-six joules in neutrinos, the rest energy of a tenth of a solar mass, in ten seconds. Those neutrinos reached Earth three hours before the light, because the light had to fight its way out of the collapsing star.\n\nBlack holes and pulsars launch jets with bulk gamma of ten to a hundred. In nineteen ninety-one the Oh-My-God particle, a proton, arrived with energy about three times ten to the twenty electron-volts and gamma about three times ten to the eleven. That is a baseball's kinetic energy at a hundred kilometres per hour, in one nucleus. Length contraction made the Galaxy three hundred light years thick in that proton's frame.\n\nA photon becomes an electron-positron pair only if its energy E exceeds two m sub e c squared, which equals one point zero two two mega-electron-volts. E is the photon energy, m sub e the electron mass, and c the speed of light. The positron matches the electron's mass, so the threshold is two rest energies. The pair annihilates into two photons of five hundred and eleven kilo-electron-volts, and that line glows from the centre of our Galaxy.\n\nThe same relations run GPS, accelerators, and PET scanners, and they colour gold and keep mercury liquid.\n\nRelativity does not replace Newtonian mechanics. It tells us where Newton works, when gamma is about one, and takes over where gamma is not.",
+   "hash": "83730b014d79",
+   "duration": 122.55,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.42,
+     "text": "Look at the remnant behind the panel, SN 1987A."
+    },
+    {
+     "start": 5.42,
+     "end": 11.42,
+     "text": "I sometimes hear special relativity called exotic, but in astrophysics it is daily business."
+    },
+    {
+     "start": 11.42,
+     "end": 14.32,
+     "text": "Stars shine by converting mass to energy."
+    },
+    {
+     "start": 14.32,
+     "end": 18.4,
+     "text": "Spectra are Doppler shifted and read with the relativistic formula."
+    },
+    {
+     "start": 18.4,
+     "end": 23.22,
+     "text": "Plenty of matter has gamma of ten, a thousand, or ten to the eleven."
+    },
+    {
+     "start": 23.22,
+     "end": 31.54,
+     "text": "The Sun's luminosity, about four times ten to the twenty-six watts, means a mass loss of about four billion kilograms each second."
+    },
+    {
+     "start": 31.54,
+     "end": 37.46,
+     "text": "Over ten billion years it will convert only about seven hundredths of one percent of its mass into light."
+    },
+    {
+     "start": 37.46,
+     "end": 45.5,
+     "text": "That explosion released about ten to the forty-six joules in neutrinos, the rest energy of a tenth of a solar mass, in ten seconds."
+    },
+    {
+     "start": 45.5,
+     "end": 52.1,
+     "text": "Those neutrinos reached Earth three hours before the light, because the light had to fight its way out of the collapsing star."
+    },
+    {
+     "start": 52.1,
+     "end": 56.72,
+     "text": "Black holes and pulsars launch jets with bulk gamma of ten to a hundred."
+    },
+    {
+     "start": 56.72,
+     "end": 67.41,
+     "text": "In nineteen ninety-one the Oh-My-God particle, a proton, arrived with energy about three times ten to the twenty electron-volts and gamma about three times ten to the eleven."
+    },
+    {
+     "start": 67.41,
+     "end": 72.67,
+     "text": "That is a baseball's kinetic energy at a hundred kilometres per hour, in one nucleus."
+    },
+    {
+     "start": 72.67,
+     "end": 77.79,
+     "text": "Length contraction made the Galaxy three hundred light years thick in that proton's frame."
+    },
+    {
+     "start": 77.79,
+     "end": 88.71,
+     "text": "A photon becomes an electron-positron pair only if its energy E exceeds two m sub e c squared, which equals one point zero two two mega-electron-volts."
+    },
+    {
+     "start": 88.71,
+     "end": 94.31,
+     "text": "E is the photon energy, m sub e the electron mass, and c the speed of light."
+    },
+    {
+     "start": 94.31,
+     "end": 99.35,
+     "text": "The positron matches the electron's mass, so the threshold is two rest energies."
+    },
+    {
+     "start": 99.35,
+     "end": 106.99,
+     "text": "The pair annihilates into two photons of five hundred and eleven kilo-electron-volts, and that line glows from the centre of our Galaxy."
+    },
+    {
+     "start": 106.99,
+     "end": 114.07,
+     "text": "The same relations run GPS, accelerators, and PET scanners, and they colour gold and keep mercury liquid."
+    },
+    {
+     "start": 114.07,
+     "end": 117.05,
+     "text": "Relativity does not replace Newtonian mechanics."
+    },
+    {
+     "start": 117.05,
+     "end": 122.55,
+     "text": "It tells us where Newton works, when gamma is about one, and takes over where gamma is not."
+    }
+   ],
+   "voicedHash": "88b5b2ec03ef"
+  },
+  "energy": {
+   "script": "Look at the Sun behind the panel. Kinetic energy is the work we do to bring a particle from rest to speed v. K equals the integral of force F times dx. Force is dp by dt, and because dx over dt is v, that integral equals the integral of v dp. We insert the relativistic momentum, substitute dp equals m gamma cubed dv, and integrate. We get K equals gamma m c squared minus m c squared, or gamma minus one, times m c squared. Gamma is the Lorentz factor, m the rest mass, c the speed of light. At low speed, expand gamma as about one plus one half v squared over c squared, plus three eighths v to the fourth over c to the fourth. K is about one half m v squared plus three eighths m v to the fourth over c squared. Newton's formula is the first term.\n\nWe call gamma m c squared the total energy E. K is E minus a term present even at rest, so m c squared is energy the particle has simply by existing. We write E equals gamma m c squared, E zero equals m c squared, and E equals E zero plus K. At rest, gamma is one, and E equals m c squared. Mass is a form of energy.\n\nOne gram, converted completely, is ninety trillion joules, a large power station for a day. The Sun fuses four protons into helium and releases seven tenths of a percent of their mass as energy, converting four point three million tonnes into light every second. A charged battery is heavier than a dead one, but only by parts in ten billion, too small to weigh.\n\nEinstein published this in a three-page follow-up in September 1905: the mass of a body is a measure of its energy content. In 1932 Cockcroft and Walton split lithium with protons, and the fragments' kinetic energy matched the mass lost, to within one percent.",
+   "hash": "750a2c5ef30a",
+   "duration": 115.83,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.38,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 2.38,
+     "end": 7.14,
+     "text": "Kinetic energy is the work we do to bring a particle from rest to speed v."
+    },
+    {
+     "start": 7.14,
+     "end": 10.76,
+     "text": "K equals the integral of force F times dx."
+    },
+    {
+     "start": 10.76,
+     "end": 18.44,
+     "text": "Force is dp by dt, and because dx over dt is v, that integral equals the integral of v dp."
+    },
+    {
+     "start": 18.44,
+     "end": 25.38,
+     "text": "We insert the relativistic momentum, substitute dp equals m gamma cubed dv, and integrate."
+    },
+    {
+     "start": 25.38,
+     "end": 32.74,
+     "text": "We get K equals gamma m c squared minus m c squared, or gamma minus one, times m c squared."
+    },
+    {
+     "start": 32.74,
+     "end": 37.64,
+     "text": "Gamma is the Lorentz factor, m the rest mass, c the speed of light."
+    },
+    {
+     "start": 37.64,
+     "end": 46.2,
+     "text": "At low speed, expand gamma as about one plus one half v squared over c squared, plus three eighths v to the fourth over c to the fourth."
+    },
+    {
+     "start": 46.2,
+     "end": 51.7,
+     "text": "K is about one half m v squared plus three eighths m v to the fourth over c squared."
+    },
+    {
+     "start": 51.7,
+     "end": 53.88,
+     "text": "Newton's formula is the first term."
+    },
+    {
+     "start": 53.88,
+     "end": 57.16,
+     "text": "We call gamma m c squared the total energy E."
+    },
+    {
+     "start": 57.16,
+     "end": 64.21,
+     "text": "K is E minus a term present even at rest, so m c squared is energy the particle has simply by existing."
+    },
+    {
+     "start": 64.21,
+     "end": 71.45,
+     "text": "We write E equals gamma m c squared, E zero equals m c squared, and E equals E zero plus K."
+    },
+    {
+     "start": 71.45,
+     "end": 75.39,
+     "text": "At rest, gamma is one, and E equals m c squared."
+    },
+    {
+     "start": 75.39,
+     "end": 77.27,
+     "text": "Mass is a form of energy."
+    },
+    {
+     "start": 77.27,
+     "end": 83.25,
+     "text": "One gram, converted completely, is ninety trillion joules, a large power station for a day."
+    },
+    {
+     "start": 83.25,
+     "end": 93.21,
+     "text": "The Sun fuses four protons into helium and releases seven tenths of a percent of their mass as energy, converting four point three million tonnes into light every second."
+    },
+    {
+     "start": 93.21,
+     "end": 99.37,
+     "text": "A charged battery is heavier than a dead one, but only by parts in ten billion, too small to weigh."
+    },
+    {
+     "start": 99.37,
+     "end": 106.99,
+     "text": "Einstein published this in a three-page follow-up in September 1905: the mass of a body is a measure of its energy content."
+    },
+    {
+     "start": 106.99,
+     "end": 115.83,
+     "text": "In 1932 Cockcroft and Walton split lithium with protons, and the fragments' kinetic energy matched the mass lost, to within one percent."
+    }
+   ],
+   "voicedHash": "92458459a268"
+  },
+  "energy-momentum": {
+   "script": "Both energy and momentum contain gamma, the Lorentz factor, so I eliminate it between them. Take E equals gamma m c squared and p equals gamma m v. E squared minus p squared c squared equals gamma squared m squared c to the fourth times one minus v squared over c squared. Gamma squared cancels that velocity factor, leaving m squared c to the fourth. So E squared equals p squared c squared plus m squared c to the fourth. E is total energy, p is momentum, m is rest mass, and c is the speed of light. The widget draws a right triangle: legs p c and m c squared, hypotenuse E. Boost the particle, and as the view flies in behind the panel, watch the p c leg grow. The m c squared leg never changes. E squared minus p squared c squared is a Lorentz invariant. Like c t squared minus x squared in spacetime, m squared c to the fourth is that invariant length, and mass is what every frame agrees on. Set m to zero and E equals p c. Momentum is E over c, and v equals p c squared over E, so it always moves at exactly c. A photon has energy h nu, hence momentum h nu over c, or h over lambda, the origin of radiation pressure. A proton's rest energy is about nine hundred forty mega-electron-volts. In the Large Hadron Collider the total energy is about six point eight tera-electron-volts, so gamma, E over m c squared, is about seven thousand two hundred fifty. Speed is c times the square root of one minus one over gamma squared, within a hundred-millionth of c. Momentum times c is the square root of E squared minus m squared c to the fourth, essentially E over c. The rest energy, about one giga-electron-volt, is a rounding error, so past about ninety-nine hundredths of the speed of light we quote energies, not speeds.",
+   "hash": "c590b56b25f6",
+   "duration": 117.11,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.32,
+     "text": "Both energy and momentum contain gamma, the Lorentz factor, so I eliminate it between them."
+    },
+    {
+     "start": 6.32,
+     "end": 11.76,
+     "text": "Take E equals gamma m c squared and p equals gamma m v."
+    },
+    {
+     "start": 11.76,
+     "end": 20.02,
+     "text": "E squared minus p squared c squared equals gamma squared m squared c to the fourth times one minus v squared over c squared."
+    },
+    {
+     "start": 20.02,
+     "end": 25.04,
+     "text": "Gamma squared cancels that velocity factor, leaving m squared c to the fourth."
+    },
+    {
+     "start": 25.04,
+     "end": 29.72,
+     "text": "So E squared equals p squared c squared plus m squared c to the fourth."
+    },
+    {
+     "start": 29.72,
+     "end": 35.92,
+     "text": "E is total energy, p is momentum, m is rest mass, and c is the speed of light."
+    },
+    {
+     "start": 35.92,
+     "end": 41.9,
+     "text": "The widget draws a right triangle: legs p c and m c squared, hypotenuse E."
+    },
+    {
+     "start": 41.9,
+     "end": 47.66,
+     "text": "Boost the particle, and as the view flies in behind the panel, watch the p c leg grow."
+    },
+    {
+     "start": 47.66,
+     "end": 50.24,
+     "text": "The m c squared leg never changes."
+    },
+    {
+     "start": 50.24,
+     "end": 54.02,
+     "text": "E squared minus p squared c squared is a Lorentz invariant."
+    },
+    {
+     "start": 54.02,
+     "end": 62.79,
+     "text": "Like c t squared minus x squared in spacetime, m squared c to the fourth is that invariant length, and mass is what every frame agrees on."
+    },
+    {
+     "start": 62.79,
+     "end": 65.55,
+     "text": "Set m to zero and E equals p c."
+    },
+    {
+     "start": 65.55,
+     "end": 72.29,
+     "text": "Momentum is E over c, and v equals p c squared over E, so it always moves at exactly c."
+    },
+    {
+     "start": 72.29,
+     "end": 80.33,
+     "text": "A photon has energy h nu, hence momentum h nu over c, or h over lambda, the origin of radiation pressure."
+    },
+    {
+     "start": 80.33,
+     "end": 84.63,
+     "text": "A proton's rest energy is about nine hundred forty mega-electron-volts."
+    },
+    {
+     "start": 84.63,
+     "end": 95.19,
+     "text": "In the Large Hadron Collider the total energy is about six point eight tera-electron-volts, so gamma, E over m c squared, is about seven thousand two hundred fifty."
+    },
+    {
+     "start": 95.19,
+     "end": 101.29,
+     "text": "Speed is c times the square root of one minus one over gamma squared, within a hundred-millionth of c."
+    },
+    {
+     "start": 101.29,
+     "end": 107.85,
+     "text": "Momentum times c is the square root of E squared minus m squared c to the fourth, essentially E over c."
+    },
+    {
+     "start": 107.85,
+     "end": 117.11,
+     "text": "The rest energy, about one giga-electron-volt, is a rounding error, so past about ninety-nine hundredths of the speed of light we quote energies, not speeds."
+    }
+   ],
+   "voicedHash": "e9f5b09ec635"
+  },
+  "momentum": {
+   "script": "Conservation of momentum is the backbone of mechanics, and by the first postulate it must hold in every inertial frame. Velocities no longer add the way Galileo taught. A collision that conserves the sum of m v in one frame fails to conserve it in another under relativistic velocity addition. Either conservation has failed — unthinkable — or momentum is not m v.\n\nWhat is conserved in every frame is relativistic momentum. Vector p equals gamma times m times vector v, which is m times vector v divided by the square root of one minus v squared over c squared. p is momentum, v is the particle's own velocity, and c is the speed of light. m is the rest mass, the only mass I will use. Gamma is one over the square root of one minus v squared over c squared, built from that same speed. At low speed gamma is about one, so p is just m v, in kilogram metres per second. As v nears c the denominator shrinks and momentum runs to infinity.\n\nLook at the momentum curve in the widget. Raise the speed from rest toward the speed of light. At low speed it hugs the classical line p equals m v. Near c it turns upward and climbs without bound. Newton's second law survives as F equals dee p by dee t — force is the rate of change of momentum — so a steady push keeps increasing p, while the speed only creeps toward c and never arrives. Like a sled that grips harder the faster it goes, you change the momentum and the speed barely moves. Light speed is unreachable not by a cosmic ban, but because momentum, the thing a force actually changes, becomes infinite there.\n\nOlder books put gamma into a relativistic mass that grows with speed. I will keep mass invariant and let gamma ride with the velocity. Same physics, cleaner bookkeeping. Only the link between momentum and velocity has changed.",
+   "hash": "0430d0d8c70a",
+   "duration": 114.23,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 7.48,
+     "text": "Conservation of momentum is the backbone of mechanics, and by the first postulate it must hold in every inertial frame."
+    },
+    {
+     "start": 7.48,
+     "end": 10.98,
+     "text": "Velocities no longer add the way Galileo taught."
+    },
+    {
+     "start": 10.98,
+     "end": 18.82,
+     "text": "A collision that conserves the sum of m v in one frame fails to conserve it in another under relativistic velocity addition."
+    },
+    {
+     "start": 18.82,
+     "end": 23.96,
+     "text": "Either conservation has failed — unthinkable — or momentum is not m v."
+    },
+    {
+     "start": 23.96,
+     "end": 27.62,
+     "text": "What is conserved in every frame is relativistic momentum."
+    },
+    {
+     "start": 27.62,
+     "end": 36.92,
+     "text": "Vector p equals gamma times m times vector v, which is m times vector v divided by the square root of one minus v squared over c squared."
+    },
+    {
+     "start": 36.92,
+     "end": 42.84,
+     "text": "p is momentum, v is the particle's own velocity, and c is the speed of light."
+    },
+    {
+     "start": 42.84,
+     "end": 46.18,
+     "text": "m is the rest mass, the only mass I will use."
+    },
+    {
+     "start": 46.18,
+     "end": 52.42,
+     "text": "Gamma is one over the square root of one minus v squared over c squared, built from that same speed."
+    },
+    {
+     "start": 52.42,
+     "end": 58.65,
+     "text": "At low speed gamma is about one, so p is just m v, in kilogram metres per second."
+    },
+    {
+     "start": 58.65,
+     "end": 63.05,
+     "text": "As v nears c the denominator shrinks and momentum runs to infinity."
+    },
+    {
+     "start": 63.05,
+     "end": 65.25,
+     "text": "Look at the momentum curve in the widget."
+    },
+    {
+     "start": 65.25,
+     "end": 67.99,
+     "text": "Raise the speed from rest toward the speed of light."
+    },
+    {
+     "start": 67.99,
+     "end": 71.87,
+     "text": "At low speed it hugs the classical line p equals m v."
+    },
+    {
+     "start": 71.87,
+     "end": 75.11,
+     "text": "Near c it turns upward and climbs without bound."
+    },
+    {
+     "start": 75.11,
+     "end": 87.13,
+     "text": "Newton's second law survives as F equals dee p by dee t — force is the rate of change of momentum — so a steady push keeps increasing p, while the speed only creeps toward c and never arrives."
+    },
+    {
+     "start": 87.13,
+     "end": 92.89,
+     "text": "Like a sled that grips harder the faster it goes, you change the momentum and the speed barely moves."
+    },
+    {
+     "start": 92.89,
+     "end": 101.01,
+     "text": "Light speed is unreachable not by a cosmic ban, but because momentum, the thing a force actually changes, becomes infinite there."
+    },
+    {
+     "start": 101.01,
+     "end": 105.19,
+     "text": "Older books put gamma into a relativistic mass that grows with speed."
+    },
+    {
+     "start": 105.19,
+     "end": 108.79,
+     "text": "I will keep mass invariant and let gamma ride with the velocity."
+    },
+    {
+     "start": 108.79,
+     "end": 111.15,
+     "text": "Same physics, cleaner bookkeeping."
+    },
+    {
+     "start": 111.15,
+     "end": 114.23,
+     "text": "Only the link between momentum and velocity has changed."
+    }
+   ],
+   "voicedHash": "a042673da4af"
+  },
+  "relativity-close": {
+   "script": "Behind the panel, planets circle the Sun. Michelson and Morley, eighteen eighty-seven, found no ether. The Galilean transformation fails for light. Einstein, nineteen oh five: laws of physics and light speed, same in every inertial frame.\n\nx prime equals gamma times x minus u t. t prime equals gamma times t minus u x over c squared. x, t: position and time. Primes, other frame. u, relative speed. c, light's speed. Gamma equals one over the square root of one minus u squared over c squared, grows near c.\n\nv equals v prime plus u over one plus u v prime over c squared, never reaching c.\n\nSimultaneity is relative. delta t equals gamma delta tau. Clocks slow. Tau, proper time. Short L equals rest L zero over gamma. Muons prove it daily.\n\none plus z equals the square root of one plus beta, over one minus beta. z is redshift, beta is u over c. Interval, c delta t squared minus delta x squared, unchanged.\n\nMomentum p equals gamma m v. Energy E equals gamma m c squared. Kinetic K equals gamma minus one times m c squared. Rest E zero equals m c squared. E squared equals p squared c squared plus m squared c to the fourth. Massless particles move at c, E equals p c.\n\nGo well.",
+   "hash": "3f612aee9f2e",
+   "duration": 92.15,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 3.22,
+     "text": "Behind the panel, planets circle the Sun."
+    },
+    {
+     "start": 3.22,
+     "end": 7.7,
+     "text": "Michelson and Morley, eighteen eighty-seven, found no ether."
+    },
+    {
+     "start": 7.7,
+     "end": 10.7,
+     "text": "The Galilean transformation fails for light."
+    },
+    {
+     "start": 10.7,
+     "end": 17.08,
+     "text": "Einstein, nineteen oh five: laws of physics and light speed, same in every inertial frame."
+    },
+    {
+     "start": 17.08,
+     "end": 20.62,
+     "text": "x prime equals gamma times x minus u t."
+    },
+    {
+     "start": 20.62,
+     "end": 25.14,
+     "text": "t prime equals gamma times t minus u x over c squared."
+    },
+    {
+     "start": 25.14,
+     "end": 27.88,
+     "text": "x, t: position and time."
+    },
+    {
+     "start": 27.88,
+     "end": 29.8,
+     "text": "Primes, other frame."
+    },
+    {
+     "start": 29.8,
+     "end": 31.56,
+     "text": "u, relative speed."
+    },
+    {
+     "start": 31.56,
+     "end": 33.32,
+     "text": "c, light's speed."
+    },
+    {
+     "start": 33.32,
+     "end": 39.64,
+     "text": "Gamma equals one over the square root of one minus u squared over c squared, grows near c."
+    },
+    {
+     "start": 39.64,
+     "end": 45.98,
+     "text": "v equals v prime plus u over one plus u v prime over c squared, never reaching c."
+    },
+    {
+     "start": 45.98,
+     "end": 48.01,
+     "text": "Simultaneity is relative."
+    },
+    {
+     "start": 48.01,
+     "end": 50.47,
+     "text": "delta t equals gamma delta tau."
+    },
+    {
+     "start": 50.47,
+     "end": 51.73,
+     "text": "Clocks slow."
+    },
+    {
+     "start": 51.73,
+     "end": 53.51,
+     "text": "Tau, proper time."
+    },
+    {
+     "start": 53.51,
+     "end": 56.53,
+     "text": "Short L equals rest L zero over gamma."
+    },
+    {
+     "start": 56.53,
+     "end": 58.33,
+     "text": "Muons prove it daily."
+    },
+    {
+     "start": 58.33,
+     "end": 63.35,
+     "text": "one plus z equals the square root of one plus beta, over one minus beta."
+    },
+    {
+     "start": 63.35,
+     "end": 66.67,
+     "text": "z is redshift, beta is u over c."
+    },
+    {
+     "start": 66.67,
+     "end": 71.39,
+     "text": "Interval, c delta t squared minus delta x squared, unchanged."
+    },
+    {
+     "start": 71.39,
+     "end": 74.07,
+     "text": "Momentum p equals gamma m v."
+    },
+    {
+     "start": 74.07,
+     "end": 76.87,
+     "text": "Energy E equals gamma m c squared."
+    },
+    {
+     "start": 76.87,
+     "end": 80.73,
+     "text": "Kinetic K equals gamma minus one times m c squared."
+    },
+    {
+     "start": 80.73,
+     "end": 83.43,
+     "text": "Rest E zero equals m c squared."
+    },
+    {
+     "start": 83.43,
+     "end": 87.71,
+     "text": "E squared equals p squared c squared plus m squared c to the fourth."
+    },
+    {
+     "start": 87.71,
+     "end": 92.15,
+     "text": "Massless particles move at c, E equals p c. Go well."
+    }
+   ],
+   "voicedHash": "e8b693505714"
+  }
+ }
+}

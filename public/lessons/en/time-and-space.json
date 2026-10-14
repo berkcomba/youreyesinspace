@@ -1,0 +1,824 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "doppler": {
+   "script": "Sirius swings into view behind the panel. Astronomy's most used relativistic formula is the Doppler effect. A source emits frequency nu rest in its own frame and recedes at speed u. The wave stretches two ways: crests travel farther, the classical Doppler effect, and the emitting clock runs slow by gamma from time dilation. So nu observed equals nu rest times the square root of one minus u over c, divided by the square root of one plus u over c. Nu observed is what we measure, nu rest the source frequency, u the speed away, and c the speed of light. Lambda observed over lambda rest equals the square root of the ratio one plus u over c to one minus u over c. Change the sign of u for approach. For u much less than c this becomes delta lambda over lambda approximately u over c.\n\nRedshift z equals lambda observed minus lambda rest, over lambda rest. One plus z equals the square root of the ratio one plus u over c to one minus u over c, so u over c equals the square of one plus z, minus one, all over the square of one plus z, plus one. Positive z is redshift from recession; negative z is blueshift. Z may exceed one with u below c.\n\nUnlike sound there is no medium, so only relative velocity matters, not separate source or observer motion. Even a purely transverse source redshifts by gamma from time dilation. Ives and Stilwell confirmed that in nineteen thirty-eight with fast hydrogen atoms.\n\nA hydrogen line at one hundred twenty-two nanometres rest is seen at four hundred eighty-six nanometres. One plus z is four, z is three. Classical u equals c z gives three times light speed. Relativistically u over c is sixteen minus one, all over sixteen plus one, about zero point eight eight. Cosmological redshift is expanding space, needing general relativity, yet z above one is not faster than light.",
+   "hash": "f5e52b62d556",
+   "duration": 122.23,
+   "sentences": [
+    {
+     "start": 0.12,
+     "end": 3,
+     "text": "Sirius swings into view behind the panel."
+    },
+    {
+     "start": 3,
+     "end": 7.48,
+     "text": "Astronomy's most used relativistic formula is the Doppler effect."
+    },
+    {
+     "start": 7.48,
+     "end": 12.86,
+     "text": "A source emits frequency nu rest in its own frame and recedes at speed u."
+    },
+    {
+     "start": 12.86,
+     "end": 22.04,
+     "text": "The wave stretches two ways: crests travel farther, the classical Doppler effect, and the emitting clock runs slow by gamma from time dilation."
+    },
+    {
+     "start": 22.04,
+     "end": 30.9,
+     "text": "So nu observed equals nu rest times the square root of one minus u over c, divided by the square root of one plus u over c."
+    },
+    {
+     "start": 30.9,
+     "end": 38.14,
+     "text": "Nu observed is what we measure, nu rest the source frequency, u the speed away, and c the speed of light."
+    },
+    {
+     "start": 38.14,
+     "end": 45.58,
+     "text": "Lambda observed over lambda rest equals the square root of the ratio one plus u over c to one minus u over c."
+    },
+    {
+     "start": 45.58,
+     "end": 47.84,
+     "text": "Change the sign of u for approach."
+    },
+    {
+     "start": 47.84,
+     "end": 53.96,
+     "text": "For u much less than c this becomes delta lambda over lambda approximately u over c."
+    },
+    {
+     "start": 53.96,
+     "end": 59.16,
+     "text": "Redshift z equals lambda observed minus lambda rest, over lambda rest."
+    },
+    {
+     "start": 59.16,
+     "end": 72.57,
+     "text": "One plus z equals the square root of the ratio one plus u over c to one minus u over c, so u over c equals the square of one plus z, minus one, all over the square of one plus z, plus one."
+    },
+    {
+     "start": 72.57,
+     "end": 77.17,
+     "text": "Positive z is redshift from recession; negative z is blueshift."
+    },
+    {
+     "start": 77.17,
+     "end": 79.87,
+     "text": "Z may exceed one with u below c."
+    },
+    {
+     "start": 79.87,
+     "end": 86.63,
+     "text": "Unlike sound there is no medium, so only relative velocity matters, not separate source or observer motion."
+    },
+    {
+     "start": 86.63,
+     "end": 91.15,
+     "text": "Even a purely transverse source redshifts by gamma from time dilation."
+    },
+    {
+     "start": 91.15,
+     "end": 95.51,
+     "text": "Ives and Stilwell confirmed that in nineteen thirty-eight with fast hydrogen atoms."
+    },
+    {
+     "start": 95.51,
+     "end": 101.35,
+     "text": "A hydrogen line at one hundred twenty-two nanometres rest is seen at four hundred eighty-six nanometres."
+    },
+    {
+     "start": 101.35,
+     "end": 104.27,
+     "text": "One plus z is four, z is three."
+    },
+    {
+     "start": 104.27,
+     "end": 108.11,
+     "text": "Classical u equals c z gives three times light speed."
+    },
+    {
+     "start": 108.11,
+     "end": 115.25,
+     "text": "Relativistically u over c is sixteen minus one, all over sixteen plus one, about zero point eight eight."
+    },
+    {
+     "start": 115.25,
+     "end": 122.23,
+     "text": "Cosmological redshift is expanding space, needing general relativity, yet z above one is not faster than light."
+    }
+   ],
+   "voicedHash": "04a800867968"
+  },
+  "length-contraction": {
+   "script": "Let's ride with the muon. In its frame it is at rest and lives its ordinary two point two microseconds. How does it reach the ground? The atmosphere rushes up at zero point nine nine five times the speed of light, and a moving length is shorter. Fifteen kilometres of air, divided by gamma, contracts to about one and a half kilometres, and the ground covers that in about five microseconds. Same physics, two descriptions. In the Earth frame the muon's time is dilated; in the muon's frame the Earth's length is contracted.\n\nL equals L-nought over gamma, or L-nought times the square root of one minus u squared over c squared. L-nought is the proper length, measured where the object is at rest. L is the length measured where it moves at speed u, along the direction of motion only. Perpendicular sizes do not change. Gamma is the Lorentz factor, u the relative speed, c the speed of light.\n\nTo measure a moving rod, mark both ends at one time, and that time depends on the frame. With the time separation set to zero, the Lorentz transformation gives delta-x-prime equals gamma times delta-x. Delta-x-prime is L-nought, delta-x is L, so L is L-nought over gamma. That is the relativity of simultaneity applied to a ruler.\n\nThis is the FitzGerald Lorentz contraction of section four point one, but the story has changed. Nothing squeezes the rod. No ether presses on its atoms. Its rest length is unaffected, and its own observers notice nothing. The contraction says how a frame slices spacetime, exactly as a short shadow says the Sun's angle, not the object.\n\nLook at Voyager 1 behind the panel. At seventeen kilometres per second, beta about six parts in a hundred thousand, how much does it contract? About one point six parts in a billion, a few nanometres across its three point seven metre dish. Relativity is real at every speed. At ours it is just invisibly small.",
+   "hash": "1a1ae50dff5a",
+   "duration": 119.99,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.06,
+     "text": "Let's ride with the muon."
+    },
+    {
+     "start": 2.06,
+     "end": 7.18,
+     "text": "In its frame it is at rest and lives its ordinary two point two microseconds."
+    },
+    {
+     "start": 7.18,
+     "end": 9,
+     "text": "How does it reach the ground?"
+    },
+    {
+     "start": 9,
+     "end": 15.6,
+     "text": "The atmosphere rushes up at zero point nine nine five times the speed of light, and a moving length is shorter."
+    },
+    {
+     "start": 15.6,
+     "end": 24.8,
+     "text": "Fifteen kilometres of air, divided by gamma, contracts to about one and a half kilometres, and the ground covers that in about five microseconds."
+    },
+    {
+     "start": 24.8,
+     "end": 27.2,
+     "text": "Same physics, two descriptions."
+    },
+    {
+     "start": 27.2,
+     "end": 33.42,
+     "text": "In the Earth frame the muon's time is dilated; in the muon's frame the Earth's length is contracted."
+    },
+    {
+     "start": 33.42,
+     "end": 40.3,
+     "text": "L equals L-nought over gamma, or L-nought times the square root of one minus u squared over c squared."
+    },
+    {
+     "start": 40.3,
+     "end": 44.5,
+     "text": "L-nought is the proper length, measured where the object is at rest."
+    },
+    {
+     "start": 44.5,
+     "end": 49.72,
+     "text": "L is the length measured where it moves at speed u, along the direction of motion only."
+    },
+    {
+     "start": 49.72,
+     "end": 52.28,
+     "text": "Perpendicular sizes do not change."
+    },
+    {
+     "start": 52.28,
+     "end": 57.44,
+     "text": "Gamma is the Lorentz factor, u the relative speed, c the speed of light."
+    },
+    {
+     "start": 57.44,
+     "end": 63.19,
+     "text": "To measure a moving rod, mark both ends at one time, and that time depends on the frame."
+    },
+    {
+     "start": 63.19,
+     "end": 70.51,
+     "text": "With the time separation set to zero, the Lorentz transformation gives delta-x-prime equals gamma times delta-x."
+    },
+    {
+     "start": 70.51,
+     "end": 76.29,
+     "text": "Delta-x-prime is L-nought, delta-x is L, so L is L-nought over gamma."
+    },
+    {
+     "start": 76.29,
+     "end": 79.97,
+     "text": "That is the relativity of simultaneity applied to a ruler."
+    },
+    {
+     "start": 79.97,
+     "end": 85.61,
+     "text": "This is the FitzGerald Lorentz contraction of section four point one, but the story has changed."
+    },
+    {
+     "start": 85.61,
+     "end": 87.35,
+     "text": "Nothing squeezes the rod."
+    },
+    {
+     "start": 87.35,
+     "end": 89.49,
+     "text": "No ether presses on its atoms."
+    },
+    {
+     "start": 89.49,
+     "end": 93.67,
+     "text": "Its rest length is unaffected, and its own observers notice nothing."
+    },
+    {
+     "start": 93.67,
+     "end": 100.99,
+     "text": "The contraction says how a frame slices spacetime, exactly as a short shadow says the Sun's angle, not the object."
+    },
+    {
+     "start": 100.99,
+     "end": 103.25,
+     "text": "Look at Voyager 1 behind the panel."
+    },
+    {
+     "start": 103.25,
+     "end": 109.67,
+     "text": "At seventeen kilometres per second, beta about six parts in a hundred thousand, how much does it contract?"
+    },
+    {
+     "start": 109.67,
+     "end": 115.61,
+     "text": "About one point six parts in a billion, a few nanometres across its three point seven metre dish."
+    },
+    {
+     "start": 115.61,
+     "end": 117.97,
+     "text": "Relativity is real at every speed."
+    },
+    {
+     "start": 117.97,
+     "end": 119.99,
+     "text": "At ours it is just invisibly small."
+    }
+   ],
+   "voicedHash": "3ce695058276"
+  },
+  "muons": {
+   "script": "Look with me at the Earth behind the panel. Cosmic rays strike about fifteen kilometres up and produce muons. Their mean lifetime tau is 2.2 microseconds. Even near light speed they travel only c tau, and c is the speed of light, about six hundred and sixty metres. Classically, almost none should reach the ground. Yet about two hundred pass through every square metre every second. You are being hit now.\n\nThe decay law is N equals N-zero times e to the minus t over tau. N is how many remain, N-zero how many began, t the muon's own time, and tau the mean lifetime. Survival falls exponentially with lifetimes, because the chance of decay is steady.\n\nEarth time is t-Earth equals h over u, height h divided by speed u. Muon time is t-muon equals h over u gamma. Gamma is the Lorentz factor. We divide by gamma because the muon's proper time runs slow by gamma in the Earth frame, so fewer lifetimes pass on the way down.\n\nIn 1963 Frisch and Smith counted muons at 0.995 times the speed of light, gamma about ten, from Mount Washington, nineteen hundred metres up, to sea level. Classically, 6.4 microseconds is about 2.9 lifetimes, so e to the minus 2.9 is about five percent: twenty-seven of five hundred and sixty-three per hour. Relativity gives 0.64 microseconds, about 0.29 lifetimes, so about seventy-five percent survive, around four hundred and twenty. They measured four hundred and eight, plus or minus nine.\n\nSlide the speed in the widget and compare the two predictions. Watch the classical curve collapse and relativity hold up. At 0.9999 c the muon feels the crossing as 0.7 microseconds. Time dilation is why particles that, on Newton's clock, died ten kilometres overhead are hitting you. GPS satellites at 3.9 kilometres per second lose 7 microseconds a day to special relativity and gain 45 microseconds from general relativity. Without that correction your position drifts about ten kilometres a day.",
+   "hash": "4e5038866afe",
+   "duration": 131.51,
+   "sentences": [
+    {
+     "start": 0,
+     "end": 2.967,
+     "text": "Look with me at the Earth behind the panel."
+    },
+    {
+     "start": 2.967,
+     "end": 7.452,
+     "text": "Cosmic rays strike about fifteen kilometres up and produce muons."
+    },
+    {
+     "start": 7.452,
+     "end": 10.557,
+     "text": "Their mean lifetime tau is 2. 2 microseconds."
+    },
+    {
+     "start": 10.557,
+     "end": 18.146,
+     "text": "Even near light speed they travel only c tau, and c is the speed of light, about six hundred and sixty metres."
+    },
+    {
+     "start": 18.146,
+     "end": 21.527,
+     "text": "Classically, almost none should reach the ground."
+    },
+    {
+     "start": 21.527,
+     "end": 26.15,
+     "text": "Yet about two hundred pass through every square metre every second."
+    },
+    {
+     "start": 26.15,
+     "end": 27.668,
+     "text": "You are being hit now."
+    },
+    {
+     "start": 27.668,
+     "end": 32.153,
+     "text": "The decay law is N equals N-zero times e to the minus t over tau."
+    },
+    {
+     "start": 32.153,
+     "end": 38.639,
+     "text": "N is how many remain, N-zero how many began, t the muon's own time, and tau the mean lifetime."
+    },
+    {
+     "start": 38.639,
+     "end": 44.366,
+     "text": "Survival falls exponentially with lifetimes, because the chance of decay is steady."
+    },
+    {
+     "start": 44.366,
+     "end": 48.989,
+     "text": "Earth time is t-Earth equals h over u, height h divided by speed u."
+    },
+    {
+     "start": 48.989,
+     "end": 51.886,
+     "text": "Muon time is t-muon equals h over u gamma."
+    },
+    {
+     "start": 51.886,
+     "end": 53.818,
+     "text": "Gamma is the Lorentz factor."
+    },
+    {
+     "start": 53.818,
+     "end": 62.719,
+     "text": "We divide by gamma because the muon's proper time runs slow by gamma in the Earth frame, so fewer lifetimes pass on the way down."
+    },
+    {
+     "start": 62.719,
+     "end": 73.483,
+     "text": "In 1963 Frisch and Smith counted muons at 0. 995 times the speed of light, gamma about ten, from Mount Washington, nineteen hundred metres up, to sea level."
+    },
+    {
+     "start": 73.483,
+     "end": 84.246,
+     "text": "Classically, 6. 4 microseconds is about 2. 9 lifetimes, so e to the minus 2. 9 is about five percent: twenty-seven of five hundred and sixty-three per hour."
+    },
+    {
+     "start": 84.246,
+     "end": 93.216,
+     "text": "Relativity gives 0. 64 microseconds, about 0. 29 lifetimes, so about seventy-five percent survive, around four hundred and twenty."
+    },
+    {
+     "start": 93.216,
+     "end": 97.149,
+     "text": "They measured four hundred and eight, plus or minus nine."
+    },
+    {
+     "start": 97.149,
+     "end": 101.427,
+     "text": "Slide the speed in the widget and compare the two predictions."
+    },
+    {
+     "start": 101.427,
+     "end": 109.776,
+     "text": "Watch the classical curve collapse and relativity hold up. At 0. 9999 c the muon feels the crossing as 0. 7 microseconds."
+    },
+    {
+     "start": 109.776,
+     "end": 116.744,
+     "text": "Time dilation is why particles that, on Newton's clock, died ten kilometres overhead are hitting you."
+    },
+    {
+     "start": 116.744,
+     "end": 126.542,
+     "text": "GPS satellites at 3. 9 kilometres per second lose 7 microseconds a day to special relativity and gain 45 microseconds from general relativity."
+    },
+    {
+     "start": 126.542,
+     "end": 131.51,
+     "text": "Without that correction your position drifts about ten kilometres a day."
+    }
+   ],
+   "voicedHash": "e992fd20b200"
+  },
+  "simultaneity": {
+   "script": "Welcome. This is the idea that holds the rest of special relativity together.\n\nA train moves along a platform. When its ends pass marks A and B, lightning strikes both ends. Observer M, midway on the platform, receives both flashes at the same moment. The distances are equal, so the strikes were simultaneous. Fair enough.\n\nM prime sits midway on the train. In the platform frame she moves toward B and away from A, so B's flash reaches her first. In her own frame she is at rest, exactly midway, and light travels at the same speed c either way, postulate two. So she concludes B was struck first. She is not mistaken. In her frame the strikes were not simultaneous.\n\nFrom the Lorentz transformation with delta t equal to zero, delta t prime equals minus gamma times u times delta x, all over c squared. Delta t is the time separation in the platform frame S, and it is zero. Delta t prime is the time separation in the train frame S prime. Gamma is the Lorentz factor, u is the relative speed of S prime, delta x is the separation of the events in S, and c is the speed of light. The transformation mixes space into time, so simultaneous events a distance apart are not simultaneous in a moving frame. The minus sign fixes the order. Greater distance or greater speed means a greater disagreement.\n\nSimultaneity is not a fact about the world. It is a fact about a reference frame. At the same time has no meaning for events at different places until you name the frame. This is what makes time dilation and length contraction consistent rather than paradoxical.\n\nBoth observers agree on the physical facts: which flash reached M prime first, and what each clock read. They disagree only about simultaneous. Can you find any experiment that would settle who is right? Postulate one says no, and that is the point.",
+   "hash": "e331e44b33e4",
+   "duration": 114.55,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 0.8,
+     "text": "Welcome."
+    },
+    {
+     "start": 0.8,
+     "end": 4.9,
+     "text": "This is the idea that holds the rest of special relativity together."
+    },
+    {
+     "start": 4.9,
+     "end": 7.12,
+     "text": "A train moves along a platform."
+    },
+    {
+     "start": 7.12,
+     "end": 11.64,
+     "text": "When its ends pass marks A and B, lightning strikes both ends."
+    },
+    {
+     "start": 11.64,
+     "end": 16.72,
+     "text": "Observer M, midway on the platform, receives both flashes at the same moment."
+    },
+    {
+     "start": 16.72,
+     "end": 20.12,
+     "text": "The distances are equal, so the strikes were simultaneous."
+    },
+    {
+     "start": 20.12,
+     "end": 21.36,
+     "text": "Fair enough."
+    },
+    {
+     "start": 21.36,
+     "end": 23.64,
+     "text": "M prime sits midway on the train."
+    },
+    {
+     "start": 23.64,
+     "end": 29.6,
+     "text": "In the platform frame she moves toward B and away from A, so B's flash reaches her first."
+    },
+    {
+     "start": 29.6,
+     "end": 37.38,
+     "text": "In her own frame she is at rest, exactly midway, and light travels at the same speed c either way, postulate two."
+    },
+    {
+     "start": 37.38,
+     "end": 39.86,
+     "text": "So she concludes B was struck first."
+    },
+    {
+     "start": 39.86,
+     "end": 41.44,
+     "text": "She is not mistaken."
+    },
+    {
+     "start": 41.44,
+     "end": 44.2,
+     "text": "In her frame the strikes were not simultaneous."
+    },
+    {
+     "start": 44.2,
+     "end": 53.5,
+     "text": "From the Lorentz transformation with delta t equal to zero, delta t prime equals minus gamma times u times delta x, all over c squared."
+    },
+    {
+     "start": 53.5,
+     "end": 58.41,
+     "text": "Delta t is the time separation in the platform frame S, and it is zero."
+    },
+    {
+     "start": 58.41,
+     "end": 62.73,
+     "text": "Delta t prime is the time separation in the train frame S prime."
+    },
+    {
+     "start": 62.73,
+     "end": 72.09,
+     "text": "Gamma is the Lorentz factor, u is the relative speed of S prime, delta x is the separation of the events in S, and c is the speed of light."
+    },
+    {
+     "start": 72.09,
+     "end": 79.43,
+     "text": "The transformation mixes space into time, so simultaneous events a distance apart are not simultaneous in a moving frame."
+    },
+    {
+     "start": 79.43,
+     "end": 81.55,
+     "text": "The minus sign fixes the order."
+    },
+    {
+     "start": 81.55,
+     "end": 85.07,
+     "text": "Greater distance or greater speed means a greater disagreement."
+    },
+    {
+     "start": 85.07,
+     "end": 87.75,
+     "text": "Simultaneity is not a fact about the world."
+    },
+    {
+     "start": 87.75,
+     "end": 89.89,
+     "text": "It is a fact about a reference frame."
+    },
+    {
+     "start": 89.89,
+     "end": 94.55,
+     "text": "At the same time has no meaning for events at different places until you name the frame."
+    },
+    {
+     "start": 94.55,
+     "end": 99.59,
+     "text": "This is what makes time dilation and length contraction consistent rather than paradoxical."
+    },
+    {
+     "start": 99.59,
+     "end": 106.11,
+     "text": "Both observers agree on the physical facts: which flash reached M prime first, and what each clock read."
+    },
+    {
+     "start": 106.11,
+     "end": 108.67,
+     "text": "They disagree only about simultaneous."
+    },
+    {
+     "start": 108.67,
+     "end": 111.71,
+     "text": "Can you find any experiment that would settle who is right?"
+    },
+    {
+     "start": 111.71,
+     "end": 114.55,
+     "text": "Postulate one says no, and that is the point."
+    }
+   ],
+   "voicedHash": "f5a81950d82e"
+  },
+  "spacetime-summary": {
+   "script": "Look behind the panel for a moment. The whole planetary system is slowly circling the Sun, the picture Newton would have recognized. But the space and time those planets move through are not the absolute ones he assumed.\n\nSimultaneity is relative. Events that are simultaneous in one frame S are separated in a frame S-prime by delta t prime equals minus gamma u delta x over c squared. Gamma is the Lorentz factor, u is the relative speed, delta x is their separation, and c is the speed of light. Which event comes first depends on the direction of motion.\n\nTime dilation says the coordinate interval delta t equals gamma times the proper time delta tau. Proper time is read by one clock present at both events, and it is the shortest interval anyone can measure.\n\nWe see it in cosmic-ray muons, as Frisch and Smith showed in 1963, in atomic clocks flown on aircraft, and in the Global Positioning System, which must correct about seven microseconds a day.\n\nLength contraction follows at once. The measured length L is the proper length L-zero divided by gamma, along the motion only. It is simply the relativity of simultaneity applied to the two ends of a rod.\n\nFor light from a receding source, one plus z equals the square root of one plus beta, over one minus beta. Beta is speed over c, and z is the redshift. A transverse shift remains even with no approach or recession, from time dilation alone.\n\nThese effects are symmetric between frames. What everyone agrees on is the invariant interval: s squared equals c delta t, squared, minus delta x, squared.\n\nSpace and time have been rebuilt. Newton's mechanics was built on the old ones, so it too needs rebuilding, and that rebuilding produces the most famous equation in physics. We'll meet it next.",
+   "hash": "47c9e5110fd8",
+   "duration": 112.95,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.38,
+     "text": "Look behind the panel for a moment."
+    },
+    {
+     "start": 2.38,
+     "end": 8.26,
+     "text": "The whole planetary system is slowly circling the Sun, the picture Newton would have recognized."
+    },
+    {
+     "start": 8.26,
+     "end": 13.58,
+     "text": "But the space and time those planets move through are not the absolute ones he assumed."
+    },
+    {
+     "start": 13.58,
+     "end": 15.62,
+     "text": "Simultaneity is relative."
+    },
+    {
+     "start": 15.62,
+     "end": 26.04,
+     "text": "Events that are simultaneous in one frame S are separated in a frame S-prime by delta t prime equals minus gamma u delta x over c squared."
+    },
+    {
+     "start": 26.04,
+     "end": 33.74,
+     "text": "Gamma is the Lorentz factor, u is the relative speed, delta x is their separation, and c is the speed of light."
+    },
+    {
+     "start": 33.74,
+     "end": 37.08,
+     "text": "Which event comes first depends on the direction of motion."
+    },
+    {
+     "start": 37.08,
+     "end": 43.1,
+     "text": "Time dilation says the coordinate interval delta t equals gamma times the proper time delta tau."
+    },
+    {
+     "start": 43.1,
+     "end": 49.36,
+     "text": "Proper time is read by one clock present at both events, and it is the shortest interval anyone can measure."
+    },
+    {
+     "start": 49.36,
+     "end": 62.17,
+     "text": "We see it in cosmic-ray muons, as Frisch and Smith showed in 1963, in atomic clocks flown on aircraft, and in the Global Positioning System, which must correct about seven microseconds a day."
+    },
+    {
+     "start": 62.17,
+     "end": 64.43,
+     "text": "Length contraction follows at once."
+    },
+    {
+     "start": 64.43,
+     "end": 70.53,
+     "text": "The measured length L is the proper length L-zero divided by gamma, along the motion only."
+    },
+    {
+     "start": 70.53,
+     "end": 75.25,
+     "text": "It is simply the relativity of simultaneity applied to the two ends of a rod."
+    },
+    {
+     "start": 75.25,
+     "end": 82.61,
+     "text": "For light from a receding source, one plus z equals the square root of one plus beta, over one minus beta."
+    },
+    {
+     "start": 82.61,
+     "end": 86.19,
+     "text": "Beta is speed over c, and z is the redshift."
+    },
+    {
+     "start": 86.19,
+     "end": 91.67,
+     "text": "A transverse shift remains even with no approach or recession, from time dilation alone."
+    },
+    {
+     "start": 91.67,
+     "end": 94.21,
+     "text": "These effects are symmetric between frames."
+    },
+    {
+     "start": 94.21,
+     "end": 101.99,
+     "text": "What everyone agrees on is the invariant interval: s squared equals c delta t, squared, minus delta x, squared."
+    },
+    {
+     "start": 101.99,
+     "end": 104.13,
+     "text": "Space and time have been rebuilt."
+    },
+    {
+     "start": 104.13,
+     "end": 111.95,
+     "text": "Newton's mechanics was built on the old ones, so it too needs rebuilding, and that rebuilding produces the most famous equation in physics."
+    },
+    {
+     "start": 111.95,
+     "end": 112.95,
+     "text": "We'll meet it next."
+    }
+   ],
+   "voicedHash": "6a67118a5486"
+  },
+  "time-dilation": {
+   "script": "Imagine the simplest clock you can build. Two mirrors a distance h apart, and a pulse of light bouncing between them. One tick is one round trip. In the clock’s own frame that lasts delta t zero, equal to two h over c: the light goes up and back at speed c, so time is just distance over speed.\n\nNow let that clock sail past you at speed u. In your frame the mirrors are moving, so the pulse has to chase them along a zig-zag. Each leg is longer than h. But the pulse still moves at c — that is postulate two. A longer path at the same speed means a longer tick. The moving clock runs slow as you watch it.\n\nPythagoras makes this exact. Take half a tick. The light travels a distance c times delta t over two. That length, squared, equals h squared plus the sideways distance the clock moved in the same half-tick, u times delta t over two, squared. Solve for delta t and you get delta t equals two h over c, divided by the square root of one minus u squared over c squared. The piece two h over c is just delta t zero, and the factor out front is gamma, so delta t equals gamma times delta t zero. Gamma is always greater than one when u is not zero, so your interval is longer than the clock’s own.\n\nThat quantity delta t zero — the time between two events measured by a clock present at both — is the proper time, delta tau. It is the shortest interval any observer can assign to those events, and it is invariant. Everybody agrees what the moving clock reads. They disagree about how much of their own time elapsed meanwhile.\n\nWatch the widget. Both pulses move at the same speed on your screen. The moving one simply has farther to go between ticks. That is the whole effect.\n\nIs it a trick of light clocks? No. Sit any other clock beside the light clock in the moving frame. The two must keep agreeing, or the rider could detect her own motion by watching them drift, which would violate postulate one. So every process slows: pendulums, heartbeats, radioactive decay, ageing.\n\nAnd whose clock is really slow? Both. You see hers run slow; she sees yours run slow, by the same factor. No contradiction, because you disagree about simultaneity — which of your ticks lines up with which of hers. The twin paradox appears only if one twin turns around. Turning around changes inertial frame and breaks the symmetry, so the travelling twin comes home younger. The effect is real, and it has been measured with atomic clocks flown on aircraft.",
+   "hash": "1aabe3e8e7ce",
+   "duration": 152.63,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.76,
+     "text": "Imagine the simplest clock you can build."
+    },
+    {
+     "start": 2.76,
+     "end": 7.86,
+     "text": "Two mirrors a distance h apart, and a pulse of light bouncing between them."
+    },
+    {
+     "start": 7.86,
+     "end": 10.06,
+     "text": "One tick is one round trip."
+    },
+    {
+     "start": 10.06,
+     "end": 20.74,
+     "text": "In the clock’s own frame that lasts delta t zero, equal to two h over c: the light goes up and back at speed c, so time is just distance over speed."
+    },
+    {
+     "start": 20.74,
+     "end": 23.8,
+     "text": "Now let that clock sail past you at speed u."
+    },
+    {
+     "start": 23.8,
+     "end": 28.76,
+     "text": "In your frame the mirrors are moving, so the pulse has to chase them along a zig-zag."
+    },
+    {
+     "start": 28.76,
+     "end": 30.72,
+     "text": "Each leg is longer than h."
+    },
+    {
+     "start": 30.72,
+     "end": 34.7,
+     "text": "But the pulse still moves at c — that is postulate two."
+    },
+    {
+     "start": 34.7,
+     "end": 38.12,
+     "text": "A longer path at the same speed means a longer tick."
+    },
+    {
+     "start": 38.12,
+     "end": 40.86,
+     "text": "The moving clock runs slow as you watch it."
+    },
+    {
+     "start": 40.86,
+     "end": 43.02,
+     "text": "Pythagoras makes this exact."
+    },
+    {
+     "start": 43.02,
+     "end": 44.26,
+     "text": "Take half a tick."
+    },
+    {
+     "start": 44.26,
+     "end": 47.94,
+     "text": "The light travels a distance c times delta t over two."
+    },
+    {
+     "start": 47.94,
+     "end": 57.26,
+     "text": "That length, squared, equals h squared plus the sideways distance the clock moved in the same half-tick, u times delta t over two, squared."
+    },
+    {
+     "start": 57.26,
+     "end": 65.36,
+     "text": "Solve for delta t and you get delta t equals two h over c, divided by the square root of one minus u squared over c squared."
+    },
+    {
+     "start": 65.36,
+     "end": 73.7,
+     "text": "The piece two h over c is just delta t zero, and the factor out front is gamma, so delta t equals gamma times delta t zero."
+    },
+    {
+     "start": 73.7,
+     "end": 79.51,
+     "text": "Gamma is always greater than one when u is not zero, so your interval is longer than the clock’s own."
+    },
+    {
+     "start": 79.51,
+     "end": 87.31,
+     "text": "That quantity delta t zero — the time between two events measured by a clock present at both — is the proper time, delta tau."
+    },
+    {
+     "start": 87.31,
+     "end": 92.39,
+     "text": "It is the shortest interval any observer can assign to those events, and it is invariant."
+    },
+    {
+     "start": 92.39,
+     "end": 94.93,
+     "text": "Everybody agrees what the moving clock reads."
+    },
+    {
+     "start": 94.93,
+     "end": 98.49,
+     "text": "They disagree about how much of their own time elapsed meanwhile."
+    },
+    {
+     "start": 98.49,
+     "end": 99.67,
+     "text": "Watch the widget."
+    },
+    {
+     "start": 99.67,
+     "end": 102.53,
+     "text": "Both pulses move at the same speed on your screen."
+    },
+    {
+     "start": 102.53,
+     "end": 105.69,
+     "text": "The moving one simply has farther to go between ticks."
+    },
+    {
+     "start": 105.69,
+     "end": 107.27,
+     "text": "That is the whole effect."
+    },
+    {
+     "start": 107.27,
+     "end": 109.67,
+     "text": "Is it a trick of light clocks? No."
+    },
+    {
+     "start": 109.67,
+     "end": 112.85,
+     "text": "Sit any other clock beside the light clock in the moving frame."
+    },
+    {
+     "start": 112.85,
+     "end": 119.95,
+     "text": "The two must keep agreeing, or the rider could detect her own motion by watching them drift, which would violate postulate one."
+    },
+    {
+     "start": 119.95,
+     "end": 125.57,
+     "text": "So every process slows: pendulums, heartbeats, radioactive decay, ageing."
+    },
+    {
+     "start": 125.57,
+     "end": 128.23,
+     "text": "And whose clock is really slow? Both."
+    },
+    {
+     "start": 128.23,
+     "end": 132.95,
+     "text": "You see hers run slow; she sees yours run slow, by the same factor."
+    },
+    {
+     "start": 132.95,
+     "end": 139.07,
+     "text": "No contradiction, because you disagree about simultaneity — which of your ticks lines up with which of hers."
+    },
+    {
+     "start": 139.07,
+     "end": 142.59,
+     "text": "The twin paradox appears only if one twin turns around."
+    },
+    {
+     "start": 142.59,
+     "end": 148.27,
+     "text": "Turning around changes inertial frame and breaks the symmetry, so the travelling twin comes home younger."
+    },
+    {
+     "start": 148.27,
+     "end": 152.63,
+     "text": "The effect is real, and it has been measured with atomic clocks flown on aircraft."
+    }
+   ],
+   "voicedHash": "1d49775d725b"
+  }
+ }
+}

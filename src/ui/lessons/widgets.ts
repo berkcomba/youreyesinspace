@@ -2200,6 +2200,467 @@ class ColorIndexWidget extends CanvasWidget {
   }
 }
 
+/* ------------------------------------------------- 22. Michelson–Morley ---- */
+
+const gammaOf = (b: number) => 1 / Math.sqrt(1 - b * b);
+
+class MichelsonWidget extends CanvasWidget {
+  private vkm = 30;                       // Earth's speed through the "ether", km/s
+  private mode: 'ether' | 'observed' = 'ether';
+  private t = 0;
+  constructor() {
+    super(480 / 360);
+    this.segmented<'ether' | 'observed'>([['ether', 'Ether theory predicts'], ['observed', 'What was observed']], 'ether', (m) => { this.mode = m; });
+    this.playButton();
+    this.slider('Speed through the ether', 0, 100, 1, this.vkm, (v) => `${fmt(v, 0)} km/s`, (v) => { this.vkm = v; });
+  }
+  protected draw(dt: number) {
+    const c = this.ctx;
+    this.t += dt;
+    c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const beta = this.mode === 'ether' ? Math.min(0.55, this.vkm / 90) : 0;   // animation (hugely exaggerated)
+    const L = Math.min(this.w * 0.26, this.h * 0.36);
+    const bx = this.w * 0.36, by = this.h * 0.55;                         // beam splitter
+    const m1 = { x: bx + L, y: by }, m2 = { x: bx, y: by - L };          // mirrors
+    const det = { x: bx, y: by + L * 0.55 };
+    // ether wind arrows
+    if (this.mode === 'ether') {
+      for (let i = 0; i < 6; i++) {
+        const y = 14 + i * (this.h - 28) / 5, x = ((this.t * 40 + i * 37) % (this.w * 0.62));
+        this.line(x, y, x + 18, y, 'rgba(165,138,214,0.35)', 1); this.line(x + 18, y, x + 13, y - 3, 'rgba(165,138,214,0.35)'); this.line(x + 18, y, x + 13, y + 3, 'rgba(165,138,214,0.35)');
+      }
+      this.text('ether wind  (Earth moves right → ether streams left… drawn here flowing with the along-arm)', 8, this.h - 8, C.faint, 8);
+    }
+    // apparatus
+    this.line(bx - L * 0.7, by, bx, by, 'rgba(255,255,255,0.15)', 1);
+    this.text('source', bx - L * 0.7, by - 10, C.dim, 9, 'left');
+    this.line(bx, by, m1.x, m1.y, C.line, 1); this.line(bx, by, m2.x, m2.y, C.line, 1); this.line(bx, by, det.x, det.y, C.line, 1);
+    this.line(bx - 7, by + 7, bx + 7, by - 7, C.text, 2);                   // splitter
+    this.line(m1.x + 3, m1.y - 12, m1.x + 3, m1.y + 12, C.text, 3); this.line(m2.x - 12, m2.y - 3, m2.x + 12, m2.y - 3, C.text, 3);
+    c.fillStyle = '#2a2f3a'; c.fillRect(det.x - 12, det.y, 24, 8); this.text('detector', det.x, det.y + 18, C.dim, 9, 'center');
+    this.text('L', (bx + m1.x) / 2, by + 12, C.text, 11, 'center', 'serif'); this.text('L', bx - 12, (by + m2.y) / 2, C.text, 11, 'center', 'serif');
+    // pulses: unit c = L per second (so round trip at rest = 2 s)
+    const tPar = 1 / (1 - beta) + 1 / (1 + beta), tPerp = 2 / Math.sqrt(1 - beta * beta);
+    const cycle = Math.max(tPar, tPerp) + 0.8;
+    const tau = (this.t * 0.6) % cycle;
+    let pPar: { x: number; y: number } | null = null, pPerp: { x: number; y: number } | null = null;
+    if (tau < tPar) { const out = 1 / (1 - beta); const f = tau < out ? (tau * (1 - beta)) : 1 - (tau - out) * (1 + beta); pPar = { x: bx + f * L, y: by }; }
+    if (tau < tPerp) { const half = tPerp / 2; const f = tau < half ? tau / half : 2 - tau / half; pPerp = { x: bx, y: by - f * L }; }
+    if (pPar) { this.glow(pPar.x, pPar.y, 9, 'rgba(242,196,90,0.7)'); this.circle(pPar.x, pPar.y, 3, undefined, C.sun); }
+    if (pPerp) { this.glow(pPerp.x, pPerp.y, 9, 'rgba(111,163,214,0.7)'); this.circle(pPerp.x, pPerp.y, 3, undefined, C.blue); }
+    // arrival marks
+    const lag = tPar - tPerp;
+    this.text(this.mode === 'ether' ? `along-wind pulse returns late by ${fmt(lag * 100 / 2, 1)} % of a round trip (exaggerated)` : 'both pulses return together — no delay, at any orientation', 8, 12, this.mode === 'ether' ? C.sun : C.green, 9);
+    // fringes (right)
+    const fx0 = this.w * 0.72, fw = this.w - fx0 - 10, fy0 = 30, fy1 = this.h - 60;
+    const period = 16;
+    const expectedShift = (2 * 11 * (this.vkm * 1e3 / C_LIGHT) ** 2) / 590e-9;   // fringes, L = 11 m
+    const shift = this.mode === 'ether' ? expectedShift * Math.cos(this.t * 0.5) : 0;   // apparatus slowly rotating
+    c.save(); c.beginPath(); c.rect(fx0, fy0, fw, fy1 - fy0); c.clip();
+    for (let y = fy0; y < fy1; y++) { const v = 0.5 + 0.5 * Math.cos(TAU * ((y - fy0) / period + shift)); c.fillStyle = `rgba(239,233,216,${0.08 + 0.8 * v})`; c.fillRect(fx0, y, fw, 1); }
+    c.restore();
+    c.strokeStyle = C.line; c.strokeRect(fx0, fy0, fw, fy1 - fy0);
+    this.line(fx0 - 6, (fy0 + fy1) / 2, fx0 + fw + 6, (fy0 + fy1) / 2, C.red, 1);
+    this.text('fringes', fx0 + fw / 2, fy0 - 10, C.dim, 9, 'center');
+    this.text(`apparatus rotating · θ = ${fmt(((this.t * 0.25 * 180 / Math.PI) % 180), 0)}°`, fx0 + fw / 2, fy1 + 12, C.faint, 8, 'center');
+    this.text(this.mode === 'ether' ? `shift ${fmt(shift, 2)} fringe` : 'shift 0.00 fringe', fx0 + fw / 2, fy1 + 24, this.mode === 'ether' ? C.sun : C.green, 9, 'center', 'mono');
+    this.setReadout([
+      ['Earth\'s speed u', `${fmt(this.vkm, 0)} km/s  (β = ${sci(this.vkm * 1e3 / C_LIGHT, 1)})`],
+      ['Δt ≈ (L/c) β²  (L = 11 m)', `${sci((11 / C_LIGHT) * (this.vkm * 1e3 / C_LIGHT) ** 2, 2)} s`],
+      ['Fringe shift 2Lβ²/λ  (λ = 590 nm)', `${fmt(expectedShift, 2)} fringe`, C.sun],
+      ['Instrument sensitivity', '0.01 fringe'],
+      ['Observed (1887)', 'no shift, in any season', C.green],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 23. velocity addition ---- */
+
+class VelocityAddWidget extends CanvasWidget {
+  private u = 0.6;      // frame speed / c
+  private vp = 0.6;     // object speed in S′ / c
+  constructor() {
+    super(480 / 330);
+    this.playing = false;
+    this.slider('Rocket speed u (relative to you)', 0, 0.99, 0.01, this.u, (v) => `${fmt(v, 2)} c`, (v) => { this.u = v; });
+    this.slider('Probe speed v′ (relative to rocket)', -0.99, 1, 0.01, this.vp, (v) => `${fmt(v, 2)} c`, (v) => { this.vp = v; });
+  }
+  protected draw() {
+    const c = this.ctx;
+    c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const u = this.u, vp = this.vp;
+    const gal = u + vp, rel = (u + vp) / (1 + u * vp);
+    /* top: arrows */
+    const ax0 = 60, ax1 = this.w - 20, ay = 26;
+    const AX = (v: number) => ax0 + ((v + 1) / 3) * (ax1 - ax0);          // −1c … 2c
+    this.line(ax0, ay + 36, ax1, ay + 36, C.line, 1);
+    for (const v of [-1, 0, 1, 2]) { this.line(AX(v), ay + 32, AX(v), ay + 40, v === 1 ? C.red : C.text); this.text(`${v} c`, AX(v), ay + 50, v === 1 ? C.red : C.dim, 9, 'center', 'mono'); }
+    this.line(AX(1), ay - 10, AX(1), ay + 36, C.red, 1, [3, 3]); this.text('speed of light', AX(1) + 4, ay - 8, C.red, 8, 'left');
+    const arrow = (v: number, y: number, col: string, label: string) => {
+      const x = AX(v);
+      this.line(AX(0), y, x, y, col, 2.5);
+      c.beginPath(); c.moveTo(x, y); c.lineTo(x - 7 * Math.sign(v || 1), y - 4); c.lineTo(x - 7 * Math.sign(v || 1), y + 4); c.closePath(); c.fillStyle = col; c.fill();
+      this.text(label, ax0 - 6, y, col, 9, 'right');
+    };
+    arrow(u, ay, C.accent, 'rocket u');
+    arrow(gal, ay + 12, C.dim, 'Galileo u + v′');
+    arrow(rel, ay + 24, C.green, 'relativity');
+    /* bottom: graph v against v′ for this u */
+    const gx0 = 46, gx1 = this.w - 16, gy0 = ay + 70, gy1 = this.h - 26;
+    const GX = (x: number) => gx0 + ((x + 1) / 2) * (gx1 - gx0), GY = (y: number) => gy1 - ((y + 1) / 3) * (gy1 - gy0);
+    for (const v of [-1, 0, 1, 2]) { this.line(gx0, GY(v), gx1, GY(v), v === 1 || v === -1 ? 'rgba(212,106,90,0.35)' : C.grid); this.text(`${v}c`, gx0 - 4, GY(v), C.faint, 8, 'right', 'mono'); }
+    for (const x of [-1, -0.5, 0, 0.5, 1]) { this.line(GX(x), gy0, GX(x), gy1, C.grid); this.text(`${x}c`, GX(x), gy1 + 10, C.faint, 8, 'center', 'mono'); }
+    this.text('probe speed in the rocket frame v′ →', gx1, gy1 + 20, C.dim, 9, 'right');
+    c.save(); c.translate(14, (gy0 + gy1) / 2); c.rotate(-Math.PI / 2); this.text('speed you measure, v', 0, 0, C.dim, 9, 'center'); c.restore();
+    c.save(); c.beginPath(); c.rect(gx0, gy0, gx1 - gx0, gy1 - gy0); c.clip();
+    c.beginPath(); c.moveTo(GX(-1), GY(u - 1)); c.lineTo(GX(1), GY(u + 1)); c.strokeStyle = C.dim; c.lineWidth = 1.2; c.setLineDash([4, 4]); c.stroke(); c.setLineDash([]);
+    c.beginPath();
+    for (let x = -1; x <= 1.0001; x += 0.02) { const y = (u + x) / (1 + u * x); if (x <= -1) c.moveTo(GX(x), GY(y)); else c.lineTo(GX(x), GY(y)); }
+    c.strokeStyle = C.green; c.lineWidth = 2; c.stroke();
+    c.restore();
+    this.glow(GX(vp), GY(rel), 9, 'rgba(127,191,138,0.7)'); this.circle(GX(vp), GY(rel), 3.5, undefined, '#fff');
+    this.circle(GX(vp), GY(Math.min(2, gal)), 3, C.dim, undefined, 1);
+    this.text(`u = ${fmt(u, 2)} c`, gx1 - 6, gy0 + 10, C.accent, 10, 'right', 'serif');
+    this.setReadout([
+      ['Galilean: v = u + v′', `${fmt(gal, 3)} c`, gal > 1 ? C.red : C.dim],
+      ['Relativistic: v = (u + v′)/(1 + uv′/c²)', `${fmt(rel, 4)} c`, C.green],
+      ['Difference', `${fmt(gal - rel, 3)} c`],
+      ['γ of the result', Math.abs(rel) < 1 ? fmt(gammaOf(rel), 3) : '∞ (light)'],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 24. Minkowski diagram ---- */
+
+class MinkowskiWidget extends CanvasWidget {
+  private beta = 0.5;
+  private ev = { x: 1.2, ct: 2.0 };      // event in S, units of light-seconds
+  private dragging = false;
+  private readonly range = 3.2;          // axis half-extent
+  constructor() {
+    super(480 / 420);
+    this.playing = false;
+    this.slider('Speed of frame S′,  β = u/c', 0, 0.9, 0.01, this.beta, (v) => fmt(v, 2), (v) => { this.beta = v; });
+    this.controls.appendChild($('div', 'lw-caption', 'Drag the event (white dot) anywhere on the diagram.'));
+    const pos = (e: PointerEvent) => { const r = this.canvas.getBoundingClientRect(); return { px: (e.clientX - r.left) * (this.w / r.width), py: (e.clientY - r.top) * (this.h / r.height) }; };
+    this.canvas.addEventListener('pointerdown', (e) => { this.dragging = true; this.canvas.setPointerCapture(e.pointerId); const { px, py } = pos(e); this.setEvent(px, py); });
+    this.canvas.addEventListener('pointermove', (e) => { if (this.dragging) { const { px, py } = pos(e); this.setEvent(px, py); } });
+    this.canvas.addEventListener('pointerup', () => { this.dragging = false; });
+    this.canvas.style.touchAction = 'none';
+    this.canvas.style.cursor = 'crosshair';
+  }
+  private geom() { const S = Math.min(this.w, this.h) / 2 / this.range * 0.92; return { ox: this.w / 2, oy: this.h / 2 + 10, S }; }
+  private setEvent(px: number, py: number) { const { ox, oy, S } = this.geom(); this.ev = { x: Math.max(-this.range, Math.min(this.range, (px - ox) / S)), ct: Math.max(-this.range, Math.min(this.range, (oy - py) / S)) }; }
+  protected draw() {
+    const c = this.ctx;
+    c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const { ox, oy, S } = this.geom();
+    const P = (x: number, ct: number) => ({ x: ox + x * S, y: oy - ct * S });
+    const b = this.beta, g = gammaOf(b);
+    const R = this.range;
+    // S grid
+    for (let k = -3; k <= 3; k++) { const p0 = P(k, -R), p1 = P(k, R); this.line(p0.x, p0.y, p1.x, p1.y, C.grid); const q0 = P(-R, k), q1 = P(R, k); this.line(q0.x, q0.y, q1.x, q1.y, C.grid); }
+    // S′ grid: lines of constant x′ (parallel to ct′ axis) and constant ct′ (parallel to x′ axis)
+    c.save(); c.beginPath(); c.rect(P(-R, R).x, P(-R, R).y, 2 * R * S, 2 * R * S); c.clip();
+    for (let k = -4; k <= 4; k++) {
+      // x′ = k: x = γ(k + β ct′)… parametrise by ct′: x = γ(k + β s), ct = γ(s + β k)
+      const a0 = { x: g * (k - b * R * 2), ct: g * (-R * 2 + b * k) }, a1 = { x: g * (k + b * R * 2), ct: g * (R * 2 + b * k) };
+      let pa = P(a0.x, a0.ct), pb = P(a1.x, a1.ct); this.line(pa.x, pa.y, pb.x, pb.y, 'rgba(189,155,108,0.18)');
+      const b0 = { x: g * (-R * 2 + b * k), ct: g * (k - b * R * 2) }, b1 = { x: g * (R * 2 + b * k), ct: g * (k + b * R * 2) };
+      pa = P(b0.x, b0.ct); pb = P(b1.x, b1.ct); this.line(pa.x, pa.y, pb.x, pb.y, 'rgba(189,155,108,0.18)');
+    }
+    // light cone
+    let p0 = P(-R, -R), p1 = P(R, R); this.line(p0.x, p0.y, p1.x, p1.y, 'rgba(242,196,90,0.55)', 1.2);
+    p0 = P(-R, R); p1 = P(R, -R); this.line(p0.x, p0.y, p1.x, p1.y, 'rgba(242,196,90,0.55)', 1.2);
+    c.fillStyle = 'rgba(242,196,90,0.05)'; c.beginPath(); c.moveTo(ox, oy); c.lineTo(P(R, R).x, P(R, R).y); c.lineTo(P(-R, R).x, P(-R, R).y); c.closePath(); c.fill();
+    c.beginPath(); c.moveTo(ox, oy); c.lineTo(P(R, -R).x, P(R, -R).y); c.lineTo(P(-R, -R).x, P(-R, -R).y); c.closePath(); c.fill();
+    // S axes
+    p0 = P(-R, 0); p1 = P(R, 0); this.line(p0.x, p0.y, p1.x, p1.y, C.text, 1.3); p0 = P(0, -R); p1 = P(0, R); this.line(p0.x, p0.y, p1.x, p1.y, C.text, 1.3);
+    // S′ axes
+    p0 = P(-R * b, -R); p1 = P(R * b, R); this.line(p0.x, p0.y, p1.x, p1.y, C.accent, 1.5);
+    p0 = P(-R, -R * b); p1 = P(R, R * b); this.line(p0.x, p0.y, p1.x, p1.y, C.accent, 1.5);
+    c.restore();
+    this.text('x', P(R, 0).x - 8, P(R, 0).y + 12, C.text, 12, 'center', 'serif'); this.text('ct', P(0, R).x - 12, P(0, R).y + 8, C.text, 12, 'center', 'serif');
+    this.text('x′', P(R, R * b).x - 12, P(R, R * b).y - 10, C.accent, 12, 'center', 'serif'); this.text('ct′', P(R * b, R).x + 14, P(R * b, R).y + 8, C.accent, 12, 'center', 'serif');
+    this.text('light', P(R, R).x - 18, P(R, R).y + 12, 'rgba(242,196,90,0.9)', 9, 'center');
+    this.text('future', ox, P(0, R).y + 26, C.faint, 9, 'center'); this.text('past', ox, P(0, -R).y - 14, C.faint, 9, 'center'); this.text('elsewhere', P(R, 0).x - 30, oy - 12, C.faint, 9, 'center');
+    // event and projections
+    const e = this.ev, E = P(e.x, e.ct);
+    const xp = g * (e.x - b * e.ct), ctp = g * (e.ct - b * e.x);
+    // S projections
+    this.line(E.x, E.y, E.x, oy, 'rgba(211,214,220,0.4)', 1, [3, 3]); this.line(E.x, E.y, ox, E.y, 'rgba(211,214,220,0.4)', 1, [3, 3]);
+    // S′ projections: along x′ direction to ct′ axis and along ct′ direction to x′ axis
+    const Pt = P(g * b * ctp, g * ctp);          // point on ct′ axis with ct′ = ctp
+    const Px = P(g * xp, g * b * xp);            // point on x′ axis with x′ = xp
+    this.line(E.x, E.y, Pt.x, Pt.y, 'rgba(189,155,108,0.6)', 1, [3, 3]); this.line(E.x, E.y, Px.x, Px.y, 'rgba(189,155,108,0.6)', 1, [3, 3]);
+    this.circle(Pt.x, Pt.y, 2.5, undefined, C.accent); this.circle(Px.x, Px.y, 2.5, undefined, C.accent);
+    this.glow(E.x, E.y, 12, 'rgba(255,255,255,0.6)'); this.circle(E.x, E.y, 4, undefined, '#fff');
+    const s2 = e.ct * e.ct - e.x * e.x;
+    const kind = Math.abs(s2) < 0.02 ? 'lightlike' : s2 > 0 ? 'timelike' : 'spacelike';
+    this.text(`event  (x, ct) = (${fmt(e.x, 2)}, ${fmt(e.ct, 2)})   (x′, ct′) = (${fmt(xp, 2)}, ${fmt(ctp, 2)})`, 8, 12, C.text, 9);
+    this.setReadout([
+      ['β, γ', `${fmt(b, 2)},  ${fmt(g, 3)}`],
+      ['In S: (x, ct)', `(${fmt(e.x, 2)}, ${fmt(e.ct, 2)}) light-seconds`],
+      ['In S′: x′ = γ(x − βct),  ct′ = γ(ct − βx)', `(${fmt(xp, 2)}, ${fmt(ctp, 2)})`, C.accent],
+      ['Interval s² = (ct)² − x²', `${fmt(s2, 3)} = ${fmt(ctp * ctp - xp * xp, 3)} in S′  — invariant`, C.green],
+      ['Separation from the origin', kind + (kind === 'spacelike' ? ' — order of events frame-dependent' : kind === 'timelike' ? ' — causally connectable' : ' — on the light cone'), kind === 'spacelike' ? C.red : C.green],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 25. Einstein's train ---- */
+
+class TrainWidget extends CanvasWidget {
+  private beta = 0.5;
+  private t = 0;              // platform time, units where c = 1 and half-length = 1
+  private speedUI = 0.35;
+  constructor() {
+    super(480 / 300);
+    this.playButton();
+    this.slider('Train speed β', 0, 0.9, 0.01, this.beta, (v) => `${fmt(v, 2)} c`, (v) => { this.beta = v; this.t = 0; });
+    const b = $('button', 'lw-play', '↺'); b.title = 'Replay'; b.addEventListener('click', () => { this.t = 0; }); this.controls.appendChild(b);
+  }
+  protected draw(dt: number) {
+    const c = this.ctx;
+    c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const b = this.beta, g = gammaOf(b);
+    const tA = 1 / (1 - b), tB = 1 / (1 + b);           // arrival times at M′ (platform frame), half-length 1
+    const tEnd = tA + 0.8;
+    if (dt > 0) { this.t += dt * this.speedUI * 2; if (this.t > tEnd) this.t = -0.4; }
+    const t = Math.max(0, this.t);
+    const S = this.w * 0.26;                              // px per unit length
+    const cx = this.w / 2, yP = this.h * 0.68, yT = this.h * 0.40;
+    // camera pans right once the train would leave the picture
+    const pan = Math.max(0, (b * t + 1.15) - (cx - 10) / S);
+    const X = (x: number) => cx + (x - pan) * S;
+    // platform
+    c.fillStyle = '#1b1f27'; c.fillRect(0, yP, this.w, 6);
+    this.line(X(-1), yP - 6, X(-1), yP + 12, C.text, 2); this.line(X(1), yP - 6, X(1), yP + 12, C.text, 2);
+    this.text('A', X(-1), yP + 22, C.text, 11, 'center', 'serif'); this.text('B', X(1), yP + 22, C.text, 11, 'center', 'serif');
+    this.circle(X(0), yP - 8, 4, undefined, C.text); this.text('M (platform)', X(0), yP + 22, C.text, 9, 'center');
+    // train (contracted length 2 in platform frame, centred at x = βt)
+    const xc = b * t;
+    c.fillStyle = 'rgba(189,155,108,0.18)'; c.fillRect(X(xc - 1), yT - 16, 2 * S, 30);
+    c.strokeStyle = C.accent; c.strokeRect(X(xc - 1), yT - 16, 2 * S, 30);
+    for (let i = 0; i < 6; i++) { c.fillStyle = 'rgba(189,155,108,0.35)'; c.fillRect(X(xc - 1) + 8 + i * (2 * S - 16) / 6, yT - 10, (2 * S - 16) / 6 - 6, 10); }
+    this.circle(X(xc), yT + 4, 4, undefined, C.accent); this.text('M′ (train)', X(xc), yT - 26, C.accent, 9, 'center');
+    this.line(X(xc + 1) + 4, yT, X(xc + 1) + 18, yT, C.accent, 1.5); this.text('β', X(xc + 1) + 24, yT, C.accent, 9, 'left', 'serif');
+    // lightning at A and B at t = 0; flashes expand at c
+    const flash = (x0: number, col: string) => {
+      if (this.t < 0) return;
+      const r = t * S;
+      c.beginPath(); c.arc(X(x0), yT, r, 0, TAU); c.strokeStyle = col; c.lineWidth = 1.5; c.globalAlpha = Math.max(0.15, 1 - t / tEnd); c.stroke(); c.globalAlpha = 1;
+      if (t < 0.25) { this.glow(X(x0), yT - 10, 22, col.replace('1)', '0.8)')); }
+    };
+    flash(-1, 'rgba(111,163,214,1)'); flash(1, 'rgba(212,106,90,1)');
+    // event flags
+    const reachedM = t >= 1, reachedMpB = t >= tB, reachedMpA = t >= tA;
+    const y0 = 14;
+    this.text(`platform clock t = ${fmt(t, 2)}  (half-length / c)`, 8, y0, C.dim, 9);
+    this.text(`M: flash from A ${reachedM ? '✓' : '…'}   flash from B ${reachedM ? '✓' : '…'}   ${reachedM ? '→ arrived together: "simultaneous"' : ''}`, 8, y0 + 14, C.text, 9);
+    this.text(`M′: flash from B ${reachedMpB ? `✓ at t = ${fmt(tB, 2)}` : '…'}   flash from A ${reachedMpA ? `✓ at t = ${fmt(tA, 2)}` : '…'}   ${reachedMpA ? '→ B first: "B was struck first"' : reachedMpB ? '→ B arrived first' : ''}`, 8, y0 + 28, C.accent, 9);
+    this.setReadout([
+      ['Train speed β, γ', `${fmt(b, 2)} c,  ${fmt(g, 3)}`],
+      ['Platform frame', 'strikes simultaneous'],
+      ['M′ gets B, then A', `t_B = ${fmt(tB, 2)},  t_A = ${fmt(tA, 2)}`],
+      ['Train frame  Δt′ = γβL/c', `${fmt(g * b * 2, 2)}  (B first)`, C.accent],
+      ['Who is right?', 'both frames', C.green],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 26. light clock ---- */
+
+class LightClockWidget extends CanvasWidget {
+  private beta = 0.6;
+  private t = 0;
+  private ticksRest = 0; private ticksMoving = 0;
+  constructor() {
+    super(480 / 300);
+    this.playButton();
+    this.slider('Speed of the moving clock β', 0, 0.95, 0.01, this.beta, (v) => `${fmt(v, 2)} c`, (v) => { this.beta = v; this.t = 0; this.ticksRest = this.ticksMoving = 0; });
+  }
+  protected draw(dt: number) {
+    const c = this.ctx;
+    c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const b = this.beta, g = gammaOf(b);
+    const x0 = this.w * 0.36, x1 = this.w - 30, span = x1 - x0;
+    // mirror separation: shrink at high β so one moving tick (horizontal travel 2βγh) fits on screen
+    const h = Math.min(this.h * 0.42, span / (2 * b * g + 0.2));
+    const cpx = this.h * 0.46;                             // light speed, px per "second"
+    if (dt > 0) this.t += dt;
+    const T0 = 2 * h / cpx;                                // rest tick
+    const Tm = T0 * g;                                     // moving tick, as seen by us
+    const phaseRest = (this.t % T0) / T0;
+    const phaseMov = (this.t % Tm) / Tm;
+    this.ticksRest = Math.floor(this.t / T0); this.ticksMoving = Math.floor(this.t / Tm);
+    const yTop = this.h * 0.2 + (this.h * 0.42 - h) / 2, yBot = yTop + h;
+    // rest clock
+    const xr = this.w * 0.17;
+    this.line(xr - 22, yTop, xr + 22, yTop, C.text, 3); this.line(xr - 22, yBot, xr + 22, yBot, C.text, 3);
+    const yr = phaseRest < 0.5 ? yBot - phaseRest * 2 * h : yTop + (phaseRest - 0.5) * 2 * h;
+    this.line(xr, yTop, xr, yBot, 'rgba(242,196,90,0.25)', 1, [2, 3]);
+    this.glow(xr, yr, 10, 'rgba(242,196,90,0.8)'); this.circle(xr, yr, 3, undefined, '#fff');
+    this.text('clock at rest', xr, yTop - 22, C.text, 10, 'center');
+    this.text(`ticks: ${this.ticksRest}`, xr, yBot + 18, C.text, 11, 'center', 'mono');
+    // moving clock: slides across the right part, wrapping; photon path zig-zag
+    const vpx = b * cpx;
+    // a lap is a whole number of moving ticks, so the clock never wraps mid-tick
+    const ticksPerLap = Math.max(1, Math.floor(span / (vpx * Tm + 1e-9)));
+    const Tlap = ticksPerLap * Tm;
+    const tLap = vpx > 0 ? this.t % Tlap : 0;
+    const xm = x0 + vpx * tLap;
+    this.line(xm - 22, yTop, xm + 22, yTop, C.accent, 3); this.line(xm - 22, yBot, xm + 22, yBot, C.accent, 3);
+    // photon: in our frame it moves at c along a diagonal; vertical speed c/γ
+    const ym = phaseMov < 0.5 ? yBot - phaseMov * 2 * h : yTop + (phaseMov - 0.5) * 2 * h;
+    // trail of the photon over this tick
+    const xStart = x0 + vpx * (tLap - (tLap % Tm));
+    const xMid = xStart + vpx * Tm / 2;
+    c.beginPath(); c.moveTo(xStart, yBot); c.lineTo(xMid, yTop); if (phaseMov >= 0.5) c.lineTo(xm, ym); c.strokeStyle = 'rgba(189,155,108,0.45)'; c.lineWidth = 1; c.setLineDash([2, 3]); c.stroke(); c.setLineDash([]);
+    if (phaseMov < 0.5) this.line(xStart, yBot, xm, ym, 'rgba(189,155,108,0.45)', 1, [2, 3]);
+    this.glow(xm, ym, 10, 'rgba(189,155,108,0.9)'); this.circle(xm, ym, 3, undefined, '#fff');
+    this.text(`moving clock  β = ${fmt(b, 2)}`, (x0 + x1) / 2, yTop - 22, C.accent, 10, 'center');
+    this.text(`ticks: ${this.ticksMoving}`, xm, yBot + 18, C.accent, 11, 'center', 'mono');
+    this.line(x0 - 10, yBot + 32, x1 + 10, yBot + 32, C.grid);
+    this.text('both light pulses move at the same speed c on your screen — the moving one has farther to go', this.w / 2, this.h - 10, C.faint, 8, 'center');
+    this.setReadout([
+      ['γ = 1/√(1 − β²)', fmt(g, 3), C.accent],
+      ['Moving clock ticks per rest tick', fmt(1 / g, 3)],
+      ['One hour on the moving clock lasts', `${fmt(g, 3)} h for you`],
+      ['Path per tick (rest : moving)', `2h : ${fmt(2 * g, 2)} h`],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 27. cosmic-ray muons ---- */
+
+class MuonWidget extends CanvasWidget {
+  private logOneMinusBeta = Math.log10(1 - 0.995);
+  private t = 0;
+  private readonly hKm = 15;
+  private readonly tauUs = 2.2;
+  constructor() {
+    super(480 / 340);
+    this.playButton();
+    this.slider('Muon speed β', -4, -0.5, 0.01, this.logOneMinusBeta, (v) => `${(1 - 10 ** v).toFixed(v < -2.5 ? 5 : v < -1.5 ? 4 : 3)} c`, (v) => { this.logOneMinusBeta = v; });
+  }
+  protected draw(dt: number) {
+    const c = this.ctx;
+    this.t += dt;
+    c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const beta = 1 - 10 ** this.logOneMinusBeta, g = gammaOf(beta);
+    const tEarth = (this.hKm * 1e3) / (beta * C_LIGHT) * 1e6;        // µs
+    const tMuon = tEarth / g;
+    const fClass = Math.exp(-tEarth / this.tauUs), fRel = Math.exp(-tMuon / this.tauUs);
+    const colW = this.w * 0.26, y0 = 34, y1 = this.h - 40;
+    const col = (x: number, title: string, frac: number, color: string, tLabel: string) => {
+      // atmosphere column; survivors drawn as dots whose density ∝ exp(−depth)
+      c.fillStyle = 'rgba(111,163,214,0.06)'; c.fillRect(x, y0, colW, y1 - y0);
+      c.strokeStyle = C.line; c.strokeRect(x, y0, colW, y1 - y0);
+      this.text(title, x + colW / 2, y0 - 16, C.text, 10, 'center');
+      this.text(tLabel, x + colW / 2, y0 - 5, C.dim, 8, 'center');
+      // falling muons (animated)
+      const n = 24;
+      for (let i = 0; i < n; i++) {
+        const ph = ((this.t * 0.35 + i / n) % 1);
+        const depthFrac = ph;                                         // 0 top → 1 ground
+        const alive = Math.exp(Math.log(Math.max(1e-9, frac)) * depthFrac);
+        if (alive < 0.02) continue;
+        const px = x + 8 + ((i * 37) % (colW - 16)), py = y0 + depthFrac * (y1 - y0);
+        c.globalAlpha = alive; this.circle(px, py, 1.8, undefined, color); c.globalAlpha = 1;
+      }
+      // survivors bar at the ground
+      const bw = colW - 16, bl = bw * Math.max(0.003, frac);
+      c.fillStyle = color; c.fillRect(x + 8, y1 + 8, bl, 8); c.strokeStyle = C.line; c.strokeRect(x + 8, y1 + 8, bw, 8);
+      this.text(`${frac < 0.001 ? sci(frac * 100, 1) : fmt(frac * 100, frac < 0.1 ? 2 : 1)} % reach the ground`, x + colW / 2, y1 + 28, color, 9, 'center', 'mono');
+    };
+    this.text(`created at ${this.hKm} km`, 8, y0 + 6, C.faint, 8); this.text('ground', 8, y1 - 2, C.faint, 8);
+    col(this.w * 0.08, 'Newton: no time dilation', fClass, C.red, `${fmt(tEarth, 1)} µs = ${fmt(tEarth / this.tauUs, 1)} lifetimes`);
+    col(this.w * 0.39, 'Relativity: muon clock slow by γ', fRel, C.green, `${fmt(tMuon, 2)} µs = ${fmt(tMuon / this.tauUs, 2)} lifetimes`);
+    // muon's view: contracted atmosphere
+    const x3 = this.w * 0.72, hc = (y1 - y0) / g;
+    c.fillStyle = 'rgba(111,163,214,0.06)'; c.fillRect(x3, y1 - hc, colW * 0.9, hc); c.strokeStyle = C.line; c.strokeRect(x3, y1 - hc, colW * 0.9, hc);
+    this.text('the muon\'s view', x3 + colW * 0.45, y0 - 16, C.accent, 10, 'center');
+    this.text(`atmosphere only ${fmt(this.hKm / g, g > 30 ? 3 : 2)} km thick`, x3 + colW * 0.45, y0 - 5, C.dim, 8, 'center');
+    this.line(x3 - 6, y1 - hc, x3 - 6, y1, C.accent, 1); this.text(`${this.hKm}/γ km`, x3 - 10, y1 - hc / 2, C.accent, 8, 'right');
+    this.setReadout([
+      ['β, γ', `${beta.toFixed(5)},  ${fmt(g, 1)}`, C.accent],
+      ['Earth frame  h/(βc)', `${fmt(tEarth, 2)} µs  (τ = 2.2 µs)`],
+      ['Muon\'s clock  h/(βcγ)', `${fmt(tMuon, 2)} µs`, C.green],
+      ['Survivors: Newton', `${fClass < 1e-3 ? sci(fClass * 100, 1) : fmt(fClass * 100, 2)} %`],
+      ['Survivors: Einstein', `${fmt(fRel * 100, 1)} %`, C.green],
+      ['Frisch & Smith 1963 (β = 0.995)', '408 ± 9 /h measured; 420 predicted'],
+      ['Newtonian prediction', '≈ 27 /h'],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 28. relativistic energy ---- */
+
+const REL_PARTICLES: Array<[string, number, string]> = [['electron', 0.5110, 'MeV'], ['proton', 938.27, 'MeV'], ['1 kg', 8.98755e16, 'J']];
+
+class RelEnergyWidget extends CanvasWidget {
+  private beta = 0.6;
+  private pi = 1;
+  constructor() {
+    super(480 / 360);
+    this.playing = false;
+    this.segmented(REL_PARTICLES.map(([n], i) => [String(i), n] as [string, string]), '1', (v) => { this.pi = +v; });
+    this.slider('Speed β = v/c', 0, 0.995, 0.001, this.beta, (v) => fmt(v, 3), (v) => { this.beta = v; });
+  }
+  protected draw() {
+    const c = this.ctx;
+    c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const b = this.beta, g = gammaOf(b);
+    const [, mc2, unit] = REL_PARTICLES[this.pi];
+    /* left: curves against β (in units of mc², mc) */
+    const gx0 = 40, gx1 = this.w * 0.56, gy0 = 16, gy1 = this.h - 30, ymax = 5;
+    const GX = (x: number) => gx0 + x * (gx1 - gx0), GY = (y: number) => gy1 - (Math.min(ymax, y) / ymax) * (gy1 - gy0);
+    for (let y = 0; y <= ymax; y++) { this.line(gx0, GY(y), gx1, GY(y), C.grid); this.text(fmt(y, 0), gx0 - 4, GY(y), C.faint, 8, 'right', 'mono'); }
+    for (const x of [0, 0.5, 1]) { this.line(GX(x), gy0, GX(x), gy1, x === 1 ? 'rgba(212,106,90,0.4)' : C.grid); this.text(`${x}`, GX(x), gy1 + 10, C.faint, 8, 'center', 'mono'); }
+    this.text('β = v/c →', gx1, gy1 + 20, C.dim, 9, 'right');
+    const curve = (fn: (x: number) => number, col: string, dash?: number[]) => {
+      c.beginPath();
+      for (let x = 0; x <= 0.9995; x += 0.004) { const y = fn(x); if (x === 0) c.moveTo(GX(x), GY(y)); else c.lineTo(GX(x), GY(y)); }
+      c.strokeStyle = col; c.lineWidth = dash ? 1.1 : 1.8; c.setLineDash(dash ?? []); c.stroke(); c.setLineDash([]);
+    };
+    c.save(); c.beginPath(); c.rect(gx0, gy0, gx1 - gx0, gy1 - gy0); c.clip();
+    curve((x) => x, C.dim, [4, 4]);                              // classical p/mc = β
+    curve((x) => 0.5 * x * x, C.dim, [2, 3]);                    // classical K/mc² = ½β²
+    curve((x) => gammaOf(x) * x, C.blue);                        // p/mc
+    curve((x) => gammaOf(x) - 1, C.green);                       // K/mc²
+    curve((x) => gammaOf(x), C.accent);                          // γ
+    c.restore();
+    this.text('γ', GX(0.78), GY(gammaOf(0.78)) - 10, C.accent, 10, 'center', 'serif');
+    this.text('p / mc', GX(0.86), GY(gammaOf(0.86) * 0.86) + 12, C.blue, 10, 'center', 'serif');
+    this.text('K / mc²', GX(0.9), GY(gammaOf(0.9) - 1) + 12, C.green, 10, 'center', 'serif');
+    this.text('dashed: Newton (p = mv, K = ½mv²)', gx0 + 6, gy0 + 8, C.dim, 8, 'left');
+    for (const [y, col] of [[g, C.accent], [g * b, C.blue], [g - 1, C.green]] as Array<[number, string]>) { if (y <= ymax) { this.glow(GX(b), GY(y), 7, hexA(col, 0.7)); this.circle(GX(b), GY(y), 3, undefined, '#fff'); } }
+    /* right: energy–momentum triangle  E² = (pc)² + (mc²)² */
+    const tx0 = this.w * 0.63, ty1 = this.h * 0.72, tw = this.w * 0.32;
+    const scale = tw / Math.max(2.2, Math.min(5, g * b + 0.4));
+    const pcL = g * b * scale, mL = scale;
+    this.line(tx0, ty1, tx0 + pcL, ty1, C.blue, 2.5);                       // pc
+    this.line(tx0 + pcL, ty1, tx0 + pcL, ty1 - mL, C.text, 2.5);           // mc²
+    this.line(tx0, ty1, tx0 + pcL, ty1 - mL, C.accent, 2.5);               // E
+    c.strokeStyle = C.faint; c.strokeRect(tx0 + pcL - 7, ty1 - 7, 7, 7);
+    this.text('pc', tx0 + pcL / 2, ty1 + 12, C.blue, 10, 'center', 'serif');
+    this.text('mc²', tx0 + pcL + 14, ty1 - mL / 2, C.text, 10, 'left', 'serif');
+    this.text('E', tx0 + pcL / 2 - 10, ty1 - mL / 2 - 8, C.accent, 11, 'center', 'serif');
+    this.text('E² = (pc)² + (mc²)²', tx0 + tw / 2, this.h * 0.2, C.text, 10, 'center', 'serif');
+    this.text('the mc² leg never changes', tx0 + tw / 2, this.h * 0.2 + 14, C.faint, 8, 'center');
+    const fmtE = (x: number) => unit === 'J' ? `${sci(x, 3)} J` : x >= 1e4 ? `${fmt(x / 1e3, 2)} GeV` : `${fmt(x, x < 10 ? 3 : 1)} MeV`;
+    const Kcl = 0.5 * mc2 * b * b;
+    this.setReadout([
+      ['γ', fmt(g, 4), C.accent],
+      ['Rest energy  E₀ = mc²', fmtE(mc2)],
+      ['Total energy  E = γmc²', fmtE(g * mc2), C.accent],
+      ['Kinetic energy  K = (γ − 1)mc²', `${fmtE((g - 1) * mc2)}   (Newton: ${fmtE(Kcl)})`, C.green],
+      ['Momentum  pc = γβmc²', fmtE(g * b * mc2), C.blue],
+    ]);
+  }
+}
+
 /* ------------------------------------------------------------ factory ---- */
 
 export function createWidget(spec: WidgetSpec): Widget {
@@ -2225,5 +2686,12 @@ export function createWidget(spec: WidgetSpec): Widget {
     case 'lrt': return new LRTWidget();
     case 'quantum': return new QuantumWidget();
     case 'colorindex': return new ColorIndexWidget();
+    case 'michelson': return new MichelsonWidget();
+    case 'velocityadd': return new VelocityAddWidget();
+    case 'minkowski': return new MinkowskiWidget();
+    case 'train': return new TrainWidget();
+    case 'lightclock': return new LightClockWidget();
+    case 'muon': return new MuonWidget();
+    case 'relenergy': return new RelEnergyWidget();
   }
 }
