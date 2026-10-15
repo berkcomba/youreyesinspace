@@ -25,6 +25,8 @@ export type Block =
   | { kind: 'figure'; image: string; caption: string; source?: string };
 
 export type WidgetSpec =
+  /** the naked-eye sky from an ancient city: fixed stars turning, the Moon's phases, the five wanderers along the ecliptic */
+  | { type: 'ancientsky' }
   /** retrograde motion: Ptolemy's epicycles vs Copernicus' heliocentric orbits, same sky */
   | { type: 'models'; mode: 'ptolemy' | 'copernicus'; lock?: boolean }
   /** Eudoxus' two nested spheres tracing the hippopede */
@@ -191,12 +193,14 @@ const S1_1: Section = {
   steps: [
     {
       id: 'look-up',
-      kicker: 'Where it begins',
+      kicker: 'Interactive · where it begins',
       title: 'What the ancients actually saw',
+      widget: { type: 'ancientsky' },
       scene: [goto('earth'), rate(1)],
       body: [
         p('Before telescopes, before physics, there was only the naked eye and a dark sky. Watch it for a few nights and you notice patterns that are almost suspiciously regular. The whole dome of stars turns once a night around a fixed point in the north. The Sun drifts eastward against the stars and comes back to the same place after a year. The Moon changes shape on a 29½-day cycle.'),
         p('And then there are five lights that refuse to behave. They look like stars but they wander among the constellations, speed up, slow down, and sometimes stop and go <em>backwards</em> for a few weeks. The Greeks called them <em>planētai</em> — wanderers. We still do.'),
+        p('The window above is that sky: the real stars as they stood over Athens in 500 BCE, with the Sun, the Moon and the five wanderers where they actually were. In <em>one night</em> the whole dome turns about a point in the north — drag the view there and notice that no bright star marks it; Polaris was far from the pole then. In <em>night after night</em> the clock is frozen at the same hour: the stars slip a little westward each evening as the Sun drifts east, the Moon runs through its phases, and the planets leave trails among the stars — watch Mars loop backwards.'),
         terms(
           ['Fixed stars', 'Stars that keep their relative positions; they turn together as one sphere.'],
           ['Planets (wanderers)', 'Mercury, Venus, Mars, Jupiter, Saturn — the five bodies visible to the eye that move against the stars.'],

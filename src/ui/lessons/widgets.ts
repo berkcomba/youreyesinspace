@@ -3561,10 +3561,352 @@ class PauliWidget extends CanvasWidget {
   }
 }
 
+/* ------------------------------------------------------- 0. ancient sky ---- */
+
+/** [RA°, Dec° (J2000), V, B−V, name?] — the naked-eye sky down to ~mag 3 where it matters for the figures */
+type SkyStar = [number, number, number, number, string?];
+const SKY: SkyStar[] = [
+  // Orion
+  [88.793, 7.407, 0.45, 1.85, 'Betelgeuse'], [78.634, -8.202, 0.18, -0.03, 'Rigel'], [81.283, 6.350, 1.64, -0.22], [84.053, -1.202, 1.69, -0.18],
+  [85.190, -1.943, 1.74, -0.20], [83.002, -0.299, 2.25, -0.17], [86.939, -9.670, 2.07, -0.17],
+  // Ursa Major — the Plough
+  [165.932, 61.751, 1.79, 1.06, 'Dubhe'], [165.460, 56.382, 2.37, 0.03], [178.458, 53.695, 2.44, 0.04], [183.857, 57.033, 3.31, 0.08],
+  [193.507, 55.960, 1.76, -0.02], [200.981, 54.925, 2.23, 0.06], [206.885, 49.313, 1.86, -0.10, 'Alkaid'],
+  // Ursa Minor & Draco
+  [37.955, 89.264, 1.98, 0.60, 'Polaris'], [222.677, 74.156, 2.07, 1.47, 'Kochab'], [230.182, 71.834, 3.00, 0.06], [211.097, 64.376, 3.65, -0.05, 'Thuban'], [269.152, 51.489, 2.23, 1.52],
+  // Cassiopeia
+  [10.127, 56.537, 2.24, 1.17], [2.295, 59.150, 2.28, 0.34], [14.177, 60.717, 2.15, -0.15], [21.454, 60.235, 2.68, 0.16], [28.599, 63.670, 3.35, -0.15],
+  // Scorpius
+  [247.352, -26.432, 1.06, 1.83, 'Antares'], [241.359, -19.805, 2.56, -0.07], [240.083, -22.622, 2.29, -0.12], [239.713, -26.114, 2.89, -0.19], [245.297, -25.593, 2.90, 0.13],
+  [248.971, -28.216, 2.82, -0.25], [252.541, -34.293, 2.29, 1.15], [252.968, -38.048, 3.00, -0.20], [253.498, -42.362, 3.60, 1.40], [258.038, -43.239, 3.33, 0.44],
+  [264.330, -42.998, 1.86, 0.40], [265.622, -39.030, 2.39, -0.17], [263.402, -37.104, 1.62, -0.22, 'Shaula'], [262.691, -37.296, 2.70, -0.18],
+  // Leo
+  [152.093, 11.967, 1.36, -0.09, 'Regulus'], [177.265, 14.572, 2.14, 0.09, 'Denebola'], [154.993, 19.842, 2.01, 1.13], [168.527, 20.524, 2.56, 0.13], [151.833, 16.763, 3.48, -0.03],
+  [154.173, 23.417, 3.43, 0.31], [148.191, 26.007, 3.88, 1.22], [146.463, 23.774, 2.97, 0.81], [168.560, 15.430, 3.33, -0.01],
+  // Taurus
+  [68.980, 16.509, 0.87, 1.54, 'Aldebaran'], [81.573, 28.607, 1.65, -0.13, 'Elnath'], [84.411, 21.143, 3.00, -0.19], [56.871, 24.105, 2.87, -0.09, 'Pleiades'], [67.166, 15.871, 3.40, 0.18], [64.948, 15.628, 3.65, 0.99], [67.154, 19.180, 3.53, 1.01],
+  // Gemini
+  [113.650, 31.888, 1.58, 0.03, 'Castor'], [116.329, 28.026, 1.14, 1.00, 'Pollux'], [99.428, 16.399, 1.93, 0.00], [95.740, 22.514, 2.87, 1.64], [100.983, 25.131, 3.06, 1.40], [110.031, 21.982, 3.50, 0.34],
+  // Cygnus, Lyra, Aquila
+  [310.358, 45.280, 1.25, 0.09, 'Deneb'], [305.557, 40.257, 2.23, 0.68], [292.680, 27.960, 3.05, 1.13], [311.553, 33.970, 2.48, 1.02], [296.244, 45.131, 2.86, -0.03],
+  [279.235, 38.784, 0.03, 0.00, 'Vega'], [297.696, 8.868, 0.76, 0.22, 'Altair'],
+  // Boötes, Virgo, Corona Borealis, Ophiuchus
+  [213.915, 19.182, -0.05, 1.23, 'Arcturus'], [201.298, -11.161, 0.98, -0.23, 'Spica'], [233.672, 26.715, 2.23, -0.02], [263.734, 12.560, 2.08, 0.15],
+  // Canis Major & Minor, Auriga, Carina
+  [101.287, -16.716, -1.46, 0.00, 'Sirius'], [104.656, -28.972, 1.50, -0.21], [107.098, -26.393, 1.83, 0.68], [95.675, -17.956, 1.98, -0.24],
+  [114.825, 5.225, 0.34, 0.42, 'Procyon'], [79.172, 45.998, 0.08, 0.80, 'Capella'], [95.988, -52.696, -0.72, 0.15, 'Canopus'],
+  // Perseus, Andromeda, Pegasus
+  [51.081, 49.861, 1.79, 0.48, 'Mirfak'], [47.042, 40.956, 2.12, -0.05, 'Algol'],
+  [2.097, 29.090, 2.06, -0.11], [17.433, 35.620, 2.05, 1.58], [30.975, 42.330, 2.26, 1.37],
+  [346.190, 15.205, 2.49, -0.04], [345.944, 28.083, 2.42, 1.67], [3.309, 15.184, 2.83, -0.23], [326.046, 9.875, 2.39, 1.53],
+  // Sagittarius — the teapot
+  [276.043, -34.385, 1.85, -0.03], [283.816, -26.297, 2.02, -0.13], [275.249, -29.828, 2.70, 1.38], [276.993, -25.421, 2.81, 1.04], [285.653, -29.880, 2.60, 0.06], [281.414, -26.991, 3.17, -0.11], [286.735, -27.670, 3.32, 1.19], [271.452, -30.424, 2.98, 0.98],
+  // Centaurus & Crux
+  [219.902, -60.834, -0.27, 0.71, 'α Centauri'], [210.956, -60.373, 0.61, -0.23, 'Hadar'],
+  [186.650, -63.099, 0.77, -0.24, 'Acrux'], [191.930, -59.689, 1.25, -0.24], [187.791, -57.113, 1.59, 1.59], [183.786, -58.749, 2.79, -0.19],
+  // odds and ends
+  [344.413, -29.622, 1.16, 0.09, 'Fomalhaut'], [24.429, -57.237, 0.46, -0.16, 'Achernar'], [141.897, -8.659, 1.98, 1.44, 'Alphard'], [319.645, 62.585, 2.44, 0.22],
+  [31.793, 23.462, 2.00, 1.15, 'Hamal'], [10.897, -17.987, 2.04, 1.02], [332.058, -46.961, 1.74, -0.13], [120.896, -40.003, 2.25, -0.26], [122.383, -47.337, 1.80, -0.14],
+  [222.720, -16.042, 2.75, 0.15], [229.252, -9.383, 2.61, -0.07], [326.760, -16.127, 2.87, 0.29], [322.890, -5.571, 2.90, 0.83],
+];
+/** constellation figures as index pairs into SKY */
+const SKY_LINES: Array<[number, number]> = [
+  [0, 2], [0, 4], [2, 5], [4, 3], [3, 5], [4, 6], [5, 1], [1, 6],                               // Orion
+  [7, 8], [8, 9], [9, 10], [10, 7], [10, 11], [11, 12], [12, 13],                                // Plough
+  [15, 16],                                                                                       // Ursa Minor (the Guards)
+  [20, 19], [19, 21], [21, 22], [22, 23],                                                        // Cassiopeia
+  [25, 26], [26, 27], [26, 28], [28, 24], [24, 29], [29, 30], [30, 31], [31, 32], [32, 33], [33, 34], [34, 35], [35, 36], [36, 37], // Scorpius
+  [38, 42], [42, 40], [40, 43], [43, 44], [44, 45], [38, 46], [46, 39], [40, 41], [41, 39], [41, 46], // Leo
+  [47, 51], [51, 52], [52, 53], [47, 49], [53, 48],                                              // Taurus
+  [54, 58], [58, 57], [55, 59], [59, 56],                                                        // Gemini
+  [60, 61], [61, 62], [64, 61], [61, 63],                                                        // Cygnus
+  [71, 74], [71, 73], [73, 72],                                                                  // Canis Major
+  [78, 79],                                                                                       // Perseus
+  [80, 84], [84, 83], [83, 85], [85, 80], [80, 81], [81, 82], [83, 86],                          // Great Square, Andromeda, Pegasus
+  [94, 89], [89, 90], [90, 92], [92, 88], [88, 93], [93, 91], [91, 92], [89, 87], [87, 91],      // Sagittarius — the teapot
+  [95, 96], [97, 99], [98, 100],                                                                 // Centaurus pointers, Crux
+];
+const bvRGB = (bv: number) => tempRGB(4600 * (1 / (0.92 * bv + 1.7) + 1 / (0.92 * bv + 0.62)));
+
+const WANDERERS: Array<{ name: string; L0: number; n: number; a: number; color: string; r: number }> = [
+  { name: 'Mercury', L0: 252.2509, n: 4.09233, a: 0.38710, color: '#d9d4c7', r: 1.7 },
+  { name: 'Venus', L0: 181.9798, n: 1.60213, a: 0.72333, color: '#fff4d6', r: 3.4 },
+  { name: 'Mars', L0: 355.4533, n: 0.52403, a: 1.52371, color: '#e07a55', r: 2.0 },
+  { name: 'Jupiter', L0: 34.3965, n: 0.08309, a: 5.20289, color: '#f3e3c2', r: 2.9 },
+  { name: 'Saturn', L0: 49.9544, n: 0.03346, a: 9.53668, color: '#e8d9a8', r: 2.0 },
+];
+const EARTH_ORBIT = { L0: 100.4664, n: 0.98561 };
+const ANCIENT_CITIES: Array<[string, string, number]> = [['athens', 'Athens 38°N', 38.0], ['babylon', 'Babylon 32°N', 32.5], ['alexandria', 'Alexandria 31°N', 31.2]];
+const ANCIENT_EPOCHS: Array<[string, string, number]> = [['-500', '500 BCE', -500], ['150', '150 CE · Ptolemy', 150], ['2025', 'Today', 2025]];
+
+class AncientSkyWidget extends CanvasWidget {
+  private lat = 38 * DEG;
+  private year = -500;
+  private doy = 300;            // day of the (tropical) year
+  private hour = 22;            // local mean solar time
+  private mode: 'night' | 'nights' = 'night';
+  private speed = 1;
+  private azc = 180 * DEG;      // azimuth at the centre of the view (south)
+  private figures = true;
+  private dragging: { x: number; azc: number } | null = null;
+  private starsEq: V3[] = [];   // unit vectors, equatorial frame of date
+  private trails: Array<Array<{ ra: number; dec: number; d: number }>> = WANDERERS.map(() => []);
+  private setDoy: (v: number) => void = () => {};
+  private setHour: (v: number) => void = () => {};
+
+  constructor() {
+    super(480 / 400);
+    this.precess();
+    this.segmented<'night' | 'nights'>([['night', 'One night'], ['nights', 'Night after night']], this.mode, (m) => { this.mode = m; this.trails.forEach((t) => t.length = 0); });
+    this.playButton();
+    this.segmented(ANCIENT_CITIES.map(([k, l]) => [k, l] as [string, string]), 'athens', (k) => { this.lat = ANCIENT_CITIES.find((c) => c[0] === k)![2] * DEG; });
+    this.segmented(ANCIENT_EPOCHS.map(([k, l]) => [k, l] as [string, string]), '-500', (k) => { this.year = ANCIENT_EPOCHS.find((c) => c[0] === k)![2]; this.precess(); this.trails.forEach((t) => t.length = 0); });
+    this.setDoy = this.slider('Day of year', 0, 365, 1, this.doy, (v) => `${fmt(v, 0)}`, (v) => { this.doy = v; }).set;
+    this.setHour = this.slider('Local time', 0, 24, 0.05, this.hour, (v) => `${padZ(v)}:${padZ((v % 1) * 60)}`, (v) => { this.hour = v; }).set;
+    this.slider('Speed', 0.2, 3, 0.1, this.speed, (v) => `${fmt(v, 1)}×`, (v) => { this.speed = v; });
+    this.segmented<'on' | 'off'>([['on', 'Figures'], ['off', 'Stars only']], 'on', (v) => { this.figures = v === 'on'; });
+    this.controls.appendChild($('div', 'lw-caption', 'Drag to look around. The sky turns about the point in the north where no bright star sits; the ecliptic is the road of the Sun, Moon and wanderers.'));
+    this.canvas.addEventListener('pointerdown', (e) => { this.dragging = { x: e.clientX, azc: this.azc }; this.canvas.setPointerCapture(e.pointerId); });
+    this.canvas.addEventListener('pointermove', (e) => {
+      if (!this.dragging || !this.w) return;
+      this.azc = ((this.dragging.azc - (e.clientX - this.dragging.x) * (this.fov / this.w)) % TAU + TAU) % TAU;
+    });
+    this.canvas.addEventListener('pointerup', () => { this.dragging = null; });
+    this.canvas.style.cursor = 'grab';
+  }
+
+  private readonly fov = 170 * DEG;
+
+  /** stars from J2000 to the mean equator & equinox of `year`: a rotation about the ecliptic pole */
+  private precess() {
+    const dl = 0.013969 * (this.year - 2000) * DEG;   // 50.29″ per year
+    const ce = Math.cos(OBLIQ), se = Math.sin(OBLIQ), cl = Math.cos(dl), sl = Math.sin(dl);
+    this.starsEq = SKY.map(([ra, dec]) => {
+      const a = ra * DEG, d = dec * DEG;
+      const x = Math.cos(d) * Math.cos(a), y = Math.cos(d) * Math.sin(a), z = Math.sin(d);
+      const xe = x, ye = ce * y + se * z, ze = -se * y + ce * z;          // → ecliptic
+      const xr = xe * cl - ye * sl, yr = xe * sl + ye * cl;               // precess in longitude
+      return { x: xr, y: ce * yr - se * ze, z: se * yr + ce * ze };       // → equatorial of date
+    });
+  }
+  private eclToEq(lon: number, lat: number): V3 {
+    const x = Math.cos(lat) * Math.cos(lon), y = Math.cos(lat) * Math.sin(lon), z = Math.sin(lat);
+    return { x, y: Math.cos(OBLIQ) * y - Math.sin(OBLIQ) * z, z: Math.sin(OBLIQ) * y + Math.cos(OBLIQ) * z };
+  }
+  /** equatorial unit vector → horizon (east, north, up) for local sidereal time `lst` (rad) */
+  private toHorizon(v: V3, lst: number): V3 {
+    const H = lst - Math.atan2(v.y, v.x), dec = Math.asin(Math.max(-1, Math.min(1, v.z)));
+    const sp = Math.sin(this.lat), cp = Math.cos(this.lat), cd = Math.cos(dec), sd = Math.sin(dec);
+    return { x: -cd * Math.sin(H), y: -cd * Math.cos(H) * sp + sd * cp, z: cd * Math.cos(H) * cp + sd * sp };
+  }
+
+  protected draw(dt: number) {
+    const c = this.ctx;
+    if (dt > 0) {
+      if (this.mode === 'night') { this.hour = (this.hour + dt * this.speed * 0.5) % 24; this.setHour(this.hour); }
+      else { this.doy += dt * this.speed * 1.5; if (this.doy > 365) { this.doy -= 365; this.year += 1; this.precess(); } this.setDoy(this.doy); }
+    }
+    const d = (this.year - 2000) * 365.2422 + this.doy;                 // days from J2000 (mean)
+    const sunLon = wrap360(280.46 + 0.98565 * d) * DEG;
+    const sunEq = this.eclToEq(sunLon, 0);
+    const lst = Math.atan2(sunEq.y, sunEq.x) + (this.hour - 12) * 15 * DEG;
+    const sunH = this.toHorizon(sunEq, lst);
+    const sunAlt = Math.asin(sunH.z) / DEG;
+
+    const moonLon = wrap360(218.316 + 13.176396 * d) * DEG;
+    const node = wrap360(125.045 - 0.052954 * d) * DEG;
+    const moonLat = 5.128 * DEG * Math.sin(moonLon - node);
+    const moonH = this.toHorizon(this.eclToEq(moonLon, moonLat), lst);
+    const elong = wrap360((moonLon - sunLon) / DEG);                      // 0 new · 90 first quarter · 180 full
+    const lit = (1 - Math.cos(elong * DEG)) / 2;
+
+    const eL = (EARTH_ORBIT.L0 + EARTH_ORBIT.n * d) * DEG;
+    const ex = Math.cos(eL), ey = Math.sin(eL);
+    const planets = WANDERERS.map((p, i) => {
+      const L = (p.L0 + p.n * d) * DEG;
+      const gx = p.a * Math.cos(L) - ex, gy = p.a * Math.sin(L) - ey;
+      const lon = Math.atan2(gy, gx), dist = Math.hypot(gx, gy);
+      const eq = this.eclToEq(lon, 0);
+      if (dt > 0 && this.mode === 'nights') {
+        const tr = this.trails[i]; const last = tr[tr.length - 1];
+        if (!last || d - last.d >= 1) tr.push({ ra: Math.atan2(eq.y, eq.x), dec: Math.asin(eq.z), d });
+        while (tr.length && d - tr[0].d > 240) tr.shift();
+      }
+      const elongP = Math.abs((((lon - sunLon) / DEG + 540) % 360) - 180);
+      return { ...p, hz: this.toHorizon(eq, lst), dist, elong: elongP, size: p.name === 'Mars' ? 1.3 + 2.2 * Math.min(1, (0.6 / dist) ** 2) : p.name === 'Venus' ? 2.4 + 1.4 * Math.min(1, 0.4 / dist) : p.r };
+    });
+
+    /* ---- geometry: cylindrical panorama ---- */
+    const groundH = 64, horizonY = this.h - groundH;
+    const s = this.w / this.fov;                                         // px per radian
+    const P = (v: V3) => {
+      const az = Math.atan2(v.x, v.y);
+      const da = ((az - this.azc + Math.PI) % TAU + TAU) % TAU - Math.PI;
+      const alt = Math.asin(Math.max(-1, Math.min(1, v.z)));
+      return { x: this.w / 2 + da * s, y: horizonY - alt * s, alt, inView: Math.abs(da) < this.fov / 2 + 0.1 };
+    };
+
+    /* ---- sky ---- */
+    const day = Math.max(0, Math.min(1, (sunAlt + 12) / 14));           // 0 night … 1 day
+    const dusk = Math.max(0, 1 - Math.abs(sunAlt + 4) / 10);            // twilight glow strength
+    const mix = (a: number[], b: number[], t: number) => a.map((v, i) => v + (b[i] - v) * t);
+    const top = mix([6, 8, 16], [92, 150, 220], day), bot = mix([12, 15, 26], [160, 196, 236], day);
+    const g = c.createLinearGradient(0, 0, 0, horizonY);
+    g.addColorStop(0, `rgb(${top.map(Math.round).join(',')})`); g.addColorStop(1, `rgb(${bot.map(Math.round).join(',')})`);
+    c.fillStyle = g; c.fillRect(0, 0, this.w, horizonY);
+    const sp = P(sunH);
+    if (dusk > 0) {
+      const gg = c.createRadialGradient(sp.x, horizonY, 0, sp.x, horizonY, this.w * 0.55);
+      gg.addColorStop(0, `rgba(240,150,70,${0.55 * dusk})`); gg.addColorStop(0.5, `rgba(180,90,90,${0.2 * dusk})`); gg.addColorStop(1, 'rgba(0,0,0,0)');
+      c.fillStyle = gg; c.fillRect(0, 0, this.w, horizonY);
+    }
+    const starA = Math.max(0, Math.min(1, (-sunAlt - 5) / 11));
+
+    // ecliptic
+    c.save(); c.beginPath(); c.rect(0, 0, this.w, horizonY); c.clip();
+    c.setLineDash([3, 5]); c.lineWidth = 1; c.strokeStyle = `rgba(242,196,90,${0.18 + 0.2 * starA})`;
+    let prev: { x: number; y: number; inView: boolean } | null = null;
+    for (let i = 0; i <= 180; i++) {
+      const q = P(this.toHorizon(this.eclToEq(i / 180 * TAU, 0), lst));
+      if (prev && prev.inView && q.inView && Math.abs(q.x - prev.x) < this.w / 2) { c.beginPath(); c.moveTo(prev.x, prev.y); c.lineTo(q.x, q.y); c.stroke(); }
+      prev = q;
+    }
+    c.setLineDash([]);
+    // celestial pole
+    const pole = P({ x: 0, y: Math.cos(this.lat), z: Math.sin(this.lat) });
+    if (pole.inView) {
+      c.globalAlpha = 0.45 + 0.4 * starA;
+      this.line(pole.x - 5, pole.y, pole.x + 5, pole.y, C.blue); this.line(pole.x, pole.y - 5, pole.x, pole.y + 5, C.blue);
+      this.text('the sky turns here', pole.x + 8, pole.y - 7, C.blue, 9);
+      c.globalAlpha = 1;
+    }
+
+    // stars
+    const pts = this.starsEq.map((v) => P(this.toHorizon(v, lst)));
+    if (this.figures && starA > 0) {
+      c.strokeStyle = `rgba(189,155,108,${0.28 * starA})`; c.lineWidth = 1;
+      for (const [i, j] of SKY_LINES) {
+        const a = pts[i], b = pts[j];
+        if (a.alt < -0.02 && b.alt < -0.02) continue;
+        if (!a.inView && !b.inView) continue;
+        if (Math.abs(a.x - b.x) > this.w / 2) continue;
+        c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(b.x, b.y); c.stroke();
+      }
+    }
+    if (starA > 0) {
+      SKY.forEach(([, , mag, bv, name], i) => {
+        const q = pts[i];
+        if (!q.inView || q.alt < -0.01) return;
+        const vis = starA * Math.max(0, Math.min(1, (4.2 - mag) / 1.2)) * Math.min(1, 0.35 + q.alt * 3);  // extinction near the horizon
+        if (vis <= 0) return;
+        const r = Math.max(0.6, 2.4 - 0.42 * mag);
+        const [cr, cg, cb] = bvRGB(bv);
+        c.globalAlpha = vis;
+        if (mag < 1.2) this.glow(q.x, q.y, r * 4, `rgba(${cr | 0},${cg | 0},${cb | 0},0.35)`);
+        this.circle(q.x, q.y, r, undefined, `rgb(${cr | 0},${cg | 0},${cb | 0})`);
+        if (name && (mag < 1.7 || name === 'Kochab' || name === 'Thuban' || name === 'Polaris' || name === 'Pleiades')) this.text(name, q.x + 5, q.y - 7, `rgba(211,214,220,${0.75})`, 9, 'left', 'serif');
+        c.globalAlpha = 1;
+      });
+    }
+
+    // wanderers and their trails among the stars
+    const visible: string[] = [];
+    planets.forEach((p, i) => {
+      const tr = this.trails[i];
+      if (tr.length > 1) {
+        c.fillStyle = p.color;
+        for (let k = 0; k < tr.length; k++) {
+          const q = P(this.toHorizon({ x: Math.cos(tr[k].dec) * Math.cos(tr[k].ra), y: Math.cos(tr[k].dec) * Math.sin(tr[k].ra), z: Math.sin(tr[k].dec) }, lst));
+          if (!q.inView || q.alt < 0) continue;
+          c.globalAlpha = 0.15 + 0.5 * (k / tr.length) * starA;
+          c.beginPath(); c.arc(q.x, q.y, 1, 0, TAU); c.fill();
+        }
+        c.globalAlpha = 1;
+      }
+      const q = P(p.hz);
+      if (!q.inView || q.alt < 0) return;
+      const a = Math.max(0, Math.min(1, (-sunAlt + (p.name === 'Venus' ? 3 : p.name === 'Jupiter' ? 0 : -4)) / 8));
+      if (a <= 0) return;
+      visible.push(p.name);
+      c.globalAlpha = a;
+      this.glow(q.x, q.y, p.size * 4, hexA(p.color, 0.35));
+      this.circle(q.x, q.y, p.size, undefined, p.color);
+      this.text(p.name, q.x + 6, q.y - 8, p.color, 10, 'left', 'serif');
+      c.globalAlpha = 1;
+    });
+
+    // the Moon
+    const mp = P(moonH);
+    if (mp.inView && mp.alt > -0.02) {
+      const r = 7;
+      const ang = Math.atan2(sp.y - mp.y, sp.x - mp.x);
+      c.save(); c.translate(mp.x, mp.y); c.rotate(ang);
+      this.glow(0, 0, r * 2.6, `rgba(230,230,220,${0.25 * lit})`);
+      c.beginPath(); c.arc(0, 0, r, 0, TAU); c.fillStyle = `rgba(60,62,70,${0.9 - 0.6 * day})`; c.fill();
+      const ax = r * Math.cos(elong * DEG);                                 // terminator semi-axis (signed, + toward the Sun)
+      c.beginPath(); c.moveTo(0, -r); c.arc(0, 0, r, -Math.PI / 2, Math.PI / 2);
+      if (ax >= 0) c.ellipse(0, 0, Math.max(0.01, ax), r, 0, Math.PI / 2, -Math.PI / 2, true);
+      else c.ellipse(0, 0, Math.max(0.01, -ax), r, 0, Math.PI / 2, 3 * Math.PI / 2, false);
+      c.closePath(); c.fillStyle = '#efe9d8'; c.fill();
+      c.restore();
+      this.text('Moon', mp.x + 10, mp.y - 10, C.text, 10, 'left', 'serif');
+    }
+    // the Sun
+    if (sp.inView && sunAlt > -1.5) {
+      this.glow(sp.x, sp.y, 40, 'rgba(255,230,160,0.7)');
+      this.circle(sp.x, sp.y, 7, undefined, '#fff6dc');
+    }
+    c.restore();
+
+    /* ---- ground, horizon, compass ---- */
+    c.fillStyle = `rgb(${mix([14, 13, 12], [70, 62, 48], day).map(Math.round).join(',')})`;
+    c.beginPath(); c.moveTo(0, horizonY);
+    for (let x = 0; x <= this.w; x += 8) {
+      const a = (x / s + this.azc);
+      c.lineTo(x, horizonY - (3 + 2.5 * Math.sin(a * 3.1) + 1.8 * Math.sin(a * 7.3 + 1.2) + Math.sin(a * 17)) * (0.7 + 0.3 * Math.cos(a * 1.7)));
+    }
+    c.lineTo(this.w, this.h); c.lineTo(0, this.h); c.closePath(); c.fill();
+    // a temple on the skyline, fixed to an azimuth so it slides with the view
+    const tx = P({ x: Math.sin(205 * DEG), y: Math.cos(205 * DEG), z: 0 }).x;
+    if (tx > -40 && tx < this.w + 40) {
+      c.fillStyle = `rgb(${mix([22, 20, 18], [96, 84, 66], day).map(Math.round).join(',')})`;
+      c.fillRect(tx - 22, horizonY - 7, 44, 5);
+      for (let k = 0; k < 6; k++) c.fillRect(tx - 19 + k * 7.2, horizonY - 20, 2.4, 14);
+      c.fillRect(tx - 24, horizonY - 23, 48, 3); c.beginPath(); c.moveTo(tx - 24, horizonY - 23); c.lineTo(tx, horizonY - 31); c.lineTo(tx + 24, horizonY - 23); c.closePath(); c.fill();
+    }
+    // the observer
+    const ox = this.w / 2, oy = this.h - 10;
+    c.fillStyle = C.accent; c.strokeStyle = C.accent; c.lineWidth = 1.4;
+    this.circle(ox, oy - 15, 2.6, undefined, C.accent);
+    this.line(ox, oy - 12, ox, oy - 4, C.accent, 1.6); this.line(ox, oy - 10, ox - 4, oy - 6, C.accent, 1.3); this.line(ox, oy - 10, ox + 4, oy - 13, C.accent, 1.3);
+    this.line(ox, oy - 4, ox - 3, oy + 1, C.accent, 1.4); this.line(ox, oy - 4, ox + 3, oy + 1, C.accent, 1.4);
+    // compass along the horizon
+    for (const [l, azd] of [['N', 0], ['E', 90], ['S', 180], ['W', 270]] as Array<[string, number]>) {
+      const q = P({ x: Math.sin(azd * DEG), y: Math.cos(azd * DEG), z: 0 });
+      if (!q.inView) continue;
+      this.line(q.x, horizonY + 2, q.x, horizonY + 8, C.accent);
+      this.text(l, q.x, horizonY + 16, C.accent, 11, 'center', 'serif');
+    }
+
+    const phase = elong < 10 || elong > 350 ? 'new' : elong < 80 ? 'waxing crescent' : elong < 100 ? 'first quarter' : elong < 170 ? 'waxing gibbous' : elong < 190 ? 'full' : elong < 260 ? 'waning gibbous' : elong < 280 ? 'last quarter' : 'waning crescent';
+    const polaris = this.starsEq[14];   // Polaris
+    const poleDist = Math.acos(Math.max(-1, Math.min(1, polaris.z))) / DEG;
+    const yr = this.year < 0 ? `${-this.year} BCE` : `${this.year} CE`;
+    this.setReadout([
+      ['When', `${yr} · day ${fmt(this.doy, 0)} · ${padZ(this.hour)}:${padZ((this.hour % 1) * 60)}`],
+      ['Sun', sunAlt > 0 ? `${fmt(sunAlt, 0)}° up — daylight` : sunAlt > -18 ? `${fmt(-sunAlt, 0)}° below the horizon — twilight` : 'night', sunAlt > 0 ? C.sun : sunAlt > -18 ? C.accent : C.text],
+      ['Moon', `${phase} · ${fmt(lit * 100, 0)} % lit`],
+      ['Wanderers', visible.length ? visible.join(', ') : 'none in view', visible.length ? C.green : C.dim],
+      ['Pole star', poleDist < 2 ? `Polaris (${fmt(poleDist, 1)}° off)` : `none · Polaris ${fmt(poleDist, 0)}° off`, poleDist < 2 ? C.green : C.red],
+    ]);
+  }
+}
+
 /* ------------------------------------------------------------ factory ---- */
 
 export function createWidget(spec: WidgetSpec): Widget {
   switch (spec.type) {
+    case 'ancientsky': return new AncientSkyWidget();
     case 'models': return new ModelsWidget(spec);
     case 'eudoxus': return new EudoxusWidget();
     case 'synodic': return new SynodicWidget();
