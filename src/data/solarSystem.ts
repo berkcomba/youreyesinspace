@@ -390,6 +390,38 @@ export const SOLAR_SYSTEM: BodyData[] = [
     appearance: { kind: 'terrestrial', seed: 105, landLow: [0.55, 0.35, 0.25], landMid: [0.78, 0.62, 0.50], landHigh: [0.92, 0.88, 0.85], craters: 0.2, roughness: 0.6, variation: 0.5 },
     description: 'Kuiper Kuşağı\'nın en parlak cisimlerinden; metan, etan ve tolinlerle kaplı kızılımsı yüzey.',
   },
+  {
+    id: 'gonggong', name: 'Gonggong', type: 'dwarf', parent: 'sun',
+    radius: 615, mass: 1.75e21, albedo: 0.14, rotationPeriod: 22.4, tilt: 30,
+    orbit: helio(67.38, 0.4993, 30.63, 336.86, 207.07, 93.0, 201_980),
+    appearance: { kind: 'terrestrial', seed: 106, landLow: [0.40, 0.22, 0.15], landMid: [0.62, 0.40, 0.28], landHigh: [0.82, 0.68, 0.58], craters: 0.3, roughness: 0.7, variation: 0.5 },
+    description: 'Bilinen en kızıl ve en yavaş dönen büyük trans-Neptün cisimlerinden; su buzu ve tolinlerle kaplı. Saçık diskte 34–101 GB arasında salınan çok eğik bir yörüngede dolaşır.',
+    facts: { 'Keşif': '2007, Schwamb, Brown, Rabinowitz', 'Uydu': 'Xiangliu', 'Adı': 'Çin su tanrısı' },
+  },
+  {
+    id: 'quaoar', name: 'Quaoar', type: 'dwarf', parent: 'sun',
+    radius: 545, mass: 1.2e21, albedo: 0.11, rotationPeriod: 17.68, tilt: 14,
+    orbit: helio(43.69, 0.0392, 7.99, 188.8, 147.5, 272.0, 105_500),
+    appearance: { kind: 'terrestrial', seed: 107, landLow: [0.30, 0.20, 0.16], landMid: [0.50, 0.38, 0.32], landHigh: [0.72, 0.64, 0.58], craters: 0.4, roughness: 0.8, variation: 0.4 },
+    description: 'Neredeyse dairesel bir yörüngede dolaşan klasik Kuiper Kuşağı cismi. Roche sınırının çok dışında, beklenmedik uzaklıkta iki halkaya sahip olmasıyla halka oluşum kuramlarını zorladı.',
+    facts: { 'Keşif': '2002, Trujillo & Brown', 'Uydu': 'Weywot', 'Halkalar': '2 (2023)' },
+  },
+  {
+    id: 'orcus', name: 'Orcus', type: 'dwarf', parent: 'sun',
+    radius: 455, mass: 6.35e20, albedo: 0.23, rotationPeriod: 13.2, tilt: 10,
+    orbit: helio(39.42, 0.2257, 20.59, 268.8, 72.3, 152.0, 90_400),
+    appearance: { kind: 'terrestrial', seed: 108, landLow: [0.30, 0.30, 0.31], landMid: [0.52, 0.52, 0.53], landHigh: [0.78, 0.78, 0.80], craters: 0.5, roughness: 0.8, variation: 0.3 },
+    description: 'Plüton gibi Neptün ile 2:3 rezonansta, ancak yörüngesinde Plüton\'un tam karşısında dolaştığı için "anti-Plüton" denir. Kristal su buzu ve amonyak izleri geçmişte kriyovolkanizmaya işaret eder.',
+    facts: { 'Keşif': '2004, Brown, Trujillo, Rabinowitz', 'Uydu': 'Vanth', 'Rezonans': '2:3 (Neptün)' },
+  },
+  {
+    id: 'sedna', name: 'Sedna', type: 'dwarf', parent: 'sun',
+    radius: 500, mass: 1.0e21, albedo: 0.32, rotationPeriod: 10.27, tilt: 12,
+    orbit: helio(506, 0.8496, 11.93, 144.25, 311.29, 357.6, 4_163_000),
+    appearance: { kind: 'terrestrial', seed: 109, landLow: [0.45, 0.18, 0.10], landMid: [0.70, 0.35, 0.22], landHigh: [0.88, 0.62, 0.50], craters: 0.2, roughness: 0.6, variation: 0.5 },
+    description: 'Güneş Sistemi\'nin en uzak bilinen büyük cismi: 76 GB\'lik günberisi bile Kuiper Kuşağı\'nın ötesinde, günötesi ~900 GB. Yaklaşık 11 400 yıllık yörüngesi ve Mars kadar kızıl yüzeyiyle iç Oort Bulutu\'nun ilk temsilcisi sayılır; günberiye 2076\'da ulaşacak.',
+    facts: { 'Keşif': '2003, Brown, Trujillo, Rabinowitz', 'Günberi': '76 GB (2076)', 'Yörünge periyodu': '≈ 11 400 yıl' },
+  },
 
   /* ---------------- Comet ---------------- */
   {
