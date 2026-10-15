@@ -1,0 +1,274 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "balmer": {
+   "script": "Hydrogen, the simplest atom, has the simplest spectrum. Four lines in the visible: red H alpha near six hundred fifty-six nanometres, blue-green near four hundred eighty-six, violet near four hundred thirty-four and four hundred ten. They crowd toward a limit near three hundred sixty-five nanometres. Look at the Orion Nebula behind the panel. That red is H alpha.\n\nIn eighteen eighty-five Johann Balmer, a Swiss schoolteacher of sixty with a taste for numerology, fitted those wavelengths with one formula of integers. Rydberg rewrote it in eighteen eighty-eight. One over lambda equals R sub H times one over m squared minus one over n squared, n greater than m. Lambda is the wavelength. One over lambda, the wavenumber, counts waves per metre. R sub H, the Rydberg constant, is about one point one times ten to the seven per metre. m and n are integers. Their inverse squares, subtracted and scaled by R sub H, give every line.\n\nBalmer's series takes m equals two, with n equals three, four, five, and upward. At infinite n, lambda is four over R sub H, three hundred sixty-five nanometres. Lyman found m equals one in the ultraviolet. Lyman alpha, near one hundred twenty-two nanometres, is the brightest line in the universe. Paschen, Brackett, and Pfund found m equals three, four, and five in the infrared. Each line sat where the integers predicted.\n\nClick any line in the widget. Notice its two integers and wavelength, and watch each series pile against its limit. In that nebula, ultraviolet ionises hydrogen. Electrons cascade down and emit the red H alpha of every emission nebula.\n\nI find it was pure pattern, no physics behind it, accurate to one part in ten thousand. Integers should have no place in a continuous world. Any theory of the atom had to produce this, and in nineteen thirteen one did. Why integers? A standing wave on a string fits an integer number of half-wavelengths. Keep that for the next section.",
+   "hash": "3a7cb327e9aa",
+   "duration": 123.19,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.02,
+     "text": "Hydrogen, the simplest atom, has the simplest spectrum."
+    },
+    {
+     "start": 4.02,
+     "end": 15.54,
+     "text": "Four lines in the visible: red H alpha near six hundred fifty-six nanometres, blue-green near four hundred eighty-six, violet near four hundred thirty-four and four hundred ten."
+    },
+    {
+     "start": 15.54,
+     "end": 19.38,
+     "text": "They crowd toward a limit near three hundred sixty-five nanometres."
+    },
+    {
+     "start": 19.38,
+     "end": 21.98,
+     "text": "Look at the Orion Nebula behind the panel."
+    },
+    {
+     "start": 21.98,
+     "end": 23.94,
+     "text": "That red is H alpha."
+    },
+    {
+     "start": 23.94,
+     "end": 32.84,
+     "text": "In eighteen eighty-five Johann Balmer, a Swiss schoolteacher of sixty with a taste for numerology, fitted those wavelengths with one formula of integers."
+    },
+    {
+     "start": 32.84,
+     "end": 35.38,
+     "text": "Rydberg rewrote it in eighteen eighty-eight."
+    },
+    {
+     "start": 35.38,
+     "end": 42.6,
+     "text": "One over lambda equals R sub H times one over m squared minus one over n squared, n greater than m."
+    },
+    {
+     "start": 42.6,
+     "end": 44.34,
+     "text": "Lambda is the wavelength."
+    },
+    {
+     "start": 44.34,
+     "end": 48.3,
+     "text": "One over lambda, the wavenumber, counts waves per metre."
+    },
+    {
+     "start": 48.3,
+     "end": 54.1,
+     "text": "R sub H, the Rydberg constant, is about one point one times ten to the seven per metre."
+    },
+    {
+     "start": 54.1,
+     "end": 55.7,
+     "text": "m and n are integers."
+    },
+    {
+     "start": 55.7,
+     "end": 60.88,
+     "text": "Their inverse squares, subtracted and scaled by R sub H, give every line."
+    },
+    {
+     "start": 60.88,
+     "end": 66.41,
+     "text": "Balmer's series takes m equals two, with n equals three, four, five, and upward."
+    },
+    {
+     "start": 66.41,
+     "end": 72.35,
+     "text": "At infinite n, lambda is four over R sub H, three hundred sixty-five nanometres."
+    },
+    {
+     "start": 72.35,
+     "end": 75.37,
+     "text": "Lyman found m equals one in the ultraviolet."
+    },
+    {
+     "start": 75.37,
+     "end": 80.51,
+     "text": "Lyman alpha, near one hundred twenty-two nanometres, is the brightest line in the universe."
+    },
+    {
+     "start": 80.51,
+     "end": 86.13,
+     "text": "Paschen, Brackett, and Pfund found m equals three, four, and five in the infrared."
+    },
+    {
+     "start": 86.13,
+     "end": 88.69,
+     "text": "Each line sat where the integers predicted."
+    },
+    {
+     "start": 88.69,
+     "end": 90.47,
+     "text": "Click any line in the widget."
+    },
+    {
+     "start": 90.47,
+     "end": 95.51,
+     "text": "Notice its two integers and wavelength, and watch each series pile against its limit."
+    },
+    {
+     "start": 95.51,
+     "end": 98.75,
+     "text": "In that nebula, ultraviolet ionises hydrogen."
+    },
+    {
+     "start": 98.75,
+     "end": 103.55,
+     "text": "Electrons cascade down and emit the red H alpha of every emission nebula."
+    },
+    {
+     "start": 103.55,
+     "end": 108.97,
+     "text": "I find it was pure pattern, no physics behind it, accurate to one part in ten thousand."
+    },
+    {
+     "start": 108.97,
+     "end": 111.87,
+     "text": "Integers should have no place in a continuous world."
+    },
+    {
+     "start": 111.87,
+     "end": 116.59,
+     "text": "Any theory of the atom had to produce this, and in nineteen thirteen one did."
+    },
+    {
+     "start": 116.59,
+     "end": 117.77,
+     "text": "Why integers?"
+    },
+    {
+     "start": 117.77,
+     "end": 121.71,
+     "text": "A standing wave on a string fits an integer number of half-wavelengths."
+    },
+    {
+     "start": 121.71,
+     "end": 123.19,
+     "text": "Keep that for the next section."
+    }
+   ],
+   "voicedHash": "1037596b39fe"
+  },
+  "bohr-model": {
+   "script": "I picture Bohr, fresh from Rutherford, banning the classical catastrophe in nineteen thirteen with two postulates. The electron’s angular momentum has to be L equals m sub e v r equals n h-bar, n an integer from one upward; h-bar is Planck’s constant over two pi. Stationary states simply do not radiate. Photons come only from jumps, their energy h nu equaling E sub n minus E sub m.\n\nCombining the force balance m sub e v squared over r equals e squared over four pi epsilon zero r squared with that condition produces the radius r sub n equals four pi epsilon zero h-bar squared over m sub e e squared times n squared, or a zero n squared. Epsilon zero is vacuum permittivity, m sub e the electron mass, e the charge, and a zero the Bohr radius of about fifty-three picometres. Sizes grow as n squared.\n\nThe energies are E sub n equals minus m sub e e to the fourth over thirty-two pi squared epsilon zero squared h-bar squared over n squared, equaling minus thirteen point six electron-volts over n squared. Negative means bound, zero means ionised, and the thirteen point six electron-volt ground state needed no adjustable parameters.\n\nA jump yields h c over lambda equals thirteen point six electron-volts times one over m squared minus one over n squared, which is Balmer’s formula. So the Rydberg constant R equals m sub e e to the fourth over sixty-four pi cubed epsilon zero squared h-bar cubed c, near eleven million per metre, matching experiment to a tenth of a percent. Einstein called it one of the greatest discoveries.\n\nI want you to click levels in the widget, where orbits and the energy ladder are to scale. Downward jumps show the emitted photon’s colour and wavelength; upward jumps absorb. Build Balmer by dropping to n equals two and Lyman by dropping to n equals one.\n\nThese postulates were declared, not derived: classical physics stops at the atom and Planck’s constant takes over. Half-classical and self-contradictory, the theory worked.",
+   "hash": "f0910fa7fc99"
+  },
+  "bohr-summary": {
+   "script": "Look at the planetary system slowly circling the Sun behind the panel. Bohr borrowed that picture.\n\nRutherford, nineteen eleven: a tiny massive positive nucleus, electrons far outside. Classically unstable, an orbiting electron should radiate and fall in.\n\nBalmer in eighteen eighty-five, Rydberg in eighteen eighty-eight. One over lambda equals R sub H times one over m squared minus one over n squared. Lambda is the wavelength, R sub H the hydrogen Rydberg constant, and m and n integers with n above m. Lyman in the ultraviolet, Balmer in the visible, Paschen, Brackett, Pfund in the infrared.\n\nBohr, nineteen thirteen: L, the angular momentum, equals n h-bar, and no radiation in stationary states. On a jump, h nu equals E sub n minus E sub m, the photon's energy.\n\nr sub n equals a sub zero n squared, a sub zero about five hundredths of a nanometre. E sub n equals minus thirteen point six electronvolts over n squared. The Rydberg constant came out to a tenth of a percent.\n\nHydrogen-like ions: energy scales as Z squared, Z the nuclear charge. Reduced mass mu shifts isotopes, and deuterium was found that way.\n\nOne electron only, no line strengths, no fine structure, and the orbits are wrong. So why learn it? The energies and n survive; the little planets do not.",
+   "hash": "295bd7802096"
+  },
+  "hydrogenic": {
+   "script": "Bohr's derivation works for any one-electron system: hydrogen, deuterium, He plus, Li two plus. Z times the pull shrinks orbits by Z and deepens energies by Z squared.\n\nr sub n equals a zero n squared over Z. r sub n is the radius, a zero the Bohr radius, n the level, Z the nuclear charge. E sub n equals minus thirteen point six electronvolts times Z squared over n squared. Negative means bound. He plus ionises about fifty-four electronvolts, fourfold deeper. One over lambda equals R Z squared times one over m squared minus one over n squared. Lambda is the wavelength, R the Rydberg constant, m and n the two levels, so He plus four to two sits on H alpha.\n\nBoth orbit their common centre of mass, so we replace the electron mass by mu equals m sub e M over m sub e plus M, the reduced mass, M the nuclear mass. Deuterium, heavier, shifts the lines by three hundredths of a percent, how Harold Urey found it in nineteen thirty-one. Slide Z with me and switch the nucleus in the widget. Orbits shrink with Z; mass barely matters.\n\nIn eighteen ninety-six Pickering found lines in zeta Puppis that looked half-integer. Bohr showed they were He plus: every other line coincides with hydrogen, and reduced mass fixes a mismatch. Rigel behind the panel shows absorption above thirty thousand kelvin.\n\nIn the table, v one over c equals e squared, e the electron charge, over four pi epsilon zero, the vacuum permittivity, times h-bar, Planck's constant over two pi, times c, the speed of light. About one over one hundred thirty-seven, the fine-structure constant alpha, electromagnetism's strength. Relativity grows as Z squared, so gold's inner electrons at six tenths c make gold yellow.\n\nIt gets the levels, the Rydberg constant, ionisation, ions, and size and stability. It fails past one electron: brightness, fine structure, Zeeman, ground-state L of h-bar not zero, and only a postulate against radiation.",
+   "hash": "e3a891122079"
+  },
+  "rutherford": {
+   "script": "By nineteen hundred Thomson had found the electron, nearly two thousand times lighter than hydrogen, and proposed the plum pudding, diffuse positive charge with electrons embedded like raisins. Geiger and Marsden, Rutherford's students in Manchester, fired alpha particles, helium nuclei from radium, at gold foil a few hundred atoms thick and counted the flashes. Diffuse positive charge means a weak field, so an alpha particle should barely deflect. Most did. About one in eight thousand bounced back through more than ninety degrees. Rutherford said it was almost as incredible as if you fired a fifteen-inch shell at tissue paper and it came back and hit you. Only a concentrated positive charge could produce that field. In nineteen eleven he put nearly all the mass and all the positive charge in a nucleus about ten to the minus fifteen metres across, electrons at ten to the minus ten metres, a hundred thousand times further out. An atom is overwhelmingly empty space. Look at the Sun behind the panel. If the nucleus were that Sun, about one point four million kilometres across, the electron would orbit at about a hundred thousand solar radii, twice Pluto's distance. That picture gave us the word orbit, and it is deeply misleading. Fire particles in the widget and switch models. In Rutherford's atom the paths are hyperbolae, the repulsive version of chapter two's orbits, and the angle depends on how close you aim to the nucleus. The histogram builds one over sine to the fourth of theta over two. Theta is the scattering angle. That is what Coulomb's inverse-square force predicts, and they measured it down to about ten to the minus fourteen metres. An orbiting electron accelerates, so by Maxwell it should radiate, lose energy, and spiral into the nucleus in about ten to the minus eleven seconds, in a continuous flash of ever-shorter wavelengths. Atoms should not exist, and spectra should not be lines. The same physics was missing from the blackbody and photoelectric effect.",
+   "hash": "338773a18cd2",
+   "duration": 119.35,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 12.28,
+     "text": "By nineteen hundred Thomson had found the electron, nearly two thousand times lighter than hydrogen, and proposed the plum pudding, diffuse positive charge with electrons embedded like raisins."
+    },
+    {
+     "start": 12.28,
+     "end": 23.84,
+     "text": "Geiger and Marsden, Rutherford's students in Manchester, fired alpha particles, helium nuclei from radium, at gold foil a few hundred atoms thick and counted the flashes."
+    },
+    {
+     "start": 23.84,
+     "end": 30.22,
+     "text": "Diffuse positive charge means a weak field, so an alpha particle should barely deflect. Most did."
+    },
+    {
+     "start": 30.22,
+     "end": 34.22,
+     "text": "About one in eight thousand bounced back through more than ninety degrees."
+    },
+    {
+     "start": 34.22,
+     "end": 41.18,
+     "text": "Rutherford said it was almost as incredible as if you fired a fifteen-inch shell at tissue paper and it came back and hit you."
+    },
+    {
+     "start": 41.18,
+     "end": 44.74,
+     "text": "Only a concentrated positive charge could produce that field."
+    },
+    {
+     "start": 44.74,
+     "end": 58.02,
+     "text": "In nineteen eleven he put nearly all the mass and all the positive charge in a nucleus about ten to the minus fifteen metres across, electrons at ten to the minus ten metres, a hundred thousand times further out."
+    },
+    {
+     "start": 58.02,
+     "end": 60.75,
+     "text": "An atom is overwhelmingly empty space."
+    },
+    {
+     "start": 60.75,
+     "end": 62.73,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 62.73,
+     "end": 72.79,
+     "text": "If the nucleus were that Sun, about one point four million kilometres across, the electron would orbit at about a hundred thousand solar radii, twice Pluto's distance."
+    },
+    {
+     "start": 72.79,
+     "end": 76.73,
+     "text": "That picture gave us the word orbit, and it is deeply misleading."
+    },
+    {
+     "start": 76.73,
+     "end": 79.41,
+     "text": "Fire particles in the widget and switch models."
+    },
+    {
+     "start": 79.41,
+     "end": 88.09,
+     "text": "In Rutherford's atom the paths are hyperbolae, the repulsive version of chapter two's orbits, and the angle depends on how close you aim to the nucleus."
+    },
+    {
+     "start": 88.09,
+     "end": 92.09,
+     "text": "The histogram builds one over sine to the fourth of theta over two."
+    },
+    {
+     "start": 92.09,
+     "end": 93.99,
+     "text": "Theta is the scattering angle."
+    },
+    {
+     "start": 93.99,
+     "end": 100.47,
+     "text": "That is what Coulomb's inverse-square force predicts, and they measured it down to about ten to the minus fourteen metres."
+    },
+    {
+     "start": 100.47,
+     "end": 112.23,
+     "text": "An orbiting electron accelerates, so by Maxwell it should radiate, lose energy, and spiral into the nucleus in about ten to the minus eleven seconds, in a continuous flash of ever-shorter wavelengths."
+    },
+    {
+     "start": 112.23,
+     "end": 115.71,
+     "text": "Atoms should not exist, and spectra should not be lines."
+    },
+    {
+     "start": 115.71,
+     "end": 119.35,
+     "text": "The same physics was missing from the blackbody and photoelectric effect."
+    }
+   ],
+   "voicedHash": "c48c383a90ea"
+  }
+ }
+}

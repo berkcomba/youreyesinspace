@@ -1,0 +1,699 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "binaries": {
+   "script": "Look at Mizar behind the panel, the middle of the Big Dipper's handle. In 1889 Edward Pickering at Harvard noticed that the K line of calcium was sometimes single and sometimes double, with a period of about twenty days. Two stars, too close to resolve, were orbiting each other. As one approached and the other receded, their lines split; they merged again when both moved across our line of sight. Mizar A was the first spectroscopic binary.\n\nPress play in the widget and watch the two sets of lines oscillate in antiphase, one shifting blue as the other shifts red, then swapping. Change the inclination. Face-on, there are no shifts, because the motion has no radial component. Edge-on, you see the full orbital speed. Change the mass ratio. The lighter star swings faster and its lines move further.\n\nThat is v-one over v-two equals m-two over m-one. v-one and v-two are the velocity amplitudes read from the line shifts, and m-one and m-two are the masses. Both orbit one centre of mass, so the lighter one moves faster: the velocity ratio is the inverse of the mass ratio, as in Section 2.3.\n\nKepler's third law turns those amplitudes and the period into a total mass, up to the unknown inclination. m-one plus m-two equals P over two pi G, times the cube of v-one plus v-two, divided by the cube of the sine of i. P is the orbital period, G the gravitational constant, and i the tilt to the plane of the sky. We measure only the line-of-sight speed, so we cannot remove the cube of the sine of i. This is how most stellar masses are measured. Chapter 7 does it in full.\n\nSpectral lines carry velocities, velocities carry orbits, orbits carry masses. Almost everything we know about the masses of stars — and, in the last thirty years, of planets around other stars and black holes at the centres of galaxies — comes from the dance of spectral lines.",
+   "hash": "2cb70f21e33f",
+   "duration": 118.71,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4.38,
+     "text": "Look at Mizar behind the panel, the middle of the Big Dipper's handle."
+    },
+    {
+     "start": 4.38,
+     "end": 14.58,
+     "text": "In 1889 Edward Pickering at Harvard noticed that the K line of calcium was sometimes single and sometimes double, with a period of about twenty days."
+    },
+    {
+     "start": 14.58,
+     "end": 18.46,
+     "text": "Two stars, too close to resolve, were orbiting each other."
+    },
+    {
+     "start": 18.46,
+     "end": 25.42,
+     "text": "As one approached and the other receded, their lines split; they merged again when both moved across our line of sight."
+    },
+    {
+     "start": 25.42,
+     "end": 28.56,
+     "text": "Mizar A was the first spectroscopic binary."
+    },
+    {
+     "start": 28.56,
+     "end": 36.96,
+     "text": "Press play in the widget and watch the two sets of lines oscillate in antiphase, one shifting blue as the other shifts red, then swapping."
+    },
+    {
+     "start": 36.96,
+     "end": 38.56,
+     "text": "Change the inclination."
+    },
+    {
+     "start": 38.56,
+     "end": 43.42,
+     "text": "Face-on, there are no shifts, because the motion has no radial component."
+    },
+    {
+     "start": 43.42,
+     "end": 46.24,
+     "text": "Edge-on, you see the full orbital speed."
+    },
+    {
+     "start": 46.24,
+     "end": 47.9,
+     "text": "Change the mass ratio."
+    },
+    {
+     "start": 47.9,
+     "end": 51.34,
+     "text": "The lighter star swings faster and its lines move further."
+    },
+    {
+     "start": 51.34,
+     "end": 55.6,
+     "text": "That is v-one over v-two equals m-two over m-one."
+    },
+    {
+     "start": 55.6,
+     "end": 62.49,
+     "text": "v-one and v-two are the velocity amplitudes read from the line shifts, and m-one and m-two are the masses."
+    },
+    {
+     "start": 62.49,
+     "end": 71.91,
+     "text": "Both orbit one centre of mass, so the lighter one moves faster: the velocity ratio is the inverse of the mass ratio, as in Section 2. 3."
+    },
+    {
+     "start": 71.91,
+     "end": 78.47,
+     "text": "Kepler's third law turns those amplitudes and the period into a total mass, up to the unknown inclination."
+    },
+    {
+     "start": 78.47,
+     "end": 87.03,
+     "text": "m-one plus m-two equals P over two pi G, times the cube of v-one plus v-two, divided by the cube of the sine of i."
+    },
+    {
+     "start": 87.03,
+     "end": 93.17,
+     "text": "P is the orbital period, G the gravitational constant, and i the tilt to the plane of the sky."
+    },
+    {
+     "start": 93.17,
+     "end": 98.29,
+     "text": "We measure only the line-of-sight speed, so we cannot remove the cube of the sine of i."
+    },
+    {
+     "start": 98.29,
+     "end": 100.75,
+     "text": "This is how most stellar masses are measured."
+    },
+    {
+     "start": 100.75,
+     "end": 102.79,
+     "text": "Chapter 7 does it in full."
+    },
+    {
+     "start": 102.79,
+     "end": 108.31,
+     "text": "Spectral lines carry velocities, velocities carry orbits, orbits carry masses."
+    },
+    {
+     "start": 108.31,
+     "end": 118.71,
+     "text": "Almost everything we know about the masses of stars — and, in the last thirty years, of planets around other stars and black holes at the centres of galaxies — comes from the dance of spectral lines."
+    }
+   ],
+   "voicedHash": "7d3a15401601"
+  },
+  "doppler-lines": {
+   "script": "Look at Aldebaran behind the panel. Spectral lines are laboratory standards stamped on starlight, measurable to a part in a million. Approach shifts the pattern blue; recession shifts it red. Chapter 4's Doppler formula turns that shift into a velocity.\n\nAt ordinary speeds, lambda observed minus lambda rest, over lambda rest, equals delta lambda over lambda rest, equals v-r over c, and that ratio is z. Those are the recorded wavelength, the laboratory wavelength, and their difference. V-r is the radial velocity, only motion along the line of sight, and c is the speed of light. Positive v-r means recession and z above zero; approach is a blueshift. Only the radial component shifts the lines.\n\nThe exact form from Section 4.3 is one plus z equals the square root of one plus v-r over c, all over one minus v-r over c. At a hundred kilometres per second the two formulas differ by one part in ten million. Quasars and jets need it.\n\nSlide the source velocity in the widget. Wavefronts bunch ahead and stretch behind; coloured lines slide together past the grey laboratory lines. In galaxy mode, H-alpha leaves the red.\n\nIn Aldebaran, H-alpha is measured slightly longward of the laboratory line. Delta lambda is plus zero point one two nanometres, z is one point eight times ten to the minus four, and v-r equals z times c, a recession of fifty-four kilometres per second. Earth's orbit, up to plus or minus thirty kilometres per second, must come off first; we reduce velocities to the solar-system barycentre.\n\nExoplanet spectrographs reach three tenths of a metre per second, one part in a billion, tracking thousands of lines. In eighteen forty-two Doppler wrongly used the effect to explain binary colours; the speeds are far too small. Huggins in eighteen sixty-eight had Sirius at forty-seven kilometres per second; the true value is minus five and a half. Vogel by eighteen ninety reached a few kilometres per second. Gaia lists thirty-three million stars.",
+   "hash": "90178836130d",
+   "duration": 125.75,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.52,
+     "text": "Look at Aldebaran behind the panel."
+    },
+    {
+     "start": 2.52,
+     "end": 8.48,
+     "text": "Spectral lines are laboratory standards stamped on starlight, measurable to a part in a million."
+    },
+    {
+     "start": 8.48,
+     "end": 12.34,
+     "text": "Approach shifts the pattern blue; recession shifts it red."
+    },
+    {
+     "start": 12.34,
+     "end": 16.44,
+     "text": "Chapter 4's Doppler formula turns that shift into a velocity."
+    },
+    {
+     "start": 16.44,
+     "end": 27.82,
+     "text": "At ordinary speeds, lambda observed minus lambda rest, over lambda rest, equals delta lambda over lambda rest, equals v-r over c, and that ratio is z."
+    },
+    {
+     "start": 27.82,
+     "end": 32.48,
+     "text": "Those are the recorded wavelength, the laboratory wavelength, and their difference."
+    },
+    {
+     "start": 32.48,
+     "end": 38.54,
+     "text": "V-r is the radial velocity, only motion along the line of sight, and c is the speed of light."
+    },
+    {
+     "start": 38.54,
+     "end": 43.96,
+     "text": "Positive v-r means recession and z above zero; approach is a blueshift."
+    },
+    {
+     "start": 43.96,
+     "end": 46.48,
+     "text": "Only the radial component shifts the lines."
+    },
+    {
+     "start": 46.48,
+     "end": 56.42,
+     "text": "The exact form from Section 4. 3 is one plus z equals the square root of one plus v-r over c, all over one minus v-r over c."
+    },
+    {
+     "start": 56.42,
+     "end": 61.2,
+     "text": "At a hundred kilometres per second the two formulas differ by one part in ten million."
+    },
+    {
+     "start": 61.2,
+     "end": 63.09,
+     "text": "Quasars and jets need it."
+    },
+    {
+     "start": 63.09,
+     "end": 65.37,
+     "text": "Slide the source velocity in the widget."
+    },
+    {
+     "start": 65.37,
+     "end": 71.55,
+     "text": "Wavefronts bunch ahead and stretch behind; coloured lines slide together past the grey laboratory lines."
+    },
+    {
+     "start": 71.55,
+     "end": 74.63,
+     "text": "In galaxy mode, H-alpha leaves the red."
+    },
+    {
+     "start": 74.63,
+     "end": 79.47,
+     "text": "In Aldebaran, H-alpha is measured slightly longward of the laboratory line."
+    },
+    {
+     "start": 79.47,
+     "end": 91.03,
+     "text": "Delta lambda is plus zero point one two nanometres, z is one point eight times ten to the minus four, and v-r equals z times c, a recession of fifty-four kilometres per second."
+    },
+    {
+     "start": 91.03,
+     "end": 99.43,
+     "text": "Earth's orbit, up to plus or minus thirty kilometres per second, must come off first; we reduce velocities to the solar-system barycentre."
+    },
+    {
+     "start": 99.43,
+     "end": 106.41,
+     "text": "Exoplanet spectrographs reach three tenths of a metre per second, one part in a billion, tracking thousands of lines."
+    },
+    {
+     "start": 106.41,
+     "end": 112.91,
+     "text": "In eighteen forty-two Doppler wrongly used the effect to explain binary colours; the speeds are far too small."
+    },
+    {
+     "start": 112.91,
+     "end": 119.83,
+     "text": "Huggins in eighteen sixty-eight had Sirius at forty-seven kilometres per second; the true value is minus five and a half."
+    },
+    {
+     "start": 119.83,
+     "end": 123.29,
+     "text": "Vogel by eighteen ninety reached a few kilometres per second."
+    },
+    {
+     "start": 123.29,
+     "end": 125.75,
+     "text": "Gaia lists thirty-three million stars."
+    }
+   ],
+   "voicedHash": "b32bac9a2381"
+  },
+  "fingerprints": {
+   "script": "Look at the Sun behind the panel. Kirchhoff matched Fraunhofer's dark lines to laboratory emission spectra and identified sodium, iron, magnesium, calcium, chromium, nickel, and more. Comte, in 1835, called the chemistry of the stars forever beyond reach. Within twenty-five years it was routine.\n\nTry the widget. Match the mystery spectrum to laboratory references by line spacing, not colour, and see which gaps lock on. Spectroscopists do this with thousands of lines, far more precisely.\n\nDuring the eclipse of the eighteenth of August 1868, Janssen recorded a bright yellow line in a solar prominence, close to sodium's D lines but not at their position. Lockyer measured it at five hundred eighty-seven point five nanometres, found no element that produced it, and named it after the Sun: helium. It was known only in the Sun for twenty-seven years. In 1895 Ramsay isolated it from a uranium mineral and saw the same yellow line. The second most abundant element in the universe was hiding in plain sight.\n\nA faint star shows strong lines near three hundred ninety-three and three hundred ninety-seven nanometres, ionised calcium, Fraunhofer's H and K. Weaker lines near six hundred fifty-six and four hundred eighty-six nanometres are hydrogen, H alpha and H beta, with a thicket of iron. Presence says which atoms are there. Strengths, as Chapter 8 will show, say temperature and abundance. A fractional nanometre shift says motion toward or away from you. Widths say rotation and atmospheric density. One spectrum, four kinds of knowledge, and no spacecraft required.\n\nA sodium atom emits the same wavelengths in Orion as in Heidelberg. But every reading needs a model of temperature, equilibrium, and atomic data. Two groups can measure the same spectrum and infer different abundances. Seventy-three percent hydrogen by mass for the Sun comes out of a model, and models improve. Solar oxygen was revised downward by almost a factor of two in the two thousands, when three-dimensional atmospheres replaced one-dimensional ones, and the revision is still debated.",
+   "hash": "962f19b92093",
+   "duration": 132.15,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.22,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 2.22,
+     "end": 13.66,
+     "text": "Kirchhoff matched Fraunhofer's dark lines to laboratory emission spectra and identified sodium, iron, magnesium, calcium, chromium, nickel, and more."
+    },
+    {
+     "start": 13.66,
+     "end": 19.84,
+     "text": "Comte, in 1835, called the chemistry of the stars forever beyond reach."
+    },
+    {
+     "start": 19.84,
+     "end": 22.3,
+     "text": "Within twenty-five years it was routine."
+    },
+    {
+     "start": 22.3,
+     "end": 23.5,
+     "text": "Try the widget."
+    },
+    {
+     "start": 23.5,
+     "end": 30.54,
+     "text": "Match the mystery spectrum to laboratory references by line spacing, not colour, and see which gaps lock on."
+    },
+    {
+     "start": 30.54,
+     "end": 35.24,
+     "text": "Spectroscopists do this with thousands of lines, far more precisely."
+    },
+    {
+     "start": 35.24,
+     "end": 46.02,
+     "text": "During the eclipse of the eighteenth of August 1868, Janssen recorded a bright yellow line in a solar prominence, close to sodium's D lines but not at their position."
+    },
+    {
+     "start": 46.02,
+     "end": 54.6,
+     "text": "Lockyer measured it at five hundred eighty-seven point five nanometres, found no element that produced it, and named it after the Sun: helium."
+    },
+    {
+     "start": 54.6,
+     "end": 57.56,
+     "text": "It was known only in the Sun for twenty-seven years."
+    },
+    {
+     "start": 57.56,
+     "end": 63.42,
+     "text": "In 1895 Ramsay isolated it from a uranium mineral and saw the same yellow line."
+    },
+    {
+     "start": 63.42,
+     "end": 67.55,
+     "text": "The second most abundant element in the universe was hiding in plain sight."
+    },
+    {
+     "start": 67.55,
+     "end": 77.05,
+     "text": "A faint star shows strong lines near three hundred ninety-three and three hundred ninety-seven nanometres, ionised calcium, Fraunhofer's H and K."
+    },
+    {
+     "start": 77.05,
+     "end": 85.87,
+     "text": "Weaker lines near six hundred fifty-six and four hundred eighty-six nanometres are hydrogen, H alpha and H beta, with a thicket of iron."
+    },
+    {
+     "start": 85.87,
+     "end": 88.17,
+     "text": "Presence says which atoms are there."
+    },
+    {
+     "start": 88.17,
+     "end": 92.31,
+     "text": "Strengths, as Chapter 8 will show, say temperature and abundance."
+    },
+    {
+     "start": 92.31,
+     "end": 96.27,
+     "text": "A fractional nanometre shift says motion toward or away from you."
+    },
+    {
+     "start": 96.27,
+     "end": 99.39,
+     "text": "Widths say rotation and atmospheric density."
+    },
+    {
+     "start": 99.39,
+     "end": 103.97,
+     "text": "One spectrum, four kinds of knowledge, and no spacecraft required."
+    },
+    {
+     "start": 103.97,
+     "end": 108.11,
+     "text": "A sodium atom emits the same wavelengths in Orion as in Heidelberg."
+    },
+    {
+     "start": 108.11,
+     "end": 112.81,
+     "text": "But every reading needs a model of temperature, equilibrium, and atomic data."
+    },
+    {
+     "start": 112.81,
+     "end": 116.89,
+     "text": "Two groups can measure the same spectrum and infer different abundances."
+    },
+    {
+     "start": 116.89,
+     "end": 122.35,
+     "text": "Seventy-three percent hydrogen by mass for the Sun comes out of a model, and models improve."
+    },
+    {
+     "start": 122.35,
+     "end": 132.15,
+     "text": "Solar oxygen was revised downward by almost a factor of two in the two thousands, when three-dimensional atmospheres replaced one-dimensional ones, and the revision is still debated."
+    }
+   ],
+   "voicedHash": "48ca21e833ad"
+  },
+  "fraunhofer": {
+   "script": "Look at the Sun behind the panel for a moment. That light is what Newton split with a prism, and he saw a continuous band of colour. He used a round hole as his aperture, so each colour was smeared over the next and nobody could have seen fine detail. In 1802 William Hyde Wollaston repeated the experiment with a narrow slit and noticed a handful of dark gaps. He took them for the natural boundaries between colours, and moved on.\n\nTwelve years later the Bavarian optician Joseph von Fraunhofer, testing the glass he made for telescopes, built a spectroscope — a slit, a prism, and a small telescope — and saw not a handful but hundreds of dark lines, always at the same places. He catalogued 574 of them and labelled the strongest with letters, A to K, a notation we still use: the D lines of sodium, the H and K lines of calcium, the C and F lines we now know as hydrogen. He found the same lines in the Moon and the planets, reflected sunlight, and different lines in Sirius and other stars.\n\nDrag the cursor across the spectrum in the widget to identify Fraunhofer’s letters, and zoom in. Notice how narrow the lines really are, hairline gaps in an otherwise smooth rainbow. Fraunhofer died at 39 without knowing what the lines meant. He did know they were a precise, reproducible property of sunlight, a fingerprint waiting to be read. He also noticed that the bright yellow line from a sodium flame fell at exactly the position of the dark D lines. He recorded the coincidence and did not pursue it. Forty years later it became the key to the whole subject.\n\nA spectrum is not just colour. With enough resolution it is full of structure — narrow dark lines in the Sun and stars, bright lines in flames and gas discharges — and that structure is the same in the laboratory and in the sky.",
+   "hash": "8bf2d851205b",
+   "duration": 111.99,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.94,
+     "text": "Look at the Sun behind the panel for a moment."
+    },
+    {
+     "start": 2.94,
+     "end": 8.28,
+     "text": "That light is what Newton split with a prism, and he saw a continuous band of colour."
+    },
+    {
+     "start": 8.28,
+     "end": 15.66,
+     "text": "He used a round hole as his aperture, so each colour was smeared over the next and nobody could have seen fine detail."
+    },
+    {
+     "start": 15.66,
+     "end": 23.9,
+     "text": "In 1802 William Hyde Wollaston repeated the experiment with a narrow slit and noticed a handful of dark gaps."
+    },
+    {
+     "start": 23.9,
+     "end": 28.16,
+     "text": "He took them for the natural boundaries between colours, and moved on."
+    },
+    {
+     "start": 28.16,
+     "end": 44.36,
+     "text": "Twelve years later the Bavarian optician Joseph von Fraunhofer, testing the glass he made for telescopes, built a spectroscope — a slit, a prism, and a small telescope — and saw not a handful but hundreds of dark lines, always at the same places."
+    },
+    {
+     "start": 44.36,
+     "end": 58.81,
+     "text": "He catalogued 574 of them and labelled the strongest with letters, A to K, a notation we still use: the D lines of sodium, the H and K lines of calcium, the C and F lines we now know as hydrogen."
+    },
+    {
+     "start": 58.81,
+     "end": 65.69,
+     "text": "He found the same lines in the Moon and the planets, reflected sunlight, and different lines in Sirius and other stars."
+    },
+    {
+     "start": 65.69,
+     "end": 71.61,
+     "text": "Drag the cursor across the spectrum in the widget to identify Fraunhofer’s letters, and zoom in."
+    },
+    {
+     "start": 71.61,
+     "end": 76.87,
+     "text": "Notice how narrow the lines really are, hairline gaps in an otherwise smooth rainbow."
+    },
+    {
+     "start": 76.87,
+     "end": 80.57,
+     "text": "Fraunhofer died at 39 without knowing what the lines meant."
+    },
+    {
+     "start": 80.57,
+     "end": 86.29,
+     "text": "He did know they were a precise, reproducible property of sunlight, a fingerprint waiting to be read."
+    },
+    {
+     "start": 86.29,
+     "end": 92.75,
+     "text": "He also noticed that the bright yellow line from a sodium flame fell at exactly the position of the dark D lines."
+    },
+    {
+     "start": 92.75,
+     "end": 95.59,
+     "text": "He recorded the coincidence and did not pursue it."
+    },
+    {
+     "start": 95.59,
+     "end": 98.81,
+     "text": "Forty years later it became the key to the whole subject."
+    },
+    {
+     "start": 98.81,
+     "end": 100.69,
+     "text": "A spectrum is not just colour."
+    },
+    {
+     "start": 100.69,
+     "end": 111.99,
+     "text": "With enough resolution it is full of structure — narrow dark lines in the Sun and stars, bright lines in flames and gas discharges — and that structure is the same in the laboratory and in the sky."
+    }
+   ],
+   "voicedHash": "c854aa6cbdf5"
+  },
+  "kirchhoff": {
+   "script": "In Heidelberg in 1859 the chemist Robert Bunsen and the physicist Gustav Kirchhoff heated salts and looked through a spectroscope. Each element, not the compound it was in, gave its own bright lines: sodium a yellow pair, lithium a red line, potassium a violet one. Then Kirchhoff shone sunlight through a sodium flame and the dark D lines grew darker. Cool sodium vapour absorbs exactly the wavelengths a hot one emits.\n\nPicture a gas as a musical instrument with only certain notes. A hot, dense gas, or a hot solid, does not choose notes. It gives a continuous spectrum with no lines, a blackbody, as in Chapter 3. A hot, diffuse gas plays those notes as bright emission lines, its chemical signature. A cool, diffuse gas in front of a continuous source absorbs the same notes, producing dark lines at the wavelengths it would emit if it were hot.\n\nI want you to try the widget. A lamp shines through a cloud of gas. Drag the observer. Through the gas you see absorption lines. Step aside, look only at the gas, and those same wavelengths appear in emission. The wavelengths do not move. Switch the gas off and the continuum returns. Change the element and the pattern changes. Heat the gas and the lines strengthen.\n\nWe can read the Sun. Its hot, dense interior and lower photosphere emit the continuum. The thinner gas above, still forty-five hundred to six thousand kelvin but cooler than what lies beneath, absorbs its own wavelengths. Fraunhofer's lines are the chemical inventory of the solar atmosphere.\n\nLook at the nebula behind the panel, Orion: thin gas excited by hot stars, emitting its lines, red hydrogen alpha above all.\n\nKirchhoff's laws say what happens, not why a gas emits and absorbs at the same discrete wavelengths. Why only sodium owns five hundred eighty-nine point zero and five hundred eighty-nine point six nanometres has no classical answer. The rest of this chapter takes that question.",
+   "hash": "470d3b471a7b",
+   "duration": 120.95,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 9.26,
+     "text": "In Heidelberg in 1859 the chemist Robert Bunsen and the physicist Gustav Kirchhoff heated salts and looked through a spectroscope."
+    },
+    {
+     "start": 9.26,
+     "end": 19.34,
+     "text": "Each element, not the compound it was in, gave its own bright lines: sodium a yellow pair, lithium a red line, potassium a violet one."
+    },
+    {
+     "start": 19.34,
+     "end": 24.9,
+     "text": "Then Kirchhoff shone sunlight through a sodium flame and the dark D lines grew darker."
+    },
+    {
+     "start": 24.9,
+     "end": 29.34,
+     "text": "Cool sodium vapour absorbs exactly the wavelengths a hot one emits."
+    },
+    {
+     "start": 29.34,
+     "end": 33.12,
+     "text": "Picture a gas as a musical instrument with only certain notes."
+    },
+    {
+     "start": 33.12,
+     "end": 37.52,
+     "text": "A hot, dense gas, or a hot solid, does not choose notes."
+    },
+    {
+     "start": 37.52,
+     "end": 42.72,
+     "text": "It gives a continuous spectrum with no lines, a blackbody, as in Chapter 3."
+    },
+    {
+     "start": 42.72,
+     "end": 48.24,
+     "text": "A hot, diffuse gas plays those notes as bright emission lines, its chemical signature."
+    },
+    {
+     "start": 48.24,
+     "end": 56.48,
+     "text": "A cool, diffuse gas in front of a continuous source absorbs the same notes, producing dark lines at the wavelengths it would emit if it were hot."
+    },
+    {
+     "start": 56.48,
+     "end": 58.14,
+     "text": "I want you to try the widget."
+    },
+    {
+     "start": 58.14,
+     "end": 60.55,
+     "text": "A lamp shines through a cloud of gas."
+    },
+    {
+     "start": 60.55,
+     "end": 62.03,
+     "text": "Drag the observer."
+    },
+    {
+     "start": 62.03,
+     "end": 64.41,
+     "text": "Through the gas you see absorption lines."
+    },
+    {
+     "start": 64.41,
+     "end": 69.21,
+     "text": "Step aside, look only at the gas, and those same wavelengths appear in emission."
+    },
+    {
+     "start": 69.21,
+     "end": 71.17,
+     "text": "The wavelengths do not move."
+    },
+    {
+     "start": 71.17,
+     "end": 74.01,
+     "text": "Switch the gas off and the continuum returns."
+    },
+    {
+     "start": 74.01,
+     "end": 76.51,
+     "text": "Change the element and the pattern changes."
+    },
+    {
+     "start": 76.51,
+     "end": 78.77,
+     "text": "Heat the gas and the lines strengthen."
+    },
+    {
+     "start": 78.77,
+     "end": 80.21,
+     "text": "We can read the Sun."
+    },
+    {
+     "start": 80.21,
+     "end": 84.27,
+     "text": "Its hot, dense interior and lower photosphere emit the continuum."
+    },
+    {
+     "start": 84.27,
+     "end": 92.47,
+     "text": "The thinner gas above, still forty-five hundred to six thousand kelvin but cooler than what lies beneath, absorbs its own wavelengths."
+    },
+    {
+     "start": 92.47,
+     "end": 96.47,
+     "text": "Fraunhofer's lines are the chemical inventory of the solar atmosphere."
+    },
+    {
+     "start": 96.47,
+     "end": 105.29,
+     "text": "Look at the nebula behind the panel, Orion: thin gas excited by hot stars, emitting its lines, red hydrogen alpha above all."
+    },
+    {
+     "start": 105.29,
+     "end": 111.25,
+     "text": "Kirchhoff's laws say what happens, not why a gas emits and absorbs at the same discrete wavelengths."
+    },
+    {
+     "start": 111.25,
+     "end": 118.91,
+     "text": "Why only sodium owns five hundred eighty-nine point zero and five hundred eighty-nine point six nanometres has no classical answer."
+    },
+    {
+     "start": 118.91,
+     "end": 120.95,
+     "text": "The rest of this chapter takes that question."
+    }
+   ],
+   "voicedHash": "f06e6003acad"
+  },
+  "lines-summary": {
+   "script": "So let us pull the threads together. Behind the panel the whole planetary system is slowly circling the Sun, and almost everything we know about those worlds, and about the stars beyond them, arrives as light. Wollaston in 1802 and Fraunhofer in 1814 found dark lines crossing the solar spectrum. Fraunhofer catalogued five hundred and seventy-four of them and lettered the strongest, A, B, C, D, and on through H and K, by position from red to violet, long before anyone knew the cause. Labelling them was still the right move. A shared set of names let observers compare notes; private labels would have scattered that common language and slowed the work.\n\nKirchhoff, in 1859, supplied the rules. Hot dense matter gives a continuum. Hot thin gas gives bright emission lines. Cool thin gas in front of a continuum gives dark absorption lines at the same wavelengths. Each element owns its own pattern, so Kirchhoff could read the Sun’s composition, and Lockyer could find helium there in 1868, twenty-seven years before it was found on Earth.\n\nMotion follows the Doppler relation: delta lambda over lambda equals v sub r over c, when the speed is much less than the speed of light. Delta lambda is the wavelength shift, lambda the rest wavelength, v sub r the radial velocity, and c the speed of light. Redshift means recession, and we measure those speeds to metres per second. In spectroscopic binaries the lines split and merge with the orbital period; the velocity amplitudes give mass ratios, and with Kepler’s third law the masses themselves.\n\nThe open question for the rest of the chapter is why the lines are discrete, and why each element owns one particular set. That is where we go next.",
+   "hash": "54fc937a4719",
+   "duration": 107.51,
+   "sentences": [
+    {
+     "start": 0.12,
+     "end": 2.4,
+     "text": "So let us pull the threads together."
+    },
+    {
+     "start": 2.4,
+     "end": 13.1,
+     "text": "Behind the panel the whole planetary system is slowly circling the Sun, and almost everything we know about those worlds, and about the stars beyond them, arrives as light."
+    },
+    {
+     "start": 13.1,
+     "end": 20.3,
+     "text": "Wollaston in 1802 and Fraunhofer in 1814 found dark lines crossing the solar spectrum."
+    },
+    {
+     "start": 20.3,
+     "end": 33.68,
+     "text": "Fraunhofer catalogued five hundred and seventy-four of them and lettered the strongest, A, B, C, D, and on through H and K, by position from red to violet, long before anyone knew the cause."
+    },
+    {
+     "start": 33.68,
+     "end": 35.94,
+     "text": "Labelling them was still the right move."
+    },
+    {
+     "start": 35.94,
+     "end": 43,
+     "text": "A shared set of names let observers compare notes; private labels would have scattered that common language and slowed the work."
+    },
+    {
+     "start": 43,
+     "end": 46.52,
+     "text": "Kirchhoff, in 1859, supplied the rules."
+    },
+    {
+     "start": 46.52,
+     "end": 48.84,
+     "text": "Hot dense matter gives a continuum."
+    },
+    {
+     "start": 48.84,
+     "end": 51.64,
+     "text": "Hot thin gas gives bright emission lines."
+    },
+    {
+     "start": 51.64,
+     "end": 57.21,
+     "text": "Cool thin gas in front of a continuum gives dark absorption lines at the same wavelengths."
+    },
+    {
+     "start": 57.21,
+     "end": 67.87,
+     "text": "Each element owns its own pattern, so Kirchhoff could read the Sun’s composition, and Lockyer could find helium there in 1868, twenty-seven years before it was found on Earth."
+    },
+    {
+     "start": 67.87,
+     "end": 76.61,
+     "text": "Motion follows the Doppler relation: delta lambda over lambda equals v sub r over c, when the speed is much less than the speed of light."
+    },
+    {
+     "start": 76.61,
+     "end": 84.63,
+     "text": "Delta lambda is the wavelength shift, lambda the rest wavelength, v sub r the radial velocity, and c the speed of light."
+    },
+    {
+     "start": 84.63,
+     "end": 89.11,
+     "text": "Redshift means recession, and we measure those speeds to metres per second."
+    },
+    {
+     "start": 89.11,
+     "end": 99.31,
+     "text": "In spectroscopic binaries the lines split and merge with the orbital period; the velocity amplitudes give mass ratios, and with Kepler’s third law the masses themselves."
+    },
+    {
+     "start": 99.31,
+     "end": 106.01,
+     "text": "The open question for the rest of the chapter is why the lines are discrete, and why each element owns one particular set."
+    },
+    {
+     "start": 106.01,
+     "end": 107.51,
+     "text": "That is where we go next."
+    }
+   ],
+   "voicedHash": "2b6e8795725f"
+  }
+ }
+}

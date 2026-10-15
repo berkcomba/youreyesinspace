@@ -80,7 +80,39 @@ export type WidgetSpec =
   /** cosmic-ray muons reaching the ground: classical vs relativistic survival */
   | { type: 'muon' }
   /** relativistic momentum, kinetic energy, γ against β; the energy–momentum triangle */
-  | { type: 'relenergy' };
+  | { type: 'relenergy' }
+  /** the solar spectrum with Fraunhofer's dark lines; drag a cursor to identify them, zoom in */
+  | { type: 'fraunhofer' }
+  /** Kirchhoff's laws: a lamp, a gas cloud and a draggable observer — continuous, emission or absorption */
+  | { type: 'kirchhoff' }
+  /** identify-the-element game: match a mystery emission spectrum to a reference */
+  | { type: 'elementid' }
+  /** Doppler shift of spectral lines: a moving source, its wavefronts and the shifted spectrum */
+  | { type: 'dopplerlines' }
+  /** a spectroscopic binary: two stars orbiting, their lines splitting and merging */
+  | { type: 'specbinary' }
+  /** the photoelectric effect: wavelength, intensity, metal, retarding voltage → K_max and current */
+  | { type: 'photoelectric' }
+  /** a photon across the spectrum: energy, frequency, momentum, equivalent temperature, what it does to matter */
+  | { type: 'photonscale' }
+  /** Compton scattering: drag the scattering angle, see Δλ and the recoil electron */
+  | { type: 'compton' }
+  /** Rutherford's gold foil: Thomson vs nuclear atom, α trajectories and the scattering histogram */
+  | { type: 'rutherford' }
+  /** hydrogen series (Lyman, Balmer, Paschen, Brackett) on a wavelength axis; click a line for its transition */
+  | { type: 'series' }
+  /** Bohr's atom: click energy levels to make the electron jump and emit or absorb a photon */
+  | { type: 'bohr' }
+  /** hydrogen-like ions: nuclear charge Z and reduced mass rescale the ladder */
+  | { type: 'hydrogenic' }
+  /** de Broglie standing waves around a Bohr orbit; integer n fits, fractional n cancels */
+  | { type: 'matterwave' }
+  /** hydrogen orbitals |ψ|² for (n, l, m) with the radial probability and the Bohr radius */
+  | { type: 'orbitals' }
+  /** a wave packet: position spread against momentum spread, Δx·Δp */
+  | { type: 'wavepacket' }
+  /** Pauli's exclusion principle builds the periodic table: fill shells electron by electron */
+  | { type: 'pauli' };
 
 export type SceneCue =
   | { action: 'goto'; ref: string; kind?: 'body' | 'blackhole' | 'star' | 'landmark' | 'galaxy' }
@@ -2017,6 +2049,396 @@ const S4_4: Section = {
   ],
 };
 
+/* ================================================================================ */
+/*  Chapter 5 — The Interaction of Light and Matter                                 */
+/* ================================================================================ */
+
+const S5_1: Section = {
+  id: 'spectral-lines',
+  number: '5.1',
+  title: 'Spectral Lines',
+  summary: 'Dark lines in sunlight, Kirchhoff\'s three laws, elements identified across light-years, a new element found in the Sun before it was found on Earth, and the Doppler shift that turns lines into velocities.',
+  minutes: 22,
+  steps: [
+    {
+      id: 'fraunhofer',
+      kicker: 'Interactive · history',
+      title: 'Dark lines in the rainbow',
+      widget: { type: 'fraunhofer' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('Newton split sunlight with a prism and saw a continuous band of colour. He used a round hole as his aperture, so each colour was smeared over the next; nobody could have seen fine detail. In 1802 William Hyde Wollaston repeated the experiment with a narrow <em>slit</em> and noticed a handful of dark gaps in the spectrum. He took them for the natural boundaries between colours, and moved on.'),
+        p('Twelve years later the Bavarian optician Joseph von Fraunhofer, testing the glass he made for telescopes, built a spectroscope — slit, prism, small telescope — and saw not a handful but <em>hundreds</em> of dark lines, always at the same places. He catalogued 574 of them and labelled the strongest with letters, A to K, a notation astronomers still use: the D lines of sodium, the H and K lines of calcium, the C and F lines we now know as hydrogen. He found the same lines in the light of the Moon and planets (reflected sunlight) and <em>different</em> lines in the spectra of Sirius and other stars.'),
+        p('Drag the cursor across the spectrum in the widget to identify Fraunhofer\'s letters, and zoom in to see how narrow the lines really are. Fraunhofer died at 39 without knowing what the lines meant. He did know they were a precise, reproducible property of sunlight — a fingerprint waiting to be read.'),
+        history('Fraunhofer also noticed that the bright yellow line emitted by a sodium flame fell at exactly the position of the dark D lines in sunlight. He recorded the coincidence and did not pursue it. Forty years later it would become the key to the whole subject.', 'The clue he left'),
+        key('A spectrum is not just colour. Looked at with enough resolution it is full of structure — narrow dark lines in the Sun and stars, bright lines in flames and gas discharges — and that structure is the same in the laboratory and in the sky.'),
+      ],
+    },
+    {
+      id: 'kirchhoff',
+      kicker: 'Interactive · principle',
+      title: 'Kirchhoff\'s three laws',
+      widget: { type: 'kirchhoff' },
+      scene: [goto('l-m42', 'landmark'), rate(1)],
+      body: [
+        p('In Heidelberg in 1859 the chemist Robert Bunsen (with his new clean-burning burner) and the physicist Gustav Kirchhoff heated salts in a flame and looked at the light through a spectroscope. Each element gave its own set of bright lines — sodium its yellow pair, lithium a red line, potassium a violet one — regardless of the compound it was in. Then Kirchhoff shone bright sunlight <em>through</em> a sodium flame and saw the dark D lines get <em>darker</em>. A cool sodium vapour was absorbing exactly the wavelengths a hot one emitted. He summarised the behaviour of light and matter in three empirical laws:'),
+        list(
+          '<b>A hot, dense gas or a hot solid</b> produces a <b>continuous spectrum</b> with no lines — a blackbody, Chapter 3.',
+          '<b>A hot, diffuse gas</b> produces <b>bright emission lines</b> at wavelengths characteristic of its chemical composition.',
+          '<b>A cool, diffuse gas in front of a continuous source</b> produces <b>dark absorption lines</b> — at the same wavelengths that gas would emit if it were hot.',
+        ),
+        p('The widget puts you in the laboratory. A lamp (continuous source) shines through a cloud of gas. <em>Drag the observer</em>: look at the lamp through the gas and you see absorption lines; step aside and look only at the gas and the same wavelengths appear as emission lines; switch the gas off and the continuum returns. Change the element and the pattern changes; heat the gas and the lines strengthen.'),
+        p('The Sun is now easy to read. Its hot, dense interior and lower photosphere emit a continuum. The thinner, cooler gas above — still 4500–6000 K, but cooler than what lies beneath — absorbs its own wavelengths out of that continuum. Fraunhofer\'s lines are the chemical inventory of the solar atmosphere. The glowing nebula in the scene behind you, Orion, shows law two: thin gas excited by hot stars, emitting its lines, red Hα above all.'),
+        note('Kirchhoff\'s laws describe <em>what</em> happens; they do not say <em>why</em> a gas emits and absorbs at exactly the same discrete wavelengths. That question — why sodium, and only sodium, owns 589.0 and 589.6 nm — has no classical answer. It will take the rest of this chapter.', 'What the laws do not explain'),
+      ],
+    },
+    {
+      id: 'fingerprints',
+      kicker: 'Interactive · application',
+      title: 'Reading the cosmic fingerprint',
+      widget: { type: 'elementid' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('Kirchhoff turned at once to the Sun. Matching Fraunhofer\'s dark lines with laboratory emission spectra, he identified sodium, iron, magnesium, calcium, chromium, nickel and more. The philosopher Auguste Comte had written in 1835 that the chemical composition of the stars was the example par excellence of knowledge forever beyond human reach. Within twenty-five years it was routine.'),
+        p('Try it yourself: the widget shows a mystery emission spectrum and a set of laboratory references. Match the pattern — the <em>spacing</em> of the lines, not just the colours. Spectroscopists do exactly this, with thousands of lines and a few more digits of precision.'),
+        history('During the total solar eclipse of 18 August 1868 the French astronomer Jules Janssen recorded a bright yellow line in the spectrum of a solar prominence, close to sodium\'s D lines but not at their position. Norman Lockyer in London measured it at 587.49 nm and, finding no element that produced it, proposed a new one and named it after the Sun: <em>helium</em>. For 27 years helium was known only in the Sun. In 1895 William Ramsay isolated it on Earth from a uranium mineral and saw the same yellow line. It is the second most abundant element in the universe and had been hiding in plain sight.', 'An element found in the Sun first'),
+        example('You point a telescope at a faint star. Its light shows strong dark lines at 393.4 and 396.8 nm (ionised calcium, Fraunhofer\'s H and K), weaker ones at 656.3 and 486.1 nm (hydrogen Hα and Hβ), and a thicket of iron lines. The <em>presence</em> of these lines says which atoms are in the star\'s atmosphere. Their <em>strengths</em> — as Chapter 8 will show — say how hot it is and how much of each element is there. Their <em>positions</em>, shifted a fraction of a nanometre from the laboratory values, say how fast the star moves toward or away from you. And their <em>widths</em> say how fast it rotates and how dense its atmosphere is. One spectrum, four kinds of knowledge; no spacecraft required.', 'Reading a star'),
+        think('Spectroscopy is powerful because the laws of atomic physics are the same everywhere — a sodium atom in Orion emits the same wavelengths as one in Heidelberg. But <em>interpreting</em> a spectrum always involves a model: the temperature structure of the atmosphere, the assumption of equilibrium, the atomic data for each transition. Two groups can measure the same spectrum and infer different abundances. When this course quotes "the Sun is 73 % hydrogen by mass", remember that the number comes out of a model, and that models improve. The solar oxygen abundance, for instance, was revised downward by almost a factor of two in the 2000s when 3-D atmosphere models replaced 1-D ones — and the revision is still debated.', 'How objective is a spectrum?'),
+      ],
+    },
+    {
+      id: 'doppler-lines',
+      kicker: 'Interactive · measurement',
+      title: 'Lines in motion: radial velocity',
+      widget: { type: 'dopplerlines' },
+      scene: [goto('Aldebaran', 'star'), rate(1)],
+      body: [
+        p('A spectral line is a wavelength marker of extraordinary precision — a laboratory standard stamped on starlight. If a star moves toward us, every marker arrives compressed: the whole pattern shifts toward the blue. If it recedes, the pattern shifts to the red. Since the pattern is known, the shift can be measured to a part in a million, and Chapter 4\'s Doppler formula converts it into a velocity. For speeds small compared with c:'),
+        eq('\\frac{\\lambda_{\\text{obs}} - \\lambda_{\\text{rest}}}{\\lambda_{\\text{rest}}} = \\frac{\\Delta\\lambda}{\\lambda_{\\text{rest}}} = \\frac{v_r}{c} \\equiv z', 'Low-speed Doppler shift. v_r is the radial velocity — the component of the star\'s velocity along the line of sight. Positive v_r (receding) gives a redshift z > 0; approach gives a blueshift. Only the radial component shifts the lines; motion across the sky does not.'),
+        eq('1 + z = \\sqrt{\\frac{1 + v_r/c}{1 - v_r/c}}', 'The exact relativistic form (Section 4.3), needed for quasars and jets. For v_r = 100 km/s the two formulas differ by one part in 10⁷.'),
+        p('Slide the source velocity in the widget. The wavefronts bunch up ahead and stretch behind; the spectrum below shows the laboratory lines (grey) and the observed ones (coloured) sliding together. Switch to "galaxy" mode and the shifts become large enough to move Hα out of the red entirely.'),
+        example('The red hydrogen line Hα is at 656.281 nm in the laboratory. In the spectrum of Aldebaran, the star in the scene, it is measured at 656.399 nm. Then Δλ = +0.118 nm, z = 1.80 × 10⁻⁴, and v_r = zc = +54 km/s: Aldebaran is receding. (Earth\'s own orbital motion, up to ±30 km/s depending on the season, has to be subtracted first — astronomers reduce all velocities to the solar system barycentre.) Precision today: the spectrographs that find exoplanets measure stellar velocities to 0.3 m/s, a shift of Δλ/λ = 10⁻⁹, by tracking thousands of lines at once.', 'Aldebaran'),
+        history('In 1842 Christian Doppler proposed the effect to explain the colours of binary stars — wrongly, since stellar velocities are far too small to change a star\'s colour. The first stellar radial velocity was measured by William Huggins in 1868: Sirius, receding at (he thought) 47 km/s. The true value is −5.5 km/s; the measurement was heroic and the error enormous. By 1890 Vogel at Potsdam, with photographic plates, was reliable to a few km/s. Today\'s Gaia catalogue holds radial velocities for 33 million stars.'),
+      ],
+    },
+    {
+      id: 'binaries',
+      kicker: 'Interactive · preview',
+      title: 'Lines that dance: spectroscopic binaries',
+      widget: { type: 'specbinary' },
+      scene: [goto('Mizar', 'star'), rate(1)],
+      body: [
+        p('In 1889 Edward Pickering at Harvard noticed that the K line of calcium in the spectrum of Mizar — the star in the scene, the middle of the Big Dipper\'s handle — was sometimes single and sometimes double, with a period of about 20 days. Two stars too close to resolve were orbiting each other; as one approached and the other receded, their lines split apart, then merged again as both moved across the line of sight. Mizar A was the first <em>spectroscopic binary</em>.'),
+        p('Press play in the widget and watch the two sets of lines oscillate in antiphase. Change the inclination: a system seen face-on shows no shifts at all (no radial component), while an edge-on system shows the full orbital velocity. Change the mass ratio: the lighter star swings faster and its lines move further — the velocity ratio is the inverse of the mass ratio, because both stars orbit a common centre of mass (Section 2.3).'),
+        eq('\\frac{v_1}{v_2} = \\frac{m_2}{m_1} \\qquad\\qquad m_1 + m_2 = \\frac{P}{2\\pi G}\\,\\frac{(v_1 + v_2)^3}{\\sin^3 i}', 'From the two velocity amplitudes and the period, Kepler\'s third law gives the total mass — up to the unknown inclination i. This is how most stellar masses are measured; Chapter 7 does it in full.'),
+        key('Spectral lines carry velocities, velocities carry orbits, orbits carry masses. Almost everything we know about the masses of stars — and, in the last thirty years, of planets around other stars and black holes at the centres of galaxies — comes from the dance of spectral lines.'),
+      ],
+    },
+    {
+      id: 'lines-summary',
+      kicker: 'Summary',
+      title: 'Spectral lines in brief',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Wollaston (1802) and Fraunhofer (1814) found dark lines in the solar spectrum; Fraunhofer catalogued 574 and lettered the strongest (A, B, C, D, …, H, K).',
+          'Kirchhoff (1859): hot dense matter → continuum; hot thin gas → emission lines; cool thin gas before a continuum → absorption lines at the same wavelengths.',
+          'Each element has its own line pattern. Kirchhoff read the Sun\'s composition; Lockyer found helium in the Sun (1868) 27 years before it was found on Earth.',
+          'Doppler: Δλ/λ = v_r/c for v ≪ c; redshift means recession. Radial velocities are measurable to m/s.',
+          'Spectroscopic binaries: lines split and merge with the orbital period; velocity amplitudes give mass ratios and, with Kepler\'s third law, masses.',
+          'Open question for the rest of the chapter: why are the lines discrete, and why does each element own a particular set?',
+        ),
+        think('Fraunhofer\'s letters were assigned from red to violet (A, B, C … H), by position, before anyone knew what caused them. Why was it nonetheless a good idea to label the lines rather than wait until they were understood? What would have been lost if everyone had used their own labels?'),
+      ],
+    },
+  ],
+};
+
+const S5_2: Section = {
+  id: 'photons',
+  number: '5.2',
+  title: 'Photons',
+  summary: 'Hertz proves light is a wave and stumbles on evidence it is not; Einstein takes Planck\'s quantum seriously; Compton makes photons collide like billiard balls.',
+  minutes: 20,
+  steps: [
+    {
+      id: 'hertz',
+      kicker: 'History',
+      title: 'The wave confirmed — and the first crack',
+      scene: [goto('earth'), rate(1)],
+      body: [
+        p('By 1887 Maxwell\'s electromagnetic theory (Section 3.3) predicted that oscillating charges should radiate waves travelling at c. Heinrich Hertz built the first radio transmitter — a spark gap driven by an induction coil — and a receiver, a loop of wire with a tiny gap in which a spark appeared when the wave arrived. He measured the wavelength (about 4 m), showed the waves reflected, refracted, polarised and interfered like light, and found their speed to be c. Maxwell was right; light was an electromagnetic wave. Hertz, asked about applications, replied that there were none.'),
+        p('In the same experiments Hertz noticed something odd. The receiver spark jumped more easily when ultraviolet light from the transmitter spark fell on the gap. Light was somehow helping charge leave the metal. Hertz noted the effect, and died in 1894 at 36 before it was understood. His assistant Philipp Lenard pursued it and by 1902 had the facts:'),
+        list(
+          'Light falling on a clean metal surface in a vacuum ejects electrons (<em>photoelectrons</em>) — but only if its frequency is above a <b>threshold</b> that depends on the metal. Below the threshold no electrons appear however intense the light.',
+          'Above threshold, the <b>maximum kinetic energy</b> of the electrons depends only on the frequency of the light, not on its intensity. Brighter light ejects <em>more</em> electrons, not faster ones.',
+          'There is <b>no delay</b>. Even in very faint light, the first electrons leave within nanoseconds.',
+        ),
+        p('Each point contradicts the wave picture. A wave\'s energy is spread continuously over its front and grows with intensity; a faint wave should need time to accumulate enough energy at one atom to free an electron, and an intense wave of any colour should eventually do it. Lenard proposed that the electrons\' energy came from inside the atom and the light merely triggered its release — a theory that explained nothing quantitatively.'),
+        timeline([
+          { when: '1887', title: 'Hertz', text: 'Radio waves generated and detected; the photoelectric effect noticed as a side issue.' },
+          { when: '1899', title: 'J. J. Thomson', text: 'The ejected particles are electrons — the same particle he had discovered in cathode rays in 1897.' },
+          { when: '1902', title: 'Lenard', text: 'Threshold frequency; kinetic energy independent of intensity. Nobel Prize 1905.' },
+          { when: '1905', title: 'Einstein', text: 'Light quanta: E = hν. Explains everything in one line. Nobel Prize 1921 — for this, not for relativity.' },
+          { when: '1914–16', title: 'Millikan', text: 'Ten years of experiments designed to disprove Einstein confirm his equation and measure h to 0.5 %. Nobel Prize 1923.' },
+        ]),
+      ],
+    },
+    {
+      id: 'photoelectric',
+      kicker: 'Interactive · principle',
+      title: 'Einstein\'s light quanta',
+      widget: { type: 'photoelectric' },
+      scene: [goto('iss'), rate(1)],
+      body: [
+        p('In March 1905 — before the relativity paper — Einstein proposed that Planck\'s quantisation (Section 3.5) was not a property of the oscillators in the cavity walls but of <em>light itself</em>. Light of frequency ν comes in indivisible packets, later called <em>photons</em>, each carrying energy:'),
+        eq('E_{\\text{photon}} = h\\nu = \\frac{h c}{\\lambda}', 'Energy of one photon. For visible light (λ ≈ 500 nm), E ≈ 4 × 10⁻¹⁹ J ≈ 2.5 eV — a convenient unit: 1 eV = 1.602 × 10⁻¹⁹ J is the energy an electron gains falling through one volt. A handy form is E = 1240 eV·nm / λ.'),
+        p('The photoelectric effect then becomes bookkeeping. An electron absorbs <em>one</em> photon, all at once. It needs at least the <em>work function</em> φ — the binding energy of the loosest electrons in that metal, a few eV — to escape; whatever remains is kinetic energy. The fastest electrons, from the surface and bound least tightly, have:'),
+        eq('K_{\\max} = h\\nu - \\phi', 'Einstein\'s photoelectric equation. It is a straight line of slope h in a plot of K_max against ν, with intercept −φ: the same slope for every metal, a different intercept for each. Below the threshold frequency ν₀ = φ/h a photon simply does not have enough energy, and no intensity will help.'),
+        p('Everything is in the widget. Choose a metal, set the wavelength and intensity, and watch the electrons leave with speeds set by colour, in numbers set by brightness. Then apply a <em>retarding voltage</em>: the current stops at V_s = K_max/e, which is how Millikan measured the electron energies. Plot K_max against ν and the slope is Planck\'s constant — the same h that fixed the shape of the blackbody curve. Two unrelated experiments, one constant: that is when a theory becomes real.'),
+        history('Einstein called it "a heuristic point of view" and later described the paper as "very revolutionary". Planck, recommending him for the Prussian Academy in 1913, wrote that Einstein "may sometimes have missed the target in his speculations, as for example in his hypothesis of light quanta" — and asked that it not be held against him. Robert Millikan spent a decade trying to prove the equation wrong and in 1916 reported that it was "exactly" right, while still calling the theory behind it "wholly untenable". It took the Compton effect (next step) to convince the sceptics.', 'Nobody believed it'),
+      ],
+    },
+    {
+      id: 'photon-scale',
+      kicker: 'Interactive · orders of magnitude',
+      title: 'What a photon can do',
+      widget: { type: 'photonscale' },
+      scene: [goto('jwst'), rate(1)],
+      body: [
+        p('A photon has energy hν, moves at c, and — by the energy–momentum relation of Section 4.4 with m = 0 — carries momentum:'),
+        eq('p = \\frac{E}{c} = \\frac{h\\nu}{c} = \\frac{h}{\\lambda}', 'Photon momentum. A beam of light pushes on what it hits: radiation pressure. For the Sun at Earth it is 4.6 µPa — tiny, but it drives comet tails and solar sails, and inside massive stars it holds up a significant part of the weight.'),
+        p('Slide across the spectrum in the widget and the photon\'s energy spans twenty orders of magnitude; what it does to matter changes accordingly. Radio photons (µeV) barely nudge the spins of nuclei; the 21 cm line of hydrogen, the most important spectral line in radio astronomy, is a 6 µeV photon. Microwave and far-infrared photons (meV) make molecules rotate; near-infrared ones make them vibrate. Visible and ultraviolet photons (1–10 eV) rearrange the outer electrons of atoms — this is chemistry, and the subject of the rest of this chapter. Beyond 13.6 eV a photon can tear the electron out of hydrogen altogether. X-rays (keV) reach the inner electrons of heavy atoms; gamma rays (MeV) reach the nucleus.'),
+        p('Photon counting makes faint astronomy possible. The Sun delivers about 10²¹ photons per second to each square metre of Earth; a star at the limit of the naked eye, magnitude 6, delivers about 10⁵ per second per square metre — and a magnitude-30 galaxy in a Hubble deep field, about one photon per second into the entire 2.4 m mirror. A modern detector registers nearly every one of them. The telescope in the scene, JWST, works in the infrared, where each photon carries a tenth of an eV and the telescope itself must be cooled to 40 K so that its own thermal photons do not swamp the signal.'),
+        example('A 100 W light bulb radiates about 5 W as visible light near 550 nm. Each photon carries hc/λ = 3.6 × 10⁻¹⁹ J, so the bulb emits 5 / 3.6 × 10⁻¹⁹ ≈ 1.4 × 10¹⁹ visible photons per second. That is why light looks continuous: the graininess is there, but at 10¹⁹ grains per second you do not notice. A dark-adapted eye, by contrast, can register a flash of about 100 photons — the retina is nearly a photon counter.', 'Photons from a bulb'),
+      ],
+    },
+    {
+      id: 'compton',
+      kicker: 'Interactive · evidence',
+      title: 'The Compton effect: photons as billiard balls',
+      widget: { type: 'compton' },
+      scene: [goto('b0', 'blackhole'), rate(1)],
+      body: [
+        p('If photons carry momentum, they should be able to <em>collide</em>. In 1923 Arthur Compton scattered X-rays off the electrons in a graphite target and measured the wavelength of the scattered radiation at each angle. A wave theory predicts that the electrons, shaken at the frequency of the incoming wave, re-radiate at the <em>same</em> frequency. Compton found instead that the scattered X-rays had a <em>longer</em> wavelength, and that the increase depended only on the scattering angle θ:'),
+        eq('\\Delta\\lambda = \\lambda_f - \\lambda_i = \\frac{h}{m_e c}\\,(1 - \\cos\\theta)', 'The Compton formula. The constant h/m_e c = 2.426 × 10⁻³ nm is the Compton wavelength of the electron. The maximum shift, for the photon bouncing straight back (θ = 180°), is twice this: 0.00485 nm.'),
+        p('The formula follows from treating the collision as a relativistic two-body problem: a particle of energy hν and momentum hν/c hits an electron at rest; energy and momentum are conserved (Section 4.4). The photon gives up some energy to the recoiling electron, so it leaves with less energy — a longer wavelength. The derivation uses nothing but E = hν, p = h/λ and E² = p²c² + m²c⁴; no wave physics at all.'),
+        p('<em>Drag the outgoing photon</em> in the widget to set the scattering angle and watch Δλ follow (1 − cos θ) while the electron recoils to conserve momentum. Lower the incoming wavelength toward the Compton wavelength and the energy transfer becomes dramatic: a gamma ray can hand most of its energy to the electron. For visible light (λ = 500 nm) the shift is the same 0.005 nm — one part in 10⁵, which is why Compton needed X-rays to see it.'),
+        note('Compton scattering runs in reverse too. A photon that hits a <em>fast</em> electron can gain energy: <em>inverse Compton scattering</em>. The hot gas spiralling into the black hole in the scene is full of relativistic electrons, and it is inverse Compton scattering that turns the disc\'s ultraviolet photons into the hard X-rays by which we detect such systems. The same process imprints the shadows of galaxy clusters on the cosmic microwave background (the Sunyaev–Zel\'dovich effect).', 'Inverse Compton in astrophysics'),
+        key('After Compton (Nobel Prize 1927) no one doubted the photon. Light exchanges energy and momentum in discrete, localised packets — and yet it interferes and diffracts like a wave. Both facts are true at once. How that can be is the subject of Section 5.4.'),
+      ],
+    },
+    {
+      id: 'photons-summary',
+      kicker: 'Summary',
+      title: 'Wave and particle: the evidence',
+      scene: [backdrop()],
+      body: [
+        compare(
+          { title: 'Light behaves as a wave', items: ['Young\'s double slit (1801): interference fringes', 'Diffraction and polarisation', 'Maxwell (1865): c from electric and magnetic constants', 'Hertz (1887): radio waves reflect, refract, interfere, travel at c', 'Fringes build up even one photon at a time'] },
+          { title: 'Light behaves as particles', items: ['Blackbody spectrum needs E = nhν (Planck 1900)', 'Photoelectric effect: threshold, K_max = hν − φ, no delay (Einstein 1905)', 'Compton effect: Δλ = (h/m_e c)(1 − cos θ) (1923)', 'Photon counting: detectors click', 'Radiation pressure: p = E/c'] },
+        ),
+        summary(
+          'A photon has energy E = hν = hc/λ, momentum p = h/λ, zero mass, speed c.',
+          'Photoelectric equation K_max = hν − φ; threshold ν₀ = φ/h; intensity sets the number of electrons, frequency sets their energy.',
+          'Useful numbers: E(eV) = 1240/λ(nm); visible photons ≈ 2–3 eV; hydrogen is ionised above 13.6 eV; Compton wavelength h/m_e c = 0.00243 nm.',
+          'Light is neither a classical wave nor a classical particle. It is a quantum object that shows wave behaviour in propagation and particle behaviour in exchange of energy and momentum.',
+        ),
+      ],
+    },
+  ],
+};
+
+const S5_3: Section = {
+  id: 'bohr-atom',
+  number: '5.3',
+  title: 'The Bohr Model of the Atom',
+  summary: 'Rutherford finds the nucleus, Balmer finds a formula, and Bohr joins them with a single bold postulate that explains the hydrogen spectrum to five decimal places.',
+  minutes: 24,
+  steps: [
+    {
+      id: 'rutherford',
+      kicker: 'Interactive · history',
+      title: 'The nuclear atom',
+      widget: { type: 'rutherford' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('By 1900 the atom had parts. J. J. Thomson had found the electron — a particle nearly 2000 times lighter than hydrogen, present in all matter — and proposed the "plum pudding": a sphere of diffuse positive charge with electrons embedded in it like raisins. In 1909 Hans Geiger and Ernest Marsden, students of Ernest Rutherford in Manchester, fired α particles (helium nuclei, from radioactive radium) at a gold foil a few hundred atoms thick and counted the flashes where they landed on a screen.'),
+        p('In Thomson\'s atom the positive charge is spread over the whole atomic volume, so its electric field is weak everywhere; an α particle should pass through barely deflected. Most did. But about 1 in 8000 bounced back through more than 90°. Rutherford: "It was almost as incredible as if you fired a 15-inch shell at a piece of tissue paper and it came back and hit you." Only a <em>concentrated</em> positive charge could produce such a field. In 1911 he proposed the nuclear atom: nearly all the mass and all the positive charge in a nucleus about 10⁻¹⁵ m across, with the electrons orbiting at 10⁻¹⁰ m — a hundred thousand times further out. An atom is overwhelmingly empty space.'),
+        p('Fire particles in the widget and switch between the two models. In Rutherford\'s atom the trajectories are hyperbolae (the repulsive version of Chapter 2\'s orbits), and the scattering angle depends on how close to the nucleus the particle is aimed. The histogram on the right builds up the famous 1/sin⁴(θ/2) distribution that Geiger and Marsden measured — proving that the force is Coulomb\'s inverse square right down to 10⁻¹⁴ m.'),
+        p('The nuclear atom had an immediate, fatal problem. An orbiting electron accelerates; by Maxwell\'s theory an accelerating charge radiates; the electron should lose energy and spiral into the nucleus in about 10⁻¹¹ s, emitting a continuous flash of ever-shorter wavelengths on the way. Atoms should not exist, and their spectra should not be lines. Something in the physics was missing, and it was the same thing that was missing from the blackbody and the photoelectric effect.'),
+        note('The Sun in the scene is a useful picture of the problem of scale. If a hydrogen nucleus were the size of the Sun (1.4 million km), the electron would orbit at about 100 000 solar radii — twice the distance of Pluto. The analogy with a planetary system was irresistible in 1911 and is the origin of the word "orbit" for electron states. It is also, as Section 5.4 will show, deeply misleading.', 'A planetary system?'),
+      ],
+    },
+    {
+      id: 'balmer',
+      kicker: 'Interactive · pattern',
+      title: 'Balmer\'s formula',
+      widget: { type: 'series' },
+      scene: [goto('l-m42', 'landmark'), rate(1)],
+      body: [
+        p('Hydrogen, the simplest atom, has the simplest spectrum: in the visible, four lines — red at 656.3 nm (Hα), blue-green at 486.1 (Hβ), violet at 434.0 (Hγ) and 410.2 nm (Hδ) — then more, crowding together toward a limit at 364.6 nm. In 1885 Johann Balmer, a Swiss schoolteacher of sixty with a taste for numerology, found that all four wavelengths were given by a single formula with integers. Rewritten in the form Johannes Rydberg gave it in 1888:'),
+        eq('\\frac{1}{\\lambda} = R_H \\left( \\frac{1}{m^2} - \\frac{1}{n^2} \\right), \\qquad n > m, \\qquad R_H = 1.0968 \\times 10^{7}\\ \\text{m}^{-1}', 'The Rydberg formula for hydrogen. Balmer\'s visible series is m = 2, n = 3, 4, 5, …; the series limit is n → ∞, λ = 4/R_H = 364.6 nm. R_H is the Rydberg constant.'),
+        p('The formula predicted other series. Theodore Lyman found the m = 1 series in the ultraviolet (1906–14), starting at Lyman α, 121.6 nm, the brightest line in the universe. Friedrich Paschen found m = 3 in the infrared (1908), Frederick Brackett m = 4 (1922), August Pfund m = 5 (1924). Every one fell where Rydberg\'s two integers said it would.'),
+        p('Click any line in the widget to see its two integers and its wavelength, and watch each series pile up against its own limit. The nebula in the scene glows in Balmer lines: ultraviolet from hot young stars ionises the hydrogen, the electrons recombine, and as they cascade down they emit Hα — the red of every emission nebula ever photographed.'),
+        p('Balmer\'s formula was pure pattern, with no physics behind it. It was precise to one part in 10⁴ and involved <em>integers</em>, which in a continuous world should have no place. Any theory of the atom had to produce it, and in 1913 one did.'),
+        think('Why integers? Where in classical physics do integers arise naturally? (Standing waves on a string have an integer number of half-wavelengths. Keep this in mind for Section 5.4.)'),
+      ],
+    },
+    {
+      id: 'bohr-model',
+      kicker: 'Interactive · model',
+      title: 'Bohr\'s atom',
+      widget: { type: 'bohr' },
+      body: [
+        p('Niels Bohr, a 27-year-old Dane who had just spent a year with Rutherford, cut the knot in 1913 with two postulates that simply <em>forbade</em> the classical catastrophe:'),
+        list(
+          'The electron moves in circular orbits under the Coulomb force, but only orbits whose <b>angular momentum is an integer multiple of ħ = h/2π</b> are allowed: L = m_e v r = nħ, n = 1, 2, 3, … In these <em>stationary states</em> the electron does <b>not</b> radiate.',
+          'The atom emits or absorbs light only when the electron <b>jumps</b> between allowed orbits, and the photon carries exactly the energy difference: hν = E_n − E_m.',
+        ),
+        p('Everything else is classical mechanics. Circular motion under Coulomb attraction gives m_e v²/r = e²/4πε₀r². Combine with L = nħ, and the radius and energy of the n-th orbit follow:'),
+        eq('r_n = \\frac{4\\pi\\varepsilon_0 \\hbar^2}{m_e e^2}\\, n^2 = a_0\\, n^2, \\qquad a_0 = 5.29 \\times 10^{-11}\\ \\text{m}', 'The Bohr radius a₀ and the allowed orbits. Radii grow as n²: the n = 2 orbit is four times the size of the ground state, n = 10 a hundred times.'),
+        eq('E_n = -\\frac{m_e e^4}{32\\pi^2 \\varepsilon_0^2 \\hbar^2}\\,\\frac{1}{n^2} = -\\frac{13.6\\ \\text{eV}}{n^2}', 'Energy levels of hydrogen (kinetic plus potential). Negative because the electron is bound; zero is the ionisation limit. The ground state, n = 1, lies 13.6 eV below it: this is the ionisation energy of hydrogen, and it came out of the theory with no adjustable parameters.'),
+        p('Now apply postulate two to a jump from n to m. The photon energy is hc/λ = E_n − E_m = 13.6 eV (1/m² − 1/n²). Divide by hc and this is <em>exactly Balmer\'s formula</em>, with the Rydberg constant expressed in fundamental constants: R = m_e e⁴/(64π³ε₀²ħ³c) = 1.097 × 10⁷ m⁻¹. Bohr computed the number and it matched Rydberg\'s measured one to 0.1 %. Einstein, told of it, called it "one of the greatest discoveries".'),
+        p('In the widget the orbits and the energy ladder are drawn to scale. <em>Click a level</em> to send the electron there: a downward jump emits a photon whose colour and wavelength appear on the spectrum below; an upward jump absorbs one. Build the Balmer series by jumping down to n = 2 from each higher level, and the Lyman series by jumping to n = 1.'),
+        key('Bohr\'s postulates were not derived from anything — they were a declaration that classical physics stops at the atom and that something with Planck\'s constant in it takes over. The theory was half-classical and self-contradictory, and it worked.'),
+      ],
+    },
+    {
+      id: 'hydrogenic',
+      kicker: 'Interactive · generalisation',
+      title: 'Other nuclei, and the limits of the model',
+      widget: { type: 'hydrogenic' },
+      scene: [goto('Rigel', 'star'), rate(1)],
+      body: [
+        p('Bohr\'s derivation works for any <em>one-electron</em> system: hydrogen, deuterium, He⁺, Li²⁺, and so on. A nucleus of charge Ze pulls Z times harder, so the orbits shrink by Z and the energies grow by Z²:'),
+        eq('r_n = \\frac{a_0 n^2}{Z}, \\qquad E_n = -13.6\\ \\text{eV}\\,\\frac{Z^2}{n^2}, \\qquad \\frac{1}{\\lambda} = R\\,Z^2\\left(\\frac{1}{m^2} - \\frac{1}{n^2}\\right)', 'Hydrogen-like ions. He⁺ (Z = 2) has an ionisation energy of 54.4 eV and a spectrum four times "stretched" in energy. Its n = 4 → 2 line falls almost exactly on hydrogen\'s Hα, 656 nm.'),
+        p('There is a smaller correction too. The electron does not orbit a fixed nucleus; both orbit their common centre of mass (Section 2.3), and m_e must be replaced by the <em>reduced mass</em> μ = m_e M/(m_e + M). For hydrogen μ is 0.9995 m_e; for deuterium, with a nucleus twice as heavy, slightly larger. The result: deuterium\'s lines are shifted by 0.03 % — Hα moves from 656.28 to 656.10 nm — and that is how Harold Urey discovered deuterium in 1931. Slide Z and switch the nucleus in the widget to see both effects.'),
+        p('In 1896 Edward Pickering had found a series of lines in the hot star ζ Puppis that fitted Rydberg\'s formula with <em>half-integer</em> n — a mystery. Bohr showed they were He⁺ with Z = 2: every other line coincides with a hydrogen line, and the ones in between look half-integer. The reduced-mass correction even explained a tiny mismatch between the coincident lines. Hot stars like Rigel in the scene show He⁺ absorption; their presence is the signature of a surface above 30 000 K.'),
+        table(
+          ['n', 'r_n (a₀)', 'E_n (eV)', 'v_n / c', 'Lyman n→1 (nm)'],
+          [['1', '1', '−13.60', '1/137', '—'], ['2', '4', '−3.40', '1/274', '121.6'], ['3', '9', '−1.51', '1/411', '102.6'], ['4', '16', '−0.85', '1/548', '97.3'], ['5', '25', '−0.54', '1/685', '95.0'], ['∞', '∞', '0', '0', '91.2']],
+          'The hydrogen ladder. v₁/c = e²/(4πε₀ħc) = 1/137.036 is the fine-structure constant α — the pure number that measures the strength of electromagnetism. Relativity is a small correction for hydrogen but grows as Z²: the inner electrons of gold move at 0.6c, which is why gold is yellow.',
+        ),
+        compare(
+          { title: 'What Bohr\'s model gets right', items: ['Hydrogen energy levels and all its spectral series', 'The Rydberg constant from fundamental constants', 'Ionisation energy 13.6 eV', 'Hydrogen-like ions (Z²) and isotope shifts (reduced mass)', 'The size of atoms (a₀) and why they are stable'] },
+          { title: 'What it gets wrong or cannot do', items: ['Helium and every atom with more than one electron', 'The relative brightness of lines (transition rates)', 'Fine structure: lines that are close doublets', 'Spectra in magnetic fields (the Zeeman effect)', 'The ground state has L = ħ in Bohr, L = 0 in reality', 'An electron "in orbit" would radiate — the postulate forbids it but does not explain why'] },
+        ),
+      ],
+    },
+    {
+      id: 'bohr-summary',
+      kicker: 'Summary',
+      title: 'The Bohr atom in brief',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Rutherford (1911): a tiny massive positive nucleus, electrons far outside. Classically unstable — an orbiting electron should radiate and fall in.',
+          'Balmer (1885) / Rydberg (1888): 1/λ = R_H(1/m² − 1/n²) fits every hydrogen line; Lyman (UV), Balmer (visible), Paschen, Brackett, Pfund (IR).',
+          'Bohr (1913): L = nħ; no radiation in stationary states; hν = E_n − E_m on jumps.',
+          'r_n = a₀n², a₀ = 0.0529 nm; E_n = −13.6 eV/n²; Rydberg constant derived to 0.1 %.',
+          'Hydrogen-like ions: E ∝ Z²; reduced mass μ shifts isotopes (deuterium discovered this way).',
+          'Limits: one electron only; no line strengths; no fine structure; the orbit picture itself is wrong.',
+        ),
+        think('Bohr\'s model is taught in every introductory course even though it is known to be wrong in its picture of the atom. What makes a wrong model worth learning? Which of its results survive into the correct theory, and which do not?'),
+      ],
+    },
+  ],
+};
+
+const S5_4: Section = {
+  id: 'quantum-mechanics',
+  number: '5.4',
+  title: 'Quantum Mechanics and Wave–Particle Duality',
+  summary: 'De Broglie gives the electron a wavelength, Schrödinger gives it an equation, Heisenberg gives it limits, Pauli gives it a rule — and the periodic table, white dwarfs and the 21 cm line all follow.',
+  minutes: 26,
+  steps: [
+    {
+      id: 'debroglie',
+      kicker: 'Interactive · idea',
+      title: 'Matter waves',
+      widget: { type: 'matterwave' },
+      scene: [goto('earth'), rate(1)],
+      body: [
+        p('In his 1924 doctoral thesis Louis de Broglie asked a symmetrical question. If light, long thought a wave, has particle properties with E = hν and p = h/λ, might matter, long thought particles, have wave properties with the <em>same</em> relations? He proposed that every particle of momentum p has an associated wavelength:'),
+        eq('\\lambda = \\frac{h}{p} = \\frac{h}{m v}, \\qquad \\nu = \\frac{E}{h}', 'The de Broglie relations. For an electron accelerated through 100 V, p = √(2m_e K) and λ = 0.12 nm — about the spacing of atoms in a crystal. For a thrown baseball, λ ≈ 10⁻³⁴ m, which is why baseballs do not diffract.'),
+        p('The idea explained Bohr\'s mysterious postulate at once. Wrap a wave around a circular orbit of radius r: it fits only if the circumference holds a whole number of wavelengths, 2πr = nλ. Otherwise the wave interferes with itself and cancels. Put in λ = h/mv and 2πr = nh/mv, that is, mvr = nħ — Bohr\'s condition, derived rather than declared. The integers in the hydrogen spectrum are the integers of standing waves, as on a guitar string.'),
+        p('Try it in the widget: slide n through non-integer values and watch the wave fail to close on itself; at integers it locks into a standing pattern. Then switch the "particle" selector to see the de Broglie wavelength of an electron, a proton, a dust grain and a person.'),
+        history('Einstein read the thesis and wrote that de Broglie had "lifted a corner of the great veil". Direct proof came in 1927: Clinton Davisson and Lester Germer, firing electrons at a nickel crystal, found them scattered into the same angular pattern that X-rays of wavelength h/p produce; G. P. Thomson (son of J. J., who had shown the electron was a particle) got diffraction rings by passing electrons through thin metal foils. Father and son both won Nobel Prizes, one for showing the electron is a particle, the other for showing it is a wave. Electron diffraction is now a standard tool: electron microscopes see atoms because an electron\'s wavelength is a thousand times shorter than light\'s. Since then neutrons, whole atoms, and molecules of 2000 atoms have been diffracted.', 'Proof'),
+      ],
+    },
+    {
+      id: 'schrodinger',
+      kicker: 'Interactive · theory',
+      title: 'Schrödinger\'s equation and the real hydrogen atom',
+      widget: { type: 'orbitals' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('If the electron is a wave, there must be a wave equation. Erwin Schrödinger wrote it down over the Christmas holidays of 1925. For a particle of mass m in a potential V, the <em>wavefunction</em> Ψ(x, t) obeys:'),
+        eq('i\\hbar\\,\\frac{\\partial \\Psi}{\\partial t} = -\\frac{\\hbar^2}{2m}\\,\\nabla^2 \\Psi + V\\,\\Psi', 'The Schrödinger equation. For a state of definite energy E, Ψ = ψ(x) e^{−iEt/ħ}, and the time-independent form is −(ħ²/2m)∇²ψ + Vψ = Eψ: an eigenvalue problem whose solutions exist only for certain E. Quantisation is no longer a postulate; it is the mathematics of waves confined by a potential.'),
+        p('What is Ψ? Max Born gave the answer in 1926: |Ψ|² is a <em>probability density</em>. The electron does not orbit; it has a probability |Ψ|² dV of being found in each small volume dV. The atom is a standing wave of probability, and the "orbits" of Bohr are replaced by <em>orbitals</em> — clouds of varying density. For the Coulomb potential of hydrogen the equation can be solved exactly, and the allowed energies are:'),
+        eq('E_n = -\\frac{13.6\\ \\text{eV}}{n^2}', 'The same levels as Bohr — but now n is the principal quantum number of a three-dimensional standing wave, and each level comes with other quantum numbers describing the shape of the wave.'),
+        terms(
+          ['n = 1, 2, 3, …', 'Principal quantum number: sets the energy and the overall size (⟨r⟩ ≈ a₀ n²).'],
+          ['l = 0, 1, …, n − 1', 'Orbital angular momentum quantum number: L = √(l(l+1)) ħ. l = 0, 1, 2, 3 are called s, p, d, f. The ground state has l = 0: no angular momentum, unlike Bohr\'s ħ.'],
+          ['m_l = −l, …, +l', 'Magnetic quantum number: the component of L along a chosen axis, L_z = m_l ħ. The 2l + 1 values are degenerate (same energy) unless a magnetic field is applied — the Zeeman effect, which lets us measure stellar magnetic fields.'],
+        ),
+        p('The widget renders the real thing: a slice through |ψ|² for the lowest orbitals of hydrogen, with the radial probability curve and the Bohr radius marked. The 1s cloud is a fuzzy ball most dense at the nucleus; its most probable <em>radius</em> is exactly a₀ — Bohr\'s orbit survives as the peak of a distribution. The 2p orbitals are dumbbells; 3d are cloverleaves. Chemistry is the shapes on this screen.'),
+        key('Bohr\'s n survives, his orbits do not. Quantum mechanics keeps every number Bohr got right and explains the ones he got wrong: the degeneracies of the levels, the selection rules (Δl = ±1) that say which transitions happen, their rates, and — once the electron\'s spin and relativity are added — the fine structure of the lines.'),
+      ],
+    },
+    {
+      id: 'uncertainty',
+      kicker: 'Interactive · principle',
+      title: 'Heisenberg\'s uncertainty principle',
+      widget: { type: 'wavepacket' },
+      scene: [goto('hubble'), rate(1)],
+      body: [
+        p('A wave with a single, exact wavelength extends forever — it has a definite momentum p = h/λ but no position at all. To <em>localise</em> a wave you must add waves of different wavelengths so they reinforce in one region and cancel elsewhere: a <em>wave packet</em>. The narrower the packet, the wider the range of wavelengths — of momenta — it must contain. This is a theorem about waves (Fourier\'s), and in 1927 Werner Heisenberg saw what it means for matter waves:'),
+        eq('\\Delta x\\,\\Delta p \\geq \\frac{\\hbar}{2}', 'The uncertainty principle. Δx and Δp are the standard deviations of position and momentum. The product has a minimum; a Gaussian packet achieves it. Nothing about measurement technology is involved: an electron does not <em>have</em> a sharp position and a sharp momentum at the same time, any more than a sound can have a definite pitch and a definite instant.'),
+        p('In the widget, narrow the packet in position and watch its momentum distribution broaden; the product sits on the limit. Add fewer waves and the packet spreads. The slider is doing exactly what nature does when an electron is confined to an atom: squeeze it into a₀ and it acquires a momentum spread ħ/a₀ — a kinetic energy of order ħ²/2m_e a₀² ≈ 13.6 eV. The uncertainty principle sets the size of atoms: the electron cannot fall into the nucleus because confining it costs more kinetic energy than the Coulomb attraction pays back. Rutherford\'s collapse is averted by Heisenberg.'),
+        eq('\\Delta E\\,\\Delta t \\geq \\frac{\\hbar}{2}', 'The energy–time form. A state that lives for Δt has an energy uncertain by ħ/2Δt. Excited atomic states live about 10⁻⁸ s, so their energies are uncertain by 10⁻⁷ eV and the spectral lines they emit have a <em>natural width</em> — the first of several broadening mechanisms Chapter 9 will use to measure stellar atmospheres.'),
+        p('The telescope in the scene, Hubble, obeys the same principle with photons. A photon that passes through a mirror of diameter D has its transverse position fixed to Δx ≈ D, so its transverse momentum is uncertain by ħ/D and its direction by Δθ ≈ λ/D. That is the diffraction limit of every telescope: Hubble\'s 2.4 m mirror cannot resolve better than about 0.05 arcseconds in visible light, however perfect its optics. Bigger mirrors see sharper not only because they collect more light but because they localise the photon less.'),
+        think('Heisenberg\'s original argument used a "gamma-ray microscope": to see where an electron is you must bounce a photon off it, and the photon\'s momentum kick disturbs the electron. This is a useful picture but it is <em>not</em> the content of the principle, which holds even when nothing is measured. Can you state the difference?'),
+      ],
+    },
+    {
+      id: 'spin-pauli',
+      kicker: 'Interactive · principle',
+      title: 'Spin and the exclusion principle',
+      widget: { type: 'pauli' },
+      scene: [goto('Sirius', 'star'), rate(1)],
+      body: [
+        p('High-resolution spectra showed that many lines are close doublets: sodium\'s D line is two lines 0.6 nm apart, hydrogen\'s Hα is split by 0.016 nm. In 1925 Samuel Goudsmit and George Uhlenbeck proposed that the electron has an intrinsic angular momentum, <em>spin</em>, of fixed magnitude S = √(3/4) ħ, with a component along any axis of only two possible values:'),
+        eq('S_z = m_s\\,\\hbar, \\qquad m_s = \\pm\\tfrac{1}{2}', '"Spin up" and "spin down". Spin is not literal rotation — a point particle spinning fast enough to have ħ/2 would have its surface moving faster than light — but a purely quantum property with no classical picture. The Stern–Gerlach experiment (1922) had already shown it: a beam of silver atoms through a non-uniform magnetic field split into exactly two beams, not a continuous smear.'),
+        p('Spin interacts with the magnetic field of the electron\'s own orbital motion; the two orientations have slightly different energies, and every level with l > 0 splits in two. That is the <em>fine structure</em>, and its size is set by the fine-structure constant α = 1/137 that appeared in Bohr\'s velocities. (The nuclear spin splits things further, by much less: the <em>hyperfine</em> splitting of hydrogen\'s ground state is a 6 µeV photon of 21 cm wavelength, the line that maps the gas of the Milky Way.)'),
+        p('In the same year Wolfgang Pauli stated the rule that organises all of matter. A complete description of an electron in an atom is the set (n, l, m_l, m_s). The <em>exclusion principle</em>: <b>no two electrons in a system can have the same set of quantum numbers</b>. Each spatial orbital (n, l, m_l) can hold at most two electrons, one of each spin. Fill the atom in the widget electron by electron and watch the shells close: 2 electrons in n = 1, 8 in n = 2, 8 more to fill 3s and 3p — helium, neon, argon. The periodic table is the exclusion principle in a grid.'),
+        p('Without it, every electron would drop to the 1s state, all atoms would be tiny and chemically identical, and there would be no chemistry. With it, matter resists compression: squeeze electrons together and they are forced into states of higher momentum, a pressure that depends on density but not on temperature — <em>degeneracy pressure</em>. The faint companion of Sirius in the scene, Sirius B, is a white dwarf: the mass of the Sun in the volume of the Earth, held up against gravity by nothing but Pauli\'s principle. Chapter 16 will show that this support fails above 1.4 solar masses, with consequences for the whole universe.'),
+        history('Pauli was 25 when he stated the principle and had no idea why it should be true. The explanation — that particles with half-integer spin (<em>fermions</em>: electrons, protons, neutrons, neutrinos) must have antisymmetric wavefunctions, while those with integer spin (<em>bosons</em>: photons, helium-4 atoms) may crowd into one state without limit — came from relativistic quantum field theory in 1940, in Pauli\'s own spin-statistics theorem. Photons being bosons is why lasers work; electrons being fermions is why you do not fall through the floor.', 'Fermions and bosons'),
+      ],
+    },
+    {
+      id: 'quantum-close',
+      kicker: 'Chapter close',
+      title: 'Light and matter in one page',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Kirchhoff\'s laws: continuum from hot dense matter; emission lines from hot thin gas; absorption lines from cool thin gas before a continuum. Doppler shifts give radial velocities, Δλ/λ = v_r/c.',
+          'Photons: E = hν = hc/λ, p = h/λ. Photoelectric: K_max = hν − φ. Compton: Δλ = (h/m_e c)(1 − cos θ).',
+          'Bohr: L = nħ, r_n = a₀n², E_n = −13.6 eV/n²; jumps give the Rydberg formula 1/λ = R(1/m² − 1/n²). Hydrogen-like ions: E ∝ Z².',
+          'De Broglie: λ = h/p; standing waves explain the integers. Schrödinger: |ψ|² is probability; quantum numbers n, l, m_l; orbitals, not orbits.',
+          'Heisenberg: Δx Δp ≥ ħ/2, ΔE Δt ≥ ħ/2 — the size of atoms and the natural width of lines.',
+          'Spin ½ and Pauli\'s exclusion principle: two electrons per orbital, the periodic table, degeneracy pressure, white dwarfs.',
+        ),
+        key('Every spectral line is a transition between two quantum states. Its wavelength says which element and which levels; its strength says how many atoms are in the lower level, hence the temperature and abundance; its shift says the velocity; its width says the pressure, rotation and magnetic field. Chapters 8 and 9 turn these facts into the classification and analysis of stellar spectra. Everything we know about the chemistry of the universe passes through this chapter.'),
+        { kind: 'callout', tone: 'history', title: 'Suggested reading', html: 'For the physics, any introductory modern-physics text (Tipler & Llewellyn, <em>Modern Physics</em>; Eisberg & Resnick, <em>Quantum Physics of Atoms, Molecules, Solids, Nuclei and Particles</em>). Richard Feynman, <em>QED: The Strange Theory of Light and Matter</em> (1985), is the best short account of what photons actually do. For the history: Abraham Pais, <em>Inward Bound</em> (1986) and <em>Niels Bohr\'s Times</em> (1991); Manjit Kumar, <em>Quantum</em> (2008); and the original papers in <em>Sources of Quantum Mechanics</em> (van der Waerden, ed., Dover). J. B. Hearnshaw, <em>The Analysis of Starlight</em> (2nd ed., 2014), is the definitive history of astronomical spectroscopy.' },
+        { kind: 'callout', tone: 'think', title: 'Problems to try', html: '(1) Sodium\'s D₂ line is at 588.995 nm. A star shows it at 589.120 nm. Find the radial velocity. (2) The work function of potassium is 2.30 eV. Find the threshold wavelength, and K_max for light of 400 nm. (3) An X-ray photon of 0.0711 nm (Mo Kα) scatters through 90°. Find the scattered wavelength and the energy given to the electron. (4) Compute the wavelength of the Paschen α line (n = 4 → 3) and the Balmer series limit. (5) Find the de Broglie wavelength of an electron with 13.6 eV of kinetic energy, and compare it with the circumference of the n = 1 Bohr orbit. (6) Use Δx Δp ≈ ħ to estimate the minimum kinetic energy of an electron confined to a nucleus of radius 5 × 10⁻¹⁵ m, and argue that electrons cannot be nuclear constituents. (7) Write the electron configuration of oxygen (Z = 8) and iron (Z = 26), and count the electrons in the outermost shell of each.' },
+      ],
+    },
+  ],
+};
+
 export const COURSE: Course = {
   id: 'astrophysics',
   title: 'Introduction to Astrophysics',
@@ -2049,6 +2471,13 @@ export const COURSE: Course = {
       title: 'The Theory of Special Relativity',
       summary: 'The ether that could not be found, Einstein\'s two postulates, what they do to time and space, and the equation that makes stars shine.',
       sections: [S4_1, S4_2, S4_3, S4_4],
+    },
+    {
+      id: 'ch5',
+      number: 5,
+      title: 'The Interaction of Light and Matter',
+      summary: 'Spectral lines and Kirchhoff\'s laws, the photon, Bohr\'s atom, and the quantum mechanics that explains why every element has its own fingerprint in the light.',
+      sections: [S5_1, S5_2, S5_3, S5_4],
     },
   ],
 };

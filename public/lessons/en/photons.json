@@ -1,0 +1,487 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "compton": {
+   "script": "Photons with momentum should bounce like billiard balls. Compton, in nineteen twenty-three, scattered X-rays off graphite electrons and found a longer wavelength, fixed by the angle. A wave would have returned at the same frequency.\n\nDelta lambda, the wavelength change, equals lambda final minus lambda initial, which equals h over m sub e c times one minus cosine theta. Lambda final and lambda initial are the wavelengths after and before the hit. h is Planck's constant, m sub e the electron mass, c the speed of light, theta the deflection. h over m sub e c, the Compton wavelength, is about two and a half thousandths of a nanometre. Straight back, at 180 degrees, the shift doubles, to about five thousandths of a nanometre.\n\nIn this relativistic two-body collision, a photon of energy h nu, nu the frequency, and momentum h nu over c hits an electron at rest. Energy and momentum are conserved, as in Section 4.4. The photon leaves poorer, so the wavelength grows. E, the energy, equals h nu. p, the momentum, equals h over lambda. E squared equals p squared c squared plus m squared c to the fourth. No wave physics.\n\nDrag the outgoing photon in the widget and set the angle. Watch delta lambda follow one minus cosine theta while the electron recoils. Lower the incoming wavelength toward the Compton wavelength and a gamma ray can hand over most of its energy. Visible light near five hundred nanometres shifts by one part in a hundred thousand, so Compton needed X-rays.\n\nA fast electron can give a photon energy: inverse Compton scattering. Behind the panel, hot gas spirals into the black hole. Relativistic electrons there turn the disc's ultraviolet photons into hard X-rays, and shadow galaxy clusters on the cosmic microwave background, the Sunyaev-Zeldovich effect.\n\nCompton's nineteen twenty-seven Nobel Prize settled it. Light exchanges energy and momentum in discrete localised packets, yet interferes and diffracts. How both can be true is Section 5.4.",
+   "hash": "c7632f8546d9",
+   "duration": 132.47,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 3.76,
+     "text": "Photons with momentum should bounce like billiard balls."
+    },
+    {
+     "start": 3.76,
+     "end": 12.08,
+     "text": "Compton, in nineteen twenty-three, scattered X-rays off graphite electrons and found a longer wavelength, fixed by the angle."
+    },
+    {
+     "start": 12.08,
+     "end": 15.14,
+     "text": "A wave would have returned at the same frequency."
+    },
+    {
+     "start": 15.14,
+     "end": 25.94,
+     "text": "Delta lambda, the wavelength change, equals lambda final minus lambda initial, which equals h over m sub e c times one minus cosine theta."
+    },
+    {
+     "start": 25.94,
+     "end": 30.82,
+     "text": "Lambda final and lambda initial are the wavelengths after and before the hit."
+    },
+    {
+     "start": 30.82,
+     "end": 38.12,
+     "text": "h is Planck's constant, m sub e the electron mass, c the speed of light, theta the deflection."
+    },
+    {
+     "start": 38.12,
+     "end": 44.16,
+     "text": "h over m sub e c, the Compton wavelength, is about two and a half thousandths of a nanometre."
+    },
+    {
+     "start": 44.16,
+     "end": 50.46,
+     "text": "Straight back, at 180 degrees, the shift doubles, to about five thousandths of a nanometre."
+    },
+    {
+     "start": 50.46,
+     "end": 60.56,
+     "text": "In this relativistic two-body collision, a photon of energy h nu, nu the frequency, and momentum h nu over c hits an electron at rest."
+    },
+    {
+     "start": 60.56,
+     "end": 64.94,
+     "text": "Energy and momentum are conserved, as in Section 4. 4."
+    },
+    {
+     "start": 64.94,
+     "end": 68.41,
+     "text": "The photon leaves poorer, so the wavelength grows."
+    },
+    {
+     "start": 68.41,
+     "end": 70.97,
+     "text": "E, the energy, equals h nu."
+    },
+    {
+     "start": 70.97,
+     "end": 74.07,
+     "text": "p, the momentum, equals h over lambda."
+    },
+    {
+     "start": 74.07,
+     "end": 78.75,
+     "text": "E squared equals p squared c squared plus m squared c to the fourth."
+    },
+    {
+     "start": 78.75,
+     "end": 80.19,
+     "text": "No wave physics."
+    },
+    {
+     "start": 80.19,
+     "end": 83.63,
+     "text": "Drag the outgoing photon in the widget and set the angle."
+    },
+    {
+     "start": 83.63,
+     "end": 88.85,
+     "text": "Watch delta lambda follow one minus cosine theta while the electron recoils."
+    },
+    {
+     "start": 88.85,
+     "end": 94.89,
+     "text": "Lower the incoming wavelength toward the Compton wavelength and a gamma ray can hand over most of its energy."
+    },
+    {
+     "start": 94.89,
+     "end": 101.51,
+     "text": "Visible light near five hundred nanometres shifts by one part in a hundred thousand, so Compton needed X-rays."
+    },
+    {
+     "start": 101.51,
+     "end": 106.07,
+     "text": "A fast electron can give a photon energy: inverse Compton scattering."
+    },
+    {
+     "start": 106.07,
+     "end": 109.57,
+     "text": "Behind the panel, hot gas spirals into the black hole."
+    },
+    {
+     "start": 109.57,
+     "end": 120.43,
+     "text": "Relativistic electrons there turn the disc's ultraviolet photons into hard X-rays, and shadow galaxy clusters on the cosmic microwave background, the Sunyaev-Zeldovich effect."
+    },
+    {
+     "start": 120.43,
+     "end": 123.75,
+     "text": "Compton's nineteen twenty-seven Nobel Prize settled it."
+    },
+    {
+     "start": 123.75,
+     "end": 129.71,
+     "text": "Light exchanges energy and momentum in discrete localised packets, yet interferes and diffracts."
+    },
+    {
+     "start": 129.71,
+     "end": 132.47,
+     "text": "How both can be true is Section 5. 4."
+    }
+   ],
+   "voicedHash": "5b9a342c3760"
+  },
+  "hertz": {
+   "script": "Good morning. I want us to see how the wave picture of light was confirmed and where it first cracked. Look toward Earth behind the panel, where Hertz and Lenard did the work.\nBy eighteen eighty-seven Maxwell's theory said oscillating charges radiate waves at the speed of light. Hertz generated them with an induction-coil spark gap and caught them in a wire loop whose gap sparked on arrival. Wavelength about four metres; the waves reflected, refracted, polarised and interfered like light, and moved at c. So the theory held. Hertz thought the waves had no applications.\nThe ultraviolet light from his spark, though, made the receiver spark jump more readily. Light was ejecting charge from the metal. He noted the effect and died in eighteen ninety-four aged thirty-six. Thomson showed in eighteen ninety-nine that the particles were electrons. Lenard by nineteen oh two showed they leave a clean metal in vacuum only above a threshold frequency fixed by the metal. Below threshold, intensity does nothing. Above it, maximum kinetic energy follows frequency alone; brighter light gives more electrons, not quicker ones. They depart within nanoseconds, with no delay.\nA spreading wave, whose energy grows only with intensity, cannot explain that. Faint light should accumulate slowly at one atom, like rain filling a bucket, and any colour if intense enough should work. Lenard's idea that light merely triggered energy already in the atom explained nothing quantitatively.\nEinstein's nineteen oh five light quanta did. The energy E equals h times nu. E is the energy of each quantum, h is Planck's constant, and nu is the frequency. Physically the packet energy depends only on frequency, so the relation accounts for the threshold, the kinetic energy independent of intensity, and the instant emission, all in one line. The nineteen twenty-one Nobel was for this, not relativity. Millikan's tests from nineteen fourteen to sixteen, meant to disprove it, confirmed the equation and h to half a percent, earning the Nobel in nineteen twenty-three.",
+   "hash": "4e7502a14430",
+   "duration": 122.23,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 1.18,
+     "text": "Good morning."
+    },
+    {
+     "start": 1.18,
+     "end": 6.1,
+     "text": "I want us to see how the wave picture of light was confirmed and where it first cracked."
+    },
+    {
+     "start": 6.1,
+     "end": 10.36,
+     "text": "Look toward Earth behind the panel, where Hertz and Lenard did the work."
+    },
+    {
+     "start": 10.36,
+     "end": 16.46,
+     "text": "By eighteen eighty-seven Maxwell's theory said oscillating charges radiate waves at the speed of light."
+    },
+    {
+     "start": 16.46,
+     "end": 22.92,
+     "text": "Hertz generated them with an induction-coil spark gap and caught them in a wire loop whose gap sparked on arrival."
+    },
+    {
+     "start": 22.92,
+     "end": 30.8,
+     "text": "Wavelength about four metres; the waves reflected, refracted, polarised and interfered like light, and moved at c."
+    },
+    {
+     "start": 30.8,
+     "end": 32.24,
+     "text": "So the theory held."
+    },
+    {
+     "start": 32.24,
+     "end": 34.78,
+     "text": "Hertz thought the waves had no applications."
+    },
+    {
+     "start": 34.78,
+     "end": 39.8,
+     "text": "The ultraviolet light from his spark, though, made the receiver spark jump more readily."
+    },
+    {
+     "start": 39.8,
+     "end": 42,
+     "text": "Light was ejecting charge from the metal."
+    },
+    {
+     "start": 42,
+     "end": 46.22,
+     "text": "He noted the effect and died in eighteen ninety-four aged thirty-six."
+    },
+    {
+     "start": 46.22,
+     "end": 50.24,
+     "text": "Thomson showed in eighteen ninety-nine that the particles were electrons."
+    },
+    {
+     "start": 50.24,
+     "end": 57.02,
+     "text": "Lenard by nineteen oh two showed they leave a clean metal in vacuum only above a threshold frequency fixed by the metal."
+    },
+    {
+     "start": 57.02,
+     "end": 59.66,
+     "text": "Below threshold, intensity does nothing."
+    },
+    {
+     "start": 59.66,
+     "end": 66.61,
+     "text": "Above it, maximum kinetic energy follows frequency alone; brighter light gives more electrons, not quicker ones."
+    },
+    {
+     "start": 66.61,
+     "end": 69.59,
+     "text": "They depart within nanoseconds, with no delay."
+    },
+    {
+     "start": 69.59,
+     "end": 74.41,
+     "text": "A spreading wave, whose energy grows only with intensity, cannot explain that."
+    },
+    {
+     "start": 74.41,
+     "end": 81.43,
+     "text": "Faint light should accumulate slowly at one atom, like rain filling a bucket, and any colour if intense enough should work."
+    },
+    {
+     "start": 81.43,
+     "end": 87.19,
+     "text": "Lenard's idea that light merely triggered energy already in the atom explained nothing quantitatively."
+    },
+    {
+     "start": 87.19,
+     "end": 90.05,
+     "text": "Einstein's nineteen oh five light quanta did."
+    },
+    {
+     "start": 90.05,
+     "end": 92.85,
+     "text": "The energy E equals h times nu."
+    },
+    {
+     "start": 92.85,
+     "end": 98.37,
+     "text": "E is the energy of each quantum, h is Planck's constant, and nu is the frequency."
+    },
+    {
+     "start": 98.37,
+     "end": 109.17,
+     "text": "Physically the packet energy depends only on frequency, so the relation accounts for the threshold, the kinetic energy independent of intensity, and the instant emission, all in one line."
+    },
+    {
+     "start": 109.17,
+     "end": 113.07,
+     "text": "The nineteen twenty-one Nobel was for this, not relativity."
+    },
+    {
+     "start": 113.07,
+     "end": 122.23,
+     "text": "Millikan's tests from nineteen fourteen to sixteen, meant to disprove it, confirmed the equation and h to half a percent, earning the Nobel in nineteen twenty-three."
+    }
+   ],
+   "voicedHash": "d6f55e088109"
+  },
+  "photoelectric": {
+   "script": "Look at the space station behind the panel. In March nineteen oh five, before the relativity paper, Einstein argued that Planck's quantisation was a property of light itself, not the cavity walls. The energy of one photon is E photon equals h nu equals h c over lambda. E photon is that energy, h is Planck's constant, nu the frequency, c the speed of light, and lambda the wavelength. The two forms agree because c equals nu times lambda. Visible light near five hundred nanometres carries about four times ten to the minus nineteen joules, roughly two and a half electron volts. One electron volt is the energy an electron gains falling through one volt. A handy form is E equals twelve forty electron volt nanometres divided by lambda.\n\nI see the photoelectric effect as bookkeeping. An electron absorbs one photon all at once. It needs at least the work function phi, a few electron volts, to escape, and the rest is kinetic energy. K max, the maximum kinetic energy, equals h nu minus phi. Plot K max against frequency and the graph is a straight line of slope h, intercept minus phi, the same slope for every metal and a different intercept for each. Below the threshold nu zero equals phi over h, no intensity will help.\n\nI want you to try the widget. Choose a metal, set wavelength and intensity, and watch speeds follow colour while numbers follow brightness. Apply a retarding voltage and the current stops at V s equals K max over e, where e is the electron charge. That stopping voltage is how Millikan measured the energies. The slope equals Planck's constant, the same h that fixed the blackbody curve. Two experiments, one constant.\n\nEinstein called the idea a heuristic point of view. Planck asked that the hypothesis of light quanta not be held against him. Millikan reported the equation exactly right in nineteen sixteen while still calling the theory untenable. The Compton effect convinced the sceptics.",
+   "hash": "35f2c1d989b3",
+   "duration": 121.27,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.74,
+     "text": "Look at the space station behind the panel."
+    },
+    {
+     "start": 2.74,
+     "end": 12.54,
+     "text": "In March nineteen oh five, before the relativity paper, Einstein argued that Planck's quantisation was a property of light itself, not the cavity walls."
+    },
+    {
+     "start": 12.54,
+     "end": 18.62,
+     "text": "The energy of one photon is E photon equals h nu equals h c over lambda."
+    },
+    {
+     "start": 18.62,
+     "end": 27.22,
+     "text": "E photon is that energy, h is Planck's constant, nu the frequency, c the speed of light, and lambda the wavelength."
+    },
+    {
+     "start": 27.22,
+     "end": 31.22,
+     "text": "The two forms agree because c equals nu times lambda."
+    },
+    {
+     "start": 31.22,
+     "end": 39.32,
+     "text": "Visible light near five hundred nanometres carries about four times ten to the minus nineteen joules, roughly two and a half electron volts."
+    },
+    {
+     "start": 39.32,
+     "end": 43.64,
+     "text": "One electron volt is the energy an electron gains falling through one volt."
+    },
+    {
+     "start": 43.64,
+     "end": 48.98,
+     "text": "A handy form is E equals twelve forty electron volt nanometres divided by lambda."
+    },
+    {
+     "start": 48.98,
+     "end": 51.7,
+     "text": "I see the photoelectric effect as bookkeeping."
+    },
+    {
+     "start": 51.7,
+     "end": 54.78,
+     "text": "An electron absorbs one photon all at once."
+    },
+    {
+     "start": 54.78,
+     "end": 61.25,
+     "text": "It needs at least the work function phi, a few electron volts, to escape, and the rest is kinetic energy."
+    },
+    {
+     "start": 61.25,
+     "end": 66.07,
+     "text": "K max, the maximum kinetic energy, equals h nu minus phi."
+    },
+    {
+     "start": 66.07,
+     "end": 75.55,
+     "text": "Plot K max against frequency and the graph is a straight line of slope h, intercept minus phi, the same slope for every metal and a different intercept for each."
+    },
+    {
+     "start": 75.55,
+     "end": 80.49,
+     "text": "Below the threshold nu zero equals phi over h, no intensity will help."
+    },
+    {
+     "start": 80.49,
+     "end": 82.09,
+     "text": "I want you to try the widget."
+    },
+    {
+     "start": 82.09,
+     "end": 88.27,
+     "text": "Choose a metal, set wavelength and intensity, and watch speeds follow colour while numbers follow brightness."
+    },
+    {
+     "start": 88.27,
+     "end": 95.31,
+     "text": "Apply a retarding voltage and the current stops at V s equals K max over e, where e is the electron charge."
+    },
+    {
+     "start": 95.31,
+     "end": 98.65,
+     "text": "That stopping voltage is how Millikan measured the energies."
+    },
+    {
+     "start": 98.65,
+     "end": 103.47,
+     "text": "The slope equals Planck's constant, the same h that fixed the blackbody curve."
+    },
+    {
+     "start": 103.47,
+     "end": 105.83,
+     "text": "Two experiments, one constant."
+    },
+    {
+     "start": 105.83,
+     "end": 108.83,
+     "text": "Einstein called the idea a heuristic point of view."
+    },
+    {
+     "start": 108.83,
+     "end": 113.03,
+     "text": "Planck asked that the hypothesis of light quanta not be held against him."
+    },
+    {
+     "start": 113.03,
+     "end": 119.13,
+     "text": "Millikan reported the equation exactly right in nineteen sixteen while still calling the theory untenable."
+    },
+    {
+     "start": 119.13,
+     "end": 121.27,
+     "text": "The Compton effect convinced the sceptics."
+    }
+   ],
+   "voicedHash": "2d47c006dac3"
+  },
+  "photon-scale": {
+   "script": "Look at JWST behind the panel. A photon has energy h times nu and moves at c. From Section 4.4, mass zero, p equals E over c, equals h times nu over c, equals h over lambda. p is momentum, E energy, c the speed of light, h Planck's constant, nu frequency, lambda wavelength. Massless, so momentum is energy over c, and c is nu times lambda, hence h over lambda. We call that push radiation pressure. At Earth the Sun gives four point six micropascals, yet it drives comet tails, solar sails, and part of a massive star's weight.\n\nSlide across the spectrum in the widget and notice twenty orders of magnitude. Radio photons, microelectronvolts, barely nudge nuclear spins. The twenty-one centimetre hydrogen line, the most important in radio astronomy, is six microelectronvolts. Microwave and far-infrared photons, millielectronvolts, rotate molecules; near-infrared ones vibrate them. One to ten electronvolts, visible and ultraviolet, rearranges outer electrons: chemistry, the rest of this chapter. Beyond thirteen point six electronvolts a photon tears the electron out of hydrogen. Kiloelectronvolt X-rays reach inner electrons of heavy atoms; megaelectronvolt gamma rays reach the nucleus.\n\nCounting photons makes faint astronomy possible. The Sun delivers about ten to the twenty-one photons a second per square metre. A magnitude six star, the naked-eye limit, about a hundred thousand per square metre. A magnitude thirty galaxy, about one photon a second into Hubble's two point four metre mirror. Detectors catch nearly every one. JWST sees infrared photons of a tenth of an electronvolt, cooled to forty kelvin so its own thermal photons do not swamp the signal.\n\nA hundred watt bulb radiates about five watts of visible light near five fifty nanometres. h c over lambda is three point six times ten to the minus nineteen joules, so about one point four times ten to the nineteen photons a second. Too fast to notice, so light looks continuous. A dark-adapted eye catches about a hundred photons. The retina is nearly a photon counter.",
+   "hash": "5c9c95a059d1"
+  },
+  "photons-summary": {
+   "script": "Look behind the panel at the whole planetary system slowly circling the Sun. We see its light behave as a wave and as particles. Young's double slit showed interference fringes, diffraction and polarisation. Maxwell found the speed of light from electric and magnetic constants. Hertz showed radio waves reflect, refract, interfere and travel at that speed, fringes building one photon at a time. Planck needed E equals n h nu, E energy, n an integer, h Planck's constant, nu frequency, for blackbody spectra. Einstein's K max equals h nu minus phi, maximum kinetic energy minus work function phi, with a threshold and no delay. Compton's delta lambda equals h over m e c times one minus cosine theta, m e electron mass, theta the angle. Detectors click and p equals E over c. In short E equals h nu equals h c over lambda, p equals h over lambda, zero mass and speed c. Threshold nu zero equals phi over h. Intensity sets the number of electrons, frequency their energy. Energy in electronvolts equals twelve forty over wavelength in nanometres. Visible photons are two to three electronvolts, hydrogen ionises above thirteen point six electronvolts, Compton wavelength two point four thousandths of a nanometre. Light is a quantum object showing wave behaviour in propagation and particle behaviour exchanging energy and momentum.",
+   "hash": "93d62034c5d5",
+   "duration": 91.83,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.9,
+     "text": "Look behind the panel at the whole planetary system slowly circling the Sun."
+    },
+    {
+     "start": 4.9,
+     "end": 8.46,
+     "text": "We see its light behave as a wave and as particles."
+    },
+    {
+     "start": 8.46,
+     "end": 13.54,
+     "text": "Young's double slit showed interference fringes, diffraction and polarisation."
+    },
+    {
+     "start": 13.54,
+     "end": 17.62,
+     "text": "Maxwell found the speed of light from electric and magnetic constants."
+    },
+    {
+     "start": 17.62,
+     "end": 25.86,
+     "text": "Hertz showed radio waves reflect, refract, interfere and travel at that speed, fringes building one photon at a time."
+    },
+    {
+     "start": 25.86,
+     "end": 35.98,
+     "text": "Planck needed E equals n h nu, E energy, n an integer, h Planck's constant, nu frequency, for blackbody spectra."
+    },
+    {
+     "start": 35.98,
+     "end": 44.66,
+     "text": "Einstein's K max equals h nu minus phi, maximum kinetic energy minus work function phi, with a threshold and no delay."
+    },
+    {
+     "start": 44.66,
+     "end": 53.27,
+     "text": "Compton's delta lambda equals h over m e c times one minus cosine theta, m e electron mass, theta the angle."
+    },
+    {
+     "start": 53.27,
+     "end": 56.29,
+     "text": "Detectors click and p equals E over c."
+    },
+    {
+     "start": 56.29,
+     "end": 64.07,
+     "text": "In short E equals h nu equals h c over lambda, p equals h over lambda, zero mass and speed c."
+    },
+    {
+     "start": 64.07,
+     "end": 66.99,
+     "text": "Threshold nu zero equals phi over h."
+    },
+    {
+     "start": 66.99,
+     "end": 70.93,
+     "text": "Intensity sets the number of electrons, frequency their energy."
+    },
+    {
+     "start": 70.93,
+     "end": 75.43,
+     "text": "Energy in electronvolts equals twelve forty over wavelength in nanometres."
+    },
+    {
+     "start": 75.43,
+     "end": 85.55,
+     "text": "Visible photons are two to three electronvolts, hydrogen ionises above thirteen point six electronvolts, Compton wavelength two point four thousandths of a nanometre."
+    },
+    {
+     "start": 85.55,
+     "end": 91.83,
+     "text": "Light is a quantum object showing wave behaviour in propagation and particle behaviour exchanging energy and momentum."
+    }
+   ],
+   "voicedHash": "cd070750e211"
+  }
+ }
+}

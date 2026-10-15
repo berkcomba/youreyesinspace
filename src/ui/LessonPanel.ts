@@ -174,7 +174,7 @@ export class LessonPanel {
       scroll.appendChild(chEl);
     }
     const soon = el('div', 'ac-soon');
-    soon.innerHTML = `<span class="ac-ch-num">Coming next</span><ul><li>Chapter 5 · The Interaction of Light and Matter — spectral lines, photons, the Bohr atom, quantum mechanics</li><li>Chapter 6 · Telescopes — optics, detectors, radio and space telescopes</li></ul>`;
+    soon.innerHTML = `<span class="ac-ch-num">Coming next</span><ul><li>Chapter 6 · Telescopes — optics, detectors, radio and space telescopes</li><li>Chapter 7 · Binary Systems and Stellar Parameters — masses, radii and temperatures from orbiting pairs</li></ul>`;
     scroll.appendChild(soon);
   }
 
