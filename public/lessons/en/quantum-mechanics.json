@@ -1,5 +1,666 @@
 {
  "voice": "altair",
  "locale": "en",
- "steps": {}
+ "steps": {
+  "debroglie": {
+   "script": "Behind the panel the view has flown in on Earth. In his 1924 thesis Louis de Broglie asked a symmetrical question. If light, long thought a wave, has particle properties — energy E equals h times nu, momentum p equals h over lambda — might matter have the same wave relations?\n\nLambda equals h over p, which equals h over m v, and nu equals E over h. Lambda is the wavelength, h is Planck's constant, p is momentum, m is mass, v is speed, nu is frequency, and E is energy. Larger momentum, shorter wave.\n\nFor an electron through a hundred volts, p is the square root of two m sub e K — electron mass times kinetic energy — and lambda is zero point one two nanometres, the spacing of atoms in a crystal. A thrown baseball has lambda about ten to the minus thirty-four metres, so baseballs do not diffract.\n\nWrap a wave around a circular orbit of radius r. It closes only if two pi r equals n lambda; otherwise the wave cancels. Put in lambda equals h over m v, so two pi r equals n h over m v, that is m v r equals n h-bar — Bohr's condition, derived not declared. H-bar is h divided by two pi. Those integers are standing waves, as on a guitar string.\n\nSlide n through non-integer values in the widget and watch the wave fail to close; at integers it locks. Switch the particle selector: electron, proton, dust grain, person.\n\nEinstein wrote that de Broglie had lifted a corner of the great veil. In 1927 Davisson and Germer saw electrons scatter from nickel like X-rays of wavelength h over p, and G. P. Thomson, son of J. J., found diffraction rings in thin foils. Father and son both won Nobel Prizes, one for the particle, one for the wave. Electron microscopes see atoms because that wavelength is a thousand times shorter than light's. Neutrons, atoms, and molecules of two thousand atoms have been diffracted too.",
+   "hash": "de4d9a2c35c4",
+   "duration": 125.43,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.3,
+     "text": "Behind the panel the view has flown in on Earth."
+    },
+    {
+     "start": 3.3,
+     "end": 8.62,
+     "text": "In his 1924 thesis Louis de Broglie asked a symmetrical question."
+    },
+    {
+     "start": 8.62,
+     "end": 20.1,
+     "text": "If light, long thought a wave, has particle properties — energy E equals h times nu, momentum p equals h over lambda — might matter have the same wave relations?"
+    },
+    {
+     "start": 20.1,
+     "end": 26.34,
+     "text": "Lambda equals h over p, which equals h over m v, and nu equals E over h."
+    },
+    {
+     "start": 26.34,
+     "end": 36.26,
+     "text": "Lambda is the wavelength, h is Planck's constant, p is momentum, m is mass, v is speed, nu is frequency, and E is energy."
+    },
+    {
+     "start": 36.26,
+     "end": 38.6,
+     "text": "Larger momentum, shorter wave."
+    },
+    {
+     "start": 38.6,
+     "end": 51.26,
+     "text": "For an electron through a hundred volts, p is the square root of two m sub e K — electron mass times kinetic energy — and lambda is zero point one two nanometres, the spacing of atoms in a crystal."
+    },
+    {
+     "start": 51.26,
+     "end": 57.88,
+     "text": "A thrown baseball has lambda about ten to the minus thirty-four metres, so baseballs do not diffract."
+    },
+    {
+     "start": 57.88,
+     "end": 61.02,
+     "text": "Wrap a wave around a circular orbit of radius r."
+    },
+    {
+     "start": 61.02,
+     "end": 66.33,
+     "text": "It closes only if two pi r equals n lambda; otherwise the wave cancels."
+    },
+    {
+     "start": 66.33,
+     "end": 77.47,
+     "text": "Put in lambda equals h over m v, so two pi r equals n h over m v, that is m v r equals n h-bar — Bohr's condition, derived not declared."
+    },
+    {
+     "start": 77.47,
+     "end": 79.85,
+     "text": "H-bar is h divided by two pi."
+    },
+    {
+     "start": 79.85,
+     "end": 83.39,
+     "text": "Those integers are standing waves, as on a guitar string."
+    },
+    {
+     "start": 83.39,
+     "end": 89.87,
+     "text": "Slide n through non-integer values in the widget and watch the wave fail to close; at integers it locks."
+    },
+    {
+     "start": 89.87,
+     "end": 94.89,
+     "text": "Switch the particle selector: electron, proton, dust grain, person."
+    },
+    {
+     "start": 94.89,
+     "end": 98.55,
+     "text": "Einstein wrote that de Broglie had lifted a corner of the great veil."
+    },
+    {
+     "start": 98.55,
+     "end": 106.13,
+     "text": "In 1927 Davisson and Germer saw electrons scatter from nickel like X-rays of wavelength h over p, and G. P."
+    },
+    {
+     "start": 106.13,
+     "end": 107.88,
+     "text": "Thomson, son of J. J."
+    },
+    {
+     "start": 107.88,
+     "end": 110.81,
+     "text": ", found diffraction rings in thin foils."
+    },
+    {
+     "start": 110.81,
+     "end": 116.01,
+     "text": "Father and son both won Nobel Prizes, one for the particle, one for the wave."
+    },
+    {
+     "start": 116.01,
+     "end": 121.13,
+     "text": "Electron microscopes see atoms because that wavelength is a thousand times shorter than light's."
+    },
+    {
+     "start": 121.13,
+     "end": 125.43,
+     "text": "Neutrons, atoms, and molecules of two thousand atoms have been diffracted too."
+    }
+   ],
+   "voicedHash": "f2a1533cbff3"
+  },
+  "quantum-close": {
+   "script": "Look behind the panel. The whole planetary system is slowly circling the Sun, and its news arrives as light, so let us gather the relations that read it.\n\nKirchhoff still sorts that light. Hot dense matter gives a continuum, hot thin gas gives emission lines, and cool thin gas before a continuum gives absorption lines. A shift obeys delta lambda over lambda equals v sub r over c. Delta lambda is the change in wavelength, lambda the rest wavelength, v sub r the radial velocity, and c the speed of light. The wave stretches in that proportion, so the fractional shift is a speedometer.\n\nA photon carries energy E equals h nu, or h c over lambda, and momentum p equals h over lambda. h is Planck's constant, nu the frequency, lambda the wavelength: higher frequency means more energy and more kick. In the photoelectric effect, K max equals h nu minus phi, the greatest kinetic energy left after the work function phi is paid. Compton scattering shifts the wavelength by delta lambda equals h over m sub e c, times one minus the cosine of theta. m sub e is the electron mass and theta the scattering angle; the electron takes momentum, so lambda grows.\n\nBohr set the angular momentum L equal to n h-bar, h-bar being Planck's constant over two pi. That gives a radius r sub n equals a zero n squared, a zero the Bohr radius, and an energy E sub n equals minus thirteen point six electron-volts over n squared, n the level. A jump gives the Rydberg formula, one over lambda equals R times one over m squared minus one over n squared, R the Rydberg constant and m and n the two levels. Hydrogen-like ions scale as Z squared, Z the nuclear charge, because the nucleus pulls harder.\n\nDe Broglie wrote lambda equals h over p, a wavelength fixed by momentum, and a standing wave is what forces those integers. Schrödinger's square of psi, strictly the square of its amplitude, is the probability of finding the electron, labelled by n, l and m sub l. Orbitals, not orbits.\n\nHeisenberg: delta x times delta p at least h-bar over two, and delta E times delta t at least h-bar over two. Position and momentum cannot both be sharp, nor energy and the time window, and that is the size of an atom and the natural width of a line.\n\nSpin one half, with Pauli's exclusion principle, allows two electrons in each orbital. That builds the periodic table, and in a crushed star the degeneracy pressure that holds a white dwarf up.\n\nEvery spectral line is a jump between two quantum states. Wavelength names the element and the levels; strength counts atoms in the lower level, hence temperature and abundance; the shift is velocity; the width is pressure, rotation and magnetic field. Chapters eight and nine turn that into stellar spectra, and the chemistry of the universe passes through this chapter. Try the problems on the screen. That is the close.",
+   "hash": "7e2ed60c00dd",
+   "duration": 182.39,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 1.78,
+     "text": "Look behind the panel."
+    },
+    {
+     "start": 1.78,
+     "end": 9.8,
+     "text": "The whole planetary system is slowly circling the Sun, and its news arrives as light, so let us gather the relations that read it."
+    },
+    {
+     "start": 9.8,
+     "end": 11.98,
+     "text": "Kirchhoff still sorts that light."
+    },
+    {
+     "start": 11.98,
+     "end": 20.62,
+     "text": "Hot dense matter gives a continuum, hot thin gas gives emission lines, and cool thin gas before a continuum gives absorption lines."
+    },
+    {
+     "start": 20.62,
+     "end": 25.32,
+     "text": "A shift obeys delta lambda over lambda equals v sub r over c."
+    },
+    {
+     "start": 25.32,
+     "end": 33.5,
+     "text": "Delta lambda is the change in wavelength, lambda the rest wavelength, v sub r the radial velocity, and c the speed of light."
+    },
+    {
+     "start": 33.5,
+     "end": 37.98,
+     "text": "The wave stretches in that proportion, so the fractional shift is a speedometer."
+    },
+    {
+     "start": 37.98,
+     "end": 45.72,
+     "text": "A photon carries energy E equals h nu, or h c over lambda, and momentum p equals h over lambda."
+    },
+    {
+     "start": 45.72,
+     "end": 53.04,
+     "text": "h is Planck's constant, nu the frequency, lambda the wavelength: higher frequency means more energy and more kick."
+    },
+    {
+     "start": 53.04,
+     "end": 61.48,
+     "text": "In the photoelectric effect, K max equals h nu minus phi, the greatest kinetic energy left after the work function phi is paid."
+    },
+    {
+     "start": 61.48,
+     "end": 69.36,
+     "text": "Compton scattering shifts the wavelength by delta lambda equals h over m sub e c, times one minus the cosine of theta."
+    },
+    {
+     "start": 69.36,
+     "end": 76.34,
+     "text": "m sub e is the electron mass and theta the scattering angle; the electron takes momentum, so lambda grows."
+    },
+    {
+     "start": 76.34,
+     "end": 82.86,
+     "text": "Bohr set the angular momentum L equal to n h-bar, h-bar being Planck's constant over two pi."
+    },
+    {
+     "start": 82.86,
+     "end": 95.09,
+     "text": "That gives a radius r sub n equals a zero n squared, a zero the Bohr radius, and an energy E sub n equals minus thirteen point six electron-volts over n squared, n the level."
+    },
+    {
+     "start": 95.09,
+     "end": 105.43,
+     "text": "A jump gives the Rydberg formula, one over lambda equals R times one over m squared minus one over n squared, R the Rydberg constant and m and n the two levels."
+    },
+    {
+     "start": 105.43,
+     "end": 111.85,
+     "text": "Hydrogen-like ions scale as Z squared, Z the nuclear charge, because the nucleus pulls harder."
+    },
+    {
+     "start": 111.85,
+     "end": 119.65,
+     "text": "De Broglie wrote lambda equals h over p, a wavelength fixed by momentum, and a standing wave is what forces those integers."
+    },
+    {
+     "start": 119.65,
+     "end": 128.87,
+     "text": "Schrödinger's square of psi, strictly the square of its amplitude, is the probability of finding the electron, labelled by n, l and m sub l."
+    },
+    {
+     "start": 128.87,
+     "end": 130.75,
+     "text": "Orbitals, not orbits."
+    },
+    {
+     "start": 130.75,
+     "end": 138.83,
+     "text": "Heisenberg: delta x times delta p at least h-bar over two, and delta E times delta t at least h-bar over two."
+    },
+    {
+     "start": 138.83,
+     "end": 146.69,
+     "text": "Position and momentum cannot both be sharp, nor energy and the time window, and that is the size of an atom and the natural width of a line."
+    },
+    {
+     "start": 146.69,
+     "end": 152.27,
+     "text": "Spin one half, with Pauli's exclusion principle, allows two electrons in each orbital."
+    },
+    {
+     "start": 152.27,
+     "end": 158.27,
+     "text": "That builds the periodic table, and in a crushed star the degeneracy pressure that holds a white dwarf up."
+    },
+    {
+     "start": 158.27,
+     "end": 161.77,
+     "text": "Every spectral line is a jump between two quantum states."
+    },
+    {
+     "start": 161.77,
+     "end": 173.33,
+     "text": "Wavelength names the element and the levels; strength counts atoms in the lower level, hence temperature and abundance; the shift is velocity; the width is pressure, rotation and magnetic field."
+    },
+    {
+     "start": 173.33,
+     "end": 179.47,
+     "text": "Chapters eight and nine turn that into stellar spectra, and the chemistry of the universe passes through this chapter."
+    },
+    {
+     "start": 179.47,
+     "end": 181.27,
+     "text": "Try the problems on the screen."
+    },
+    {
+     "start": 181.27,
+     "end": 182.39,
+     "text": "That is the close."
+    }
+   ],
+   "voicedHash": "19bbbac45cf2"
+  },
+  "schrodinger": {
+   "script": "If the electron is a wave, it needs a wave equation, and Erwin Schrödinger wrote one down over the Christmas holidays of 1925. On the screen: i times h-bar, times the partial derivative of capital psi with respect to time, equals minus h-bar squared over two m, times the Laplacian of psi, plus V times psi. Capital psi of position and time is the wavefunction. m is the mass, V is the potential, h-bar is Planck’s constant over two pi, and the Laplacian measures how curved the wave is in space. The left side is how the wave changes in time; the right side is kinetic energy plus potential energy acting on that wave. It is conservation of energy, written for a wave rather than a little orbiting ball.\n\nFor a state of definite energy E, capital psi equals little psi of x times e to the minus i E t over h-bar. Time factors out, leaving minus h-bar squared over two m, times the Laplacian of little psi, plus V little psi, equals E little psi. That is an eigenvalue problem. Like a guitar string fixed at both ends, only certain shapes fit, and only at certain energies. Quantisation is no longer a postulate. It is what a confined wave does.\n\nMax Born, in 1926, said the square of the absolute value of psi is a probability density. The electron does not orbit. The chance of finding it in a small volume dV is that density times dV. Bohr’s orbits become orbitals, clouds of probability.\n\nFor hydrogen the Coulomb potential can be solved exactly. The energies are E sub n equals minus thirteen point six electronvolts over n squared — Bohr’s levels, but n is now the principal quantum number of a three-dimensional standing wave, and the average radius grows as the Bohr radius times n squared. l runs from zero to n minus one, and the angular momentum is the square root of l times l plus one, times h-bar. l of zero, one, two, three are called s, p, d, f. The ground state has l equals zero: no angular momentum, unlike Bohr. m sub l runs from minus l to plus l, and the component along a chosen axis is L sub z equals m sub l times h-bar. Those two l plus one states share an energy unless a magnetic field splits them — the Zeeman effect, which lets us measure stellar magnetic fields.\n\nThe widget is a slice through that probability density, with the radial curve and the Bohr radius marked. The 1s cloud is a fuzzy ball, densest at the nucleus, and its most probable radius is exactly a-zero, so Bohr’s orbit survives only as the peak of a distribution. 2p are dumbbells; 3d are cloverleaves. Chemistry is those shapes. Behind the panel we are flying toward the Sun, a star of hydrogen whose light we read with exactly these levels. Bohr’s n survives; his orbits do not. The theory keeps every number he got right, and explains the degeneracies, the selection rule that the change in l is plus or minus one, the rates, and, with spin and relativity, the fine structure.",
+   "hash": "d179630e6b21",
+   "duration": 191.35,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 8.56,
+     "text": "If the electron is a wave, it needs a wave equation, and Erwin Schrödinger wrote one down over the Christmas holidays of 1925."
+    },
+    {
+     "start": 8.56,
+     "end": 22.28,
+     "text": "On the screen: i times h-bar, times the partial derivative of capital psi with respect to time, equals minus h-bar squared over two m, times the Laplacian of psi, plus V times psi."
+    },
+    {
+     "start": 22.28,
+     "end": 25.88,
+     "text": "Capital psi of position and time is the wavefunction."
+    },
+    {
+     "start": 25.88,
+     "end": 34.96,
+     "text": "m is the mass, V is the potential, h-bar is Planck’s constant over two pi, and the Laplacian measures how curved the wave is in space."
+    },
+    {
+     "start": 34.96,
+     "end": 42.16,
+     "text": "The left side is how the wave changes in time; the right side is kinetic energy plus potential energy acting on that wave."
+    },
+    {
+     "start": 42.16,
+     "end": 47.1,
+     "text": "It is conservation of energy, written for a wave rather than a little orbiting ball."
+    },
+    {
+     "start": 47.1,
+     "end": 55.34,
+     "text": "For a state of definite energy E, capital psi equals little psi of x times e to the minus i E t over h-bar."
+    },
+    {
+     "start": 55.34,
+     "end": 65.08,
+     "text": "Time factors out, leaving minus h-bar squared over two m, times the Laplacian of little psi, plus V little psi, equals E little psi."
+    },
+    {
+     "start": 65.08,
+     "end": 67.04,
+     "text": "That is an eigenvalue problem."
+    },
+    {
+     "start": 67.04,
+     "end": 72.84,
+     "text": "Like a guitar string fixed at both ends, only certain shapes fit, and only at certain energies."
+    },
+    {
+     "start": 72.84,
+     "end": 75.3,
+     "text": "Quantisation is no longer a postulate."
+    },
+    {
+     "start": 75.3,
+     "end": 77.46,
+     "text": "It is what a confined wave does."
+    },
+    {
+     "start": 77.46,
+     "end": 83.9,
+     "text": "Max Born, in 1926, said the square of the absolute value of psi is a probability density."
+    },
+    {
+     "start": 83.9,
+     "end": 85.72,
+     "text": "The electron does not orbit."
+    },
+    {
+     "start": 85.72,
+     "end": 90.86,
+     "text": "The chance of finding it in a small volume dV is that density times dV."
+    },
+    {
+     "start": 90.86,
+     "end": 94.52,
+     "text": "Bohr’s orbits become orbitals, clouds of probability."
+    },
+    {
+     "start": 94.52,
+     "end": 97.99,
+     "text": "For hydrogen the Coulomb potential can be solved exactly."
+    },
+    {
+     "start": 97.99,
+     "end": 113.25,
+     "text": "The energies are E sub n equals minus thirteen point six electronvolts over n squared — Bohr’s levels, but n is now the principal quantum number of a three-dimensional standing wave, and the average radius grows as the Bohr radius times n squared."
+    },
+    {
+     "start": 113.25,
+     "end": 121.15,
+     "text": "l runs from zero to n minus one, and the angular momentum is the square root of l times l plus one, times h-bar."
+    },
+    {
+     "start": 121.15,
+     "end": 126.19,
+     "text": "l of zero, one, two, three are called s, p, d, f."
+    },
+    {
+     "start": 126.19,
+     "end": 131.45,
+     "text": "The ground state has l equals zero: no angular momentum, unlike Bohr."
+    },
+    {
+     "start": 131.45,
+     "end": 140.05,
+     "text": "m sub l runs from minus l to plus l, and the component along a chosen axis is L sub z equals m sub l times h-bar."
+    },
+    {
+     "start": 140.05,
+     "end": 148.63,
+     "text": "Those two l plus one states share an energy unless a magnetic field splits them — the Zeeman effect, which lets us measure stellar magnetic fields."
+    },
+    {
+     "start": 148.63,
+     "end": 154.33,
+     "text": "The widget is a slice through that probability density, with the radial curve and the Bohr radius marked."
+    },
+    {
+     "start": 154.33,
+     "end": 168.55,
+     "text": "The 1s cloud is a fuzzy ball, densest at the nucleus, and its most probable radius is exactly a-zero, so Bohr’s orbit survives only as the peak of a distribution. 2p are dumbbells; 3d are cloverleaves."
+    },
+    {
+     "start": 168.55,
+     "end": 170.31,
+     "text": "Chemistry is those shapes."
+    },
+    {
+     "start": 170.31,
+     "end": 176.65,
+     "text": "Behind the panel we are flying toward the Sun, a star of hydrogen whose light we read with exactly these levels."
+    },
+    {
+     "start": 176.65,
+     "end": 179.61,
+     "text": "Bohr’s n survives; his orbits do not."
+    },
+    {
+     "start": 179.61,
+     "end": 191.35,
+     "text": "The theory keeps every number he got right, and explains the degeneracies, the selection rule that the change in l is plus or minus one, the rates, and, with spin and relativity, the fine structure."
+    }
+   ],
+   "voicedHash": "d9e6e8c58025"
+  },
+  "spin-pauli": {
+   "script": "Many spectral lines appear as close doublets. The sodium D line is split by zero point six nanometres, and hydrogen H alpha by zero point zero one six nanometres. In nineteen twenty five Goudsmit and Uhlenbeck proposed electron spin of fixed magnitude the square root of three quarters h bar. The component along any axis is S sub z equals m sub s times h bar, with m sub s plus or minus one half. S sub z is the projection of that spin on the axis we choose. m sub s selects the direction, up or down. h bar is the reduced Planck constant.\n\nA point particle could not spin fast enough to carry h bar over two without its surface exceeding light speed, so spin is purely quantum. Stern and Gerlach in nineteen twenty two split silver atoms into two beams using a non uniform magnetic field. Spin interacting with the orbital field shifts the two energies slightly, splitting levels with l greater than zero. The fine structure scale is the constant one over one hundred thirty seven.\n\nPauli stated that year that no two electrons can share the same n, l, m sub l and m sub s. Each orbital holds two at most. Fill the widget one electron at a time and watch shells close after two, after eight, and after eight more for three s and three p, building helium, neon and argon. The periodic table is this rule in a grid.\n\nWithout the rule every electron would enter the one s state and chemistry would vanish. With the rule, compression forces higher momentum and degeneracy pressure that tracks density, not temperature. Behind the panel, Sirius B the faint white dwarf holds a solar mass in an Earth volume by this pressure alone. Support ends above one point four solar masses. The spin statistics theorem of nineteen forty explains why fermions of half integer spin cannot share states, while bosons of integer spin can, letting lasers work and keeping you from falling through the floor.",
+   "hash": "3a8280e404c1",
+   "duration": 118.71,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.2,
+     "text": "Many spectral lines appear as close doublets."
+    },
+    {
+     "start": 3.2,
+     "end": 11.3,
+     "text": "The sodium D line is split by zero point six nanometres, and hydrogen H alpha by zero point zero one six nanometres."
+    },
+    {
+     "start": 11.3,
+     "end": 19.76,
+     "text": "In nineteen twenty five Goudsmit and Uhlenbeck proposed electron spin of fixed magnitude the square root of three quarters h bar."
+    },
+    {
+     "start": 19.76,
+     "end": 28.66,
+     "text": "The component along any axis is S sub z equals m sub s times h bar, with m sub s plus or minus one half."
+    },
+    {
+     "start": 28.66,
+     "end": 32.72,
+     "text": "S sub z is the projection of that spin on the axis we choose."
+    },
+    {
+     "start": 32.72,
+     "end": 36.18,
+     "text": "m sub s selects the direction, up or down."
+    },
+    {
+     "start": 36.18,
+     "end": 38.64,
+     "text": "h bar is the reduced Planck constant."
+    },
+    {
+     "start": 38.64,
+     "end": 46.86,
+     "text": "A point particle could not spin fast enough to carry h bar over two without its surface exceeding light speed, so spin is purely quantum."
+    },
+    {
+     "start": 46.86,
+     "end": 53.44,
+     "text": "Stern and Gerlach in nineteen twenty two split silver atoms into two beams using a non uniform magnetic field."
+    },
+    {
+     "start": 53.44,
+     "end": 59.99,
+     "text": "Spin interacting with the orbital field shifts the two energies slightly, splitting levels with l greater than zero."
+    },
+    {
+     "start": 59.99,
+     "end": 64.27,
+     "text": "The fine structure scale is the constant one over one hundred thirty seven."
+    },
+    {
+     "start": 64.27,
+     "end": 70.87,
+     "text": "Pauli stated that year that no two electrons can share the same n, l, m sub l and m sub s."
+    },
+    {
+     "start": 70.87,
+     "end": 73.11,
+     "text": "Each orbital holds two at most."
+    },
+    {
+     "start": 73.11,
+     "end": 83.39,
+     "text": "Fill the widget one electron at a time and watch shells close after two, after eight, and after eight more for three s and three p, building helium, neon and argon."
+    },
+    {
+     "start": 83.39,
+     "end": 86.13,
+     "text": "The periodic table is this rule in a grid."
+    },
+    {
+     "start": 86.13,
+     "end": 90.85,
+     "text": "Without the rule every electron would enter the one s state and chemistry would vanish."
+    },
+    {
+     "start": 90.85,
+     "end": 97.37,
+     "text": "With the rule, compression forces higher momentum and degeneracy pressure that tracks density, not temperature."
+    },
+    {
+     "start": 97.37,
+     "end": 103.95,
+     "text": "Behind the panel, Sirius B the faint white dwarf holds a solar mass in an Earth volume by this pressure alone."
+    },
+    {
+     "start": 103.95,
+     "end": 107.07,
+     "text": "Support ends above one point four solar masses."
+    },
+    {
+     "start": 107.07,
+     "end": 118.71,
+     "text": "The spin statistics theorem of nineteen forty explains why fermions of half integer spin cannot share states, while bosons of integer spin can, letting lasers work and keeping you from falling through the floor."
+    }
+   ],
+   "voicedHash": "ff0e3b62fed5"
+  },
+  "uncertainty": {
+   "script": "A wave of one exact wavelength stretches forever. Its momentum is definite, p equals h over lambda, h is Planck's constant and lambda the wavelength, but no position. Add different wavelengths so they reinforce in one region and cancel elsewhere, a wave packet. Narrower packet, wider momenta. Fourier, nineteen twenty-seven: Heisenberg's law for matter.\n\nDelta x times delta p is at least h-bar over two. Delta x and delta p are the standard deviations of position and momentum, h-bar Planck's constant over two pi. A Gaussian packet reaches that floor. Not our instruments: an electron has no sharp position and sharp momentum together, any more than a sound has one pitch and one instant.\n\nIn the widget, narrow the packet and watch momentum broaden. The product sits on the limit. Fewer waves, the packet spreads. Confine an electron to a Bohr radius a-nought and the momentum spread is h-bar over a-nought, kinetic energy of order h-bar squared over two m-e, the electron mass, times a-nought squared, about thirteen point six electronvolts. That sets atomic size. Tighter confinement costs more kinetic energy than Coulomb attraction returns, so Heisenberg stops Rutherford's collapse.\n\nDelta E times delta t is at least h-bar over two. A lifetime delta t leaves energy uncertain by h-bar over two delta t. Excited atoms last about a hundred-millionth of a second, energies uncertain by about a ten-millionth of an electronvolt, and the lines have a natural width, the first broadening Chapter 9 uses on stellar atmospheres.\n\nLook at Hubble behind the panel. Fix a photon's transverse position to about D and its direction blurs by about lambda over D, transverse momentum uncertain by h-bar over D. Diffraction keeps that two point four metre mirror to about five hundredths of an arcsecond. Bigger mirrors see sharper because they localise the photon less, not just from extra light.\n\nA gamma-ray microscope, the photon's kick, is a picture not the principle. It holds with nothing measured. Can you state the difference?",
+   "hash": "7de5b046efab",
+   "duration": 129.27,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.62,
+     "text": "A wave of one exact wavelength stretches forever."
+    },
+    {
+     "start": 3.62,
+     "end": 12.06,
+     "text": "Its momentum is definite, p equals h over lambda, h is Planck's constant and lambda the wavelength, but no position."
+    },
+    {
+     "start": 12.06,
+     "end": 17.86,
+     "text": "Add different wavelengths so they reinforce in one region and cancel elsewhere, a wave packet."
+    },
+    {
+     "start": 17.86,
+     "end": 20.46,
+     "text": "Narrower packet, wider momenta."
+    },
+    {
+     "start": 20.46,
+     "end": 24.66,
+     "text": "Fourier, nineteen twenty-seven: Heisenberg's law for matter."
+    },
+    {
+     "start": 24.66,
+     "end": 28.68,
+     "text": "Delta x times delta p is at least h-bar over two."
+    },
+    {
+     "start": 28.68,
+     "end": 35.96,
+     "text": "Delta x and delta p are the standard deviations of position and momentum, h-bar Planck's constant over two pi."
+    },
+    {
+     "start": 35.96,
+     "end": 38.46,
+     "text": "A Gaussian packet reaches that floor."
+    },
+    {
+     "start": 38.46,
+     "end": 46.8,
+     "text": "Not our instruments: an electron has no sharp position and sharp momentum together, any more than a sound has one pitch and one instant."
+    },
+    {
+     "start": 46.8,
+     "end": 50.24,
+     "text": "In the widget, narrow the packet and watch momentum broaden."
+    },
+    {
+     "start": 50.24,
+     "end": 52.04,
+     "text": "The product sits on the limit."
+    },
+    {
+     "start": 52.04,
+     "end": 54.26,
+     "text": "Fewer waves, the packet spreads."
+    },
+    {
+     "start": 54.26,
+     "end": 69.51,
+     "text": "Confine an electron to a Bohr radius a-nought and the momentum spread is h-bar over a-nought, kinetic energy of order h-bar squared over two m-e, the electron mass, times a-nought squared, about thirteen point six electronvolts."
+    },
+    {
+     "start": 69.51,
+     "end": 71.41,
+     "text": "That sets atomic size."
+    },
+    {
+     "start": 71.41,
+     "end": 78.47,
+     "text": "Tighter confinement costs more kinetic energy than Coulomb attraction returns, so Heisenberg stops Rutherford's collapse."
+    },
+    {
+     "start": 78.47,
+     "end": 82.29,
+     "text": "Delta E times delta t is at least h-bar over two."
+    },
+    {
+     "start": 82.29,
+     "end": 87.19,
+     "text": "A lifetime delta t leaves energy uncertain by h-bar over two delta t."
+    },
+    {
+     "start": 87.19,
+     "end": 99.85,
+     "text": "Excited atoms last about a hundred-millionth of a second, energies uncertain by about a ten-millionth of an electronvolt, and the lines have a natural width, the first broadening Chapter 9 uses on stellar atmospheres."
+    },
+    {
+     "start": 99.85,
+     "end": 101.71,
+     "text": "Look at Hubble behind the panel."
+    },
+    {
+     "start": 101.71,
+     "end": 111.15,
+     "text": "Fix a photon's transverse position to about D and its direction blurs by about lambda over D, transverse momentum uncertain by h-bar over D."
+    },
+    {
+     "start": 111.15,
+     "end": 116.25,
+     "text": "Diffraction keeps that two point four metre mirror to about five hundredths of an arcsecond."
+    },
+    {
+     "start": 116.25,
+     "end": 121.67,
+     "text": "Bigger mirrors see sharper because they localise the photon less, not just from extra light."
+    },
+    {
+     "start": 121.67,
+     "end": 126.25,
+     "text": "A gamma-ray microscope, the photon's kick, is a picture not the principle."
+    },
+    {
+     "start": 126.25,
+     "end": 128.07,
+     "text": "It holds with nothing measured."
+    },
+    {
+     "start": 128.07,
+     "end": 129.27,
+     "text": "Can you state the difference?"
+    }
+   ],
+   "voicedHash": "39f98c4108d7"
+  }
+ }
 }

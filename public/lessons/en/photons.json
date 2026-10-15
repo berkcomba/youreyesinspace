@@ -398,7 +398,136 @@
   },
   "photon-scale": {
    "script": "Look at JWST behind the panel. A photon has energy h times nu and moves at c. From Section 4.4, mass zero, p equals E over c, equals h times nu over c, equals h over lambda. p is momentum, E energy, c the speed of light, h Planck's constant, nu frequency, lambda wavelength. Massless, so momentum is energy over c, and c is nu times lambda, hence h over lambda. We call that push radiation pressure. At Earth the Sun gives four point six micropascals, yet it drives comet tails, solar sails, and part of a massive star's weight.\n\nSlide across the spectrum in the widget and notice twenty orders of magnitude. Radio photons, microelectronvolts, barely nudge nuclear spins. The twenty-one centimetre hydrogen line, the most important in radio astronomy, is six microelectronvolts. Microwave and far-infrared photons, millielectronvolts, rotate molecules; near-infrared ones vibrate them. One to ten electronvolts, visible and ultraviolet, rearranges outer electrons: chemistry, the rest of this chapter. Beyond thirteen point six electronvolts a photon tears the electron out of hydrogen. Kiloelectronvolt X-rays reach inner electrons of heavy atoms; megaelectronvolt gamma rays reach the nucleus.\n\nCounting photons makes faint astronomy possible. The Sun delivers about ten to the twenty-one photons a second per square metre. A magnitude six star, the naked-eye limit, about a hundred thousand per square metre. A magnitude thirty galaxy, about one photon a second into Hubble's two point four metre mirror. Detectors catch nearly every one. JWST sees infrared photons of a tenth of an electronvolt, cooled to forty kelvin so its own thermal photons do not swamp the signal.\n\nA hundred watt bulb radiates about five watts of visible light near five fifty nanometres. h c over lambda is three point six times ten to the minus nineteen joules, so about one point four times ten to the nineteen photons a second. Too fast to notice, so light looks continuous. A dark-adapted eye catches about a hundred photons. The retina is nearly a photon counter.",
-   "hash": "5c9c95a059d1"
+   "hash": "5c9c95a059d1",
+   "duration": 138.55,
+   "sentences": [
+    {
+     "start": 0,
+     "end": 2.057,
+     "text": "Look at JWST behind the panel."
+    },
+    {
+     "start": 2.057,
+     "end": 5.21,
+     "text": "A photon has energy h times nu and moves at c."
+    },
+    {
+     "start": 5.21,
+     "end": 11.791,
+     "text": "From Section 4. 4, mass zero, p equals E over c, equals h times nu over c, equals h over lambda."
+    },
+    {
+     "start": 11.791,
+     "end": 18.647,
+     "text": "p is momentum, E energy, c the speed of light, h Planck's constant, nu frequency, lambda wavelength."
+    },
+    {
+     "start": 18.647,
+     "end": 24.543,
+     "text": "Massless, so momentum is energy over c, and c is nu times lambda, hence h over lambda."
+    },
+    {
+     "start": 24.543,
+     "end": 27.079,
+     "text": "We call that push radiation pressure."
+    },
+    {
+     "start": 27.079,
+     "end": 35.854,
+     "text": "At Earth the Sun gives four point six micropascals, yet it drives comet tails, solar sails, and part of a massive star's weight."
+    },
+    {
+     "start": 35.854,
+     "end": 41.202,
+     "text": "Slide across the spectrum in the widget and notice twenty orders of magnitude."
+    },
+    {
+     "start": 41.202,
+     "end": 45.452,
+     "text": "Radio photons, microelectronvolts, barely nudge nuclear spins."
+    },
+    {
+     "start": 45.452,
+     "end": 52.719,
+     "text": "The twenty-one centimetre hydrogen line, the most important in radio astronomy, is six microelectronvolts."
+    },
+    {
+     "start": 52.719,
+     "end": 59.986,
+     "text": "Microwave and far-infrared photons, millielectronvolts, rotate molecules; near-infrared ones vibrate them."
+    },
+    {
+     "start": 59.986,
+     "end": 67.87,
+     "text": "One to ten electronvolts, visible and ultraviolet, rearranges outer electrons: chemistry, the rest of this chapter."
+    },
+    {
+     "start": 67.87,
+     "end": 73.628,
+     "text": "Beyond thirteen point six electronvolts a photon tears the electron out of hydrogen."
+    },
+    {
+     "start": 73.628,
+     "end": 81.032,
+     "text": "Kiloelectronvolt X-rays reach inner electrons of heavy atoms; megaelectronvolt gamma rays reach the nucleus."
+    },
+    {
+     "start": 81.032,
+     "end": 84.323,
+     "text": "Counting photons makes faint astronomy possible."
+    },
+    {
+     "start": 84.323,
+     "end": 89.739,
+     "text": "The Sun delivers about ten to the twenty-one photons a second per square metre."
+    },
+    {
+     "start": 89.739,
+     "end": 95.566,
+     "text": "A magnitude six star, the naked-eye limit, about a hundred thousand per square metre."
+    },
+    {
+     "start": 95.566,
+     "end": 102.079,
+     "text": "A magnitude thirty galaxy, about one photon a second into Hubble's two point four metre mirror."
+    },
+    {
+     "start": 102.079,
+     "end": 104.341,
+     "text": "Detectors catch nearly every one."
+    },
+    {
+     "start": 104.341,
+     "end": 113.39,
+     "text": "JWST sees infrared photons of a tenth of an electronvolt, cooled to forty kelvin so its own thermal photons do not swamp the signal."
+    },
+    {
+     "start": 113.39,
+     "end": 119.56,
+     "text": "A hundred watt bulb radiates about five watts of visible light near five fifty nanometres."
+    },
+    {
+     "start": 119.56,
+     "end": 129.295,
+     "text": "h c over lambda is three point six times ten to the minus nineteen joules, so about one point four times ten to the nineteen photons a second."
+    },
+    {
+     "start": 129.295,
+     "end": 132.449,
+     "text": "Too fast to notice, so light looks continuous."
+    },
+    {
+     "start": 132.449,
+     "end": 135.945,
+     "text": "A dark-adapted eye catches about a hundred photons."
+    },
+    {
+     "start": 135.945,
+     "end": 138.55,
+     "text": "The retina is nearly a photon counter."
+    }
+   ],
+   "voicedHash": "7a4bde240f71"
   },
   "photons-summary": {
    "script": "Look behind the panel at the whole planetary system slowly circling the Sun. We see its light behave as a wave and as particles. Young's double slit showed interference fringes, diffraction and polarisation. Maxwell found the speed of light from electric and magnetic constants. Hertz showed radio waves reflect, refract, interfere and travel at that speed, fringes building one photon at a time. Planck needed E equals n h nu, E energy, n an integer, h Planck's constant, nu frequency, for blackbody spectra. Einstein's K max equals h nu minus phi, maximum kinetic energy minus work function phi, with a threshold and no delay. Compton's delta lambda equals h over m e c times one minus cosine theta, m e electron mass, theta the angle. Detectors click and p equals E over c. In short E equals h nu equals h c over lambda, p equals h over lambda, zero mass and speed c. Threshold nu zero equals phi over h. Intensity sets the number of electrons, frequency their energy. Energy in electronvolts equals twelve forty over wavelength in nanometres. Visible photons are two to three electronvolts, hydrogen ionises above thirteen point six electronvolts, Compton wavelength two point four thousandths of a nanometre. Light is a quantum object showing wave behaviour in propagation and particle behaviour exchanging energy and momentum.",
