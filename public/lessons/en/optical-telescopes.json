@@ -1,0 +1,739 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "aperture": {
+   "script": "Look behind the panel. The view has flown to M sixteen, and the Pillars of Creation show why aperture matters.\n\nThe light we collect scales with diameter squared, and the resolution we achieve scales with one over diameter, so telescope history is the race to a larger mirror. Use the widget to put any two instruments side by side, to scale. Compare Galileo's thirty-seven millimetre refractor with the eye, Herschel's one point two metre with Galileo, Hubble with Keck, and Keck with the Extremely Large Telescope. Notice the three readouts: photons collected, faintest magnitude reached, and image sharpness.\n\nThe formula is m limiting approximately equals seven point five plus five times the logarithm base ten of D over centimetres. m limiting is the faintest magnitude your eye can just see, and D is the telescope diameter. The relation holds because light grasp goes as D squared, and five magnitudes mean a factor of one hundred in brightness, so a factor of ten in diameter buys five magnitudes. The eye at about seven millimetres gives roughly six point seven. Twenty centimetres reaches about fourteen, the five metre Hale about twenty-one. Detector exposures go eight to ten magnitudes deeper, Hubble near thirty-one and JWST beyond thirty-two.\n\nThat is exactly the difference in the Pillars. Hubble's nineteen ninety-five visible image caught the dust as silhouettes. JWST in twenty twenty-two, with two point seven times the diameter and seven times the area, and working in the infrared from space, sees through to the protostars. Aperture, wavelength, and location together.\n\nYet bigger is not automatically better. Herschel's one point two metre stayed the largest for fifty-six years, but he made his great discoveries — Uranus, the Milky Way's structure, infrared light — with a forty-seven centimetre. Speculum reflected only sixty percent and tarnished, and the huge tube was nearly impossible to point. Aperture wins only if mount, optics, detector, and site keep up. Which of those links do you think limits the giants most today?",
+   "hash": "652c50d49dd8",
+   "duration": 127.35,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 1.74,
+     "text": "Look behind the panel."
+    },
+    {
+     "start": 1.74,
+     "end": 7.7,
+     "text": "The view has flown to M sixteen, and the Pillars of Creation show why aperture matters."
+    },
+    {
+     "start": 7.7,
+     "end": 17.82,
+     "text": "The light we collect scales with diameter squared, and the resolution we achieve scales with one over diameter, so telescope history is the race to a larger mirror."
+    },
+    {
+     "start": 17.82,
+     "end": 22,
+     "text": "Use the widget to put any two instruments side by side, to scale."
+    },
+    {
+     "start": 22,
+     "end": 32.72,
+     "text": "Compare Galileo's thirty-seven millimetre refractor with the eye, Herschel's one point two metre with Galileo, Hubble with Keck, and Keck with the Extremely Large Telescope."
+    },
+    {
+     "start": 32.72,
+     "end": 39.26,
+     "text": "Notice the three readouts: photons collected, faintest magnitude reached, and image sharpness."
+    },
+    {
+     "start": 39.26,
+     "end": 47.4,
+     "text": "The formula is m limiting approximately equals seven point five plus five times the logarithm base ten of D over centimetres."
+    },
+    {
+     "start": 47.4,
+     "end": 53.18,
+     "text": "m limiting is the faintest magnitude your eye can just see, and D is the telescope diameter."
+    },
+    {
+     "start": 53.18,
+     "end": 64.03,
+     "text": "The relation holds because light grasp goes as D squared, and five magnitudes mean a factor of one hundred in brightness, so a factor of ten in diameter buys five magnitudes."
+    },
+    {
+     "start": 64.03,
+     "end": 67.93,
+     "text": "The eye at about seven millimetres gives roughly six point seven."
+    },
+    {
+     "start": 67.93,
+     "end": 72.93,
+     "text": "Twenty centimetres reaches about fourteen, the five metre Hale about twenty-one."
+    },
+    {
+     "start": 72.93,
+     "end": 80.21,
+     "text": "Detector exposures go eight to ten magnitudes deeper, Hubble near thirty-one and JWST beyond thirty-two."
+    },
+    {
+     "start": 80.21,
+     "end": 82.69,
+     "text": "That is exactly the difference in the Pillars."
+    },
+    {
+     "start": 82.69,
+     "end": 86.87,
+     "text": "Hubble's nineteen ninety-five visible image caught the dust as silhouettes."
+    },
+    {
+     "start": 86.87,
+     "end": 97.33,
+     "text": "JWST in twenty twenty-two, with two point seven times the diameter and seven times the area, and working in the infrared from space, sees through to the protostars."
+    },
+    {
+     "start": 97.33,
+     "end": 100.25,
+     "text": "Aperture, wavelength, and location together."
+    },
+    {
+     "start": 100.25,
+     "end": 102.65,
+     "text": "Yet bigger is not automatically better."
+    },
+    {
+     "start": 102.65,
+     "end": 113.71,
+     "text": "Herschel's one point two metre stayed the largest for fifty-six years, but he made his great discoveries — Uranus, the Milky Way's structure, infrared light — with a forty-seven centimetre."
+    },
+    {
+     "start": 113.71,
+     "end": 119.91,
+     "text": "Speculum reflected only sixty percent and tarnished, and the huge tube was nearly impossible to point."
+    },
+    {
+     "start": 119.91,
+     "end": 124.41,
+     "text": "Aperture wins only if mount, optics, detector, and site keep up."
+    },
+    {
+     "start": 124.41,
+     "end": 127.35,
+     "text": "Which of those links do you think limits the giants most today?"
+    }
+   ],
+   "voicedHash": "4e538f7fcc9f"
+  },
+  "mounts": {
+   "script": "Look behind the panel for a moment. The view has come down to Earth, and the equatorial grid is drawn across the sky. That grid is turning, and that turning is the problem the mount has to solve.\n\nThe sky moves at fifteen arcseconds every second of time. A star drifts across the tiny pixels of a modern camera in about a millisecond. For an hour-long exposure the telescope must follow it to a fraction of an arcsecond while swinging tonnes of steel. How it does that depends on the geometry of the mount.\n\nAn equatorial mount copies the Earth. Its polar axis is tilted to the observer’s latitude so it lies parallel to Earth’s rotation axis. Tracking is then one motor at one constant speed, and the field of view does not rotate. That is why long photographs were possible long before computers. The cost is mechanical: the tilted axis carries the whole weight off-centre. The five-metre Hale’s horseshoe yoke was about the practical limit.\n\nAn alt-azimuth mount ignores that axis. Its axes are simply vertical and horizontal, azimuth and altitude, like a gun turret. The weight always bears straight down, so the structure stays symmetric, stiff and compact. Every large telescope since the Soviet six-metre BTA in 1975 is built this way. Both axes must now move at continuously changing rates, and the field itself rotates as the star crosses the sky, fastest as it passes overhead. A third motor turns the instrument to compensate.\n\nTry the widget. Set your latitude and the star’s declination, start the clock, and watch. On the equatorial the frame stays fixed. On the alt-az a reference pattern turns in the eyepiece, slowly near the horizon and quickly near the zenith. There is a small blind spot overhead where no alt-az telescope can follow. The Earth and its grid, sitting below, are why the two mounts differ: one copies the axis, the other ignores it.\n\nThe rotation rate is d chi by d t equals omega-Earth times the cosine of phi, times cosine of A over cosine of a. Chi is the angle the field has turned, so that derivative is how fast the picture spins. Omega-Earth is fifteen arcseconds per second. Phi is your latitude, A the star’s azimuth, a its altitude. The cosine of a in the denominator is why the rate diverges as altitude approaches ninety degrees.\n\nEven perfect tracking is not enough. The structure must not sag as it tilts, the dome must not shed warm air into the beam, and the encoders must know the pointing to a fraction of an arcsecond. A modern eight-metre points blind to about one arcsecond and tracks to five hundredths of an arcsecond, with a small camera watching a reference star and nudging the telescope, or more cheaply the detector.",
+   "hash": "f625febacce4",
+   "duration": 166.07,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.3,
+     "text": "Look behind the panel for a moment."
+    },
+    {
+     "start": 2.3,
+     "end": 7.5,
+     "text": "The view has come down to Earth, and the equatorial grid is drawn across the sky."
+    },
+    {
+     "start": 7.5,
+     "end": 12.26,
+     "text": "That grid is turning, and that turning is the problem the mount has to solve."
+    },
+    {
+     "start": 12.26,
+     "end": 16.12,
+     "text": "The sky moves at fifteen arcseconds every second of time."
+    },
+    {
+     "start": 16.12,
+     "end": 20.96,
+     "text": "A star drifts across the tiny pixels of a modern camera in about a millisecond."
+    },
+    {
+     "start": 20.96,
+     "end": 27.7,
+     "text": "For an hour-long exposure the telescope must follow it to a fraction of an arcsecond while swinging tonnes of steel."
+    },
+    {
+     "start": 27.7,
+     "end": 30.88,
+     "text": "How it does that depends on the geometry of the mount."
+    },
+    {
+     "start": 30.88,
+     "end": 33.36,
+     "text": "An equatorial mount copies the Earth."
+    },
+    {
+     "start": 33.36,
+     "end": 39.72,
+     "text": "Its polar axis is tilted to the observer’s latitude so it lies parallel to Earth’s rotation axis."
+    },
+    {
+     "start": 39.72,
+     "end": 45.22,
+     "text": "Tracking is then one motor at one constant speed, and the field of view does not rotate."
+    },
+    {
+     "start": 45.22,
+     "end": 49.02,
+     "text": "That is why long photographs were possible long before computers."
+    },
+    {
+     "start": 49.02,
+     "end": 53.58,
+     "text": "The cost is mechanical: the tilted axis carries the whole weight off-centre."
+    },
+    {
+     "start": 53.58,
+     "end": 57.4,
+     "text": "The five-metre Hale’s horseshoe yoke was about the practical limit."
+    },
+    {
+     "start": 57.4,
+     "end": 60.28,
+     "text": "An alt-azimuth mount ignores that axis."
+    },
+    {
+     "start": 60.28,
+     "end": 65.98,
+     "text": "Its axes are simply vertical and horizontal, azimuth and altitude, like a gun turret."
+    },
+    {
+     "start": 65.98,
+     "end": 71.5,
+     "text": "The weight always bears straight down, so the structure stays symmetric, stiff and compact."
+    },
+    {
+     "start": 71.5,
+     "end": 77.5,
+     "text": "Every large telescope since the Soviet six-metre BTA in 1975 is built this way."
+    },
+    {
+     "start": 77.5,
+     "end": 86.81,
+     "text": "Both axes must now move at continuously changing rates, and the field itself rotates as the star crosses the sky, fastest as it passes overhead."
+    },
+    {
+     "start": 86.81,
+     "end": 89.69,
+     "text": "A third motor turns the instrument to compensate."
+    },
+    {
+     "start": 89.69,
+     "end": 90.83,
+     "text": "Try the widget."
+    },
+    {
+     "start": 90.83,
+     "end": 95.33,
+     "text": "Set your latitude and the star’s declination, start the clock, and watch."
+    },
+    {
+     "start": 95.33,
+     "end": 97.81,
+     "text": "On the equatorial the frame stays fixed."
+    },
+    {
+     "start": 97.81,
+     "end": 104.19,
+     "text": "On the alt-az a reference pattern turns in the eyepiece, slowly near the horizon and quickly near the zenith."
+    },
+    {
+     "start": 104.19,
+     "end": 109.01,
+     "text": "There is a small blind spot overhead where no alt-az telescope can follow."
+    },
+    {
+     "start": 109.01,
+     "end": 116.07,
+     "text": "The Earth and its grid, sitting below, are why the two mounts differ: one copies the axis, the other ignores it."
+    },
+    {
+     "start": 116.07,
+     "end": 124.55,
+     "text": "The rotation rate is d chi by d t equals omega-Earth times the cosine of phi, times cosine of A over cosine of a."
+    },
+    {
+     "start": 124.55,
+     "end": 129.87,
+     "text": "Chi is the angle the field has turned, so that derivative is how fast the picture spins."
+    },
+    {
+     "start": 129.87,
+     "end": 132.91,
+     "text": "Omega-Earth is fifteen arcseconds per second."
+    },
+    {
+     "start": 132.91,
+     "end": 137.65,
+     "text": "Phi is your latitude, A the star’s azimuth, a its altitude."
+    },
+    {
+     "start": 137.65,
+     "end": 143.51,
+     "text": "The cosine of a in the denominator is why the rate diverges as altitude approaches ninety degrees."
+    },
+    {
+     "start": 143.51,
+     "end": 145.69,
+     "text": "Even perfect tracking is not enough."
+    },
+    {
+     "start": 145.69,
+     "end": 154.65,
+     "text": "The structure must not sag as it tilts, the dome must not shed warm air into the beam, and the encoders must know the pointing to a fraction of an arcsecond."
+    },
+    {
+     "start": 154.65,
+     "end": 166.07,
+     "text": "A modern eight-metre points blind to about one arcsecond and tracks to five hundredths of an arcsecond, with a small camera watching a reference star and nudging the telescope, or more cheaply the detector."
+    }
+   ],
+   "voicedHash": "fc6a4671cae4"
+  },
+  "optical-summary": {
+   "script": "Behind the panel the whole planetary system is slowly circling the Sun. Refractors suffer chromatic aberration; an achromatic doublet reduces it, but lenses stop near one metre, at Yerkes. Reflectors use a parabolic primary, with prime, Newtonian, Cassegrain, Ritchey-Chrétien, Gregorian, Nasmyth or coudé foci, plus Schmidt cameras for wide fields. Plate scale is two hundred six thousand two hundred sixty-five over f, in arcseconds per millimetre. f is focal length. That constant is arcseconds in a radian, so that ratio is sky per millimetre. Field equals detector size over f, shrinking as f grows. Magnification M equals objective focal length over eyepiece focal length. A short eyepiece re-expands it. The f-ratio sets image brightness. Apertures grew from thirty-seven millimetres through one point two metres, five metres and ten-metre segments to thirty-nine metres. Light scales as D squared, D the diameter, because area does, and limiting magnitude gains five magnitudes per decade in D, which is a hundredfold more light. Equatorial mounts track on one axis with no field rotation; alt-az mounts are stiff and compact but need computed tracking and a rotator. A modern telescope is a thin or segmented mirror held in shape by actuators, computer-steered on an alt-az mount, feeding a Cassegrain or Nasmyth focus to a cooled camera or spectrograph, with adaptive optics. Impossible in nineteen fifty.",
+   "hash": "027e22c25dc2",
+   "duration": 91.83,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.6,
+     "text": "Behind the panel the whole planetary system is slowly circling the Sun."
+    },
+    {
+     "start": 4.6,
+     "end": 12.7,
+     "text": "Refractors suffer chromatic aberration; an achromatic doublet reduces it, but lenses stop near one metre, at Yerkes."
+    },
+    {
+     "start": 12.7,
+     "end": 24.56,
+     "text": "Reflectors use a parabolic primary, with prime, Newtonian, Cassegrain, Ritchey-Chrétien, Gregorian, Nasmyth or coudé foci, plus Schmidt cameras for wide fields."
+    },
+    {
+     "start": 24.56,
+     "end": 31.08,
+     "text": "Plate scale is two hundred six thousand two hundred sixty-five over f, in arcseconds per millimetre."
+    },
+    {
+     "start": 31.08,
+     "end": 32.46,
+     "text": "f is focal length."
+    },
+    {
+     "start": 32.46,
+     "end": 37.74,
+     "text": "That constant is arcseconds in a radian, so that ratio is sky per millimetre."
+    },
+    {
+     "start": 37.74,
+     "end": 42,
+     "text": "Field equals detector size over f, shrinking as f grows."
+    },
+    {
+     "start": 42,
+     "end": 46.53,
+     "text": "Magnification M equals objective focal length over eyepiece focal length."
+    },
+    {
+     "start": 46.53,
+     "end": 48.69,
+     "text": "A short eyepiece re-expands it."
+    },
+    {
+     "start": 48.69,
+     "end": 51.15,
+     "text": "The f-ratio sets image brightness."
+    },
+    {
+     "start": 51.15,
+     "end": 58.51,
+     "text": "Apertures grew from thirty-seven millimetres through one point two metres, five metres and ten-metre segments to thirty-nine metres."
+    },
+    {
+     "start": 58.51,
+     "end": 68.97,
+     "text": "Light scales as D squared, D the diameter, because area does, and limiting magnitude gains five magnitudes per decade in D, which is a hundredfold more light."
+    },
+    {
+     "start": 68.97,
+     "end": 77.57,
+     "text": "Equatorial mounts track on one axis with no field rotation; alt-az mounts are stiff and compact but need computed tracking and a rotator."
+    },
+    {
+     "start": 77.57,
+     "end": 90.21,
+     "text": "A modern telescope is a thin or segmented mirror held in shape by actuators, computer-steered on an alt-az mount, feeding a Cassegrain or Nasmyth focus to a cooled camera or spectrograph, with adaptive optics."
+    },
+    {
+     "start": 90.21,
+     "end": 91.83,
+     "text": "Impossible in nineteen fifty."
+    }
+   ],
+   "voicedHash": "b2664835ad6e"
+  },
+  "plate-scale": {
+   "script": "Look with me at the Moon behind the panel. An angle theta on the sky becomes a length y equal to f times theta. f is the focal length, theta the angle in radians, y the stretch on the detector. Plate scale is d theta over d y equals about two hundred and six thousand over f, arcseconds per millimetre, f in millimetres. That constant is the arcseconds in a radian, so a longer focus packs fewer arcseconds per millimetre. Keck at f over fifteen, a hundred and fifty metres, gives about one point four arcseconds per millimetre, and a fifteen micrometre pixel covers two hundredths of an arcsecond.\n\nA thirty-six millimetre sensor behind two metres of focus sees one degree. Long foci magnify. Hubble's Deep Field is a twelfth the Moon's width. Rubin goes the other way: an eight point four metre mirror at only ten point three metres, covering nine point six square degrees, forty Moons.\n\nThe eyepiece is a magnifying glass on that image, so magnification M is the objective focal length over the eyepiece focal length. Twelve hundred millimetres over ten millimetres is one hundred and twenty times. Past two times per millimetre of aperture you only enlarge the Airy disc and the seeing. Six hundred power on a sixty millimetre department-store refractor is a lie.\n\nIn the widget, pick the Moon, Jupiter, Orion, or Andromeda and slide focal length and detector or eyepiece. The circle shows what fits, and the readout gives plate scale, field, and magnification. Fit all of Andromeda, three degrees long, then resolve the Cassini division, seven tenths of an arcsecond.\n\nOn a twenty-four by thirty-six millimetre sensor the Moon, thirty-one arcminutes, is a dot at two hundred millimetres, half the short side at two thousand, and no longer fits at four thousand, nineteen by twenty-eight arcminutes. Doubling f quadruples the pixels and quarters the light per pixel, so the exposure runs four times longer. No free lunch in the focal plane.",
+   "hash": "71bcf0985d9f",
+   "duration": 120.63,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.72,
+     "text": "Look with me at the Moon behind the panel."
+    },
+    {
+     "start": 2.72,
+     "end": 7.88,
+     "text": "An angle theta on the sky becomes a length y equal to f times theta."
+    },
+    {
+     "start": 7.88,
+     "end": 13.3,
+     "text": "f is the focal length, theta the angle in radians, y the stretch on the detector."
+    },
+    {
+     "start": 13.3,
+     "end": 21.9,
+     "text": "Plate scale is d theta over d y equals about two hundred and six thousand over f, arcseconds per millimetre, f in millimetres."
+    },
+    {
+     "start": 21.9,
+     "end": 28.32,
+     "text": "That constant is the arcseconds in a radian, so a longer focus packs fewer arcseconds per millimetre."
+    },
+    {
+     "start": 28.32,
+     "end": 38.84,
+     "text": "Keck at f over fifteen, a hundred and fifty metres, gives about one point four arcseconds per millimetre, and a fifteen micrometre pixel covers two hundredths of an arcsecond."
+    },
+    {
+     "start": 38.84,
+     "end": 43.8,
+     "text": "A thirty-six millimetre sensor behind two metres of focus sees one degree."
+    },
+    {
+     "start": 43.8,
+     "end": 45.8,
+     "text": "Long foci magnify."
+    },
+    {
+     "start": 45.8,
+     "end": 48.72,
+     "text": "Hubble's Deep Field is a twelfth the Moon's width."
+    },
+    {
+     "start": 48.72,
+     "end": 57.64,
+     "text": "Rubin goes the other way: an eight point four metre mirror at only ten point three metres, covering nine point six square degrees, forty Moons."
+    },
+    {
+     "start": 57.64,
+     "end": 65.43,
+     "text": "The eyepiece is a magnifying glass on that image, so magnification M is the objective focal length over the eyepiece focal length."
+    },
+    {
+     "start": 65.43,
+     "end": 69.87,
+     "text": "Twelve hundred millimetres over ten millimetres is one hundred and twenty times."
+    },
+    {
+     "start": 69.87,
+     "end": 74.97,
+     "text": "Past two times per millimetre of aperture you only enlarge the Airy disc and the seeing."
+    },
+    {
+     "start": 74.97,
+     "end": 79.73,
+     "text": "Six hundred power on a sixty millimetre department-store refractor is a lie."
+    },
+    {
+     "start": 79.73,
+     "end": 86.65,
+     "text": "In the widget, pick the Moon, Jupiter, Orion, or Andromeda and slide focal length and detector or eyepiece."
+    },
+    {
+     "start": 86.65,
+     "end": 92.09,
+     "text": "The circle shows what fits, and the readout gives plate scale, field, and magnification."
+    },
+    {
+     "start": 92.09,
+     "end": 98.75,
+     "text": "Fit all of Andromeda, three degrees long, then resolve the Cassini division, seven tenths of an arcsecond."
+    },
+    {
+     "start": 98.75,
+     "end": 112.27,
+     "text": "On a twenty-four by thirty-six millimetre sensor the Moon, thirty-one arcminutes, is a dot at two hundred millimetres, half the short side at two thousand, and no longer fits at four thousand, nineteen by twenty-eight arcminutes."
+    },
+    {
+     "start": 112.27,
+     "end": 118.87,
+     "text": "Doubling f quadruples the pixels and quarters the light per pixel, so the exposure runs four times longer."
+    },
+    {
+     "start": 118.87,
+     "end": 120.63,
+     "text": "No free lunch in the focal plane."
+    }
+   ],
+   "voicedHash": "e7d418fd0c8b"
+  },
+  "reflectors": {
+   "script": "Look at Hubble behind the panel. Newton started this story in sixteen seventy-two with a spherical speculum mirror about thirty-three millimetres across, and a small flat at forty-five degrees folding the beam out the side to an eyepiece. The Newtonian is still the commonest amateur telescope, simple and cheap. I want you to switch the widget between the designs and notice where the focus ends up.\n\nA paraboloidal primary brings on-axis parallel light to a perfect focus. That is the defining property of the parabola. Off axis, stars grow comet-shaped tails, coma. Picture a funnel that catches vertical rain cleanly and smears it as soon as the wind tilts the shower. The other designs cope with that, and move the focus.\n\nPrime focus puts the detector inside the tube. Fastest f-ratio, widest field, but it blocks light. A convex Cassegrain hyperboloid sends the beam back through a hole in the primary, a long focal length in a short tube, with heavy instruments at the bottom. Make both mirrors hyperboloidal and the coma is gone. That is the Ritchey–Chrétien, and Hubble, Keck, the VLT and Gemini are all RCs. Hubble is two point four metres, at an f-ratio of twenty-four. f is focal length divided by aperture. The primary was too flat at the edge by about two micrometres, spherical aberration, because a test optic sat a millimetre out of place. It was fixed with corrective optics in nineteen ninety-three. Diffraction and seeing are physics. This was a measurement mistake, and it was fixable.\n\nGregorian, coudé and Nasmyth park the focus for an upright image, a heat stop, or a spectrograph that never moves. The Schmidt uses a spherical mirror, no preferred axis and so no coma, plus a corrector plate, about six degrees on the Palomar Schmidt. Kepler used the same optics. Glass replaced tarnishing metal. It only has to hold the shape, under silver, aluminium or gold, a meniscus or aligned segments. That is active optics, not adaptive optics.",
+   "hash": "b3dc63aaf1b4",
+   "duration": 123.51,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.28,
+     "text": "Look at Hubble behind the panel."
+    },
+    {
+     "start": 2.28,
+     "end": 14.64,
+     "text": "Newton started this story in sixteen seventy-two with a spherical speculum mirror about thirty-three millimetres across, and a small flat at forty-five degrees folding the beam out the side to an eyepiece."
+    },
+    {
+     "start": 14.64,
+     "end": 19.36,
+     "text": "The Newtonian is still the commonest amateur telescope, simple and cheap."
+    },
+    {
+     "start": 19.36,
+     "end": 24.1,
+     "text": "I want you to switch the widget between the designs and notice where the focus ends up."
+    },
+    {
+     "start": 24.1,
+     "end": 29.14,
+     "text": "A paraboloidal primary brings on-axis parallel light to a perfect focus."
+    },
+    {
+     "start": 29.14,
+     "end": 31.92,
+     "text": "That is the defining property of the parabola."
+    },
+    {
+     "start": 31.92,
+     "end": 35.88,
+     "text": "Off axis, stars grow comet-shaped tails, coma."
+    },
+    {
+     "start": 35.88,
+     "end": 41.82,
+     "text": "Picture a funnel that catches vertical rain cleanly and smears it as soon as the wind tilts the shower."
+    },
+    {
+     "start": 41.82,
+     "end": 45.22,
+     "text": "The other designs cope with that, and move the focus."
+    },
+    {
+     "start": 45.22,
+     "end": 48.34,
+     "text": "Prime focus puts the detector inside the tube."
+    },
+    {
+     "start": 48.34,
+     "end": 52.6,
+     "text": "Fastest f-ratio, widest field, but it blocks light."
+    },
+    {
+     "start": 52.6,
+     "end": 61.99,
+     "text": "A convex Cassegrain hyperboloid sends the beam back through a hole in the primary, a long focal length in a short tube, with heavy instruments at the bottom."
+    },
+    {
+     "start": 61.99,
+     "end": 65.41,
+     "text": "Make both mirrors hyperboloidal and the coma is gone."
+    },
+    {
+     "start": 65.41,
+     "end": 71.47,
+     "text": "That is the Ritchey–Chrétien, and Hubble, Keck, the VLT and Gemini are all RCs."
+    },
+    {
+     "start": 71.47,
+     "end": 75.81,
+     "text": "Hubble is two point four metres, at an f-ratio of twenty-four."
+    },
+    {
+     "start": 75.81,
+     "end": 78.39,
+     "text": "f is focal length divided by aperture."
+    },
+    {
+     "start": 78.39,
+     "end": 86.69,
+     "text": "The primary was too flat at the edge by about two micrometres, spherical aberration, because a test optic sat a millimetre out of place."
+    },
+    {
+     "start": 86.69,
+     "end": 90.01,
+     "text": "It was fixed with corrective optics in nineteen ninety-three."
+    },
+    {
+     "start": 90.01,
+     "end": 92.21,
+     "text": "Diffraction and seeing are physics."
+    },
+    {
+     "start": 92.21,
+     "end": 94.95,
+     "text": "This was a measurement mistake, and it was fixable."
+    },
+    {
+     "start": 94.95,
+     "end": 102.17,
+     "text": "Gregorian, coudé and Nasmyth park the focus for an upright image, a heat stop, or a spectrograph that never moves."
+    },
+    {
+     "start": 102.17,
+     "end": 110.67,
+     "text": "The Schmidt uses a spherical mirror, no preferred axis and so no coma, plus a corrector plate, about six degrees on the Palomar Schmidt."
+    },
+    {
+     "start": 110.67,
+     "end": 112.59,
+     "text": "Kepler used the same optics."
+    },
+    {
+     "start": 112.59,
+     "end": 114.65,
+     "text": "Glass replaced tarnishing metal."
+    },
+    {
+     "start": 114.65,
+     "end": 120.91,
+     "text": "It only has to hold the shape, under silver, aluminium or gold, a meniscus or aligned segments."
+    },
+    {
+     "start": 120.91,
+     "end": 123.51,
+     "text": "That is active optics, not adaptive optics."
+    }
+   ],
+   "voicedHash": "3bd87ec3787f"
+  },
+  "refractors": {
+   "script": "Let us look at Jupiter behind the panel with its four moons from January 1610. Refractors with an objective lens and eyepiece began with Lippershey’s patent in 1608. Galileo’s thirty-seven millimetre objective magnifying twenty times found the moons. Kepler’s convex eyepiece gave a wider inverted field, and refractors led for two centuries.\n\nBlue focuses closer than red because glass disperses, so yellow focus leaves a purple halo, called chromatic aberration. Trace three colours through the single lens on the widget and see three foci. Crown glass spreads them by about f over sixty, seventeen millimetres at one metre.\n\nHuge focal length made the spread small beside the depth of focus. Hevelius slung forty-five metres from a mast. Huygens used seven metres to discover Titan and Saturn’s ring. Newton called it incurable and built a mirror next.\n\nHall in 1733 and Dollond in 1758 paired converging crown with weaker diverging flint. Flint disperses more per unit of bending, so colour cancels while net convergence stays. Switch the widget to the achromatic doublet and see red and blue meet, green slightly off as secondary spectrum. A third glass makes an apochromat.\n\nOne over f total equals one over f one plus one over f two, and f one over f two equals minus V one over V two. f total is the combined focal length, f one and f two each lens, V the Abbe number measuring how little glass disperses, crown near sixty, flint near thirty-six. Contact powers add so reciprocals sum. The ratio cancels dispersion, with weaker flint about minus one point seven times the crown focal length.\n\nAchromats enabled Dorpat’s twenty-four centimetre in 1824, the first modern equatorial, Lick’s ninety-one centimetre, and Yerkes at one metre in 1897, the largest used. A lens sags on edge support, needs flawless glass throughout, absorbs blue and ultraviolet, and requires two figured surfaces per element. Mirrors have one surface and back support, ignore colour, every large telescope after Yerkes has been a reflector.",
+   "hash": "22028de4749d",
+   "duration": 135.35,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.54,
+     "text": "Let us look at Jupiter behind the panel with its four moons from January 1610."
+    },
+    {
+     "start": 5.54,
+     "end": 11.56,
+     "text": "Refractors with an objective lens and eyepiece began with Lippershey’s patent in 1608."
+    },
+    {
+     "start": 11.56,
+     "end": 16.9,
+     "text": "Galileo’s thirty-seven millimetre objective magnifying twenty times found the moons."
+    },
+    {
+     "start": 16.9,
+     "end": 23.18,
+     "text": "Kepler’s convex eyepiece gave a wider inverted field, and refractors led for two centuries."
+    },
+    {
+     "start": 23.18,
+     "end": 31.28,
+     "text": "Blue focuses closer than red because glass disperses, so yellow focus leaves a purple halo, called chromatic aberration."
+    },
+    {
+     "start": 31.28,
+     "end": 35.7,
+     "text": "Trace three colours through the single lens on the widget and see three foci."
+    },
+    {
+     "start": 35.7,
+     "end": 41.28,
+     "text": "Crown glass spreads them by about f over sixty, seventeen millimetres at one metre."
+    },
+    {
+     "start": 41.28,
+     "end": 45.26,
+     "text": "Huge focal length made the spread small beside the depth of focus."
+    },
+    {
+     "start": 45.26,
+     "end": 48.38,
+     "text": "Hevelius slung forty-five metres from a mast."
+    },
+    {
+     "start": 48.38,
+     "end": 52.38,
+     "text": "Huygens used seven metres to discover Titan and Saturn’s ring."
+    },
+    {
+     "start": 52.38,
+     "end": 55.58,
+     "text": "Newton called it incurable and built a mirror next."
+    },
+    {
+     "start": 55.58,
+     "end": 62.84,
+     "text": "Hall in 1733 and Dollond in 1758 paired converging crown with weaker diverging flint."
+    },
+    {
+     "start": 62.84,
+     "end": 68.59,
+     "text": "Flint disperses more per unit of bending, so colour cancels while net convergence stays."
+    },
+    {
+     "start": 68.59,
+     "end": 75.29,
+     "text": "Switch the widget to the achromatic doublet and see red and blue meet, green slightly off as secondary spectrum."
+    },
+    {
+     "start": 75.29,
+     "end": 77.67,
+     "text": "A third glass makes an apochromat."
+    },
+    {
+     "start": 77.67,
+     "end": 86.17,
+     "text": "One over f total equals one over f one plus one over f two, and f one over f two equals minus V one over V two."
+    },
+    {
+     "start": 86.17,
+     "end": 97.47,
+     "text": "f total is the combined focal length, f one and f two each lens, V the Abbe number measuring how little glass disperses, crown near sixty, flint near thirty-six."
+    },
+    {
+     "start": 97.47,
+     "end": 100.51,
+     "text": "Contact powers add so reciprocals sum."
+    },
+    {
+     "start": 100.51,
+     "end": 107.11,
+     "text": "The ratio cancels dispersion, with weaker flint about minus one point seven times the crown focal length."
+    },
+    {
+     "start": 107.11,
+     "end": 119.59,
+     "text": "Achromats enabled Dorpat’s twenty-four centimetre in 1824, the first modern equatorial, Lick’s ninety-one centimetre, and Yerkes at one metre in 1897, the largest used."
+    },
+    {
+     "start": 119.59,
+     "end": 128.55,
+     "text": "A lens sags on edge support, needs flawless glass throughout, absorbs blue and ultraviolet, and requires two figured surfaces per element."
+    },
+    {
+     "start": 128.55,
+     "end": 135.35,
+     "text": "Mirrors have one surface and back support, ignore colour, every large telescope after Yerkes has been a reflector."
+    }
+   ],
+   "voicedHash": "a95ae91d1618"
+  }
+ }
+}

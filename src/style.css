@@ -712,7 +712,7 @@ mtext { font-family: var(--font); }
 .lw-seg button.active { color: var(--text); border-color: var(--accent); position: relative; z-index: 1; }
 .lw-play { width: 30px; padding: 3px 0; font-size: 10px; text-align: center; }
 .lw-btn { padding: 3px 9px; font-size: 10px; white-space: nowrap; }
-.lw-slider { display: flex; align-items: center; gap: 7px; font-size: 11px; color: var(--text-3); flex: 1 1 180px; min-width: 160px; }
+.lw-slider { display: flex; align-items: center; gap: 7px; font-size: 11px; color: var(--text-3); flex: 1 1 auto; min-width: 160px; }
 .lw-slider input[type=range] { flex: 1; min-width: 60px; accent-color: var(--accent); height: 14px; }
 .lw-slider-label { white-space: nowrap; }
 .lw-slider-value { font-family: var(--mono); color: var(--text); min-width: 52px; text-align: right; white-space: nowrap; }

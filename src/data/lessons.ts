@@ -114,7 +114,49 @@ export type WidgetSpec =
   /** a wave packet: position spread against momentum spread, Δx·Δp */
   | { type: 'wavepacket' }
   /** Pauli's exclusion principle builds the periodic table: fill shells electron by electron */
-  | { type: 'pauli' };
+  | { type: 'pauli' }
+  /** the light bucket: aperture, exposure and magnitude → photons collected and a simulated star field */
+  | { type: 'lightbucket' }
+  /** Snell's law: drag the incident ray; media, wavelength (dispersion), total internal reflection */
+  | { type: 'snell' }
+  /** thin lens / concave mirror ray diagram: object distance, focal length, image and magnification */
+  | { type: 'lens' }
+  /** Airy pattern of a circular aperture; two stars and the Rayleigh criterion */
+  | { type: 'airy' }
+  /** atmospheric seeing: speckles, long-exposure blur, adaptive optics */
+  | { type: 'seeing' }
+  /** chromatic aberration of a single lens and its cure, the achromatic doublet */
+  | { type: 'chromatic' }
+  /** reflecting telescope designs: prime, Newtonian, Cassegrain, Gregorian, Schmidt — ray paths */
+  | { type: 'designs' }
+  /** focal length, plate scale, field of view and magnification on real targets */
+  | { type: 'platescale' }
+  /** compare two telescopes: aperture to scale, light grasp, limiting magnitude, resolution */
+  | { type: 'scopes' }
+  /** alt-azimuth vs equatorial mounts: tracking a star and field rotation */
+  | { type: 'mount' }
+  /** Jansky's antenna: a signal that peaks 4 minutes earlier each day — the sidereal clue */
+  | { type: 'jansky' }
+  /** a radio dish: wavefronts to the feed, beam pattern, half-power beam width, flux density in janskys */
+  | { type: 'dish' }
+  /** two-element interferometer: baseline, fringes, synthesized resolution, Earth-rotation uv coverage */
+  | { type: 'interferometer' }
+  /** atmospheric transmission against wavelength at different altitudes */
+  | { type: 'atmwindow' }
+  /** infrared: the glow of a warm telescope against a cold target; cooling */
+  | { type: 'irthermal' }
+  /** grazing-incidence X-ray mirrors: reflectivity against angle and energy, nested Wolter shells */
+  | { type: 'grazing' }
+  /** gamma-ray detection: coded mask, Compton telescope, pair conversion, Cherenkov air shower */
+  | { type: 'gammadetect' }
+  /** the same galaxy seen in radio, infrared, optical, ultraviolet, X-ray and gamma rays */
+  | { type: 'multiview' }
+  /** all-sky maps in galactic coordinates across the spectrum (Mollweide) */
+  | { type: 'skymap' }
+  /** survey data volumes against time, and the time to move them */
+  | { type: 'datagrowth' }
+  /** cross-matching two catalogues: match radius, true pairs and false matches */
+  | { type: 'crossmatch' };
 
 export type SceneCue =
   | { action: 'goto'; ref: string; kind?: 'body' | 'blackhole' | 'star' | 'landmark' | 'galaxy' }
@@ -2443,6 +2485,573 @@ const S5_4: Section = {
   ],
 };
 
+/* ================================================================================ */
+/*  Chapter 6 — Telescopes                                                           */
+/* ================================================================================ */
+
+const S6_1: Section = {
+  id: 'basic-optics',
+  number: '6.1',
+  title: 'Basic Optics',
+  summary: 'Why a telescope is first of all a bucket for light; how refraction and reflection bend it to a focus; and the two limits — diffraction and the atmosphere — that decide how sharp the picture can be.',
+  minutes: 28,
+  steps: [
+    {
+      id: 'light-bucket',
+      kicker: 'Interactive · the point of it',
+      title: 'A telescope is a bucket for light',
+      widget: { type: 'lightbucket' },
+      scene: [goto('hubble'), rate(1)],
+      body: [
+        p('Everything in the previous chapters arrived as light, and almost all of that light is pitifully faint. The dark-adapted eye has a pupil about 7 mm across and integrates for roughly a tenth of a second; with that it reaches 6th magnitude — a few thousand stars. A galaxy at the edge of the observable universe delivers to the Earth perhaps one photon per square metre per <em>minute</em> in the visible. No eye and no cleverness can see it. What is needed is a larger collecting area, a longer exposure, and a detector that does not forget.'),
+        p('That is the first and most important job of a telescope, and it is the one Galileo\'s audience in 1609 appreciated least: it <b>gathers light</b>. The number of photons collected scales with the area of the aperture, that is, with the square of its diameter D, and with the exposure time t:'),
+        eq('N \\propto D^2\\, t', 'A 10 m telescope collects (10/0.007)² ≈ 2 million times the light of the eye per second; a one-hour exposure multiplies that by another 36 000. Together: eleven magnitudes… times another eleven. That is how a 30th-magnitude galaxy becomes an image.'),
+        p('The widget is a light bucket. Set the aperture — from the eye to the 39 m Extremely Large Telescope — and the exposure, and watch a patch of sky fill in: stars that were below the noise emerge as the photon count grows, since a source is detected when its photons outnumber the fluctuations in the background. Notice that doubling the exposure gains far less than doubling the aperture.'),
+        terms(
+          ['Aperture D', 'The diameter of the objective lens or primary mirror — the single most quoted number about a telescope, because light grasp ∝ D² and resolution ∝ 1/D.'],
+          ['Light-gathering power', 'Collecting area relative to the eye: (D / 7 mm)². A 20 cm amateur telescope: about 800×.'],
+          ['Limiting magnitude', 'The faintest star detectable; grows by 5 magnitudes for every factor of 10 in diameter, and by 2.5 magnitudes for every factor of 10 in exposure time (when background noise dominates, half of that).'],
+          ['Signal-to-noise ratio', 'Detected photons from the source divided by the random fluctuation in the total count (√N for photon counting). Astronomers speak of "a 5σ detection".'],
+        ),
+        key('Magnification is the least important property of a telescope; it can be changed by swapping an eyepiece. Aperture cannot. Every advance in observational astronomy since 1609 — Herschel\'s 1.2 m, the 5 m Hale, the 10 m Kecks, the 6.5 m JWST mirror in the scene\'s neighbourhood, the coming 39 m ELT — has first of all been a bigger bucket.'),
+      ],
+    },
+    {
+      id: 'refraction',
+      kicker: 'Interactive · physics',
+      title: 'Refraction: Snell\'s law',
+      widget: { type: 'snell' },
+      scene: [goto('earth'), rate(1)],
+      body: [
+        p('Light travels more slowly in glass or water than in vacuum. The ratio is the <em>index of refraction</em> n = c/v: about 1.00029 for air, 1.33 for water, 1.5–1.7 for glasses, 2.42 for diamond. When a wavefront crosses obliquely from one medium into another, the part that enters first slows first, and the front pivots — the ray bends. Willebrord Snell found the rule in 1621 (Ibn Sahl had it in 984):'),
+        eq('n_1 \\sin\\theta_1 = n_2 \\sin\\theta_2', 'Snell\'s law. Angles are measured from the normal to the surface. Entering a denser medium (n₂ > n₁) the ray bends <em>toward</em> the normal; leaving it, away.'),
+        p('Drag the incident ray in the widget. Going from glass to air, increase the angle and watch the refracted ray flatten along the surface and then vanish: beyond the <em>critical angle</em> sin θ_c = n₂/n₁ there is no solution and all the light reflects. This total internal reflection is what guides light along optical fibres — including the fibres that carry starlight from a telescope\'s focal plane to its spectrograph.'),
+        p('Now change the wavelength. The index of refraction is not quite constant: for ordinary glass it is larger for blue light than for red (<em>dispersion</em>), so blue bends more. Newton\'s prism splits sunlight for exactly this reason — and the same effect will haunt every lens in the next section.'),
+        p('Reflection has an even simpler law, known to Euclid: the angle of reflection equals the angle of incidence, with both rays and the normal in one plane. A mirror does not care about wavelength. Remember that.'),
+        note('Snell\'s law is a consequence of Fermat\'s principle — light takes the path of least <em>time</em> between two points — or, equivalently, of the continuity of the wave across the boundary: the wavelength shrinks by a factor n inside the medium while the frequency stays fixed. In quantum language the photon\'s momentum component parallel to the surface is conserved.', 'Why it holds'),
+      ],
+    },
+    {
+      id: 'lenses',
+      kicker: 'Interactive · geometry',
+      title: 'Lenses, mirrors and the focal length',
+      widget: { type: 'lens' },
+      scene: [goto('moon'), rate(1)],
+      body: [
+        p('Shape a piece of glass so that it is thicker in the middle and Snell\'s law bends parallel rays toward a common point: a <em>converging lens</em>. Curve a mirror into a paraboloid and the law of reflection does the same. In both cases the distance from the optic to the point where parallel light converges is the <em>focal length</em> f. Light from a star is parallel to an extraordinary degree, so a star\'s image forms exactly in the <em>focal plane</em> — which is where the detector goes.'),
+        p('For an object that is not at infinity, at distance p, the image forms at distance q given by the thin-lens equation:'),
+        eq('\\frac{1}{p} + \\frac{1}{q} = \\frac{1}{f}, \\qquad m = -\\frac{q}{p}', 'The thin-lens (and mirror) equation; m is the lateral magnification, negative for an inverted image. For a spherical mirror f = R/2. Astronomical telescopes always work with p → ∞, so q → f.'),
+        p('In the widget, slide the object toward the lens and watch the image recede, grow, and finally — inside the focal length — become a virtual, upright, magnified image on the same side: a magnifying glass. The three construction rays (parallel → through the focus; through the centre → undeviated; through the focus → parallel) are drawn for you. Switch to the concave mirror and note that nothing about the geometry changes except that the light folds back.'),
+        p('A telescope is two of these in series. The <em>objective</em> (lens or mirror) forms a real image of the sky in its focal plane; an <em>eyepiece</em> of short focal length then acts as a magnifying glass on that image, or a camera simply records it. The <em>f-ratio</em> F = f/D sets how concentrated the light in the image is: a "fast" f/2 mirror makes a small, bright image good for faint extended nebulae; a "slow" f/15 system spreads it out for planets and spectroscopy.'),
+        example('The Moon subtends 0.52°. In the focal plane of a lens of focal length f the image of an object of angular size θ has linear size y = f θ (θ in radians). For a 1000 mm lens, y = 1000 × 0.0091 = 9.1 mm — the Moon just fits on a 35 mm frame. For the 57 m effective focal length of the Hale telescope at its Cassegrain focus, the Moon\'s image is half a metre wide. Short focal length: wide field. Long focal length: fine detail spread across many pixels.', 'The Moon in the focal plane'),
+      ],
+    },
+    {
+      id: 'diffraction',
+      kicker: 'Interactive · limit 1',
+      title: 'Diffraction and the resolution limit',
+      widget: { type: 'airy' },
+      scene: [goto('Mizar', 'star'), rate(1)],
+      body: [
+        p('Geometric optics promises a point image of a point star. Waves do not deliver it. An aperture of diameter D admits only a slice of the incoming wavefront, and the truncated wave spreads — it <em>diffracts</em> — exactly as in Young\'s double slit of Chapter 3, now with a circular opening. The image of a star is a bright central disc surrounded by faint rings: the <em>Airy pattern</em>, named for George Airy who derived it in 1835. The first dark ring falls at an angle'),
+        eq('\\theta = 1.22\\,\\frac{\\lambda}{D}', 'The radius of the Airy disc (radians). For the eye at 550 nm: 1.22 × 5.5×10⁻⁷/0.007 ≈ 10⁻⁴ rad ≈ 20 arcseconds (the eye actually does a little worse). For Hubble\'s 2.4 m: 0.057″. For a 10 m Keck: 0.014″ — <em>if</em> nothing else interferes.'),
+        p('Two stars closer together than this merge into one blob. Lord Rayleigh\'s practical criterion: two point sources are <em>just resolved</em> when the central maximum of one falls on the first minimum of the other, that is, when their separation equals θ above. In the widget set the aperture and wavelength, then slide the two stars together and watch the profile: two peaks, a saddle, one peak. The number in the readout is the only thing that ever improves resolution: a bigger D or a shorter λ.'),
+        eq('\\theta_{\\min} \\approx 2.5 \\times 10^5\\,\\frac{\\lambda}{D}\\ \\text{arcsec}', 'The same formula in observers\' units (206 265 arcsec per radian × 1.22). At 21 cm a radio dish of 100 m resolves only 9 arcminutes — a third of the Moon. Hence Section 6.3.'),
+        p('The pair in the scene, Mizar and Alcor, is 12 arcminutes apart and easy for the eye. Mizar itself is a double of 14 arcseconds — the first telescopic double star, seen by Riccioli in 1650 — which needs an aperture of about 1 cm; and each of those two is again a spectroscopic binary (Chapter 5) that no telescope will ever split.'),
+        key('Resolution is set by the wave nature of light, not by the quality of the optics. A perfect telescope is called <em>diffraction-limited</em>: the only way past its limit is to make the aperture larger — or, as Section 6.3 shows, to make several apertures behave as one.'),
+      ],
+    },
+    {
+      id: 'seeing',
+      kicker: 'Interactive · limit 2',
+      title: 'The atmosphere: seeing and adaptive optics',
+      widget: { type: 'seeing' },
+      scene: [goto('iss'), rate(1)],
+      body: [
+        p('From the ground, however, diffraction is rarely the limit. Starlight crosses tens of kilometres of air in which temperature — and therefore index of refraction — varies from one centimetre-sized pocket to the next, on timescales of milliseconds. The flat wavefront from the star arrives crumpled. A short exposure shows the star shattered into a cloud of dancing <em>speckles</em>, each one a diffraction-limited image from a different coherent patch of the wavefront; a long exposure smears them into a blob 0.5–2 arcseconds across. Astronomers call that blob\'s size the <em>seeing</em>. It is why stars twinkle.'),
+        p('In the widget compare the two exposures, change the seeing and the aperture. Above a certain aperture — the <em>Fried parameter</em> r₀, 10–20 cm in the visible at a good site — making the telescope bigger no longer sharpens the long-exposure image at all; it only collects more light into the same blur. A 10 m telescope in 1″ seeing resolves no better than a 12 cm one. That was the state of affairs for three centuries, and it is why observatories went to mountain tops (Mauna Kea, the Chilean Andes, La Palma) where the air is thin, dry and smooth, and finally — Hubble — above the air altogether.'),
+        p('Since the 1990s there has been a third way. <em>Adaptive optics</em> measures the wavefront distortion several hundred times a second using a bright reference star — or an artificial one, a <em>laser guide star</em> made by exciting sodium atoms 90 km up — and cancels it with a deformable mirror whose surface is pushed by hundreds of actuators. Switch it on in the widget: the speckles collapse back into an Airy disc. With AO the 10 m Kecks and the 8 m VLT reach their diffraction limit in the infrared, and the images of the stars orbiting the Galactic Centre black hole (Chapter 24) were made this way.'),
+        terms(
+          ['Seeing', 'The angular size (FWHM) of a star\'s long-exposure image through the atmosphere; 0.4″ on a superb night, 3″ in a city.'],
+          ['Scintillation', 'The twinkling in brightness, caused by the same turbulence focusing and defocusing the light; planets twinkle less because their discs average it out.'],
+          ['Fried parameter r₀', 'The size of the atmospheric patch over which the wavefront is still flat; scales as λ^(6/5), which is why seeing is better in the infrared.'],
+          ['Strehl ratio', 'Peak intensity of the actual star image relative to a perfect Airy disc; 0.01 uncorrected, 0.3–0.9 with adaptive optics.'],
+        ),
+        think('The space station in the scene orbits at 400 km, well above the turbulent layers, yet astronauts photograph the Earth through air that is at its most turbulent when seen from above. Why does the atmosphere blur a star seen from below far more than it blurs a city seen from above, through the same air? (Think about where the turbulence is relative to the aperture, and what "near" and "far" field mean.)'),
+      ],
+    },
+    {
+      id: 'optics-summary',
+      kicker: 'Summary',
+      title: 'Basic optics in brief',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Light grasp ∝ D² t. Aperture is the number that matters; magnification is a detail.',
+          'Refraction: n₁ sin θ₁ = n₂ sin θ₂; n = c/v; dispersion makes n depend on λ. Reflection: θ_r = θ_i, independent of λ.',
+          'Focal length f: parallel light converges there; 1/p + 1/q = 1/f, m = −q/p; image size y = f θ; f-ratio F = f/D.',
+          'Diffraction: the Airy pattern; Rayleigh resolution θ = 1.22 λ/D. Bigger D or shorter λ — nothing else.',
+          'Seeing: atmospheric turbulence limits ground-based images to ~1″ regardless of aperture beyond r₀ ≈ 10–20 cm; adaptive optics and space restore the diffraction limit.',
+        ),
+        key('Three numbers describe the raw capability of any telescope: its aperture (how faint), its diffraction limit (how sharp) and its focal length (how large the image). Everything in the rest of the chapter is engineering to get close to those numbers at each wavelength.'),
+      ],
+    },
+  ],
+};
+
+const S6_2: Section = {
+  id: 'optical-telescopes',
+  number: '6.2',
+  title: 'Optical Telescopes',
+  summary: 'Refractors and their colour problem; the mirror designs — Newtonian, Cassegrain, Schmidt — that replaced them; focal length and field of view; the race for aperture; and the mounts that keep a star still.',
+  minutes: 30,
+  steps: [
+    {
+      id: 'refractors',
+      kicker: 'Interactive · history & flaw',
+      title: 'Refracting telescopes and chromatic aberration',
+      widget: { type: 'chromatic' },
+      scene: [goto('jupiter'), rate(1)],
+      body: [
+        p('The first telescopes were <em>refractors</em>: an objective lens and an eyepiece. Hans Lippershey applied for a patent in 1608; Galileo heard of it, built his own, and by January 1610 had found four moons circling Jupiter — the ones in the scene — with a 37 mm objective magnifying 20 times. Kepler improved the design with a convex eyepiece (inverted image, wider field), and for two centuries the refractor was <em>the</em> telescope.'),
+        p('It has a built-in flaw. Because glass disperses, a single lens has a different focal length for every colour: blue light focuses closer than red. Focus on the yellow and every star wears a purple halo. This <em>chromatic aberration</em> is what the widget shows: trace the three colours through the single lens and see the three separate foci. The spread is about f/60 for ordinary crown glass — 17 mm for a one-metre focal length.'),
+        p('Seventeenth-century opticians could do only one thing: make the focal length enormous, so that the colour spread became small compared with the depth of focus. Hevelius built a 45 m "aerial telescope" slung from a mast; Huygens discovered Titan and Saturn\'s ring with a 7 m tube. Newton, concluding the problem was incurable, built a mirror instead (next step).'),
+        p('He was wrong about incurable. In 1733 Chester Moor Hall, and in 1758 John Dollond, combined a converging lens of crown glass with a weaker diverging lens of dense flint glass. Flint disperses more strongly per unit of bending, so the pair can cancel the colour spread while keeping net convergence. Switch the widget to the <em>achromatic doublet</em> and watch red and blue meet at a common focus (green sits slightly off: the residual "secondary spectrum"). Add a third glass and you have an <em>apochromat</em>.'),
+        eq('\\frac{1}{f_{\\text{total}}} = \\frac{1}{f_1} + \\frac{1}{f_2}, \\qquad \\frac{f_1}{f_2} = -\\frac{V_1}{V_2}', 'Achromat condition. V is the Abbe number, a measure of how little a glass disperses (crown ≈ 60, flint ≈ 36). The weaker flint lens has about −1.7 times the focal length of the crown lens.'),
+        history('Achromats made the great refractors of the nineteenth century possible: Fraunhofer\'s 24 cm at Dorpat (1824, the first on a modern equatorial mount), the 91 cm Lick (1888) and the 1.02 m Yerkes (1897), which remains the largest refractor ever used. The reasons it <em>remains</em> the largest: a lens can only be held at its edge and sags under its own weight; the glass must be flawless all the way through; it absorbs blue and ultraviolet light; and two surfaces per element must be figured. A mirror has one surface, can be supported from behind, and is colour-blind. After Yerkes, every large telescope has been a reflector.', 'Why 1 m is the limit'),
+      ],
+    },
+    {
+      id: 'reflectors',
+      kicker: 'Interactive · designs',
+      title: 'Reflecting telescopes: Newton, Cassegrain and Schmidt',
+      widget: { type: 'designs' },
+      scene: [goto('hubble'), rate(1)],
+      body: [
+        p('Newton presented his reflector to the Royal Society in 1672: a 33 mm spherical mirror of speculum metal, with a small flat secondary mirror set at 45° to fold the converging beam out of the side of the tube to an eyepiece. The <em>Newtonian</em> is still the commonest amateur design — simple, cheap, and with the observer conveniently at the top. The widget traces the rays; switch between the designs and watch where the light goes.'),
+        p('A paraboloidal primary brings <em>on-axis</em> parallel light to a perfect focus (that is the defining property of the parabola), but off-axis stars grow comet-shaped tails — <em>coma</em> — that limit the useful field. The other designs are mostly ways to deal with that, and with the awkward position of the focus.'),
+        terms(
+          ['Prime focus', 'The detector sits directly at the focus of the primary, inside the tube. Fastest f-ratio, widest field, but anything there blocks light. The 5 m Hale had a cage for the observer; today a camera (or the Subaru Hyper Suprime-Cam, 870 megapixels) rides there.'],
+          ['Newtonian', 'A flat diagonal sends the focus out of the side. Compact to build, awkward to balance on large instruments.'],
+          ['Cassegrain', 'A convex hyperboloidal secondary reflects the beam back through a hole in the primary. The folded path gives a long effective focal length in a short tube; heavy instruments hang at the bottom where the mount can carry them. Most large telescopes work this way. The <em>Ritchey–Chrétien</em> variant makes both mirrors hyperboloidal and removes coma — Hubble, Keck, VLT, Gemini, and most of the giants are RCs.'],
+          ['Gregorian', 'A concave ellipsoidal secondary placed <em>beyond</em> the prime focus; longer, but gives an upright image and an accessible intermediate focus. Used by the Giant Magellan Telescope and by solar telescopes, which can put a heat stop at that intermediate focus.'],
+          ['Coudé / Nasmyth', 'Further flats send the beam along the polar axis (coudé) or out through the altitude bearing (Nasmyth) to instruments that never move: a spectrograph the size of a room.'],
+          ['Schmidt camera', 'A <em>spherical</em> mirror, which has no preferred axis and so no coma, with a thin aspheric corrector plate at its centre of curvature to remove the spherical aberration. Result: a very fast, very wide field (6° for the 1.2 m Palomar Schmidt) on a curved focal surface. Built for surveys; the Palomar Sky Survey plates and the Kepler spacecraft used Schmidt optics.'],
+        ),
+        p('Hubble, in the scene, is a 2.4 m f/24 Ritchey–Chrétien. Its primary was ground to the wrong shape — too flat at the edge by 2.2 µm, a textbook <em>spherical aberration</em> — because a null corrector in the test rig had been assembled 1.3 mm out of place. The 1993 servicing mission installed corrective optics (COSTAR) and a new camera with the opposite error built in. Diffraction limits and seeing are physics; this was a measurement mistake, and it was fixable.'),
+        note('Mirrors used to be metal and tarnished within months; since Foucault (1857) they have been glass with a thin reflecting coat — silver, then aluminium (Hale, 1930s), today protected silver or gold for the infrared. The glass only has to hold a shape. Modern primaries are thin "meniscus" blanks held in shape by computer-controlled actuators (<em>active optics</em>, correcting slow flexure and temperature; not to be confused with the fast adaptive optics of 6.1), or honeycomb castings, or — Keck, GTC, JWST, ELT — mosaics of hexagonal segments kept aligned to nanometres.', 'From speculum to segments'),
+      ],
+    },
+    {
+      id: 'plate-scale',
+      kicker: 'Interactive · numbers',
+      title: 'Focal length, plate scale, field and magnification',
+      widget: { type: 'platescale' },
+      scene: [goto('moon'), rate(1)],
+      body: [
+        p('How big is the picture? In the focal plane an angle θ on the sky becomes a length y = f θ, so the <em>plate scale</em> — arcseconds per millimetre of detector, the number every observer knows for their instrument — is'),
+        eq('\\frac{d\\theta}{dy} = \\frac{206\\,265}{f}\\ \\frac{\\text{arcsec}}{\\text{mm}} \\quad (f \\text{ in mm})', 'Plate scale. A 500 mm camera lens: 413″/mm. The 10 m Keck at f/15 (f = 150 m): 1.38″/mm, so a 15 µm pixel covers 0.02″ — well matched to adaptive-optics images.'),
+        p('The <em>field of view</em> then follows from the detector size: a 36 mm sensor behind a 2 m focal length sees 1°. Long focal lengths magnify but see little — the whole of Hubble\'s famous Deep Field is 1/12 the width of the Moon. Survey telescopes go the other way: Rubin Observatory\'s 8.4 m mirror has a focal length of only 10.3 m (f/1.23) and a 64 cm, 3.2-gigapixel focal plane covering 9.6 square degrees — 40 full Moons at once.'),
+        p('For a visual telescope the eyepiece is a magnifying glass on the focal-plane image, and the angular magnification is simply the ratio of focal lengths:'),
+        eq('M = \\frac{f_{\\text{objective}}}{f_{\\text{eyepiece}}}', 'A 1200 mm telescope with a 10 mm eyepiece: 120×. Beyond about 2× per millimetre of aperture the magnified image shows only the Airy disc and the seeing; "600× power!" on a 60 mm department-store refractor is a lie.'),
+        p('In the widget pick a target — the Moon, Jupiter, the Orion Nebula, the Andromeda Galaxy — and slide the focal length and the detector or eyepiece: the circle shows what fits in the frame, the readout gives the plate scale, the field and the magnification. Try to put all of Andromeda (3° long) in one frame, then try to resolve the Cassini division in Saturn\'s rings (0.7″).'),
+        example('The Moon (31′ = 1860″) on a 24 mm × 36 mm sensor. With a 200 mm lens the plate scale is 1031″/mm, the Moon is 1.8 mm across — a dot. With 2000 mm it is 18 mm and fills half the short side. With 4000 mm (plate scale 52″/mm) the field is 19′ × 28′ and the Moon no longer fits. Doubling f quadruples the pixels on the Moon and divides the light per pixel by four: the exposure must be four times longer. There is no free lunch in the focal plane.', 'Framing the Moon'),
+      ],
+    },
+    {
+      id: 'aperture',
+      kicker: 'Interactive · the race',
+      title: 'Aperture: from Galileo to the Extremely Large Telescope',
+      widget: { type: 'scopes' },
+      scene: [goto('l-m16', 'landmark'), rate(1)],
+      body: [
+        p('Because light grasp goes as D² and resolution as 1/D, the history of the telescope is essentially the history of its diameter. The widget puts any two instruments side by side, to scale, with the three consequences: how many photons, how faint, how sharp. Compare Galileo\'s 37 mm with the eye, Herschel\'s 1.2 m "40-foot" with Galileo, Hubble with Keck, and Keck with the ELT.'),
+        timeline([
+          { when: '1609', title: 'Galileo, 37 mm refractor', text: 'Moons of Jupiter, phases of Venus, mountains on the Moon, stars in the Milky Way.' },
+          { when: '1789', title: 'Herschel, 1.2 m speculum reflector', text: 'Largest for half a century; discovered two moons of Saturn on its first night.' },
+          { when: '1845', title: 'Lord Rosse, 1.8 m "Leviathan"', text: 'First to see spiral structure, in M51.' },
+          { when: '1917', title: 'Hooker 2.5 m, Mount Wilson', text: 'Hubble measured the distance to Andromeda and the expansion of the universe with it.' },
+          { when: '1948', title: 'Hale 5 m, Palomar', text: 'Pyrex honeycomb mirror; the largest for 45 years; quasars, the cosmic distance scale.' },
+          { when: '1990', title: 'Hubble Space Telescope, 2.4 m', text: 'Small, but above the atmosphere: diffraction-limited images, ultraviolet access, dark sky.' },
+          { when: '1993', title: 'Keck I, 10 m segmented', text: '36 hexagonal segments, actively aligned; the template for every giant since.' },
+          { when: '1998–2005', title: 'VLT (4 × 8.2 m), Gemini, Subaru, GTC 10.4 m', text: 'Thin meniscus and segmented mirrors; adaptive optics becomes routine.' },
+          { when: '2022', title: 'JWST, 6.5 m, infrared, at L2', text: '18 gold-coated beryllium segments unfolded in space; 40 K passive cooling.' },
+          { when: '2025–2030s', title: 'Rubin 8.4 m survey; GMT 25 m; ELT 39 m', text: 'The ELT\'s 798 segments give 13× the light of a Keck and 0.01″ resolution with AO.' },
+        ]),
+        eq('m_{\\lim} \\approx 7.5 + 5\\log_{10}\\!\\left(\\frac{D}{\\text{cm}}\\right)', 'Rough visual limiting magnitude of a telescope (eye: 6.7 for 0.7 cm; 20 cm: 14; 5 m: 21). Long CCD exposures go 8–10 magnitudes deeper: Hubble\'s deepest fields reach m ≈ 31, JWST beyond 32.'),
+        p('The Pillars of Creation in the scene are the test case everyone knows: Hubble\'s 1995 visible-light image showed dust silhouettes; JWST\'s 2022 infrared image, with a mirror of 2.7 times the diameter and 7 times the area, sees <em>through</em> the dust to the protostars inside. Aperture, wavelength and location, all three at once.'),
+        think('Herschel\'s 1.2 m mirror was bigger than any telescope built for the next 56 years, yet he did most of his great work — Uranus, the structure of the Milky Way, infrared light — with a 47 cm. Speculum metal reflected only 60% and tarnished; the big tube was so hard to point that Herschel rarely used it. A larger aperture is only better if the rest of the system — mount, optics quality, detector, site — can keep up. Which link in <em>today\'s</em> chain do you think limits the giant telescopes most?'),
+      ],
+    },
+    {
+      id: 'mounts',
+      kicker: 'Interactive · engineering',
+      title: 'Mounts: keeping a star still',
+      widget: { type: 'mount' },
+      scene: [goto('earth'), grid(true), rate(1)],
+      body: [
+        p('The sky turns at 15 arcseconds per second of time. A star drifts across the 0.02″ pixels of a modern camera in a millisecond; to expose for an hour the telescope must follow it to a fraction of an arcsecond over tonnes of moving steel. How it follows depends on the geometry of the mount.'),
+        compare(
+          { title: 'Equatorial mount', items: ['One axis (the <em>polar axis</em>) is aligned parallel to the Earth\'s rotation axis — tilted at the observer\'s latitude.', 'Tracking is a single, constant rotation about that axis: one motor, one speed.', 'The field of view does not rotate; long photographic exposures were possible with no further correction.', 'Mechanically awkward for large telescopes: the tilted axis must carry the whole weight off-centre. The 5 m Hale\'s horseshoe yoke was the practical limit.'] },
+          { title: 'Alt-azimuth mount', items: ['Axes are vertical (azimuth) and horizontal (altitude), like a gun turret or a camera tripod.', 'Tracking needs both axes to move at continuously varying rates — trivial since computers, impossible before.', 'The field of view <em>rotates</em> as the star crosses the sky, at a rate that becomes infinite as the star passes overhead; a third motor turns the instrument to compensate.', 'The weight always bears straight down: symmetric, stiff, compact. Every large telescope since the Soviet 6 m BTA (1975) is alt-az.'] },
+        ),
+        p('The widget tracks a star with each mount. Set your latitude and the star\'s declination, start the clock and watch: on the equatorial the frame stays fixed; on the alt-az a reference pattern turns in the eyepiece, slowly near the horizon and quickly near the zenith — there is a small "blind spot" overhead where no alt-az telescope can follow. The Earth below, with its equatorial grid drawn, is the reason the two mounts differ: one copies its axis, the other ignores it.'),
+        eq('\\frac{d\\chi}{dt} = \\omega_\\oplus \\cos\\varphi\\,\\frac{\\cos A}{\\cos a}', 'Field-rotation rate on an alt-az mount for an observer at latitude φ watching a star at azimuth A and altitude a; ω⊕ = 15″/s. It diverges as a → 90°.'),
+        note('Keeping a star still well enough for a one-hour exposure also requires that the telescope\'s own structure not sag as it tilts (hence active optics), that the dome not shed warm air into the beam (hence vented enclosures and chilled mirrors), and that the mount\'s encoders know where it points to a fraction of an arcsecond (hence pointing models with dozens of terms). A modern 8 m points blind to 1″ and tracks to 0.05″. The guiding is done by a small camera watching a reference star in the field and nudging the telescope — or, more cheaply, nudging the detector.', 'Precision'),
+      ],
+    },
+    {
+      id: 'optical-summary',
+      kicker: 'Summary',
+      title: 'Optical telescopes in brief',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Refractors suffer chromatic aberration; achromatic doublets reduce it; lenses stop at 1 m (Yerkes).',
+          'Reflectors: parabolic primary; prime, Newtonian, Cassegrain (Ritchey–Chrétien), Gregorian, Nasmyth/coudé foci; Schmidt cameras for wide fields.',
+          'Plate scale 206 265/f ″/mm; field = detector size / f; magnification M = f_obj / f_eye; f-ratio sets image brightness.',
+          'Aperture history: 37 mm → 1.2 m → 5 m → 10 m segmented → 39 m. Light ∝ D², limiting magnitude +5 per decade in D.',
+          'Equatorial mounts track with one axis and no field rotation; alt-az mounts are stiff and compact but need computed tracking and a rotator.',
+        ),
+        key('A modern large optical telescope is a thin or segmented mirror held in shape by actuators, on an alt-az mount steered by computer, delivering light through a Cassegrain or Nasmyth focus to a cooled camera or spectrograph, with adaptive optics sharpening the image. Every element on that list was impossible in 1950.'),
+      ],
+    },
+  ],
+};
+
+const S6_3: Section = {
+  id: 'radio-telescopes',
+  number: '6.3',
+  title: 'Radio Telescopes',
+  summary: 'An accidental discovery at Bell Labs opened the second window on the universe; dishes, beams and the jansky; and interferometry, the trick that turns a continent — or a planet — into one aperture.',
+  minutes: 24,
+  steps: [
+    {
+      id: 'jansky',
+      kicker: 'Interactive · history',
+      title: 'Jansky\'s hiss: a signal that keeps sidereal time',
+      widget: { type: 'jansky' },
+      scene: [goto('b0', 'blackhole'), rate(1)],
+      body: [
+        p('In 1931 Karl Jansky, a 26-year-old engineer at Bell Telephone Laboratories, was asked to find the sources of static that troubled transatlantic radio-telephone calls at 20.5 MHz (λ = 14.6 m). He built a 30 m rotating antenna array on a turntable of Ford Model-T wheels — "Jansky\'s merry-go-round" — and logged the noise for a year. Thunderstorms, near and far, accounted for most of it. A third component was a faint, steady hiss whose direction swept around the sky once a day.'),
+        p('A daily cycle suggested the Sun. But the peak came about four minutes earlier each day, and after a year it had gained a whole day: the period was 23 h 56 min — the <em>sidereal</em> day of Chapter 1, the rotation of the Earth relative to the stars, not the Sun. The source was fixed among the stars, toward Sagittarius — the centre of the Milky Way, where the black hole in the scene sits. Jansky published "Electrical disturbances apparently of extraterrestrial origin" in 1933. The <em>New York Times</em> put it on the front page; the astronomers ignored it; Bell Labs moved him to other work.'),
+        p('The widget is Jansky\'s chart recorder. Watch the signal peak drift across the daily record and use the slider to read off how many days it takes to gain an hour; the readout compares the period with the solar and sidereal days. It is a beautiful example of a measurement that identifies a source without seeing it at all.'),
+        timeline([
+          { when: '1932–33', title: 'Jansky', text: 'Galactic radio noise at 20 MHz; period 23 h 56 m.' },
+          { when: '1937', title: 'Grote Reber', text: 'Builds a 9 m parabolic dish in his back garden in Illinois; maps the Milky Way at 160 MHz. For a decade he is the world\'s only radio astronomer.' },
+          { when: '1942', title: 'J. S. Hey', text: 'Radar jamming turns out to be the Sun; later detects radio meteors and Cygnus A.' },
+          { when: '1951', title: 'Ewen & Purcell', text: 'Detect the 21 cm line of hydrogen predicted by van de Hulst; the spiral arms of the Milky Way are mapped in gas.' },
+          { when: '1957', title: 'Jodrell Bank 76 m', text: 'First giant steerable dish; tracks Sputnik\'s rocket.' },
+          { when: '1963', title: 'Schmidt; Arecibo 305 m', text: '3C 273 identified as a quasar at z = 0.16; the Arecibo fixed spherical dish opens.' },
+          { when: '1965', title: 'Penzias & Wilson', text: 'A 3 K excess in a Bell Labs horn antenna: the cosmic microwave background.' },
+          { when: '1967', title: 'Jocelyn Bell', text: 'Pulsars, with a 4-acre dipole array at Cambridge.' },
+          { when: '1980', title: 'VLA', text: '27 dishes of 25 m on rails in New Mexico; aperture synthesis becomes routine imaging.' },
+          { when: '2013', title: 'ALMA', text: '66 antennas at 5000 m in Chile, 0.3–3 mm; protoplanetary discs resolved.' },
+          { when: '2019 / 2022', title: 'Event Horizon Telescope', text: 'Earth-sized interferometer at 1.3 mm images the shadows of M87* and Sgr A*.' },
+        ]),
+        key('Radio astronomy is the first time astronomy was done with something other than visible light, and it was done by engineers. Every later window — infrared, X-ray, gamma, gravitational waves — followed the same pattern: new technology, an unexpected signal, and a sky nobody had predicted.'),
+      ],
+    },
+    {
+      id: 'dish',
+      kicker: 'Interactive · instrument',
+      title: 'The dish, the beam and the jansky',
+      widget: { type: 'dish' },
+      scene: [goto('l-casa', 'landmark'), rate(1)],
+      body: [
+        p('A radio telescope is an optical reflector built for long wavelengths. A paraboloidal dish reflects incoming plane waves to a focus where a <em>feed horn</em> and a cryogenically cooled amplifier replace the eyepiece; a sub-reflector often folds the light back Cassegrain-style to receivers in a cabin behind the dish. Because λ is 10⁴–10⁶ times longer than visible light, the surface need only be accurate to about λ/20 — a few millimetres for a 21 cm dish, which is why dishes can be wire mesh and can be built 100 m across (Effelsberg, Green Bank). At millimetre wavelengths (ALMA) the surface must again be good to 20 µm.'),
+        p('The long wavelength has one severe price: diffraction. The antenna\'s sensitivity on the sky — its <em>beam pattern</em> — is the Airy pattern of 6.1 with λ a million times larger. The <em>half-power beam width</em> ≈ 1.2 λ/D is the resolution:'),
+        eq('\\theta_{\\text{HPBW}} \\approx 1.2\\,\\frac{\\lambda}{D} \\approx 4100\\,\\frac{\\lambda}{D}\\ \\text{arcmin}', 'For the 100 m Green Bank Telescope at 21 cm: 8.6′. For Arecibo at 21 cm: 3.4′. The eye does 1′. A single dish is a very blurry instrument, and much of its energy also leaks into <em>side lobes</em> that pick up the ground and the Sun.'),
+        p('What the receiver measures is power per unit collecting area per unit bandwidth: the <em>spectral flux density</em> S_ν, in W m⁻² Hz⁻¹. Cosmic sources are so weak that a special unit was adopted in Jansky\'s honour:'),
+        eq('1\\ \\text{Jy} = 10^{-26}\\ \\text{W m}^{-2}\\,\\text{Hz}^{-1}, \\qquad P = S_\\nu\\, A_{\\text{eff}}\\, \\Delta\\nu', 'The jansky. Cassiopeia A in the scene, the brightest source in the sky after the Sun, is about 2400 Jy at 1 GHz; a typical quasar is 1 Jy; modern surveys reach microjanskys. A mobile phone on the Moon would be one of the brighter radio sources in the sky.'),
+        example('How much power does a 1 Jy source deliver to the 100 m Effelsberg dish (A ≈ 7850 m², efficiency ~0.6) in a 10 MHz band? P = 10⁻²⁶ × 0.6 × 7850 × 10⁷ ≈ 5 × 10⁻¹⁶ W. The total energy collected by every radio telescope in history is less than that of a falling snowflake. Detection is possible only because the receiver is cooled to 15 K and the signal is integrated for minutes to hours; the figure of merit is the <em>system temperature</em> T_sys, the temperature of a resistor that would produce the same noise.', 'One jansky in watts'),
+        p('In the widget set the dish diameter and the wavelength: the wavefronts converge on the feed, the beam pattern narrows or broadens, and the readout gives the beam width, the collecting area and the power from a source of chosen flux density. Try 21 cm with a 25 m VLA-type dish, then 1.3 mm with a 12 m ALMA antenna.'),
+      ],
+    },
+    {
+      id: 'interferometry',
+      kicker: 'Interactive · the trick',
+      title: 'Interferometry: an aperture the size of the Earth',
+      widget: { type: 'interferometer' },
+      scene: [goto('b0', 'blackhole'), rate(1)],
+      body: [
+        p('A single dish cannot be made large enough: a 1″ beam at 21 cm would need a dish 50 km wide. The solution, worked out by Martin Ryle and colleagues at Cambridge in the 1950s (Nobel Prize 1974), is to not build the middle. Two antennas separated by a <em>baseline</em> B, with their signals combined, respond to the sky like Young\'s two slits in reverse: the output oscillates — produces <em>fringes</em> — as a source moves through the pattern, with an angular fringe spacing of λ/B. The pair resolves structure on the scale'),
+        eq('\\theta \\approx \\frac{\\lambda}{B}', 'Resolution of an interferometer. Two 25 m dishes 35 km apart (the VLA in its widest configuration) at 21 cm: 1.2″ — the same as a 35 km dish, with a millionth of the collecting area. The sensitivity is that of the dishes; the resolution is that of the baseline.'),
+        p('One baseline measures one <em>spatial frequency</em> of the sky brightness — one Fourier component. Many baselines, of different lengths and orientations, measure many components; and the Earth\'s rotation slowly swings every baseline around as seen from the source, sweeping out arcs in the "uv plane". Record for twelve hours, Fourier-transform the lot, and you have an image as though from a filled dish the size of the array: <em>aperture synthesis</em>. This is how the VLA, ALMA, MeerKAT and LOFAR make pictures.'),
+        p('The widget starts with two dishes. Change the baseline and the wavelength and watch the fringe pattern on the sky tighten; move the source and watch the fringes shift; make the source larger than a fringe and the fringes wash out — that is how Michelson measured the diameter of Betelgeuse in 1920 with two mirrors on a beam across the 2.5 m Hooker telescope. Then press play to let the Earth rotate and watch the uv coverage fill in.'),
+        p('With atomic clocks the signals need not even be combined in real time. In <em>very long baseline interferometry</em> (VLBI) each station records the raw voltages with a hydrogen-maser timestamp; the tapes — now disks — are correlated later. Baselines become intercontinental, and the resolution reaches milli- and micro-arcseconds. The Event Horizon Telescope joined eight millimetre-wave observatories from Hawaii to the South Pole into an Earth-sized aperture at 1.3 mm: θ ≈ λ/B = 1.3×10⁻³/1.3×10⁷ ≈ 10⁻¹⁰ rad = 20 micro-arcseconds, enough to resolve the 50 µas shadow of the black hole at the centre of the scene.'),
+        key('Resolution comes from the <em>longest</em> separation between collecting elements, not from their size. That principle — the same wave physics as diffraction, run backwards — is why radio astronomy, which started with the worst resolution of any branch of astronomy, now has the best. Optical interferometers (VLTI, CHARA) do the same with baselines of a few hundred metres, limited by the difficulty of keeping optical paths equal to a fraction of a micron.'),
+      ],
+    },
+    {
+      id: 'radio-summary',
+      kicker: 'Summary',
+      title: 'Radio astronomy in brief',
+      scene: [backdrop()],
+      body: [
+        table(
+          ['Facility', 'Type', 'λ / ν', 'Resolution', 'Known for'],
+          [
+            ['Green Bank (GBT)', '100 m single dish', '3 mm – 3 m', '~9′ at 21 cm', 'Pulsars, molecules, HI'],
+            ['FAST (China)', '500 m fixed dish', '10 cm – 4 m', '~3′', 'Pulsars, fast radio bursts'],
+            ['VLA', '27 × 25 m, 36 km', '0.7 – 400 cm', '0.04″ – 1′', 'Imaging of jets, SNRs, HI in galaxies'],
+            ['ALMA', '66 × 12/7 m, 16 km', '0.3 – 3.6 mm', '0.01″', 'Protoplanetary discs, molecular gas'],
+            ['LOFAR', '~50 000 dipoles, 2000 km', '1.3 – 30 m', '~1″', 'Low-frequency sky, pulsars'],
+            ['EHT', '8+ sites, Earth-size', '1.3 mm', '20 µas', 'Black-hole shadows'],
+            ['SKA (building)', '~200 dishes + 130 000 dipoles', '2 cm – 6 m', '< 0.1″', 'Cosmic dawn, HI surveys'],
+          ],
+          'A selection of radio observatories. Resolution follows λ/B; sensitivity follows collecting area and system temperature.',
+        ),
+        summary(
+          'Jansky (1932): Galactic radio noise with a 23 h 56 m period — the sidereal clue to an extraterrestrial source.',
+          'Dishes focus like mirrors; the surface need only be good to λ/20; beam width ≈ 1.2 λ/D is poor for a single dish.',
+          'Spectral flux density S_ν in janskys: 1 Jy = 10⁻²⁶ W m⁻² Hz⁻¹; P = S_ν A Δν. Receivers are cooled; T_sys is the figure of merit.',
+          'Interferometry: θ ≈ λ/B; aperture synthesis uses many baselines and the Earth\'s rotation to make images; VLBI reaches micro-arcseconds.',
+        ),
+      ],
+    },
+  ],
+};
+
+const S6_4: Section = {
+  id: 'beyond-visible',
+  number: '6.4',
+  title: 'Infrared, Ultraviolet, X-ray and Gamma-Ray Astronomy',
+  summary: 'The atmosphere lets through only two windows; opening the rest meant mountains, balloons, aircraft and finally orbit — and a different kind of telescope for every band.',
+  minutes: 30,
+  steps: [
+    {
+      id: 'atmosphere',
+      kicker: 'Interactive · the problem',
+      title: 'Windows in the atmosphere',
+      widget: { type: 'atmwindow' },
+      scene: [goto('earth'), rate(1)],
+      body: [
+        p('The air is transparent to the light our eyes evolved in and to radio waves between about 1 cm and 10 m. For everything else it is a wall. Ozone, 20–30 km up, absorbs the ultraviolet below 300 nm; molecular oxygen and nitrogen take everything shortward of 100 nm, X-rays and gamma rays included. Water vapour and carbon dioxide blanket most of the infrared from 1 µm to 1 mm, leaving a few narrow windows — the J, H, K, L, M, N and Q bands of infrared astronomers — that depend on how dry the air above you is. Below 10–15 MHz (λ > 20–30 m) the ionosphere reflects radio waves back into space.'),
+        p('The widget plots the transmission from the top of the atmosphere to an altitude you choose. Climb from sea level to Mauna Kea (4200 m, above 40% of the air and 90% of the water vapour), to an aircraft at 13 km (SOFIA flew a 2.7 m telescope through a hole in a Boeing 747), to a balloon at 40 km (above 99.7% of the atmosphere; good enough for hard X-rays and the far infrared), and finally to orbit. Watch the windows open one by one. Note which bands open last: only space works for the far ultraviolet, soft X-rays and gamma rays — and for the long-wavelength radio sky that the ionosphere hides.'),
+        table(
+          ['Band', 'Wavelength / energy', 'Blocked by', 'Where to observe'],
+          [
+            ['Radio', '1 cm – 10 m', 'Ionosphere below 10 MHz; water vapour above 20 GHz', 'Ground (dry high sites for mm)'],
+            ['Far infrared / sub-mm', '30 µm – 1 mm', 'Water vapour', 'Aircraft, balloon, space (Herschel, Spitzer)'],
+            ['Near / mid infrared', '1 – 30 µm', 'H₂O, CO₂ (windows at 1.25, 1.65, 2.2, 3.5, 10, 20 µm)', 'High mountains; space for the gaps (JWST)'],
+            ['Visible', '300 – 1100 nm', 'Clouds, seeing, light pollution', 'Ground; space for sharpness'],
+            ['Ultraviolet', '10 – 300 nm', 'Ozone (< 300 nm), O₂, N₂ (< 200 nm)', 'Space only (Hubble, GALEX, FUSE)'],
+            ['X-ray', '0.1 – 100 keV', 'Whole atmosphere (a few g cm⁻² is opaque)', 'Space (Chandra, XMM, NuSTAR); balloons above 20 keV'],
+            ['Gamma', '> 100 keV', 'Atmosphere; but air showers are visible from the ground above ~50 GeV', 'Space (Fermi, INTEGRAL); ground Cherenkov arrays (H.E.S.S., CTA)'],
+          ],
+        ),
+        key('Where you observe from is as much a part of the telescope as its mirror. The Earth in the scene, seen from outside, has a transparent skin a few tens of kilometres thick; most of the electromagnetic spectrum never reaches the ground, and most of the history of astronomy was done through two narrow windows in it.'),
+      ],
+    },
+    {
+      id: 'infrared',
+      kicker: 'Interactive · heat',
+      title: 'Infrared: a telescope that glows',
+      widget: { type: 'irthermal' },
+      scene: [goto('jwst'), rate(1)],
+      body: [
+        p('William Herschel discovered infrared light in 1800 with a thermometer placed beyond the red end of a solar spectrum. The band is where cool things shine: Wien\'s law puts the peak of a 300 K body at 10 µm, of a 30 K dust cloud at 100 µm, of a protostar still wrapped in its envelope at a few microns. It is also where dust stops hiding things — the grains that blacken the Milky Way in visible light are smaller than infrared wavelengths and let it pass — and where the light of the first galaxies, redshifted by a factor of ten or more, has ended up.'),
+        p('The difficulty is built into the first sentence: everything at 300 K glows at 10 µm, including the telescope, the dome, the air and the detector. Observing a faint infrared source from the ground is like observing a faint star in daylight with a luminous telescope. The widget shows the Planck curve of the telescope beside that of a target; slide the telescope temperature down and watch its own emission drop out of the band of interest.'),
+        eq('\\lambda_{\\max} T = 2.898 \\times 10^{-3}\\ \\text{m K}', 'Wien\'s law. 300 K → 9.7 µm; 77 K (liquid nitrogen) → 38 µm; 40 K (JWST passive) → 72 µm; 4 K (liquid helium) → 0.7 mm. To push the telescope\'s own glow out of the mid-infrared it must be cooled to tens of kelvin; the detectors must be colder still, 7 K for JWST\'s MIRI.'),
+        list(
+          '<b>Ground</b>: near-infrared through the atmospheric windows, with the telescope at ambient temperature and the sky background subtracted by rapidly "chopping" between source and blank sky. Adaptive optics works best here (r₀ grows as λ^(6/5)).',
+          '<b>Cooled space telescopes</b>: IRAS (1983) surveyed the whole sky at 12–100 µm in ten months with 73 kg of superfluid helium; Spitzer (2003) and Herschel (2009, 3.5 m, the largest mirror in space until JWST) did the same, each until its coolant ran out.',
+          '<b>JWST</b> (2022), in the scene: a 6.5 m gold-coated segmented mirror kept at 40 K not by cryogen but by a five-layer sunshield the size of a tennis court, parked at the Sun–Earth L₂ point 1.5 million km away so that Sun, Earth and Moon are always on the same side. It covers 0.6–28 µm and sees galaxies at z > 13.',
+        ),
+        p('Detectors differ too. Visible CCDs are silicon, which goes transparent beyond 1.1 µm. The infrared uses mercury-cadmium-telluride (to 5 µm) and arsenic-doped silicon (to 28 µm) arrays, and in the far infrared and sub-millimetre, <em>bolometers</em> — tiny absorbers whose temperature rise is read out by superconducting thermometers at 0.1 K.'),
+        note('Herschel\'s original thermometer was a detector with a time constant of minutes and a sensitivity of a few millikelvin. JWST\'s MIRI detects a change of a few electrons per hour per pixel, corresponding to a temperature contrast between pixels of micro-kelvin. The physics of the measurement — a warm thing radiates — has not changed since 1800; the engineering has gained about fifteen orders of magnitude.', 'From thermometer to MIRI'),
+      ],
+    },
+    {
+      id: 'ultraviolet',
+      kicker: 'Concept · hot',
+      title: 'Ultraviolet: the hot universe, from orbit only',
+      scene: [goto('l-30dor', 'landmark'), rate(1)],
+      body: [
+        p('Shortward of 300 nm nothing reaches the ground; shortward of 91.2 nm — the Lyman limit, the energy that ionises hydrogen (Chapter 5) — the interstellar gas itself becomes opaque and even space telescopes see only a few hundred light-years. Between those limits lies the band where the hottest stars put out most of their light: O and B stars of 20 000–50 000 K, white dwarfs, accretion discs around compact objects, the coronae of stars like the Sun. The Tarantula Nebula in the scene, lit by the most massive stars known, is at its most luminous here.'),
+        p('The ultraviolet is also the spectroscopist\'s band. The resonance lines of the common ions — C IV, Si IV, N V, O VI, Mg II, the Lyman series of hydrogen — are all between 100 and 300 nm. They trace the hot gas in stellar winds, the warm gas in the halo of the Milky Way seen in absorption against quasars, and the chemistry of the intergalactic medium along every sightline through the universe.'),
+        timeline([
+          { when: '1946', title: 'V-2 rockets', text: 'First ultraviolet spectrum of the Sun, from a captured German rocket over New Mexico. A few minutes above the ozone per flight.' },
+          { when: '1972–81', title: 'Copernicus (OAO-3)', text: 'UV spectroscopy of interstellar molecular hydrogen and deuterium.' },
+          { when: '1978–96', title: 'IUE', text: 'The International Ultraviolet Explorer: 18 years in geosynchronous orbit, 104 000 spectra, the most productive astronomical satellite of its era.' },
+          { when: '1990–', title: 'Hubble', text: 'Imaging and spectroscopy from 115 nm; the COS and STIS spectrographs are its most oversubscribed instruments.' },
+          { when: '1999–2007', title: 'FUSE', text: 'Far ultraviolet, 90–120 nm; O VI in the Galactic halo, deuterium abundances.' },
+          { when: '2003–13', title: 'GALEX', text: 'All-sky survey at 150 and 230 nm: star formation histories of a billion galaxies.' },
+        ]),
+        p('Ultraviolet optics are conventional — mirrors work, down to about 100 nm with special coatings (aluminium with a thin layer of magnesium fluoride or lithium fluoride; bare aluminium oxidises within minutes and goes blind in the far UV). Lenses do not: glass is opaque below 350 nm, and only exotic crystals (CaF₂, LiF) transmit further. Detectors are photocathodes and microchannel plates counting individual photons, or CCDs thinned and coated to respond at short wavelengths. The problem with the ultraviolet was never the instrument; it was the 20 km of ozone between the instrument and the sky.'),
+        key('Each band selects a temperature. Radio: cold gas and relativistic electrons. Infrared: dust, protostars, 10–1000 K. Visible: stellar photospheres, 3000–10 000 K. Ultraviolet: the hottest stars and accretion, 10⁴–10⁵ K. X-rays: gas at millions of kelvin. The full spectrum is a thermometer running from 3 K to 10⁹ K, and no single telescope reads more than two or three decades of it.'),
+      ],
+    },
+    {
+      id: 'xray',
+      kicker: 'Interactive · grazing',
+      title: 'X-rays: mirrors that light skims like a stone',
+      widget: { type: 'grazing' },
+      scene: [goto('l-m1', 'landmark'), rate(1)],
+      body: [
+        p('X-ray photons of 0.1–10 keV are absorbed within a few microns of any solid, and pass through a mirror hit face-on as if it were not there. Ordinary focusing is impossible. The first X-ray astronomy, from rockets (Giacconi, 1962: Scorpius X-1, and a bright X-ray background nobody expected) and from the Uhuru satellite (1970), used no optics at all: collimators that restricted the field of view to a degree or so, and proportional counters behind them.'),
+        p('There is one way to make X-rays reflect. At very shallow <em>grazing incidence</em> — less than a degree from the surface — the index of refraction of a metal for X-rays is slightly <em>less</em> than one, and total external reflection occurs, as it does for light leaving glass. The critical angle depends on the density of the coating and falls with photon energy:'),
+        eq('\\theta_c \\approx 3.6^\\circ\\,\\sqrt{\\frac{\\rho}{19\\ \\text{g cm}^{-3}}}\\;\\frac{1\\ \\text{keV}}{E}', 'Critical grazing angle for a gold or iridium coating. About 3.6° at 1 keV, 0.5° at 7 keV. Harder X-rays need shallower angles — or multilayer coatings that reflect by Bragg interference, which is how NuSTAR reaches 79 keV.'),
+        p('Hans Wolter showed in 1952 how to make an image with two such reflections: a paraboloid followed by a hyperboloid, both shaped like the inside of a slightly tapered tube, so that light grazing the first is brought to a focus by the second. Because each shell collects only a thin annulus, many shells are nested one inside another like Russian dolls. The widget fires photons at a nested Wolter mirror; change the energy and the angle and watch the reflectivity collapse past the critical angle. The readout gives the fraction of photons that make it to the focus.'),
+        list(
+          '<b>Chandra</b> (1999): four nested iridium-coated shells, the largest 1.2 m, polished to 0.3 nm roughness — the smoothest mirrors ever made — giving 0.5″ images, as sharp as a ground-based optical telescope. Collecting area only 0.08 m².',
+          '<b>XMM-Newton</b> (1999): three modules of 58 thin gold-coated nickel shells each; 15″ images but 0.43 m² — five times Chandra\'s area, for spectroscopy.',
+          '<b>NuSTAR</b> (2012): 133 shells of multilayer-coated glass per module, on a 10 m mast, focusing 3–79 keV for the first time.',
+          '<b>eROSITA</b> (2019): seven mirror modules; mapped the whole sky in X-rays eight times deeper than ROSAT.',
+        ),
+        p('The Crab Nebula in the scene is the X-ray astronomer\'s standard candle: so steady that fluxes are quoted in "milliCrab". Its X-rays are synchrotron radiation from electrons accelerated by the pulsar at its centre — the same mechanism as the radio emission of Section 6.3, from the same object, five decades of wavelength apart.'),
+        note('Behind the mirror sit CCDs much like optical ones but operated so that each X-ray photon releases hundreds of electrons: the charge measures the photon\'s <em>energy</em>. An X-ray CCD is thus imager and spectrometer at once — every photon comes with its colour. The next step, flown on XRISM (2023), is the microcalorimeter: a pixel cooled to 50 mK whose temperature jumps when a single photon lands, giving the energy to 1 part in a thousand.', 'Detectors that count photons'),
+      ],
+    },
+    {
+      id: 'gamma',
+      kicker: 'Interactive · particles',
+      title: 'Gamma rays: when the telescope is a particle detector',
+      widget: { type: 'gammadetect' },
+      scene: [goto('b0', 'blackhole'), rate(1)],
+      body: [
+        p('Above about 100 keV even grazing incidence fails; a gamma-ray photon does not reflect, it collides. The "telescope" becomes a particle physics experiment that records what the photon does to matter — the interactions of Chapter 5 — and reconstructs its direction from the debris. Which interaction depends on the energy, so there are four quite different instruments. The widget animates each; set the energy and see which technique the photon selects.'),
+        terms(
+          ['Coded mask (0.02–10 MeV)', 'A pinhole camera for the hard X-ray / soft gamma sky: a patterned mask of tungsten tiles casts a shadow on a position-sensitive detector; the shadow pattern is decoded to find the sources. INTEGRAL, Swift-BAT (which locates gamma-ray bursts within seconds, and triggered the 2017 kilonova follow-up).'],
+          ['Compton telescope (0.3–30 MeV)', 'The photon Compton-scatters in a first detector layer, depositing some energy, and is absorbed in a second. The scattering angle follows from the energies (Compton\'s formula), constraining the source to a circle on the sky; many photons, many circles, one intersection. COMPTEL on CGRO; the planned COSI mission.'],
+          ['Pair-conversion (20 MeV–300 GeV)', 'Above 1.022 MeV the photon can turn into an electron–positron pair in a thin tungsten foil; the pair\'s tracks through layers of silicon strips point back to the source, and a calorimeter below measures their total energy. Fermi-LAT (2008–) scans the whole sky every three hours and has catalogued 6000 sources: pulsars, blazars, supernova remnants, and the "Fermi bubbles" blown out of the Galactic Centre in the scene.'],
+          ['Atmospheric Cherenkov (50 GeV–100 TeV)', 'At the highest energies photons are too rare for a satellite — one per square metre per year — but each one striking the upper atmosphere makes a shower of billions of particles, which emit a 5-nanosecond flash of blue Cherenkov light over a 250 m-wide pool on the ground. Arrays of 10–28 m mirrors with fast cameras (H.E.S.S., MAGIC, VERITAS, and the coming Cherenkov Telescope Array) image the flash and reconstruct the primary\'s direction to 0.1°. The atmosphere, the enemy of every other band, has become the detector.'],
+        ),
+        p('Gamma-ray astronomy began as a by-product of the Cold War: the Vela satellites, launched in 1967 to detect clandestine nuclear tests, instead recorded brief flashes of gamma rays from random directions in the sky — <em>gamma-ray bursts</em>, declassified in 1973 and traced thirty years later to the collapse of massive stars and the merger of neutron stars in galaxies billions of light-years away. For a few seconds a burst outshines the rest of the gamma-ray universe combined.'),
+        key('Angular resolution degrades steadily up the spectrum — 0.5″ for Chandra, arcminutes for INTEGRAL, 0.1–1° for Fermi — because the instruments no longer focus; they reconstruct. In exchange they see the most violent processes in the universe directly: particle acceleration, antimatter, nuclear lines from freshly made radioactive elements. The thermometer of the previous step runs off its scale here; gamma rays are not about temperature at all.'),
+      ],
+    },
+    {
+      id: 'multiwavelength',
+      kicker: 'Interactive · synthesis',
+      title: 'One galaxy, seven skies',
+      widget: { type: 'multiview' },
+      scene: [backdrop()],
+      body: [
+        p('Put the bands together and the same object becomes several. The widget shows a schematic spiral galaxy as each kind of telescope sees it. In radio continuum, a smooth disc of synchrotron emission from cosmic-ray electrons spiralling in the galaxy\'s magnetic field, with jets if the central black hole is active; at 21 cm, the cold atomic hydrogen extending far beyond the stars. In the far infrared, the dust lanes that were dark in visible light are the brightest feature, re-radiating the light of hidden young stars. In the near infrared, the old stars that hold most of the mass, with the dust transparent. In the visible, the familiar picture. In the ultraviolet, only the knots of hot young stars in the arms. In X-rays, a halo of million-degree gas and a sprinkle of accreting binaries. In gamma rays, almost nothing — a few pulsars and the diffuse glow of cosmic rays hitting gas.'),
+        p('No single picture is "what the galaxy looks like". Each is a map of one physical process — one temperature, one population, one mechanism — and the astrophysics of Chapters 24–26 is read off by comparing them pixel by pixel.'),
+        table(
+          ['Observatory', 'Band', 'Aperture / technique', 'Launched', 'Resolution'],
+          [
+            ['Hubble', 'UV – near IR, 115 nm – 2.5 µm', '2.4 m Ritchey–Chrétien', '1990', '0.05″'],
+            ['Chandra', 'X-ray, 0.1 – 10 keV', '4 nested Wolter-I shells, 1.2 m', '1999', '0.5″'],
+            ['XMM-Newton', 'X-ray, 0.1 – 12 keV', '3 × 58 nested shells', '1999', '6″ (15″ HEW)'],
+            ['Spitzer', 'IR, 3.6 – 160 µm', '0.85 m, He-cooled to 5.5 K', '2003 (–2020)', '2″'],
+            ['Fermi', 'Gamma, 20 MeV – 300 GeV', 'Pair-conversion tracker', '2008', '0.1 – 1°'],
+            ['Herschel', 'Far IR, 55 – 672 µm', '3.5 m, He-cooled', '2009 (–2013)', '6″'],
+            ['Planck', 'Microwave, 0.3 – 10 mm', '1.5 m off-axis Gregorian', '2009 (–2013)', '5′'],
+            ['Gaia', 'Visible, astrometry', '2 × 1.45 × 0.5 m', '2013 (–2025)', '20 µas positions'],
+            ['JWST', 'IR, 0.6 – 28 µm', '6.5 m segmented, 40 K', '2021', '0.07″'],
+            ['Euclid', 'Visible + near IR survey', '1.2 m Korsch', '2023', '0.2″'],
+          ],
+          'The current fleet of space observatories. Note how aperture, cooling and technique change across the spectrum.',
+        ),
+        summary(
+          'Two atmospheric windows (visible, radio); the rest needs altitude or orbit.',
+          'Infrared: cool objects and dust; the telescope glows and must be cooled (JWST: 40 K passive, L₂, sunshield).',
+          'Ultraviolet: hot stars and resonance lines; conventional mirrors, special coatings, space only.',
+          'X-ray: grazing-incidence Wolter mirrors (θ_c ∝ 1/E), nested shells; photon-counting CCDs give energy for free.',
+          'Gamma: no focusing — coded masks, Compton telescopes, pair trackers, and Cherenkov arrays that use the atmosphere.',
+        ),
+      ],
+    },
+  ],
+};
+
+const S6_5: Section = {
+  id: 'surveys',
+  number: '6.5',
+  title: 'All-Sky Surveys and Virtual Observatories',
+  summary: 'From glass plates to petabytes: how the whole sky came to be mapped at every wavelength, and how the archives became a telescope in their own right.',
+  minutes: 20,
+  steps: [
+    {
+      id: 'all-sky',
+      kicker: 'Interactive · the whole sky',
+      title: 'Mapping everything',
+      widget: { type: 'skymap' },
+      scene: [backdrop()],
+      body: [
+        p('Targeted observations answer questions you already have. Surveys find the questions. The first was photographic: the Palomar Observatory Sky Survey (1949–58) covered the northern sky on 1872 pairs of 14-inch glass plates with the 1.2 m Schmidt, reaching 21st magnitude; astronomers worked from its prints for forty years, and quasars, dwarf galaxies and the first brown-dwarf candidates were found by people staring at them. Its digitised successor and the southern surveys from Siding Spring and ESO became the first all-sky image database.'),
+        p('Since then the whole sky has been surveyed in almost every band, and the widget lets you page through them in galactic coordinates — the Mollweide oval with the plane of the Milky Way across the middle and its centre at the origin. Each map is a different universe: synchrotron and HI in the radio, dust in the far infrared, stars in the near infrared, hot gas in X-rays, cosmic-ray collisions in gamma rays. Move the cursor across to compare the same direction in each.'),
+        table(
+          ['Survey', 'Band', 'Years', 'Yield'],
+          [
+            ['POSS I / II, ESO-SRC', 'Photographic, blue & red', '1949–2000', 'Whole sky to m ≈ 21–22 on plates'],
+            ['Haslam 408 MHz; HI4PI', 'Radio continuum; 21 cm', '1982; 2016', 'Synchrotron sky; Galactic hydrogen in 3-D'],
+            ['IRAS; AKARI', 'Infrared 12–100 µm', '1983; 2006', '350 000 sources; the dust "cirrus"'],
+            ['ROSAT; eROSITA', 'Soft X-ray', '1990–91; 2019–22', '150 000 → ~1 million X-ray sources'],
+            ['2MASS', 'Near IR, J H K', '1997–2001', '470 million point sources; 1.6 million galaxies'],
+            ['SDSS', 'Optical ugriz + spectra', '2000–', '1/3 of the sky; > 4 million spectra; the cosmic web'],
+            ['WMAP; Planck', 'Microwave', '2001–10; 2009–13', 'The cosmic microwave background to 5′'],
+            ['WISE', 'Mid IR 3.4–22 µm', '2010–', '750 million sources; brown dwarfs, luminous dusty galaxies'],
+            ['Fermi-LAT', 'Gamma, 20 MeV – 300 GeV', '2008–', 'Whole sky every 3 h; 6000+ sources'],
+            ['Gaia', 'Astrometry, photometry, spectra', '2014–25', 'Positions, motions and distances of ~2 billion stars'],
+            ['Pan-STARRS; ZTF', 'Optical, time-domain', '2010–; 2018–', 'The variable sky nightly; asteroids, supernovae'],
+            ['Rubin / LSST', 'Optical ugrizy, time-domain', '2025–35', '20 TB per night; 37 billion objects; 10 million alerts a night'],
+            ['SKA', 'Radio', '2029–', 'HI to z ~ 2; 600 PB per year'],
+          ],
+          'All-sky and large-area surveys, band by band.',
+        ),
+        key('Surveys change the <em>kind</em> of astronomy that is done. Once every object in the sky has a measured brightness, colour, position and motion, questions are answered by querying rather than observing: how many white dwarfs are there within 100 pc? Which stars share Gaia\'s velocities with the Hyades? What fraction of galaxies at z = 0.5 are red? The telescope has become a database, and the database a telescope.'),
+      ],
+    },
+    {
+      id: 'data',
+      kicker: 'Interactive · scale',
+      title: 'The data deluge',
+      widget: { type: 'datagrowth' },
+      scene: [goto('earth'), rate(1)],
+      body: [
+        p('A photographic plate holds the equivalent of a gigabyte and took a night to expose and a day to develop. A modern survey camera reads out a few gigabytes every fifteen seconds. The widget plots the data volume of major surveys against time, on a logarithmic axis: the slope is roughly a factor of ten per decade, matching the growth of detector pixels and of the computers needed to digest them. Slide the year marker; the readout tells you how long it would take to move each archive over a connection of your choosing.'),
+        list(
+          '<b>SDSS</b> (2000–): 40 TB of images and spectra after a decade; its public data releases are the most cited data set in astronomy.',
+          '<b>Pan-STARRS</b> (2010–): 2 PB; 1.6 billion objects; the first catalogue that would not fit on any single institute\'s disk.',
+          '<b>Gaia</b> (2014–25): 1 PB of raw telemetry processed by a consortium of 450 people into a catalogue of 1.8 billion stars with positions to 20 micro-arcseconds.',
+          '<b>Rubin Observatory</b> (2025–): 20 TB per night, 500 PB over the ten-year survey; each image compared with a template within 60 seconds to issue up to 10 million alerts a night for anything that moved or changed.',
+          '<b>SKA</b> (2029–): raw data rates of petabits per second at the antennas, reduced on site to ~600 PB per year of archive — more than the global internet carried in 2000.',
+        ),
+        p('The consequence is that the data cannot be looked at. Every object in Rubin\'s sky will be measured a thousand times, and no human will see most of the images. Classification, outlier detection, the triage of alerts, and the photometric redshifts of billions of galaxies are done by software — increasingly by machine-learning models trained on the surveys themselves. The astronomer\'s craft is shifting from observing to <em>asking the right question of the archive</em>, and to writing code that can be trusted on data it has never seen.'),
+        think('A survey measures everything in its footprint to its limiting magnitude, with no selection by a human. That removes one kind of bias (you no longer study only the objects that interested you) and introduces others (flux limits, resolution limits, crowding, the seasons and latitude of the site). Malmquist bias — the preferential inclusion of luminous objects at large distances in any flux-limited sample — was named in 1922 and is as dangerous in a petabyte catalogue as in a plate. Before trusting any statistic from a survey, ask: what could this survey <em>not</em> have seen?', 'Selection effects'),
+      ],
+    },
+    {
+      id: 'virtual-observatory',
+      kicker: 'Interactive · the archive as telescope',
+      title: 'The Virtual Observatory',
+      widget: { type: 'crossmatch' },
+      scene: [goto('l-47tuc', 'landmark'), rate(1)],
+      body: [
+        p('Every survey is a different format, a different coordinate convention, a different photometric system, on a different server. By 2000 it was clear that the science lay in combining them — an infrared colour with an X-ray flux with a Gaia distance — and that this would not happen unless the archives agreed on how to talk. The International Virtual Observatory Alliance (2002) defined the standards: FITS and VOTable for data, Simple Cone Search and TAP/ADQL for queries, SAMP for passing results between tools, and registries that let a program discover every catalogue covering a given point of sky.'),
+        p('The practical result is that a student at a laptop can, in an afternoon, retrieve every observation ever archived of a given object across the spectrum (SIMBAD, VizieR, NED, MAST, ESASky), plot them together (Aladin, TOPCAT), and cross-match million-row catalogues on the CDS servers in seconds. The "Virtual Observatory" is not a place; it is the set of protocols that makes the world\'s archives behave like one instrument — and a good fraction of today\'s papers are written without anyone applying for telescope time.'),
+        p('The elementary operation is the <em>cross-match</em>, and it is less trivial than it sounds. The widget shows two catalogues of the same field — say Chandra X-ray sources (yellow, with their larger position errors) and Gaia stars (blue) in the globular cluster of the scene, 47 Tucanae. Drag the match radius: too small and real counterparts are missed; too large and every X-ray source finds a chance star. The readout counts true matches, false matches and the completeness, and the right radius depends on the positional errors <em>and</em> on the source density, which in a cluster core is ferocious. A careful astronomer quotes the probability of a chance match, not just the match.'),
+        eq('P_{\\text{chance}} \\approx 1 - e^{-\\pi r^2 \\Sigma} \\approx \\pi r^2 \\Sigma', 'Probability that an unrelated source of surface density Σ lies within radius r of a given position. With Σ = 10 stars per square arcminute and r = 1″, P ≈ 0.9%; in a cluster core with Σ = 1000, P ≈ 60% — a match is nearly meaningless without more information (colour, variability, proper motion).'),
+        key('Data from telescopes are now a permanent public resource; by policy nearly all space-mission and most ground-based data become public within a year. The Virtual Observatory makes that resource usable, and in doing so has made the archive the most productive telescope on Earth: more Hubble papers are now written from archival data than from new observations.'),
+      ],
+    },
+    {
+      id: 'telescopes-close',
+      kicker: 'Chapter close',
+      title: 'Telescopes in one page',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Aperture gathers light ∝ D² and sets the diffraction limit θ = 1.22 λ/D; focal length sets the image scale 206 265/f ″/mm; magnification is an afterthought.',
+          'Refraction (Snell) and reflection build lenses and mirrors; chromatic aberration doomed the big refractor; Cassegrain-type reflectors on alt-az mounts with active and adaptive optics are the modern form.',
+          'The atmosphere blurs (seeing, ~1″) and blocks (two windows). Adaptive optics, mountain sites and space are the answers.',
+          'Radio: dishes with poor single-dish resolution; interferometry θ ≈ λ/B and aperture synthesis; flux density in janskys.',
+          'Infrared telescopes must be cold; ultraviolet needs orbit; X-rays need grazing incidence; gamma rays need particle detectors or the atmosphere itself.',
+          'Surveys at every wavelength and the Virtual Observatory have turned the archive into an instrument; the limiting factor is increasingly software, not glass.',
+        ),
+        key('For the rest of this course, when a measurement is quoted — a parallax, a spectrum, a light curve, a radio map — ask which telescope made it and what that telescope could and could not do. The resolution, the depth, the wavelength and the selection of every data set are set in this chapter, and so are the error bars.'),
+        { kind: 'callout', tone: 'history', title: 'Suggested reading', html: 'Harland & Miller (eds.), <em>Telescopes and Techniques</em>; Ian S. McLean, <em>Electronic Imaging in Astronomy</em> (2nd ed., 2008) for detectors; Kitchin, <em>Astrophysical Techniques</em> (7th ed., 2020) for everything; Burke, Graham-Smith & Wilkinson, <em>An Introduction to Radio Astronomy</em> (4th ed., 2019); Hardy, <em>Adaptive Optics for Astronomical Telescopes</em>. For history: Henry C. King, <em>The History of the Telescope</em> (1955, Dover); Ronald Florence, <em>The Perfect Machine</em> (1994) on the building of the 200-inch; Woodruff Sullivan, <em>Cosmic Noise</em> (2009) on the birth of radio astronomy; Robert Zimmerman, <em>The Universe in a Mirror</em> (2008) on Hubble. The ESO, NASA and NRAO web sites document every current facility.' },
+        { kind: 'callout', tone: 'think', title: 'Problems to try', html: '(1) Compare the light-gathering power of the 39 m ELT with that of the dark-adapted eye, and with Hubble. Express the gain over the eye in magnitudes. (2) Find the diffraction-limited resolution of the ELT at 550 nm and at 2.2 µm, and compare with the 0.6″ seeing at Cerro Armazones. How large must r₀ be for the ELT to be seeing-limited at 2.2 µm? (3) A 28 cm f/10 Schmidt–Cassegrain has a focal length of 2800 mm. Find the plate scale, the field of view on a 4.8 mm × 3.6 mm planetary camera sensor, and the magnification with a 9 mm eyepiece. Is the latter useful? (4) The Arecibo dish was 305 m across but only ~220 m was illuminated at any time. Find the beam width at 21 cm and at 12.6 cm (the planetary radar). (5) A quasar has a flux density of 2 Jy at 1.4 GHz. Compute the power collected by a VLA dish (D = 25 m, efficiency 0.5) in a 50 MHz band, and the energy collected in a 12-hour track. (6) The EHT baseline from Hawaii to Spain is 10 700 km. Find its resolution at 1.3 mm and at 0.87 mm, and compare with the 42 µas shadow of M87*. (7) Chandra\'s iridium mirrors work to 10 keV. Using the critical-angle formula, estimate the grazing angle needed, and hence the maximum radius of a shell whose focal length is 10 m. (8) A one-degree Cherenkov air shower is seen by a telescope 120 m from the shower axis; estimate the time delay of the Cherenkov front across a 12 m mirror and comment on the camera speed required. (9) Rubin issues 10 million alerts a night. If a human spends 10 seconds on each, how many astronomers are needed working full-time? What does this imply about how alerts are handled?' },
+      ],
+    },
+  ],
+};
+
 export const COURSE: Course = {
   id: 'astrophysics',
   title: 'Introduction to Astrophysics',
@@ -2482,6 +3091,13 @@ export const COURSE: Course = {
       title: 'The Interaction of Light and Matter',
       summary: 'Spectral lines and Kirchhoff\'s laws, the photon, Bohr\'s atom, and the quantum mechanics that explains why every element has its own fingerprint in the light.',
       sections: [S5_1, S5_2, S5_3, S5_4],
+    },
+    {
+      id: 'ch6',
+      number: 6,
+      title: 'Telescopes',
+      summary: 'Light buckets and their limits; lenses, mirrors and mounts; radio dishes and interferometers; the infrared, ultraviolet, X-ray and gamma-ray sky from above the air; and the surveys and archives that now map everything.',
+      sections: [S6_1, S6_2, S6_3, S6_4, S6_5],
     },
   ],
 };

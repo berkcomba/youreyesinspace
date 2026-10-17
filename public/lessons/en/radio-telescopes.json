@@ -1,0 +1,488 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "dish": {
+   "script": "A radio telescope is an optical reflector built for wavelengths ten thousand to a million times longer than visible light. The paraboloidal dish gathers incoming plane waves and brings them to a focus, where a feed horn and a cryogenically cooled amplifier take the place of an eyepiece. A sub-reflector often folds the beam back, Cassegrain style, into receivers sitting in a cabin behind the dish. Because the wavelength is so long, the surface only has to be good to about a twentieth of a wavelength — a few millimetres at twenty-one centimetres — so the dish can be wire mesh and can stretch a hundred metres across, as at Effelsberg and Green Bank. At millimetre wavelengths, with ALMA, we again need surfaces accurate to twenty micrometres.\n\nDiffraction is the severe price of that long wavelength. The beam pattern on the sky is the Airy pattern we already know, only with lambda a million times larger. The resolution is the half-power beam width: theta HPBW is approximately 1.2 times lambda over D, or about four thousand one hundred times lambda over D when the angle is in arcminutes. Theta HPBW is the angle from the peak out to where the sensitivity has fallen by half; lambda is the wavelength and D the diameter. Diffraction sets the Airy scale to lambda over D, and the factor 1.2 simply marks the half-power points. On the hundred-metre Green Bank Telescope at twenty-one centimetres that beam is eight point six arcminutes; Arecibo reaches three point four; your eye manages one. A single dish is a very blurry instrument, and a good fraction of its energy leaks into side lobes that pick up the ground and the Sun.\n\nThe receiver records power per unit area per unit bandwidth, the spectral flux density S sub nu, in watts per square metre per hertz. Sources are so faint that we honour Jansky with a special unit: one jansky equals ten to the minus twenty-six watts per square metre per hertz. The power we actually collect is P equals S sub nu times A effective times delta nu — flux density times effective collecting area times bandwidth. A one-jansky source on the hundred-metre Effelsberg dish, area about seven thousand eight hundred fifty square metres at sixty percent efficiency, in a ten-megahertz band, delivers only about five times ten to the minus sixteen watts. All the energy ever gathered by every radio telescope in history is less than that of one falling snowflake. Detection works only because we cool the receiver to fifteen kelvin and integrate for minutes to hours; the figure of merit is the system temperature T sys, the temperature a resistor would need to produce the same noise.\n\nIn the widget, change the dish diameter and the wavelength. Watch the wavefronts converge on the feed, see the beam narrow or widen, and read the beam width, the collecting area and the power from a source of the flux you choose. Try twenty-one centimetres on a twenty-five-metre VLA-type dish, then one point three millimetres on a twelve-metre ALMA antenna. Look at Cassiopeia A behind the panel — about two thousand four hundred janskys at one gigahertz, the brightest thing in the sky after the Sun. A typical quasar is one jansky; surveys now reach microjanskys. A mobile phone on the Moon would be one of the brighter radio sources up there.",
+   "hash": "4915bdb18e29",
+   "duration": 195.51,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 7.68,
+     "text": "A radio telescope is an optical reflector built for wavelengths ten thousand to a million times longer than visible light."
+    },
+    {
+     "start": 7.68,
+     "end": 17.34,
+     "text": "The paraboloidal dish gathers incoming plane waves and brings them to a focus, where a feed horn and a cryogenically cooled amplifier take the place of an eyepiece."
+    },
+    {
+     "start": 17.34,
+     "end": 24.46,
+     "text": "A sub-reflector often folds the beam back, Cassegrain style, into receivers sitting in a cabin behind the dish."
+    },
+    {
+     "start": 24.46,
+     "end": 38.54,
+     "text": "Because the wavelength is so long, the surface only has to be good to about a twentieth of a wavelength — a few millimetres at twenty-one centimetres — so the dish can be wire mesh and can stretch a hundred metres across, as at Effelsberg and Green Bank."
+    },
+    {
+     "start": 38.54,
+     "end": 44.28,
+     "text": "At millimetre wavelengths, with ALMA, we again need surfaces accurate to twenty micrometres."
+    },
+    {
+     "start": 44.28,
+     "end": 47.58,
+     "text": "Diffraction is the severe price of that long wavelength."
+    },
+    {
+     "start": 47.58,
+     "end": 53.78,
+     "text": "The beam pattern on the sky is the Airy pattern we already know, only with lambda a million times larger."
+    },
+    {
+     "start": 53.78,
+     "end": 66.44,
+     "text": "The resolution is the half-power beam width: theta HPBW is approximately 1. 2 times lambda over D, or about four thousand one hundred times lambda over D when the angle is in arcminutes."
+    },
+    {
+     "start": 66.44,
+     "end": 75.02,
+     "text": "Theta HPBW is the angle from the peak out to where the sensitivity has fallen by half; lambda is the wavelength and D the diameter."
+    },
+    {
+     "start": 75.02,
+     "end": 81.92,
+     "text": "Diffraction sets the Airy scale to lambda over D, and the factor 1. 2 simply marks the half-power points."
+    },
+    {
+     "start": 81.92,
+     "end": 92.08,
+     "text": "On the hundred-metre Green Bank Telescope at twenty-one centimetres that beam is eight point six arcminutes; Arecibo reaches three point four; your eye manages one."
+    },
+    {
+     "start": 92.08,
+     "end": 99.25,
+     "text": "A single dish is a very blurry instrument, and a good fraction of its energy leaks into side lobes that pick up the ground and the Sun."
+    },
+    {
+     "start": 99.25,
+     "end": 108.07,
+     "text": "The receiver records power per unit area per unit bandwidth, the spectral flux density S sub nu, in watts per square metre per hertz."
+    },
+    {
+     "start": 108.07,
+     "end": 116.57,
+     "text": "Sources are so faint that we honour Jansky with a special unit: one jansky equals ten to the minus twenty-six watts per square metre per hertz."
+    },
+    {
+     "start": 116.57,
+     "end": 125.87,
+     "text": "The power we actually collect is P equals S sub nu times A effective times delta nu — flux density times effective collecting area times bandwidth."
+    },
+    {
+     "start": 125.87,
+     "end": 139.61,
+     "text": "A one-jansky source on the hundred-metre Effelsberg dish, area about seven thousand eight hundred fifty square metres at sixty percent efficiency, in a ten-megahertz band, delivers only about five times ten to the minus sixteen watts."
+    },
+    {
+     "start": 139.61,
+     "end": 145.87,
+     "text": "All the energy ever gathered by every radio telescope in history is less than that of one falling snowflake."
+    },
+    {
+     "start": 145.87,
+     "end": 158.23,
+     "text": "Detection works only because we cool the receiver to fifteen kelvin and integrate for minutes to hours; the figure of merit is the system temperature T sys, the temperature a resistor would need to produce the same noise."
+    },
+    {
+     "start": 158.23,
+     "end": 161.69,
+     "text": "In the widget, change the dish diameter and the wavelength."
+    },
+    {
+     "start": 161.69,
+     "end": 170.93,
+     "text": "Watch the wavefronts converge on the feed, see the beam narrow or widen, and read the beam width, the collecting area and the power from a source of the flux you choose."
+    },
+    {
+     "start": 170.93,
+     "end": 178.87,
+     "text": "Try twenty-one centimetres on a twenty-five-metre VLA-type dish, then one point three millimetres on a twelve-metre ALMA antenna."
+    },
+    {
+     "start": 178.87,
+     "end": 187.29,
+     "text": "Look at Cassiopeia A behind the panel — about two thousand four hundred janskys at one gigahertz, the brightest thing in the sky after the Sun."
+    },
+    {
+     "start": 187.29,
+     "end": 192.01,
+     "text": "A typical quasar is one jansky; surveys now reach microjanskys."
+    },
+    {
+     "start": 192.01,
+     "end": 195.51,
+     "text": "A mobile phone on the Moon would be one of the brighter radio sources up there."
+    }
+   ],
+   "voicedHash": "5f7edbebde33"
+  },
+  "interferometry": {
+   "script": "A one-arcsecond beam at twenty-one centimetres needs a fifty-kilometre dish. Martin Ryle and colleagues at Cambridge, in the nineteen-fifties, Nobel Prize nineteen seventy-four, showed we need not build the middle.\n\nTwo antennas a baseline B apart, signals combined, work like Young's two slits in reverse. Fringes appear, spaced by lambda over B, so the resolution is theta approximately equal to lambda over B. Theta is the angle we resolve, lambda the wavelength, B the separation — the same limit as a filled dish of size B.\n\nTwo twenty-five-metre dishes thirty-five kilometres apart, the VLA at its widest, give one point two arcseconds at twenty-one centimetres. Same as a thirty-five-kilometre dish, a millionth of the area. Sensitivity from the dishes, resolution from the baseline.\n\nOne baseline measures one Fourier component. Many lengths and orientations measure more, and Earth's rotation traces arcs in the uv plane. Twelve hours, Fourier-transformed, give us the image of a filled array-sized dish. Aperture synthesis: VLA, ALMA, MeerKAT, LOFAR.\n\nTry the widget. Change baseline and wavelength; fringes tighten. Move the source; fringes shift. Grow the source past a fringe and they wash out. That is Michelson in nineteen twenty, sizing Betelgeuse with two mirrors on the two-and-a-half-metre Hooker. Press play: Earth rotates, the uv plane fills, the view behind the panel flies out.\n\nAtomic clocks let us skip live combination. Very long baseline interferometry timestamps voltages with a hydrogen maser and correlates the disks later. Continents apart, we reach milliarcseconds and microarcseconds.\n\nThe Event Horizon Telescope joined eight stations, Hawaii to the South Pole, an Earth-sized aperture at one point three millimetres. Theta approximately lambda over B: one point three millimetres over thirteen thousand kilometres, about ten to the minus ten radians, twenty microarcseconds, enough for the fifty-microarcsecond shadow.\n\nResolution is the longest separation, not collector size — diffraction, run backwards. Radio astronomy went from the worst resolution to the best. VLTI and CHARA do it optically, baselines a few hundred metres, paths equal to a fraction of a micron.",
+   "hash": "84abe301d077",
+   "duration": 145.27,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 5.3,
+     "text": "A one-arcsecond beam at twenty-one centimetres needs a fifty-kilometre dish."
+    },
+    {
+     "start": 5.3,
+     "end": 13.92,
+     "text": "Martin Ryle and colleagues at Cambridge, in the nineteen-fifties, Nobel Prize nineteen seventy-four, showed we need not build the middle."
+    },
+    {
+     "start": 13.92,
+     "end": 20.58,
+     "text": "Two antennas a baseline B apart, signals combined, work like Young's two slits in reverse."
+    },
+    {
+     "start": 20.58,
+     "end": 28.16,
+     "text": "Fringes appear, spaced by lambda over B, so the resolution is theta approximately equal to lambda over B."
+    },
+    {
+     "start": 28.16,
+     "end": 36.34,
+     "text": "Theta is the angle we resolve, lambda the wavelength, B the separation — the same limit as a filled dish of size B."
+    },
+    {
+     "start": 36.34,
+     "end": 45.28,
+     "text": "Two twenty-five-metre dishes thirty-five kilometres apart, the VLA at its widest, give one point two arcseconds at twenty-one centimetres."
+    },
+    {
+     "start": 45.28,
+     "end": 49.22,
+     "text": "Same as a thirty-five-kilometre dish, a millionth of the area."
+    },
+    {
+     "start": 49.22,
+     "end": 53,
+     "text": "Sensitivity from the dishes, resolution from the baseline."
+    },
+    {
+     "start": 53,
+     "end": 55.82,
+     "text": "One baseline measures one Fourier component."
+    },
+    {
+     "start": 55.82,
+     "end": 61.68,
+     "text": "Many lengths and orientations measure more, and Earth's rotation traces arcs in the uv plane."
+    },
+    {
+     "start": 61.68,
+     "end": 67.04,
+     "text": "Twelve hours, Fourier-transformed, give us the image of a filled array-sized dish."
+    },
+    {
+     "start": 67.04,
+     "end": 72.26,
+     "text": "Aperture synthesis: VLA, ALMA, MeerKAT, LOFAR."
+    },
+    {
+     "start": 72.26,
+     "end": 73.37,
+     "text": "Try the widget."
+    },
+    {
+     "start": 73.37,
+     "end": 76.57,
+     "text": "Change baseline and wavelength; fringes tighten."
+    },
+    {
+     "start": 76.57,
+     "end": 78.83,
+     "text": "Move the source; fringes shift."
+    },
+    {
+     "start": 78.83,
+     "end": 81.63,
+     "text": "Grow the source past a fringe and they wash out."
+    },
+    {
+     "start": 81.63,
+     "end": 87.57,
+     "text": "That is Michelson in nineteen twenty, sizing Betelgeuse with two mirrors on the two-and-a-half-metre Hooker."
+    },
+    {
+     "start": 87.57,
+     "end": 93.85,
+     "text": "Press play: Earth rotates, the uv plane fills, the view behind the panel flies out."
+    },
+    {
+     "start": 93.85,
+     "end": 96.79,
+     "text": "Atomic clocks let us skip live combination."
+    },
+    {
+     "start": 96.79,
+     "end": 103.41,
+     "text": "Very long baseline interferometry timestamps voltages with a hydrogen maser and correlates the disks later."
+    },
+    {
+     "start": 103.41,
+     "end": 107.73,
+     "text": "Continents apart, we reach milliarcseconds and microarcseconds."
+    },
+    {
+     "start": 107.73,
+     "end": 115.73,
+     "text": "The Event Horizon Telescope joined eight stations, Hawaii to the South Pole, an Earth-sized aperture at one point three millimetres."
+    },
+    {
+     "start": 115.73,
+     "end": 129.05,
+     "text": "Theta approximately lambda over B: one point three millimetres over thirteen thousand kilometres, about ten to the minus ten radians, twenty microarcseconds, enough for the fifty-microarcsecond shadow."
+    },
+    {
+     "start": 129.05,
+     "end": 134.93,
+     "text": "Resolution is the longest separation, not collector size — diffraction, run backwards."
+    },
+    {
+     "start": 134.93,
+     "end": 138.37,
+     "text": "Radio astronomy went from the worst resolution to the best."
+    },
+    {
+     "start": 138.37,
+     "end": 145.27,
+     "text": "VLTI and CHARA do it optically, baselines a few hundred metres, paths equal to a fraction of a micron."
+    }
+   ],
+   "voicedHash": "51f43b41d7a6"
+  },
+  "jansky": {
+   "script": "Look behind the panel. We have flown in on the black hole at the galactic centre.\n\nIn nineteen thirty-one Karl Jansky, a twenty-six-year-old engineer at Bell Telephone Laboratories, was asked to find the static spoiling transatlantic radio-telephone calls at twenty point five megahertz. Lambda, the wavelength, equals fourteen point six metres. Lambda is the distance between crests of the wave. Radio waves travel at the speed of light, so frequency and wavelength are locked together: a lower frequency means a longer wave. At this frequency lambda is longer than a city bus.\n\nHe built a thirty-metre rotating array on a turntable of Ford Model-T wheels, Jansky's merry-go-round, and logged the noise for a year. Thunderstorms, near and far, accounted for most of it. A third component was a faint, steady hiss whose direction swept around the sky once a day.\n\nA daily cycle suggested the Sun. But the peak came about four minutes earlier each day, and after a year it had gained a whole day. The period was twenty-three hours and fifty-six minutes, the sidereal day from Chapter One, Earth's rotation relative to the stars, not the Sun. The source was fixed among the stars, toward Sagittarius, the centre of the Milky Way, where the black hole behind the panel sits.\n\nHe published Electrical disturbances apparently of extraterrestrial origin in nineteen thirty-three. The New York Times put it on the front page. Astronomers ignored it. Bell Labs moved him on.\n\nTry the widget. It is Jansky's chart recorder. Watch the signal peak drift across the daily record, and use the slider to read off how many days it takes to gain an hour. The readout compares the period with the solar day and the sidereal day. You should see it sit on the sidereal day, not the Sun.\n\nThis was the first time astronomy was done with something other than visible light, by engineers, and every later window followed the same way: new technology, an unexpected signal, and a sky nobody had predicted.",
+   "hash": "59f7938ab480",
+   "duration": 116.15,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 1.74,
+     "text": "Look behind the panel."
+    },
+    {
+     "start": 1.74,
+     "end": 5.26,
+     "text": "We have flown in on the black hole at the galactic centre."
+    },
+    {
+     "start": 5.26,
+     "end": 17.78,
+     "text": "In nineteen thirty-one Karl Jansky, a twenty-six-year-old engineer at Bell Telephone Laboratories, was asked to find the static spoiling transatlantic radio-telephone calls at twenty point five megahertz."
+    },
+    {
+     "start": 17.78,
+     "end": 22,
+     "text": "Lambda, the wavelength, equals fourteen point six metres."
+    },
+    {
+     "start": 22,
+     "end": 24.94,
+     "text": "Lambda is the distance between crests of the wave."
+    },
+    {
+     "start": 24.94,
+     "end": 32.5,
+     "text": "Radio waves travel at the speed of light, so frequency and wavelength are locked together: a lower frequency means a longer wave."
+    },
+    {
+     "start": 32.5,
+     "end": 35.76,
+     "text": "At this frequency lambda is longer than a city bus."
+    },
+    {
+     "start": 35.76,
+     "end": 44.12,
+     "text": "He built a thirty-metre rotating array on a turntable of Ford Model-T wheels, Jansky's merry-go-round, and logged the noise for a year."
+    },
+    {
+     "start": 44.12,
+     "end": 47.36,
+     "text": "Thunderstorms, near and far, accounted for most of it."
+    },
+    {
+     "start": 47.36,
+     "end": 52.64,
+     "text": "A third component was a faint, steady hiss whose direction swept around the sky once a day."
+    },
+    {
+     "start": 52.64,
+     "end": 54.86,
+     "text": "A daily cycle suggested the Sun."
+    },
+    {
+     "start": 54.86,
+     "end": 60.33,
+     "text": "But the peak came about four minutes earlier each day, and after a year it had gained a whole day."
+    },
+    {
+     "start": 60.33,
+     "end": 68.83,
+     "text": "The period was twenty-three hours and fifty-six minutes, the sidereal day from Chapter One, Earth's rotation relative to the stars, not the Sun."
+    },
+    {
+     "start": 68.83,
+     "end": 76.23,
+     "text": "The source was fixed among the stars, toward Sagittarius, the centre of the Milky Way, where the black hole behind the panel sits."
+    },
+    {
+     "start": 76.23,
+     "end": 81.79,
+     "text": "He published Electrical disturbances apparently of extraterrestrial origin in nineteen thirty-three."
+    },
+    {
+     "start": 81.79,
+     "end": 84.19,
+     "text": "The New York Times put it on the front page."
+    },
+    {
+     "start": 84.19,
+     "end": 85.75,
+     "text": "Astronomers ignored it."
+    },
+    {
+     "start": 85.75,
+     "end": 87.55,
+     "text": "Bell Labs moved him on."
+    },
+    {
+     "start": 87.55,
+     "end": 88.49,
+     "text": "Try the widget."
+    },
+    {
+     "start": 88.49,
+     "end": 90.45,
+     "text": "It is Jansky's chart recorder."
+    },
+    {
+     "start": 90.45,
+     "end": 97.11,
+     "text": "Watch the signal peak drift across the daily record, and use the slider to read off how many days it takes to gain an hour."
+    },
+    {
+     "start": 97.11,
+     "end": 101.03,
+     "text": "The readout compares the period with the solar day and the sidereal day."
+    },
+    {
+     "start": 101.03,
+     "end": 104.17,
+     "text": "You should see it sit on the sidereal day, not the Sun."
+    },
+    {
+     "start": 104.17,
+     "end": 116.15,
+     "text": "This was the first time astronomy was done with something other than visible light, by engineers, and every later window followed the same way: new technology, an unexpected signal, and a sky nobody had predicted."
+    }
+   ],
+   "voicedHash": "8dcc987791ad"
+  },
+  "radio-summary": {
+   "script": "Look with me behind the panel: the whole planetary system circling the Sun. The table is a selection of radio observatories, so read the caption. Resolution follows lambda over B, wavelength over baseline, and sensitivity follows collecting area and system temperature. A dish focuses like a mirror. The surface need only be good to lambda over twenty, lambda the wavelength, or the waves will not add in step. Beam width is about one point two lambda over D: lambda the wavelength, D the diameter. Green Bank, a hundred metres across, is about nine arcminutes wide at twenty-one centimetres, a poor beam. Spectral flux density S-nu is measured in janskys. One jansky is ten to the minus twenty-six watts per square metre per hertz. Power is P equals S-nu times A times delta-nu: S-nu the flux density, A the collecting area, delta-nu the bandwidth. We cool receivers, because system temperature is the figure of merit. Theta, the resolution, is about lambda over B, B the baseline. Aperture synthesis uses many baselines and the Earth's rotation to make images. Very long baseline interferometry reaches about twenty micro-arcseconds, enough for a black-hole shadow. Jansky, in nineteen thirty-two, heard galactic noise every twenty-three hours and fifty-six minutes, the sidereal clue to a source beyond Earth. That is radio astronomy in brief.",
+   "hash": "cb5c1ecf9d4a",
+   "duration": 85.11,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.94,
+     "text": "Look with me behind the panel: the whole planetary system circling the Sun."
+    },
+    {
+     "start": 4.94,
+     "end": 9.4,
+     "text": "The table is a selection of radio observatories, so read the caption."
+    },
+    {
+     "start": 9.4,
+     "end": 17.4,
+     "text": "Resolution follows lambda over B, wavelength over baseline, and sensitivity follows collecting area and system temperature."
+    },
+    {
+     "start": 17.4,
+     "end": 19.42,
+     "text": "A dish focuses like a mirror."
+    },
+    {
+     "start": 19.42,
+     "end": 26.02,
+     "text": "The surface need only be good to lambda over twenty, lambda the wavelength, or the waves will not add in step."
+    },
+    {
+     "start": 26.02,
+     "end": 31.8,
+     "text": "Beam width is about one point two lambda over D: lambda the wavelength, D the diameter."
+    },
+    {
+     "start": 31.8,
+     "end": 38.64,
+     "text": "Green Bank, a hundred metres across, is about nine arcminutes wide at twenty-one centimetres, a poor beam."
+    },
+    {
+     "start": 38.64,
+     "end": 42.18,
+     "text": "Spectral flux density S-nu is measured in janskys."
+    },
+    {
+     "start": 42.18,
+     "end": 46.49,
+     "text": "One jansky is ten to the minus twenty-six watts per square metre per hertz."
+    },
+    {
+     "start": 46.49,
+     "end": 55.17,
+     "text": "Power is P equals S-nu times A times delta-nu: S-nu the flux density, A the collecting area, delta-nu the bandwidth."
+    },
+    {
+     "start": 55.17,
+     "end": 58.97,
+     "text": "We cool receivers, because system temperature is the figure of merit."
+    },
+    {
+     "start": 58.97,
+     "end": 63.83,
+     "text": "Theta, the resolution, is about lambda over B, B the baseline."
+    },
+    {
+     "start": 63.83,
+     "end": 68.45,
+     "text": "Aperture synthesis uses many baselines and the Earth's rotation to make images."
+    },
+    {
+     "start": 68.45,
+     "end": 74.73,
+     "text": "Very long baseline interferometry reaches about twenty micro-arcseconds, enough for a black-hole shadow."
+    },
+    {
+     "start": 74.73,
+     "end": 83.11,
+     "text": "Jansky, in nineteen thirty-two, heard galactic noise every twenty-three hours and fifty-six minutes, the sidereal clue to a source beyond Earth."
+    },
+    {
+     "start": 83.11,
+     "end": 85.11,
+     "text": "That is radio astronomy in brief."
+    }
+   ],
+   "voicedHash": "93e3fbc6b970"
+  }
+ }
+}

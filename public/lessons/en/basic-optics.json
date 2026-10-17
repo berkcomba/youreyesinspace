@@ -1,0 +1,729 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "diffraction": {
+   "script": "Look at Mizar behind the panel. Geometric optics promises a point image, but a wave through a finite aperture cannot stay a point. Diameter D clips the wavefront, and the clipped wave diffracts, spreading exactly as in Young's double slit, only the hole is round. We get a bright central disc and faint rings, the Airy pattern, derived by George Airy in eighteen thirty-five. The first dark ring sits at theta equals one point two two times lambda over D. Theta is that angular radius in radians, lambda the wavelength, D the aperture diameter. The one point two two is the circular hole factor from the calculation. The eye, five hundred fifty nanometres, seven millimetre pupil, yields about a ten-thousandth of a radian, twenty arcseconds, and does a little worse. Hubble's two point four metres reaches six hundredths of an arcsecond; Keck's ten metres about fourteen thousandths, if nothing else interferes.\n\nStars inside that angle blend into one blob. Rayleigh's criterion: just resolved when one centre falls on the other's first dark ring, separation equal to theta. In the widget, set aperture and wavelength, slide the stars together, and watch two peaks become a saddle, then one peak. Only bigger D or shorter lambda improves the readout.\n\nWe use theta-minimum approximately two hundred and fifty thousand times lambda over D, in arcseconds. Theta-minimum is the resolution limit; the large factor converts radians to arcseconds. A hundred-metre dish at twenty-one centimetres resolves only nine arcminutes, a third of the Moon, so we need Section six point three. Mizar and Alcor, twelve arcminutes apart, are easy by eye. Mizar's fourteen-arcsecond double, the first telescopic double, seen by Riccioli in sixteen fifty, needs about a centimetre. Each of them is again a spectroscopic binary no telescope will ever split.\n\nResolution is fixed by the wave nature of light, not by the quality of the optics. A diffraction-limited telescope gets past its limit only with a larger aperture, or several apertures acting as one.",
+   "hash": "26c7593f9777",
+   "duration": 127.67,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.44,
+     "text": "Look at Mizar behind the panel."
+    },
+    {
+     "start": 2.44,
+     "end": 9.16,
+     "text": "Geometric optics promises a point image, but a wave through a finite aperture cannot stay a point."
+    },
+    {
+     "start": 9.16,
+     "end": 17.98,
+     "text": "Diameter D clips the wavefront, and the clipped wave diffracts, spreading exactly as in Young's double slit, only the hole is round."
+    },
+    {
+     "start": 17.98,
+     "end": 25.04,
+     "text": "We get a bright central disc and faint rings, the Airy pattern, derived by George Airy in eighteen thirty-five."
+    },
+    {
+     "start": 25.04,
+     "end": 30.22,
+     "text": "The first dark ring sits at theta equals one point two two times lambda over D."
+    },
+    {
+     "start": 30.22,
+     "end": 36.32,
+     "text": "Theta is that angular radius in radians, lambda the wavelength, D the aperture diameter."
+    },
+    {
+     "start": 36.32,
+     "end": 40.48,
+     "text": "The one point two two is the circular hole factor from the calculation."
+    },
+    {
+     "start": 40.48,
+     "end": 50.06,
+     "text": "The eye, five hundred fifty nanometres, seven millimetre pupil, yields about a ten-thousandth of a radian, twenty arcseconds, and does a little worse."
+    },
+    {
+     "start": 50.06,
+     "end": 58.48,
+     "text": "Hubble's two point four metres reaches six hundredths of an arcsecond; Keck's ten metres about fourteen thousandths, if nothing else interferes."
+    },
+    {
+     "start": 58.48,
+     "end": 61.6,
+     "text": "Stars inside that angle blend into one blob."
+    },
+    {
+     "start": 61.6,
+     "end": 69.01,
+     "text": "Rayleigh's criterion: just resolved when one centre falls on the other's first dark ring, separation equal to theta."
+    },
+    {
+     "start": 69.01,
+     "end": 76.77,
+     "text": "In the widget, set aperture and wavelength, slide the stars together, and watch two peaks become a saddle, then one peak."
+    },
+    {
+     "start": 76.77,
+     "end": 80.07,
+     "text": "Only bigger D or shorter lambda improves the readout."
+    },
+    {
+     "start": 80.07,
+     "end": 86.23,
+     "text": "We use theta-minimum approximately two hundred and fifty thousand times lambda over D, in arcseconds."
+    },
+    {
+     "start": 86.23,
+     "end": 91.47,
+     "text": "Theta-minimum is the resolution limit; the large factor converts radians to arcseconds."
+    },
+    {
+     "start": 91.47,
+     "end": 99.37,
+     "text": "A hundred-metre dish at twenty-one centimetres resolves only nine arcminutes, a third of the Moon, so we need Section six point three."
+    },
+    {
+     "start": 99.37,
+     "end": 103.89,
+     "text": "Mizar and Alcor, twelve arcminutes apart, are easy by eye."
+    },
+    {
+     "start": 103.89,
+     "end": 111.87,
+     "text": "Mizar's fourteen-arcsecond double, the first telescopic double, seen by Riccioli in sixteen fifty, needs about a centimetre."
+    },
+    {
+     "start": 111.87,
+     "end": 116.27,
+     "text": "Each of them is again a spectroscopic binary no telescope will ever split."
+    },
+    {
+     "start": 116.27,
+     "end": 121.07,
+     "text": "Resolution is fixed by the wave nature of light, not by the quality of the optics."
+    },
+    {
+     "start": 121.07,
+     "end": 127.67,
+     "text": "A diffraction-limited telescope gets past its limit only with a larger aperture, or several apertures acting as one."
+    }
+   ],
+   "voicedHash": "0203f60e00aa"
+  },
+  "lenses": {
+   "script": "Thicker glass in the middle is a converging lens. Snell's law bends parallel rays to a common point. A paraboloid mirror does the same by reflection. The distance to that point is the focal length f. Stars send light so nearly parallel that their images form exactly in the focal plane, where we place the detector.\n\nWhen the object is closer, at distance p, the image distance q obeys one over p plus one over q equals one over f. p is the object distance, q is the image distance, and f is the focal length. This reciprocal link comes from how the optic bends the rays, and the equation is identical for a mirror. Magnification m equals minus q over p, negative for an inverted image. For a spherical mirror f equals R over two. Telescopes have p infinite, so q equals f.\n\nSlide the object toward the lens in the widget. The image moves away and grows. Inside the focal length it turns virtual, upright and magnified, on the same side of the lens, a magnifying glass. The three rays are drawn for you. Switch to the concave mirror. The geometry stays the same and the light folds back.\n\nA telescope uses two such optics. The objective makes a real image of the sky at its focus. The eyepiece then magnifies that image, or a camera records it. The f-ratio F equals f over D. An f over two system is fast, giving a small bright image for nebulae. An f over fifteen system is slow, spreading the light for planets and spectroscopy.\n\nThe Moon behind the panel subtends about half a degree. Its image size y equals f times theta, with theta in radians. A thousand millimetre lens gives an image about nine millimetres, fitting a thirty five millimetre frame. The Hale telescope at fifty seven metres gives a Moon image half a metre across. Short focal length means a wide field. Long focal length spreads detail over many pixels.",
+   "hash": "634d1ef31355",
+   "duration": 119.35,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 3.24,
+     "text": "Thicker glass in the middle is a converging lens."
+    },
+    {
+     "start": 3.24,
+     "end": 6.9,
+     "text": "Snell's law bends parallel rays to a common point."
+    },
+    {
+     "start": 6.9,
+     "end": 10.06,
+     "text": "A paraboloid mirror does the same by reflection."
+    },
+    {
+     "start": 10.06,
+     "end": 13.36,
+     "text": "The distance to that point is the focal length f."
+    },
+    {
+     "start": 13.36,
+     "end": 20.58,
+     "text": "Stars send light so nearly parallel that their images form exactly in the focal plane, where we place the detector."
+    },
+    {
+     "start": 20.58,
+     "end": 29.4,
+     "text": "When the object is closer, at distance p, the image distance q obeys one over p plus one over q equals one over f."
+    },
+    {
+     "start": 29.4,
+     "end": 34.96,
+     "text": "p is the object distance, q is the image distance, and f is the focal length."
+    },
+    {
+     "start": 34.96,
+     "end": 41.02,
+     "text": "This reciprocal link comes from how the optic bends the rays, and the equation is identical for a mirror."
+    },
+    {
+     "start": 41.02,
+     "end": 46.32,
+     "text": "Magnification m equals minus q over p, negative for an inverted image."
+    },
+    {
+     "start": 46.32,
+     "end": 49.44,
+     "text": "For a spherical mirror f equals R over two."
+    },
+    {
+     "start": 49.44,
+     "end": 53.12,
+     "text": "Telescopes have p infinite, so q equals f."
+    },
+    {
+     "start": 53.12,
+     "end": 55.72,
+     "text": "Slide the object toward the lens in the widget."
+    },
+    {
+     "start": 55.72,
+     "end": 57.86,
+     "text": "The image moves away and grows."
+    },
+    {
+     "start": 57.86,
+     "end": 65.17,
+     "text": "Inside the focal length it turns virtual, upright and magnified, on the same side of the lens, a magnifying glass."
+    },
+    {
+     "start": 65.17,
+     "end": 67.19,
+     "text": "The three rays are drawn for you."
+    },
+    {
+     "start": 67.19,
+     "end": 69.03,
+     "text": "Switch to the concave mirror."
+    },
+    {
+     "start": 69.03,
+     "end": 72.21,
+     "text": "The geometry stays the same and the light folds back."
+    },
+    {
+     "start": 72.21,
+     "end": 74.75,
+     "text": "A telescope uses two such optics."
+    },
+    {
+     "start": 74.75,
+     "end": 78.15,
+     "text": "The objective makes a real image of the sky at its focus."
+    },
+    {
+     "start": 78.15,
+     "end": 82.21,
+     "text": "The eyepiece then magnifies that image, or a camera records it."
+    },
+    {
+     "start": 82.21,
+     "end": 85.21,
+     "text": "The f-ratio F equals f over D."
+    },
+    {
+     "start": 85.21,
+     "end": 89.99,
+     "text": "An f over two system is fast, giving a small bright image for nebulae."
+    },
+    {
+     "start": 89.99,
+     "end": 95.15,
+     "text": "An f over fifteen system is slow, spreading the light for planets and spectroscopy."
+    },
+    {
+     "start": 95.15,
+     "end": 98.39,
+     "text": "The Moon behind the panel subtends about half a degree."
+    },
+    {
+     "start": 98.39,
+     "end": 103.09,
+     "text": "Its image size y equals f times theta, with theta in radians."
+    },
+    {
+     "start": 103.09,
+     "end": 109.07,
+     "text": "A thousand millimetre lens gives an image about nine millimetres, fitting a thirty five millimetre frame."
+    },
+    {
+     "start": 109.07,
+     "end": 113.89,
+     "text": "The Hale telescope at fifty seven metres gives a Moon image half a metre across."
+    },
+    {
+     "start": 113.89,
+     "end": 116.37,
+     "text": "Short focal length means a wide field."
+    },
+    {
+     "start": 116.37,
+     "end": 119.35,
+     "text": "Long focal length spreads detail over many pixels."
+    }
+   ],
+   "voicedHash": "67b70fccd6a1"
+  },
+  "light-bucket": {
+   "script": "Welcome. Look at Hubble behind the panel: a light bucket, not a magnifier. Everything we have met arrived as light, and almost all of it is pitifully faint.\n\nThe dark-adapted eye has a pupil about seven millimetres across and integrates for roughly a tenth of a second, good for sixth magnitude, a few thousand stars. A galaxy at the edge of the observable universe sends perhaps one photon per square metre per minute in the visible. No eye can see it. You need more area, a longer exposure, and a detector that does not forget.\n\nGalileo's audience in 1609 missed this: a telescope gathers light. We write N proportional to D squared times t. N is the photon count. D is aperture diameter, since light grasp goes as D squared and resolution as one over D. t is exposure time. Area grows with D squared, and time stacks the photons.\n\nA ten-metre telescope collects about two million times the light of the eye each second. An hour multiplies that by thirty-six thousand. Eleven magnitudes, times another eleven. That is how a thirtieth-magnitude galaxy becomes an image. Light grasp relative to the eye is D over seven millimetres, squared — about eight hundred for a twenty-centimetre telescope.\n\nOn the light-bucket widget, sweep the aperture from the eye to the thirty-nine-metre Extremely Large Telescope and stretch the exposure. Stars emerge once their photons beat the background fluctuations. Doubling the exposure gains far less than doubling the aperture. Limiting magnitude grows by five magnitudes per factor of ten in diameter, and by two and a half per factor of ten in time — half of that when background noise dominates. Signal-to-noise is source photons over the random fluctuation, the square root of N. That is five sigma.\n\nWhat I care about least is magnification. Change the eyepiece; aperture you cannot. Herschel's one-point-two metres, the five-metre Hale, the ten-metre Kecks, James Webb at six and a half, the thirty-nine-metre ELT — since 1609, a bigger bucket.",
+   "hash": "6fc8a974780e",
+   "duration": 126.71,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 1.18,
+     "text": "Welcome."
+    },
+    {
+     "start": 1.18,
+     "end": 5.62,
+     "text": "Look at Hubble behind the panel: a light bucket, not a magnifier."
+    },
+    {
+     "start": 5.62,
+     "end": 10.68,
+     "text": "Everything we have met arrived as light, and almost all of it is pitifully faint."
+    },
+    {
+     "start": 10.68,
+     "end": 20.62,
+     "text": "The dark-adapted eye has a pupil about seven millimetres across and integrates for roughly a tenth of a second, good for sixth magnitude, a few thousand stars."
+    },
+    {
+     "start": 20.62,
+     "end": 27.12,
+     "text": "A galaxy at the edge of the observable universe sends perhaps one photon per square metre per minute in the visible."
+    },
+    {
+     "start": 27.12,
+     "end": 28.66,
+     "text": "No eye can see it."
+    },
+    {
+     "start": 28.66,
+     "end": 33.68,
+     "text": "You need more area, a longer exposure, and a detector that does not forget."
+    },
+    {
+     "start": 33.68,
+     "end": 38.74,
+     "text": "Galileo's audience in 1609 missed this: a telescope gathers light."
+    },
+    {
+     "start": 38.74,
+     "end": 42.28,
+     "text": "We write N proportional to D squared times t."
+    },
+    {
+     "start": 42.28,
+     "end": 43.92,
+     "text": "N is the photon count."
+    },
+    {
+     "start": 43.92,
+     "end": 50.1,
+     "text": "D is aperture diameter, since light grasp goes as D squared and resolution as one over D."
+    },
+    {
+     "start": 50.1,
+     "end": 51.92,
+     "text": "t is exposure time."
+    },
+    {
+     "start": 51.92,
+     "end": 55.8,
+     "text": "Area grows with D squared, and time stacks the photons."
+    },
+    {
+     "start": 55.8,
+     "end": 60.62,
+     "text": "A ten-metre telescope collects about two million times the light of the eye each second."
+    },
+    {
+     "start": 60.62,
+     "end": 63.57,
+     "text": "An hour multiplies that by thirty-six thousand."
+    },
+    {
+     "start": 63.57,
+     "end": 66.63,
+     "text": "Eleven magnitudes, times another eleven."
+    },
+    {
+     "start": 66.63,
+     "end": 70.15,
+     "text": "That is how a thirtieth-magnitude galaxy becomes an image."
+    },
+    {
+     "start": 70.15,
+     "end": 77.85,
+     "text": "Light grasp relative to the eye is D over seven millimetres, squared — about eight hundred for a twenty-centimetre telescope."
+    },
+    {
+     "start": 77.85,
+     "end": 85.69,
+     "text": "On the light-bucket widget, sweep the aperture from the eye to the thirty-nine-metre Extremely Large Telescope and stretch the exposure."
+    },
+    {
+     "start": 85.69,
+     "end": 89.65,
+     "text": "Stars emerge once their photons beat the background fluctuations."
+    },
+    {
+     "start": 89.65,
+     "end": 93.31,
+     "text": "Doubling the exposure gains far less than doubling the aperture."
+    },
+    {
+     "start": 93.31,
+     "end": 103.47,
+     "text": "Limiting magnitude grows by five magnitudes per factor of ten in diameter, and by two and a half per factor of ten in time — half of that when background noise dominates."
+    },
+    {
+     "start": 103.47,
+     "end": 108.61,
+     "text": "Signal-to-noise is source photons over the random fluctuation, the square root of N."
+    },
+    {
+     "start": 108.61,
+     "end": 110.21,
+     "text": "That is five sigma."
+    },
+    {
+     "start": 110.21,
+     "end": 112.79,
+     "text": "What I care about least is magnification."
+    },
+    {
+     "start": 112.79,
+     "end": 115.69,
+     "text": "Change the eyepiece; aperture you cannot."
+    },
+    {
+     "start": 115.69,
+     "end": 126.71,
+     "text": "Herschel's one-point-two metres, the five-metre Hale, the ten-metre Kecks, James Webb at six and a half, the thirty-nine-metre ELT — since 1609, a bigger bucket."
+    }
+   ],
+   "voicedHash": "ca013cd622cb"
+  },
+  "optics-summary": {
+   "script": "Look with me behind the panel: the planets circle the Sun. In short, light grasp scales as D squared times t: D the aperture, t the exposure, area growing as D squared, so aperture matters and magnification is a detail. Refraction is n one, sine of theta one, equals n two, sine of theta two. n, the index, equals c over v, vacuum speed over speed in the medium, and theta is the angle to the normal. Dispersion makes n depend on lambda. Reflection is theta r equals theta i, the reflected and incident angles, independent of lambda. Focal length f is where parallel light converges. One over p plus one over q equals one over f, with p and q the object and image distances. Magnification m equals minus q over p. Image size y equals f times theta, theta the sky angle, and f-ratio F equals f over D. The Airy pattern sets the Rayleigh limit, theta equals one point two two lambda over D: bigger D or shorter lambda, nothing else. Seeing holds images near one arcsecond beyond the coherence length r zero, ten to twenty centimetres; adaptive optics and space restore the limit. Three numbers: aperture, how faint; diffraction limit, how sharp; focal length, how large the image. Ahead, we engineer toward those numbers at each wavelength.",
+   "hash": "33d0d6038626",
+   "duration": 87.03,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.98,
+     "text": "Look with me behind the panel: the planets circle the Sun."
+    },
+    {
+     "start": 3.98,
+     "end": 16.1,
+     "text": "In short, light grasp scales as D squared times t: D the aperture, t the exposure, area growing as D squared, so aperture matters and magnification is a detail."
+    },
+    {
+     "start": 16.1,
+     "end": 22.4,
+     "text": "Refraction is n one, sine of theta one, equals n two, sine of theta two."
+    },
+    {
+     "start": 22.4,
+     "end": 29.8,
+     "text": "n, the index, equals c over v, vacuum speed over speed in the medium, and theta is the angle to the normal."
+    },
+    {
+     "start": 29.8,
+     "end": 32.38,
+     "text": "Dispersion makes n depend on lambda."
+    },
+    {
+     "start": 32.38,
+     "end": 38.94,
+     "text": "Reflection is theta r equals theta i, the reflected and incident angles, independent of lambda."
+    },
+    {
+     "start": 38.94,
+     "end": 42.18,
+     "text": "Focal length f is where parallel light converges."
+    },
+    {
+     "start": 42.18,
+     "end": 48.75,
+     "text": "One over p plus one over q equals one over f, with p and q the object and image distances."
+    },
+    {
+     "start": 48.75,
+     "end": 52.05,
+     "text": "Magnification m equals minus q over p."
+    },
+    {
+     "start": 52.05,
+     "end": 59.19,
+     "text": "Image size y equals f times theta, theta the sky angle, and f-ratio F equals f over D."
+    },
+    {
+     "start": 59.19,
+     "end": 67.81,
+     "text": "The Airy pattern sets the Rayleigh limit, theta equals one point two two lambda over D: bigger D or shorter lambda, nothing else."
+    },
+    {
+     "start": 67.81,
+     "end": 76.69,
+     "text": "Seeing holds images near one arcsecond beyond the coherence length r zero, ten to twenty centimetres; adaptive optics and space restore the limit."
+    },
+    {
+     "start": 76.69,
+     "end": 83.81,
+     "text": "Three numbers: aperture, how faint; diffraction limit, how sharp; focal length, how large the image."
+    },
+    {
+     "start": 83.81,
+     "end": 87.03,
+     "text": "Ahead, we engineer toward those numbers at each wavelength."
+    }
+   ],
+   "voicedHash": "e2d877d06581"
+  },
+  "refraction": {
+   "script": "I want you to look at Earth behind the panel. Photons we collect for astronomy have usually crossed glass, air, or fibre, and light travels more slowly in those materials than in vacuum. The index of refraction is n equals c over v: n the index, c the vacuum speed, v the speed inside. Air is about 1.0003, water 1.33, glass 1.5 to 1.7, diamond 2.42.\n\nA wavefront hitting at a slant slows on the side that enters first, so the front pivots and the ray bends, like a marching line wheeling when one flank hits soft ground. Snell found the rule in 1621; Ibn Sahl had it in 984. n one times the sine of theta one equals n two times the sine of theta two. Angles are from the normal. Entering a denser medium, n two bigger than n one, the ray bends toward the normal; leaving, it bends away.\n\nDrag the incident ray. From glass to air, increase the angle: the refracted ray flattens along the surface and vanishes. Past the critical angle, sine of theta c equals n two over n one, no solution exists and all the light reflects. That total internal reflection guides light in optical fibres, including those carrying starlight from a telescope's focal plane to its spectrograph.\n\nChange the wavelength. Glass has a larger index for blue than red, so blue bends more. That is dispersion. Newton's prism splits sunlight this way, and the same effect will haunt every lens next.\n\nReflection, known to Euclid, is simpler: the angle of reflection equals the angle of incidence, both rays and the normal in one plane. A mirror ignores wavelength. Remember that.\n\nWhy does it hold? Snell's law follows from Fermat's principle, light takes the path of least time, or from continuity of the wave: the wavelength shrinks by a factor n while the frequency stays fixed. In quantum language the photon's momentum parallel to the surface is conserved.",
+   "hash": "f57d2fa86b0c",
+   "duration": 126.39,
+   "sentences": [
+    {
+     "start": 0,
+     "end": 3.144,
+     "text": "I want you to look at Earth behind the panel."
+    },
+    {
+     "start": 3.144,
+     "end": 12.925,
+     "text": "Photons we collect for astronomy have usually crossed glass, air, or fibre, and light travels more slowly in those materials than in vacuum."
+    },
+    {
+     "start": 12.925,
+     "end": 19.772,
+     "text": "The index of refraction is n equals c over v: n the index, c the vacuum speed, v the speed inside."
+    },
+    {
+     "start": 19.772,
+     "end": 24.593,
+     "text": "Air is about 1. 0003, water 1. 33, glass 1. 5 to 1. 7, diamond 2. 42."
+    },
+    {
+     "start": 24.593,
+     "end": 36.401,
+     "text": "A wavefront hitting at a slant slows on the side that enters first, so the front pivots and the ray bends, like a marching line wheeling when one flank hits soft ground."
+    },
+    {
+     "start": 36.401,
+     "end": 40.104,
+     "text": "Snell found the rule in 1621; Ibn Sahl had it in 984."
+    },
+    {
+     "start": 40.104,
+     "end": 45.344,
+     "text": "n one times the sine of theta one equals n two times the sine of theta two."
+    },
+    {
+     "start": 45.344,
+     "end": 47.23,
+     "text": "Angles are from the normal."
+    },
+    {
+     "start": 47.23,
+     "end": 54.706,
+     "text": "Entering a denser medium, n two bigger than n one, the ray bends toward the normal; leaving, it bends away."
+    },
+    {
+     "start": 54.706,
+     "end": 56.243,
+     "text": "Drag the incident ray."
+    },
+    {
+     "start": 56.243,
+     "end": 63.02,
+     "text": "From glass to air, increase the angle: the refracted ray flattens along the surface and vanishes."
+    },
+    {
+     "start": 63.02,
+     "end": 70.845,
+     "text": "Past the critical angle, sine of theta c equals n two over n one, no solution exists and all the light reflects."
+    },
+    {
+     "start": 70.845,
+     "end": 81.256,
+     "text": "That total internal reflection guides light in optical fibres, including those carrying starlight from a telescope's focal plane to its spectrograph."
+    },
+    {
+     "start": 81.256,
+     "end": 82.793,
+     "text": "Change the wavelength."
+    },
+    {
+     "start": 82.793,
+     "end": 87.194,
+     "text": "Glass has a larger index for blue than red, so blue bends more."
+    },
+    {
+     "start": 87.194,
+     "end": 88.522,
+     "text": "That is dispersion."
+    },
+    {
+     "start": 88.522,
+     "end": 94.67,
+     "text": "Newton's prism splits sunlight this way, and the same effect will haunt every lens next."
+    },
+    {
+     "start": 94.67,
+     "end": 104.032,
+     "text": "Reflection, known to Euclid, is simpler: the angle of reflection equals the angle of incidence, both rays and the normal in one plane."
+    },
+    {
+     "start": 104.032,
+     "end": 105.989,
+     "text": "A mirror ignores wavelength."
+    },
+    {
+     "start": 105.989,
+     "end": 106.967,
+     "text": "Remember that."
+    },
+    {
+     "start": 106.967,
+     "end": 108.155,
+     "text": "Why does it hold?"
+    },
+    {
+     "start": 108.155,
+     "end": 120.87,
+     "text": "Snell's law follows from Fermat's principle, light takes the path of least time, or from continuity of the wave: the wavelength shrinks by a factor n while the frequency stays fixed."
+    },
+    {
+     "start": 120.87,
+     "end": 126.39,
+     "text": "In quantum language the photon's momentum parallel to the surface is conserved."
+    }
+   ],
+   "voicedHash": "b9e8876eef29"
+  },
+  "seeing": {
+   "script": "Look at the space station behind the panel, four hundred kilometres up and clear of the messy air. From the ground that same air is usually what stops us, not diffraction. Starlight crosses tens of kilometres where temperature, and therefore the index of refraction, jumps from one centimetre-sized pocket to the next, rearranging every few milliseconds. The flat wavefront arrives crumpled. A short exposure shatters the star into dancing speckles, each a tiny diffraction-limited image from one coherent patch; a long exposure smears them into a blob half an arcsecond to two arcseconds across. We call that blob’s size the seeing, and it is why stars twinkle.\n\nTry the widget. Compare the two exposures, then change the seeing and the aperture. Once the telescope grows past the Fried parameter r zero — the patch size over which the wavefront is still flat, ten to twenty centimetres in the visible at a good site — a bigger mirror no longer sharpens the long exposure at all. It only pours more light into the same blur. A ten metre telescope in one arcsecond seeing resolves no better than a twelve centimetre one. That is why we climbed mountains where the air is thin and smooth, and why Hubble left the air behind.\n\nSince the nineteen nineties there is a third way. Adaptive optics samples the distortion several hundred times a second with a real star or a laser guide star, sodium atoms excited ninety kilometres up, and a deformable mirror driven by hundreds of actuators cancels it. Switch it on in the widget: the speckles collapse back into an Airy disc. The Kecks and the VLT then reach their diffraction limit in the infrared. r zero scales as lambda to the power six fifths, so the infrared is kinder, and the Strehl ratio — peak intensity relative to a perfect Airy disc — climbs from about a hundredth to between three tenths and nine tenths. Scintillation, the brightness flicker, is the same turbulence focusing the light; planets twinkle less because their discs average many cells.\n\nThe station looks down through air that is wildest near the ground, yet cities stay sharp. The turbulence sits right against a ground telescope, in the near field, scribbling phase errors across the pupil. From orbit it lies far away, in the far field, so the angular damage at the camera is far smaller — like a crumpled window pressed to your eye versus the same wrinkles seen from across the room.",
+   "hash": "af6260e08490",
+   "duration": 139.83,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 5.9,
+     "text": "Look at the space station behind the panel, four hundred kilometres up and clear of the messy air."
+    },
+    {
+     "start": 5.9,
+     "end": 10.72,
+     "text": "From the ground that same air is usually what stops us, not diffraction."
+    },
+    {
+     "start": 10.72,
+     "end": 21.56,
+     "text": "Starlight crosses tens of kilometres where temperature, and therefore the index of refraction, jumps from one centimetre-sized pocket to the next, rearranging every few milliseconds."
+    },
+    {
+     "start": 21.56,
+     "end": 23.88,
+     "text": "The flat wavefront arrives crumpled."
+    },
+    {
+     "start": 23.88,
+     "end": 36.38,
+     "text": "A short exposure shatters the star into dancing speckles, each a tiny diffraction-limited image from one coherent patch; a long exposure smears them into a blob half an arcsecond to two arcseconds across."
+    },
+    {
+     "start": 36.38,
+     "end": 40.78,
+     "text": "We call that blob’s size the seeing, and it is why stars twinkle."
+    },
+    {
+     "start": 40.78,
+     "end": 41.82,
+     "text": "Try the widget."
+    },
+    {
+     "start": 41.82,
+     "end": 45.78,
+     "text": "Compare the two exposures, then change the seeing and the aperture."
+    },
+    {
+     "start": 45.78,
+     "end": 58.72,
+     "text": "Once the telescope grows past the Fried parameter r zero — the patch size over which the wavefront is still flat, ten to twenty centimetres in the visible at a good site — a bigger mirror no longer sharpens the long exposure at all."
+    },
+    {
+     "start": 58.72,
+     "end": 61.4,
+     "text": "It only pours more light into the same blur."
+    },
+    {
+     "start": 61.4,
+     "end": 67.08,
+     "text": "A ten metre telescope in one arcsecond seeing resolves no better than a twelve centimetre one."
+    },
+    {
+     "start": 67.08,
+     "end": 72.73,
+     "text": "That is why we climbed mountains where the air is thin and smooth, and why Hubble left the air behind."
+    },
+    {
+     "start": 72.73,
+     "end": 75.31,
+     "text": "Since the nineteen nineties there is a third way."
+    },
+    {
+     "start": 75.31,
+     "end": 88.45,
+     "text": "Adaptive optics samples the distortion several hundred times a second with a real star or a laser guide star, sodium atoms excited ninety kilometres up, and a deformable mirror driven by hundreds of actuators cancels it."
+    },
+    {
+     "start": 88.45,
+     "end": 92.77,
+     "text": "Switch it on in the widget: the speckles collapse back into an Airy disc."
+    },
+    {
+     "start": 92.77,
+     "end": 96.93,
+     "text": "The Kecks and the VLT then reach their diffraction limit in the infrared."
+    },
+    {
+     "start": 96.93,
+     "end": 110.15,
+     "text": "r zero scales as lambda to the power six fifths, so the infrared is kinder, and the Strehl ratio — peak intensity relative to a perfect Airy disc — climbs from about a hundredth to between three tenths and nine tenths."
+    },
+    {
+     "start": 110.15,
+     "end": 118.31,
+     "text": "Scintillation, the brightness flicker, is the same turbulence focusing the light; planets twinkle less because their discs average many cells."
+    },
+    {
+     "start": 118.31,
+     "end": 123.29,
+     "text": "The station looks down through air that is wildest near the ground, yet cities stay sharp."
+    },
+    {
+     "start": 123.29,
+     "end": 129.69,
+     "text": "The turbulence sits right against a ground telescope, in the near field, scribbling phase errors across the pupil."
+    },
+    {
+     "start": 129.69,
+     "end": 139.83,
+     "text": "From orbit it lies far away, in the far field, so the angular damage at the camera is far smaller — like a crumpled window pressed to your eye versus the same wrinkles seen from across the room."
+    }
+   ],
+   "voicedHash": "0108a0ee2ede"
+  }
+ }
+}

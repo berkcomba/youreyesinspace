@@ -3902,6 +3902,1039 @@ class AncientSkyWidget extends CanvasWidget {
   }
 }
 
+/* ================================================================================ */
+/*  Chapter 6 — Telescopes                                                           */
+/* ================================================================================ */
+
+const ARCSEC = Math.PI / 180 / 3600;
+/** Bessel J₁ (Numerical Recipes polynomial approximation) */
+function J1(x: number): number {
+  const ax = Math.abs(x);
+  if (ax < 8) {
+    const y = x * x;
+    const a1 = x * (72362614232.0 + y * (-7895059235.0 + y * (242396853.1 + y * (-2972611.439 + y * (15704.48260 + y * (-30.16036606))))));
+    const a2 = 144725228442.0 + y * (2300535178.0 + y * (18583304.74 + y * (99447.43394 + y * (376.9991397 + y))));
+    return a1 / a2;
+  }
+  const z = 8 / ax, y = z * z, xx = ax - 2.356194491;
+  const a1 = 1.0 + y * (0.183105e-2 + y * (-0.3516396496e-4 + y * (0.2457520174e-5 + y * (-0.240337019e-6))));
+  const a2 = 0.04687499995 + y * (-0.2002690873e-3 + y * (0.8449199096e-5 + y * (-0.88228987e-6 + y * 0.105787412e-6)));
+  const ans = Math.sqrt(0.636619772 / ax) * (Math.cos(xx) * a1 - z * Math.sin(xx) * a2);
+  return x < 0 ? -ans : ans;
+}
+/** normalised Airy intensity for x = π D sin θ / λ */
+const airy = (x: number) => (Math.abs(x) < 1e-6 ? 1 : (2 * J1(x) / x) ** 2);
+/** small seeded PRNG */
+function mulberry(seed: number) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+const gaussRand = (rnd: () => number) => Math.sqrt(-2 * Math.log(rnd() + 1e-12)) * Math.cos(TAU * rnd());
+const fmtAngle = (as: number) => (as < 1e-3 ? `${fmt(as * 1e6, 0)} µas` : as < 1 ? `${fmt(as * 1e3, as < 0.01 ? 1 : 0)} mas` : as < 60 ? `${fmt(as, as < 10 ? 2 : 1)}″` : as < 3600 ? `${fmt(as / 60, 1)}′` : `${fmt(as / 3600, 2)}°`);
+const fmtLen = (m: number) => (m < 1e-3 ? `${fmt(m * 1e6, 0)} µm` : m < 1e-2 ? `${fmt(m * 1e3, 1)} mm` : m < 1 ? `${fmt(m * 100, 0)} cm` : m < 1e3 ? `${fmt(m, m < 10 ? 1 : 0)} m` : `${fmt(m / 1e3, 0)} km`);
+const fmtDur = (s: number) => (s < 1 ? `${fmt(s * 1e3, 0)} ms` : s < 60 ? `${fmt(s, 1)} s` : s < 3600 ? `${fmt(s / 60, 1)} min` : s < 86400 ? `${fmt(s / 3600, 1)} h` : s < 86400 * 365 ? `${fmt(s / 86400, 1)} d` : `${fmt(s / 86400 / 365.25, 1)} yr`);
+const SCOPES: Array<[string, number, string]> = [
+  ['eye', 0.007, 'dark-adapted pupil'], ['Galileo 1609', 0.037, 'refractor, 20×'], ['20 cm amateur', 0.2, 'Schmidt–Cassegrain'], ['Yerkes 1897', 1.02, 'largest refractor'], ['Herschel 1789', 1.2, 'speculum reflector'],
+  ['Hubble', 2.4, 'in orbit since 1990'], ['Hale 1948', 5.08, 'Palomar'], ['JWST', 6.5, 'at L₂, infrared'], ['VLT (one)', 8.2, 'Paranal'], ['Keck', 10, 'segmented, 1993'], ['GMT', 25.4, 'seven 8.4 m mirrors'], ['ELT', 39.3, '798 segments'],
+];
+
+/* ------------------------------------------------- 45. light bucket ---- */
+
+class LightBucketWidget extends CanvasWidget {
+  private lgD = Math.log10(0.2); private lgT = 0; private stars: Array<{ x: number; y: number; m: number }> = []; private noise: Float32Array; private img: ImageData | null = null; private readonly NX = 150; private readonly NY = 96;
+  private sD!: { set: (v: number) => void };
+  constructor() {
+    super(480 / 300);
+    const rnd = mulberry(7); for (let i = 0; i < 140; i++) this.stars.push({ x: rnd(), y: rnd(), m: 4 + 27 * Math.sqrt(rnd()) });
+    this.noise = new Float32Array(this.NX * this.NY); for (let i = 0; i < this.noise.length; i++) this.noise[i] = gaussRand(rnd);
+    this.segmented<string>(SCOPES.filter(([n]) => ['eye', '20 cm amateur', 'Hubble', 'Keck', 'ELT'].includes(n)).map(([n]) => [n, n] as [string, string]), '20 cm amateur', (n) => { this.lgD = Math.log10(SCOPES.find(([k]) => k === n)![1]); this.sD.set(this.lgD); });
+    this.sD = this.slider('Aperture D', Math.log10(0.007), Math.log10(40), 0.01, this.lgD, (v) => fmtLen(10 ** v), (v) => { this.lgD = v; });
+    this.slider('Exposure', -1, Math.log10(36000), 0.01, 0, (v) => fmtDur(10 ** v), (v) => { this.lgT = v; });
+  }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const D = 10 ** this.lgD, t = 10 ** this.lgT, A = Math.PI * D * D / 4;
+    const N0 = 1e10;                              // photons s⁻¹ m⁻² from an m = 0 star (visible band, rough)
+    const sky = N0 * 10 ** (-0.4 * 21) * A * t;   // sky photons in a 1″² seeing disc at 21 mag/arcsec²
+    const read = 25;                              // read noise² (electrons²)
+    const snr = (m: number) => { const n = N0 * 10 ** (-0.4 * m) * A * t; return n / Math.sqrt(n + sky + read); };
+    let lo = 0, hi = 40; for (let i = 0; i < 40; i++) { const mid = (lo + hi) / 2; if (snr(mid) > 5) lo = mid; else hi = mid; }
+    const mlim = lo;
+    const px = Math.min(this.w - 16, (this.h - 16) * this.NX / this.NY), py = px * this.NY / this.NX, x0 = 8, y0 = (this.h - py) / 2;
+    if (!this.img) this.img = c.createImageData(this.NX, this.NY);
+    const d = this.img.data; const sig = 1 / Math.sqrt(sky + read); const stretch = 12;
+    for (let i = 0; i < this.NX * this.NY; i++) { const v = 0.5 + stretch * this.noise[i] * sig * Math.sqrt(sky + read) / Math.sqrt(sky + read) * 0.04; const g = Math.max(0, Math.min(255, (12 + v * 40))); d[i * 4] = g * 0.95; d[i * 4 + 1] = g; d[i * 4 + 2] = g * 1.08; d[i * 4 + 3] = 255; }
+    c.putImageData(this.img, 0, 0, 0, 0, 0, 0);
+    const off = document.createElement('canvas'); off.width = this.NX; off.height = this.NY; off.getContext('2d')!.putImageData(this.img, 0, 0);
+    c.imageSmoothingEnabled = false; c.drawImage(off, x0, y0, px, py); c.imageSmoothingEnabled = true;
+    let nvis = 0;
+    for (const s of this.stars) { const q = snr(s.m); if (q < 1) continue; const b = Math.min(1, Math.log10(q) / 3.5); const r = 1 + 6 * Math.max(0, Math.log10(q) - 0.7) / 3; if (q >= 5) nvis++; this.glow(x0 + s.x * px, y0 + s.y * py, Math.max(1.5, r * 2), `rgba(255,250,235,${0.25 + 0.75 * b})`); if (q >= 5) this.circle(x0 + s.x * px, y0 + s.y * py, Math.max(0.8, r * 0.6), undefined, `rgba(255,255,255,${0.5 + 0.5 * b})`); }
+    c.strokeStyle = C.line; c.strokeRect(x0, y0, px, py);
+    this.text(`${nvis} of ${this.stars.length} stars above 5σ`, x0 + 6, y0 + py - 10, C.text, 9);
+    this.text(`faintest star drawn: m = ${fmt(Math.min(mlim, 31), 1)}`, x0 + px - 6, y0 + py - 10, C.dim, 9, 'right');
+    const grasp = (D / 0.007) ** 2;
+    this.setReadout([
+      ['Collecting area  πD²/4', `${A < 1 ? fmt(A * 1e4, 1) + ' cm²' : fmt(A, 1) + ' m²'}`, C.accent],
+      ['Light grasp vs the eye', `${grasp < 1e4 ? fmt(grasp, 0) : sci(grasp, 1)}×  (${fmt(2.5 * Math.log10(grasp), 1)} mag)`],
+      ['Photons from an m = 20 star', `${sci(N0 * 1e-8 * A, 1)} /s  ·  ${sci(N0 * 1e-8 * A * t, 1)} in the exposure`],
+      ['Limiting magnitude (5σ)', `m ≈ ${fmt(mlim, 1)}`, C.green],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 46. Snell's law ---- */
+
+const MEDIA: Record<string, [number, number, string]> = { air: [1.000277, 0, 'air'], water: [1.3199, 3100, 'water'], crown: [1.5046, 4200, 'crown glass'], flint: [1.6, 9000, 'flint glass'], diamond: [2.3818, 12100, 'diamond'] };
+const nOf = (m: string, nm: number) => MEDIA[m][0] + MEDIA[m][1] / (nm * nm);
+
+class SnellWidget extends CanvasWidget {
+  private pair: [string, string] = ['air', 'crown']; private th1 = 40 * DEG; private nm = 550; private dragging = false;
+  constructor() {
+    super(480 / 300);
+    this.segmented<string>([['air→water', 'air → water'], ['air→crown', 'air → crown glass'], ['air→diamond', 'air → diamond'], ['crown→air', 'glass → air'], ['water→air', 'water → air']], 'air→crown', (v) => { this.pair = v.split('→') as [string, string]; });
+    this.slider('Wavelength', 400, 700, 1, 550, (v) => `${v} nm`, (v) => { this.nm = v; });
+    const set = (e: PointerEvent) => { const { x, y } = canvasPos(this.canvas, e, this.w, this.h); const cx = this.w * 0.5, cy = this.h * 0.5; const dx = x - cx, dy = cy - y; if (dy <= 2) return; this.th1 = Math.max(0.5 * DEG, Math.min(89.5 * DEG, Math.atan2(Math.abs(dx), dy))); if (dx > 0) this.flip = -1; else this.flip = 1; };
+    this.canvas.addEventListener('pointerdown', (e) => { this.dragging = true; this.canvas.setPointerCapture(e.pointerId); set(e); });
+    this.canvas.addEventListener('pointermove', (e) => { if (this.dragging) set(e); });
+    this.canvas.addEventListener('pointerup', () => { this.dragging = false; });
+    this.canvas.style.touchAction = 'none'; this.canvas.style.cursor = 'grab';
+    this.controls.appendChild($('div', 'lw-caption', 'Drag in the upper medium to aim the incident ray.'));
+  }
+  private flip = 1;
+  protected draw() {
+    const c = this.ctx; const cx = this.w / 2, cy = this.h / 2, L = Math.min(this.w, this.h) * 0.46;
+    const n1 = nOf(this.pair[0], this.nm), n2 = nOf(this.pair[1], this.nm);
+    const col = rgba(waveRGB(this.nm));
+    c.fillStyle = hexA(C.blue, 0.03 + 0.06 * (n1 - 1)); c.fillRect(0, 0, this.w, cy); c.fillStyle = hexA(C.blue, 0.03 + 0.06 * (n2 - 1)); c.fillRect(0, cy, this.w, cy);
+    this.line(0, cy, this.w, cy, C.line, 1.2); this.line(cx, cy - L, cx, cy + L, C.faint, 1, [4, 4]);
+    this.text(`${MEDIA[this.pair[0]][2]}   n₁ = ${fmt(n1, 4)}`, 10, 14, C.text, 10); this.text(`${MEDIA[this.pair[1]][2]}   n₂ = ${fmt(n2, 4)}`, 10, this.h - 12, C.text, 10);
+    const s = this.flip, th1 = this.th1;
+    const ix = cx - s * L * Math.sin(th1), iy = cy - L * Math.cos(th1);
+    // incident
+    this.line(ix, iy, cx, cy, col, 2.2); const ux = (cx - ix) / L, uy = (cy - iy) / L; this.arrow(cx - ux * 30, cy - uy * 30, col);
+    // reflected (Fresnel, unpolarised)
+    const sinT2 = n1 / n2 * Math.sin(th1); const tir = sinT2 > 1;
+    let R = 1;
+    if (!tir) { const th2 = Math.asin(sinT2); const rs = (n1 * Math.cos(th1) - n2 * Math.cos(th2)) / (n1 * Math.cos(th1) + n2 * Math.cos(th2)); const rp = (n2 * Math.cos(th1) - n1 * Math.cos(th2)) / (n2 * Math.cos(th1) + n1 * Math.cos(th2)); R = (rs * rs + rp * rp) / 2; }
+    const rx = cx + s * L * Math.sin(th1), ry = cy - L * Math.cos(th1);
+    this.line(cx, cy, rx, ry, rgba(waveRGB(this.nm), Math.max(0.12, R)), tir ? 2.2 : 1.2);
+    this.text(`reflected  ${fmt(R * 100, R < 0.1 ? 1 : 0)} %`, rx + s * 6, ry + 10, C.dim, 8, s > 0 ? 'left' : 'right');
+    if (!tir) { const th2 = Math.asin(sinT2); const tx = cx + s * L * Math.sin(th2), ty = cy + L * Math.cos(th2); this.line(cx, cy, tx, ty, rgba(waveRGB(this.nm), Math.max(0.2, 1 - R)), 2.2); this.text(`refracted  θ₂ = ${fmt(th2 / DEG, 1)}°`, tx + s * 6, ty - 8, col, 9, s > 0 ? 'left' : 'right'); this.arc(cx, cy, 34, Math.PI / 2, Math.PI / 2 + s * th2 * -1, col); }
+    else this.text('total internal reflection', cx, cy + 24, C.red, 10, 'center');
+    this.arc(cx, cy, 28, -Math.PI / 2, -Math.PI / 2 - s * th1, col);
+    this.text(`θ₁ = ${fmt(th1 / DEG, 1)}°`, cx - s * 40, cy - 40, col, 9, s > 0 ? 'right' : 'left');
+    const thc = n1 > n2 ? Math.asin(n2 / n1) : NaN;
+    if (!Number.isNaN(thc)) { const kx = cx - s * L * Math.sin(thc), ky = cy - L * Math.cos(thc); this.line(kx, ky, cx, cy, hexA(C.red, 0.5), 1, [3, 3]); this.text(`critical ${fmt(thc / DEG, 1)}°`, kx, ky - 8, C.red, 8, 'center'); }
+    this.setReadout([
+      ['Snell  n₁ sin θ₁ = n₂ sin θ₂', `${fmt(n1 * Math.sin(th1), 4)} = ${tir ? 'no solution' : fmt(n2 * Math.sin(Math.asin(sinT2)), 4)}`, tir ? C.red : C.accent],
+      ['Speed of light in medium 2', `c / ${fmt(n2, 3)} = ${sci(C_LIGHT / n2, 3)} m/s`],
+      ['Critical angle  sin θc = n₂/n₁', Number.isNaN(thc) ? 'none (into denser medium)' : `${fmt(thc / DEG, 1)}°`],
+      ['Dispersion n(400) − n(700)', `${fmt(nOf(this.pair[1], 400) - nOf(this.pair[1], 700), 4)} for ${MEDIA[this.pair[1]][2]}`],
+    ]);
+  }
+  private arrow(x: number, y: number, col: string) { this.circle(x, y, 2.5, undefined, col); }
+  private arc(x: number, y: number, r: number, a0: number, a1: number, col: string) { const c = this.ctx; c.beginPath(); c.arc(x, y, r, Math.min(a0, a1), Math.max(a0, a1)); c.strokeStyle = col; c.lineWidth = 1; c.stroke(); }
+}
+
+/* ------------------------------------------------- 47. thin lens / mirror ---- */
+
+class LensWidget extends CanvasWidget {
+  private mode: 'lens' | 'mirror' = 'lens'; private p = 2.2; private f = 1;
+  constructor() {
+    super(480 / 240);
+    this.segmented<'lens' | 'mirror'>([['lens', 'converging lens'], ['mirror', 'concave mirror']], 'lens', (v) => { this.mode = v; });
+    this.slider('Object distance p / f', 0.3, 4.5, 0.01, 2.2, (v) => `${fmt(v, 2)} f`, (v) => { this.p = v; });
+  }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const fpx = this.w * 0.13, ax = this.h * 0.56; const ox = this.mode === 'lens' ? this.w * 0.55 : this.w * 0.86; // optic position
+    const q = 1 / (1 / this.f - 1 / this.p); const m = -q / this.p; const hO = this.h * 0.22;
+    const dir = this.mode === 'lens' ? 1 : -1;                          // image side direction
+    const px = ox - this.p * fpx, qx = ox + dir * q * fpx;
+    this.line(0, ax, this.w, ax, C.line);
+    for (const k of [-2, -1, 1, 2]) { const x = ox - k * fpx * (this.mode === 'lens' ? 1 : 1); if (x > 4 && x < this.w - 4) { this.line(x, ax - 4, x, ax + 4, C.dim); this.text(Math.abs(k) === 1 ? (k > 0 ? 'F' : 'F′') : (k > 0 ? '2F' : '2F′'), x, ax + 12, C.dim, 8, 'center'); } }
+    if (this.mode === 'lens') { c.beginPath(); c.ellipse(ox, ax, 7, this.h * 0.34, 0, 0, TAU); c.fillStyle = hexA(C.blue, 0.18); c.fill(); c.strokeStyle = C.blue; c.stroke(); }
+    else { c.beginPath(); const R = 2 * fpx; for (let y = -this.h * 0.34; y <= this.h * 0.34; y += 2) { const x = ox - (R - Math.sqrt(Math.max(0, R * R - y * y))); y === -this.h * 0.34 ? c.moveTo(x, ax + y) : c.lineTo(x, ax + y); } c.strokeStyle = C.blue; c.lineWidth = 3; c.stroke(); c.lineWidth = 1; }
+    // object
+    this.arrowV(px, ax, -hO, C.sun); this.text('object', px, ax - hO - 10, C.sun, 9, 'center');
+    const hI = hO * m;                       // signed image height (negative = inverted)
+    const real = q > 0;
+    // rays from object tip
+    const tipY = ax - hO; const F2 = ox + dir * fpx, F1 = ox - fpx;
+    // each ray: start, point where it meets the optic, outgoing direction
+    const y3 = ax - hO * (F1 - ox) / (F1 - px);
+    const rays: Array<[number, number, number, number, string]> = [
+      [ox, tipY, F2 - ox, ax - tipY, C.red],                                   // parallel in → through F
+      [ox, ax, this.mode === 'lens' ? ox - px : -(ox - px), ax - tipY, C.green],  // through centre / off the vertex
+      [ox, y3, dir, 0, C.purple],                                             // through F in → parallel out
+    ];
+    for (const [x1, y1, dx0, dy0, col] of rays) {
+      this.line(px, tipY, x1, y1, col, 1.2);
+      const L = Math.hypot(dx0, dy0) || 1, dx = dx0 / L, dy = dy0 / L, far = this.w;
+      this.line(x1, y1, x1 + dx * far, y1 + dy * far, col, 1.2);
+      if (!real) this.line(x1, y1, x1 - dx * far, y1 - dy * far, hexA(col, 0.45), 1, [3, 4]);
+    }
+    if (Math.abs(qx) < this.w * 3) { this.arrowV(qx, ax, -hI, real ? C.text : hexA(C.text, 0.6), !real); this.text(real ? 'real image' : 'virtual image', qx, hI < 0 ? ax - hI + 12 : ax - hI - 10, C.text, 9, 'center'); }
+    this.setReadout([
+      ['1/p + 1/q = 1/f', `1/${fmt(this.p, 2)} + 1/${fmt(q, 2)} = 1`, C.accent],
+      ['Image distance q', `${fmt(Math.abs(q), 2)} f  ${real ? '(opposite side: real)' : '(same side: virtual)'}`, real ? C.green : C.purple],
+      ['Magnification m = −q/p', `${fmt(m, 2)}  (${Math.abs(m) >= 1 ? 'enlarged' : 'reduced'}, ${m < 0 ? 'inverted' : 'upright'})`],
+      ['Use', this.p > 2 ? 'telescope objective (image near F)' : this.p > 1 ? 'projector (enlarged, beyond 2F)' : 'magnifier / eyepiece (object inside F)'],
+    ]);
+  }
+  private arrowV(x: number, y: number, dy: number, col: string, dashed = false) { const c = this.ctx; c.setLineDash(dashed ? [3, 3] : []); this.line(x, y, x, y + dy, col, 2); c.setLineDash([]); c.beginPath(); const s = Math.sign(dy) || 1; c.moveTo(x, y + dy); c.lineTo(x - 4, y + dy - s * 7); c.lineTo(x + 4, y + dy - s * 7); c.closePath(); c.fillStyle = col; c.fill(); }
+}
+
+/* ------------------------------------------------- 48. Airy pattern & Rayleigh ---- */
+
+class AiryWidget extends CanvasWidget {
+  private lgD = Math.log10(0.2); private nm = 550; private lgSep = Math.log10(1); private img: ImageData | null = null; private readonly N = 110;
+  constructor() {
+    super(480 / 250);
+    this.slider('Aperture D', Math.log10(0.007), Math.log10(40), 0.01, this.lgD, (v) => fmtLen(10 ** v), (v) => { this.lgD = v; });
+    this.slider('λ', 350, 2500, 10, 550, (v) => `${v} nm`, (v) => { this.nm = v; });
+    this.slider('Star separation', -3, Math.log10(30), 0.01, this.lgSep, (v) => fmtAngle(10 ** v), (v) => { this.lgSep = v; });
+  }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const D = 10 ** this.lgD, lam = this.nm * 1e-9, sep = 10 ** this.lgSep * ARCSEC, thR = 1.22 * lam / D;
+    const half = Math.max(2.6 * thR, 0.8 * sep + 1.5 * thR);
+    const N = this.N; if (!this.img) this.img = c.createImageData(N, N); const d = this.img.data;
+    const k = Math.PI * D / lam; const s1 = -sep / 2, s2 = sep / 2;
+    for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) { const tx = (i / (N - 1) - 0.5) * 2 * half, ty = (j / (N - 1) - 0.5) * 2 * half; const I = airy(k * Math.hypot(tx - s1, ty)) + airy(k * Math.hypot(tx - s2, ty)); const v = Math.pow(Math.min(1, I / 1.0), 0.45); const o = (j * N + i) * 4; d[o] = 255 * v; d[o + 1] = 245 * v; d[o + 2] = 225 * v; d[o + 3] = 255; }
+    const size = Math.min(this.h - 16, this.w * 0.46), x0 = 8, y0 = (this.h - size) / 2;
+    const off = document.createElement('canvas'); off.width = N; off.height = N; off.getContext('2d')!.putImageData(this.img, 0, 0); c.drawImage(off, x0, y0, size, size); c.strokeStyle = C.line; c.strokeRect(x0, y0, size, size);
+    this.text(`field ${fmtAngle(2 * half / ARCSEC)} across`, x0 + 6, y0 + size - 10, C.dim, 8);
+    const sx0 = x0 + size + 20, sx1 = this.w - 12, gy0 = 24, gy1 = this.h - 36;
+    this.line(sx0, gy1, sx1, gy1, C.line); this.text('intensity along the line joining the stars', sx0, 12, C.dim, 8);
+    let peakMid = 0, peakMax = 0; c.beginPath();
+    for (let i = 0; i <= 200; i++) { const tx = (i / 200 - 0.5) * 2 * half; const I = airy(k * Math.abs(tx - s1)) + airy(k * Math.abs(tx - s2)); peakMax = Math.max(peakMax, I); if (Math.abs(tx) < half / 200) peakMid = I; const x = sx0 + i / 200 * (sx1 - sx0), y = gy1 - I / 2 * (gy1 - gy0) * 0.98; i ? c.lineTo(x, y) : c.moveTo(x, y); }
+    c.strokeStyle = C.sun; c.lineWidth = 1.5; c.stroke();
+    for (const s of [s1, s2]) { const x = sx0 + (s / half / 2 + 0.5) * (sx1 - sx0); this.line(x, gy1, x, gy1 + 5, C.dim); }
+    const xr0 = sx0 + (0.5 - thR / half / 2) * (sx1 - sx0), xr1 = sx0 + (0.5 + thR / half / 2) * (sx1 - sx0);
+    this.line(xr0, gy1 + 14, xr1, gy1 + 14, C.accent); this.text(`1.22 λ/D = ${fmtAngle(thR / ARCSEC)}`, (xr0 + xr1) / 2, gy1 + 24, C.accent, 8, 'center');
+    const ratio = sep / thR; const verdict = ratio >= 1 ? 'resolved (Rayleigh)' : ratio >= 0.77 ? 'barely — a dip is just visible' : ratio >= 0.5 ? 'elongated blob, no dip' : 'single point';
+    const dip = peakMax > 0 ? peakMid / peakMax : 1;
+    this.setReadout([
+      ['Rayleigh limit θ = 1.22 λ/D', fmtAngle(thR / ARCSEC), C.accent],
+      ['Separation / θ', `${fmt(ratio, 2)}  →  ${verdict}`, ratio >= 1 ? C.green : ratio >= 0.77 ? C.sun : C.red],
+      ['Central dip', ratio >= 0.77 ? `${fmt((1 - dip) * 100, 0)} % below the peaks` : 'none'],
+      ['Airy disc on a detector', `${fmtLen(2.44 * lam * 15)} for f/15  ·  ${fmtLen(2.44 * lam * 2)} for f/2`],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 49. seeing & adaptive optics ---- */
+
+class SeeingWidget extends CanvasWidget {
+  private seeing = 1.0; private lgD = Math.log10(4); private nm = 550; private mode: 'short' | 'long' = 'long'; private ao = false; private t = 0; private speck: Array<[number, number]> = []; private nextSpeck = 0; private img: ImageData | null = null; private readonly N = 100;
+  constructor() {
+    super(480 / 250);
+    this.segmented<'short' | 'long'>([['short', 'short exposure (10 ms)'], ['long', 'long exposure']], 'long', (v) => { this.mode = v; });
+    this.segmented<'off' | 'on'>([['off', 'adaptive optics off'], ['on', 'AO on']], 'off', (v) => { this.ao = v === 'on'; });
+    this.slider('Seeing (FWHM)', 0.3, 3, 0.05, 1, (v) => `${fmt(v, 2)}″`, (v) => { this.seeing = v; });
+    this.slider('Aperture D', -1, 1.6, 0.01, this.lgD, (v) => fmtLen(10 ** v), (v) => { this.lgD = v; });
+    this.slider('Wavelength', 400, 2200, 10, 550, (v) => `${v} nm`, (v) => { this.nm = v; });
+  }
+  protected draw(dt: number) {
+    this.t += dt;
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const D = 10 ** this.lgD, lam = this.nm * 1e-9, see = this.seeing * ARCSEC, thR = 1.22 * lam / D;
+    const r0 = 0.98 * lam / see; const nSp = Math.max(1, Math.round((D / r0) ** 2));
+    const strehl = this.ao ? Math.min(0.9, 0.25 + 0.65 * Math.min(1, (lam / 550e-9 - 0.5) / 3.5)) : (D < r0 ? 1 : (r0 / D) ** 2 * 0.9);
+    const half = Math.max(2.2 * see, 3 * thR); const N = this.N; if (!this.img) this.img = c.createImageData(N, N); const d = this.img.data;
+    const sig = see / 2.355; const k = Math.PI * D / lam;
+    if (this.t >= this.nextSpeck) { this.nextSpeck = this.t + 0.09; const rnd = Math.random; this.speck = []; for (let i = 0; i < Math.min(nSp, 400); i++) this.speck.push([gaussRand(rnd) * sig, gaussRand(rnd) * sig]); }
+    const ao = this.ao; const raw = new Float32Array(N * N); let peak = 1e-12;
+    for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+      const tx = (i / (N - 1) - 0.5) * 2 * half, ty = (j / (N - 1) - 0.5) * 2 * half; let I = 0;
+      if (ao) { I = strehl * airy(k * Math.hypot(tx, ty)) + (1 - strehl) * Math.exp(-(tx * tx + ty * ty) / (2 * sig * sig)) * Math.min(1, (thR / sig) ** 2 * 0.3 + 0.08); }
+      else if (this.mode === 'long' || D <= r0 * 1.2) { const s2 = sig * sig + (thR / 2.355) ** 2 * 1.4; I = Math.exp(-(tx * tx + ty * ty) / (2 * s2)); }
+      else { for (const [sx, sy] of this.speck) I += airy(k * Math.hypot(tx - sx, ty - sy)); }
+      raw[j * N + i] = I; if (I > peak) peak = I;
+    }
+    for (let o = 0; o < N * N; o++) { const v = Math.sqrt(Math.min(1, raw[o] / peak)); d[o * 4] = 255 * v; d[o * 4 + 1] = 245 * v; d[o * 4 + 2] = 225 * v; d[o * 4 + 3] = 255; }
+    const size = Math.min(this.h - 16, this.w * 0.46), x0 = 8, y0 = (this.h - size) / 2;
+    const off = document.createElement('canvas'); off.width = N; off.height = N; off.getContext('2d')!.putImageData(this.img, 0, 0); c.drawImage(off, x0, y0, size, size); c.strokeStyle = C.line; c.strokeRect(x0, y0, size, size);
+    this.text(`${fmtAngle(2 * half / ARCSEC)} across`, x0 + 6, y0 + size - 10, C.dim, 8);
+    const bx0 = x0 + size + 22, bx1 = this.w - 14, by = 40;
+    const rows: Array<[string, number, string]> = [['diffraction limit 1.22 λ/D', thR, C.accent], ['seeing disc', see, C.red], ['delivered FWHM', ao ? Math.max(thR, see * Math.sqrt(1 - strehl) * 0.5) : Math.sqrt(see * see + thR * thR), ao ? C.green : C.sun]];
+    const maxA = Math.max(see, thR) * 1.1; this.text('angular size (log scale)', bx0, by - 20, C.dim, 8);
+    rows.forEach(([lab, v, col], i) => { const y = by + i * 36; const frac = Math.max(0.02, (Math.log10(v / ARCSEC) + 3) / (Math.log10(maxA / ARCSEC) + 3)); c.fillStyle = hexA(col, 0.8); c.fillRect(bx0, y, (bx1 - bx0) * Math.min(1, frac), 10); this.text(`${lab}: ${fmtAngle(v / ARCSEC)}`, bx0, y - 7, col, 8); });
+    this.text(`r₀ = ${fmtLen(r0)}  →  D/r₀ = ${fmt(D / r0, 1)}  →  ~${nSp > 1e4 ? sci(nSp, 1) : nSp} speckles`, bx0, by + 118, C.text, 9);
+    this.text(ao ? `AO corrects ~${Math.min(nSp, 5000)} modes; Strehl ≈ ${fmt(strehl, 2)}` : D > r0 ? 'bigger D only collects more light into the same blur' : 'small aperture: diffraction-limited even through turbulence', bx0, by + 134, C.dim, 8);
+    this.setReadout([
+      ['Fried parameter r₀ ∝ λ^(6/5)', `${fmtLen(r0)} at ${this.nm} nm`, C.accent],
+      ['Image FWHM', fmtAngle(rows[2][1] / ARCSEC), rows[2][2]],
+      ['Strehl ratio', fmt(strehl, strehl < 0.1 ? 3 : 2), strehl > 0.3 ? C.green : C.red],
+      ['Limited by', ao ? 'residual AO error' : D > r0 ? 'the atmosphere (seeing)' : 'diffraction'],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 50. chromatic aberration ---- */
+
+class ChromaticWidget extends CanvasWidget {
+  private design: 'single' | 'achromat' | 'apo' = 'single'; private focusAt = 1.0; private V = 60;
+  constructor() {
+    super(480 / 230);
+    this.segmented<'single' | 'achromat' | 'apo'>([['single', 'single lens'], ['achromat', 'achromatic doublet'], ['apo', 'apochromat (3 glasses)']], 'single', (v) => { this.design = v; });
+    this.slider('Abbe number V', 30, 90, 1, 60, (v) => `${v}`, (v) => { this.V = v; });
+    this.slider('Focal plane', 0.96, 1.04, 0.0005, 1.0, (v) => `${fmt((v - 1) * 1000, 1)} ‰`, (v) => { this.focusAt = v; });
+  }
+  private focal(nm: number) { const f0 = 1; const dev = (550 - nm) / 300; if (this.design === 'single') return f0 * (1 - dev * 1.6 / this.V * 1.0); if (this.design === 'achromat') return f0 * (1 + 0.012 * ((nm - 560) / 300) ** 2 * 60 / this.V); return f0 * (1 + 0.0012 * ((nm - 560) / 300) ** 2); }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const ax = this.h * 0.5, lx = this.w * 0.16, fpx = this.w * 0.62, hA = this.h * 0.3;
+    this.line(0, ax, this.w, ax, C.grid);
+    c.beginPath(); c.ellipse(lx, ax, 6, hA + 6, 0, 0, TAU); c.fillStyle = hexA(C.blue, 0.18); c.fill(); c.strokeStyle = C.blue; c.stroke();
+    if (this.design !== 'single') { c.beginPath(); c.ellipse(lx + 9, ax, 3, hA + 6, 0, 0, TAU); c.fillStyle = hexA(C.purple, 0.18); c.fill(); c.strokeStyle = C.purple; c.stroke(); }
+    if (this.design === 'apo') { c.beginPath(); c.ellipse(lx + 16, ax, 2.5, hA + 6, 0, 0, TAU); c.fillStyle = hexA(C.green, 0.18); c.fill(); c.strokeStyle = C.green; c.stroke(); }
+    const waves = [440, 550, 650]; const fs = waves.map((nm) => this.focal(nm));
+    const fpX = lx + fpx * this.focusAt; this.line(fpX, ax - hA - 14, fpX, ax + hA + 14, C.text, 1, [4, 3]); this.text('focal plane', fpX, ax + hA + 22, C.text, 8, 'center');
+    const blur: number[] = [];
+    waves.forEach((nm, i) => { const col = rgba(waveRGB(nm), 0.85); const fx = lx + fpx * fs[i]; for (const h of [-hA, -hA / 2, hA / 2, hA]) { this.line(0, ax + h, lx, ax + h, col, 1); const slope = -h / (fx - lx); const xe = this.w; this.line(lx, ax + h, xe, ax + h + slope * (xe - lx), col, 1); } this.line(fx, ax - 5, fx, ax + 5, col, 2); blur.push(Math.abs(2 * hA * (fpX - fx) / (fx - lx))); });
+    // zoom inset of focal region
+    const ix = this.w * 0.78, iy = 10, iw = this.w * 0.2, ih = this.h * 0.42; c.fillStyle = '#10141b'; c.fillRect(ix, iy, iw, ih); c.strokeStyle = C.line; c.strokeRect(ix, iy, iw, ih);
+    this.text('blur spots at the focal plane', ix + iw / 2, iy + 10, C.dim, 7, 'center');
+    waves.forEach((nm, i) => { const r = Math.max(1.2, Math.min(ih * 0.4, blur[i] * 6)); const cy = iy + ih * 0.6; this.circle(ix + iw / 2, cy, r, rgba(waveRGB(nm), 0.9), rgba(waveRGB(nm), 0.18)); });
+    const spread = (Math.max(...fs) - Math.min(...fs));
+    const blurF = fs.map((f) => 0.6 * Math.abs(this.focusAt - f) / f);
+    this.setReadout([
+      ['f (blue / green / red), f₅₅₀ = 1000', `${fmt(fs[0] * 1000, 1)} / ${fmt(fs[1] * 1000, 1)} / ${fmt(fs[2] * 1000, 1)}`, C.accent],
+      ['Longitudinal colour spread', `${fmt(spread * 1000, 2)} ‰ of f ≈ f/${fmt(1 / Math.max(spread, 1e-5), 0)}`, spread > 5e-3 ? C.red : spread > 5e-4 ? C.sun : C.green],
+      ['Blur spot (D = 0.6 f), ‰ of f', `b ${fmt(blurF[0] * 1000, 1)} · g ${fmt(blurF[1] * 1000, 1)} · r ${fmt(blurF[2] * 1000, 1)}`],
+      ['Design', this.design === 'single' ? 'one glass: blue focuses short' : this.design === 'achromat' ? 'crown + flint: 2 colours united' : 'fluorite / ED triplet: 3 colours united'],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 51. reflector designs ---- */
+
+type Design = 'prime' | 'newton' | 'cass' | 'greg' | 'schmidt' | 'nasmyth';
+class DesignsWidget extends CanvasWidget {
+  private design: Design = 'newton'; private t = 0; private F = 3;
+  constructor() {
+    super(480 / 230);
+    this.segmented<Design>([['prime', 'prime focus'], ['newton', 'Newtonian'], ['cass', 'Cassegrain'], ['greg', 'Gregorian'], ['nasmyth', 'Nasmyth'], ['schmidt', 'Schmidt camera']], 'newton', (v) => { this.design = v; });
+    this.slider('Primary f-ratio', 1.2, 6, 0.1, 3, (v) => `f/${fmt(v, 1)}`, (v) => { this.F = v; });
+    this.playButton();
+  }
+  protected draw(dt: number) {
+    this.t += dt;
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const ax = this.h * 0.5, Dpx = this.h * 0.62, R = Dpx / 2, fpx = Dpx * this.F;
+    const sch = this.design === 'schmidt';
+    const mx = sch ? this.w * 0.86 : Math.min(this.w * 0.9, this.w * 0.22 + fpx * (this.design === 'cass' || this.design === 'nasmyth' ? 0.75 : this.design === 'greg' ? 1.0 : 1.05)); // primary vertex x
+    const scale = Math.min(1, (this.w - 30) / (fpx * (sch ? 1.4 : 1.1) + 40)); const f = fpx * scale, rr = R;
+    const vx = sch ? this.w - 24 : Math.min(this.w - 24, 30 + f * (this.design === 'cass' || this.design === 'nasmyth' ? 0.72 : this.design === 'greg' ? 1.3 : 1.05));
+    void mx;
+    // primary mirror
+    c.beginPath(); for (let y = -rr; y <= rr; y += 2) { const x = sch ? vx - (2 * f - Math.sqrt(Math.max(0, 4 * f * f - y * y))) : vx - y * y / (4 * f); y === -rr ? c.moveTo(x, ax + y) : c.lineTo(x, ax + y); } c.strokeStyle = C.blue; c.lineWidth = 3; c.stroke(); c.lineWidth = 1;
+    const hole = this.design === 'cass' || this.design === 'greg'; if (hole) { c.fillStyle = C.bg; c.fillRect(vx - 6, ax - rr * 0.16, 12, rr * 0.32); }
+    const Fx = vx - f;                                     // prime focus
+    const heights = [-0.9, -0.6, -0.3, 0.3, 0.6, 0.9].map((k) => k * rr);
+    const paths: number[][][] = [];
+    for (const h of heights) {
+      const hitX = sch ? vx - (2 * f - Math.sqrt(4 * f * f - h * h)) : vx - h * h / (4 * f);
+      const pts: number[][] = [[0, ax + h], [hitX, ax + h]];
+      if (this.design === 'prime') pts.push([Fx, ax], [Fx - 18, ax + (ax + h - ax) * -18 / (hitX - Fx)]);
+      else if (this.design === 'newton') { const dx = Fx - hitX, dy = -h; const L = Math.hypot(dx, dy); const flatX = Fx + rr * 0.55; const tt = (flatX - hitX) / dx; const px = hitX + dx * tt, py = ax + h + dy * tt; const ux = dx / L, uy = dy / L; const nx = Math.SQRT1_2, ny = -Math.SQRT1_2; const dot = ux * nx + uy * ny; const rx = ux - 2 * dot * nx, ry = uy - 2 * dot * ny; const rem = L * (1 - tt); pts.push([px, py], [px + rx * rem, py + ry * rem], [px + rx * (rem + 16), py + ry * (rem + 16)]); }
+      else if (this.design === 'cass' || this.design === 'nasmyth') { const sx = Fx + f * 0.25; const tt = (sx - hitX) / (Fx - hitX); const px = hitX + (Fx - hitX) * tt, py = ax + h - h * tt; const F2x = vx + f * 0.18; if (this.design === 'cass') { pts.push([px, py], [F2x, ax], [F2x + 14, ax - (py - ax) * 14 / (F2x - px)]); } else { const tx = vx - rr * 0.35; const tt2 = (tx - px) / (F2x - px); const qx = px + (F2x - px) * tt2, qy = py + (ax - py) * tt2; const rem = Math.hypot(F2x - qx, ax - qy); pts.push([px, py], [qx, qy], [qx, qy - rem * 1.0 * Math.sign(1)]); } }
+      else if (this.design === 'greg') { const sx = Fx - f * 0.3; const px = hitX + (sx - hitX), py = ax + h + (-h) * (sx - hitX) / (Fx - hitX); const F2x = vx + f * 0.2; pts.push([Fx, ax], [px, py], [F2x, ax], [F2x + 14, ax - (py - ax) * 14 / (F2x - px)]); }
+      else { const plateX = vx - 2 * f; const fx = vx - f, fy = ax; pts.splice(1, 1, [plateX, ax + h], [hitX, ax + h * 0.98]); const dirx = fx - hitX, diry = fy - ax - h * 0.98; const L = Math.hypot(dirx, diry); pts.push([hitX + dirx / L * (L - 2), ax + h * 0.98 + diry / L * (L - 2)]); }
+      paths.push(pts);
+    }
+    // secondary / flats / plate
+    if (this.design === 'newton') { const flatX = Fx + rr * 0.55; this.line(flatX - 10, ax - 10, flatX + 10, ax + 10, C.purple, 3); }
+    if (this.design === 'cass' || this.design === 'nasmyth') { const sx = Fx + f * 0.25; c.beginPath(); c.moveTo(sx + 5, ax - rr * 0.32); c.quadraticCurveTo(sx - 7, ax, sx + 5, ax + rr * 0.32); c.strokeStyle = C.purple; c.lineWidth = 3; c.stroke(); c.lineWidth = 1; }
+    if (this.design === 'nasmyth') { const tx = vx - rr * 0.35; this.line(tx - 10, ax + 10, tx + 10, ax - 10, C.purple, 3); }
+    if (this.design === 'greg') { const sx = Fx - f * 0.3; c.beginPath(); c.moveTo(sx - 5, ax - rr * 0.36); c.quadraticCurveTo(sx + 9, ax, sx - 5, ax + rr * 0.36); c.strokeStyle = C.purple; c.lineWidth = 3; c.stroke(); c.lineWidth = 1; }
+    if (sch) { const plateX = vx - 2 * f; this.line(plateX, ax - rr, plateX, ax + rr, C.green, 3); this.text('corrector plate', plateX, ax - rr - 10, C.green, 8, 'center'); c.beginPath(); for (let y = -rr * 0.5; y <= rr * 0.5; y += 2) { const x = vx - f + y * y / (2 * f); y === -rr * 0.5 ? c.moveTo(x, ax + y) : c.lineTo(x, ax + y); } c.strokeStyle = C.sun; c.setLineDash([3, 3]); c.stroke(); c.setLineDash([]); this.text('curved focal surface', vx - f, ax + rr * 0.5 + 12, C.sun, 8, 'center'); }
+    // rays with travelling pulses
+    for (const pts of paths) {
+      c.beginPath(); pts.forEach(([x, y], i) => (i ? c.lineTo(x, y) : c.moveTo(x, y))); c.strokeStyle = hexA(C.sun, 0.55); c.lineWidth = 1; c.stroke();
+      let total = 0; const segs: number[] = []; for (let i = 1; i < pts.length; i++) { const L = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); segs.push(L); total += L; }
+      for (let k = 0; k < 3; k++) { let s = ((this.t * 120 + k * total / 3) % total); for (let i = 0; i < segs.length; i++) { if (s <= segs[i]) { const u = s / segs[i]; const x = pts[i][0] + (pts[i + 1][0] - pts[i][0]) * u, y = pts[i][1] + (pts[i + 1][1] - pts[i][1]) * u; this.glow(x, y, 4, hexA(C.sun, 0.95)); break; } s -= segs[i]; } }
+    }
+    const info: Record<Design, [string, number, string]> = {
+      prime: ['focus inside the tube, in front of the primary', 1, 'fast, wide field; the detector blocks light'],
+      newton: ['flat diagonal; focus at the side of the tube', 1, 'simple and cheap; eyepiece at the top'],
+      cass: ['convex hyperboloid; focus behind the primary', 3, 'long f in a short tube; heavy instruments at the back'],
+      greg: ['concave ellipsoid beyond prime focus', 3.5, 'upright image; accessible intermediate focus (solar heat stop)'],
+      nasmyth: ['Cassegrain + flat out through the altitude axis', 3, 'instruments on fixed platforms, never move'],
+      schmidt: ['spherical primary + corrector at 2R; no coma', 1, 'very wide field (6°) on a curved surface — surveys'],
+    };
+    const [desc, mag, pro] = info[this.design]; const Feff = this.F * mag;
+    this.setReadout([
+      ['Secondary', desc, C.accent],
+      ['Effective focal ratio', `f/${fmt(Feff, 1)}  (focal length ${fmt(Feff, 1)} × D)`],
+      ['Tube length', `≈ ${fmt(this.design === 'schmidt' ? 2 * this.F : this.design === 'greg' ? this.F * 1.3 : this.design === 'cass' || this.design === 'nasmyth' ? this.F * 0.75 : this.F, 1)} × D`],
+      ['Why', pro],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 52. plate scale & field ---- */
+
+const TARGETS: Array<[string, number, number, string]> = [['Moon', 1860, 1860, 'moon'], ['Jupiter', 45, 45, 'jupiter'], ['Saturn', 43, 19, 'saturn'], ['Orion Nebula', 3900, 3600, 'nebula'], ['Andromeda', 11400, 3600, 'galaxy'], ['Pleiades', 6600, 6600, 'cluster']];
+const SENSORS: Array<[string, number, number, number]> = [['phone sensor', 6.2, 4.6, 0], ['APS-C', 23.5, 15.6, 0], ['full frame', 36, 24, 0], ['eyepiece 25 mm', 0, 0, 25], ['eyepiece 10 mm', 0, 0, 10], ['eyepiece 4 mm', 0, 0, 4]];
+class PlateScaleWidget extends CanvasWidget {
+  private lgF = Math.log10(1000); private tgt = 0; private sens = 2;
+  constructor() {
+    super(480 / 240);
+    this.segmented<string>(TARGETS.map(([n]) => [n, n] as [string, string]), 'Moon', (n) => { this.tgt = TARGETS.findIndex(([k]) => k === n); });
+    this.segmented<string>(SENSORS.map(([n]) => [n, n] as [string, string]), 'full frame', (n) => { this.sens = SENSORS.findIndex(([k]) => k === n); });
+    this.slider('Focal length f', Math.log10(50), Math.log10(150000), 0.01, this.lgF, (v) => fmtLen(10 ** v / 1000), (v) => { this.lgF = v; });
+  }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const f = 10 ** this.lgF; const scale = 206265 / f; // arcsec per mm
+    const [, sw, sh, fe] = SENSORS[this.sens]; const eye = fe > 0; const afov = 60; // apparent field of eyepiece, degrees
+    const M = eye ? f / fe : 0; const fovW = eye ? afov * 3600 / M : sw * scale, fovH = eye ? fovW : sh * scale;
+    const [name, tw, th, kind] = TARGETS[this.tgt];
+    const box = Math.min(this.h - 40, this.w * 0.56); const cx = this.w * 0.32, cy = this.h / 2 - 6;
+    const pxPerAs = (eye ? box : box) / Math.max(fovW, fovH);
+    const fw = fovW * pxPerAs, fh = fovH * pxPerAs;
+    c.save(); c.beginPath(); if (eye) c.arc(cx, cy, fw / 2, 0, TAU); else c.rect(cx - fw / 2, cy - fh / 2, fw, fh); c.clip();
+    c.fillStyle = '#05070b'; c.fillRect(0, 0, this.w, this.h);
+    const rnd = mulberry(3); for (let i = 0; i < 120; i++) { const x = cx + (rnd() - 0.5) * box * 1.4, y = cy + (rnd() - 0.5) * box * 1.4; this.circle(x, y, 0.6 + rnd(), undefined, `rgba(255,255,255,${0.2 + rnd() * 0.5})`); }
+    const rw = tw * pxPerAs, rh = th * pxPerAs;
+    if (kind === 'moon') { const g = c.createRadialGradient(cx - rw * 0.2, cy - rw * 0.2, rw * 0.1, cx, cy, rw / 2); g.addColorStop(0, '#d9d6cc'); g.addColorStop(1, '#8e8a80'); c.fillStyle = g; c.beginPath(); c.arc(cx, cy, rw / 2, 0, TAU); c.fill(); const r2 = mulberry(11); for (let i = 0; i < 14; i++) { const a = r2() * TAU, r = r2() * rw * 0.42; c.fillStyle = 'rgba(60,65,80,0.35)'; c.beginPath(); c.ellipse(cx + r * Math.cos(a), cy + r * Math.sin(a), rw * (0.04 + 0.08 * r2()), rw * (0.03 + 0.06 * r2()), a, 0, TAU); c.fill(); } }
+    else if (kind === 'jupiter') { c.fillStyle = '#d8c3a0'; c.beginPath(); c.ellipse(cx, cy, rw / 2, rh / 2 * 0.94, 0, 0, TAU); c.fill(); c.save(); c.beginPath(); c.ellipse(cx, cy, rw / 2, rh / 2 * 0.94, 0, 0, TAU); c.clip(); for (const [k, col] of [[-0.45, '#a8785a'], [-0.2, '#b58a68'], [0.15, '#a8785a'], [0.45, '#b58a68']] as Array<[number, string]>) { c.fillStyle = col; c.fillRect(cx - rw, cy + k * rh / 2 - rh * 0.05, 2 * rw, rh * 0.1); } c.fillStyle = '#c8664a'; c.beginPath(); c.ellipse(cx + rw * 0.15, cy + rh * 0.2, rw * 0.1, rh * 0.06, 0, 0, TAU); c.fill(); c.restore(); }
+    else if (kind === 'saturn') { c.strokeStyle = '#cfc2a0'; c.lineWidth = Math.max(1, rh * 0.18); c.beginPath(); c.ellipse(cx, cy, rw / 2, rw / 2 * 0.3, 0, 0, TAU); c.stroke(); c.lineWidth = 1; c.fillStyle = '#e0cfa2'; c.beginPath(); c.ellipse(cx, cy, rh / 2 * 1.1, rh / 2, 0, 0, TAU); c.fill(); if (rw > 60) { c.strokeStyle = '#05070b'; c.lineWidth = Math.max(0.8, rw * 0.012); c.beginPath(); c.ellipse(cx, cy, rw / 2 * 0.89, rw / 2 * 0.3 * 0.89, 0, 0, TAU); c.stroke(); c.lineWidth = 1; } }
+    else if (kind === 'nebula') { const g = c.createRadialGradient(cx, cy, 0, cx, cy, rw / 2); g.addColorStop(0, 'rgba(255,220,200,0.9)'); g.addColorStop(0.4, 'rgba(200,90,110,0.5)'); g.addColorStop(1, 'rgba(120,40,80,0)'); c.fillStyle = g; c.beginPath(); c.ellipse(cx, cy, rw / 2, rh / 2, 0.4, 0, TAU); c.fill(); }
+    else if (kind === 'galaxy') { c.save(); c.translate(cx, cy); c.rotate(-0.5); const g = c.createRadialGradient(0, 0, 0, 0, 0, rw / 2); g.addColorStop(0, 'rgba(255,240,220,0.95)'); g.addColorStop(0.15, 'rgba(230,210,190,0.6)'); g.addColorStop(1, 'rgba(120,120,160,0)'); c.fillStyle = g; c.beginPath(); c.ellipse(0, 0, rw / 2, rh / 2, 0, 0, TAU); c.fill(); c.restore(); }
+    else { const r2 = mulberry(5); for (let i = 0; i < 9; i++) { const x = cx + (r2() - 0.5) * rw * 0.8, y = cy + (r2() - 0.5) * rh * 0.8; this.glow(x, y, Math.max(2, rw * 0.03), 'rgba(170,200,255,0.9)'); } }
+    c.restore();
+    if (eye) this.circle(cx, cy, fw / 2, C.line, undefined, 1.5); else { c.strokeStyle = C.line; c.strokeRect(cx - fw / 2, cy - fh / 2, fw, fh); }
+    this.text(eye ? `eyepiece field ${fmtAngle(fovW)} · ${fmt(M, 0)}×` : `${SENSORS[this.sens][0]}: ${fmtAngle(fovW)} × ${fmtAngle(fovH)}`, cx, cy + Math.max(fw, fh) / 2 + 12, C.dim, 8, 'center');
+    const tx = this.w * 0.66; let ty = 24;
+    const lines: Array<[string, string]> = [[`${name}`, `${fmtAngle(tw)}${tw !== th ? ' × ' + fmtAngle(th) : ''} on the sky`], ['image size', eye ? `${fmt(tw / 3600 * M, 1)}° apparent` : `${fmt(tw / scale, tw / scale < 10 ? 2 : 1)} mm${tw !== th ? ' × ' + fmt(th / scale, 1) + ' mm' : ''}`], ['pixels across (4 µm)', eye ? '—' : `${fmt(tw / scale / 0.004, 0)}`], ['fits the frame?', tw <= fovW && th <= fovH ? 'yes' : 'no — overflows']];
+    for (const [k, v] of lines) { this.text(k, tx, ty, C.dim, 9); this.text(v, tx, ty + 13, k === 'fits the frame?' ? (v === 'yes' ? C.green : C.red) : C.text, 10); ty += 34; }
+    this.setReadout([
+      ['Plate scale 206 265 / f', `${scale >= 10 ? fmt(scale, 0) : fmt(scale, 2)}″ per mm  ·  ${fmt(scale * 0.004, scale * 0.004 < 1 ? 3 : 1)}″ per 4 µm pixel`, C.accent],
+      ['Field of view', eye ? `${fmtAngle(fovW)} true field (60° apparent)` : `${fmtAngle(fovW)} × ${fmtAngle(fovH)}`],
+      ['Magnification', eye ? `${fmt(M, 0)}× (max useful ≈ 2× per mm of D)` : `${fmt(f / 50, 1)}× vs a 50 mm camera lens`],
+      ['Rule', '2× f → 2× image, 4× pixels, 4× exposure'],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 53. compare telescopes ---- */
+
+class ScopesWidget extends CanvasWidget {
+  private a = 1; private b = 9;
+  constructor() {
+    super(480 / 250);
+    this.controls.appendChild($('div', 'lw-caption', 'A:'));
+    this.segmented<string>(SCOPES.map(([n]) => [n, n] as [string, string]), SCOPES[1][0], (n) => { this.a = SCOPES.findIndex(([k]) => k === n); });
+    this.controls.appendChild($('div', 'lw-caption', 'B:'));
+    this.segmented<string>(SCOPES.map(([n]) => [n, n] as [string, string]), SCOPES[9][0], (n) => { this.b = SCOPES.findIndex(([k]) => k === n); });
+  }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const A = SCOPES[this.a], B = SCOPES[this.b]; const Dmax = Math.max(A[1], B[1]); const Rpx = Math.min(this.h * 0.3, this.w * 0.15);
+    const cx = [this.w * 0.17, this.w * 0.45]; const col = [C.sun, C.blue]; const cy = this.h * 0.46;
+    [A, B].forEach((s, i) => { const r = Math.max(1.5, s[1] / Dmax * Rpx); this.circle(cx[i], cy, r, col[i], hexA(col[i], 0.15), 1.5); if (s[1] / Dmax * Rpx < 1.5) this.text('(too small to draw to scale)', cx[i], cy + 16, C.dim, 7, 'center'); this.text(`${s[0]} — ${fmtLen(s[1])}`, cx[i], cy + Rpx + 14, col[i], 9, 'center'); this.text(s[2], cx[i], cy + Rpx + 26, C.dim, 8, 'center'); });
+    this.text('apertures to the same scale', this.w * 0.31, 14, C.dim, 8, 'center');
+    const bx = this.w * 0.66, bw = this.w * 0.22; const lgA = (D: number) => 2 * Math.log10(D / 0.007);
+    const rows: Array<[string, (D: number) => number, (v: number) => string, number]> = [
+      ['light grasp vs eye (log)', lgA, (v) => `10^${fmt(v, 1)}`, 2 * Math.log10(40 / 0.007)],
+      ['limiting magnitude (visual)', (D) => 7.5 + 5 * Math.log10(D * 100), (v) => `m ${fmt(v, 1)}`, 7.5 + 5 * Math.log10(4000)],
+      ['resolution 1.22 λ/D at 550 nm', (D) => -Math.log10(1.22 * 550e-9 / D / ARCSEC), (v) => fmtAngle(10 ** -v), 2.5],
+    ];
+    rows.forEach(([lab, fn, show, maxv], i) => { const y = 30 + i * 62; this.text(lab, bx, y, C.dim, 8); [A, B].forEach((s, j) => { const v = fn(s[1]); const yy = y + 10 + j * 14; c.fillStyle = hexA(col[j], 0.75); c.fillRect(bx, yy, Math.max(2, bw * Math.max(0, (i === 2 ? v + 2 : v) / (i === 2 ? maxv + 2 : maxv))), 9); this.text(show(v), bx + bw + 4, yy + 5, col[j], 8); }); });
+    const ratio = (B[1] / A[1]) ** 2;
+    this.setReadout([
+      ['Light grasp  B / A = (D_B/D_A)²', `${ratio >= 1 ? (ratio > 1e4 ? sci(ratio, 1) : fmt(ratio, 1)) + '×' : fmt(1 / ratio, 1) + '× less'}  (${fmt(Math.abs(2.5 * Math.log10(ratio)), 1)} mag)`, C.accent],
+      ['Same photons collected in', ratio >= 1 ? `B needs 1/${fmt(ratio, ratio > 100 ? 0 : 1)} of A\'s exposure` : `A needs 1/${fmt(1 / ratio, 1)} of B\'s exposure`],
+      ['Diffraction limit  A / B', `${fmtAngle(1.22 * 550e-9 / A[1] / ARCSEC)} / ${fmtAngle(1.22 * 550e-9 / B[1] / ARCSEC)}`],
+      ['Seeing-limited (r₀ ≈ 15 cm, no AO)?', `A ${A[1] > 0.15 ? 'yes' : 'no'} · B ${B[1] > 0.15 ? 'yes' : 'no'}`],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 54. mounts & field rotation ---- */
+
+class MountWidget extends CanvasWidget {
+  private mount: 'eq' | 'altaz' = 'altaz'; private lat = 35; private dec = 20; private H = -30;
+  constructor() {
+    super(480 / 240);
+    this.segmented<'eq' | 'altaz'>([['eq', 'equatorial'], ['altaz', 'alt-azimuth']], 'altaz', (v) => { this.mount = v; });
+    this.playButton();
+    this.slider('Latitude φ', -60, 60, 1, 35, (v) => `${v}°`, (v) => { this.lat = v; });
+    this.slider('Star declination δ', -30, 89, 1, 20, (v) => `${v}°`, (v) => { this.dec = v; });
+    this.slider('Time (hour angle)', -6, 6, 0.01, -2, (v) => `${fmt(v, 1)} h`, (v) => { this.H = v * 15; });
+  }
+  protected draw(dt: number) {
+    if (this.playing) { this.H += dt * 15 * 0.25; if (this.H > 90) this.H = -90; }
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const phi = this.lat * DEG, dec = this.dec * DEG, H = this.H * DEG;
+    const sinA = Math.sin(phi) * Math.sin(dec) + Math.cos(phi) * Math.cos(dec) * Math.cos(H); const alt = Math.asin(sinA);
+    const az = Math.atan2(-Math.cos(dec) * Math.sin(H), Math.sin(dec) * Math.cos(phi) - Math.cos(dec) * Math.sin(phi) * Math.cos(H));
+    const q = Math.atan2(Math.sin(H), Math.tan(phi) * Math.cos(dec) - Math.sin(dec) * Math.cos(H)); // parallactic angle
+    const rate = 15 * Math.cos(phi) * Math.cos(az) / Math.max(1e-3, Math.cos(alt)); // arcsec/s of field rotation
+    // sky dome (left): azimuth around, altitude radial
+    const cx = this.w * 0.27, cy = this.h * 0.52, R = Math.min(this.h * 0.42, this.w * 0.24);
+    this.circle(cx, cy, R, C.line); for (const a of [30, 60]) this.circle(cx, cy, R * (1 - a / 90), C.grid, undefined, 1, [2, 4]);
+    this.text('N', cx, cy - R - 8, C.dim, 8, 'center'); this.text('S', cx, cy + R + 8, C.dim, 8, 'center'); this.text('E', cx + R + 8, cy, C.dim, 8, 'center'); this.text('W', cx - R - 8, cy, C.dim, 8, 'center');
+    const sky = (altr: number, azr: number) => [cx + R * (1 - altr / (Math.PI / 2)) * Math.sin(azr), cy - R * (1 - altr / (Math.PI / 2)) * Math.cos(azr)];
+    c.beginPath(); let started = false; for (let h = -180; h <= 180; h += 2) { const hr = h * DEG; const sa = Math.sin(phi) * Math.sin(dec) + Math.cos(phi) * Math.cos(dec) * Math.cos(hr); if (sa < 0) { started = false; continue; } const a2 = Math.atan2(-Math.cos(dec) * Math.sin(hr), Math.sin(dec) * Math.cos(phi) - Math.cos(dec) * Math.sin(phi) * Math.cos(hr)); const [x, y] = sky(Math.asin(sa), a2); started ? c.lineTo(x, y) : c.moveTo(x, y); started = true; } c.strokeStyle = hexA(C.sun, 0.5); c.stroke();
+    const pole = sky(Math.abs(phi), phi >= 0 ? 0 : Math.PI); this.circle(pole[0], pole[1], 3, C.accent); this.text('celestial pole', pole[0] + 6, pole[1], C.accent, 7);
+    if (alt > 0) { const [sx, sy] = sky(alt, az); this.glow(sx, sy, 8, 'rgba(255,255,255,0.9)'); const len = 14; const ang = this.mount === 'altaz' ? 0 : q; this.line(sx - len * Math.sin(ang), sy - len * Math.cos(ang), sx + len * Math.sin(ang), sy + len * Math.cos(ang), hexA(C.blue, 0.9), 1.5); this.line(sx - len * Math.cos(ang), sy + len * Math.sin(ang), sx + len * Math.cos(ang), sy - len * Math.sin(ang), hexA(C.blue, 0.9), 1.5); }
+    else this.text('star below the horizon', cx, cy, C.red, 9, 'center');
+    // eyepiece view (right)
+    const ex = this.w * 0.72, ey = this.h * 0.5, Re = Math.min(this.h * 0.36, this.w * 0.2);
+    this.circle(ex, ey, Re, C.line, '#05070b', 1.5);
+    const fieldRot = this.mount === 'altaz' ? q : 0;
+    const rnd = mulberry(21); c.save(); c.beginPath(); c.arc(ex, ey, Re, 0, TAU); c.clip(); c.translate(ex, ey); c.rotate(fieldRot);
+    this.circle(0, 0, 3, undefined, '#fff'); for (let i = 0; i < 16; i++) { const a = rnd() * TAU, r = (0.25 + 0.7 * rnd()) * Re; this.circle(r * Math.cos(a), r * Math.sin(a), 1 + rnd() * 1.5, undefined, `rgba(255,255,255,${0.4 + 0.5 * rnd()})`); }
+    this.line(0, -Re, 0, Re, hexA(C.blue, 0.4)); this.line(-Re, 0, Re, 0, hexA(C.blue, 0.4)); this.text('N', 0, -Re + 10, C.blue, 8, 'center'); c.restore();
+    this.text(this.mount === 'altaz' ? 'alt-az: the field turns' : 'equatorial: the field stays put', ex, ey + Re + 12, this.mount === 'altaz' ? C.sun : C.green, 9, 'center');
+    this.setReadout([
+      ['Altitude · azimuth', alt > 0 ? `${fmt(alt / DEG, 1)}° · ${fmt(((az / DEG) + 360) % 360, 0)}°` : 'set', C.accent],
+      ['Parallactic angle', `${fmt(q / DEG, 1)}°`],
+      ['Field rotation (alt-az)', alt > 0 ? `${fmt(rate, 1)}″/s = ${fmt(rate * 60 / 3600, 2)}°/min${alt > 85 * DEG ? '  — near zenith: cannot follow' : ''}` : '—', alt > 85 * DEG ? C.red : this.mount === 'altaz' ? C.sun : C.dim],
+      ['Axis rates', this.mount === 'eq' ? 'polar axis 15″/s, declination 0 — one motor' : alt > 0 ? `az ${fmt(15 * (Math.sin(phi) + Math.cos(phi) * Math.tan(alt) * Math.cos(az)) * 1, 1)}″/s · alt ${fmt(15 * Math.cos(phi) * Math.sin(az), 1)}″/s — both vary` : '—'],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 55. Jansky's chart ---- */
+
+class JanskyWidget extends CanvasWidget {
+  private day = 60; private hyp: 'sun' | 'stars' = 'stars'; private noise: number[] = [];
+  constructor() {
+    super(480 / 260);
+    this.segmented<'sun' | 'stars'>([['sun', 'if the source were the Sun'], ['stars', 'if the source were fixed to the stars']], 'stars', (v) => { this.hyp = v; });
+    this.slider('Day of the year', 0, 365, 1, 60, (v) => `day ${v}`, (v) => { this.day = v; });
+    this.playButton(); this.playing = false;
+    const rnd = mulberry(99); for (let i = 0; i < 4000; i++) this.noise.push(gaussRand(rnd));
+  }
+  protected draw(dt: number) {
+    if (this.playing) { this.day = (this.day + dt * 20) % 366; }
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const rows = 12, x0 = 52, x1 = this.w - 14, y0 = 20, rowH = (this.h - 48) / rows;
+    const X = (hour: number) => x0 + hour / 24 * (x1 - x0);
+    for (let hh = 0; hh <= 24; hh += 6) { this.line(X(hh), y0 - 4, X(hh), this.h - 26, C.grid); this.text(`${hh}h`, X(hh), this.h - 18, C.dim, 8, 'center'); }
+    this.text('local solar time →', x1, this.h - 8, C.dim, 7, 'right');
+    const peakHour = (d: number) => ((12 + (18 - 12) - d * 3.9344 / 60) % 24 + 24) % 24; // peaks at 18h on day 0, 3.93 min earlier each day
+    for (let r = 0; r < rows; r++) {
+      const d = Math.floor(this.day) - (rows - 1 - r); if (d < 0) continue; const yb = y0 + (r + 1) * rowH - 3;
+      this.text(`d ${d}`, x0 - 6, yb - rowH * 0.35, C.dim, 8, 'right');
+      const pk = peakHour(d); c.beginPath();
+      for (let i = 0; i <= 160; i++) { const hr = i / 160 * 24; let dh = Math.abs(hr - pk); dh = Math.min(dh, 24 - dh); const sig = Math.exp(-dh * dh / (2 * 1.1 * 1.1)); const n = this.noise[(d * 160 + i) % this.noise.length] * 0.05; const v = 0.12 + 0.85 * sig + n + (Math.sin(hr * 1.3 + d) > 0.95 ? 0.3 : 0); const y = yb - Math.max(0, Math.min(1, v)) * rowH * 0.9; i ? c.lineTo(X(hr), y) : c.moveTo(X(hr), y); }
+      c.strokeStyle = r === rows - 1 ? C.sun : hexA(C.text, 0.35 + 0.5 * r / rows); c.lineWidth = r === rows - 1 ? 1.4 : 1; c.stroke();
+      const pred = this.hyp === 'sun' ? 18 : pk; this.line(X(pred), yb - rowH * 0.95, X(pred), yb, this.hyp === 'sun' ? hexA(C.red, 0.6) : hexA(C.green, 0.6), 1, [2, 2]);
+    }
+    this.text(this.hyp === 'sun' ? 'prediction (red): same solar time every day' : 'prediction (green): 3 m 56 s earlier each day', x0, 10, this.hyp === 'sun' ? C.red : C.green, 8);
+    const d = Math.floor(this.day); const pk = peakHour(d); const gained = d * 3.9344;
+    this.setReadout([
+      ['Peak today', `${Math.floor(pk)}h ${padZ((pk % 1) * 60)}m local time`, C.sun],
+      ['Drift (−3 m 56 s per day)', `${fmt(gained / 60, 1)} h earlier after ${d} days`],
+      ['Period of the signal', this.hyp === 'sun' ? '23h 56m 04s ≠ 24h: not the Sun' : '23h 56m 04s = sidereal: stars', this.hyp === 'sun' ? C.red : C.green],
+      ['Direction', 'RA 18h, Dec −20°: Galactic Centre'],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 56. radio dish ---- */
+
+class DishWidget extends CanvasWidget {
+  private lgD = Math.log10(25); private lgLam = Math.log10(0.21); private lgS = 0; private t = 0;
+  constructor() {
+    super(480 / 240);
+    this.segmented<string>([['vla', 'VLA dish 25 m · 21 cm'], ['gbt', 'GBT 100 m · 21 cm'], ['alma', 'ALMA 12 m · 1.3 mm'], ['fast', 'FAST 300 m · 21 cm'], ['eff', 'Effelsberg 100 m · 6 cm']], 'vla', (v) => { const m: Record<string, [number, number]> = { vla: [25, 0.21], gbt: [100, 0.21], alma: [12, 0.0013], fast: [300, 0.21], eff: [100, 0.06] }; this.lgD = Math.log10(m[v][0]); this.lgLam = Math.log10(m[v][1]); this.sD.set(this.lgD); this.sL.set(this.lgLam); });
+    this.sD = this.slider('Dish diameter D', 0, Math.log10(500), 0.01, this.lgD, (v) => fmtLen(10 ** v), (v) => { this.lgD = v; });
+    this.sL = this.slider('Wavelength λ', -3.3, 1, 0.01, this.lgLam, (v) => fmtLen(10 ** v), (v) => { this.lgLam = v; });
+    this.slider('Source flux density', -3, 4, 0.01, 0, (v) => `${10 ** v >= 1 ? fmt(10 ** v, 10 ** v > 100 ? 0 : 1) + ' Jy' : fmt(10 ** v * 1000, 0) + ' mJy'}`, (v) => { this.lgS = v; });
+  }
+  private sD!: { set: (v: number) => void }; private sL!: { set: (v: number) => void };
+  protected draw(dt: number) {
+    this.t += dt;
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const D = 10 ** this.lgD, lam = 10 ** this.lgLam, S = 10 ** this.lgS;
+    const hpbw = 1.2 * lam / D; const A = Math.PI * D * D / 4, Aeff = 0.6 * A; const P = S * 1e-26 * Aeff * 1e7;
+    // dish picture (left)
+    const cx = this.w * 0.26, base = this.h * 0.82, R = Math.min(this.w * 0.22, this.h * 0.4), f = R * 0.9;
+    c.beginPath(); for (let x = -R; x <= R; x += 2) { const y = base - x * x / (4 * f); x === -R ? c.moveTo(cx + x, y) : c.lineTo(cx + x, y); } c.strokeStyle = C.blue; c.lineWidth = 3; c.stroke(); c.lineWidth = 1;
+    const fy = base - f; this.circle(cx, fy, 4, C.accent, hexA(C.accent, 0.5)); this.text('feed', cx + 8, fy, C.accent, 8);
+    for (const x of [-R * 0.7, R * 0.7]) this.line(cx + x, base - x * x / (4 * f), cx, fy, C.faint);
+    const ph = (this.t * 40) % 24;
+    for (let k = 0; k < 6; k++) { const y = 10 + k * 24 + ph; if (y < base - R * R / (4 * f) - 40) this.line(cx - R, y, cx + R, y, hexA(C.sun, 0.5)); }
+    for (let k = 0; k < 4; k++) { const r = (k * 18 + (24 - ph) * 0.75) % 72; if (r > 2) { c.beginPath(); c.arc(cx, fy, r, 0.25 * Math.PI, 0.75 * Math.PI); c.strokeStyle = hexA(C.sun, 0.6 * (1 - r / 72)); c.stroke(); } }
+    this.text(`surface accurate to λ/20 = ${fmtLen(lam / 20)}`, cx, base + 14, C.dim, 8, 'center');
+    // beam pattern (right)
+    const gx0 = this.w * 0.55, gx1 = this.w - 12, gy0 = 30, gy1 = this.h * 0.62; const span = 3.5 * hpbw;
+    this.line(gx0, gy1, gx1, gy1, C.line); this.text('beam pattern (power vs angle)', gx0, gy0 - 14, C.dim, 8);
+    c.beginPath(); for (let i = 0; i <= 200; i++) { const th = (i / 200 - 0.5) * 2 * span; const I = airy(Math.PI * D * th / lam); const x = gx0 + i / 200 * (gx1 - gx0), y = gy1 - I * (gy1 - gy0); i ? c.lineTo(x, y) : c.moveTo(x, y); } c.strokeStyle = C.sun; c.lineWidth = 1.5; c.stroke();
+    const xh1 = gx0 + (0.5 + hpbw / 2 / (2 * span)) * (gx1 - gx0);
+    const xa = gx0 + (0.5 - hpbw / 2 / (2 * span)) * (gx1 - gx0); this.line(xa, gy1 - 0.5 * (gy1 - gy0), xh1, gy1 - 0.5 * (gy1 - gy0), C.accent, 1.5); this.text(`HPBW ${fmtAngle(hpbw / ARCSEC)}`, (xa + xh1) / 2, gy1 - 0.5 * (gy1 - gy0) - 9, C.accent, 8, 'center');
+    this.text('side lobes', gx0 + (gx1 - gx0) * 0.86, gy1 - 12, C.dim, 7, 'center');
+    const moon = 1860 * ARCSEC; this.text(hpbw > moon ? `the beam is ${fmt(hpbw / moon, 1)}× the Moon` : `the Moon is ${fmt(moon / hpbw, 0)} beams wide`, gx0, gy1 + 14, C.text, 9);
+    this.text(`the eye: 1′ — this dish: ${fmtAngle(hpbw / ARCSEC)}`, gx0, gy1 + 28, C.dim, 8);
+    this.setReadout([
+      ['Half-power beam width 1.2 λ/D', fmtAngle(hpbw / ARCSEC), C.accent],
+      ['Collecting area · effective (60 %)', `${fmt(A, 0)} m²  ·  ${fmt(Aeff, 0)} m²`],
+      ['Power collected (10 MHz band)', `${sci(P, 2)} W = ${sci(P * 3600, 1)} J/h`, C.sun],
+      ['Frequency', `${fmtFreq(C_LIGHT / lam)}  ·  photon energy ${fmtEnergy(H_PLANCK * C_LIGHT / lam / EV)}`],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 57. interferometer ---- */
+
+class InterferometerWidget extends CanvasWidget {
+  private lgB = Math.log10(1000); private lgLam = Math.log10(0.21); private lgSrc = Math.log10(1); private srcOff = 0; private t = 0; private n = 2; private uv: Array<[number, number]> = [];
+  constructor() {
+    super(480 / 270);
+    this.segmented<string>([['2', '2 antennas'], ['3', '3'], ['5', '5'], ['8', '8 (Y-shaped)']], '2', (v) => { this.n = +v; this.uv = []; });
+    this.playButton(); this.playing = false;
+    this.slider('Baseline B', 1, Math.log10(1.2e7), 0.01, this.lgB, (v) => fmtLen(10 ** v), (v) => { this.lgB = v; this.uv = []; });
+    this.slider('Wavelength λ', -3.3, 0.5, 0.01, this.lgLam, (v) => fmtLen(10 ** v), (v) => { this.lgLam = v; this.uv = []; });
+    this.slider('Source angular size', -5, Math.log10(600), 0.01, this.lgSrc, (v) => fmtAngle(10 ** v), (v) => { this.lgSrc = v; });
+    this.controls.appendChild($('div', 'lw-caption', 'Press play to let the Earth rotate and fill the uv plane.'));
+  }
+  protected draw(dt: number) {
+    if (this.playing) { this.t += dt; }
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const B = 10 ** this.lgB, lam = 10 ** this.lgLam, src = 10 ** this.lgSrc * ARCSEC; const fr = lam / B;
+    const xarg = Math.PI * src * B / lam; const vis = Math.abs(xarg < 1e-6 ? 1 : 2 * J1(xarg) / xarg);
+    // antennas (top-left)
+    const ax0 = 14, ax1 = this.w * 0.44, ay = this.h * 0.36; const ant = (x: number) => { c.beginPath(); c.moveTo(x - 9, ay); c.quadraticCurveTo(x, ay - 14, x + 9, ay); c.strokeStyle = C.blue; c.lineWidth = 2.5; c.stroke(); c.lineWidth = 1; this.line(x, ay, x, ay + 12, C.line); };
+    const pos = this.n === 2 ? [0, 1] : this.n === 3 ? [0, 0.35, 1] : this.n === 5 ? [0, 0.15, 0.45, 0.8, 1] : [0, 0.08, 0.2, 0.4, 0.55, 0.7, 0.86, 1];
+    pos.forEach((p) => ant(ax0 + 12 + p * (ax1 - ax0 - 24)));
+    this.line(ax0, ay + 12, ax1, ay + 12, C.faint); this.text(`B = ${fmtLen(B)}`, (ax0 + ax1) / 2, ay + 24, C.text, 9, 'center');
+    const tilt = (ax1 - ax0) * 0.11; for (let k = 0; k < 5; k++) { const d = (k * 16 + (this.t * 30) % 16); const y = ay - 90 + d; this.line(ax0, y + tilt, ax1, y - tilt, hexA(C.sun, 0.35)); }
+    this.text('plane waves from the source', ax0, ay - 100, C.dim, 8);
+    this.text(`delay across B = B sin θ / c`, ax0, ay + 38, C.dim, 8);
+    // fringes on the sky (top-right)
+    const fx0 = this.w * 0.52, fx1 = this.w - 12, fy0 = 14, fy1 = this.h * 0.46; const span = 4 * fr;
+    c.fillStyle = '#05070b'; c.fillRect(fx0, fy0, fx1 - fx0, fy1 - fy0);
+    const W = fx1 - fx0; for (let i = 0; i < W; i++) { const thx = (i / W - 0.5) * 2 * span; const env = airy(Math.PI * (B * 0.06) * thx / lam) ; const fringe = 0.5 + 0.5 * vis * Math.cos(2 * Math.PI * (thx - this.srcOff) / fr); const v = env * fringe; c.fillStyle = `rgba(255,210,120,${v})`; c.fillRect(fx0 + i, fy0, 1.2, fy1 - fy0); }
+    c.strokeStyle = C.line; c.strokeRect(fx0, fy0, fx1 - fx0, fy1 - fy0);
+    this.text(`fringe spacing λ/B = ${fmtAngle(fr / ARCSEC)}`, fx0 + 4, fy1 + 10, C.accent, 8); this.text(`visibility ${fmt(vis, 2)}`, fx1 - 4, fy1 + 10, vis > 0.5 ? C.green : vis > 0.1 ? C.sun : C.red, 8, 'right');
+    // uv coverage (bottom)
+    const ux = this.w * 0.5, uy = this.h * 0.74, Ru = Math.min(this.h * 0.17, this.w * 0.12);
+    this.circle(ux, uy, Ru, C.grid); this.line(ux - Ru, uy, ux + Ru, uy, C.grid); this.line(ux, uy - Ru, ux, uy + Ru, C.grid); this.text('uv plane (baselines seen from the source)', ux, uy - Ru - 8, C.dim, 8, 'center');
+    const Hn = (this.t * 0.15) % (TAU);
+    if (this.playing || this.uv.length === 0) { const decl = 45 * DEG; for (let i = 0; i < pos.length; i++) for (let j = i + 1; j < pos.length; j++) { const b = (pos[j] - pos[i]); const u = b * Math.sin(Hn), v = b * Math.cos(Hn) * Math.sin(decl); this.uv.push([u, v], [-u, -v]); } if (this.uv.length > 4000) this.uv.splice(0, this.uv.length - 4000); }
+    for (const [u, v] of this.uv) { c.fillStyle = hexA(C.blue, 0.5); c.fillRect(ux + u * Ru * 0.95 - 1, uy - v * Ru * 0.95 - 1, 2, 2); }
+    this.text(`${pos.length} antennas → ${pos.length * (pos.length - 1) / 2} baselines${this.playing ? ' · Earth rotating' : ''}`, ux, uy + Ru + 10, C.text, 8, 'center');
+    const eq = 1.22 * lam / fr * 1;
+    this.setReadout([
+      ['Resolution θ ≈ λ/B', fmtAngle(fr / ARCSEC), C.accent],
+      ['Resolution of a single dish', `${fmtLen(B)} wide — but only ${pos.length} × 25 m of area`],
+      ['Source of this size', vis > 0.9 ? 'unresolved: full fringes' : vis > 0.1 ? 'partly resolved: fringes fade' : 'resolved out: no fringes', vis > 0.5 ? C.green : C.red],
+      ['Famous baselines', 'VLA 36 km · VLBA 8600 km · EHT 10 700 km'],
+    ]); void eq;
+  }
+}
+
+/* ------------------------------------------------- 58. atmospheric windows ---- */
+
+const SITES: Array<[string, number]> = [['sea level', 0], ['Mauna Kea 4.2 km', 4.2], ['SOFIA 13 km', 13], ['balloon 40 km', 40], ['orbit', 400]];
+class AtmWindowWidget extends CanvasWidget {
+  private alt = 0; private sA!: { set: (v: number) => void };
+  constructor() {
+    super(480 / 230);
+    this.segmented<string>(SITES.map(([n]) => [n, n] as [string, string]), 'sea level', (n) => { this.alt = SITES.find(([k]) => k === n)![1]; this.sA.set(Math.min(60, this.alt)); });
+    this.sA = this.slider('Altitude', 0, 60, 0.1, 0, (v) => `${fmt(v, 1)} km`, (v) => { this.alt = v; });
+  }
+  /** transmission at wavelength λ (m) from space down to altitude h (km) */
+  private T(lam: number, h: number): number {
+    const fAir = Math.exp(-h / 8), fH2O = Math.exp(-h / 2), fO3 = h < 15 ? 1 : h < 35 ? (35 - h) / 20 : 0;
+    const lg = Math.log10(lam); let tau = 0;
+    const band = (c0: number, w: number, depth: number) => depth * Math.exp(-(((lg - c0) / w) ** 2));
+    // UV / X / gamma: O2, N2, O3
+    if (lam < 3.1e-7) tau += 30 * fO3 * Math.min(1, (3.1e-7 - lam) / 2e-8 + 0.05) + 40 * fAir * (lam < 2e-7 ? 1 : 0);
+    if (lam < 1e-8) tau += 200 * fAir;
+    tau += 0.1 * fAir * (lam < 5e-7 ? (5e-7 / lam) ** 4 * 0.3 : 0);  // Rayleigh (blue)
+    // IR water & CO2 bands
+    for (const [c0, w, d] of [[Math.log10(0.94e-6), 0.012, 1.5], [Math.log10(1.14e-6), 0.012, 2], [Math.log10(1.38e-6), 0.02, 6], [Math.log10(1.87e-6), 0.02, 6], [Math.log10(2.7e-6), 0.04, 20], [Math.log10(3.2e-6), 0.02, 4], [Math.log10(6.3e-6), 0.09, 30], [Math.log10(15e-6), 0.07, 25], [Math.log10(4.3e-6), 0.015, 15]] as Array<[number, number, number]>) tau += band(c0, w, d) * (c0 === Math.log10(4.3e-6) || c0 === Math.log10(15e-6) ? fAir : fH2O);
+    if (lam > 20e-6 && lam < 1e-3) tau += 40 * fH2O * Math.min(1, (lg - Math.log10(20e-6)) / 0.5) * (lam > 3e-4 ? Math.max(0.15, 1 - (lg - Math.log10(3e-4)) / 0.8) : 1);
+    if (lam > 3.3e-4 && lam < 4e-4) tau -= 25 * fH2O * Math.exp(-(((lg - Math.log10(3.5e-4)) / 0.015) ** 2)) * 0; // (sub-mm windows are left to the general term)
+    for (const c0 of [Math.log10(1.35e-2), Math.log10(5e-3), Math.log10(1.6e-3)]) tau += band(c0, 0.02, 1.5) * fH2O;
+    // ionosphere
+    if (lam > 15) tau += 50 * Math.min(1, (lg - Math.log10(15)) / 0.4) * (h < 300 ? 1 : 0);
+    return Math.exp(-Math.max(0, tau));
+  }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const x0 = 36, x1 = this.w - 12, y0 = 26, y1 = this.h - 40; const lg0 = -10, lg1 = 2.5;
+    const X = (lam: number) => x0 + (Math.log10(lam) - lg0) / (lg1 - lg0) * (x1 - x0);
+    const bands: Array<[number, number, string, string]> = [[1e-10, 1e-8, 'X-ray', C.purple], [1e-8, 3.8e-7, 'UV', '#a88cff'], [3.8e-7, 7.8e-7, 'visible', '#fff'], [7.8e-7, 1e-3, 'infrared', '#ff9c6a'], [1e-3, 1e-1, 'microwave', '#ffd27a'], [1e-1, 3e2, 'radio', '#9ad0a0']];
+    for (const [a, b, n, col] of bands) { c.fillStyle = hexA(col === '#fff' ? '#ffffff' : col, 0.06); c.fillRect(X(a), y0, X(b) - X(a), y1 - y0); this.text(n, (X(a) + X(b)) / 2, y0 - 10, col, 8, 'center'); }
+    rainbow(c, (nm) => X(nm * 1e-9), y0 - 16, 4, 0.9);
+    c.beginPath(); c.moveTo(x0, y1);
+    for (let i = 0; i <= x1 - x0; i++) { const lam = 10 ** (lg0 + i / (x1 - x0) * (lg1 - lg0)); const T = this.T(lam, this.alt); c.lineTo(x0 + i, y1 - T * (y1 - y0)); }
+    c.lineTo(x1, y1); c.closePath(); c.fillStyle = hexA(C.blue, 0.35); c.fill(); c.strokeStyle = C.blue; c.stroke();
+    this.line(x0, y1, x1, y1, C.line); this.line(x0, y0, x0, y1, C.line); this.text('T', x0 - 6, y0 - 12, C.dim, 7, 'right'); this.text('1', x0 - 6, y0, C.dim, 7, 'right'); this.text('0', x0 - 6, y1, C.dim, 7, 'right');
+    for (const lg of [-9, -7, -5, -3, -1, 1]) { const x = X(10 ** lg); this.line(x, y1, x, y1 + 4, C.line); this.text(fmtLambda(10 ** lg), x, y1 + 12, C.dim, 7, 'center'); }
+    const obs: Array<[number, string]> = [[1e-9, 'Chandra'], [1.5e-7, 'Hubble UV'], [5.5e-7, 'VLT'], [2.2e-6, 'Keck AO'], [1e-5, 'JWST'], [1e-4, 'Herschel'], [1.3e-3, 'ALMA'], [2.1e-1, 'VLA'], [3, 'LOFAR']];
+    for (const [lam, n] of obs) { const T = this.T(lam, this.alt); const x = X(lam); this.circle(x, y1 - T * (y1 - y0), 3, undefined, T > 0.5 ? C.green : C.red); this.text(n, x, y1 + 24, T > 0.5 ? C.green : C.dim, 7, 'center'); }
+    const h = this.alt; const windows: string[] = []; const probe: Array<[string, number]> = [['UV', 2e-7], ['visible', 5.5e-7], ['near-IR K', 2.2e-6], ['mid-IR 10 µm', 1e-5], ['far-IR', 1e-4], ['sub-mm', 8.5e-4], ['radio', 0.21], ['X-ray', 1e-9]];
+    for (const [n, lam] of probe) if (this.T(lam, h) > 0.5) windows.push(n);
+    this.setReadout([
+      ['Altitude', `${fmt(h, 1)} km: above ${fmt((1 - Math.exp(-h / 8)) * 100, h > 30 ? 2 : 0)} % of air, ${fmt((1 - Math.exp(-h / 2)) * 100, h > 10 ? 2 : 0)} % of H₂O`, C.accent],
+      ['Open windows (T > 0.5)', windows.join(', ') || 'none'],
+      ['Still closed', probe.filter(([n]) => !windows.includes(n)).map(([n]) => n).join(', ') || 'nothing'],
+      ['Blocked by', h < 15 ? 'O₃ (UV) · H₂O, CO₂ (IR) · O₂, N₂ (X-ray)' : h < 35 ? 'residual O₃ (UV) · O₂, N₂ (X-ray)' : h < 300 ? 'residual air (soft X-ray)' : 'nothing'],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 59. infrared: the warm telescope ---- */
+
+class IrThermalWidget extends CanvasWidget {
+  private lgT = Math.log10(290); private lgBand = Math.log10(10e-6); private target = 1;
+  private readonly TGT: Array<[string, number, string]> = [['dust cloud 30 K', 30, 'far-IR, 100 µm'], ['protostar / exoplanet 300 K', 300, 'mid-IR, 10 µm'], ['brown dwarf 1000 K', 1000, 'near-IR, 3 µm'], ['z = 10 galaxy (3000 K → 3 µm)', 300, 'rest-frame UV redshifted into the IR']];
+  constructor() {
+    super(480 / 240);
+    this.segmented<string>([['amb', 'ground telescope 290 K'], ['n2', 'LN₂ 77 K'], ['jwst', 'JWST 40 K'], ['he', 'liquid He 4 K']], 'amb', (v) => { this.lgT = Math.log10({ amb: 290, n2: 77, jwst: 40, he: 4.2 }[v]!); this.sT.set(this.lgT); });
+    this.sT = this.slider('Telescope temperature', Math.log10(3), Math.log10(320), 0.01, this.lgT, (v) => `${fmt(10 ** v, 0)} K`, (v) => { this.lgT = v; });
+    this.slider('Observing wavelength', Math.log10(0.6e-6), Math.log10(500e-6), 0.01, this.lgBand, (v) => fmtLambda(10 ** v), (v) => { this.lgBand = v; });
+  }
+  private sT!: { set: (v: number) => void };
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const T = 10 ** this.lgT, lamB = 10 ** this.lgBand; const eps = 0.04; // emissivity of mirror + structure seen by the detector
+    const x0 = 44, x1 = this.w - 12, y0 = 18, y1 = this.h - 36; const lg0 = Math.log10(0.5e-6), lg1 = Math.log10(1e-3);
+    const X = (lam: number) => x0 + (Math.log10(lam) - lg0) / (lg1 - lg0) * (x1 - x0);
+    const yTop = Math.log10(planck(9.7e-6, 300) * eps * 1e3), yBot = yTop - 14; const Y = (B: number) => y1 - Math.max(0, Math.min(1, (Math.log10(Math.max(B, 1e-300)) - yBot) / (yTop - yBot))) * (y1 - y0);
+    this.line(x0, y1, x1, y1, C.line); this.line(x0, y0, x0, y1, C.line); this.text('log B_λ', x0 - 4, y0 - 4, C.dim, 7, 'right');
+    for (const lam of [1e-6, 3e-6, 1e-5, 3e-5, 1e-4, 3e-4]) { const x = X(lam); this.line(x, y1, x, y1 + 4, C.line); this.text(fmtLambda(lam), x, y1 + 12, C.dim, 7, 'center'); }
+    const curves: Array<[number, number, string, string]> = [[T, eps, C.red, `telescope ${fmt(T, 0)} K × ε 0.04`], [250, 0.15, C.sun, 'sky 250 K (ground only)'], [2.725, 1, C.purple, 'CMB 2.7 K']];
+    curves.forEach(([Tc, e, col, lab], ci) => { if (lab.startsWith('sky') && T < 200) return; c.beginPath(); let first = true; for (let i = 0; i <= 200; i++) { const lam = 10 ** (lg0 + i / 200 * (lg1 - lg0)); const B = planck(lam, Tc) * e; const y = Y(B); if (y >= y1 - 0.5) { first = true; continue; } first ? c.moveTo(X(lam), y) : c.lineTo(X(lam), y); first = false; } c.strokeStyle = col; c.lineWidth = 1.5; c.stroke(); const lmax = 2.898e-3 / Tc; const yl = Math.max(y0 + 6, Y(planck(lmax, Tc) * e) - 9); if (lmax > 0.5e-6 && lmax < 1e-3) { if (ci === 0) this.text(lab, X(lmax) - 8, yl, col, 8, 'right'); else this.text(lab, Math.min(x1 - 4, X(lmax) + 8), yl + (ci === 1 ? 12 : 0), col, 8, 'left'); } else this.text(lab, x1 - 4, Y(planck(1e-3, Tc) * e) - 8, col, 8, 'right'); });
+    // target: a faint source — draw as a flat dim line scaled to show where it sits relative to background (schematic)
+    const [tn, tT, tband] = this.TGT[this.target]; void tband;
+    const dil = 1e-6; c.beginPath(); for (let i = 0; i <= 200; i++) { const lam = 10 ** (lg0 + i / 200 * (lg1 - lg0)); const y = Y(planck(lam, tT) * dil); i ? c.lineTo(X(lam), y) : c.moveTo(X(lam), y); } c.strokeStyle = C.green; c.setLineDash([3, 3]); c.stroke(); c.setLineDash([]);
+    this.text(`target: ${tn} (diluted 10⁻⁶)`, x0 + 6, y0 + 6, C.green, 8);
+    const xb = X(lamB); c.fillStyle = hexA(C.accent, 0.12); c.fillRect(xb - 6, y0, 12, y1 - y0); this.line(xb, y0, xb, y1, C.accent); this.text('band', xb, y1 - 6, C.accent, 7, 'center');
+    const bgTel = planck(lamB, T) * eps, bg300 = planck(lamB, 290) * eps, sig = planck(lamB, tT) * dil;
+    const gain = 2.5 * Math.log10(bg300 / Math.max(bgTel, 1e-300));
+    this.setReadout([
+      ['Telescope peak λ_max = 2898 µm·K / T', fmtLambda(2.898e-3 / T), C.red],
+      ['Telescope glow in the band', `${sci(bgTel, 1)} W m⁻³ sr⁻¹`, gain > 5 ? C.green : gain > 1 ? C.sun : C.red],
+      ['Target / background · cooling gain', `${sci(sig / Math.max(bgTel, 1e-300), 1)} · ${fmt(gain, 1)} mag vs 290 K`, sig > bgTel ? C.green : C.red],
+      ['Rule', lamB < 2.5e-6 ? 'near-IR: OH sky lines dominate' : lamB < 30e-6 ? 'mid-IR: cool the telescope below ~50 K' : 'far-IR: telescope < 10 K, space only'],
+    ]);
+    this.target = lamB < 2.5e-6 ? 2 : lamB < 30e-6 ? 1 : 0;
+  }
+}
+
+/* ------------------------------------------------- 60. grazing-incidence X-ray mirrors ---- */
+
+class GrazingWidget extends CanvasWidget {
+  private lgE = 0; private ang = 0.8; private coat: 'au' | 'ir' | 'ni' | 'ml' = 'ir'; private t = 0; private photons: Array<{ s: number; ok: boolean; shell: number }> = []; private acc = 0; private hit = 0; private lost = 0;
+  constructor() {
+    super(480 / 240);
+    this.segmented<'au' | 'ir' | 'ni' | 'ml'>([['ir', 'iridium (Chandra)'], ['au', 'gold (XMM)'], ['ni', 'nickel'], ['ml', 'multilayer (NuSTAR)']], 'ir', (v) => { this.coat = v; this.reset(); });
+    this.slider('Photon energy', -1, Math.log10(80), 0.01, 0, (v) => fmtEnergy(10 ** v * 1000), (v) => { this.lgE = v; this.reset(); });
+    this.slider('Grazing angle', 0.05, 4, 0.01, 0.8, (v) => `${fmt(v, 2)}°`, (v) => { this.ang = v; this.reset(); });
+  }
+  private reset() { this.hit = 0; this.lost = 0; }
+  private thetaC(E: number) { const rho = { au: 19.3, ir: 22.6, ni: 8.9, ml: 19.3 }[this.coat]; return 3.6 * Math.sqrt(rho / 19) / E; }
+  private R(th: number, E: number) { const tc = this.thetaC(E); if (this.coat === 'ml') { const base = th < tc ? 0.85 : 0; const bragg = th < 3.5 * tc && th >= tc ? 0.45 * Math.exp(-(((th - 2 * tc) / (1.2 * tc)) ** 2)) + 0.25 : 0; return Math.max(base, bragg) * Math.exp(-((th / 6) ** 2)); } if (th <= tc) return 0.92 - 0.3 * (th / tc) ** 4; const r = th / tc; const s = Math.sqrt(r * r - 1); return 0.92 * ((r - s) / (r + s)) ** 2; }
+  protected draw(dt: number) {
+    this.t += dt;
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const E = 10 ** this.lgE; const R1 = this.R(this.ang, E); const R2 = R1 * R1;
+    // Wolter-I nested shells (left)
+    const x0 = 12, x1 = this.w * 0.46, ax = this.h * 0.56, fx = this.w * 0.58; const shells = [0.42, 0.33, 0.25, 0.18];
+    for (const s of shells) { const r = s * this.h * 0.6; for (const sg of [-1, 1]) { this.line(x0, ax + sg * r, x1 * 0.62, ax + sg * r * 0.84, C.blue, 2); this.line(x1 * 0.62, ax + sg * r * 0.84, x1, ax + sg * r * 0.55, C.blue, 2); } }
+    this.text('paraboloid', x1 * 0.35, ax - shells[0] * this.h * 0.6 - 10, C.dim, 7, 'center'); this.text('hyperboloid', x1 * 0.8, ax - shells[0] * this.h * 0.6 - 10, C.dim, 7, 'center');
+    this.line(x1, ax, fx + 10, ax, C.faint, 1, [3, 3]); this.circle(fx, ax, 3, C.accent); this.text('focus', fx, ax + 12, C.accent, 7, 'center');
+    this.acc += dt * 10; while (this.acc >= 1) { this.acc -= 1; const sh = Math.floor(Math.random() * shells.length); const ok = Math.random() < R2; this.photons.push({ s: 0, ok, shell: sh }); if (ok) this.hit++; else this.lost++; }
+    for (let i = this.photons.length - 1; i >= 0; i--) { const p = this.photons[i]; p.s += dt * 1.1; const r = shells[p.shell] * this.h * 0.6 * 0.98; let x: number, y: number; const stage = p.s < 0.4 ? 0 : p.s < 0.6 ? 1 : 2; if (stage === 0) { const u = p.s / 0.4; x = x0 - 20 + (x1 * 0.62 - x0 + 20) * u; y = ax - r; } else if (stage === 1) { const u = (p.s - 0.4) / 0.2; x = x1 * 0.62 + (x1 - x1 * 0.62) * u; y = ax - r * (0.86 - 0.3 * u); } else { const u = (p.s - 0.6) / 0.4; x = x1 + (fx - x1) * u; y = ax - r * 0.56 * (1 - u); } if (!p.ok && p.s > 0.4 + Math.random() * 0.02) { this.glow(x, y, 5, hexA(C.red, 0.8)); this.photons.splice(i, 1); continue; } if (p.s > 1) { this.photons.splice(i, 1); continue; } this.glow(x, y, 3.5, hexA(C.purple, 0.95)); }
+    this.text(`${fmt(E, E < 1 ? 2 : 1)} keV photons at ${fmt(this.ang, 2)}°`, x0, 12, C.text, 9);
+    // reflectivity curve (right)
+    const gx0 = this.w * 0.66, gx1 = this.w - 16, gy0 = 30, gy1 = this.h * 0.7;
+    this.line(gx0, gy1, gx1, gy1, C.line); this.line(gx0, gy0, gx0, gy1, C.line); this.text('reflectivity vs grazing angle', gx0, gy0 - 14, C.dim, 8);
+    c.beginPath(); for (let i = 0; i <= 150; i++) { const th = i / 150 * 4; const y = gy1 - this.R(th, E) * (gy1 - gy0); i ? c.lineTo(gx0 + i / 150 * (gx1 - gx0), y) : c.moveTo(gx0, y); } c.strokeStyle = C.purple; c.lineWidth = 1.5; c.stroke();
+    for (const th of [1, 2, 3, 4]) this.text(`${th}°`, gx0 + th / 4 * (gx1 - gx0), gy1 + 10, C.dim, 7, 'center');
+    const xa = gx0 + this.ang / 4 * (gx1 - gx0); this.line(xa, gy0, xa, gy1, hexA(C.accent, 0.7), 1, [3, 3]); this.circle(xa, gy1 - R1 * (gy1 - gy0), 3, undefined, C.accent);
+    const tc = this.thetaC(E); if (tc < 4) this.text(`θc ≈ ${fmt(tc, 2)}°`, Math.min(gx1 - 26, gx0 + tc / 4 * (gx1 - gx0)), gy0 + 8, C.red, 8, 'center');
+    const total = this.hit + this.lost; this.text(`${total ? fmt(this.hit / total * 100, 0) : '–'} % of photons reach the focus (two bounces)`, gx0, gy1 + 26, R2 > 0.5 ? C.green : R2 > 0.1 ? C.sun : C.red, 9);
+    const fl = 10; const rmax = fl * Math.tan(4 * this.ang * DEG);
+    this.setReadout([
+      ['Critical angle θc ≈ 3.6° √(ρ/19) / E', `${fmt(tc, 2)}° at ${fmt(E, 1)} keV`, C.accent],
+      ['Reflectivity: one bounce · two', `${fmt(R1 * 100, 0)} % · ${fmt(R2 * 100, 0)} %`, R2 > 0.5 ? C.green : C.red],
+      ['Shell radius r ≈ f tan 4θ (f = 10 m)', `${fmt(rmax, 2)} m — thin rings, nest many`],
+      ['Design', this.coat === 'ml' ? 'Bragg multilayers work beyond θc (NuSTAR, 79 keV)' : 'total external reflection below θc only'],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 61. gamma-ray detection ---- */
+
+type GTech = 'mask' | 'compton' | 'pair' | 'cherenkov';
+class GammaDetectWidget extends CanvasWidget {
+  private lgE = 2; private t = 0; private override: GTech | 'auto' = 'auto';
+  constructor() {
+    super(480 / 250);
+    this.segmented<GTech | 'auto'>([['auto', 'choose by energy'], ['mask', 'coded mask'], ['compton', 'Compton'], ['pair', 'pair conversion'], ['cherenkov', 'Cherenkov']], 'auto', (v) => { this.override = v; });
+    this.slider('Photon energy', Math.log10(20), Math.log10(1e8), 0.01, 2, (v) => fmtEnergy(10 ** v * 1e3), (v) => { this.lgE = v; });
+  }
+  private tech(): GTech { if (this.override !== 'auto') return this.override; const E = 10 ** this.lgE; return E < 500 ? 'mask' : E < 3e4 ? 'compton' : E < 1e8 * 0.5 ? 'pair' : 'cherenkov'; }
+  protected draw(dt: number) {
+    this.t += dt; const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const E = 10 ** this.lgE, tech = this.tech(); const ph = (this.t % 2.4) / 2.4; const W = this.w, H = this.h;
+    const info: Record<GTech, [string, string, string]> = {
+      mask: ['Swift-BAT, INTEGRAL', '~arcminutes', '20 keV – 10 MeV'],
+      compton: ['COMPTEL, COSI', '1–3°', '0.3 – 30 MeV'],
+      pair: ['Fermi-LAT, AGILE', '0.1–1°', '20 MeV – 300 GeV'],
+      cherenkov: ['H.E.S.S., MAGIC, VERITAS, CTA', '0.05–0.1°', '50 GeV – 100 TeV'],
+    };
+    if (tech === 'mask') {
+      const mx = W * 0.2, mw = W * 0.5, my = H * 0.22, dy = H * 0.72; const rnd = mulberry(5); const cells = 24; const pat: boolean[] = []; for (let i = 0; i < cells; i++) pat.push(rnd() < 0.5);
+      for (let i = 0; i < cells; i++) if (pat[i]) { c.fillStyle = '#8a8f99'; c.fillRect(mx + i * mw / cells, my - 4, mw / cells, 8); }
+      this.text('tungsten coded mask', mx + mw / 2, my - 16, C.text, 9, 'center'); c.fillStyle = '#2a3140'; c.fillRect(mx, dy, mw, 8); this.text('position-sensitive detector (CdZnTe)', mx + mw / 2, dy + 20, C.text, 9, 'center');
+      const srcAng = 0.25 * Math.sin(this.t * 0.4); for (let i = 0; i < cells; i++) if (!pat[i]) { const xm = mx + (i + 0.5) * mw / cells; const xd = xm + srcAng * (dy - my); c.fillStyle = hexA(C.purple, 0.45); c.fillRect(xd - mw / cells / 2, dy - 2, mw / cells, 6); }
+      for (let k = 0; k < 10; k++) { const u = (ph + k / 10) % 1; const i = Math.floor(((k * 7) % cells)); const xm = mx + (i + 0.5) * mw / cells; const xs = xm - srcAng * (my - 0) ; const x = xs + (xm + srcAng * (dy - my) - xs) * u, y = u * dy; if (pat[i] && y > my) continue; this.glow(x, y, 3, hexA(C.purple, 0.9)); }
+      this.text('the shadow pattern shifts with the source direction → decode it', mx + mw / 2, H * 0.9, C.dim, 8, 'center');
+    } else if (tech === 'compton') {
+      const d1 = H * 0.4, d2 = H * 0.72; c.fillStyle = '#2a3140'; c.fillRect(W * 0.15, d1, W * 0.45, 6); c.fillRect(W * 0.15, d2, W * 0.45, 10); this.text('scatter layer (Si / Ge)', W * 0.62, d1 + 3, C.text, 8); this.text('absorber (CsI / Ge)', W * 0.62, d2 + 5, C.text, 8);
+      const px = W * 0.35; const theta = 40 * DEG; const sx = px + Math.tan(theta) * (d2 - d1); const u = ph; if (u < 0.5) this.glow(px, u / 0.5 * d1, 4, hexA(C.purple, 0.95)); else { const v = (u - 0.5) / 0.5; this.glow(px + (sx - px) * v, d1 + (d2 - d1) * v, 4, hexA(C.purple, 0.95)); this.glow(px - 20 * v, d1 + 30 * v, 2.5, hexA(C.blue, 0.9)); }
+      this.line(px, 0, px, d1, hexA(C.purple, 0.3), 1, [3, 3]); this.line(px, d1, sx, d2, hexA(C.purple, 0.3), 1, [3, 3]);
+      this.text(`θ from E₁, E₂: cos θ = 1 − mₑc² (1/E₂ − 1/E)`, W * 0.15, H * 0.9, C.dim, 8);
+      const cx = W * 0.84, cy = H * 0.42, r = H * 0.22; this.circle(cx, cy, r, hexA(C.purple, 0.7)); this.circle(cx + r * 0.6, cy - r * 0.2, r * 0.9, hexA(C.purple, 0.5)); this.circle(cx - r * 0.3, cy + r * 0.5, r * 0.95, hexA(C.purple, 0.5)); this.circle(cx + r * 0.5, cy + r * 0.6, 3, undefined, C.sun); this.text('event circles on the sky', cx, cy + r + 14, C.dim, 7, 'center'); this.text('intersect at the source', cx, cy + r + 24, C.sun, 7, 'center');
+    } else if (tech === 'pair') {
+      const top = H * 0.18, bot = H * 0.7; for (let i = 0; i < 8; i++) { const y = top + i * (bot - top) / 8; c.fillStyle = i % 2 ? '#3b4252' : '#2a3140'; c.fillRect(W * 0.2, y, W * 0.4, 3); }
+      c.fillStyle = '#4a3a2a'; c.fillRect(W * 0.2, bot + 6, W * 0.4, H * 0.14); this.text('tungsten converter foils + silicon strip trackers', W * 0.62, top + 8, C.text, 8); this.text('CsI calorimeter: total energy', W * 0.62, bot + 16, C.text, 8); this.text('anti-coincidence shield vetoes charged cosmic rays', W * 0.62, bot - 20, C.dim, 7);
+      const px = W * 0.38, conv = top + (bot - top) * 0.3; if (ph < 0.4) this.glow(px, ph / 0.4 * conv, 4, hexA(C.purple, 0.95)); else { const v = (ph - 0.4) / 0.6; const yy = conv + (bot + 20 - conv) * v; this.line(px, conv, px - 14 * v, yy, C.blue, 1.5); this.line(px, conv, px + 14 * v, yy, C.red, 1.5); this.glow(px - 14 * v, yy, 3, hexA(C.blue, 0.9)); this.glow(px + 14 * v, yy, 3, hexA(C.red, 0.9)); }
+      this.line(px, 0, px, conv, hexA(C.purple, 0.3), 1, [3, 3]); this.text('γ → e⁺ e⁻  (E > 1.022 MeV); the pair\'s bisector points back to the source', W * 0.2, H * 0.92, C.dim, 8);
+    } else {
+      const gy = H * 0.86; c.fillStyle = '#1a2a1a'; c.fillRect(0, gy, W, H - gy); for (const x of [W * 0.3, W * 0.5, W * 0.7]) { c.beginPath(); c.moveTo(x - 10, gy); c.quadraticCurveTo(x, gy - 14, x + 10, gy); c.strokeStyle = C.blue; c.lineWidth = 2; c.stroke(); c.lineWidth = 1; }
+      this.text('12–28 m Cherenkov telescopes, 100 m apart', W * 0.5, gy - 22, C.text, 8, 'center');
+      if (ph < 0.3) { this.glow(W * 0.5, ph / 0.3 * H * 0.2, 4, hexA(C.purple, 0.95)); }
+      else { const v = (ph - 0.3) / 0.7; const depth = H * 0.2 + v * (gy - H * 0.2); const rnd = mulberry(Math.floor(this.t / 2.4)); c.strokeStyle = hexA(C.blue, 0.5); for (let i = 0; i < 40; i++) { const y0 = H * 0.2 + rnd() * (depth - H * 0.2); const x0 = W * 0.5 + (rnd() - 0.5) * (y0 - H * 0.2) * 0.3; const L = 20 + rnd() * 30; const y1 = Math.min(depth, y0 + L); const x1 = x0 + (rnd() - 0.5) * 12; if (y0 < depth) this.line(x0, y0, x1, y1, hexA(C.blue, 0.5)); } if (v > 0.5) { c.fillStyle = hexA(C.blue, 0.12 * (v - 0.5) * 2); c.beginPath(); c.moveTo(W * 0.5, H * 0.3); c.lineTo(W * 0.2, gy); c.lineTo(W * 0.8, gy); c.closePath(); c.fill(); } }
+      this.text('air shower: ~10⁹ particles at 10 km; a 5 ns flash of blue light lights a 250 m pool on the ground', W * 0.5, H * 0.08, C.dim, 8, 'center');
+    }
+    const [instr, res, range] = info[tech];
+    const rate = 1e-3 * (E / 1e5) ** -1.5; // photons m⁻² s⁻¹ above E for a bright source (very rough, Crab-like)
+    this.setReadout([
+      ['Technique', `${tech === 'mask' ? 'coded-mask shadowgram' : tech === 'compton' ? 'Compton telescope' : tech === 'pair' ? 'pair-conversion tracker' : 'imaging atmospheric Cherenkov'}  (${range})`, C.accent],
+      ['Instruments', instr],
+      ['Angular resolution', res, C.sun],
+      ['Crab photons above this energy', `≈ ${sci(rate, 1)} m⁻² s⁻¹ → ${rate > 1e-4 ? 'a 1 m² satellite works' : 'need the atmosphere (10⁵ m²)'}`],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 62. one galaxy, seven skies ---- */
+
+type Band = 'radio' | 'hi' | 'fir' | 'nir' | 'vis' | 'uv' | 'xray' | 'gamma';
+class MultiviewWidget extends CanvasWidget {
+  private band: Band = 'vis'; private maps: Record<string, Float32Array> | null = null; private readonly NX = 180; private readonly NY = 110; private img: ImageData | null = null; private t = 0;
+  constructor() {
+    super(480 / 290);
+    this.segmented<Band>([['radio', 'radio continuum'], ['hi', 'HI 21 cm'], ['fir', 'far-IR'], ['nir', 'near-IR'], ['vis', 'visible'], ['uv', 'ultraviolet'], ['xray', 'X-ray'], ['gamma', 'gamma']], 'vis', (v) => { this.band = v; });
+  }
+  private build() {
+    const NX = this.NX, NY = this.NY; const mk = () => new Float32Array(NX * NY);
+    const old = mk(), arms = mk(), dust = mk(), hi = mk(), halo = mk(), pts = mk(), jets = mk(), bulge = mk();
+    const rnd = mulberry(42); const incl = 0.55; const cx = NX / 2, cy = NY / 2; const Rd = NX * 0.14;
+    for (let j = 0; j < NY; j++) for (let i = 0; i < NX; i++) {
+      const x = (i - cx) / Rd, y = (j - cy) / Rd / incl; const r = Math.hypot(x, y), th = Math.atan2(y, x); const o = j * NX + i;
+      old[o] = Math.exp(-r / 1.2); bulge[o] = Math.exp(-((r / 0.25) ** 0.8)) * 1.5;
+      let a = 0, d = 0; for (const k of [0, Math.PI]) { const phi = Math.log(Math.max(r, 0.05)) / 0.3 + k; let dphi = ((th - phi) % TAU + TAU) % TAU; if (dphi > Math.PI) dphi -= TAU; a += Math.exp(-((dphi * r / 0.22) ** 2)); let dd = dphi + 0.22; dd = ((dd + Math.PI) % TAU + TAU) % TAU - Math.PI; d += Math.exp(-((dd * r / 0.14) ** 2)); }
+      const taper = Math.exp(-(((r - 1.4) / 1.1) ** 2)) * (r > 0.3 ? 1 : r / 0.3);
+      arms[o] = a * taper; dust[o] = d * taper * Math.exp(-r / 2.5) + 0.25 * Math.exp(-r / 1.0) * (r > 0.2 ? 1 : 0);
+      hi[o] = Math.exp(-(((r - 1.6) / 1.4) ** 2)) * (1 - Math.exp(-((r / 0.4) ** 2))) + 0.3 * a * taper;
+      const rs = Math.hypot((i - cx) / Rd, (j - cy) / Rd); halo[o] = Math.exp(-((rs / 1.6) ** 1.2)) * 0.8;
+      const jl = Math.exp(-(((i - cx) / (Rd * 0.12)) ** 2)) * Math.exp(-Math.abs(j - cy) / (Rd * 1.6)) * (Math.abs(j - cy) > Rd * 0.2 ? 1 : 0.3); jets[o] = jl + Math.exp(-((rs / 1.5) ** 2)) * 0.35 + 0.3 * a * taper;
+    }
+    for (let n = 0; n < 60; n++) { const r = 0.3 + rnd() * 1.6, th = rnd() * TAU; const x = Math.round(cx + r * Math.cos(th) * Rd), y = Math.round(cy + r * Math.sin(th) * Rd * incl); if (x > 1 && x < NX - 1 && y > 1 && y < NY - 1) { const o = y * NX + x; const a = arms[o]; if (rnd() < 0.3 + a) { pts[o] += 2 + rnd() * 3; pts[o - 1] += 1; pts[o + 1] += 1; pts[o - NX] += 1; pts[o + NX] += 1; } } }
+    this.maps = { old, arms, dust, hi, halo, pts, jets, bulge };
+  }
+  protected draw(dt: number) {
+    this.t += dt; if (!this.maps) this.build();
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const m = this.maps!, NX = this.NX, NY = this.NY; if (!this.img) this.img = c.createImageData(NX, NY); const d = this.img.data;
+    const cols: Record<Band, [[number, number, number], [number, number, number]]> = { radio: [[20, 40, 90], [255, 200, 120]], hi: [[10, 30, 40], [120, 230, 255]], fir: [[30, 10, 20], [255, 130, 60]], nir: [[20, 15, 10], [255, 220, 170]], vis: [[8, 10, 16], [255, 245, 230]], uv: [[10, 10, 30], [150, 170, 255]], xray: [[10, 10, 25], [190, 120, 255]], gamma: [[12, 8, 20], [255, 90, 160]] };
+    for (let o = 0; o < NX * NY; o++) {
+      let v = 0; let tint = 0; // tint: 0 = base colour, 1 = second colour
+      switch (this.band) {
+        case 'radio': v = m.jets[o] * 0.9; break;
+        case 'hi': v = m.hi[o] * 0.9; break;
+        case 'fir': v = m.dust[o] * 1.2 + m.bulge[o] * 0.15; break;
+        case 'nir': v = m.old[o] * 0.9 + m.bulge[o] * 0.5 + m.arms[o] * 0.15; break;
+        case 'vis': { const ext = Math.exp(-m.dust[o] * 2.2); v = (m.old[o] * 0.6 + m.bulge[o] * 0.4 + m.arms[o] * 0.7) * ext; tint = m.arms[o] * ext > m.old[o] ? 1 : 0; break; }
+        case 'uv': v = m.arms[o] ** 1.5 * 1.1 * Math.exp(-m.dust[o] * 1.5) + m.bulge[o] * 0.03; break;
+        case 'xray': v = m.halo[o] * 0.35 + m.pts[o] * 0.4 + m.bulge[o] * 0.5 * (Math.abs(Math.sin(this.t * 2)) > 0.1 ? 1 : 0.5); break;
+        case 'gamma': v = m.old[o] * 0.12 + m.bulge[o] * 0.15 + (m.pts[o] > 3 ? 0.9 : 0) * (m.pts[o] > 0 ? 1 : 0) * ((o * 7919) % 5 === 0 ? 1 : 0.2); break;
+      }
+      if (this.band === 'vis') { const ext = Math.exp(-m.dust[o] * 2.2); const blue = m.arms[o] * ext; const warm = (m.old[o] * 0.6 + m.bulge[o] * 0.4) * ext; const tot = blue + warm; const vv = Math.pow(Math.min(1, tot * 0.9), 0.6); const fb = tot > 0 ? blue / tot : 0; d[o * 4] = 8 + (255 * (1 - fb * 0.3)) * vv; d[o * 4 + 1] = 10 + (235 * (1 - fb * 0.1)) * vv; d[o * 4 + 2] = 16 + (210 + 45 * fb) * vv; d[o * 4 + 3] = 255; continue; }
+      const vv = Math.pow(Math.min(1, v), this.band === 'gamma' ? 0.9 : 0.55); const [c0, c1] = cols[this.band]; void tint;
+      d[o * 4] = c0[0] + (c1[0] - c0[0]) * vv; d[o * 4 + 1] = c0[1] + (c1[1] - c0[1]) * vv; d[o * 4 + 2] = c0[2] + (c1[2] - c0[2]) * vv; d[o * 4 + 3] = 255;
+    }
+    const pw = Math.min(this.w - 16, (this.h - 46) * NX / NY), phh = pw * NY / NX, x0 = (this.w - pw) / 2, y0 = 8;
+    const off = document.createElement('canvas'); off.width = NX; off.height = NY; off.getContext('2d')!.putImageData(this.img, 0, 0); c.imageSmoothingEnabled = true; c.drawImage(off, x0, y0, pw, phh); c.strokeStyle = C.line; c.strokeRect(x0, y0, pw, phh);
+    const cap: Record<Band, [string, string, string]> = {
+      radio: ['synchrotron: cosmic-ray electrons in the magnetic field; jets from the active nucleus', 'VLA, MeerKAT, LOFAR', 'non-thermal'],
+      hi: ['cold atomic hydrogen, far beyond the stars; a hole in the centre where gas is molecular', 'VLA, FAST, SKA', '~100 K gas'],
+      fir: ['dust warmed by hidden young stars: the dark lanes are now the bright ones', 'Herschel, Spitzer, JWST/MIRI', '20–50 K dust'],
+      nir: ['the old stars that carry most of the mass; dust is transparent', '2MASS, Spitzer/IRAC, JWST/NIRCam', '3000–5000 K stars'],
+      vis: ['photospheres of stars; blue arms, yellow bulge, dust lanes in silhouette', 'Hubble, VLT, Subaru, Rubin', '3000–30 000 K'],
+      uv: ['only the hot young O and B stars: star formation in the last 100 Myr', 'GALEX, Hubble, Swift-UVOT', '> 20 000 K'],
+      xray: ['hot halo gas and accreting binaries; the nucleus flickers', 'Chandra, XMM-Newton, eROSITA', '10⁶–10⁷ K'],
+      gamma: ['cosmic rays hitting gas; a few pulsars; the nucleus if it is a blazar', 'Fermi-LAT, H.E.S.S.', 'non-thermal'],
+    };
+    const [what, who, temp] = cap[this.band];
+    this.text(what, this.w / 2, y0 + phh + 14, C.text, 9, 'center');
+    this.setReadout([['Band', this.band, C.accent], ['Telescopes', who], ['Temperature / mechanism', temp]]);
+  }
+}
+
+/* ------------------------------------------------- 63. all-sky maps (Mollweide) ---- */
+
+type SkyBand = 'r408' | 'hi' | 'dust' | 'nir' | 'opt' | 'xray' | 'gamma';
+class SkyMapWidget extends CanvasWidget {
+  private band: SkyBand = 'opt'; private readonly NX = 240; private readonly NY = 120; private img: Record<string, ImageData> = {}; private cur: [number, number] | null = null; private noise: Float32Array;
+  private readonly MARK: Array<[number, number, string]> = [[0, 0, 'Galactic Centre'], [184.6, -5.8, 'Crab'], [263.6, -2.8, 'Vela'], [76.2, 5.8, 'Cyg A'], [309.5, 19.4, 'Cen A'], [280.5, -32.9, 'LMC'], [302.8, -44.3, 'SMC'], [121.2, -21.6, 'M31'], [209, -19.4, 'Orion'], [30, 60, 'N. Polar Spur']];
+  constructor() {
+    super(480 / 260);
+    this.segmented<SkyBand>([['r408', 'radio 408 MHz'], ['hi', 'HI 21 cm'], ['dust', 'far-IR dust'], ['nir', 'near-IR stars'], ['opt', 'optical'], ['xray', 'soft X-ray'], ['gamma', 'gamma (Fermi)']], 'opt', (v) => { this.band = v; });
+    const rnd = mulberry(1234); this.noise = new Float32Array(this.NX * this.NY); for (let i = 0; i < this.noise.length; i++) this.noise[i] = rnd();
+    this.canvas.addEventListener('pointermove', (e) => { const { x, y } = canvasPos(this.canvas, e, this.w, this.h); this.cur = [x, y]; });
+    this.canvas.addEventListener('pointerleave', () => { this.cur = null; });
+    this.controls.appendChild($('div', 'lw-caption', 'Galactic coordinates: the Milky Way runs across the middle, its centre in the middle. Move the pointer to read l, b and the brightness in every band.'));
+  }
+  /** brightness 0..1 at galactic (l, b) degrees for a band */
+  private B(band: SkyBand, l: number, b: number, n: number): number {
+    const ab = Math.abs(b); const dl = ((l + 180) % 360 + 360) % 360 - 180; // −180..180, 0 at GC
+    const plane = (w: number) => Math.exp(-((b / w) ** 2)); const centre = Math.exp(-((dl / 25) ** 2 + (b / 8) ** 2)); const bulge = Math.exp(-((dl / 12) ** 2 + (b / 7) ** 2));
+    const blob = (l0: number, b0: number, w: number) => { let d = ((l - l0 + 540) % 360) - 180; return Math.exp(-((d * Math.cos(b * DEG) / w) ** 2 + ((b - b0) / w) ** 2)); };
+    const lmc = blob(280.5, -32.9, 4), smc = blob(302.8, -44.3, 2.5), m31 = blob(121.2, -21.6, 1.5), ori = blob(209, -19.4, 6), oph = blob(355, 17, 7), taurus = blob(172, -15, 6);
+    const spur = Math.exp(-(((Math.hypot(dl - 30, b - 15) - 55) / 8) ** 2)) * (b > 0 ? 1 : 0.2); // Loop I
+    const cirrus = 0.6 * n + 0.4 * ((Math.sin(l * 0.3 + b * 0.5) + 1) / 2);
+    switch (band) {
+      case 'r408': return Math.min(1, 0.35 * plane(6) + 0.6 * centre + 0.35 * spur + 0.08 + 0.03 * n + blob(76.2, 5.8, 1.5) + blob(309.5, 19.4, 1.5) * 0.8 + blob(263.6, -2.8, 2) * 0.5 + blob(184.6, -5.8, 1.2) * 0.6);
+      case 'hi': return Math.min(1, 0.7 * plane(9) * (1 - 0.2 * Math.cos(dl * DEG * 2)) + 0.25 * cirrus * Math.exp(-ab / 40) + 0.25 * lmc + 0.2 * smc + 0.08 * blob(290, -40, 15) + 0.05);
+      case 'dust': return Math.min(1, 0.9 * plane(2.5) + 0.3 * plane(6) * (0.6 + 0.4 * centre) + 0.35 * ori + 0.3 * oph + 0.25 * taurus + 0.12 * cirrus * Math.exp(-ab / 25) + 0.3 * lmc + 0.15 * smc + 0.01);
+      case 'nir': return Math.min(1, 0.6 * plane(3) + 0.8 * bulge + 0.2 * plane(10) * Math.exp(-Math.abs(dl) / 90) + 0.35 * lmc + 0.2 * smc + 0.4 * m31 + 0.03 + 0.04 * n);
+      case 'opt': { const ext = Math.exp(-3 * (0.9 * plane(2.5) + 0.3 * ori + 0.3 * oph + 0.25 * taurus)); return Math.min(1, (0.5 * plane(8) * (0.7 + 0.5 * Math.exp(-Math.abs(dl) / 70)) + 0.6 * bulge + 0.05 + 0.06 * n) * ext + 0.35 * lmc + 0.2 * smc + 0.25 * m31); }
+      case 'xray': { const absorb = Math.exp(-2.5 * plane(4)); return Math.min(1, (0.25 + 0.5 * spur + 0.2 * (b < 0 && Math.abs(dl) < 60 ? 1 : 0) * Math.exp(-ab / 30) + 0.1 * n + 0.6 * blob(263.6, -2.8, 4) + 0.5 * blob(76, 1, 4)) * absorb + 0.9 * blob(184.6, -5.8, 1.2) * 1 + 0.6 * bulge * absorb + 0.4 * blob(263.6, -2.8, 1)); }
+      case 'gamma': { const bubbles = (Math.exp(-((dl / 20) ** 2 + ((b - 28) / 22) ** 2)) + Math.exp(-((dl / 20) ** 2 + ((b + 28) / 22) ** 2))) * 0.25; return Math.min(1, 0.7 * plane(3) * (0.6 + 0.6 * Math.exp(-Math.abs(dl) / 60)) + bubbles + 0.06 + 0.05 * n + 0.9 * blob(263.6, -2.8, 1.2) + 0.9 * blob(184.6, -5.8, 1.2) + 0.9 * blob(195.1, 4.3, 1.2) + 0.5 * blob(86, -38, 1.2) + 0.5 * blob(150, 50, 1.2) + 0.4 * lmc); }
+    }
+  }
+  private render(band: SkyBand): ImageData {
+    if (this.img[band]) return this.img[band];
+    const NX = this.NX, NY = this.NY; const im = this.ctx.createImageData(NX, NY); const d = im.data;
+    const pal: Record<SkyBand, [[number, number, number], [number, number, number], [number, number, number]]> = { r408: [[5, 5, 30], [200, 60, 40], [255, 240, 150]], hi: [[5, 10, 20], [30, 120, 160], [220, 255, 255]], dust: [[10, 5, 15], [180, 60, 20], [255, 230, 160]], nir: [[8, 6, 4], [170, 110, 60], [255, 240, 210]], opt: [[6, 7, 12], [150, 140, 130], [255, 250, 235]], xray: [[5, 5, 20], [80, 40, 160], [255, 220, 255]], gamma: [[8, 5, 15], [120, 30, 100], [255, 220, 120]] };
+    const [p0, p1, p2] = pal[band];
+    for (let j = 0; j < NY; j++) for (let i = 0; i < NX; i++) {
+      const o = (j * NX + i) * 4; const X = (i + 0.5) / NX * 2 - 1, Y = 1 - (j + 0.5) / NY * 2; // −1..1
+      const th = Math.asin(Math.max(-1, Math.min(1, Y))); const inside = (X * X + Y * Y) <= 1.0001 && Math.abs(X) <= Math.cos(th) + 1e-9;
+      if (!inside) { d[o] = 11; d[o + 1] = 14; d[o + 2] = 19; d[o + 3] = 255; continue; }
+      const lon = -Math.PI * X / Math.max(1e-6, Math.cos(th)); const lat = Math.asin((2 * th + Math.sin(2 * th)) / Math.PI); // lon: east to the left (astronomical convention)
+      const l = ((lon / DEG) + 360) % 360, b = lat / DEG; const v = Math.pow(this.B(band, l, b, this.noise[j * NX + i]), 0.75);
+      const t = v < 0.5 ? v * 2 : (v - 0.5) * 2; const a = v < 0.5 ? p0 : p1, bb = v < 0.5 ? p1 : p2;
+      d[o] = a[0] + (bb[0] - a[0]) * t; d[o + 1] = a[1] + (bb[1] - a[1]) * t; d[o + 2] = a[2] + (bb[2] - a[2]) * t; d[o + 3] = 255;
+    }
+    this.img[band] = im; return im;
+  }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const pw = Math.min(this.w - 16, (this.h - 70) * 2), phh = pw / 2, x0 = (this.w - pw) / 2, y0 = 10;
+    const im = this.render(this.band); const off = document.createElement('canvas'); off.width = this.NX; off.height = this.NY; off.getContext('2d')!.putImageData(im, 0, 0); c.drawImage(off, x0, y0, pw, phh);
+    c.beginPath(); c.ellipse(x0 + pw / 2, y0 + phh / 2, pw / 2, phh / 2, 0, 0, TAU); c.strokeStyle = C.line; c.stroke();
+    const proj = (l: number, b: number): [number, number] => { let lon = ((l + 180) % 360) - 180; let th = b * DEG; for (let k = 0; k < 8; k++) th -= (2 * th + Math.sin(2 * th) - Math.PI * Math.sin(b * DEG)) / (2 + 2 * Math.cos(2 * th)); const X = -lon * DEG / Math.PI * Math.cos(th), Y = Math.sin(th); return [x0 + (X + 1) / 2 * pw, y0 + (1 - Y) / 2 * phh]; };
+    for (const [l, b, n] of this.MARK) { const [x, y] = proj(l, b); this.circle(x, y, 2.5, hexA('#ffffff', 0.7)); this.text(n, x + 4, y - 6, hexA('#ffffff', 0.75), 7); }
+    for (const l of [90, 180, 270]) { const [x] = proj(l, 0); this.text(`l = ${l}°`, x, y0 + phh + 8, C.dim, 7, 'center'); } this.text('l = 0', x0 + pw / 2, y0 + phh + 8, C.dim, 7, 'center');
+    const src: Record<SkyBand, string> = { r408: 'Haslam et al. 1982 (synchrotron)', hi: 'HI4PI 2016 (21 cm column density)', dust: 'IRAS / Planck 100–350 µm', nir: '2MASS / COBE-DIRBE', opt: 'Mellinger / Gaia', xray: 'ROSAT 0.25–1.5 keV', gamma: 'Fermi-LAT > 1 GeV' };
+    this.text(`schematic rendering of the ${src[this.band]} sky`, x0 + pw / 2, y0 + phh + 20, C.dim, 7, 'center');
+    const pairs: Array<[string, string, string?]> = [['Map', src[this.band], C.accent]];
+    if (this.cur) {
+      const X = (this.cur[0] - x0) / pw * 2 - 1, Y = 1 - (this.cur[1] - y0) / phh * 2; const th = Math.asin(Math.max(-1, Math.min(1, Y)));
+      if (X * X + Y * Y <= 1) { const lon = -Math.PI * X / Math.max(1e-6, Math.cos(th)); const lat = Math.asin((2 * th + Math.sin(2 * th)) / Math.PI); const l = ((lon / DEG) + 360) % 360, b = lat / DEG; const i = Math.floor((this.cur[0] - x0) / pw * this.NX), j = Math.floor((this.cur[1] - y0) / phh * this.NY); const n = this.noise[Math.max(0, Math.min(this.noise.length - 1, j * this.NX + i))];
+        pairs.push(['Pointer', `l = ${fmt(l, 1)}°, b = ${fmt(b, 1)}°`]);
+        const bands: SkyBand[] = ['r408', 'hi', 'dust', 'nir', 'opt', 'xray', 'gamma']; const names = ['radio', 'HI', 'dust', 'near-IR', 'optical', 'X-ray', 'gamma'];
+        pairs.push(['Relative brightness here', bands.map((bd, k) => `${names[k]} ${'▮'.repeat(Math.round(this.B(bd, l, b, n) * 5))}`).join('  ')]); }
+    } else pairs.push(['Pointer', 'move over the map']);
+    this.setReadout(pairs);
+  }
+}
+
+/* ------------------------------------------------- 64. data growth ---- */
+
+const SURVEYS: Array<[string, number, number, string]> = [['POSS I (plates)', 1955, 3e12, '1872 plates, ~1.5 GB each if scanned'], ['IRAS', 1984, 1e11, 'whole sky in 10 months'], ['2MASS', 2001, 1.2e13, '4 million images'], ['SDSS DR7', 2009, 4e13, 'images + spectra'], ['Pan-STARRS1', 2016, 2e15, '1.6 billion objects'], ['Gaia (raw)', 2019, 1e15, '1.8 billion stars'], ['ZTF', 2021, 3e15, 'the northern sky every 2 nights'], ['Rubin (10 yr)', 2033, 5e17, '20 TB per night'], ['SKA (1 yr)', 2030, 6e17, '600 PB / yr archive']];
+class DataGrowthWidget extends CanvasWidget {
+  private year = 2010; private lgBw = Math.log10(1e8);
+  constructor() {
+    super(480 / 230);
+    this.slider('Year', 1950, 2035, 1, 2010, (v) => `${v}`, (v) => { this.year = v; });
+    this.slider('Your connection', 6, 11, 0.1, 8, (v) => `${fmt(10 ** v / 1e6 < 1000 ? 10 ** v / 1e6 : 10 ** v / 1e9, 0)} ${10 ** v / 1e6 < 1000 ? 'Mbit/s' : 'Gbit/s'}`, (v) => { this.lgBw = v; });
+  }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const x0 = 56, x1 = this.w - 14, y0 = 16, y1 = this.h - 30; const Xy = (y: number) => x0 + (y - 1950) / 92 * (x1 - x0), Yb = (b: number) => y1 - (Math.log10(b) - 10) / 8.5 * (y1 - y0);
+    this.line(x0, y1, x1, y1, C.line); this.line(x0, y0, x0, y1, C.line);
+    for (const [lg, lab] of [[12, '1 TB'], [15, '1 PB'], [18, '1 EB']] as Array<[number, string]>) { const y = Yb(10 ** lg); this.line(x0, y, x1, y, C.grid); this.text(lab, x0 - 6, y, C.dim, 8, 'right'); }
+    for (const yr of [1960, 1980, 2000, 2020]) this.text(`${yr}`, Xy(yr), y1 + 10, C.dim, 8, 'center');
+    this.line(Xy(1955), Yb(3e12 * 0.3), Xy(2035), Yb(3e12 * 0.3 * 10 ** 8), hexA(C.accent, 0.4), 1, [4, 4]); this.text('×10 per decade', Xy(2000), Yb(3e12 * 0.3 * 10 ** 4.5) - 10, C.accent, 8, 'center');
+    let near = SURVEYS[0]; for (const s of SURVEYS) if (Math.abs(s[1] - this.year) < Math.abs(near[1] - this.year)) near = s;
+    for (const s of SURVEYS) { const x = Xy(s[1]), y = Yb(s[2]); const sel = s === near; this.circle(x, y, sel ? 5 : 3, sel ? C.sun : undefined, sel ? hexA(C.sun, 0.5) : C.blue); const below = s[0].startsWith('Rubin'); this.text(s[0], Math.max(x0 + 24, Math.min(x1 - 24, x)), below ? y + 14 : y - 10, sel ? C.sun : C.dim, sel ? 9 : 7, 'center'); }
+    const xy = Xy(this.year); this.line(xy, y0, xy, y1, hexA(C.text, 0.4), 1, [3, 3]);
+    const bw = 10 ** this.lgBw; const secs = near[2] * 8 / bw;
+    this.setReadout([
+      [`${near[0]} (${near[1]})`, `${near[2] >= 1e15 ? fmt(near[2] / 1e15, 1) + ' PB' : near[2] >= 1e12 ? fmt(near[2] / 1e12, 1) + ' TB' : fmt(near[2] / 1e9, 0) + ' GB'} — ${near[3]}`, C.sun],
+      ['Time to download it', fmtDur(secs), secs > 86400 * 30 ? C.red : C.green],
+      ['Equivalent', `${sci(near[2] / 4.7e9, 1)} DVDs · ${sci(near[2] / 1.5e9, 1)} photo plates`],
+      ['Lesson', near[2] > 1e15 ? 'software must classify, flag and alert' : 'still small enough for human eyes'],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 65. cross-match ---- */
+
+class CrossmatchWidget extends CanvasWidget {
+  private density = 40; private sigma = 0.6; private r = 1.0; private stars: Array<[number, number]> = []; private xs: Array<{ x: number; y: number; truth: number }> = [];
+  private readonly FIELD = 60; // arcsec across
+  constructor() {
+    super(480 / 250);
+    this.segmented<string>([['sparse', 'sparse field (5 / arcmin²)'], ['disc', 'Galactic disc (40)'], ['core', 'cluster core (400)']], 'disc', (v) => { this.density = { sparse: 5, disc: 40, core: 400 }[v]!; this.regen(); });
+    this.slider('Match radius r', 0.1, 5, 0.05, 1, (v) => `${fmt(v, 2)}″`, (v) => { this.r = v; });
+    this.slider('X-ray position error σ', 0.1, 2, 0.05, 0.6, (v) => `${fmt(v, 2)}″`, (v) => { this.sigma = v; this.regen(); });
+    const b = $('button', 'lw-btn', '↻ new field'); b.addEventListener('click', () => this.regen()); this.controls.appendChild(b);
+    this.regen();
+  }
+  private regen() {
+    const rnd = mulberry(Math.floor(Math.random() * 1e9)); const F = this.FIELD; const n = Math.round(this.density * (F / 60) ** 2);
+    this.stars = []; for (let i = 0; i < n; i++) this.stars.push([rnd() * F, rnd() * F]);
+    this.xs = []; for (let i = 0; i < 24; i++) { const hasTruth = rnd() < 0.6 && this.stars.length; if (hasTruth) { const k = Math.floor(rnd() * this.stars.length); const [sx, sy] = this.stars[k]; this.xs.push({ x: sx + gaussRand(rnd) * this.sigma, y: sy + gaussRand(rnd) * this.sigma, truth: k }); } else this.xs.push({ x: rnd() * F, y: rnd() * F, truth: -1 }); }
+  }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const size = Math.min(this.h - 12, this.w * 0.55), x0 = 8, y0 = (this.h - size) / 2, s = size / this.FIELD;
+    c.fillStyle = '#05070b'; c.fillRect(x0, y0, size, size); c.strokeStyle = C.line; c.strokeRect(x0, y0, size, size);
+    for (const [sx, sy] of this.stars) this.circle(x0 + sx * s, y0 + sy * s, 1.6, undefined, hexA(C.blue, 0.9));
+    let tp = 0, fp = 0, fn = 0, amb = 0;
+    for (const X of this.xs) {
+      const within: number[] = []; this.stars.forEach(([sx, sy], k) => { if (Math.hypot(sx - X.x, sy - X.y) <= this.r) within.push(k); });
+      let nearest = -1, dmin = 1e9; for (const k of within) { const d = Math.hypot(this.stars[k][0] - X.x, this.stars[k][1] - X.y); if (d < dmin) { dmin = d; nearest = k; } }
+      let col = C.dim;
+      if (nearest < 0) { if (X.truth >= 0) { fn++; col = C.sun; } }
+      else if (nearest === X.truth) { tp++; col = C.green; if (within.length > 1) amb++; }
+      else { fp++; col = C.red; }
+      this.circle(x0 + X.x * s, y0 + X.y * s, this.r * s, hexA(col, 0.8), hexA(col, 0.12)); this.circle(x0 + X.x * s, y0 + X.y * s, 2.2, undefined, C.sun);
+      if (nearest >= 0) this.line(x0 + X.x * s, y0 + X.y * s, x0 + this.stars[nearest][0] * s, y0 + this.stars[nearest][1] * s, col, 1);
+    }
+    this.text(`${this.FIELD}″ × ${this.FIELD}″ · ${this.stars.length} Gaia stars (blue) · ${this.xs.length} X-ray sources (yellow)`, x0 + 4, y0 + size - 8, C.dim, 7);
+    const lx = x0 + size + 16; let ly = 28;
+    for (const [lab, n, col] of [['true matches', tp, C.green], ['false matches (wrong star)', fp, C.red], ['missed (counterpart outside r)', fn, C.sun], ['no counterpart, correctly unmatched', this.xs.length - tp - fp - fn - this.xs.filter((x) => x.truth < 0 && this.stars.some(([sx, sy]) => Math.hypot(sx - x.x, sy - x.y) <= this.r)).length + 0, C.dim]] as Array<[string, number, string]>) { this.circle(lx + 5, ly, 4, col, hexA(col, 0.3)); this.text(`${lab}: ${n}`, lx + 14, ly, C.text, 9); ly += 20; }
+    const Sigma = this.density / 3600; const pch = 1 - Math.exp(-Math.PI * this.r * this.r * Sigma);
+    const truth = this.xs.filter((x) => x.truth >= 0).length;
+    this.text(`chance of a random star within r: ${fmt(pch * 100, pch < 0.01 ? 2 : 1)} %`, lx, ly + 6, pch > 0.2 ? C.red : C.text, 9);
+    this.text(`r = ${fmt(this.r / this.sigma, 1)} σ captures ${fmt((1 - Math.exp(-((this.r / this.sigma) ** 2) / 2)) * 100, 0)} % of true counterparts`, lx, ly + 22, C.dim, 8);
+    this.setReadout([
+      ['Completeness (found / real)', `${truth ? fmt(tp / truth * 100, 0) : '–'} %`, C.green],
+      ['Reliability (true / all matches)', `${tp + fp ? fmt(tp / (tp + fp) * 100, 0) : '–'} %`, fp > tp * 0.3 ? C.red : C.green],
+      ['P(chance) = 1 − exp(−π r² Σ)', `${fmt(pch * 100, pch < 0.01 ? 2 : 1)} %  with Σ = ${this.density} / arcmin²`, pch > 0.2 ? C.red : C.accent],
+      ['Rule', pch > 0.2 ? 'positions alone cannot identify counterparts here — add colour, variability, proper motion' : 'r ≈ 2–3σ: nearly complete and still reliable'],
+    ]); void amb;
+  }
+}
+
 /* ------------------------------------------------------------ factory ---- */
 
 export function createWidget(spec: WidgetSpec): Widget {
@@ -3951,5 +4984,26 @@ export function createWidget(spec: WidgetSpec): Widget {
     case 'orbitals': return new OrbitalsWidget();
     case 'wavepacket': return new WavePacketWidget();
     case 'pauli': return new PauliWidget();
+    case 'lightbucket': return new LightBucketWidget();
+    case 'snell': return new SnellWidget();
+    case 'lens': return new LensWidget();
+    case 'airy': return new AiryWidget();
+    case 'seeing': return new SeeingWidget();
+    case 'chromatic': return new ChromaticWidget();
+    case 'designs': return new DesignsWidget();
+    case 'platescale': return new PlateScaleWidget();
+    case 'scopes': return new ScopesWidget();
+    case 'mount': return new MountWidget();
+    case 'jansky': return new JanskyWidget();
+    case 'dish': return new DishWidget();
+    case 'interferometer': return new InterferometerWidget();
+    case 'atmwindow': return new AtmWindowWidget();
+    case 'irthermal': return new IrThermalWidget();
+    case 'grazing': return new GrazingWidget();
+    case 'gammadetect': return new GammaDetectWidget();
+    case 'multiview': return new MultiviewWidget();
+    case 'skymap': return new SkyMapWidget();
+    case 'datagrowth': return new DataGrowthWidget();
+    case 'crossmatch': return new CrossmatchWidget();
   }
 }

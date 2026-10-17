@@ -1,0 +1,794 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "atmosphere": {
+   "script": "Look at the Earth behind the panel. That skin of air is only a few tens of kilometres thick. Think of the air as a bouncer. Visible light, the band our eyes evolved in, is on the list, and so are radio waves from one centimetre to ten metres. Everyone else is turned away. Ozone, twenty to thirty kilometres up, absorbs ultraviolet below about three hundred nanometres. Molecular oxygen and nitrogen take everything shorter than about one hundred nanometres, X-rays and gamma rays included. Water vapour and carbon dioxide blanket most of the infrared from one micrometre to one millimetre, leaving a few narrow windows that open only if the air above you is dry. Frequency and wavelength are tied together: below ten to fifteen megahertz the waves are longer than about twenty to thirty metres, and the ionosphere reflects them back into space. Try the widget. It plots transmission from the top of the atmosphere to an altitude you choose. Start at sea level, then climb to Mauna Kea, about forty-two hundred metres, above forty percent of the air and ninety percent of the water vapour. Then an aircraft at thirteen kilometres. SOFIA flew a telescope of two point seven metres through a hole in a Boeing seven forty-seven. Then a balloon at forty kilometres, above more than ninety-nine percent of the atmosphere, enough for hard X-rays and the far infrared. Finally, orbit. Watch the windows open one by one. The last to open are the far ultraviolet, the soft X-rays and the gamma rays, and the long-wavelength radio sky the ionosphere hides. A few grams of air per square centimetre is opaque to X-rays. Gamma rays above about fifty gigaelectronvolts are the exception: their air showers light up the sky, so the ground can see them. Where you observe from is as much a part of the telescope as its mirror. Most of the history of astronomy was done through two narrow windows in that skin.",
+   "hash": "36068638231d",
+   "duration": 115.83,
+   "sentences": [
+    {
+     "start": 0.12,
+     "end": 2.36,
+     "text": "Look at the Earth behind the panel."
+    },
+    {
+     "start": 2.36,
+     "end": 6.2,
+     "text": "That skin of air is only a few tens of kilometres thick."
+    },
+    {
+     "start": 6.2,
+     "end": 8.24,
+     "text": "Think of the air as a bouncer."
+    },
+    {
+     "start": 8.24,
+     "end": 16.24,
+     "text": "Visible light, the band our eyes evolved in, is on the list, and so are radio waves from one centimetre to ten metres."
+    },
+    {
+     "start": 16.24,
+     "end": 18.28,
+     "text": "Everyone else is turned away."
+    },
+    {
+     "start": 18.28,
+     "end": 24.56,
+     "text": "Ozone, twenty to thirty kilometres up, absorbs ultraviolet below about three hundred nanometres."
+    },
+    {
+     "start": 24.56,
+     "end": 32.12,
+     "text": "Molecular oxygen and nitrogen take everything shorter than about one hundred nanometres, X-rays and gamma rays included."
+    },
+    {
+     "start": 32.12,
+     "end": 42.34,
+     "text": "Water vapour and carbon dioxide blanket most of the infrared from one micrometre to one millimetre, leaving a few narrow windows that open only if the air above you is dry."
+    },
+    {
+     "start": 42.34,
+     "end": 52.7,
+     "text": "Frequency and wavelength are tied together: below ten to fifteen megahertz the waves are longer than about twenty to thirty metres, and the ionosphere reflects them back into space."
+    },
+    {
+     "start": 52.7,
+     "end": 53.86,
+     "text": "Try the widget."
+    },
+    {
+     "start": 53.86,
+     "end": 58.19,
+     "text": "It plots transmission from the top of the atmosphere to an altitude you choose."
+    },
+    {
+     "start": 58.19,
+     "end": 67.29,
+     "text": "Start at sea level, then climb to Mauna Kea, about forty-two hundred metres, above forty percent of the air and ninety percent of the water vapour."
+    },
+    {
+     "start": 67.29,
+     "end": 69.91,
+     "text": "Then an aircraft at thirteen kilometres."
+    },
+    {
+     "start": 69.91,
+     "end": 75.39,
+     "text": "SOFIA flew a telescope of two point seven metres through a hole in a Boeing seven forty-seven."
+    },
+    {
+     "start": 75.39,
+     "end": 83.29,
+     "text": "Then a balloon at forty kilometres, above more than ninety-nine percent of the atmosphere, enough for hard X-rays and the far infrared."
+    },
+    {
+     "start": 83.29,
+     "end": 84.91,
+     "text": "Finally, orbit."
+    },
+    {
+     "start": 84.91,
+     "end": 87.25,
+     "text": "Watch the windows open one by one."
+    },
+    {
+     "start": 87.25,
+     "end": 95.93,
+     "text": "The last to open are the far ultraviolet, the soft X-rays and the gamma rays, and the long-wavelength radio sky the ionosphere hides."
+    },
+    {
+     "start": 95.93,
+     "end": 99.93,
+     "text": "A few grams of air per square centimetre is opaque to X-rays."
+    },
+    {
+     "start": 99.93,
+     "end": 107.63,
+     "text": "Gamma rays above about fifty gigaelectronvolts are the exception: their air showers light up the sky, so the ground can see them."
+    },
+    {
+     "start": 107.63,
+     "end": 111.61,
+     "text": "Where you observe from is as much a part of the telescope as its mirror."
+    },
+    {
+     "start": 111.61,
+     "end": 115.83,
+     "text": "Most of the history of astronomy was done through two narrow windows in that skin."
+    }
+   ],
+   "voicedHash": "08340a84cf01"
+  },
+  "gamma": {
+   "script": "Once photon energies climb past about a hundred kiloelectronvolts, even grazing mirrors fail. A gamma ray does not reflect; it collides. The telescope becomes a particle-physics experiment: we record what the photon does to matter — the interactions from the last chapter — and rebuild its direction from the debris. Which process wins depends on energy, so there are four quite different instruments. The widget animates each one. Set the energy and watch which technique the photon selects.\n\nAt the soft end, from a few hundredths of a megaelectronvolt up to about ten, a coded mask works like a pinhole camera made of tungsten tiles. The patterned mask casts a shadow on a position-sensitive detector, and we decode that shadow to locate sources. That is INTEGRAL, and Swift’s burst telescope, which pins down gamma-ray bursts within seconds — the alerts that started the 2017 kilonova chase.\n\nA little higher, from a few tenths of a megaelectronvolt to a few tens, the Compton telescope takes over. The photon scatters in a first layer, deposits some energy, and is absorbed in a second. Those energies fix the scattering angle and place the source on a circle on the sky. Many photons, many circles, one intersection. COMPTEL flew this way; COSI is planned to follow.\n\nAbove roughly twenty megaelectronvolts, and on up toward hundreds of gigaelectronvolts, the photon can turn into an electron–positron pair in a thin tungsten foil — possible once the energy exceeds just over one megaelectronvolt. Silicon-strip layers track the pair back toward the source, and a calorimeter measures the total energy. Fermi’s large-area telescope has scanned the whole sky every three hours since 2008 and catalogued about six thousand sources: pulsars, blazars, supernova remnants, and the Fermi bubbles you can see blown out of the Galactic Centre behind the panel.\n\nAt the top, from tens of gigaelectronvolts into the hundred-teraelectronvolt range, photons are too rare for orbit — about one per square metre per year. Each one that strikes the upper atmosphere starts a shower of billions of particles and a five-nanosecond flash of blue Cherenkov light across a pool a couple of hundred metres wide. Arrays of mirrors ten to nearly thirty metres across, with fast cameras — HESS, MAGIC, VERITAS, and the coming Cherenkov Telescope Array — image that flash and recover the direction to about a tenth of a degree. The atmosphere, enemy of every other band, has become the detector.\n\nThis field began as a Cold War by-product. Vela satellites, launched in the late nineteen sixties to catch clandestine nuclear tests, instead recorded brief flashes from random sky directions. Those gamma-ray bursts were declassified in the early nineteen seventies and, thirty years later, traced to collapsing massive stars and merging neutron stars billions of light-years away. For a few seconds one burst outshines the rest of the gamma-ray universe combined.\n\nAngular resolution degrades as we climb — half an arcsecond for Chandra, arcminutes for INTEGRAL, a tenth of a degree to a degree for Fermi — because we no longer focus; we reconstruct. In exchange we see the most violent processes directly: particle acceleration, antimatter, nuclear lines from freshly made elements. The thermometer of the last step has run off the scale. Gamma rays are not about temperature at all.",
+   "hash": "77a25c0a7770",
+   "duration": 202.87,
+   "sentences": [
+    {
+     "start": 0.12,
+     "end": 6.62,
+     "text": "Once photon energies climb past about a hundred kiloelectronvolts, even grazing mirrors fail."
+    },
+    {
+     "start": 6.62,
+     "end": 9.72,
+     "text": "A gamma ray does not reflect; it collides."
+    },
+    {
+     "start": 9.72,
+     "end": 19.9,
+     "text": "The telescope becomes a particle-physics experiment: we record what the photon does to matter — the interactions from the last chapter — and rebuild its direction from the debris."
+    },
+    {
+     "start": 19.9,
+     "end": 25.02,
+     "text": "Which process wins depends on energy, so there are four quite different instruments."
+    },
+    {
+     "start": 25.02,
+     "end": 27.04,
+     "text": "The widget animates each one."
+    },
+    {
+     "start": 27.04,
+     "end": 30.5,
+     "text": "Set the energy and watch which technique the photon selects."
+    },
+    {
+     "start": 30.5,
+     "end": 39.42,
+     "text": "At the soft end, from a few hundredths of a megaelectronvolt up to about ten, a coded mask works like a pinhole camera made of tungsten tiles."
+    },
+    {
+     "start": 39.42,
+     "end": 46.06,
+     "text": "The patterned mask casts a shadow on a position-sensitive detector, and we decode that shadow to locate sources."
+    },
+    {
+     "start": 46.06,
+     "end": 55.66,
+     "text": "That is INTEGRAL, and Swift’s burst telescope, which pins down gamma-ray bursts within seconds — the alerts that started the 2017 kilonova chase."
+    },
+    {
+     "start": 55.66,
+     "end": 62.16,
+     "text": "A little higher, from a few tenths of a megaelectronvolt to a few tens, the Compton telescope takes over."
+    },
+    {
+     "start": 62.16,
+     "end": 67.66,
+     "text": "The photon scatters in a first layer, deposits some energy, and is absorbed in a second."
+    },
+    {
+     "start": 67.66,
+     "end": 72.38,
+     "text": "Those energies fix the scattering angle and place the source on a circle on the sky."
+    },
+    {
+     "start": 72.38,
+     "end": 75.96,
+     "text": "Many photons, many circles, one intersection."
+    },
+    {
+     "start": 75.96,
+     "end": 79.54,
+     "text": "COMPTEL flew this way; COSI is planned to follow."
+    },
+    {
+     "start": 79.54,
+     "end": 93.72,
+     "text": "Above roughly twenty megaelectronvolts, and on up toward hundreds of gigaelectronvolts, the photon can turn into an electron–positron pair in a thin tungsten foil — possible once the energy exceeds just over one megaelectronvolt."
+    },
+    {
+     "start": 93.72,
+     "end": 99.48,
+     "text": "Silicon-strip layers track the pair back toward the source, and a calorimeter measures the total energy."
+    },
+    {
+     "start": 99.48,
+     "end": 114.57,
+     "text": "Fermi’s large-area telescope has scanned the whole sky every three hours since 2008 and catalogued about six thousand sources: pulsars, blazars, supernova remnants, and the Fermi bubbles you can see blown out of the Galactic Centre behind the panel."
+    },
+    {
+     "start": 114.57,
+     "end": 123.95,
+     "text": "At the top, from tens of gigaelectronvolts into the hundred-teraelectronvolt range, photons are too rare for orbit — about one per square metre per year."
+    },
+    {
+     "start": 123.95,
+     "end": 133.87,
+     "text": "Each one that strikes the upper atmosphere starts a shower of billions of particles and a five-nanosecond flash of blue Cherenkov light across a pool a couple of hundred metres wide."
+    },
+    {
+     "start": 133.87,
+     "end": 146.95,
+     "text": "Arrays of mirrors ten to nearly thirty metres across, with fast cameras — HESS, MAGIC, VERITAS, and the coming Cherenkov Telescope Array — image that flash and recover the direction to about a tenth of a degree."
+    },
+    {
+     "start": 146.95,
+     "end": 151.15,
+     "text": "The atmosphere, enemy of every other band, has become the detector."
+    },
+    {
+     "start": 151.15,
+     "end": 154.03,
+     "text": "This field began as a Cold War by-product."
+    },
+    {
+     "start": 154.03,
+     "end": 162.53,
+     "text": "Vela satellites, launched in the late nineteen sixties to catch clandestine nuclear tests, instead recorded brief flashes from random sky directions."
+    },
+    {
+     "start": 162.53,
+     "end": 172.93,
+     "text": "Those gamma-ray bursts were declassified in the early nineteen seventies and, thirty years later, traced to collapsing massive stars and merging neutron stars billions of light-years away."
+    },
+    {
+     "start": 172.93,
+     "end": 177.59,
+     "text": "For a few seconds one burst outshines the rest of the gamma-ray universe combined."
+    },
+    {
+     "start": 177.59,
+     "end": 189.29,
+     "text": "Angular resolution degrades as we climb — half an arcsecond for Chandra, arcminutes for INTEGRAL, a tenth of a degree to a degree for Fermi — because we no longer focus; we reconstruct."
+    },
+    {
+     "start": 189.29,
+     "end": 197.67,
+     "text": "In exchange we see the most violent processes directly: particle acceleration, antimatter, nuclear lines from freshly made elements."
+    },
+    {
+     "start": 197.67,
+     "end": 200.73,
+     "text": "The thermometer of the last step has run off the scale."
+    },
+    {
+     "start": 200.73,
+     "end": 202.87,
+     "text": "Gamma rays are not about temperature at all."
+    }
+   ],
+   "voicedHash": "eb98826d0297"
+  },
+  "infrared": {
+   "script": "Look behind the panel at Webb. Its mirror is near forty kelvin so it will not glow. Herschel found the infrared in eighteen hundred with a thermometer past the red end of the solar spectrum. Wien's law says lambda max times T equals two point nine times ten to the minus three metre kelvin. Lambda max is the peak wavelength, T the temperature, so cooler bodies peak at longer wavelengths. Three hundred kelvin peaks near ten micrometres, thirty kelvin dust near a hundred micrometres, a protostar at a few microns.\n\nThese waves pass the dust hiding the Milky Way and show us the first galaxies redshifted by ten or more. Telescope, dome, air and detector glow in that band. It is like a faint star in daylight with a luminous telescope. Slide the telescope temperature down on the widget and watch the Planck curve leave the band. Optics need tens of kelvin for the mid-infrared, detectors near seven kelvin for MIRI.\n\nFrom the ground we use near-infrared windows, a warm telescope, and chopping to blank sky. Adaptive optics is best here, the coherence length growing as wavelength to the six-fifths. IRAS mapped twelve to a hundred micrometres in ten months with seventy-three kilograms of superfluid helium. Spitzer and Herschel worked until the cryogen was gone, Herschel's mirror three and a half metres and the largest then in space.\n\nWebb needs no cryogen. A five-layer sunshield the size of a tennis court, at Sun-Earth L two, one and a half million kilometres away, keeps Sun, Earth and Moon on one side and the six and a half metre mirror at forty kelvin. It covers six-tenths of a micrometre to twenty-eight and galaxies beyond redshift thirteen.\n\nSilicon is transparent past one point one micrometres. Mercury cadmium telluride reaches five micrometres, arsenic-doped silicon twenty-eight, bolometers a tenth of a kelvin. Herschel's millikelvin in minutes, MIRI's few electrons an hour per pixel, microkelvin contrasts. Fifteen orders of magnitude, physics unchanged since eighteen hundred.",
+   "hash": "0f9cb36fb875",
+   "duration": 125.43,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.36,
+     "text": "Look behind the panel at Webb."
+    },
+    {
+     "start": 2.36,
+     "end": 6,
+     "text": "Its mirror is near forty kelvin so it will not glow."
+    },
+    {
+     "start": 6,
+     "end": 11.78,
+     "text": "Herschel found the infrared in eighteen hundred with a thermometer past the red end of the solar spectrum."
+    },
+    {
+     "start": 11.78,
+     "end": 18.42,
+     "text": "Wien's law says lambda max times T equals two point nine times ten to the minus three metre kelvin."
+    },
+    {
+     "start": 18.42,
+     "end": 24.96,
+     "text": "Lambda max is the peak wavelength, T the temperature, so cooler bodies peak at longer wavelengths."
+    },
+    {
+     "start": 24.96,
+     "end": 33.1,
+     "text": "Three hundred kelvin peaks near ten micrometres, thirty kelvin dust near a hundred micrometres, a protostar at a few microns."
+    },
+    {
+     "start": 33.1,
+     "end": 39.54,
+     "text": "These waves pass the dust hiding the Milky Way and show us the first galaxies redshifted by ten or more."
+    },
+    {
+     "start": 39.54,
+     "end": 43.4,
+     "text": "Telescope, dome, air and detector glow in that band."
+    },
+    {
+     "start": 43.4,
+     "end": 46.92,
+     "text": "It is like a faint star in daylight with a luminous telescope."
+    },
+    {
+     "start": 46.92,
+     "end": 51.98,
+     "text": "Slide the telescope temperature down on the widget and watch the Planck curve leave the band."
+    },
+    {
+     "start": 51.98,
+     "end": 57.44,
+     "text": "Optics need tens of kelvin for the mid-infrared, detectors near seven kelvin for MIRI."
+    },
+    {
+     "start": 57.44,
+     "end": 63.49,
+     "text": "From the ground we use near-infrared windows, a warm telescope, and chopping to blank sky."
+    },
+    {
+     "start": 63.49,
+     "end": 69.41,
+     "text": "Adaptive optics is best here, the coherence length growing as wavelength to the six-fifths."
+    },
+    {
+     "start": 69.41,
+     "end": 75.99,
+     "text": "IRAS mapped twelve to a hundred micrometres in ten months with seventy-three kilograms of superfluid helium."
+    },
+    {
+     "start": 75.99,
+     "end": 83.03,
+     "text": "Spitzer and Herschel worked until the cryogen was gone, Herschel's mirror three and a half metres and the largest then in space."
+    },
+    {
+     "start": 83.03,
+     "end": 84.87,
+     "text": "Webb needs no cryogen."
+    },
+    {
+     "start": 84.87,
+     "end": 97.61,
+     "text": "A five-layer sunshield the size of a tennis court, at Sun-Earth L two, one and a half million kilometres away, keeps Sun, Earth and Moon on one side and the six and a half metre mirror at forty kelvin."
+    },
+    {
+     "start": 97.61,
+     "end": 103.29,
+     "text": "It covers six-tenths of a micrometre to twenty-eight and galaxies beyond redshift thirteen."
+    },
+    {
+     "start": 103.29,
+     "end": 106.89,
+     "text": "Silicon is transparent past one point one micrometres."
+    },
+    {
+     "start": 106.89,
+     "end": 114.69,
+     "text": "Mercury cadmium telluride reaches five micrometres, arsenic-doped silicon twenty-eight, bolometers a tenth of a kelvin."
+    },
+    {
+     "start": 114.69,
+     "end": 121.27,
+     "text": "Herschel's millikelvin in minutes, MIRI's few electrons an hour per pixel, microkelvin contrasts."
+    },
+    {
+     "start": 121.27,
+     "end": 125.43,
+     "text": "Fifteen orders of magnitude, physics unchanged since eighteen hundred."
+    }
+   ],
+   "voicedHash": "6c77ce9091bb"
+  },
+  "multiwavelength": {
+   "script": "Look behind the panel — our whole planetary system is slowly circling the Sun. From that little disc I choose a wavelength, and the wavelength chooses the sky.\n\nTry the widget. Step the same spiral through each band and watch what lights up. Radio continuum is a smooth disc of synchrotron emission, cosmic-ray electrons spiralling in the magnetic field, plus jets if the central black hole is active. At twenty-one centimetres, cold atomic hydrogen stretches far past the stars. Far infrared turns the dark dust lanes into the brightest feature: they re-radiate light from hidden young stars. Near infrared shows the old stars that hold most of the mass, dust now transparent. Visible light is the picture you know. Ultraviolet keeps only hot young stars in the arms. X-rays show a halo of million-degree gas and accreting binaries. Gamma rays are almost empty — a few pulsars, and a glow where cosmic rays hit gas.\n\nNone of those is the galaxy. Each map is one process, one temperature, one population, and the science is in the comparison, pixel by pixel, like scans of one patient.\n\nLook with me at the table. The machine changes with the band. Ordinary mirrors work from the ultraviolet into the near infrared. X-rays reflect only at a grazing angle. Theta-c is proportional to one over E — theta-c is the critical grazing angle, E is the photon energy — so a harder X-ray must graze more shallowly. Chandra and XMM-Newton nest many Wolter shells, and a photon-counting detector gives each photon's energy for free. Infrared telescopes glow, so they must be cooled — helium for Spitzer and Herschel, a sunshield holding JWST near forty kelvin. Gamma rays cannot be focused: coded masks, Compton telescopes, pair trackers like Fermi, and Cherenkov arrays that use the atmosphere.\n\nTwo windows, visible and radio; the rest needs altitude or orbit. Ultraviolet wants coated mirrors and space. Cool the infrared telescope or it outshines the sky. One galaxy, seven skies — carry that comparison with you.",
+   "hash": "858c57771746",
+   "duration": 127.99,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.96,
+     "text": "Look behind the panel — our whole planetary system is slowly circling the Sun."
+    },
+    {
+     "start": 4.96,
+     "end": 9.72,
+     "text": "From that little disc I choose a wavelength, and the wavelength chooses the sky."
+    },
+    {
+     "start": 9.72,
+     "end": 11,
+     "text": "Try the widget."
+    },
+    {
+     "start": 11,
+     "end": 14.82,
+     "text": "Step the same spiral through each band and watch what lights up."
+    },
+    {
+     "start": 14.82,
+     "end": 24.78,
+     "text": "Radio continuum is a smooth disc of synchrotron emission, cosmic-ray electrons spiralling in the magnetic field, plus jets if the central black hole is active."
+    },
+    {
+     "start": 24.78,
+     "end": 29.96,
+     "text": "At twenty-one centimetres, cold atomic hydrogen stretches far past the stars."
+    },
+    {
+     "start": 29.96,
+     "end": 36.7,
+     "text": "Far infrared turns the dark dust lanes into the brightest feature: they re-radiate light from hidden young stars."
+    },
+    {
+     "start": 36.7,
+     "end": 42.04,
+     "text": "Near infrared shows the old stars that hold most of the mass, dust now transparent."
+    },
+    {
+     "start": 42.04,
+     "end": 44.22,
+     "text": "Visible light is the picture you know."
+    },
+    {
+     "start": 44.22,
+     "end": 47.6,
+     "text": "Ultraviolet keeps only hot young stars in the arms."
+    },
+    {
+     "start": 47.6,
+     "end": 51.58,
+     "text": "X-rays show a halo of million-degree gas and accreting binaries."
+    },
+    {
+     "start": 51.58,
+     "end": 57.06,
+     "text": "Gamma rays are almost empty — a few pulsars, and a glow where cosmic rays hit gas."
+    },
+    {
+     "start": 57.06,
+     "end": 58.94,
+     "text": "None of those is the galaxy."
+    },
+    {
+     "start": 58.94,
+     "end": 68.47,
+     "text": "Each map is one process, one temperature, one population, and the science is in the comparison, pixel by pixel, like scans of one patient."
+    },
+    {
+     "start": 68.47,
+     "end": 69.93,
+     "text": "Look with me at the table."
+    },
+    {
+     "start": 69.93,
+     "end": 71.99,
+     "text": "The machine changes with the band."
+    },
+    {
+     "start": 71.99,
+     "end": 75.83,
+     "text": "Ordinary mirrors work from the ultraviolet into the near infrared."
+    },
+    {
+     "start": 75.83,
+     "end": 78.47,
+     "text": "X-rays reflect only at a grazing angle."
+    },
+    {
+     "start": 78.47,
+     "end": 88.21,
+     "text": "Theta-c is proportional to one over E — theta-c is the critical grazing angle, E is the photon energy — so a harder X-ray must graze more shallowly."
+    },
+    {
+     "start": 88.21,
+     "end": 95.91,
+     "text": "Chandra and XMM-Newton nest many Wolter shells, and a photon-counting detector gives each photon's energy for free."
+    },
+    {
+     "start": 95.91,
+     "end": 104.67,
+     "text": "Infrared telescopes glow, so they must be cooled — helium for Spitzer and Herschel, a sunshield holding JWST near forty kelvin."
+    },
+    {
+     "start": 104.67,
+     "end": 113.63,
+     "text": "Gamma rays cannot be focused: coded masks, Compton telescopes, pair trackers like Fermi, and Cherenkov arrays that use the atmosphere."
+    },
+    {
+     "start": 113.63,
+     "end": 118.33,
+     "text": "Two windows, visible and radio; the rest needs altitude or orbit."
+    },
+    {
+     "start": 118.33,
+     "end": 120.97,
+     "text": "Ultraviolet wants coated mirrors and space."
+    },
+    {
+     "start": 120.97,
+     "end": 124.29,
+     "text": "Cool the infrared telescope or it outshines the sky."
+    },
+    {
+     "start": 124.29,
+     "end": 127.99,
+     "text": "One galaxy, seven skies — carry that comparison with you."
+    }
+   ],
+   "voicedHash": "db3e13bc263e"
+  },
+  "ultraviolet": {
+   "script": "Look with me behind the panel at the Tarantula, thirty Doradus. The most massive stars known light it here, like iron heated past white. Shortward of three hundred nanometres, ozone stops the light. Shortward of ninety-one point two nanometres, the Lyman limit, the energy that ionises hydrogen, the interstellar gas is opaque, so space telescopes see only a few hundred light-years. Between those limits sit O and B stars of twenty to fifty thousand kelvin, white dwarfs, accretion discs, and solar coronae.\n\nThis is the spectroscopist's band. Carbon four, silicon four, nitrogen five, oxygen six, magnesium two, and the Lyman series of hydrogen all have resonance lines between one hundred and three hundred nanometres. Those lines trace stellar winds, Milky Way halo gas against quasars, and the intergalactic medium on every sightline.\n\nIn nineteen forty-six a captured V-two over New Mexico took the Sun's first ultraviolet spectrum, minutes above the ozone. Copernicus measured interstellar molecular hydrogen and deuterium. IUE spent eighteen years in geosynchronous orbit and returned about a hundred thousand spectra, the most productive satellite of its era. Hubble, from one hundred and fifteen nanometres, has COS and STIS oversubscribed. FUSE covered ninety to one hundred and twenty nanometres. GALEX surveyed at one hundred and fifty and two hundred and thirty nanometres and traced star formation in a billion galaxies.\n\nMirrors work to about one hundred nanometres with aluminium coated in magnesium fluoride or lithium fluoride. Bare aluminium oxidises in minutes and goes blind. Glass is opaque below three hundred and fifty nanometres. The barrier was twenty kilometres of ozone, not the instrument.\n\nEach band selects a temperature. Radio sees cold gas and relativistic electrons. Infrared sees dust and protostars, ten to a thousand kelvin. Visible sees stellar photospheres, three thousand to ten thousand kelvin. Ultraviolet sees hottest stars and accretion, ten thousand to a hundred thousand kelvin. X-rays see millions of kelvin. From three kelvin to a billion kelvin, no telescope reads more than two or three decades.",
+   "hash": "03a96744c5a0",
+   "duration": 135.35,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.2,
+     "text": "Look with me behind the panel at the Tarantula, thirty Doradus."
+    },
+    {
+     "start": 4.2,
+     "end": 9.22,
+     "text": "The most massive stars known light it here, like iron heated past white."
+    },
+    {
+     "start": 9.22,
+     "end": 13.28,
+     "text": "Shortward of three hundred nanometres, ozone stops the light."
+    },
+    {
+     "start": 13.28,
+     "end": 25.1,
+     "text": "Shortward of ninety-one point two nanometres, the Lyman limit, the energy that ionises hydrogen, the interstellar gas is opaque, so space telescopes see only a few hundred light-years."
+    },
+    {
+     "start": 25.1,
+     "end": 33.6,
+     "text": "Between those limits sit O and B stars of twenty to fifty thousand kelvin, white dwarfs, accretion discs, and solar coronae."
+    },
+    {
+     "start": 33.6,
+     "end": 36.06,
+     "text": "This is the spectroscopist's band."
+    },
+    {
+     "start": 36.06,
+     "end": 48.16,
+     "text": "Carbon four, silicon four, nitrogen five, oxygen six, magnesium two, and the Lyman series of hydrogen all have resonance lines between one hundred and three hundred nanometres."
+    },
+    {
+     "start": 48.16,
+     "end": 55.74,
+     "text": "Those lines trace stellar winds, Milky Way halo gas against quasars, and the intergalactic medium on every sightline."
+    },
+    {
+     "start": 55.74,
+     "end": 63.18,
+     "text": "In nineteen forty-six a captured V-two over New Mexico took the Sun's first ultraviolet spectrum, minutes above the ozone."
+    },
+    {
+     "start": 63.18,
+     "end": 67.2,
+     "text": "Copernicus measured interstellar molecular hydrogen and deuterium."
+    },
+    {
+     "start": 67.2,
+     "end": 75.21,
+     "text": "IUE spent eighteen years in geosynchronous orbit and returned about a hundred thousand spectra, the most productive satellite of its era."
+    },
+    {
+     "start": 75.21,
+     "end": 81.09,
+     "text": "Hubble, from one hundred and fifteen nanometres, has COS and STIS oversubscribed."
+    },
+    {
+     "start": 81.09,
+     "end": 84.29,
+     "text": "FUSE covered ninety to one hundred and twenty nanometres."
+    },
+    {
+     "start": 84.29,
+     "end": 91.69,
+     "text": "GALEX surveyed at one hundred and fifty and two hundred and thirty nanometres and traced star formation in a billion galaxies."
+    },
+    {
+     "start": 91.69,
+     "end": 98.03,
+     "text": "Mirrors work to about one hundred nanometres with aluminium coated in magnesium fluoride or lithium fluoride."
+    },
+    {
+     "start": 98.03,
+     "end": 101.43,
+     "text": "Bare aluminium oxidises in minutes and goes blind."
+    },
+    {
+     "start": 101.43,
+     "end": 104.75,
+     "text": "Glass is opaque below three hundred and fifty nanometres."
+    },
+    {
+     "start": 104.75,
+     "end": 108.49,
+     "text": "The barrier was twenty kilometres of ozone, not the instrument."
+    },
+    {
+     "start": 108.49,
+     "end": 110.53,
+     "text": "Each band selects a temperature."
+    },
+    {
+     "start": 110.53,
+     "end": 113.93,
+     "text": "Radio sees cold gas and relativistic electrons."
+    },
+    {
+     "start": 113.93,
+     "end": 118.29,
+     "text": "Infrared sees dust and protostars, ten to a thousand kelvin."
+    },
+    {
+     "start": 118.29,
+     "end": 122.73,
+     "text": "Visible sees stellar photospheres, three thousand to ten thousand kelvin."
+    },
+    {
+     "start": 122.73,
+     "end": 128.05,
+     "text": "Ultraviolet sees hottest stars and accretion, ten thousand to a hundred thousand kelvin."
+    },
+    {
+     "start": 128.05,
+     "end": 130.03,
+     "text": "X-rays see millions of kelvin."
+    },
+    {
+     "start": 130.03,
+     "end": 135.35,
+     "text": "From three kelvin to a billion kelvin, no telescope reads more than two or three decades."
+    }
+   ],
+   "voicedHash": "65cedfd30a8c"
+  },
+  "xray": {
+   "script": "X-rays will not bounce like visible light. Photons from a tenth of a kiloelectronvolt to ten are absorbed within a few microns of any solid, and a face-on mirror might as well be air. Early X-ray astronomy used no optics. Giacconi's nineteen sixty-two rocket found Scorpius X-one and an unexpected bright background. Uhuru in nineteen seventy collimated the view to about a degree.\n\nI picture skipping a stone. Below about a degree, the refractive index of a metal for X-rays is slightly less than one, and you get total external reflection, as light does leaving glass too shallowly. Denser coatings allow a larger angle; higher energy shrinks it.\n\nTheta-c is approximately three point six degrees times the square root of rho over nineteen grams per cubic centimetre, times one kiloelectronvolt over E. Theta-c is the critical grazing angle. Rho is the coating density, and E is the photon energy. Nineteen grams per cubic centimetre is roughly gold or iridium, so the square root is near one. At one kiloelectronvolt the angle is about three point six degrees; at seven kiloelectronvolts, half a degree. Harder X-rays need shallower angles, or multilayer coatings that reflect by Bragg interference, which is how NuSTAR reaches seventy-nine kiloelectronvolts.\n\nWolter, in nineteen fifty-two, focused the rays with two reflections, paraboloid then hyperboloid, the inside of a tapered tube. Shells nest like Russian dolls; each catches only a thin ring.\n\nOn the widget, change the energy and the angle. It fires photons at the nested Wolter mirror. Past the critical angle the reflectivity collapses. The readout is the fraction that still reach the focus.\n\nChandra's four iridium shells give half-arcsecond images, but only eight hundredths of a square metre. XMM-Newton's many thin gold shells collect five times that, blurrier, for spectroscopy. Look at the Crab behind the panel: so steady we quote fluxes in milliCrab. Its X-rays are synchrotron radiation from the pulsar's electrons, the same mechanism as its radio glow, five decades of wavelength apart.",
+   "hash": "0723b24c9ad6",
+   "duration": 130.55,
+   "sentences": [
+    {
+     "start": 0.18,
+     "end": 3.04,
+     "text": "X-rays will not bounce like visible light."
+    },
+    {
+     "start": 3.04,
+     "end": 12.04,
+     "text": "Photons from a tenth of a kiloelectronvolt to ten are absorbed within a few microns of any solid, and a face-on mirror might as well be air."
+    },
+    {
+     "start": 12.04,
+     "end": 15.12,
+     "text": "Early X-ray astronomy used no optics."
+    },
+    {
+     "start": 15.12,
+     "end": 21.52,
+     "text": "Giacconi's nineteen sixty-two rocket found Scorpius X-one and an unexpected bright background."
+    },
+    {
+     "start": 21.52,
+     "end": 25.76,
+     "text": "Uhuru in nineteen seventy collimated the view to about a degree."
+    },
+    {
+     "start": 25.76,
+     "end": 27.64,
+     "text": "I picture skipping a stone."
+    },
+    {
+     "start": 27.64,
+     "end": 38.22,
+     "text": "Below about a degree, the refractive index of a metal for X-rays is slightly less than one, and you get total external reflection, as light does leaving glass too shallowly."
+    },
+    {
+     "start": 38.22,
+     "end": 42.36,
+     "text": "Denser coatings allow a larger angle; higher energy shrinks it."
+    },
+    {
+     "start": 42.36,
+     "end": 52.12,
+     "text": "Theta-c is approximately three point six degrees times the square root of rho over nineteen grams per cubic centimetre, times one kiloelectronvolt over E."
+    },
+    {
+     "start": 52.12,
+     "end": 54.64,
+     "text": "Theta-c is the critical grazing angle."
+    },
+    {
+     "start": 54.64,
+     "end": 58.44,
+     "text": "Rho is the coating density, and E is the photon energy."
+    },
+    {
+     "start": 58.44,
+     "end": 64.46,
+     "text": "Nineteen grams per cubic centimetre is roughly gold or iridium, so the square root is near one."
+    },
+    {
+     "start": 64.46,
+     "end": 71.55,
+     "text": "At one kiloelectronvolt the angle is about three point six degrees; at seven kiloelectronvolts, half a degree."
+    },
+    {
+     "start": 71.55,
+     "end": 80.93,
+     "text": "Harder X-rays need shallower angles, or multilayer coatings that reflect by Bragg interference, which is how NuSTAR reaches seventy-nine kiloelectronvolts."
+    },
+    {
+     "start": 80.93,
+     "end": 89.43,
+     "text": "Wolter, in nineteen fifty-two, focused the rays with two reflections, paraboloid then hyperboloid, the inside of a tapered tube."
+    },
+    {
+     "start": 89.43,
+     "end": 93.63,
+     "text": "Shells nest like Russian dolls; each catches only a thin ring."
+    },
+    {
+     "start": 93.63,
+     "end": 96.43,
+     "text": "On the widget, change the energy and the angle."
+    },
+    {
+     "start": 96.43,
+     "end": 99.35,
+     "text": "It fires photons at the nested Wolter mirror."
+    },
+    {
+     "start": 99.35,
+     "end": 102.43,
+     "text": "Past the critical angle the reflectivity collapses."
+    },
+    {
+     "start": 102.43,
+     "end": 105.53,
+     "text": "The readout is the fraction that still reach the focus."
+    },
+    {
+     "start": 105.53,
+     "end": 111.73,
+     "text": "Chandra's four iridium shells give half-arcsecond images, but only eight hundredths of a square metre."
+    },
+    {
+     "start": 111.73,
+     "end": 117.77,
+     "text": "XMM-Newton's many thin gold shells collect five times that, blurrier, for spectroscopy."
+    },
+    {
+     "start": 117.77,
+     "end": 122.53,
+     "text": "Look at the Crab behind the panel: so steady we quote fluxes in milliCrab."
+    },
+    {
+     "start": 122.53,
+     "end": 130.55,
+     "text": "Its X-rays are synchrotron radiation from the pulsar's electrons, the same mechanism as its radio glow, five decades of wavelength apart."
+    }
+   ],
+   "voicedHash": "360ce27a68e5"
+  }
+ }
+}

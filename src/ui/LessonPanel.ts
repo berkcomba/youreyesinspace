@@ -174,7 +174,7 @@ export class LessonPanel {
       scroll.appendChild(chEl);
     }
     const soon = el('div', 'ac-soon');
-    soon.innerHTML = `<span class="ac-ch-num">Coming next</span><ul><li>Chapter 6 · Telescopes — optics, detectors, radio and space telescopes</li><li>Chapter 7 · Binary Systems and Stellar Parameters — masses, radii and temperatures from orbiting pairs</li></ul>`;
+    soon.innerHTML = `<span class="ac-ch-num">Coming next</span><ul><li>Chapter 7 · Binary Systems and Stellar Parameters — masses, radii and temperatures from orbiting pairs</li><li>Chapter 8 · The Classification of Stellar Spectra — OBAFGKM, the Boltzmann and Saha equations, the H–R diagram</li></ul>`;
     scroll.appendChild(soon);
   }
 

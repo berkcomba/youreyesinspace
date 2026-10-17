@@ -367,122 +367,142 @@
    "voicedHash": "baf6387ce5c0"
   },
   "look-up": {
-   "script": "Welcome. Let's start where astronomy itself started, with nothing but eyes and a dark sky. Look at the Earth behind the panel for a moment. From down there the night sky is a dome, and if you watch it for a few nights you notice patterns that are almost suspiciously regular. The whole field of stars swings around once a night, pivoting on a fixed point in the north. The Sun is slower. Night after night it drifts eastward against those stars, and after a full year it is back where it began. The Moon is fussier still: it changes shape on a cycle of about twenty-nine and a half days, from thin crescent to full and back again.\n\nAnd then there are five lights that refuse to keep the rules. They look like stars, but they wander among the constellations. They speed up, they slow down, and sometimes they stop and go backwards for a few weeks. The Greeks called them planētai, which simply means wanderers, and we still use that word. Mercury, Venus, Mars, Jupiter, and Saturn: the five bodies you can see with the naked eye that move against the fixed stars. Those fixed stars keep their relative positions. They turn together as if they were painted on one great sphere.\n\nThe Sun's yearly path through the constellations is the ecliptic, and the planets stay close to it. The band of constellations along that path, the ones the Sun, Moon, and planets pass through, is the zodiac. Think of the ecliptic as a road, and the zodiac as the towns strung along it.\n\nHere is the idea I want you to hold onto. Regularity is an invitation. A sky that repeats can be predicted, and anything that can be predicted can be described with numbers. That is the step the Greeks took, and it is the step we are about to follow them on.",
-   "hash": "6f4bfdf1f493",
-   "duration": 100.15,
+   "script": "Welcome. Before telescopes, before physics, there was only the naked eye and a dark sky. Look behind the panel: that is the real sky over Athens in five hundred BCE, with the Sun, the Moon, and the five wanderers where they actually were.\n\nWatch a sky like that for a few nights and the patterns are almost suspiciously regular. The whole dome of stars turns once a night around a fixed point in the north. Drag the view there and notice something important: no bright star marks that point. Polaris was far from the pole then. The pole is a direction, not a lamp.\n\nThe Sun drifts eastward against the stars and comes back to the same place after a year. The Moon changes shape on a cycle of about twenty-nine and a half days. And then there are five lights that refuse to behave. They look like stars, but they wander among the constellations, speed up, slow down, and sometimes stop and go backwards for a few weeks. The Greeks called them planētai — wanderers. We still call them planets.\n\nIn the view, the clock is frozen at the same hour night after night. The stars slip a little westward each evening as the Sun drifts east. The Moon runs through its phases. The planets leave trails among the stars. Watch Mars especially: it loops backwards.\n\nStars that keep their relative positions are the fixed stars; they turn together as one sphere. The five bodies you can see with the eye that move against them are Mercury, Venus, Mars, Jupiter, and Saturn. The Sun’s yearly path through the constellations is the ecliptic, and the planets stay close to it. The band of constellations along that path is the zodiac.\n\nRegularity is an invitation. A sky that repeats can be predicted, and anything that can be predicted can be described with numbers. That is the step the Greeks took.",
+   "hash": "4129d440dfea",
+   "duration": 105.27,
    "sentences": [
     {
      "start": 0.08,
-     "end": 1.12,
+     "end": 1.04,
      "text": "Welcome."
     },
     {
-     "start": 1.12,
-     "end": 6.4,
-     "text": "Let's start where astronomy itself started, with nothing but eyes and a dark sky."
+     "start": 1.04,
+     "end": 6.88,
+     "text": "Before telescopes, before physics, there was only the naked eye and a dark sky."
     },
     {
-     "start": 6.4,
-     "end": 9.06,
-     "text": "Look at the Earth behind the panel for a moment."
+     "start": 6.88,
+     "end": 16.84,
+     "text": "Look behind the panel: that is the real sky over Athens in five hundred BCE, with the Sun, the Moon, and the five wanderers where they actually were."
     },
     {
-     "start": 9.06,
-     "end": 16.44,
-     "text": "From down there the night sky is a dome, and if you watch it for a few nights you notice patterns that are almost suspiciously regular."
-    },
-    {
-     "start": 16.44,
+     "start": 16.84,
      "end": 21.8,
-     "text": "The whole field of stars swings around once a night, pivoting on a fixed point in the north."
+     "text": "Watch a sky like that for a few nights and the patterns are almost suspiciously regular."
     },
     {
      "start": 21.8,
-     "end": 23.3,
-     "text": "The Sun is slower."
+     "end": 26.06,
+     "text": "The whole dome of stars turns once a night around a fixed point in the north."
     },
     {
-     "start": 23.3,
-     "end": 29.34,
-     "text": "Night after night it drifts eastward against those stars, and after a full year it is back where it began."
+     "start": 26.06,
+     "end": 30.9,
+     "text": "Drag the view there and notice something important: no bright star marks that point."
     },
     {
-     "start": 29.34,
-     "end": 37.46,
-     "text": "The Moon is fussier still: it changes shape on a cycle of about twenty-nine and a half days, from thin crescent to full and back again."
+     "start": 30.9,
+     "end": 33.22,
+     "text": "Polaris was far from the pole then."
     },
     {
-     "start": 37.46,
-     "end": 40.52,
-     "text": "And then there are five lights that refuse to keep the rules."
+     "start": 33.22,
+     "end": 35.72,
+     "text": "The pole is a direction, not a lamp."
     },
     {
-     "start": 40.52,
-     "end": 44.28,
-     "text": "They look like stars, but they wander among the constellations."
+     "start": 35.72,
+     "end": 40.5,
+     "text": "The Sun drifts eastward against the stars and comes back to the same place after a year."
     },
     {
-     "start": 44.28,
-     "end": 49.62,
-     "text": "They speed up, they slow down, and sometimes they stop and go backwards for a few weeks."
+     "start": 40.5,
+     "end": 44.6,
+     "text": "The Moon changes shape on a cycle of about twenty-nine and a half days."
     },
     {
-     "start": 49.62,
-     "end": 55.19,
-     "text": "The Greeks called them planētai, which simply means wanderers, and we still use that word."
+     "start": 44.6,
+     "end": 47.46,
+     "text": "And then there are five lights that refuse to behave."
     },
     {
-     "start": 55.19,
-     "end": 62.89,
-     "text": "Mercury, Venus, Mars, Jupiter, and Saturn: the five bodies you can see with the naked eye that move against the fixed stars."
+     "start": 47.46,
+     "end": 55.53,
+     "text": "They look like stars, but they wander among the constellations, speed up, slow down, and sometimes stop and go backwards for a few weeks."
     },
     {
-     "start": 62.89,
-     "end": 65.65,
-     "text": "Those fixed stars keep their relative positions."
+     "start": 55.53,
+     "end": 58.49,
+     "text": "The Greeks called them planētai — wanderers."
     },
     {
-     "start": 65.65,
-     "end": 69.15,
-     "text": "They turn together as if they were painted on one great sphere."
+     "start": 58.49,
+     "end": 60.29,
+     "text": "We still call them planets."
     },
     {
-     "start": 69.15,
-     "end": 74.63,
-     "text": "The Sun's yearly path through the constellations is the ecliptic, and the planets stay close to it."
+     "start": 60.29,
+     "end": 64.21,
+     "text": "In the view, the clock is frozen at the same hour night after night."
     },
     {
-     "start": 74.63,
-     "end": 81.35,
-     "text": "The band of constellations along that path, the ones the Sun, Moon, and planets pass through, is the zodiac."
+     "start": 64.21,
+     "end": 67.95,
+     "text": "The stars slip a little westward each evening as the Sun drifts east."
     },
     {
-     "start": 81.35,
-     "end": 85.91,
-     "text": "Think of the ecliptic as a road, and the zodiac as the towns strung along it."
+     "start": 67.95,
+     "end": 69.85,
+     "text": "The Moon runs through its phases."
     },
     {
-     "start": 85.91,
-     "end": 88.33,
-     "text": "Here is the idea I want you to hold onto."
+     "start": 69.85,
+     "end": 72.29,
+     "text": "The planets leave trails among the stars."
     },
     {
-     "start": 88.33,
-     "end": 90.43,
+     "start": 72.29,
+     "end": 75.31,
+     "text": "Watch Mars especially: it loops backwards."
+    },
+    {
+     "start": 75.31,
+     "end": 80.53,
+     "text": "Stars that keep their relative positions are the fixed stars; they turn together as one sphere."
+    },
+    {
+     "start": 80.53,
+     "end": 87.55,
+     "text": "The five bodies you can see with the eye that move against them are Mercury, Venus, Mars, Jupiter, and Saturn."
+    },
+    {
+     "start": 87.55,
+     "end": 92.91,
+     "text": "The Sun’s yearly path through the constellations is the ecliptic, and the planets stay close to it."
+    },
+    {
+     "start": 92.91,
+     "end": 96.27,
+     "text": "The band of constellations along that path is the zodiac."
+    },
+    {
+     "start": 96.27,
+     "end": 98.29,
      "text": "Regularity is an invitation."
     },
     {
-     "start": 90.43,
-     "end": 96.01,
+     "start": 98.29,
+     "end": 103.63,
      "text": "A sky that repeats can be predicted, and anything that can be predicted can be described with numbers."
     },
     {
-     "start": 96.01,
-     "end": 100.15,
-     "text": "That is the step the Greeks took, and it is the step we are about to follow them on."
+     "start": 103.63,
+     "end": 105.27,
+     "text": "That is the step the Greeks took."
     }
    ],
-   "voicedHash": "d9b7c09862e0"
+   "voicedHash": "65fb2a29e8a2"
   },
   "plato": {
    "script": "I want you to look behind the panel — the view is flying in toward Earth. From out here it is just another world, but put yourself on its surface the way Plato's students had to. Plato, more than two thousand years ago, took sky-watching and turned it into a research programme. He asked a precise question: what combination of uniform, circular motions can reproduce the movements of the planets as we actually see them? And the Earth sat motionless at the centre. We feel no motion under our feet, and nothing flies off into space, so that seemed obvious.\n\nWhy circles, and why uniform speed? To the Greeks the heavens were the realm of perfection and permanence. A circle has no beginning and no end — think of it as a ring with no clasp, a path you can follow forever without ever arriving or departing. Uniform motion never changes its pace. Anything else would have been an imperfection, and the heavens had none. This assumption is the single most important thing to keep in mind for the next two thousand years of astronomy. Every model was forced to obey it.\n\nNow try the thought on the screen. Imagine you had never seen a photograph of the Solar System. You stand on ground that feels perfectly still and watch everything in the sky go around you once a day. Which model would you propose first? The geocentric picture was not naive. It was the straightforward reading of the evidence.\n\nHere is the key idea. A scientific model is judged by whether it reproduces what is observed — that is what saving the phenomena means — and by the assumptions it is willing to make. The Greeks had the first part right. They were locked in by the second.",

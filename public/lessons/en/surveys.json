@@ -1,0 +1,483 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "all-sky": {
+   "script": "Welcome. This is where we stop chasing single objects and start mapping the whole sky.\n\nBehind the panel the planetary system is slowly circling the Sun. That little clockwork is home.\n\nTargeted observations answer questions you already have. Surveys find the questions. The first was photographic. From 1949 to 1958 the Palomar Observatory Sky Survey covered the northern sky on about nineteen hundred pairs of fourteen-inch glass plates with the one point two metre Schmidt, reaching twenty-first magnitude. Astronomers worked from the prints for forty years. Quasars, dwarf galaxies and the first brown-dwarf candidates were found by people staring at the plates. Think of a paper internet: the data were already taken, and discovery was careful looking. Digitised Palomar, with the southern surveys from Siding Spring and ESO, became the first all-sky image database.\n\nUse the widget. Page through the maps in galactic coordinates: a Mollweide oval, the Milky Way across the middle, the galactic centre at the origin. Move the cursor and hold one direction while the band changes. Radio continuum is synchrotron emission; the twenty-one centimetre line is galactic hydrogen in three dimensions. Far infrared, about twelve to a hundred micrometres, is dust, the cirrus. Near infrared is stars. Soft X-rays are hot gas. Gamma rays, from tens of mega-electronvolts to a few hundred giga-electronvolts, mark cosmic-ray collisions. A bright patch in one map can be empty in the next.\n\nThe table gathers the yield. Plates to about magnitude twenty-one. Haslam, IRAS, ROSAT, Planck and WISE sit beside them. Sloan spectra and the cosmic web. Gaia, nearly two billion stars. Rubin and the Square Kilometre Array are still opening.\n\nOnce brightness, colour, position and motion are measured, you answer by querying rather than observing. How many white dwarfs lie within a hundred parsecs? Which stars share Gaia’s velocities with the Hyades? What fraction of galaxies at redshift one half are red? The telescope has become a database, and the database a telescope.",
+   "hash": "1a40b386a7b7",
+   "duration": 134.71,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 1.2,
+     "text": "Welcome."
+    },
+    {
+     "start": 1.2,
+     "end": 6.24,
+     "text": "This is where we stop chasing single objects and start mapping the whole sky."
+    },
+    {
+     "start": 6.24,
+     "end": 10.48,
+     "text": "Behind the panel the planetary system is slowly circling the Sun."
+    },
+    {
+     "start": 10.48,
+     "end": 12.82,
+     "text": "That little clockwork is home."
+    },
+    {
+     "start": 12.82,
+     "end": 16.56,
+     "text": "Targeted observations answer questions you already have."
+    },
+    {
+     "start": 16.56,
+     "end": 18.48,
+     "text": "Surveys find the questions."
+    },
+    {
+     "start": 18.48,
+     "end": 20.42,
+     "text": "The first was photographic."
+    },
+    {
+     "start": 20.42,
+     "end": 35.02,
+     "text": "From 1949 to 1958 the Palomar Observatory Sky Survey covered the northern sky on about nineteen hundred pairs of fourteen-inch glass plates with the one point two metre Schmidt, reaching twenty-first magnitude."
+    },
+    {
+     "start": 35.02,
+     "end": 37.98,
+     "text": "Astronomers worked from the prints for forty years."
+    },
+    {
+     "start": 37.98,
+     "end": 44.3,
+     "text": "Quasars, dwarf galaxies and the first brown-dwarf candidates were found by people staring at the plates."
+    },
+    {
+     "start": 44.3,
+     "end": 49.82,
+     "text": "Think of a paper internet: the data were already taken, and discovery was careful looking."
+    },
+    {
+     "start": 49.82,
+     "end": 57.52,
+     "text": "Digitised Palomar, with the southern surveys from Siding Spring and ESO, became the first all-sky image database."
+    },
+    {
+     "start": 57.52,
+     "end": 58.62,
+     "text": "Use the widget."
+    },
+    {
+     "start": 58.62,
+     "end": 66.7,
+     "text": "Page through the maps in galactic coordinates: a Mollweide oval, the Milky Way across the middle, the galactic centre at the origin."
+    },
+    {
+     "start": 66.7,
+     "end": 70.39,
+     "text": "Move the cursor and hold one direction while the band changes."
+    },
+    {
+     "start": 70.39,
+     "end": 77.37,
+     "text": "Radio continuum is synchrotron emission; the twenty-one centimetre line is galactic hydrogen in three dimensions."
+    },
+    {
+     "start": 77.37,
+     "end": 82.73,
+     "text": "Far infrared, about twelve to a hundred micrometres, is dust, the cirrus."
+    },
+    {
+     "start": 82.73,
+     "end": 84.65,
+     "text": "Near infrared is stars."
+    },
+    {
+     "start": 84.65,
+     "end": 86.83,
+     "text": "Soft X-rays are hot gas."
+    },
+    {
+     "start": 86.83,
+     "end": 93.93,
+     "text": "Gamma rays, from tens of mega-electronvolts to a few hundred giga-electronvolts, mark cosmic-ray collisions."
+    },
+    {
+     "start": 93.93,
+     "end": 96.99,
+     "text": "A bright patch in one map can be empty in the next."
+    },
+    {
+     "start": 96.99,
+     "end": 98.87,
+     "text": "The table gathers the yield."
+    },
+    {
+     "start": 98.87,
+     "end": 101.29,
+     "text": "Plates to about magnitude twenty-one."
+    },
+    {
+     "start": 101.29,
+     "end": 106.73,
+     "text": "Haslam, IRAS, ROSAT, Planck and WISE sit beside them."
+    },
+    {
+     "start": 106.73,
+     "end": 109.15,
+     "text": "Sloan spectra and the cosmic web."
+    },
+    {
+     "start": 109.15,
+     "end": 111.69,
+     "text": "Gaia, nearly two billion stars."
+    },
+    {
+     "start": 111.69,
+     "end": 115.05,
+     "text": "Rubin and the Square Kilometre Array are still opening."
+    },
+    {
+     "start": 115.05,
+     "end": 121.15,
+     "text": "Once brightness, colour, position and motion are measured, you answer by querying rather than observing."
+    },
+    {
+     "start": 121.15,
+     "end": 124.27,
+     "text": "How many white dwarfs lie within a hundred parsecs?"
+    },
+    {
+     "start": 124.27,
+     "end": 127.51,
+     "text": "Which stars share Gaia’s velocities with the Hyades?"
+    },
+    {
+     "start": 127.51,
+     "end": 130.97,
+     "text": "What fraction of galaxies at redshift one half are red?"
+    },
+    {
+     "start": 130.97,
+     "end": 134.71,
+     "text": "The telescope has become a database, and the database a telescope."
+    }
+   ],
+   "voicedHash": "50813ae63bec"
+  },
+  "data": {
+   "script": "Look at Earth behind the panel. The limit is the data. A plate held a gigabyte: a night to expose, a day to develop. A modern camera reads out a few gigabytes every fifteen seconds. The widget plots volume against time on a logarithmic axis, rising by a factor of ten per decade, in step with pixels and the computers that digest them. I want you to slide the year marker, choose a home link, and read the transfer time. Watch that wait become a lifetime.\n\nSloan, around two thousand: forty terabytes after a decade, astronomy's most cited data set. Pan-STARRS, around twenty ten: two petabytes, one point six billion objects, beyond any one institute's disk. Gaia, twenty fourteen to twenty twenty-five: a petabyte of telemetry, four hundred and fifty people, one point eight billion stars, positions to twenty micro-arcseconds. Rubin, from twenty twenty-five: twenty terabytes a night, five hundred petabytes in ten years, each image against a template within sixty seconds, up to ten million alerts a night if something moved or changed. The Square Kilometre Array, from twenty twenty-nine: petabits per second at the antennas, reduced on site to about six hundred petabytes a year, more than the internet in two thousand.\n\nThe data cannot be looked at. Rubin measures every object a thousand times, and no human sees most images. Classification, outlier detection, alert triage, and photometric redshifts of billions of galaxies fall to software, often models trained on the surveys themselves. Like a press outrunning its readers, the craft shifts to the right question, and to code trusted on data it has never seen.\n\nA survey measures everything in its footprint to its limiting magnitude, so you stop studying only what interested you. Flux limits, resolution, crowding, seasons, and latitude remain. Malmquist bias, named in nineteen twenty-two, still prefers luminous objects at large distance in any flux-limited sample, petabyte catalogue or plate. Before you trust a statistic, ask what the survey could not have seen.",
+   "hash": "4a4cf0b3ce59",
+   "duration": 127.35,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 2.04,
+     "text": "Look at Earth behind the panel."
+    },
+    {
+     "start": 2.04,
+     "end": 3.74,
+     "text": "The limit is the data."
+    },
+    {
+     "start": 3.74,
+     "end": 8.42,
+     "text": "A plate held a gigabyte: a night to expose, a day to develop."
+    },
+    {
+     "start": 8.42,
+     "end": 12.4,
+     "text": "A modern camera reads out a few gigabytes every fifteen seconds."
+    },
+    {
+     "start": 12.4,
+     "end": 22.14,
+     "text": "The widget plots volume against time on a logarithmic axis, rising by a factor of ten per decade, in step with pixels and the computers that digest them."
+    },
+    {
+     "start": 22.14,
+     "end": 27.16,
+     "text": "I want you to slide the year marker, choose a home link, and read the transfer time."
+    },
+    {
+     "start": 27.16,
+     "end": 29.44,
+     "text": "Watch that wait become a lifetime."
+    },
+    {
+     "start": 29.44,
+     "end": 36.02,
+     "text": "Sloan, around two thousand: forty terabytes after a decade, astronomy's most cited data set."
+    },
+    {
+     "start": 36.02,
+     "end": 44.08,
+     "text": "Pan-STARRS, around twenty ten: two petabytes, one point six billion objects, beyond any one institute's disk."
+    },
+    {
+     "start": 44.08,
+     "end": 55.22,
+     "text": "Gaia, twenty fourteen to twenty twenty-five: a petabyte of telemetry, four hundred and fifty people, one point eight billion stars, positions to twenty micro-arcseconds."
+    },
+    {
+     "start": 55.22,
+     "end": 67.69,
+     "text": "Rubin, from twenty twenty-five: twenty terabytes a night, five hundred petabytes in ten years, each image against a template within sixty seconds, up to ten million alerts a night if something moved or changed."
+    },
+    {
+     "start": 67.69,
+     "end": 78.45,
+     "text": "The Square Kilometre Array, from twenty twenty-nine: petabits per second at the antennas, reduced on site to about six hundred petabytes a year, more than the internet in two thousand."
+    },
+    {
+     "start": 78.45,
+     "end": 80.27,
+     "text": "The data cannot be looked at."
+    },
+    {
+     "start": 80.27,
+     "end": 85.23,
+     "text": "Rubin measures every object a thousand times, and no human sees most images."
+    },
+    {
+     "start": 85.23,
+     "end": 95.97,
+     "text": "Classification, outlier detection, alert triage, and photometric redshifts of billions of galaxies fall to software, often models trained on the surveys themselves."
+    },
+    {
+     "start": 95.97,
+     "end": 102.95,
+     "text": "Like a press outrunning its readers, the craft shifts to the right question, and to code trusted on data it has never seen."
+    },
+    {
+     "start": 102.95,
+     "end": 109.41,
+     "text": "A survey measures everything in its footprint to its limiting magnitude, so you stop studying only what interested you."
+    },
+    {
+     "start": 109.41,
+     "end": 114.11,
+     "text": "Flux limits, resolution, crowding, seasons, and latitude remain."
+    },
+    {
+     "start": 114.11,
+     "end": 123.61,
+     "text": "Malmquist bias, named in nineteen twenty-two, still prefers luminous objects at large distance in any flux-limited sample, petabyte catalogue or plate."
+    },
+    {
+     "start": 123.61,
+     "end": 127.35,
+     "text": "Before you trust a statistic, ask what the survey could not have seen."
+    }
+   ],
+   "voicedHash": "f99305077c0e"
+  },
+  "telescopes-close": {
+   "script": "Look behind the panel at the planetary system slowly circling the Sun. We measure its light with telescopes. Aperture gathers light proportional to D squared, D the diameter, matching the collecting area. The diffraction limit is theta equals one point two two lambda over D. Theta is the smallest separable angle, lambda the wavelength, D the diameter, so larger apertures resolve better. Image scale is two hundred six thousand two hundred sixty-five over f arcseconds per millimetre, f the focal length; the number converts a radian to arcseconds, and magnification is an afterthought. Lenses use Snell’s refraction, mirrors use reflection. Chromatic aberration doomed big refractors. Cassegrain reflectors on alt-az mounts with active and adaptive optics are standard now. Seeing of about one arcsecond and two windows are handled by adaptive optics, mountains or space. Interferometry gives theta approximately lambda over B, B the baseline as effective size, flux density in janskys. Infrared stays cold, ultraviolet needs orbit, X-rays use grazing incidence, gamma rays use particles or the atmosphere. Surveys and the Virtual Observatory turn the archive into an instrument, limited more by software than glass. For the rest of this course I want you to ask which telescope set the resolution, depth, wavelength and selection, since that fixes the error bars. This closes the chapter.",
+   "hash": "afea1440fd5f",
+   "duration": 91.19,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 4.66,
+     "text": "Look behind the panel at the planetary system slowly circling the Sun."
+    },
+    {
+     "start": 4.66,
+     "end": 7.14,
+     "text": "We measure its light with telescopes."
+    },
+    {
+     "start": 7.14,
+     "end": 13.6,
+     "text": "Aperture gathers light proportional to D squared, D the diameter, matching the collecting area."
+    },
+    {
+     "start": 13.6,
+     "end": 18.3,
+     "text": "The diffraction limit is theta equals one point two two lambda over D."
+    },
+    {
+     "start": 18.3,
+     "end": 26.14,
+     "text": "Theta is the smallest separable angle, lambda the wavelength, D the diameter, so larger apertures resolve better."
+    },
+    {
+     "start": 26.14,
+     "end": 38.84,
+     "text": "Image scale is two hundred six thousand two hundred sixty-five over f arcseconds per millimetre, f the focal length; the number converts a radian to arcseconds, and magnification is an afterthought."
+    },
+    {
+     "start": 38.84,
+     "end": 42.76,
+     "text": "Lenses use Snell’s refraction, mirrors use reflection."
+    },
+    {
+     "start": 42.76,
+     "end": 45.83,
+     "text": "Chromatic aberration doomed big refractors."
+    },
+    {
+     "start": 45.83,
+     "end": 51.45,
+     "text": "Cassegrain reflectors on alt-az mounts with active and adaptive optics are standard now."
+    },
+    {
+     "start": 51.45,
+     "end": 57.67,
+     "text": "Seeing of about one arcsecond and two windows are handled by adaptive optics, mountains or space."
+    },
+    {
+     "start": 57.67,
+     "end": 66.03,
+     "text": "Interferometry gives theta approximately lambda over B, B the baseline as effective size, flux density in janskys."
+    },
+    {
+     "start": 66.03,
+     "end": 74.55,
+     "text": "Infrared stays cold, ultraviolet needs orbit, X-rays use grazing incidence, gamma rays use particles or the atmosphere."
+    },
+    {
+     "start": 74.55,
+     "end": 81.05,
+     "text": "Surveys and the Virtual Observatory turn the archive into an instrument, limited more by software than glass."
+    },
+    {
+     "start": 81.05,
+     "end": 89.81,
+     "text": "For the rest of this course I want you to ask which telescope set the resolution, depth, wavelength and selection, since that fixes the error bars."
+    },
+    {
+     "start": 89.81,
+     "end": 91.19,
+     "text": "This closes the chapter."
+    }
+   ],
+   "voicedHash": "2406ada164ef"
+  },
+  "virtual-observatory": {
+   "script": "Look at forty seven Tucanae behind the panel. Each survey has a different format, different coordinates, different photometry, and a different server. By two thousand the science was in combining them, an infrared colour with an X-ray flux with a Gaia distance, so the archives had to agree on how to talk.\n\nIn two thousand two the International Virtual Observatory Alliance defined the standards. FITS and VOTable for the data, Simple Cone Search and TAP with ADQL for the queries, SAMP to pass results between tools, and registries so a program can discover every catalogue on a point of sky. Those protocols are the Virtual Observatory, not a place, and they make the world's archives behave like one instrument. In an afternoon SIMBAD, VizieR, NED, MAST and ESASky give you every archived observation across the spectrum, Aladin and TOPCAT plot them, and the CDS servers cross-match million-row catalogues in seconds.\n\nI want you to drag the match radius on the widget. Yellow is Chandra, with larger position errors, and blue is Gaia. Too small misses real counterparts. Too large invents matches. Watch true matches, false matches and completeness. Density here is ferocious.\n\nP chance is approximately one minus e to the minus pi r squared Sigma, about pi r squared Sigma for small counts. P chance is the probability an unrelated source lies inside the match radius r. Sigma is the surface density of unrelated sources. Pi r squared times Sigma is the expected number of interlopers, and one minus the exponential is the Poisson chance of at least one. Ten per square arcminute at one arcsecond is under one percent. A thousand per square arcminute is about sixty percent. Quote the chance, and ask for colour, variability or proper motion.\n\nWithin a year nearly all space-mission data and most ground-based data are public, many papers never apply for telescope time, and more Hubble papers come from the archive than from new observations. The archive is the most productive telescope on Earth.",
+   "hash": "ebd2ebb19ce8",
+   "duration": 127.99,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.28,
+     "text": "Look at forty seven Tucanae behind the panel."
+    },
+    {
+     "start": 3.28,
+     "end": 9.66,
+     "text": "Each survey has a different format, different coordinates, different photometry, and a different server."
+    },
+    {
+     "start": 9.66,
+     "end": 19.36,
+     "text": "By two thousand the science was in combining them, an infrared colour with an X-ray flux with a Gaia distance, so the archives had to agree on how to talk."
+    },
+    {
+     "start": 19.36,
+     "end": 24.8,
+     "text": "In two thousand two the International Virtual Observatory Alliance defined the standards."
+    },
+    {
+     "start": 24.8,
+     "end": 38.88,
+     "text": "FITS and VOTable for the data, Simple Cone Search and TAP with ADQL for the queries, SAMP to pass results between tools, and registries so a program can discover every catalogue on a point of sky."
+    },
+    {
+     "start": 38.88,
+     "end": 46.14,
+     "text": "Those protocols are the Virtual Observatory, not a place, and they make the world's archives behave like one instrument."
+    },
+    {
+     "start": 46.14,
+     "end": 61.88,
+     "text": "In an afternoon SIMBAD, VizieR, NED, MAST and ESASky give you every archived observation across the spectrum, Aladin and TOPCAT plot them, and the CDS servers cross-match million-row catalogues in seconds."
+    },
+    {
+     "start": 61.88,
+     "end": 64.55,
+     "text": "I want you to drag the match radius on the widget."
+    },
+    {
+     "start": 64.55,
+     "end": 68.81,
+     "text": "Yellow is Chandra, with larger position errors, and blue is Gaia."
+    },
+    {
+     "start": 68.81,
+     "end": 71.09,
+     "text": "Too small misses real counterparts."
+    },
+    {
+     "start": 71.09,
+     "end": 73.07,
+     "text": "Too large invents matches."
+    },
+    {
+     "start": 73.07,
+     "end": 76.49,
+     "text": "Watch true matches, false matches and completeness."
+    },
+    {
+     "start": 76.49,
+     "end": 78.47,
+     "text": "Density here is ferocious."
+    },
+    {
+     "start": 78.47,
+     "end": 86.19,
+     "text": "P chance is approximately one minus e to the minus pi r squared Sigma, about pi r squared Sigma for small counts."
+    },
+    {
+     "start": 86.19,
+     "end": 91.21,
+     "text": "P chance is the probability an unrelated source lies inside the match radius r."
+    },
+    {
+     "start": 91.21,
+     "end": 94.35,
+     "text": "Sigma is the surface density of unrelated sources."
+    },
+    {
+     "start": 94.35,
+     "end": 102.41,
+     "text": "Pi r squared times Sigma is the expected number of interlopers, and one minus the exponential is the Poisson chance of at least one."
+    },
+    {
+     "start": 102.41,
+     "end": 106.45,
+     "text": "Ten per square arcminute at one arcsecond is under one percent."
+    },
+    {
+     "start": 106.45,
+     "end": 109.75,
+     "text": "A thousand per square arcminute is about sixty percent."
+    },
+    {
+     "start": 109.75,
+     "end": 114.05,
+     "text": "Quote the chance, and ask for colour, variability or proper motion."
+    },
+    {
+     "start": 114.05,
+     "end": 125.35,
+     "text": "Within a year nearly all space-mission data and most ground-based data are public, many papers never apply for telescope time, and more Hubble papers come from the archive than from new observations."
+    },
+    {
+     "start": 125.35,
+     "end": 127.99,
+     "text": "The archive is the most productive telescope on Earth."
+    }
+   ],
+   "voicedHash": "136219a27c4a"
+  }
+ }
+}
