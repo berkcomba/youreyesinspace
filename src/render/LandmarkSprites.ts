@@ -151,6 +151,9 @@ export class LandmarkSprites {
   /** flux → alpha·px² calibration shared with the clouds */
   get k(): number { return this.mat.uniforms.uK.value as number; }
 
+  /** Distance (pc) from the last camera position to landmark i */
+  distancePc(i: number): number { return this.landmarks[i].positionPc.distanceTo(this.camPc); }
+
   /** Unit direction from the camera to landmark i */
   direction(i: number, out = new Vector3()): Vector3 {
     return out.copy(this.landmarks[i].positionPc).sub(this.camPc).normalize();

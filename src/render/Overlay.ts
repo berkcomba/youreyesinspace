@@ -14,6 +14,8 @@ export interface StarSelectionScreen {
   kind?: 'star' | 'galaxy' | 'landmark';
   /** apparent radius in px (galaxies) so the reticle hugs the object */
   radiusPx?: number;
+  /** distance from the camera (km), appended to the label */
+  distKm?: number;
 }
 
 /** A labelled point on a body's surface (guided tours) */
@@ -315,7 +317,7 @@ export class Overlay {
           }
           ctx.stroke();
           ctx.fillStyle = 'rgba(255,255,255,0.98)';
-          ctx.fillText(selectedStar.name, x + r + 8, y - r * 0.35);
+          ctx.fillText(withDist(selectedStar.name, selectedStar.distKm), x + r + 8, y - r * 0.35);
         }
       }
     }

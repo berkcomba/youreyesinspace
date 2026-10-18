@@ -1169,7 +1169,8 @@ class App implements UIHost {
     let starSel: StarSelectionScreen | null = null;
     if (this.selectedStar !== null) {
       this.starSel.name = this.universe.starName(this.selectedStar);
-      this.universe.starRelative(this.selectedStar, camPos, this.starSel.dir).normalize();
+      this.starSel.distKm = this.universe.starRelative(this.selectedStar, camPos, this.starSel.dir).length();
+      this.starSel.dir.normalize();
       this.starSel.kind = 'star';
       this.starSel.radiusPx = 0;
       starSel = this.starSel;
@@ -1177,6 +1178,7 @@ class App implements UIHost {
       const i = this.selectedGalaxy;
       this.starSel.name = this.universe.galaxies.name(i);
       this.galaxySprites.direction(i, this.starSel.dir);
+      this.starSel.distKm = this.galaxySprites.apparent(i).distPc * PARSEC_KM;
       this.starSel.kind = 'galaxy';
       this.starSel.radiusPx = Math.min(this.galaxySprites.apparent(i).angRad * pxPerRad, eng.height);
       starSel = this.starSel;
@@ -1184,6 +1186,7 @@ class App implements UIHost {
       const i = this.selectedLandmark;
       this.starSel.name = this.universe.landmarks[i].def.name;
       this.landmarkSprites.direction(i, this.starSel.dir);
+      this.starSel.distKm = this.landmarkSprites.distancePc(i) * PARSEC_KM;
       this.starSel.kind = 'landmark';
       this.starSel.radiusPx = Math.min(this.landmarkSprites.angularRadius(i) * pxPerRad, eng.height);
       starSel = this.starSel;

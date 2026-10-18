@@ -141,7 +141,7 @@ export class StarPoints {
       if (i === hideIndex) continue;
       const m = this.apparentMag(i);
       if (m > 3.6) continue;
-      this.namedStars.push({ index: i, name: this.catalog.nameOf(i), dir: this.direction(i), mag: m });
+      this.namedStars.push({ index: i, name: this.catalog.nameOf(i), dir: this.direction(i), mag: m, distKm: this.distancePc(i) * PARSEC_KM });
     }
     // The Sun itself is drawn by the overlay's sun marker (with distance and an off-screen compass);
     // it only needs to stay pickable here when it is not the current system's body.
@@ -167,7 +167,7 @@ export class StarPoints {
         if (i === 0 || i === hideIndex) continue;
         this.marked.push(i);
         if (this.namedStars.some((n) => n.index === i)) continue;
-        this.namedStars.push({ index: i, name: this.catalog.nameOf(i), dir: this.direction(i), mag: this.catalog.mags[i] + 2.5, landmark: true });
+        this.namedStars.push({ index: i, name: this.catalog.nameOf(i), dir: this.direction(i), mag: this.catalog.mags[i] + 2.5, landmark: true, distKm: this.distancePc(i) * PARSEC_KM });
       }
     }
   }
