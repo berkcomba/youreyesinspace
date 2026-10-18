@@ -87,8 +87,6 @@ export interface LabelHit {
   x: number; y: number; w: number; h: number;
 }
 
-/** "Name · 8.6 ly" */
-const withDist = (name: string, km?: number): string => (km === undefined ? name : `${name} · ${fmtScaleDistance(km)}`);
 
 const _v = new Vector3();
 
@@ -102,6 +100,8 @@ export class Overlay {
   showLabels = true;
   showMarkers = true;
   showStarNames = false;
+  /** append the camera distance to labels: "Mars · 1.2 AU", "Sirius · 8.6 ly" */
+  showDistances = false;
   /** labels drawn in the last frame (for click / hover hit-testing) */
   private readonly labelHits: LabelHit[] = [];
   /** star names that won a spot last frame: they keep priority so declutter does not flicker */
@@ -204,7 +204,7 @@ export class Overlay {
         const x = (_v.x * 0.5 + 0.5) * W;
         const y = (-_v.y * 0.5 + 0.5) * H;
         if (x < 0 || x > W || y < 0 || y > H) continue;
-        const label = withDist(s.name, s.distKm);
+        const label = this.withDist(s.name, s.distKm);
         const w = ctx.measureText(label).width + 10;
         let clash = false;
         for (const t of taken) {
@@ -248,7 +248,7 @@ export class Overlay {
         const y = (-_v.y * 0.5 + 0.5) * H;
         if (x < 0 || x > W || y < 0 || y > H) continue;
         ctx.fillStyle = 'rgba(215, 190, 255, 0.6)';
-        const glabel = withDist(s.name, s.distKm);
+        const glabel = this.withDist(s.name, s.distKm);
         ctx.fillText(glabel, x + 7, y + 9);
         this.labelHits.push({ kind: 'galaxy', index: s.index, name: s.name, x: x + 7, y: y + 2, w: ctx.measureText(glabel).width, h: 14 });
       }
@@ -282,7 +282,7 @@ export class Overlay {
           ctx.globalAlpha = 1;
         }
         if (this.showLabels) {
-          const label = withDist(s.name, s.distKm);
+          const label = this.withDist(s.name, s.distKm);
           const w = ctx.measureText(label).width + 10;
           const lx = x + r * 0.71 + 6, ly = y - r * 0.71 - 6;
           let clash = false;
@@ -319,7 +319,7 @@ export class Overlay {
         ctx.stroke();
         if (this.showLabels) {
           ctx.fillStyle = TYPE_COLORS.blackhole;
-          const blabel = withDist(s.name, s.distKm);
+          const blabel = this.withDist(s.name, s.distKm);
           ctx.fillText(blabel, x + 10, y - 6);
           this.labelHits.push({ kind: 'blackhole', index: -1, name: s.name, x: x + 10, y: y - 13, w: ctx.measureText(blabel).width, h: 14 });
         }
@@ -349,7 +349,7 @@ export class Overlay {
           }
           ctx.stroke();
           ctx.fillStyle = 'rgba(255,255,255,0.98)';
-          ctx.fillText(withDist(selectedStar.name, selectedStar.distKm), x + r + 8, y - r * 0.35);
+          ctx.fillText(this.withDist(selectedStar.name, selectedStar.distKm), x + r + 8, y - r * 0.35);
         }
       }
     }
@@ -383,7 +383,7 @@ export class Overlay {
       if (sun && b.id === 'sun' && !isSel) continue;
 
       const color = TYPE_COLORS[b.data.type] ?? 'white';
-      const label = it.distance > BODY_DIST_LABEL_KM ? withDist(b.name, it.distance) : b.name;
+      const label = it.distance > BODY_DIST_LABEL_KM ? this.withDist(b.name, it.distance) : b.name;
       const tw = ctx.measureText(label).width;
       const offset = Math.max(it.radiusPx, 5) + 8;
       const lx = it.x + offset, ly = it.y - offset * 0.35;
@@ -599,6 +599,11 @@ export class Overlay {
   }
 
   /** Pick nearest body to screen point (px). */
+  /** "Name · 8.6 ly" when distances are on, otherwise just the name */
+  private withDist(name: string, km?: number): string {
+    return !this.showDistances || km === undefined ? name : `${name} · ${fmtScaleDistance(km)}`;
+  }
+
   /** Sky label under a screen point (a few px of slack around the text) */
   hitLabel(x: number, y: number, pad = 3): LabelHit | null {
     // last drawn is on top

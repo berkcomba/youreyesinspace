@@ -850,6 +850,7 @@ class App implements UIHost {
     this.overlay.showMarkers = s.markers;
     this.overlay.showStarNames = s.starNames;
     this.overlay.showGalaxyNames = s.galaxyNames;
+    this.overlay.showDistances = s.distances;
     const ov = this.tourOverrides;
     this.grid.setVisible(ov.eclipticGrid ?? s.eclipticGrid, ov.equatorialGrid ?? s.equatorialGrid);
     this.galaxySprites.setVisible(s.galaxies);

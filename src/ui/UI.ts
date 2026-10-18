@@ -100,6 +100,7 @@ const SETTING_DEFS: SettingDef[] = [
   { key: 'sunMarker', label: 'Güneş işareti ve pusulası', kind: 'bool' },
   { key: 'starNames', label: 'Yıldız isimleri', kind: 'bool' },
   { key: 'galaxyNames', label: 'Galaksi isimleri', kind: 'bool' },
+  { key: 'distances', label: 'Etiketlerde uzaklık', kind: 'bool' },
   { key: 'eclipticGrid', label: 'Ekliptik ızgara', kind: 'bool' },
   { key: 'equatorialGrid', label: 'Ekvatoral ızgara', kind: 'bool' },
   { key: 'belts', label: 'Asteroit / Kuiper kuşağı', kind: 'bool' },

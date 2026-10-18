@@ -7,6 +7,8 @@ export interface Settings {
   sunMarker: boolean;
   starNames: boolean;
   galaxyNames: boolean;
+  /** camera distance appended to labels ("Mars · 1.2 AU", "Sirius · 8.6 ly") */
+  distances: boolean;
   galaxies: boolean;
   eclipticGrid: boolean;
   equatorialGrid: boolean;
@@ -39,6 +41,7 @@ export const DEFAULT_SETTINGS: Settings = {
   sunMarker: true,
   starNames: false,
   galaxyNames: true,
+  distances: false,
   galaxies: true,
   eclipticGrid: false,
   equatorialGrid: false,
