@@ -3,6 +3,8 @@ export interface Settings {
   moonOrbits: boolean;
   labels: boolean;
   markers: boolean;
+  /** the Sun marked on the sky with its distance (and a compass when off-screen) once we have left the planets */
+  sunMarker: boolean;
   starNames: boolean;
   galaxyNames: boolean;
   galaxies: boolean;
@@ -32,6 +34,7 @@ export const DEFAULT_SETTINGS: Settings = {
   moonOrbits: true,
   labels: true,
   markers: true,
+  sunMarker: true,
   starNames: false,
   galaxyNames: true,
   galaxies: true,

@@ -179,6 +179,17 @@ export class LessonPlayer {
     for (const s of ch.sections) { t += s.steps.length; n += this.progress(s) * s.steps.length; }
     return t ? n / t : 0;
   }
+  /** whole-course tally: steps seen, sections finished, minutes of material remaining */
+  courseProgress(): { steps: number; totalSteps: number; sections: number; totalSections: number; minutesLeft: number; totalMinutes: number } {
+    let steps = 0, totalSteps = 0, sections = 0, totalSections = 0, minutesLeft = 0, totalMinutes = 0;
+    for (const ch of this.course.chapters) for (const s of ch.sections) {
+      const p = this.progress(s);
+      totalSteps += s.steps.length; steps += Math.round(p * s.steps.length);
+      totalSections++; if (p >= 1) sections++;
+      totalMinutes += s.minutes; minutesLeft += Math.round((1 - p) * s.minutes);
+    }
+    return { steps, totalSteps, sections, totalSections, minutesLeft, totalMinutes };
+  }
   private save() {
     try {
       const s: Stored = { visited: [...this.visited], last: this.last, voice: this.narration.enabled, auto: this.narration.auto };

@@ -97,6 +97,7 @@ const SETTING_DEFS: SettingDef[] = [
   { key: 'moonOrbits', label: 'Uydu yörüngeleri', kind: 'bool' },
   { key: 'labels', label: 'Etiketler', kind: 'bool' },
   { key: 'markers', label: 'İşaretçiler', kind: 'bool' },
+  { key: 'sunMarker', label: 'Güneş işareti ve pusulası', kind: 'bool' },
   { key: 'starNames', label: 'Yıldız isimleri', kind: 'bool' },
   { key: 'galaxyNames', label: 'Galaksi isimleri', kind: 'bool' },
   { key: 'eclipticGrid', label: 'Ekliptik ızgara', kind: 'bool' },
@@ -611,7 +612,8 @@ export class UI {
     if (i < g.catalogCount && i !== 0) rows.push(['Kaynak', 'Messier / NGC (yaklaşık parametreler)']);
     rows.push(['Işık gecikmesi', fmtDuration(camDist / 299_792.458)]);
     this.infoBody.innerHTML = rowsHtml(rows);
-    this.infoDesc.textContent = g.model(i).p.description ?? '';
+    const desc = g.model(i).p.description ?? '';
+    this.infoDesc.textContent = i < g.catalogCount ? desc : `${desc} ${_('Gözlemlenmiş bir nesne değil: kataloglar arasındaki boşluğu doldurmak için deterministik olarak üretildi.')}`.trim();
   }
 
   private renderLandmarkInfo(i: number): void {
@@ -681,7 +683,7 @@ export class UI {
 
     this.infoBody.innerHTML = rowsHtml(rows);
     this.infoDesc.textContent = isProc
-      ? `${_(sys.star.data.description ?? '')} ${_('(* Bu yıldız {galaxy} galaksisinin yoğunluk modelinden deterministik olarak üretilmiştir; kimliği kalıcıdır, aynı yere dönünce aynı yıldızı bulursunuz.)', { galaxy: galName })}`
+      ? `${_(sys.star.data.description ?? '')} ${_('Gözlemlenmiş bir nesne değil: kataloglar arasındaki boşluğu doldurmak için deterministik olarak üretildi.')} ${_('(* Bu yıldız {galaxy} galaksisinin yoğunluk modelinden deterministik olarak üretilmiştir; kimliği kalıcıdır, aynı yere dönünce aynı yıldızı bulursunuz.)', { galaxy: galName })}`
       : u.hasMeasuredInfo(id)
         ? `${_(sys.star.data.description ?? '')} ${_('(* Tayf ve yörünge ölçümlerinden gelen değerler; katalog tahminlerinin yerini alır.)')}`
         : `${_(sys.star.data.description ?? '')} ${_('(* Kadir, uzaklık ve B−V renginden türetilen tahminler.)')}`;

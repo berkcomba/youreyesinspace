@@ -23,6 +23,16 @@ export interface SurfacePinScreen {
   alpha: number;
 }
 
+/** The Sun seen from elsewhere: a marker with its distance, or a compass arrow when off-screen */
+export interface SunMarkerScreen {
+  /** unit direction from the camera */
+  dir: Vector3;
+  /** "Sun · 4.2 ly" */
+  label: string;
+  /** the Sun is the current selection: the reticle labels it, so only the off-screen compass is drawn */
+  selected?: boolean;
+}
+
 export interface ScreenItem {
   body: CelestialBody;
   x: number;
@@ -55,6 +65,8 @@ const LANDMARK_COLORS: Record<string, string> = {
 /** Muted brass — the one accent colour of the interface, used only for the selected object. */
 const SELECTION_COLOR = 'rgba(189, 155, 108, 0.95)';
 
+const SUN_COLOR = 'rgba(255, 225, 160, 0.9)';
+
 const _v = new Vector3();
 
 /** 2D canvas overlay: markers, labels, selection reticle, star names. */
@@ -73,6 +85,8 @@ export class Overlay {
   hoverId: string | null = null;
   /** draw a centre crosshair (free roam / pointer lock) */
   crosshair = false;
+  /** where the sun marker / compass was last drawn (click target), screen px */
+  private sunHit: { x: number; y: number; w: number; h: number } | null = null;
 
   constructor(readonly canvas: HTMLCanvasElement) {
     this.ctx = canvas.getContext('2d')!;
@@ -96,12 +110,14 @@ export class Overlay {
     blackHoles: NamedStarScreen[] = [],
     landmarks: LandmarkScreen[] = [],
     pin: SurfacePinScreen | null = null,
+    sun: SunMarkerScreen | null = null,
   ): ScreenItem[] {
     const ctx = this.ctx;
     const W = this.width, H = this.height;
     ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
     ctx.clearRect(0, 0, W, H);
     this.items.length = 0;
+    this.sunHit = null;
 
     // Project all bodies
     const byId = new Map<string, ScreenItem>();
@@ -135,13 +151,16 @@ export class Overlay {
     ctx.font = '500 12px Inter, ui-sans-serif, system-ui, sans-serif';
     ctx.textBaseline = 'middle';
 
+    // The sun marker's label gets its spot first; star and landmark labels keep clear of it
+    const sunBox = sun && (this.showMarkers || this.showLabels) ? this.sunLabelBox(sun, camera) : null;
+
     // Star names (behind everything). Brightest first; later labels skip occupied spots.
     // Landmarks (the Sun and famous stars, far from home) are shown with the markers even when
     // star names are off: they are the only way to find the way around the galaxy.
     const anyLandmarkStar = this.showMarkers && !this.showStarNames && namedStars.some((s) => s.landmark);
     if (this.showStarNames || anyLandmarkStar) {
       ctx.font = '400 11px Inter, ui-sans-serif, system-ui, sans-serif';
-      const taken: Array<{ x: number; y: number; w: number }> = [];
+      const taken: Array<{ x: number; y: number; w: number }> = sunBox ? [sunBox] : [];
       const sortedStars = [...namedStars].sort((a, b) => (a.index === 0 ? -99 : a.mag) - (b.index === 0 ? -99 : b.mag));
       for (const s of sortedStars) {
         if (!this.showStarNames && !s.landmark) continue;
@@ -164,6 +183,7 @@ export class Overlay {
         ctx.fillStyle = s.index === 0 ? 'rgba(255, 225, 160, 0.85)'
           : s.index < 0 ? (this.highlightProcedural ? `rgba(120, 255, 160, ${0.85 * fade})` : `rgba(195, 208, 235, ${0.7 * fade})`)
           : `rgba(205, 215, 235, ${0.75 * fade})`;
+        ctx.globalAlpha = s.alpha ?? 1;
         if (s.landmark) {
           // the star itself is invisible from here: give the label a small ring to point at
           ctx.strokeStyle = s.index === 0 ? 'rgba(255, 225, 160, 0.85)' : 'rgba(205, 215, 235, 0.7)';
@@ -173,6 +193,7 @@ export class Overlay {
           ctx.stroke();
         }
         ctx.fillText(s.name, x + 7, y - 7);
+        ctx.globalAlpha = 1;
       }
       ctx.font = '500 12px Inter, ui-sans-serif, system-ui, sans-serif';
     }
@@ -197,7 +218,7 @@ export class Overlay {
     // Deep-sky landmarks (nebulae, clusters, remnants, record stars): dashed ring + name
     if ((this.showMarkers || this.showLabels) && landmarks.length) {
       ctx.font = '400 11px Inter, ui-sans-serif, system-ui, sans-serif';
-      const taken: Array<{ x: number; y: number; w: number }> = [];
+      const taken: Array<{ x: number; y: number; w: number }> = sunBox ? [sunBox] : [];
       for (const s of landmarks) {
         if (selectedStar && selectedStar.kind === 'landmark' && selectedStar.name === s.name) continue;
         if (occluders.length && occluded(s.dir)) continue;
@@ -262,6 +283,9 @@ export class Overlay {
       }
     }
 
+    // The Sun from afar: ring + "Sun · distance" on the sky, or a compass arrow when it is off-screen
+    if (sun && (this.showMarkers || this.showLabels)) this.drawSun(sun, camera);
+
     // Selected catalogue star / galaxy: reticle + name
     if (selectedStar) {
       _v.copy(selectedStar.dir).multiplyScalar(1e11).project(camera);
@@ -311,6 +335,8 @@ export class Overlay {
       if (!isSel && minor && it.radiusPx < 0.003) continue;
       // Camera very close: skip marker/label (we're on the surface)
       if (it.radiusPx > Math.max(W, H)) continue;
+      // The home star far behind us is labelled by the sun marker (with its distance) instead
+      if (sun && b.id === 'sun' && !isSel) continue;
 
       const color = TYPE_COLORS[b.data.type] ?? 'white';
       const label = b.name;
@@ -447,6 +473,84 @@ export class Overlay {
       ctx.fillRect(cx - 0.75, cy - 0.75, 1.5, 1.5);
     }
     return this.items;
+  }
+
+  /** Screen position of the Sun, or null when it is off-screen */
+  private sunScreenPos(sun: SunMarkerScreen, camera: PerspectiveCamera): { x: number; y: number } | null {
+    _v.copy(sun.dir).multiplyScalar(1e11).project(camera);
+    const x = (_v.x * 0.5 + 0.5) * this.width;
+    const y = (-_v.y * 0.5 + 0.5) * this.height;
+    return _v.z < 1 && _v.z > -1 && x >= 0 && x <= this.width && y >= 0 && y <= this.height ? { x, y } : null;
+  }
+
+  /** The strip the sun label occupies (same geometry as the star-name `taken` entries) */
+  private sunLabelBox(sun: SunMarkerScreen, camera: PerspectiveCamera): { x: number; y: number; w: number } | null {
+    const p = this.sunScreenPos(sun, camera);
+    if (!p) return null;
+    this.ctx.font = '500 11px Inter, ui-sans-serif, system-ui, sans-serif';
+    const w = this.ctx.measureText(sun.label).width + 10;
+    this.ctx.font = '500 12px Inter, ui-sans-serif, system-ui, sans-serif';
+    return { x: p.x + 9, y: p.y - 8, w };
+  }
+
+  private drawSun(sun: SunMarkerScreen, camera: PerspectiveCamera): void {
+    const ctx = this.ctx;
+    const W = this.width, H = this.height;
+    ctx.font = '500 11px Inter, ui-sans-serif, system-ui, sans-serif';
+    const p = this.sunScreenPos(sun, camera);
+    if (p && sun.selected) { ctx.font = '500 12px Inter, ui-sans-serif, system-ui, sans-serif'; return; }
+    if (p) {
+      // on the sky: a small ring and the label
+      const { x, y } = p;
+      ctx.strokeStyle = SUN_COLOR;
+      ctx.fillStyle = SUN_COLOR;
+      ctx.lineWidth = 1;
+      if (this.showMarkers) {
+        ctx.beginPath();
+        ctx.arc(x, y, 4.5, 0, Math.PI * 2);
+        ctx.moveTo(x + 1.2, y);
+        ctx.arc(x, y, 1.2, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      if (this.showLabels) ctx.fillText(sun.label, x + 9, y - 8);
+      const w = ctx.measureText(sun.label).width + 12;
+      this.sunHit = { x: x - 10, y: y - 18, w: w + 10, h: 28 };
+    } else {
+      // off-screen: a compass at the bottom centre, pointing the way to turn
+      _v.copy(sun.dir).transformDirection(camera.matrixWorldInverse);
+      const ang = Math.hypot(_v.x, _v.y) < 1e-4 ? 0 : Math.atan2(-_v.y, _v.x); // screen y runs down
+      const cx = W / 2, cy = H - 78, R = 15;
+      ctx.strokeStyle = 'rgba(255, 225, 160, 0.55)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(cx, cy, R, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(ang);
+      ctx.fillStyle = SUN_COLOR;
+      ctx.beginPath();
+      ctx.moveTo(R - 3, 0);
+      ctx.lineTo(-3, -5);
+      ctx.lineTo(-1, 0);
+      ctx.lineTo(-3, 5);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+      ctx.textAlign = 'center';
+      ctx.fillStyle = SUN_COLOR;
+      ctx.fillText(sun.label, cx, cy + R + 12);
+      ctx.textAlign = 'left';
+      const w = Math.max(2 * R, ctx.measureText(sun.label).width) + 16;
+      this.sunHit = { x: cx - w / 2, y: cy - R - 6, w, h: 2 * R + 30 };
+    }
+    ctx.font = '500 12px Inter, ui-sans-serif, system-ui, sans-serif';
+  }
+
+  /** `true` when a screen point (px) is on the sun marker or its compass */
+  hitSun(x: number, y: number): boolean {
+    const h = this.sunHit;
+    return !!h && x >= h.x && x <= h.x + h.w && y >= h.y && y <= h.y + h.h;
   }
 
   /** Pick nearest body to screen point (px). */

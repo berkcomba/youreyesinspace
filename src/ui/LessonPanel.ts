@@ -95,6 +95,8 @@ export class LessonPanel {
   readonly panel = document.getElementById('academy') as HTMLElement;
   private readonly btn = document.getElementById('btn-academy') as HTMLButtonElement;
   private widget: Widget | null = null;
+  /** chapters expanded on the course home; null until first render (then seeded with the active one) */
+  private openChapters: Set<string> | null = null;
   private lec: { root: HTMLElement; play: HTMLButtonElement; time: HTMLElement; text: HTMLElement; fill: HTMLElement; auto: HTMLInputElement; mute: HTMLButtonElement } | null = null;
 
   constructor(private readonly player: LessonPlayer, private readonly onToggle: (show: boolean) => void) {
@@ -151,26 +153,53 @@ export class LessonPanel {
     hero.appendChild(el('div', 'ac-hero-kicker', 'Course'));
     hero.appendChild(el('h2', 'ac-hero-title', esc(p.course.title)));
     hero.appendChild(el('p', 'ac-hero-sub', esc(p.course.subtitle)));
+    const cp = p.courseProgress();
+    const cpct = cp.totalSteps ? Math.round(cp.steps / cp.totalSteps * 100) : 0;
+    const hours = (m: number) => (m >= 90 ? `${(m / 60).toFixed(m % 60 ? 1 : 0)} h` : `${m} min`);
+    const tally = el('div', 'ac-course-prog');
+    tally.innerHTML = `<div class="ac-bar"><div style="width:${cpct}%"></div></div>`
+      + `<div class="ac-course-stats"><span><b>${cpct}%</b> complete</span><span>${cp.sections} / ${cp.totalSections} sections</span><span>${cp.steps} / ${cp.totalSteps} steps</span><span>${cp.steps ? `~${hours(cp.minutesLeft)} left` : `~${hours(cp.totalMinutes)} of material`}</span></div>`;
+    hero.appendChild(tally);
     scroll.appendChild(hero);
 
     const last = p.resume;
-    if (last) {
-      const hit = p.findSection(last.section);
-      if (hit && p.progress(hit.section) < 1) {
-        const r = el('button', 'ac-resume');
-        r.innerHTML = `<span class="ac-resume-k">Continue</span><span class="ac-resume-t">${esc(hit.section.number)} · ${esc(hit.section.title)}</span><span class="ac-resume-s">step ${last.step + 1} of ${hit.section.steps.length}</span>`;
-        r.addEventListener('click', () => p.open(last.section, last.step));
-        scroll.appendChild(r);
-      }
+    const resumeHit = last ? p.findSection(last.section) : null;
+    if (last && resumeHit && p.progress(resumeHit.section) < 1) {
+      const r = el('button', 'ac-resume');
+      r.innerHTML = `<span class="ac-resume-k">Continue</span><span class="ac-resume-t">${esc(resumeHit.section.number)} · ${esc(resumeHit.section.title)}</span><span class="ac-resume-s">step ${last.step + 1} of ${resumeHit.section.steps.length}</span>`;
+      r.addEventListener('click', () => p.open(last.section, last.step));
+      scroll.appendChild(r);
     }
 
+    // which chapters start expanded: remembered choice, else the one being studied (or the first unfinished)
+    if (!this.openChapters) {
+      const cur = resumeHit?.chapter ?? p.course.chapters.find((c) => p.chapterProgress(c) < 1) ?? p.course.chapters[0];
+      this.openChapters = new Set(cur ? [cur.id] : []);
+    }
     for (const ch of p.course.chapters) {
       const chEl = el('section', 'ac-chapter');
+      const open = this.openChapters.has(ch.id);
+      chEl.classList.toggle('open', open);
       const pct = Math.round(p.chapterProgress(ch) * 100);
-      chEl.innerHTML = `<div class="ac-ch-head"><span class="ac-ch-num">Chapter ${ch.number}</span><h3>${esc(ch.title)}</h3><p>${esc(ch.summary)}</p><div class="ac-bar"><div style="width:${pct}%"></div></div><span class="ac-ch-pct">${pct}% complete</span></div>`;
+      const done = ch.sections.filter((s) => p.progress(s) >= 1).length;
+      const head = el('button', 'ac-ch-head');
+      head.setAttribute('aria-expanded', String(open));
+      head.innerHTML = `<span class="ac-ch-top"><span class="ac-ch-num">Chapter ${ch.number}</span><span class="ac-ch-meta">${done} / ${ch.sections.length} sections${pct > 0 ? ` · ${pct}%` : ''}</span><svg class="ac-ch-caret" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" /></svg></span><h3>${esc(ch.title)}</h3><div class="ac-bar"><div style="width:${pct}%"></div></div>`;
+      const body = el('div', 'ac-ch-body');
+      body.hidden = !open;
+      body.appendChild(el('p', 'ac-ch-sum', esc(ch.summary)));
       const list = el('div', 'ac-sections');
       for (const s of ch.sections) list.appendChild(this.sectionCard(s));
-      chEl.appendChild(list);
+      body.appendChild(list);
+      head.addEventListener('click', () => {
+        const now = body.hidden === true;
+        body.hidden = !now;
+        chEl.classList.toggle('open', now);
+        head.setAttribute('aria-expanded', String(now));
+        if (now) this.openChapters!.add(ch.id); else this.openChapters!.delete(ch.id);
+      });
+      chEl.appendChild(head);
+      chEl.appendChild(body);
       scroll.appendChild(chEl);
     }
     const soon = el('div', 'ac-soon');

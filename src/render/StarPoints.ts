@@ -1,8 +1,8 @@
-import { _ } from '../i18n';
 import {
   AdditiveBlending, BufferAttribute, BufferGeometry, Points, Scene, ShaderMaterial, Vector3, type PerspectiveCamera,
 } from 'three';
-import { SKY_RADIUS_KM } from '../core/constants';
+import { PARSEC_KM, SKY_RADIUS_KM } from '../core/constants';
+import { fmtScaleDistance } from '../ui/format';
 import type { StarCatalog } from '../data/StarCatalog';
 import { bvToRgb } from '../astro/stellar';
 import { Shaders } from './shaders';
@@ -16,12 +16,22 @@ export interface NamedStarScreen {
   mag: number;
   /** navigation landmark: shown (and pickable) even when far too faint to see from here */
   landmark?: boolean;
+  /** label opacity (landmarks fading in); 1 when omitted */
+  alpha?: number;
 }
 
 /** camera distance from the Sun (pc) beyond which famous stars are labelled as landmarks */
 const LANDMARK_DIST_PC = 40;
 /** famous stars that are not among the naked-eye brightest but everyone looks for */
-const EXTRA_LANDMARKS = ['Polaris', 'Proxima Centauri', 'Barnard\'s Star', 'Mizar', 'Algol', 'Castor', 'Mira', 'Alcor', 'Alnilam', 'Wolf 359', 'Kapteyn\'s Star', 'Tau Ceti'];
+const EXTRA_LANDMARKS = ['Polaris', 'Proxima Centauri', 'Barnard\'s Star', 'Mizar', 'Algol', 'Castor', 'Mira', 'Alcor', 'Alnilam', 'Wolf 359', 'Kapteyn\'s Star', 'τ Cet'];
+/**
+ * The Sun's neighbourhood: the best-known stars within ~25 ly. Between leaving the solar system
+ * and reaching the first of them there is nothing to judge scale by, so they are marked — with
+ * their distance — regardless of brightness while the camera is still near home.
+ */
+const NEIGHBOURS = ['Proxima Centauri', 'Rigil Kentaurus', 'Barnard\'s Star', 'Wolf 359', 'Lalande 21185', 'Sirius', 'Luyten\'s Star', 'Ross 154', 'ε Eri', 'Lacaille 9352', 'Ross 128', '61 Cyg', 'Procyon', 'ε Ind', 'τ Cet', 'Kapteyn\'s Star', 'Altair', 'Vega', 'Fomalhaut'];
+/** camera distance from the Sun (pc) at which the neighbourhood markers fade in (≈ 0.5 → 1 ly) */
+const NEIGHBOUR_FADE_PC: [number, number] = [0.15, 0.3];
 
 const _rel = new Vector3();
 const _proj = new Vector3();
@@ -36,6 +46,10 @@ export class StarPoints {
   readonly namedStars: NamedStarScreen[] = [];
   /** catalogue indices of the landmark stars (Sun first) */
   readonly landmarks: number[] = [0];
+  /** catalogue indices of the neighbourhood stars (see NEIGHBOURS) */
+  readonly neighbours: number[] = [];
+  /** landmark / neighbourhood stars currently marked on the sky: pickable whatever their brightness */
+  private readonly marked: number[] = [];
   private far = false;
   private readonly mat: ShaderMaterial;
   private readonly camPc = new Vector3();
@@ -77,6 +91,10 @@ export class StarPoints {
     for (const name of EXTRA_LANDMARKS) {
       const hit = catalog.search(name, 1)[0];
       if (hit !== undefined && hit !== 0 && !this.landmarks.includes(hit)) this.landmarks.push(hit);
+    }
+    for (const name of NEIGHBOURS) {
+      const hit = catalog.search(name, 1)[0];
+      if (hit !== undefined && hit !== 0 && !this.neighbours.includes(hit)) this.neighbours.push(hit);
     }
 
     this.points = new Points(geo, this.mat);
@@ -124,19 +142,39 @@ export class StarPoints {
       if (m > 3.6) continue;
       this.namedStars.push({ index: i, name: this.catalog.nameOf(i), dir: this.direction(i), mag: m });
     }
-    if (hideIndex !== 0) {
-      // Always offer the Sun as a label so the way home is obvious
-      this.namedStars.push({ index: 0, name: _('Güneş'), dir: this.direction(0), mag: this.apparentMag(0), landmark: true });
+    // The Sun itself is drawn by the overlay's sun marker (with distance and an off-screen compass);
+    // it only needs to stay pickable here when it is not the current system's body.
+    this.marked.length = 0;
+    if (hideIndex !== 0) this.marked.push(0);
+    const dSun = camPc.length();
+    this.far = dSun > LANDMARK_DIST_PC;
+    if (!this.far && dSun > NEIGHBOUR_FADE_PC[0]) {
+      // Leaving home: the nearest famous stars, each with its distance, so the first light-years have a scale
+      const alpha = Math.min(1, (dSun - NEIGHBOUR_FADE_PC[0]) / (NEIGHBOUR_FADE_PC[1] - NEIGHBOUR_FADE_PC[0]));
+      for (const i of this.neighbours) {
+        if (i === hideIndex) continue;
+        const name = `${this.catalog.nameOf(i)} · ${fmtScaleDistance(this.distancePc(i) * PARSEC_KM)}`;
+        const cur = this.namedStars.find((n) => n.index === i);
+        if (cur) { cur.name = name; cur.landmark = true; cur.alpha = alpha; }
+        else this.namedStars.push({ index: i, name, dir: this.direction(i), mag: this.catalog.mags[i] + 2.5, landmark: true, alpha });
+        this.marked.push(i);
+      }
     }
     // Far from home the whole catalogue is too faint to label; keep the famous stars findable
-    this.far = camPc.length() > LANDMARK_DIST_PC;
     if (this.far) {
       for (const i of this.landmarks) {
         if (i === 0 || i === hideIndex) continue;
+        this.marked.push(i);
         if (this.namedStars.some((n) => n.index === i)) continue;
         this.namedStars.push({ index: i, name: this.catalog.nameOf(i), dir: this.direction(i), mag: this.catalog.mags[i] + 2.5, landmark: true });
       }
     }
+  }
+
+  /** Distance (pc) from the current camera position to star i */
+  distancePc(i: number): number {
+    const p = this.catalog.positions;
+    return Math.hypot(p[i * 3] - this.camPc.x, p[i * 3 + 1] - this.camPc.y, p[i * 3 + 2] - this.camPc.z);
   }
 
   /** Pick the star nearest to a screen point (px). Only stars brighter than `magLimit` are considered. */
@@ -160,9 +198,9 @@ export class StarPoints {
       const score = dist + m * 0.8;
       if (score < bestScore) { bestScore = score; best = i; }
     }
-    if (best < 0 && this.far) {
-      // landmarks are pickable regardless of brightness
-      for (const i of this.landmarks) {
+    if (best < 0) {
+      // marked stars (the Sun, the neighbourhood, far landmarks) are pickable regardless of brightness
+      for (const i of this.marked) {
         if (i === hideIndex) continue;
         _rel.set(p[i * 3] - this.camPc.x, p[i * 3 + 1] - this.camPc.y, p[i * 3 + 2] - this.camPc.z);
         _proj.copy(_rel).multiplyScalar(1e11 / _rel.length()).project(camera);

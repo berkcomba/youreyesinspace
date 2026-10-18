@@ -606,5 +606,10 @@
   "Yüzeye uzaklık": "Distance to surface",
   "Akademi": "Academy",
   "Akademi: bölüm bölüm ilerleyen etkileşimli astrofizik dersleri": "Academy: interactive astrophysics lessons, chapter by chapter",
-  "Denge sıcaklığı": "Equilibrium temperature"
+  "Denge sıcaklığı": "Equilibrium temperature",
+  "Gözlemlenmiş bir nesne değil: kataloglar arasındaki boşluğu doldurmak için deterministik olarak üretildi.": "Not an observed object: generated deterministically to fill the gap between catalogues.",
+  "Güneş işareti ve pusulası": "Sun marker and compass",
+  "Prosedürel galaksi kümesi": "Procedural galaxy cluster",
+  "Prosedürel süperküme düğümü": "Procedural supercluster knot",
+  "temsilî; katalog kaydı değil": "illustrative, not a catalogue entry"
 }

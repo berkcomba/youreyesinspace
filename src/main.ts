@@ -19,7 +19,7 @@ import { GalaxyCloud } from './render/GalaxyCloud';
 import { FarUniverse, localFade } from './galaxy/FarUniverse';
 import { Belts } from './render/Belts';
 import { SkyGrid } from './render/SkyGrid';
-import { Overlay, type StarSelectionScreen } from './render/Overlay';
+import { Overlay, type StarSelectionScreen, type SunMarkerScreen } from './render/Overlay';
 import type { NamedStarScreen } from './render/StarPoints';
 import { Input } from './input/Input';
 import { CameraController } from './camera/CameraController';
@@ -27,7 +27,7 @@ import { UI, type UIHost } from './ui/UI';
 import { loadSettings, saveSettings, type Settings } from './ui/Settings';
 import { DAY_S, DEG, PARSEC_KM } from './core/constants';
 import { starLightColor } from './astro/stellar';
-import { fmtDuration, fmtLightYears } from './ui/format';
+import { fmtDuration, fmtLightYears, fmtScaleDistance } from './ui/format';
 import { _, applyDom, initI18n } from './i18n';
 import { Missions, type ActiveMission } from './core/Missions';
 import { TrajectoryLines } from './render/TrajectoryLines';
@@ -40,6 +40,8 @@ const IDENTITY = new Matrix3();
 const TOUR_HOP_S = 1.6;
 /** auto-orbit speed (rad/s) of the opening backdrop */
 const BACKDROP_ORBIT = 0.03;
+/** camera distance from the Sun (pc, ≈ 200 AU: beyond the planets) from which the Sun is marked with its distance */
+const SUN_MARKER_PC = 0.001;
 
 class App implements UIHost {
   readonly universe: Universe;
@@ -77,6 +79,7 @@ class App implements UIHost {
   /** labelled surface feature the overlay points at (tours) */
   private surfacePin: SurfacePin | null = null;
   private readonly pinScreen = { dir: new Vector3(), label: '', alpha: 1, visible: false };
+  private readonly sunScreen: SunMarkerScreen = { dir: new Vector3(), label: '', selected: false };
   /** tour size comparison: a true-scale stand-in of `ref` kept at the screen-right of `beside` */
   private ghost: { body: CelestialBody; ref: CelestialBody; beside: CelestialBody; alpha: number; leaving: boolean } | null = null;
   private pulse: LightPulse | null = null;
@@ -872,6 +875,7 @@ class App implements UIHost {
   private onClick(x: number, y: number, dbl: boolean): void {
     // fingers are less precise than a mouse pointer
     const tol = this.input.coarse ? 2 : 1;
+    if (this.overlay.hitSun(x, y)) { this.faceSun(dbl); return; }
     const b = this.overlay.pick(x, y, 22 * tol);
     if (b) {
       this.select(b);
@@ -904,6 +908,19 @@ class App implements UIHost {
     if (gal !== null) {
       this.selectGalaxy(gal);
       if (dbl) this.goToGalaxy(gal);
+      return;
+    }
+    // Far-universe tiers (aggregated clusters / supercluster knots): no selection, just an honest one-liner
+    if (!this.settings.galaxies) return;
+    for (let k = 0; k < this.farSprites.length; k++) {
+      const sp = this.farSprites[k];
+      if (!sp.points.visible) continue;
+      const i = sp.pick(x, y, eng.camera, eng.width, eng.height, pxPerRad, 1, -1, 10 * tol);
+      if (i === null) continue;
+      const tier = this.farUniverse.tiers[k];
+      const kind = tier.spec.mode === 'web' ? _('Prosedürel galaksi kümesi') : _('Prosedürel süperküme düğümü');
+      this.ui.showToast(`${kind} · ${_('temsilî; katalog kaydı değil')} · ~${fmtScaleDistance(sp.apparent(i).distPc * PARSEC_KM)}`, 3200);
+      return;
     }
   }
 
@@ -1194,7 +1211,7 @@ class App implements UIHost {
         pin.alpha = this.pinAlpha;
       }
     }
-    this.overlay.draw(this.bodies.views, eng.camera, this.selected, namedStars, starSel, this.uiVisible, s.galaxies ? this.galaxySprites.named : [], this.blackHoleMarkers(camPos), this.landmarkSprites.named, pin.visible ? pin : null);
+    this.overlay.draw(this.bodies.views, eng.camera, this.selected, namedStars, starSel, this.uiVisible, s.galaxies ? this.galaxySprites.named : [], this.blackHoleMarkers(camPos), this.landmarkSprites.named, pin.visible ? pin : null, this.sunMarker(camPos));
     const selDist = this.selected ? this.bodies.byId.get(this.selected.id)?.distance ?? 0 : 0;
     this.ui.update(now, dt, selDist);
   };
@@ -1212,6 +1229,33 @@ class App implements UIHost {
     }
     if (!best) { eng.blackHole.enabled = false; return; }
     eng.blackHole.target(best.body, best.relPos, this.camera.quaternion, fovRad, eng.camera.aspect, eng.height, this.time.t / 3600);
+  }
+
+  /**
+   * The Sun with its distance, from just outside the planets (~0.001 pc) all the way out: the one
+   * reference that tells you how far from home you are when nothing else gives a sense of scale.
+   */
+  private sunMarker(camPos: Vector3): SunMarkerScreen | null {
+    if (!this.settings.sunMarker) return null;
+    const dPc = this.camPc.length();
+    if (dPc < SUN_MARKER_PC) return null;
+    const m = this.sunScreen;
+    this.universe.starRelative('c0', camPos, m.dir).normalize();
+    m.label = `${_('Güneş')} · ${fmtScaleDistance(dPc * PARSEC_KM)}`;
+    m.selected = this.selectedStar === 'c0' || this.selected?.id === 'sun';
+    return m;
+  }
+
+  /** Turn the camera towards the Sun (sun marker / compass click). */
+  private faceSun(dbl: boolean): void {
+    const u = this.universe;
+    if (u.current.catalogIndex === 0) {
+      const sun = u.get('sun');
+      if (sun) { this.center(sun); if (dbl) this.goTo(sun); }
+    } else {
+      this.centerStar('c0');
+      if (dbl) this.goToStar('c0');
+    }
   }
 
   /** Sky markers for black holes that live in other systems (the current one is a body). */

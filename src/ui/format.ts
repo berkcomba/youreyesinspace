@@ -13,6 +13,21 @@ export function fmtDistance(km: number): string {
   return `${fixed((km / PARSEC_KM / 1e6), 2)} Mpc`;
 }
 
+/**
+ * Compact distance for sky markers ("4.2 ly", "1.3 kpc", "2.1 Gly"): one unit per scale, two
+ * significant figures, so a label stays short while the camera crosses twelve orders of magnitude.
+ */
+export function fmtScaleDistance(km: number): string {
+  const a = Math.abs(km);
+  const two = (v: number) => fixed(v, v < 10 ? 1 : 0);
+  if (a < AU_KM * 0.5) return `${fmtNum(km / 1e6, { maximumFractionDigits: 0 })} M km`;
+  if (a < LIGHT_YEAR_KM * 0.1) return `${two(km / AU_KM)} AU`;
+  if (a < LIGHT_YEAR_KM * 1000) return `${two(km / LIGHT_YEAR_KM)} ly`;
+  if (a < PARSEC_KM * 1e6) return `${two(km / PARSEC_KM / 1e3)} kpc`;
+  if (a < PARSEC_KM * 1e9) return `${two(km / PARSEC_KM / 1e6)} Mpc`;
+  return `${two(km / LIGHT_YEAR_KM / 1e9)} Gly`;
+}
+
 /** Distance in light-years, scaled (ly / kly / Mly) */
 export function fmtLightYears(km: number): string {
   const ly = km / LIGHT_YEAR_KM;

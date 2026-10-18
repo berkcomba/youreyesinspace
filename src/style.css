@@ -583,12 +583,26 @@ kbd {
 .ac-resume-k { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
 .ac-resume-t { font-family: var(--serif); font-size: 14px; color: var(--text); }
 .ac-resume-s { font-family: var(--mono); font-size: 10.5px; color: var(--text-3); }
-.ac-chapter { margin-bottom: 18px; }
-.ac-ch-head h3 { font-family: var(--serif); font-weight: 400; font-size: 19px; margin: 4px 0 6px; color: var(--text); }
-.ac-ch-head p { margin: 0 0 10px; font-size: 12px; color: var(--text-3); line-height: 1.5; }
+.ac-course-prog { margin-top: 14px; }
+.ac-course-prog .ac-bar { height: 3px; }
+.ac-course-stats { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 7px; font-family: var(--mono); font-size: 10.5px; color: var(--text-3); }
+.ac-course-stats b { font-weight: 500; color: var(--text); }
+.ac-chapter { margin-bottom: 6px; border-top: 1px solid var(--border); }
+.ac-chapter:last-of-type { border-bottom: 1px solid var(--border); }
+.ac-ch-head {
+  display: block; width: 100%; text-align: left; padding: 12px 0 12px; border: 0; border-radius: 0; background: transparent; cursor: pointer; color: inherit;
+}
+.ac-ch-head:hover { background: transparent; color: inherit; }
+.ac-ch-head:hover h3 { color: var(--accent); }
+.ac-ch-top { display: flex; align-items: center; gap: 10px; }
+.ac-ch-meta { margin-left: auto; font-family: var(--mono); font-size: 10.5px; color: var(--text-3); }
+.ac-ch-caret { width: 12px; height: 12px; flex: 0 0 auto; fill: none; stroke: var(--text-3); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.18s; transform: rotate(-90deg); }
+.ac-chapter.open .ac-ch-caret { transform: rotate(0deg); }
+.ac-ch-head h3 { font-family: var(--serif); font-weight: 400; font-size: 19px; margin: 4px 0 8px; color: var(--text); transition: color 0.12s; }
+.ac-ch-body { padding-bottom: 6px; }
+.ac-ch-sum { margin: 0 0 4px; font-size: 12px; color: var(--text-3); line-height: 1.5; }
 .ac-bar { height: 2px; background: var(--surface-3); }
 .ac-bar > div { height: 100%; background: var(--accent); transition: width 0.3s; }
-.ac-ch-pct { display: block; margin: 5px 0 10px; font-family: var(--mono); font-size: 10.5px; color: var(--text-3); }
 .ac-sections { display: flex; flex-direction: column; }
 .ac-section {
   display: grid; grid-template-columns: 34px 1fr auto; column-gap: 10px; align-items: start; width: 100%; text-align: left;

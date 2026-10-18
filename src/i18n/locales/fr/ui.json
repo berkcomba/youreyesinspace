@@ -606,5 +606,10 @@
   "Yüzeye uzaklık": "Distance à la surface",
   "Akademi": "Académie",
   "Akademi: bölüm bölüm ilerleyen etkileşimli astrofizik dersleri": "Académie : leçons d’astrophysique interactives, chapitre par chapitre",
-  "Denge sıcaklığı": "Température d'équilibre"
+  "Denge sıcaklığı": "Température d'équilibre",
+  "Gözlemlenmiş bir nesne değil: kataloglar arasındaki boşluğu doldurmak için deterministik olarak üretildi.": "Pas un objet observé : généré de façon déterministe pour combler le vide entre les catalogues.",
+  "Güneş işareti ve pusulası": "Marqueur et boussole du Soleil",
+  "Prosedürel galaksi kümesi": "Amas de galaxies procédural",
+  "Prosedürel süperküme düğümü": "Nœud de superamas procédural",
+  "temsilî; katalog kaydı değil": "illustratif, pas une entrée de catalogue"
 }
