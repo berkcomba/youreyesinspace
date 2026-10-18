@@ -19,6 +19,8 @@ export interface NamedStarScreen {
   alpha?: number;
   /** distance from the camera (km): appended to the label as "· 8.6 ly" */
   distKm?: number;
+  /** star id when the entry is not a catalogue star (generated stars) */
+  id?: string;
 }
 
 /** camera distance from the Sun (pc) beyond which famous stars are labelled as landmarks */

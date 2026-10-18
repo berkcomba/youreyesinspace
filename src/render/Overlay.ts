@@ -46,6 +46,8 @@ export interface ScreenItem {
   distance: number;
   visible: boolean;
   labelShown: boolean;
+  /** label text box when drawn (clicking the name selects the body) */
+  labelBox: { x: number; y: number; w: number; h: number } | null;
 }
 
 const TYPE_COLORS: Record<string, string> = {
@@ -74,6 +76,17 @@ const SELECTION_COLOR = 'rgba(189, 155, 108, 0.95)';
 const SUN_COLOR = 'rgba(255, 225, 160, 0.9)';
 /** bodies farther than this (km) carry their distance in the label: "Mars · 1.2 AU" */
 const BODY_DIST_LABEL_KM = 0.01 * AU_KM;
+/** A drawn sky label: clicking the text selects the object even when its dot is sub-pixel */
+export interface LabelHit {
+  kind: 'star' | 'galaxy' | 'landmark' | 'blackhole';
+  /** catalogue / galaxy / landmark index; -1 for generated stars and black holes */
+  index: number;
+  name: string;
+  /** star id for generated stars */
+  id?: string;
+  x: number; y: number; w: number; h: number;
+}
+
 /** "Name · 8.6 ly" */
 const withDist = (name: string, km?: number): string => (km === undefined ? name : `${name} · ${fmtScaleDistance(km)}`);
 
@@ -89,6 +102,8 @@ export class Overlay {
   showLabels = true;
   showMarkers = true;
   showStarNames = false;
+  /** labels drawn in the last frame (for click / hover hit-testing) */
+  private readonly labelHits: LabelHit[] = [];
   showGalaxyNames = true;
   /** procedural star labels in green (matches the point tint of the same setting) */
   highlightProcedural = false;
@@ -127,6 +142,7 @@ export class Overlay {
     ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
     ctx.clearRect(0, 0, W, H);
     this.items.length = 0;
+    this.labelHits.length = 0;
     this.sunHit = null;
 
     // Project all bodies
@@ -137,7 +153,7 @@ export class Overlay {
       const x = (_v.x * 0.5 + 0.5) * W;
       const y = (-_v.y * 0.5 + 0.5) * H;
       const visible = inFront && x > -50 && x < W + 50 && y > -50 && y < H + 50;
-      const item: ScreenItem = { body: v.body, x, y, radiusPx: v.apparentRadiusPx, distance: v.distance, visible, labelShown: false };
+      const item: ScreenItem = { body: v.body, x, y, radiusPx: v.apparentRadiusPx, distance: v.distance, visible, labelShown: false, labelBox: null };
       this.items.push(item);
       byId.set(v.body.id, item);
     }
@@ -189,6 +205,7 @@ export class Overlay {
         }
         if (clash) continue;
         taken.push({ x: x + 7, y, w });
+        this.labelHits.push({ kind: 'star', index: s.index, name: s.name, id: s.id, x: x + 7, y: y - 14, w, h: 14 });
         // fade the faintest labels so dense fields don't turn into a wall of text
         const fade = s.index === 0 || s.landmark ? 1 : Math.max(0.45, Math.min(1, 1 - (s.mag - 1.5) / 4));
         ctx.fillStyle = s.index === 0 ? 'rgba(255, 225, 160, 0.85)'
@@ -221,7 +238,9 @@ export class Overlay {
         const y = (-_v.y * 0.5 + 0.5) * H;
         if (x < 0 || x > W || y < 0 || y > H) continue;
         ctx.fillStyle = 'rgba(215, 190, 255, 0.6)';
-        ctx.fillText(withDist(s.name, s.distKm), x + 7, y + 9);
+        const glabel = withDist(s.name, s.distKm);
+        ctx.fillText(glabel, x + 7, y + 9);
+        this.labelHits.push({ kind: 'galaxy', index: s.index, name: s.name, x: x + 7, y: y + 2, w: ctx.measureText(glabel).width, h: 14 });
       }
       ctx.font = '500 12px Inter, ui-sans-serif, system-ui, sans-serif';
     }
@@ -262,6 +281,7 @@ export class Overlay {
           }
           if (clash) continue;
           taken.push({ x: lx, y: ly, w });
+          this.labelHits.push({ kind: 'landmark', index: s.index, name: s.name, x: lx, y: ly - 7, w, h: 14 });
           ctx.fillStyle = color;
           ctx.fillText(label, lx, ly);
         }
@@ -289,7 +309,9 @@ export class Overlay {
         ctx.stroke();
         if (this.showLabels) {
           ctx.fillStyle = TYPE_COLORS.blackhole;
-          ctx.fillText(withDist(s.name, s.distKm), x + 10, y - 6);
+          const blabel = withDist(s.name, s.distKm);
+          ctx.fillText(blabel, x + 10, y - 6);
+          this.labelHits.push({ kind: 'blackhole', index: -1, name: s.name, x: x + 10, y: y - 13, w: ctx.measureText(blabel).width, h: 14 });
         }
         ctx.globalAlpha = 1;
       }
@@ -416,6 +438,7 @@ export class Overlay {
         ctx.globalAlpha = 1;
         occupied.push(box);
         it.labelShown = true;
+        it.labelBox = box;
       }
     }
 
@@ -566,11 +589,23 @@ export class Overlay {
   }
 
   /** Pick nearest body to screen point (px). */
+  /** Sky label under a screen point (a few px of slack around the text) */
+  hitLabel(x: number, y: number, pad = 3): LabelHit | null {
+    // last drawn is on top
+    for (let i = this.labelHits.length - 1; i >= 0; i--) {
+      const l = this.labelHits[i];
+      if (x >= l.x - pad && x <= l.x + l.w + pad && y >= l.y - pad && y <= l.y + l.h + pad) return l;
+    }
+    return null;
+  }
+
   pick(x: number, y: number, maxDist = 22): CelestialBody | null {
     let best: CelestialBody | null = null;
     let bestD = Infinity;
     for (const it of this.items) {
       if (!it.visible) continue;
+      const lb = it.labelBox;
+      if (lb && x >= lb.x - 3 && x <= lb.x + lb.w + 3 && y >= lb.y - 3 && y <= lb.y + lb.h + 3) return it.body;
       const d = Math.hypot(it.x - x, it.y - y);
       const reach = Math.max(maxDist, it.radiusPx);
       if (d < reach) {

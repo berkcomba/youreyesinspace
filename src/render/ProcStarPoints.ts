@@ -132,7 +132,7 @@ export class ProcStarPoints {
     this.namedStars.length = 0;
     for (const f of found.slice(0, LABEL_MAX)) {
       const dir = new Vector3(f.x, f.y, f.z);
-      this.namedStars.push({ index: -1, name: ProcStars.nameOf(f.id), distKm: dir.length() * PARSEC_KM, dir: dir.normalize(), mag: f.m });
+      this.namedStars.push({ index: -1, id: f.id, name: ProcStars.nameOf(f.id), distKm: dir.length() * PARSEC_KM, dir: dir.normalize(), mag: f.m });
     }
   }
 

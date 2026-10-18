@@ -890,6 +890,7 @@ class App implements UIHost {
     if (hit) {
       switch (hit.kind) {
         case 'star': this.selectStar(hit.id); if (dbl) this.goToStar(hit.id); break;
+        case 'blackhole': { const bh = this.universe.blackHole(hit.id); if (bh) { this.selectStar(bh.systemStarId); if (dbl) this.goToBlackHole(hit.id); } break; }
         case 'landmark': this.selectLandmark(hit.index); if (dbl) this.goToLandmark(hit.index); break;
         case 'galaxy': this.selectGalaxy(hit.index); if (dbl) this.goToGalaxy(hit.index); break;
       }
@@ -921,9 +922,18 @@ class App implements UIHost {
   }
 
   /** Anything selectable on the sky at a screen point: catalogue / generated star, landmark, galaxy */
-  private hitSky(x: number, y: number, tol = 1): { kind: 'star'; id: string } | { kind: 'landmark' | 'galaxy'; index: number } | null {
+  private hitSky(x: number, y: number, tol = 1): { kind: 'star' | 'blackhole'; id: string } | { kind: 'landmark' | 'galaxy'; index: number } | null {
     const eng = this.engine;
     const u = this.universe;
+    // the label text counts as the object: from afar the dot itself is a sub-pixel target
+    const lbl = this.overlay.hitLabel(x, y, 3 * tol);
+    if (lbl) {
+      switch (lbl.kind) {
+        case 'star': if (lbl.index >= 0) return { kind: 'star', id: `c${lbl.index}` }; if (lbl.id) return { kind: 'star', id: lbl.id }; break;
+        case 'blackhole': if (lbl.id) return { kind: 'blackhole', id: lbl.id }; break;
+        default: return { kind: lbl.kind, index: lbl.index };
+      }
+    }
     const star = this.starPoints.pick(x, y, eng.camera, eng.width, eng.height, u.current.catalogIndex, 14 * tol);
     if (star !== null) return { kind: 'star', id: `c${star}` };
     const proc = this.procPoints.pick(x, y, eng.camera, eng.width, eng.height, u.current.starId, 14 * tol);
@@ -1296,7 +1306,7 @@ class App implements UIHost {
       const bh = u.blackHoles[i];
       if (bh.systemStarId === u.current.starId) continue;
       let m = this.bhMarkerPool[i];
-      if (!m) { m = { index: -1, name: bh.entry.name, dir: new Vector3(), mag: 0 }; this.bhMarkerPool[i] = m; }
+      if (!m) { m = { index: -1, id: bh.entry.id, name: bh.entry.name, dir: new Vector3(), mag: 0 }; this.bhMarkerPool[i] = m; }
       m.distKm = u.starRelative(bh.systemStarId, camPos, m.dir).length();
       m.dir.normalize();
       out.push(m);
