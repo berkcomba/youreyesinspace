@@ -156,7 +156,39 @@ export type WidgetSpec =
   /** survey data volumes against time, and the time to move them */
   | { type: 'datagrowth' }
   /** cross-matching two catalogues: match radius, true pairs and false matches */
-  | { type: 'crossmatch' };
+  | { type: 'crossmatch' }
+  /** optical double vs bound pair: forty years of positions — two straight proper-motion tracks or a shared drift with an orbit */
+  | { type: 'doubletest' }
+  /** a visual binary's apparent orbit: ρ, θ measurements accumulating (observe) or true vs projected ellipse with the displaced focus (deproject) */
+  | { type: 'visualorbit'; mode: 'observe' | 'deproject' }
+  /** astrometric binary: the proper-motion path of a visible star wobbling about an unseen companion */
+  | { type: 'astrometric' }
+  /** sorting game: image, light curve, spectrum or proper-motion track → which class of binary */
+  | { type: 'binaryclassify' }
+  /** both stars tracked against the background: the centre-of-mass line and the ratio of the two orbits */
+  | { type: 'massratio' }
+  /** m₁ + m₂ = α³/(p³P²): sliders for angular semi-major axis, parallax, period and ratio with error propagation; real presets */
+  | { type: 'binarymass' }
+  /** mass–luminosity diagram of real binaries with an adjustable power-law fit */
+  | { type: 'massluminosity' }
+  /** radial-velocity curve shape against eccentricity and argument of periastron, with the orbit */
+  | { type: 'rvshape' }
+  /** the mass function: P and K₁ fixed, inclination and primary mass varied → companion mass */
+  | { type: 'massfunction' }
+  /** eclipsing binary: two stars, inclination and light curve (animate) or contacts, timings and depths → radii and temperature ratio (measure) */
+  | { type: 'eclipse'; mode: 'animate' | 'measure' }
+  /** Algol, β Lyrae and W UMa light curves with the morphing geometry */
+  | { type: 'lcgallery' }
+  /** a star's reflex velocity from one planet, against the precision floors of successive spectrographs */
+  | { type: 'planetrv' }
+  /** a planetary transit: radius, distance, inclination → light curve, depth, duration, probability */
+  | { type: 'transit' }
+  /** the exoplanet population: mass against separation, coloured by discovery method, with each method's reach */
+  | { type: 'methods' }
+  /** mass–radius diagram with composition curves and a draggable test planet */
+  | { type: 'density' }
+  /** habitable zone around a chosen star, a planet placed in it, and the signals it would produce */
+  | { type: 'habitable' };
 
 export type SceneCue =
   | { action: 'goto'; ref: string; kind?: 'body' | 'blackhole' | 'star' | 'landmark' | 'galaxy' }
@@ -3052,6 +3084,481 @@ const S6_5: Section = {
   ],
 };
 
+/* ================================================================================ */
+/*  CHAPTER 7 — BINARY SYSTEMS AND STELLAR PARAMETERS                                */
+/* ================================================================================ */
+
+const S7_1: Section = {
+  id: 'binary-classification',
+  number: '7.1',
+  title: 'The Classification of Binary Stars',
+  summary: 'Why the mass of a star can only be weighed with a second star; and the six kinds of double star — optical, visual, astrometric, eclipsing, spectrum and spectroscopic — sorted by what the telescope can actually see.',
+  minutes: 26,
+  steps: [
+    {
+      id: 'why-binaries',
+      kicker: 'Interactive · the problem',
+      title: 'Mass is the master parameter — and the hardest to measure',
+      widget: { type: 'twobody' },
+      scene: [goto('Rigil Kentaurus', 'star'), rate(1)],
+      body: [
+        p('Chapters 3 and 5 gave us a surprising amount about a star from its light alone: distance from parallax, luminosity from distance and flux, temperature from colour and lines, radius from luminosity and temperature, composition from the strengths of the lines. One quantity resists all of it. Nothing in a star\'s spectrum says plainly how much matter it contains — and <b>mass</b>, as later chapters will show, is the single number that decides a star\'s structure, its luminosity, its lifetime and its death.'),
+        p('There is only one direct way to weigh anything in astronomy: watch it pull on something else. Newton\'s form of Kepler\'s third law (Section 2.3) turns an orbit — a period and a size — into the sum of the two masses. A lone star offers no orbit. A star with a companion offers one, and the two stars pull on each other in proportion to their masses, so the companion is a scale. That is why this chapter, which is really about <em>stellar parameters</em>, is written around double stars.'),
+        p('Happily the universe is generous. Roughly half of all Sun-like stars live in binary or multiple systems; among the massive O and B stars the fraction is higher still, and the Sun\'s nearest neighbour in the scene behind the panel — α Centauri — is a triple. The widget shows the essential geometry: two stars orbiting their common <em>centre of mass</em>. Change the mass ratio and watch the heavier star move on the smaller orbit; the two orbits are always similar ellipses, sharing a focus at the centre of mass, traversed in step.'),
+        eq('m_1 r_1 = m_2 r_2 \\qquad\\Longrightarrow\\qquad \\frac{m_1}{m_2} = \\frac{r_2}{r_1} = \\frac{a_2}{a_1}', 'The centre-of-mass condition. The star that moves less is the heavier one, in exact inverse proportion: a ratio of orbit sizes <em>is</em> a ratio of masses, no units required.'),
+        key('Everything we know about stellar masses — the mass–luminosity relation, the masses of white dwarfs and neutron stars, the proof that black holes exist — traces back to binary stars. There is no spectroscopic mass. There is only gravity.'),
+      ],
+    },
+    {
+      id: 'optical-doubles',
+      kicker: 'Interactive · telling them apart',
+      title: 'Optical doubles and the proper-motion test',
+      widget: { type: 'doubletest' },
+      scene: [goto('Mizar', 'star'), rate(1)],
+      body: [
+        p('Two stars close together on the sky are not necessarily close together in space. The sky is a projection; a bright nearby star and a faint distant one can fall within a few arcseconds of each other by chance. Such a pair is an <b>optical double</b>: it tells us nothing about masses, because the two stars do not orbit each other at all. The task of Section 7.1 is to sort the pairs that are merely aligned from the pairs that are gravitationally bound — and then to sort the bound ones by how their binarity reveals itself.'),
+        p('The oldest test is motion. Every star drifts across the sky with its own <em>proper motion</em> (Chapter 1). Two unrelated stars drift in different directions at different rates, and over a few decades the pair simply comes apart along two straight lines. Two bound stars share the proper motion of their centre of mass, and on top of it they circle each other: their separation and position angle change, but in a curve that closes on itself. In the widget, play forty years of observations for a chance alignment and for a bound pair and watch how differently the two histories look — the first a pair of straight lines, the second a shared drift with an orbit drawn on it.'),
+        p('Mizar and Alcor, the "horse and rider" in the handle of the Big Dipper behind the panel, show how subtle this can be. For centuries they were the textbook optical double: 12 arcminutes apart, far too wide to orbit in any human lifetime. Modern parallaxes and proper motions put them at nearly the same distance (about 83 light-years) and moving together through the Ursa Major stream; they are probably bound after all, a quarter of a light-year apart. Mizar itself, meanwhile, is a genuine visual binary — the first double star ever seen in a telescope, by Benedetto Castelli in 1617 — and each of its two components is in turn a spectroscopic binary. One naked-eye "star": six suns.'),
+        terms(
+          ['Optical double', 'Two stars that appear close on the sky but lie at different distances and are not bound. No orbital motion; the proper motions are unrelated.'],
+          ['Common proper motion pair', 'Two stars sharing the same proper motion and parallax — almost certainly bound, even if the orbit is far too slow to see.'],
+          ['Physical binary', 'Two stars orbiting a common centre of mass. Everything that follows in this chapter concerns these.'],
+          ['Hierarchical multiple', 'Three or more stars arranged as nested binaries (a close pair orbited by a distant third, as in α Centauri); stable only when the orbits are well separated in size.'],
+        ),
+        history('William Herschel began cataloguing double stars in 1779 for a different purpose: he hoped to measure parallax by watching a near star shift relative to a far one. By 1803, after a quarter-century of measurements, he found instead that several pairs — Castor, γ Virginis, 70 Ophiuchi — had swung around each other. It was the first proof that Newton\'s gravity operates beyond the solar system, and it turned the double-star catalogue from a parallax tool into the foundation of stellar astrophysics.', 'Herschel\'s accidental discovery'),
+      ],
+    },
+    {
+      id: 'visual-binaries',
+      kicker: 'Interactive · class 1',
+      title: 'Visual binaries: the orbit drawn on the sky',
+      widget: { type: 'visualorbit', mode: 'observe' },
+      scene: [goto('Alula Australis', 'star'), rate(1)],
+      body: [
+        p('When both stars are bright enough and far enough apart to be separated in the telescope, the pair is a <b>visual binary</b>. The observer measures, night after night and year after year, two numbers: the angular <em>separation</em> ρ of the fainter star from the brighter, and the <em>position angle</em> θ of the line joining them, counted from north through east. Plotted on the sky, the points trace an ellipse — the <em>apparent orbit</em> of the secondary about the primary. The widget is such a measurement series: press play and watch the data accumulate; change the eccentricity, the inclination and the orientation and watch how the apparent ellipse changes shape — and how the primary slides away from its focus.'),
+        p('That last point matters. The true relative orbit is an ellipse with the primary at one focus (Kepler\'s first law). Its projection onto the sky is still an ellipse, but projection does not preserve foci: the primary sits at the focus only if the orbit is seen face-on. The displacement of the primary from the apparent focus is exactly what encodes the inclination, and Section 7.2 shows how to use it. For now, notice that the <em>shape</em> of the apparent orbit says nothing by itself: a circular orbit seen at 60° looks like an e = 0.5 ellipse.'),
+        p('Visual binaries are, by selection, wide and slow: a separation of 1 arcsecond at 10 parsecs is 10 AU, and such an orbit around two solar masses takes about 22 years. The shortest-period visual orbits (a few years) belong to the nearest stars; many catalogued pairs have periods of centuries and have not yet completed a single revolution since Herschel. The star behind the panel, ξ Ursae Majoris, was the first binary whose orbit was computed — by Félix Savary in 1827, period 59.8 years — and it has since gone around more than three times.'),
+        eq('\\rho(t),\\ \\theta(t) \\;\\longrightarrow\\; P,\\ a,\\ e,\\ i,\\ \\Omega,\\ \\omega,\\ T', 'Seven orbital elements from the apparent orbit: period, angular semi-major axis, eccentricity, inclination, position angle of the ascending node, argument of periastron and time of periastron passage. Only P and a enter the mass; i enters through the projection.'),
+        note('Speckle interferometry and adaptive optics (Section 6.1) have pushed the resolvable separation from about 1 arcsecond to 0.03″; long-baseline optical interferometers (CHARA, VLTI) reach a milliarcsecond and now resolve the orbits of spectroscopic binaries that were, by definition, unresolvable a generation ago. The classes in this section are defined by the instrument as much as by the star.', 'The boundary moves'),
+      ],
+    },
+    {
+      id: 'astrometric-binaries',
+      kicker: 'Interactive · class 2',
+      title: 'Astrometric binaries: the wobble of a lone star',
+      widget: { type: 'astrometric' },
+      scene: [goto('Sirius', 'star'), rate(1)],
+      body: [
+        p('Suppose the companion is too faint to see — a white dwarf next to a brilliant main-sequence star, or a brown dwarf, or a planet. The visible star still orbits the centre of mass, and the centre of mass still moves in a straight line across the sky. So the visible star\'s path is a straight line with a periodic wobble sewn onto it. A binary detected only through this wobble is an <b>astrometric binary</b>. In the widget, the proper-motion path of a single star is shown against the background; dial in an unseen companion and watch the path begin to oscillate — then increase its mass, or shorten the period, and notice which makes the wobble larger and which makes it faster.'),
+        p('The classic case is behind the panel. In 1844 Friedrich Bessel, who had measured the first stellar parallax six years earlier, announced that Sirius and Procyon both followed wavy paths with periods of about fifty and forty years, and concluded that each was accompanied by an invisible body of roughly solar mass: "the existence of numberless visible stars can prove nothing against the existence of numberless invisible ones." Sirius B was found in 1862 by Alvan Graham Clark while testing a new 18-inch objective, exactly where Bessel\'s orbit put it; Procyon B waited until 1896. Both turned out to be white dwarfs — the first known — ten thousand times fainter than their primaries.'),
+        p('The amplitude of the wobble is the visible star\'s own semi-major axis, a₁ = a m₂/(m₁+m₂), projected onto the sky at the star\'s distance. For a companion of one solar mass around Sirius the wobble is a few arcseconds; for Jupiter around the Sun seen from 10 parsecs it is 0.5 milliarcseconds; for the Earth, half a <em>micro</em>arcsecond. Hence astrometric detection of planets had to wait for the Gaia mission (Section 3.1), whose fourth data release is expected to deliver thousands of astrometric planets around nearby stars — the <em>same</em> method, four orders of magnitude finer.'),
+        eq('\\alpha_1 = \\frac{a_1}{d} = \\frac{m_2}{m_1 + m_2}\\,\\frac{a}{d}', 'Angular wobble of the visible star: the fraction of the relative orbit it occupies, divided by the distance. Measured α₁ with a known distance and primary mass gives the companion\'s mass — if the inclination is known.'),
+        think('Bessel could see Sirius wobble but not its companion. From the wobble alone he could state the period and the size of Sirius\'s orbit about the centre of mass. Which single extra piece of information did he need to turn that into a mass for the companion, and why could he not get it from the astrometry itself? (Hint: look at the formula above and count the unknowns.)'),
+      ],
+    },
+    {
+      id: 'eclipsing-spectroscopic',
+      kicker: 'Interactive · classes 3, 4 and 5',
+      title: 'Eclipsing, spectrum and spectroscopic binaries',
+      widget: { type: 'binaryclassify' },
+      scene: [goto('Algol', 'star'), rate(1)],
+      body: [
+        p('The remaining classes are defined by binaries that cannot be resolved at all: the two stars are so close that even the largest telescope sees one point of light. Their double nature leaks out in other ways.'),
+        list(
+          '<b>Eclipsing binary.</b> If the orbit happens to lie nearly edge-on to us (inclination close to 90°), each star passes in front of the other once per revolution and the total light dips periodically. Algol — "the demon\'s head", behind the panel — fades by more than a magnitude for ten hours every 2.867 days; John Goodricke, aged 18, proposed the eclipse explanation in 1783. Eclipses give the inclination almost for free, and Section 7.3 shows how the shape of the <em>light curve</em> yields the stars\' radii and the ratio of their temperatures.',
+          '<b>Spectrum binary.</b> A single unresolved image whose spectrum is plainly the superposition of two different spectral types — say, the broad hydrogen lines of an A star with the molecular bands of a K giant — even when no motion has been seen. The light itself is double.',
+          '<b>Spectroscopic binary.</b> As the two stars circle, each one alternately approaches and recedes from us. Their spectral lines shift by the Doppler effect (Section 5.1), periodically splitting apart and merging back together. If both spectra are seen the system is <em>double-lined</em> (SB2); if the companion is too faint and only one set of lines swings back and forth, <em>single-lined</em> (SB1). Edward Pickering found the first — Mizar A, period 20.5 days — in 1889 from Harvard objective-prism plates, the same year Hermann Vogel saw Algol\'s lines shift in time with its eclipses, proving that eclipse and orbit were one.',
+        ),
+        p('The classes overlap, and the overlaps are where the physics is. A binary that is <em>both</em> eclipsing and double-lined spectroscopic yields everything: masses, radii, temperatures, luminosities, distance — without a parallax. Those systems, a few hundred of them measured to a few per cent, are the calibrators of all stellar astrophysics. The widget is a sorting game: for each system you are shown what the observations actually look like — an image, a light curve, a spectrum, a proper-motion track — and asked which class it belongs to. Several belong to more than one.'),
+        table(
+          ['Class', 'What is observed', 'Typical separation', 'What it yields'],
+          [
+            ['Optical double', 'Two stars; unrelated proper motions', '—', 'Nothing about masses'],
+            ['Visual', 'Both resolved; orbit traced on sky', '1–1000 AU; P = years–centuries', 'm₁ + m₂ (with d); m₁/m₂ (with CM motion)'],
+            ['Astrometric', 'One star on a wavy path', 'as visual', 'Companion mass (with i)'],
+            ['Spectrum', 'Two spectral types in one spectrum', 'any unresolved', 'Existence; luminosity ratio'],
+            ['Spectroscopic', 'Lines Doppler-shift with period P', '0.01–1 AU; P = hours–years', 'Mass function; m sin³ i'],
+            ['Eclipsing', 'Periodic dips in brightness', 'close; i ≈ 90°', 'i, R₁/a, R₂/a, T₂/T₁'],
+          ],
+          'The classes are observational, not physical: the same pair of stars can be in several at once, and which one depends on distance, orientation and instrument.',
+        ),
+      ],
+    },
+    {
+      id: 'classification-summary',
+      kicker: 'Summary',
+      title: 'The classification in brief',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Mass is the parameter that decides a star\'s life and cannot be read from its spectrum; it is weighed only through gravity, hence through binaries. About half of all stars have companions.',
+          'Optical doubles are chance alignments: unrelated proper motions, no orbit. Bound pairs share a proper motion and curve around each other.',
+          'Visual binaries are resolved; the apparent orbit (ρ, θ against time) gives P and the angular semi-major axis, but projection moves the primary off the focus.',
+          'Astrometric binaries betray an unseen companion by the wobble of the visible star\'s path (Bessel, Sirius, 1844). Spectrum binaries show two spectral types in one light.',
+          'Spectroscopic binaries show Doppler-shifting lines, double- or single-lined; eclipsing binaries show periodic dips and must be nearly edge-on.',
+          'Eclipsing + double-lined spectroscopic = everything: masses, radii, temperatures, luminosities, distance.',
+        ),
+        key('Read the classes as a list of <em>which measurements are available</em>. The next two sections take the lists one at a time and show how far each gets toward the two numbers we want for every star: m₁ and m₂.'),
+      ],
+    },
+  ],
+};
+
+const S7_2: Section = {
+  id: 'visual-binary-masses',
+  number: '7.2',
+  title: 'Mass Determination Using Visual Binaries',
+  summary: 'From a resolved orbit to two masses: the centre of mass gives the ratio, Kepler\'s third law with a parallax gives the sum, the apparent orbit must be un-projected first — and the result, collected over two centuries, is the mass–luminosity relation.',
+  minutes: 27,
+  steps: [
+    {
+      id: 'mass-ratio',
+      kicker: 'Interactive · step 1',
+      title: 'The mass ratio from the centre of mass',
+      widget: { type: 'massratio' },
+      scene: [goto('70 Oph', 'star'), rate(1)],
+      body: [
+        p('Start with what a visual binary gives most cheaply. If the <em>absolute</em> positions of both stars are measured against the distant background — not merely one relative to the other — each is seen to trace its own ellipse about a common point, and that point, the centre of mass, drifts across the sky in a straight line at the system\'s proper motion. Taking the centre of mass as origin, the two stars are always on opposite sides of it, at distances in a fixed ratio:'),
+        eq('\\frac{m_1}{m_2} = \\frac{r_2}{r_1} = \\frac{a_2}{a_1} = \\frac{\\alpha_2}{\\alpha_1}', 'Because both stars are at the same distance d from us, the ratio of linear semi-major axes equals the ratio of angular ones, α = a/d. The mass ratio needs <em>no</em> parallax and no knowledge of the inclination: projection shrinks both orbits by the same factor.'),
+        p('In the widget both stars are tracked against the background for several decades. Drag the mass ratio and watch the two ellipses change size in opposite directions while the straight dashed line — the centre of mass — stays put. Then tilt the system: the ellipses flatten, but the ratio of their sizes, read out below, does not change. That is the whole point: the ratio is a <em>relative</em> measurement, and relative measurements survive projection.'),
+        p('The practical difficulty is finding the centre of mass at all. Its position is not marked; it must be inferred as the point whose motion is uniform while the stars curve about it. That requires absolute astrometry over a good fraction of a period, against reference stars that have proper motions of their own. Before photography it took decades of micrometer measurements; today Gaia provides the reference frame and the proper motions, and for the 70 Ophiuchi pair behind the panel — Herschel\'s binary, period 88 years — the ratio is 0.78: a 0.9 and a 0.7 solar-mass star.'),
+        note('If only the relative orbit (secondary about primary) is measured, as is common, the ratio is simply not available from the visual data; it must come from spectroscopy (Section 7.3) or be guessed from the luminosities. The sum of the masses, however, needs only the relative orbit — which is why the next step is the important one.', 'Relative versus absolute orbits'),
+      ],
+    },
+    {
+      id: 'kepler-mass',
+      kicker: 'Interactive · step 2',
+      title: 'The total mass from Kepler\'s third law',
+      widget: { type: 'binarymass' },
+      scene: [goto('Sirius', 'star'), rate(1)],
+      body: [
+        p('Newton\'s generalisation of Kepler\'s third law (Section 2.3) relates the period of the relative orbit, its semi-major axis a = a₁ + a₂, and the <em>sum</em> of the masses:'),
+        eq('P^2 = \\frac{4\\pi^2}{G\\,(m_1 + m_2)}\\,a^3 \\qquad\\Longrightarrow\\qquad m_1 + m_2 = \\frac{4\\pi^2}{G}\\,\\frac{a^3}{P^2}', 'In solar-system units — a in AU, P in years, masses in solar masses — the constants vanish: m₁ + m₂ = a³/P². The Earth\'s orbit (a = 1, P = 1) gives exactly 1 M☉.'),
+        p('The period is read directly from the apparent orbit. The semi-major axis is where the parallax enters: a visual binary provides the angular semi-major axis α (in arcseconds), and the linear one follows from the distance, a = α d. With the distance written through the parallax p (Section 3.1), d = 1/p parsecs, and since 1 AU subtends exactly 1 arcsecond at 1 parsec,'),
+        eq('a\\,[\\text{AU}] = \\frac{\\alpha\\,[\\text{arcsec}]}{p\\,[\\text{arcsec}]} \\qquad\\Longrightarrow\\qquad m_1 + m_2 = \\frac{\\alpha^3}{p^3 P^2}\\ \\text{M}_\\odot', 'The mass of a visual binary in one line. Note the cubes: a 10 % error in the parallax is a 30 % error in the mass. Until Hipparcos and Gaia, this term dominated every stellar mass.'),
+        p('The widget is this formula with error bars. Enter α, p and P for a real system — Sirius, α Centauri, Procyon, 70 Ophiuchi are preset — and read off the sum of the masses; then nudge the parallax by its quoted uncertainty and watch the mass respond three times as hard. Combine the sum with the ratio of the previous step, m₁/m₂ = q, and the individual masses follow: m₂ = (m₁+m₂)/(1+q), m₁ = q m₂. For Sirius behind the panel: P = 50.1 yr, α = 7.50″, p = 0.379″ → a = 19.8 AU → m₁ + m₂ = 3.1 M☉; with the ratio 2.0 from the centre of mass, Sirius A ≈ 2.06 M☉ and the white dwarf Sirius B ≈ 1.02 M☉, packed into a sphere the size of the Earth.'),
+        example('α Centauri AB: P = 79.9 yr, α = 17.57″, p = 0.747″. Then a = 17.57/0.747 = 23.5 AU and m₁ + m₂ = 23.5³/79.9² = 12 980/6384 = 2.03 M☉. The centre-of-mass ratio is 1.23, giving 1.12 and 0.91 M☉ for A and B — a star slightly heavier than the Sun and one slightly lighter, 4.3 light-years away. Proxima, the third member, orbits the pair every half-million years and contributes 0.12 M☉ that the AB orbit cannot feel.', 'The nearest system'),
+      ],
+    },
+    {
+      id: 'inclination',
+      kicker: 'Interactive · step 3',
+      title: 'Un-projecting the apparent orbit',
+      widget: { type: 'visualorbit', mode: 'deproject' },
+      scene: [goto('Porrima', 'star'), rate(1)],
+      body: [
+        p('One correction was skipped. The angular semi-major axis that enters the mass is that of the <em>true</em> relative orbit; what is measured is the <em>apparent</em> one, foreshortened by the inclination i between the orbital plane and the plane of the sky. For a circular orbit the correction is simple — the apparent orbit is an ellipse whose minor axis is a cos i and whose major axis is the true a, so the true size is the apparent major axis and the inclination follows from the axis ratio. For an eccentric orbit the apparent ellipse is a genuine ellipse too, but its major axis is generally neither the true major axis nor along it, and its foci are in the wrong place.'),
+        p('That misplaced focus is the key. The primary must lie at a focus of the true orbit; in the apparent orbit it lies at the projection of that focus, which is in general <em>not</em> a focus of the apparent ellipse. Measure where the primary sits inside the apparent ellipse, relative to its centre and axes, and the inclination, the node and the orientation of periastron can all be recovered. In the simplest textbook case — line of nodes along the true major axis — the apparent semi-major axis ã is related to the true one by'),
+        eq('\\tilde{\\alpha} = \\alpha\\cos i \\qquad\\text{(special case: nodes along the major axis)}', 'Here the apparent major axis itself is shortened by cos i. In general the relation is a rotation followed by a cos i compression along one direction; the Thiele–Innes method solves it with four linear constants fitted to the measured positions.'),
+        p('The widget takes the deprojection view. The true orbit is drawn in grey; the apparent one, in colour, is what the telescope sees. Drag the inclination toward 90° and watch the apparent ellipse collapse to a line — an eclipsing configuration. Drag the node and the periastron angle and watch the primary wander away from the apparent focus. The readout gives the error you would make in the mass by ignoring the inclination: (ã/α)³ = cos³ i. At 60° that is a factor of 8.'),
+        p('The pair behind the panel, γ Virginis (Porrima), is a near-perfect demonstration: two nearly identical F stars, period 169 years, eccentricity 0.88, seen at 148° inclination. At periastron in 2005 the pair closed to 0.4″, barely resolvable; at apastron they are 6″ apart. Observers of the 1830s watched the stars rush around each other and then slow down, exactly as Kepler\'s second law requires — a convincing early test of gravity outside the solar system.'),
+        think('Suppose a visual binary\'s apparent orbit is a perfect circle with the primary exactly at the centre. What can you conclude about the true orbit\'s eccentricity and inclination? Now suppose it is a circle with the primary off-centre. What then?'),
+      ],
+    },
+    {
+      id: 'visual-results',
+      kicker: 'Results',
+      title: 'What two centuries of visual binaries gave',
+      scene: [goto('Procyon', 'star'), rate(1)],
+      body: [
+        p('The method is slow — orbits take decades, and seven elements must be fitted to measurements scattered over them — but it is honest: the only physics involved is Newton\'s. From Savary\'s first orbit in 1827 to Gaia, visual binaries have yielded a few hundred reliable masses, concentrated among the nearest stars because only there are the orbits both wide enough to resolve and short enough to complete. The table collects a handful.'),
+        table(
+          ['System', 'P (yr)', 'α (″)', 'p (″)', 'a (AU)', 'm₁ + m₂ (M☉)', 'm₁, m₂ (M☉)', 'Types'],
+          [
+            ['α Centauri AB', '79.9', '17.57', '0.747', '23.5', '2.03', '1.12, 0.91', 'G2 V + K1 V'],
+            ['Sirius AB', '50.1', '7.50', '0.379', '19.8', '3.1', '2.06, 1.02', 'A1 V + white dwarf'],
+            ['Procyon AB', '40.8', '4.3', '0.285', '15.1', '2.1', '1.50, 0.60', 'F5 IV + white dwarf'],
+            ['70 Ophiuchi', '88.4', '4.55', '0.196', '23.2', '1.6', '0.90, 0.70', 'K0 V + K4 V'],
+            ['61 Cygni', '678', '24.3', '0.286', '85', '1.3', '0.70, 0.63', 'K5 V + K7 V'],
+            ['Castor A–B', '467', '6.8', '0.064', '106', '5.5', '2.8, 2.7 (each a close pair)', 'A1 V + A2 V'],
+          ],
+          'Representative visual binaries. Parallaxes from Hipparcos/Gaia; the totals follow from α³/(p³P²) and the splits from centre-of-mass or spectroscopic ratios. Castor\'s "two" stars are themselves spectroscopic binaries, and a third pair (YY Gem) orbits far outside — six stars.',
+        ),
+        p('Three lessons stand out. First, the masses of ordinary stars span a narrow range — tenths of a solar mass to a few solar masses — while their luminosities span many orders of magnitude; the next step makes this quantitative. Second, the white dwarfs in Sirius and Procyon have about a solar mass in a body the size of the Earth: densities of a tonne per cubic centimetre, which no physics known in 1862 could explain and which quantum mechanics (Chapter 5) eventually did. Third, the precision of the whole enterprise rested on the parallax until the 1990s; Hipparcos reduced the typical parallax error from 10 % to 1 %, and Gaia to 0.01 % for these stars, so the limiting errors are now in the orbits themselves.'),
+        history('Procyon B was predicted by Bessel in 1844 and sought for fifty years. The Lick 36-inch found it in 1896, 13th magnitude and 5 arcseconds from a star of magnitude 0.4 — ten thousand times fainter. Its mass, 0.6 M☉, came from the astrometric orbit decades before any spectrum could be taken; the spectrum, when it came, showed a white dwarf cooler and older than Sirius B. The star behind the panel is that 1896 discovery, still only resolved with great care.', 'A fifty-year search'),
+      ],
+    },
+    {
+      id: 'mass-luminosity',
+      kicker: 'Interactive · the pay-off',
+      title: 'The mass–luminosity relation',
+      widget: { type: 'massluminosity' },
+      scene: [goto('Capella', 'star'), rate(1)],
+      body: [
+        p('Put the masses from visual and spectroscopic binaries on one axis and the luminosities — from distance and flux — on the other, both logarithmic, and the main-sequence stars fall on a strikingly tight line. This is the <b>mass–luminosity relation</b>, first assembled by Hertzsprung and by Russell around 1913 and explained by Eddington in 1924 before the energy source of stars was even known: the luminosity of a star in radiative equilibrium is set by how fast heat leaks out of a gravitationally bound ball of gas, which depends on its mass far more steeply than on anything else.'),
+        eq('\\frac{L}{L_\\odot} \\approx \\left(\\frac{M}{M_\\odot}\\right)^{3.5} \\qquad (0.4 \\lesssim M/M_\\odot \\lesssim 10)', 'The exponent is about 2.3 below 0.4 M☉, about 4 between 0.4 and 2 M☉, 3.5 for 2–20 M☉, and flattens toward 1 for the most massive stars where radiation pressure dominates. A star of 10 M☉ shines about 3000 times as brightly as the Sun; one of 0.1 M☉, about one thousandth.'),
+        p('The widget plots the real calibrators — detached eclipsing binaries and visual pairs with masses and luminosities known to a few per cent — and lets you fit a power law through them. Slide the exponent and watch the residuals; switch the mass range and see the slope change. Then notice the stars that lie <em>off</em> the line: the white dwarfs of Sirius and Procyon far below it, the giants above. They are not on the main sequence, and the relation does not apply to them; indeed their departure from it is one of the first clues to stellar evolution.'),
+        p('The relation has an immediate consequence for lifetimes. A star\'s fuel supply is proportional to its mass, and its burn rate to its luminosity, so its main-sequence lifetime goes as M/L ∝ M⁻²·⁵: a 10 M☉ star lives about 30 million years, the Sun 10 billion, a 0.1 M☉ red dwarf several trillion — longer than the present age of the universe, so no red dwarf has yet died. And it has a practical use in the other direction: for a single main-sequence star whose luminosity is known, the relation provides a mass to perhaps 10 % — the only "spectroscopic mass" there is, and it exists only because binaries calibrated it.'),
+        key('Stellar masses span a factor of about a thousand (0.08 to 100 M☉); stellar luminosities span a factor of a hundred billion. The mass–luminosity relation is the bridge, and every mass on it was weighed by a companion star.'),
+      ],
+    },
+    {
+      id: 'visual-summary',
+      kicker: 'Summary',
+      title: 'Visual-binary masses in brief',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Centre of mass: m₁/m₂ = a₂/a₁ = α₂/α₁. Needs absolute astrometry of both stars; independent of distance and inclination.',
+          'Kepler III: m₁ + m₂ = a³/P² (AU, yr, M☉), with a = α/p. A parallax error is tripled in the mass.',
+          'Projection: the apparent orbit is foreshortened and its focus displaced; the inclination is recovered from where the primary sits, and the mass is wrong by cos³ i if it is ignored.',
+          'Results: a few hundred masses, 0.1–10 M☉, nearest stars first; white dwarfs of ~1 M☉ and Earth size.',
+          'Mass–luminosity relation L ∝ M^3.5 on the main sequence; lifetime ∝ M⁻²·⁵; the only route to the mass of a single star.',
+        ),
+        key('Visual binaries supply the sum of the masses; the ratio and the inclination come harder. The next section turns to the close binaries, where the Doppler effect gives velocities instead of angles — and eclipses give the inclination for nothing.'),
+      ],
+    },
+  ],
+};
+
+const S7_3: Section = {
+  id: 'eclipsing-spectroscopic',
+  number: '7.3',
+  title: 'Eclipsing and Spectroscopic Binaries',
+  summary: 'Radial-velocity curves and what their shape and amplitude say; the sin i degeneracy and the mass function; and how an eclipsing light curve hands over the inclination, the radii and the temperature ratio — the complete solution for a star.',
+  minutes: 34,
+  steps: [
+    {
+      id: 'radial-velocity-curves',
+      kicker: 'Interactive · velocities instead of angles',
+      title: 'Radial-velocity curves',
+      widget: { type: 'specbinary' },
+      scene: [goto('Mizar', 'star'), rate(1)],
+      body: [
+        p('A spectroscopic binary gives no picture of the orbit, only the component of each star\'s velocity along the line of sight, read from the Doppler shift of its lines (Section 5.1): v_r = c Δλ/λ. Plotted against time these <em>radial-velocity curves</em> are the spectroscopist\'s version of the apparent orbit. For a circular orbit of inclination i they are two sinusoids in antiphase, crossing at the systemic velocity of the centre of mass, with amplitudes'),
+        eq('K_1 = v_1 \\sin i = \\frac{2\\pi a_1 \\sin i}{P}, \\qquad K_2 = v_2 \\sin i = \\frac{2\\pi a_2 \\sin i}{P}', 'Semi-amplitudes of the two radial-velocity curves. The orbital speeds v₁, v₂ are projected by sin i — a face-on binary (i = 0) shows no Doppler shift at all — and the same sin i multiplies both, so their ratio is clean.'),
+        eq('\\frac{m_1}{m_2} = \\frac{a_2}{a_1} = \\frac{v_2}{v_1} = \\frac{K_2}{K_1}', 'The mass ratio of a double-lined spectroscopic binary, with no distance and no inclination needed — the spectroscopic twin of the centre-of-mass argument.'),
+        p('The widget, which you met in Chapter 5, is worth revisiting with this chapter\'s eyes. Set the mass ratio and watch the two curves: the lighter star swings farther and faster. Then lower the inclination and watch both amplitudes shrink together while their ratio holds. Finally watch the spectrum at the bottom: at the crossings the two sets of lines merge into one, and an observer with a single spectrum at that moment would see no binary at all. Spectroscopic binaries must be followed over a full period; the first, Mizar A behind the panel, was caught because its K line was double on some Harvard plates and single on others.'),
+        p('Spectroscopy favours exactly the binaries that visual astrometry cannot touch: the close, fast ones. The orbital speed scales as v ∝ (M/a)^½, so a pair of solar-mass stars 0.1 AU apart circles at about 95 km/s and completes an orbit in 12 days, with Doppler shifts of a few ångströms — easy. The same pair 20 AU apart (a typical visual binary) moves at 7 km/s with a period of 63 years: its radial velocity barely changes within a career. The two methods meet only at a few AU, and the systems in the overlap are precious.'),
+        terms(
+          ['Systemic velocity γ', 'The radial velocity of the centre of mass; the line about which both curves oscillate. Gives the binary\'s space motion.'],
+          ['SB1, SB2', 'Single-lined: only the brighter star\'s lines are measurable (companion more than ~5 times fainter). Double-lined: both.'],
+          ['Semi-amplitude K', 'Half the peak-to-peak swing of a radial-velocity curve; written K₁ for the primary.'],
+          ['Cross-correlation', 'How velocities are actually measured: the whole spectrum is slid against a template until the lines match, averaging thousands of lines at once; reaches metres per second.'],
+        ),
+      ],
+    },
+    {
+      id: 'eccentric-orbits',
+      kicker: 'Interactive · shape',
+      title: 'What eccentricity does to the curve',
+      widget: { type: 'rvshape' },
+      scene: [goto('Spica', 'star'), rate(1)],
+      body: [
+        p('Real orbits are rarely circular, and an eccentric orbit makes the radial-velocity curve distinctly lopsided. Near periastron the star moves fastest (Kepler\'s second law), so the velocity swings through its extreme quickly; near apastron it lingers. The result is a curve with a sharp peak and a broad trough — or the reverse — whose exact shape depends on two elements: the eccentricity e and the <em>argument of periastron</em> ω, the angle in the orbital plane from the line of nodes to periastron, which decides whether the fast part of the orbit is coming toward us, going away, or crossing sideways.'),
+        eq('v_r = \\gamma + K\\,\\big[\\cos(\\theta + \\omega) + e\\cos\\omega\\big], \\qquad K = \\frac{2\\pi a \\sin i}{P\\sqrt{1 - e^2}}', 'The radial velocity of one component in a Keplerian orbit; θ is the true anomaly (the angle from periastron), which advances non-uniformly in time. Note the factor (1 − e²)^−½ in K and the constant offset e cos ω that shifts the curve off γ.'),
+        p('Drag e and ω in the widget. At e = 0 the curve is a pure sinusoid whatever ω is; as e grows the peak sharpens and moves. With ω = 90° the curve is symmetric but with a narrow maximum; with ω = 0 it is skewed, rising slowly and falling fast. The orbit on the left shows why: the observer\'s direction is fixed, and periastron rotates around it. Fitting the curve therefore yields P, K, e, ω and γ — five of the seven elements. The two missing ones are the inclination, buried in K, and the node, which radial velocities cannot sense at all.'),
+        p('The shape matters practically. Fitting a sinusoid to an eccentric binary biases the amplitude and hence the mass; and a single star with a planet on an eccentric orbit (Section 7.4) looks, in a sparsely sampled curve, much like a star with two planets on circular ones. Spica behind the panel is a double-lined spectroscopic binary — two hot B stars, 4.01 days, e = 0.13, 10 and 7 solar masses — close enough that each is tidally distorted into an egg and the orbit precesses in 124 years, measurable in the changing ω.'),
+        note('Mizar A\'s lines were double on some plates and single on others. If a fifty-day orbit is sampled once a week, how many weeks of data would you need to be reasonably sure of the period? Now imagine the orbit is eccentric with e = 0.7: where in the orbit would you most need extra observations, and why do many long-period spectroscopic orbits have poorly measured eccentricities?', 'Sampling'),
+      ],
+    },
+    {
+      id: 'mass-function',
+      kicker: 'Interactive · the sin i problem',
+      title: 'The sum of the masses and the mass function',
+      widget: { type: 'massfunction' },
+      scene: [goto('Sheliak', 'star'), rate(1)],
+      body: [
+        p('With both velocity amplitudes measured, the relative orbit is in hand up to the inclination: a sin i = a₁ sin i + a₂ sin i = P (K₁ + K₂)/2π for a circular orbit. Substituting into Kepler\'s third law:'),
+        eq('m_1 + m_2 = \\frac{P}{2\\pi G}\\,\\frac{(K_1 + K_2)^3}{\\sin^3 i}', 'The total mass of a double-lined spectroscopic binary. Everything on the right is measured except sin i — and it enters <em>cubed</em>. A circular orbit is assumed; for an eccentric one multiply by (1 − e²)^3/2.'),
+        p('Without the inclination, then, spectroscopy delivers only lower limits: m sin³ i for each star. If the binary also eclipses, i is close to 90° and the limit becomes the mass. If it does not, the astronomer either finds i some other way (an interferometric orbit, polarimetry, the shape of ellipsoidal light variations) or settles for statistics: for randomly oriented orbits the average of sin³ i is 3π/16 ≈ 0.59, and since large-amplitude systems are easier to discover, the average over a real catalogue is nearer 2/3.'),
+        p('For a single-lined system it is worse. Only K₁ is known; K₂, hence the ratio, is not. Rearranging the mass equation so that every unknown is on one side gives a quantity called the <b>mass function</b>, which can be computed from P and K₁ alone:'),
+        eq('f(m) \\equiv \\frac{m_2^3 \\sin^3 i}{(m_1 + m_2)^2} = \\frac{P\\,K_1^3}{2\\pi G}', 'The mass function of a single-lined spectroscopic binary. It is a strict lower limit on m₂: whatever i and m₁ may be, m₂ ≥ f(m). To get m₂ itself one must assume i and estimate m₁ from the primary\'s spectral type.'),
+        p('The widget lets you feel the degeneracy. Fix P and K₁ — a measured curve — and move the inclination and the assumed primary mass: the companion mass that satisfies the equation changes by large factors, but never drops below f(m). The mass function is how the masses of invisible companions are bounded: when f(m) alone exceeds 3 M☉ for a companion that emits no light, as for the X-ray binary Cygnus X-1 (f = 0.25 M☉, but the primary is a 20 M☉ supergiant, giving m₂ ≈ 15 M☉), the invisible object is heavier than any neutron star can be — a black hole, weighed by the same equation that weighs Sirius B.'),
+        example('A star of 1.0 M☉ (from its spectrum) shows a single-lined orbit with P = 10 days and K₁ = 20 km/s. Then f(m) = P K₁³/(2πG) = (8.64×10⁵ s)(2×10⁴ m/s)³/(2π × 6.67×10⁻¹¹) = 1.65×10²⁹ kg = 0.083 M☉. Solving m₂³ sin³ i = 0.083 (1 + m₂)² with sin i = 1 gives m₂ ≈ 0.52 M☉ (a K dwarf, plausibly hidden in the glare); with i = 30°, m₂ ≈ 1.3 M☉ — heavier than the primary, which would then not be the primary. The spectrum should have shown a second set of lines; the low-inclination solution is disfavoured.', 'Bounding an unseen companion'),
+      ],
+    },
+    {
+      id: 'eclipse-geometry',
+      kicker: 'Interactive · the light curve',
+      title: 'Eclipsing binaries: geometry of the light curve',
+      widget: { type: 'eclipse', mode: 'animate' },
+      scene: [goto('Algol', 'star'), rate(1)],
+      body: [
+        p('When the inclination is close to 90°, each star in turn passes in front of the other and the combined light dips. A plot of brightness against time — the <b>light curve</b> — shows two minima per orbit. The deeper, <em>primary</em> minimum occurs when the hotter star is hidden: per unit area it emits more, so covering it costs more light, even if it is the smaller star. The shallower <em>secondary</em> minimum is the cooler star being hidden, half a period later for a circular orbit (displaced for an eccentric one — a free measure of e cos ω).'),
+        p('The widget animates the geometry. Set the two radii, the two temperatures and the inclination, and watch the orbit edge-on above the light curve. Reduce i and watch the eclipses become partial, then shallower, then vanish: the condition for any eclipse is that the projected separation at conjunction, a cos i, be less than R₁ + R₂. Make the smaller star much smaller and the minima acquire flat bottoms — <em>total</em> and <em>annular</em> eclipses — during which the small star is entirely hidden or entirely in front.'),
+        eq('\\cos i < \\frac{R_1 + R_2}{a}', 'Condition for eclipses. For two Sun-sized stars 0.1 AU apart, i must exceed 84.7°; for a Jupiter 0.05 AU from a Sun-like star, 87.3°. Eclipsing systems are a small, biased sample — close pairs, large stars — and that bias must be remembered when using them.'),
+        p('The light curve is a time series, not an image, and that is its strength: photometry can be done on faint stars with small telescopes, every night, by anyone. Goodricke measured Algol by eye against neighbouring stars in 1782–83 and got the period right to a minute. Today robotic surveys and the Kepler and TESS satellites (Section 7.4) have recorded the light curves of millions of eclipsing binaries to parts per million — and the method for reading them is the subject of the next step.'),
+        terms(
+          ['Primary / secondary minimum', 'The deeper dip (hotter star eclipsed) and the shallower dip (cooler star eclipsed).'],
+          ['Contacts', 'The four instants at which the stars\' limbs touch: first (eclipse begins), second (totality or annularity begins), third (ends), fourth (eclipse ends).'],
+          ['Total, annular, partial', 'Whether the smaller star is completely hidden, completely silhouetted, or only partly overlapped at mid-eclipse.'],
+          ['Phase', 'Time since primary minimum divided by the period; light curves are plotted against phase so that many orbits fold onto one.'],
+        ),
+      ],
+    },
+    {
+      id: 'radii-temperatures',
+      kicker: 'Interactive · reading the curve',
+      title: 'Radii from the timing, temperatures from the depths',
+      widget: { type: 'eclipse', mode: 'measure' },
+      scene: [goto('Almaaz', 'star'), rate(1)],
+      body: [
+        p('Take the simplest case: a circular orbit seen exactly edge-on, i = 90°, with a smaller star of radius R_s and a larger one of radius R_l. The relative velocity of the two stars across our line of sight is v = v_s + v_l, known from the spectroscopic curves. The eclipse begins at first contact t_a, the small star is fully in front (or behind) at second contact t_b, starts to emerge at t_c and is clear at t_d. Between t_a and t_b the small star moves its own diameter; between t_a and t_c it moves the diameter of the large one. Hence'),
+        eq('R_s = \\frac{v}{2}\\,(t_b - t_a), \\qquad R_l = \\frac{v}{2}\\,(t_c - t_a) = R_s + \\frac{v}{2}\\,(t_c - t_b)', 'Stellar radii from eclipse timing. This is the only direct measurement of a stellar radius other than interferometry — and it works on stars thousands of light-years away.'),
+        p('The depths give temperatures. Let B₀ be the brightness outside eclipse, B_p at primary minimum (small hot star behind the large one, totally hidden), B_s at secondary minimum (small star in front, blocking a patch of the large one of the same area πR_s²). Writing the surface flux of each star as σT⁴ and dividing, the stellar radii and the distance all cancel:'),
+        eq('\\frac{B_0 - B_p}{B_0 - B_s} = \\frac{\\pi R_s^2\\,\\sigma T_s^4}{\\pi R_s^2\\,\\sigma T_l^4} = \\left(\\frac{T_s}{T_l}\\right)^4', 'Ratio of the eclipse depths = fourth power of the temperature ratio, when the small star is the hotter one and the eclipses are total/annular. Limb darkening — the edge of a stellar disc is cooler and fainter than its centre — modifies the shape of the dips and is fitted for.'),
+        p('The widget is in measuring mode: the light curve is drawn with the four contacts marked, and the readout computes R_s, R_l and T_s/T_l from the timings and depths with v taken from the velocity curves. Move the sliders and check that the formulas recover the inputs; then tilt the inclination away from 90° and watch the contacts blur and the simple formulas start to err — the real analysis fits a full geometric model to the curve (the Wilson–Devinney code and its successors) with i, R₁/a, R₂/a, T₂/T₁, limb darkening and e as free parameters.'),
+        p('Combine this with the spectroscopy of the same system and the solution is complete: K₁ and K₂ give the mass ratio and (with i from the eclipses) the masses and a; the timings give the radii in kilometres; the depths give the temperature ratio and the spectrum gives one absolute temperature; L = 4πR²σT⁴ gives both luminosities; and comparing them with the observed fluxes gives the distance — no parallax needed. Eclipsing binaries have been used this way to measure the distance to the Large Magellanic Cloud to 1 %.'),
+        history('ε Aurigae, behind the panel, is the longest-period eclipsing binary known: every 27.1 years the F supergiant fades by 0.8 magnitudes for nearly two years. The eclipsing body is not a star but a vast opaque disc of dust around an unseen companion, seen almost edge-on; the 2009–2011 eclipse was imaged directly by the CHARA interferometer, showing the dark disc crossing the star. The light curve had been puzzling astronomers since 1821.', 'The strangest eclipse'),
+      ],
+    },
+    {
+      id: 'lightcurve-types',
+      kicker: 'Interactive · the zoo',
+      title: 'Algol, β Lyrae and W Ursae Majoris: shapes that tell the physics',
+      widget: { type: 'lcgallery' },
+      scene: [goto('Sheliak', 'star'), rate(1)],
+      body: [
+        p('Real light curves are classified by their shape, and the shape is a map of how close the two stars are to each other relative to their sizes. In the widget, switch between the three classical types and watch the geometry morph alongside the curve.'),
+        list(
+          '<b>Algol type (EA).</b> The stars are well separated and nearly spherical; the light is constant between eclipses and the minima are sharp, with the secondary often much shallower. Algol itself: a 3.7 M☉ B8 main-sequence star and a 0.8 M☉ K subgiant, period 2.87 days.',
+          '<b>β Lyrae type (EB).</b> The stars are so close that their shapes are stretched into ellipsoids by each other\'s tides; as they rotate the projected area changes continuously, so the light curve varies smoothly all the way around with no flat portions, and both minima are deep. Sheliak behind the panel — period 12.9 days and lengthening by 19 seconds a year as gas streams from one star onto a thick disc around the other.',
+          '<b>W Ursae Majoris type (EW).</b> Contact binaries: two stars sharing a common envelope, periods of hours, equal minima, continuous variation. The stars touch; there are tens of thousands known.',
+        ),
+        p('Beyond the eclipses the curve carries smaller signatures. The <em>ellipsoidal variation</em> just described; the <em>reflection effect</em>, where each star heats the facing hemisphere of the other, brightening the curve just outside secondary minimum; <em>limb darkening</em>, which rounds the bottoms of partial eclipses; starspots, which drift the curve from season to season; and, in the most precise space photometry, the <em>Doppler beaming</em> of the moving stars at the part-per-thousand level. Each effect is a free lesson in stellar atmospheres, and all of them are modelled when a modern light curve is fitted.'),
+        p('Algol also poses a puzzle that this chapter cannot solve but should flag. The less massive star, the K subgiant, is the more evolved — it has already left the main sequence — while the heavier B star is still on it. Since (Chapter 13 will show) heavier stars evolve <em>faster</em>, this is backwards. The resolution, the <em>Algol paradox</em>, is that the subgiant was once the heavier star, evolved first, swelled up and poured most of its mass onto its companion. Close binaries do not merely let us weigh stars; they let stars exchange mass, and that reshapes their lives — novae, X-ray binaries, Type Ia supernovae and gravitational-wave mergers all begin here.'),
+        key('A light curve is a one-dimensional record of a three-dimensional system, and yet from it — with a spectrum — come radii to 1 %, temperatures, the inclination that spectroscopy lacks, and a distance. The "Algol type / β Lyrae type / W UMa type" vocabulary is really a statement about the ratio R/a: detached, semi-detached, contact.'),
+      ],
+    },
+    {
+      id: 'close-binary-summary',
+      kicker: 'Summary',
+      title: 'Eclipsing and spectroscopic binaries in brief',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Radial-velocity curves: K₁ = 2πa₁ sin i/P, K₂ likewise; m₁/m₂ = K₂/K₁ without distance or inclination.',
+          'Eccentricity skews the curve; fitting it gives P, K, e, ω and γ — but never i or the node.',
+          'm₁ + m₂ = P (K₁+K₂)³/(2πG sin³ i): only lower limits unless i is known. Single-lined: the mass function f(m) = PK₁³/2πG, a strict lower limit on the companion.',
+          'Eclipses require cos i < (R₁+R₂)/a; the light curve gives the inclination and, from the contact times and the relative velocity, both radii: R_s = v(t_b − t_a)/2, R_l = v(t_c − t_a)/2.',
+          'Depths give the temperature ratio: (B₀ − B_p)/(B₀ − B_s) = (T_s/T_l)⁴. Eclipsing + double-lined = masses, radii, temperatures, luminosities, distance.',
+          'Light-curve types (Algol, β Lyrae, W UMa) encode R/a: detached, semi-detached, contact — and mass transfer, which rewrites the stars\' evolution.',
+        ),
+        key('Every number in a table of stellar masses and radii — the inputs to all of stellar structure — was obtained by one of the methods on this page. They are not many, and none is easy; that is why there are only a few hundred stars whose masses are known to better than three per cent.'),
+      ],
+    },
+  ],
+};
+
+const S7_4: Section = {
+  id: 'extrasolar-planets',
+  number: '7.4',
+  title: 'The Search for Extrasolar Planets',
+  summary: 'A planet is the extreme single-lined binary: the same Doppler and eclipse methods, pushed four orders of magnitude further, found the first worlds around other suns in 1995 and nearly six thousand since — and are now closing in on Earth-sized planets in habitable orbits.',
+  minutes: 32,
+  steps: [
+    {
+      id: 'first-exoplanets',
+      kicker: 'Interactive · 1995',
+      title: 'A planet is a very small companion',
+      widget: { type: 'planetrv' },
+      scene: [goto('Helvetios', 'star'), rate(1)],
+      body: [
+        p('Everything in Section 7.3 applies without change when the companion is a planet. The star still orbits the centre of mass; its lines still shift; the amplitude is still K₁ = 2πa₁ sin i/P. The only difference is scale. For a companion of mass m_p ≪ M★ the star\'s reflex velocity is'),
+        eq('K = \\left(\\frac{2\\pi G}{P}\\right)^{1/3}\\frac{m_p \\sin i}{M_\\star^{2/3}} \\;\\approx\\; 28.4\\ \\text{m s}^{-1}\\,\\left(\\frac{P}{1\\ \\text{yr}}\\right)^{-1/3}\\frac{m_p \\sin i}{M_J}\\left(\\frac{M_\\star}{M_\\odot}\\right)^{-2/3}', 'The radial-velocity semi-amplitude induced by a planet (circular orbit). Jupiter moves the Sun by 12.5 m/s with a period of 11.9 years; the Earth by 9 cm/s — a slow walking pace and a gentle crawl, in a star whose surface churns at kilometres per second.'),
+        p('That is why the first discoveries waited for spectrographs stable to metres per second. In 1992 Aleksander Wolszczan and Dale Frail found two Earth-mass bodies orbiting the millisecond pulsar PSR B1257+12, using the pulse arrival times as the clock — planets, but around a dead star. The breakthrough for ordinary stars came on 6 October 1995: Michel Mayor and Didier Queloz, with the ELODIE spectrograph at Haute-Provence, reported that the Sun-like star 51 Pegasi — behind the panel, 50 light-years away — swings back and forth by 56 m/s every 4.23 days. The companion has at least half the mass of Jupiter and orbits at 0.05 AU, eight times closer than Mercury: a <em>hot Jupiter</em>, which no theory had predicted. Mayor and Queloz shared the 2019 Nobel Prize in Physics.'),
+        p('The widget is a star with one planet. Set the planet\'s mass and period and the star\'s mass, and watch the star\'s tiny orbit and its velocity curve; the horizontal bands mark the precision of successive generations of instruments — 10 m/s in 1995, 1 m/s for HARPS in 2003, 0.3 m/s for ESPRESSO today — and the readout says whether the planet is detectable. Try Jupiter, then Earth. Then set a 10-day period and see why hot Jupiters were found first: short periods and large masses make large K, and short periods need only weeks of data.'),
+        p('As with any single-lined binary, only m_p sin i is measured, and the orbit\'s inclination is unknown — so radial velocities give a <em>minimum</em> mass. Statistically the correction is small (the average of sin i over random orientations is π/4 ≈ 0.79); for an individual planet the degeneracy is broken only by a transit, by astrometry, or by resolving the orbit.'),
+        history('51 Pegasi b was announced in Florence on 6 October 1995 and confirmed within a week by Geoffrey Marcy and Paul Butler at Lick, who had been surveying for years with a precision good enough to see it — but had assumed, as everyone did, that giant planets lived on decade-long orbits like Jupiter and had not yet analysed their short-period data. Within months they found 70 Virginis b and 47 Ursae Majoris b in their archives. The lesson about assumptions is often repeated.', 'The week the field began'),
+      ],
+    },
+    {
+      id: 'transits',
+      kicker: 'Interactive · eclipses again',
+      title: 'Transits: an eclipsing binary with a very small secondary',
+      widget: { type: 'transit' },
+      scene: [goto('Helvetios', 'star'), rate(1)],
+      body: [
+        p('If a planet\'s orbit is nearly edge-on it crosses the face of its star once per period, and the star dims — a <em>transit</em>, the planetary form of the primary eclipse. The planet emits no significant light, so the depth is purely geometric:'),
+        eq('\\delta = \\frac{\\Delta F}{F} = \\left(\\frac{R_p}{R_\\star}\\right)^2', 'Transit depth. Jupiter in front of the Sun: (0.10)² = 1 %. Earth: (0.0092)² = 84 parts per million — the brightness change of a city street when one window-blind closes. The depth gives the planet\'s radius in units of the star\'s.'),
+        eq('p_{\\rm transit} \\approx \\frac{R_\\star}{a}, \\qquad T_{\\rm dur} \\approx \\frac{P}{\\pi}\\,\\frac{R_\\star}{a}', 'Probability that a randomly inclined orbit transits, and the transit duration for a central crossing. Earth seen from afar: a 0.5 % chance, 13 hours once a year. A hot Jupiter at 0.05 AU: 10 %, 3 hours every few days.'),
+        p('Drag the planet radius, the orbital distance and the inclination in the widget; the light curve below responds, and the readout gives depth, duration and the geometric probability. Note the shape: a flat bottom with rounded shoulders set by limb darkening, and ingress/egress times that measure the planet\'s size directly in units of the crossing speed, exactly as the contacts did for eclipsing binaries. The ratio of the ingress duration to the total duration gives the <em>impact parameter</em> — how far from the star\'s centre the chord lies — and with it the inclination.'),
+        p('The first transiting planet, HD 209458 b, was caught in 1999 by two groups who knew from its radial-velocity orbit exactly when to look. The low probability means that to find transits in bulk one must watch many stars at once — which is what the Kepler space telescope did from 2009 to 2013, staring at 150 000 stars in Cygnus with a precision of 20 parts per million, and what TESS has done over the whole sky since 2018. Kepler alone found more than 2 700 confirmed planets and showed that small planets outnumber giants and that most Sun-like stars have at least one planet.'),
+        p('Transit and velocity together break the sin i degeneracy: a transiting planet has i ≈ 90°, so m_p sin i is m_p. Radius from the depth and mass from the velocity give the <em>density</em> — the first clue to what a planet is made of. And during transit, starlight filtering through the planet\'s atmosphere imprints its spectrum: <em>transmission spectroscopy</em>, first done for sodium in HD 209458 b in 2002 and now done routinely with JWST for water, carbon dioxide, methane and clouds.'),
+        think('Kepler found that about one star in two hundred showed a transiting planet with a period under a year. Using the transit probability above, roughly what fraction of those stars actually have such a planet? What does this say about the number of planets in the Galaxy?'),
+      ],
+    },
+    {
+      id: 'detection-methods',
+      kicker: 'Interactive · five techniques',
+      title: 'The five ways to find a planet',
+      widget: { type: 'methods' },
+      scene: [goto('Fomalhaut', 'star'), rate(1)],
+      body: [
+        p('Radial velocities and transits account for most known planets, but neither can find everything: velocities fade for long periods and light stars, transits for wide orbits. Five independent techniques are in regular use, and each sees a different corner of the planet population. The widget draws that population: planet mass against orbital distance, with the discovery method as colour and the regions each method can reach outlined. Switch methods on and off and notice how little they overlap — and where the solar system\'s planets would fall.'),
+        list(
+          '<b>Radial velocity.</b> The star\'s Doppler wobble (previous steps). Best for massive planets on short orbits around quiet, bright stars; gives m sin i, P, e. About 1 100 planets.',
+          '<b>Transit.</b> The periodic dip (previous step). Best for short periods; gives R_p/R★, P, i; needs follow-up to confirm. More than 4 300 planets — the great majority, thanks to Kepler and TESS.',
+          '<b>Direct imaging.</b> Blocking the star with a coronagraph and adaptive optics to photograph the planet itself. Only young, hot, massive planets far from their stars: the four giants of HR 8799 (2008), β Pictoris b. Fomalhaut, behind the panel, hosts the famous "Fomalhaut b" of 2008, now thought to be an expanding dust cloud from a collision — a reminder that images, too, need interpretation. A few dozen planets.',
+          '<b>Gravitational microlensing.</b> When a foreground star drifts in front of a background star, its gravity magnifies the background light for weeks (Chapter 17); a planet around the lens adds a brief spike. Sensitive to cool planets at a few AU around distant, faint stars, each event seen once and never again. About 200 planets; the Roman Space Telescope will find thousands.',
+          '<b>Astrometry.</b> The star\'s wobble on the sky — Bessel\'s method. Sensitive to massive planets on long orbits around nearby stars; gives the true mass, not m sin i. Hard: microarcseconds. Gaia\'s coming data releases are expected to yield thousands.',
+        ),
+        p('A sixth, timing, found the very first planets (pulsar planets, 1992) and finds others through variations in the times of transits or eclipses caused by additional bodies (<em>transit timing variations</em>, which also give masses without spectroscopy). As of 2025 nearly six thousand planets are confirmed; the count was zero thirty years earlier.'),
+        table(
+          ['Method', 'Measures', 'Sensitive to', 'Blind to', 'Planets (approx.)'],
+          [
+            ['Radial velocity', 'm sin i, P, e', 'massive, close, bright quiet stars', 'face-on orbits, active stars, long P', '1 100'],
+            ['Transit', 'R_p/R★, P, i', 'close orbits, any mass', 'wide orbits (probability ∝ 1/a)', '4 300'],
+            ['Direct imaging', 'brightness, separation, spectrum', 'young, massive, wide (> 10 AU)', 'old, small, close', '70'],
+            ['Microlensing', 'm_p/M★, projected separation', 'cool planets at 1–10 AU, far away', 'anything needing follow-up', '200'],
+            ['Astrometry', 'true mass, full orbit', 'massive, long-period, nearby', 'small, short-period', 'few, rising with Gaia'],
+          ],
+          'Order-of-magnitude counts as of 2025 (NASA Exoplanet Archive). The biases are as important as the numbers: the known population is what the methods can see, not what exists.',
+        ),
+      ],
+    },
+    {
+      id: 'mass-radius',
+      kicker: 'Interactive · what they are made of',
+      title: 'Mass, radius, density: from detection to composition',
+      widget: { type: 'density' },
+      scene: [goto('neptune'), rate(1)],
+      body: [
+        p('A planet with both a transit and a velocity curve has a radius and a true mass, and therefore a mean density ρ = 3m/4πR³. Density is the first word about composition: the Earth\'s 5.5 g/cm³ is rock and iron, Jupiter\'s 1.33 is hydrogen and helium compressed by its own gravity, Saturn\'s 0.69 is less than water. The widget is the mass–radius diagram: every planet with both quantities measured, over theoretical curves for pure iron, rock, water and hydrogen–helium worlds. Drag the test planet and read its implied composition; add the solar-system planets for scale.'),
+        p('Three features of the diagram organise the field. First, below about 1.6 Earth radii most planets are dense enough to be rocky; above it, nearly all are too light and must carry thick envelopes of gas or water — the boundary between <em>super-Earths</em> and <em>sub-Neptunes</em>. Second, the <em>radius valley</em>: Kepler found far fewer planets of 1.5–2 Earth radii than on either side, apparently because planets born near that size either keep their hydrogen envelope and sit above the gap or have it stripped by the young star\'s X-rays and ultraviolet and sit below. Third, giant planets stop growing: adding mass to a Jupiter compresses it, so from Saturn to 80 Jupiter masses — the edge of the stars — the radius barely changes, which is why a brown dwarf is Jupiter-sized.'),
+        eq('\\rho = \\frac{3\\,m_p}{4\\pi R_p^3}, \\qquad m_p\\ \\text{from}\\ K,\\ \\ R_p\\ \\text{from}\\ \\delta^{1/2} R_\\star', 'Density requires both methods — and a good star. Since m_p ∝ M★^2/3 and R_p ∝ R★, a 10 % error in the stellar radius is a 30 % error in the planet\'s density. The stellar parameters of this chapter are the planet\'s error bars.'),
+        p('There are surprises on the diagram that still lack a settled explanation: <em>inflated hot Jupiters</em>, too large for their mass, apparently heated from within by their star\'s irradiation; <em>super-puffs</em>, Neptune-mass planets the size of Jupiter with densities of cotton candy; and the simple fact that the most common kind of planet in the Galaxy — between the sizes of the Earth and Neptune — does not exist in the solar system at all.'),
+        key('Detection methods find planets; stellar parameters make them meaningful. Every planet radius is a stellar radius times a square root of a depth; every planet mass is a stellar mass to the two-thirds times a velocity. Characterising the planets of a star begins by characterising the star — with everything in Chapters 3, 5 and 7.'),
+      ],
+    },
+    {
+      id: 'earth-like',
+      kicker: 'Interactive · the goal',
+      title: 'Toward Earth-like planets',
+      widget: { type: 'habitable' },
+      scene: [goto('Proxima Centauri', 'star'), rate(1)],
+      body: [
+        p('The question behind the whole enterprise is whether planets like ours — rocky, temperate, with liquid water — are common, and whether any shows signs of life. The first part has an answer in sight. Define the <em>habitable zone</em> as the range of orbits in which a planet with an atmosphere could keep liquid water on its surface: close enough that it does not freeze, far enough that a runaway greenhouse does not boil the oceans away, as happened to Venus. For the Sun the conservative limits are about 0.95 and 1.7 AU; a planet\'s equilibrium temperature'),
+        eq('T_{\\rm eq} = T_\\star\\sqrt{\\frac{R_\\star}{2a}}\\,(1 - A)^{1/4}', 'Equilibrium temperature of a rapidly rotating planet with Bond albedo A, ignoring greenhouse warming (which adds 33 K for the Earth). For the Earth, A = 0.3 gives 255 K. The zone scales with the square root of the stellar luminosity, so for a red dwarf of 0.01 L☉ it lies at 0.1 AU — periods of weeks.'),
+        p('The widget draws the habitable zone around a star of chosen type and lets you place a planet in it; the readout gives T_eq, the period, and — the point of the exercise — the size of the signals that star–planet pair would produce: the radial-velocity amplitude, the transit depth and probability, the astrometric wobble. Try an Earth around the Sun and then an Earth around a 0.3 M☉ red dwarf like Proxima behind the panel. The red dwarf\'s planet gives a signal ten to a hundred times larger in every method. That is why the first temperate Earth-sized planets were all found around red dwarfs: Proxima b (2016, 1.1 Earth masses, 11.2 days, 0.05 AU), the seven planets of TRAPPIST-1 (2017, three of them in the zone), and others.'),
+        p('Around Sun-like stars the signals are at the edge of the possible — 9 cm/s, 84 ppm once a year — and the Kepler estimate that 10–50 % of such stars have a rocky planet in the habitable zone rests on a few dozen candidates. Closing that gap is the programme of the next two decades: ESPRESSO and its successors pushing velocities toward 10 cm/s against the star\'s own noise; the PLATO mission (2026) staring at bright stars for years; the Roman Space Telescope\'s coronagraph; the 39 m ELT (Section 6.2) attempting to image Proxima b directly; and the Habitable Worlds Observatory, planned for the 2040s, designed to take spectra of two dozen Earth-like planets and look for oxygen, ozone, methane and water in their atmospheres — the <em>biosignatures</em>.'),
+        p('Whether a biosignature is a sign of life is a separate and hard question; oxygen can be made without biology, and a single molecule will never settle it. But note what the chapter has accomplished. The technique that let Herschel see Castor swing around its companion, that let Bessel infer Sirius B, that let Goodricke time Algol, is the same technique — refined by a factor of a million — now being pointed at planets the mass of the Earth. Binary stars taught us how to weigh the universe; the lesson is being used to find other Earths.'),
+        note('Proxima Centauri, behind the panel, is 4.24 light-years away and 0.12 solar masses. Its habitable zone lies at 0.03–0.09 AU, and Proxima b at 0.049 AU receives 65 % of the Earth\'s sunlight. The star flares violently, and whether a planet so close can keep an atmosphere is unknown. The planet\'s radial-velocity signal is 1.4 m/s — found after 16 years of data; it does not transit; and the ELT is expected to image its reflected light. If it does, that will be the first picture of a temperate rocky world beyond the solar system.', 'The nearest case'),
+      ],
+    },
+    {
+      id: 'chapter-close',
+      kicker: 'Chapter close',
+      title: 'Binary systems and stellar parameters in one page',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Mass is weighed only by gravity: binaries are the scale. Classes by what is observed — optical (unbound), visual, astrometric, spectrum, spectroscopic, eclipsing.',
+          'Visual binaries: m₁/m₂ = α₂/α₁ from the centre of mass; m₁ + m₂ = α³/(p³P²) from Kepler III and the parallax; deproject the apparent orbit (cos³ i).',
+          'Spectroscopic binaries: m₁/m₂ = K₂/K₁; m₁ + m₂ = P(K₁+K₂)³/(2πG sin³ i); single-lined → the mass function, a lower limit on the unseen companion.',
+          'Eclipsing binaries: light curve → i, radii from contact times (R = v Δt/2), temperature ratio from depths; with spectroscopy, the complete solution and a distance.',
+          'Mass–luminosity relation L ∝ M^3.5, lifetime ∝ M⁻²·⁵; the Algol paradox and mass transfer.',
+          'Planets are tiny companions: K = 28 m/s per Jupiter at 1 yr; δ = (R_p/R★)²; five methods, ~6 000 planets, biases in each; density → composition; habitable zone and the push toward Earth analogues.',
+        ),
+        key('The chapter\'s methods are few — an orbit on the sky, a velocity curve, a light curve — and they recur throughout astrophysics: the same equations weigh white dwarfs, neutron stars, black holes, the dark matter in galaxies and the planets of other suns. When a mass is quoted anywhere in this course, ask which of these three curves it came from.'),
+        { kind: 'callout', tone: 'history', title: 'Suggested reading', html: 'Carroll & Ostlie, <em>An Introduction to Modern Astrophysics</em>, Chapter 7, which this chapter follows; R. W. Hilditch, <em>An Introduction to Close Binary Stars</em> (2001) for the full treatment of light- and velocity-curve analysis; A. Tokovinin\'s reviews on multiplicity statistics; G. Torres, J. Andersen & A. Giménez, "Accurate masses and radii of normal stars" (2010) for the calibrating sample; M. Perryman, <em>The Exoplanet Handbook</em> (2nd ed., 2018) for Section 7.4; Mayor & Queloz, <em>Nature</em> 378, 355 (1995), four pages that started a field. The NASA Exoplanet Archive and the Washington Double Star Catalog are the living data.' },
+        { kind: 'callout', tone: 'think', title: 'Problems to try', html: '(1) Sirius: P = 50.13 yr, α = 7.50″, p = 0.3792″, and the primary\'s orbit about the centre of mass has semi-major axis 2.5″. Find the total mass and the individual masses. (2) A visual binary\'s apparent orbit is a circle of radius 1″ with the primary at the centre, P = 30 yr, p = 0.05″. Find the mass. Now you learn the primary is actually 0.3″ off-centre along one axis; what changes? (3) An SB2 has P = 5.00 d, K₁ = 60 km/s, K₂ = 90 km/s, e = 0. Find the mass ratio, m₁ sin³ i and m₂ sin³ i, and a sin i. If it eclipses, what are the masses? (4) An SB1 with a G2 V primary shows P = 100 d, K₁ = 12 km/s. Find f(m) and the minimum companion mass; if the companion\'s lines are not seen, what does that imply about i? (5) An eclipsing binary (i = 90°, circular) has v₁ + v₂ = 200 km/s and contacts at 0, 0.60, 4.20 and 4.80 hours. Find both radii in solar units. The primary minimum is 0.90 and the secondary 0.30 of the depth scale; find T_s/T_l. (6) Compute K for a Jupiter at 5.2 AU and an Earth at 1 AU around a 1 M☉ star; around a 0.3 M☉ star with the planets scaled to the same stellar flux. (7) Kepler monitored 150 000 stars and found about 3 000 transiting candidates with P < 1 yr. Estimate, with the transit probability, the mean number of such planets per star. (8) For TRAPPIST-1 (T = 2 560 K, R = 0.12 R☉, L = 5.5×10⁻⁴ L☉) find the habitable-zone distances and the corresponding periods, and the transit depth of an Earth-sized planet. (9) Show that for a given m_p the transit depth and the velocity amplitude both favour small stars, but by different powers of R★ and M★; which method gains more by moving to red dwarfs?' },
+      ],
+    },
+  ],
+};
+
 export const COURSE: Course = {
   id: 'astrophysics',
   title: 'Introduction to Astrophysics',
@@ -3098,6 +3605,13 @@ export const COURSE: Course = {
       title: 'Telescopes',
       summary: 'Light buckets and their limits; lenses, mirrors and mounts; radio dishes and interferometers; the infrared, ultraviolet, X-ray and gamma-ray sky from above the air; and the surveys and archives that now map everything.',
       sections: [S6_1, S6_2, S6_3, S6_4, S6_5],
+    },
+    {
+      id: 'ch7',
+      number: 7,
+      title: 'Binary Systems and Stellar Parameters',
+      summary: 'Why a star can only be weighed by a companion; the classes of double star; masses from visual orbits, velocity curves and eclipses; the mass–luminosity relation; and the same methods, pushed a million times further, finding planets around other suns.',
+      sections: [S7_1, S7_2, S7_3, S7_4],
     },
   ],
 };

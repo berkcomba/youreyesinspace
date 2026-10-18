@@ -1,0 +1,739 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "chapter-close": {
+   "script": "Look behind the panel: the system circling the Sun. Mass comes only from gravity; binaries are the scale, unbound optical, visual, astrometric, spectrum, spectroscopic, eclipsing.\n\nm one over m two equals alpha two over alpha one, around the centre of mass. m one plus m two equals alpha cubed over p cubed times period squared, Kepler's third law, parallax p for distance. We deproject by cosine cubed of the inclination.\n\nm one over m two equals K two over K one, velocity amplitudes. The sum is period times K one plus K two, cubed, over two pi G sine cubed of inclination. Single-lined, only the mass function, a lower limit.\n\nR equals v delta t over two, radius from contacts. Depths give the temperature ratio; velocities give masses and a distance.\n\nLuminosity proportional to mass to the three and a half; lifetime proportional to mass to the minus two and a half. Mass transfer resolves the Algol paradox.\n\nK about twenty-eight metres per second per Jupiter at one year. Delta equals planet radius over star radius, squared. Five methods, about six thousand planets, biases in each; density for composition; habitable zone toward Earth analogues.\n\nOrbit, velocity curve, light curve: they weigh white dwarfs, neutron stars, black holes, dark matter in galaxies, and other suns. Ask which curve it came from.",
+   "hash": "a12ef16157f0",
+   "duration": 92.15,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 3.76,
+     "text": "Look behind the panel: the system circling the Sun."
+    },
+    {
+     "start": 3.76,
+     "end": 13.9,
+     "text": "Mass comes only from gravity; binaries are the scale, unbound optical, visual, astrometric, spectrum, spectroscopic, eclipsing."
+    },
+    {
+     "start": 13.9,
+     "end": 19.38,
+     "text": "m one over m two equals alpha two over alpha one, around the centre of mass."
+    },
+    {
+     "start": 19.38,
+     "end": 27.88,
+     "text": "m one plus m two equals alpha cubed over p cubed times period squared, Kepler's third law, parallax p for distance."
+    },
+    {
+     "start": 27.88,
+     "end": 31.38,
+     "text": "We deproject by cosine cubed of the inclination."
+    },
+    {
+     "start": 31.38,
+     "end": 36.4,
+     "text": "m one over m two equals K two over K one, velocity amplitudes."
+    },
+    {
+     "start": 36.4,
+     "end": 43.38,
+     "text": "The sum is period times K one plus K two, cubed, over two pi G sine cubed of inclination."
+    },
+    {
+     "start": 43.38,
+     "end": 47.35,
+     "text": "Single-lined, only the mass function, a lower limit."
+    },
+    {
+     "start": 47.35,
+     "end": 51.55,
+     "text": "R equals v delta t over two, radius from contacts."
+    },
+    {
+     "start": 51.55,
+     "end": 56.25,
+     "text": "Depths give the temperature ratio; velocities give masses and a distance."
+    },
+    {
+     "start": 56.25,
+     "end": 63.05,
+     "text": "Luminosity proportional to mass to the three and a half; lifetime proportional to mass to the minus two and a half."
+    },
+    {
+     "start": 63.05,
+     "end": 66.05,
+     "text": "Mass transfer resolves the Algol paradox."
+    },
+    {
+     "start": 66.05,
+     "end": 69.77,
+     "text": "K about twenty-eight metres per second per Jupiter at one year."
+    },
+    {
+     "start": 69.77,
+     "end": 73.41,
+     "text": "Delta equals planet radius over star radius, squared."
+    },
+    {
+     "start": 73.41,
+     "end": 81.87,
+     "text": "Five methods, about six thousand planets, biases in each; density for composition; habitable zone toward Earth analogues."
+    },
+    {
+     "start": 81.87,
+     "end": 90.69,
+     "text": "Orbit, velocity curve, light curve: they weigh white dwarfs, neutron stars, black holes, dark matter in galaxies, and other suns."
+    },
+    {
+     "start": 90.69,
+     "end": 92.15,
+     "text": "Ask which curve it came from."
+    }
+   ],
+   "voicedHash": "f3fd0d0f4c92"
+  },
+  "detection-methods": {
+   "script": "We've just flown out to Fomalhaut, behind the panel. Hold that star in mind: its famous \"planet\" of 2008 is now thought to be an expanding dust cloud from a collision. Images need interpretation, and so does every other method. Five independent techniques are in regular use, and each sees a different corner of the population. Radial velocities and transits account for most known planets, but velocities fade for long periods and light stars, and transits fade for wide orbits.\n\nOpen the widget. It plots planet mass against orbital distance, coloured by discovery method, with each method's reach outlined. Switch the methods on and off. Notice how little the regions overlap, and where the solar system's planets would fall. That blank space is blindness, not absence.\n\nRadial velocity is the star's Doppler wobble. Best for massive planets on short orbits around quiet, bright stars. It gives m sine i — planet mass times the sine of the inclination — plus period and eccentricity. Face-on, the sine is zero and the wobble vanishes, so we get a minimum mass, not the true one. About eleven hundred planets.\n\nTransits are the periodic dip. Best for short periods. They give the planet's radius divided by the star's radius, the period, and the inclination, and they need follow-up to confirm. More than forty-three hundred planets, the great majority, thanks to Kepler and TESS. The chance of a transit is proportional to one over the orbital distance, so wide orbits are almost never caught.\n\nDirect imaging blocks the star with a coronagraph and adaptive optics and photographs the planet. Only young, hot, massive worlds far out: the four giants of HR 8799, and beta Pictoris b. A few dozen.\n\nMicrolensing catches a brief spike when a foreground star magnifies a background star for weeks and a planet adds a flash. It measures planet mass over star mass, and a projected separation. Cool planets at a few astronomical units, seen once and never again. About two hundred; Roman will find thousands.\n\nAstrometry is the star's wobble on the sky, Bessel's method. Massive planets on long orbits around nearby stars, and the true mass, not m sine i. The shifts are microarcseconds. Gaia should yield thousands.\n\nA sixth route, timing, found the first planets, the pulsar planets of 1992, and still finds others through transit timing variations, which give masses without spectroscopy. Nearly six thousand planets confirmed by 2025; thirty years earlier the count was zero. The biases in that table matter as much as the numbers. We know what our methods can see, not yet what exists.",
+   "hash": "b16a8ec9e149",
+   "duration": 164.15,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 3.34,
+     "text": "We've just flown out to Fomalhaut, behind the panel."
+    },
+    {
+     "start": 3.34,
+     "end": 10.98,
+     "text": "Hold that star in mind: its famous \"planet\" of 2008 is now thought to be an expanding dust cloud from a collision."
+    },
+    {
+     "start": 10.98,
+     "end": 14.86,
+     "text": "Images need interpretation, and so does every other method."
+    },
+    {
+     "start": 14.86,
+     "end": 20.64,
+     "text": "Five independent techniques are in regular use, and each sees a different corner of the population."
+    },
+    {
+     "start": 20.64,
+     "end": 30.06,
+     "text": "Radial velocities and transits account for most known planets, but velocities fade for long periods and light stars, and transits fade for wide orbits."
+    },
+    {
+     "start": 30.06,
+     "end": 31.2,
+     "text": "Open the widget."
+    },
+    {
+     "start": 31.2,
+     "end": 38.08,
+     "text": "It plots planet mass against orbital distance, coloured by discovery method, with each method's reach outlined."
+    },
+    {
+     "start": 38.08,
+     "end": 40,
+     "text": "Switch the methods on and off."
+    },
+    {
+     "start": 40,
+     "end": 44.78,
+     "text": "Notice how little the regions overlap, and where the solar system's planets would fall."
+    },
+    {
+     "start": 44.78,
+     "end": 47.9,
+     "text": "That blank space is blindness, not absence."
+    },
+    {
+     "start": 47.9,
+     "end": 50.74,
+     "text": "Radial velocity is the star's Doppler wobble."
+    },
+    {
+     "start": 50.74,
+     "end": 54.9,
+     "text": "Best for massive planets on short orbits around quiet, bright stars."
+    },
+    {
+     "start": 54.9,
+     "end": 61.58,
+     "text": "It gives m sine i — planet mass times the sine of the inclination — plus period and eccentricity."
+    },
+    {
+     "start": 61.58,
+     "end": 67.68,
+     "text": "Face-on, the sine is zero and the wobble vanishes, so we get a minimum mass, not the true one."
+    },
+    {
+     "start": 67.68,
+     "end": 69.6,
+     "text": "About eleven hundred planets."
+    },
+    {
+     "start": 69.6,
+     "end": 71.58,
+     "text": "Transits are the periodic dip."
+    },
+    {
+     "start": 71.58,
+     "end": 73.22,
+     "text": "Best for short periods."
+    },
+    {
+     "start": 73.22,
+     "end": 80.6,
+     "text": "They give the planet's radius divided by the star's radius, the period, and the inclination, and they need follow-up to confirm."
+    },
+    {
+     "start": 80.6,
+     "end": 85.69,
+     "text": "More than forty-three hundred planets, the great majority, thanks to Kepler and TESS."
+    },
+    {
+     "start": 85.69,
+     "end": 92.01,
+     "text": "The chance of a transit is proportional to one over the orbital distance, so wide orbits are almost never caught."
+    },
+    {
+     "start": 92.01,
+     "end": 97.45,
+     "text": "Direct imaging blocks the star with a coronagraph and adaptive optics and photographs the planet."
+    },
+    {
+     "start": 97.45,
+     "end": 105.73,
+     "text": "Only young, hot, massive worlds far out: the four giants of HR 8799, and beta Pictoris b."
+    },
+    {
+     "start": 105.73,
+     "end": 106.97,
+     "text": "A few dozen."
+    },
+    {
+     "start": 106.97,
+     "end": 114.33,
+     "text": "Microlensing catches a brief spike when a foreground star magnifies a background star for weeks and a planet adds a flash."
+    },
+    {
+     "start": 114.33,
+     "end": 118.71,
+     "text": "It measures planet mass over star mass, and a projected separation."
+    },
+    {
+     "start": 118.71,
+     "end": 123.27,
+     "text": "Cool planets at a few astronomical units, seen once and never again."
+    },
+    {
+     "start": 123.27,
+     "end": 126.45,
+     "text": "About two hundred; Roman will find thousands."
+    },
+    {
+     "start": 126.45,
+     "end": 130.49,
+     "text": "Astrometry is the star's wobble on the sky, Bessel's method."
+    },
+    {
+     "start": 130.49,
+     "end": 136.41,
+     "text": "Massive planets on long orbits around nearby stars, and the true mass, not m sine i."
+    },
+    {
+     "start": 136.41,
+     "end": 138.63,
+     "text": "The shifts are microarcseconds."
+    },
+    {
+     "start": 138.63,
+     "end": 140.47,
+     "text": "Gaia should yield thousands."
+    },
+    {
+     "start": 140.47,
+     "end": 151.75,
+     "text": "A sixth route, timing, found the first planets, the pulsar planets of 1992, and still finds others through transit timing variations, which give masses without spectroscopy."
+    },
+    {
+     "start": 151.75,
+     "end": 157.83,
+     "text": "Nearly six thousand planets confirmed by 2025; thirty years earlier the count was zero."
+    },
+    {
+     "start": 157.83,
+     "end": 160.97,
+     "text": "The biases in that table matter as much as the numbers."
+    },
+    {
+     "start": 160.97,
+     "end": 164.15,
+     "text": "We know what our methods can see, not yet what exists."
+    }
+   ],
+   "voicedHash": "17fc4553d297"
+  },
+  "earth-like": {
+   "script": "I want you to consider whether rocky planets with liquid water are common, and whether they show life. The habitable zone is the range where an atmosphere keeps water liquid, close enough not to freeze, far enough to avoid Venus’s runaway greenhouse. For the Sun it lies near zero point nine five to one point seven astronomical units, like a campfire’s warm ring.\n\nThe formula is T eq equals T star times the square root of R star over two a, times one minus A all to the quarter power. T eq is the equilibrium temperature, T star and R star the star’s temperature and radius, a the distance, and A the Bond albedo, the fraction of light reflected. Absorbed energy equals radiated energy over the full surface for a rapid rotator; greenhouse warming adds thirty-three kelvin on Earth, and albedo zero point three gives two hundred fifty-five kelvin. A red dwarf of one hundredth the solar luminosity has its zone at a tenth of an astronomical unit with periods of weeks.\n\nSee Proxima Centauri behind the panel. Use the widget to compare an Earth at the Sun against one at a zero point three solar-mass red dwarf, and notice how the radial-velocity, transit and astrometric signals grow ten to a hundred times. So Proxima b and the habitable planets of TRAPPIST-one, found in twenty sixteen and twenty seventeen, came first around red dwarfs.\n\nSun-like signals of nine centimetres per second and eighty-four parts per million yearly mean the ten to fifty percent estimate uses few candidates. Future work targets ten centimetres per second, PLATO, coronagraphs, thirty-nine-metre imaging and Habitable Worlds Observatory spectra of oxygen, ozone, methane and water. Biosignatures remain ambiguous. The methods Herschel, Bessel and Goodricke pioneered, now a million times better, weigh Earth-mass planets to find other Earths.\n\nProxima, four point two light-years away and zero point one two solar masses, has its planet receiving sixty-five percent of Earth’s light; flares leave the atmosphere in doubt. Sixteen years uncovered the one point four metre-per-second signal with no transit, and imaging the reflected light would be a landmark.",
+   "hash": "f1b2c7c64c16",
+   "duration": 131.83,
+   "sentences": [
+    {
+     "start": 0.14,
+     "end": 6.22,
+     "text": "I want you to consider whether rocky planets with liquid water are common, and whether they show life."
+    },
+    {
+     "start": 6.22,
+     "end": 15.48,
+     "text": "The habitable zone is the range where an atmosphere keeps water liquid, close enough not to freeze, far enough to avoid Venus’s runaway greenhouse."
+    },
+    {
+     "start": 15.48,
+     "end": 22.9,
+     "text": "For the Sun it lies near zero point nine five to one point seven astronomical units, like a campfire’s warm ring."
+    },
+    {
+     "start": 22.9,
+     "end": 31.62,
+     "text": "The formula is T eq equals T star times the square root of R star over two a, times one minus A all to the quarter power."
+    },
+    {
+     "start": 31.62,
+     "end": 42.64,
+     "text": "T eq is the equilibrium temperature, T star and R star the star’s temperature and radius, a the distance, and A the Bond albedo, the fraction of light reflected."
+    },
+    {
+     "start": 42.64,
+     "end": 54.54,
+     "text": "Absorbed energy equals radiated energy over the full surface for a rapid rotator; greenhouse warming adds thirty-three kelvin on Earth, and albedo zero point three gives two hundred fifty-five kelvin."
+    },
+    {
+     "start": 54.54,
+     "end": 61.56,
+     "text": "A red dwarf of one hundredth the solar luminosity has its zone at a tenth of an astronomical unit with periods of weeks."
+    },
+    {
+     "start": 61.56,
+     "end": 64.24,
+     "text": "See Proxima Centauri behind the panel."
+    },
+    {
+     "start": 64.24,
+     "end": 75.97,
+     "text": "Use the widget to compare an Earth at the Sun against one at a zero point three solar-mass red dwarf, and notice how the radial-velocity, transit and astrometric signals grow ten to a hundred times."
+    },
+    {
+     "start": 75.97,
+     "end": 84.31,
+     "text": "So Proxima b and the habitable planets of TRAPPIST-one, found in twenty sixteen and twenty seventeen, came first around red dwarfs."
+    },
+    {
+     "start": 84.31,
+     "end": 92.69,
+     "text": "Sun-like signals of nine centimetres per second and eighty-four parts per million yearly mean the ten to fifty percent estimate uses few candidates."
+    },
+    {
+     "start": 92.69,
+     "end": 104.45,
+     "text": "Future work targets ten centimetres per second, PLATO, coronagraphs, thirty-nine-metre imaging and Habitable Worlds Observatory spectra of oxygen, ozone, methane and water."
+    },
+    {
+     "start": 104.45,
+     "end": 106.79,
+     "text": "Biosignatures remain ambiguous."
+    },
+    {
+     "start": 106.79,
+     "end": 114.51,
+     "text": "The methods Herschel, Bessel and Goodricke pioneered, now a million times better, weigh Earth-mass planets to find other Earths."
+    },
+    {
+     "start": 114.51,
+     "end": 124.73,
+     "text": "Proxima, four point two light-years away and zero point one two solar masses, has its planet receiving sixty-five percent of Earth’s light; flares leave the atmosphere in doubt."
+    },
+    {
+     "start": 124.73,
+     "end": 131.83,
+     "text": "Sixteen years uncovered the one point four metre-per-second signal with no transit, and imaging the reflected light would be a landmark."
+    }
+   ],
+   "voicedHash": "a29db981411f"
+  },
+  "first-exoplanets": {
+   "script": "The star still orbits the centre of mass, its lines still shift, and K one equals two pi a one sine i over P. That is the star's speed, its orbit size, the tilt, and the period. Only the scale changes. Look at Helvetios, 51 Pegasi, behind the panel.\n\nFor a much lighter companion, K equals the cube root of two pi times G over P, times m p sine i, over M star to the two thirds. K is the semi-amplitude, G the gravitational constant, P the period, m p the planet mass, i the inclination, M star the stellar mass. A closer or heavier planet raises K. About twenty-eight metres per second, times period in years to the minus one third, times Jupiter masses times sine i, times solar masses to the minus two thirds. Jupiter moves the Sun by twelve and a half metres per second in nearly twelve years; Earth by nine centimetres per second, a walk and a crawl against kilometres per second of surface churn.\n\nIn 1992 Aleksander Wolszczan and Dale Frail found two Earth-mass bodies around pulsar PSR B1257+12 by timing pulses. On 6 October 1995 Michel Mayor and Didier Queloz, with ELODIE at Haute-Provence, found 51 Pegasi swinging fifty-six metres per second every four point two three days: at least half a Jupiter, at five hundredths of an astronomical unit, eight times closer than Mercury, unpredicted. They shared the 2019 Nobel Prize.\n\nOn the widget set mass, period, and stellar mass. Watch the tiny orbit and the curve. Bands mark ten, one, and three tenths of a metre per second: 1995, HARPS, ESPRESSO. Try Jupiter, then Earth, then ten days: large K, and weeks of data, so hot Jupiters came first.\n\nWe get only m p sine i, a minimum mass. Mean sine i is about zero point eight. A transit, astrometry, or a resolved orbit breaks the tilt. Geoffrey Marcy and Paul Butler confirmed it within a week, assuming decade-long orbits.",
+   "hash": "2baf299048de",
+   "duration": 128.31,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 8.44,
+     "text": "The star still orbits the centre of mass, its lines still shift, and K one equals two pi a one sine i over P."
+    },
+    {
+     "start": 8.44,
+     "end": 13.44,
+     "text": "That is the star's speed, its orbit size, the tilt, and the period."
+    },
+    {
+     "start": 13.44,
+     "end": 15.24,
+     "text": "Only the scale changes."
+    },
+    {
+     "start": 15.24,
+     "end": 19.08,
+     "text": "Look at Helvetios, 51 Pegasi, behind the panel."
+    },
+    {
+     "start": 19.08,
+     "end": 28.66,
+     "text": "For a much lighter companion, K equals the cube root of two pi times G over P, times m p sine i, over M star to the two thirds."
+    },
+    {
+     "start": 28.66,
+     "end": 38.94,
+     "text": "K is the semi-amplitude, G the gravitational constant, P the period, m p the planet mass, i the inclination, M star the stellar mass."
+    },
+    {
+     "start": 38.94,
+     "end": 41.56,
+     "text": "A closer or heavier planet raises K."
+    },
+    {
+     "start": 41.56,
+     "end": 51.6,
+     "text": "About twenty-eight metres per second, times period in years to the minus one third, times Jupiter masses times sine i, times solar masses to the minus two thirds."
+    },
+    {
+     "start": 51.6,
+     "end": 62.08,
+     "text": "Jupiter moves the Sun by twelve and a half metres per second in nearly twelve years; Earth by nine centimetres per second, a walk and a crawl against kilometres per second of surface churn."
+    },
+    {
+     "start": 62.08,
+     "end": 72.17,
+     "text": "In 1992 Aleksander Wolszczan and Dale Frail found two Earth-mass bodies around pulsar PSR B1257+12 by timing pulses."
+    },
+    {
+     "start": 72.17,
+     "end": 91.29,
+     "text": "On 6 October 1995 Michel Mayor and Didier Queloz, with ELODIE at Haute-Provence, found 51 Pegasi swinging fifty-six metres per second every four point two three days: at least half a Jupiter, at five hundredths of an astronomical unit, eight times closer than Mercury, unpredicted."
+    },
+    {
+     "start": 91.29,
+     "end": 94.19,
+     "text": "They shared the 2019 Nobel Prize."
+    },
+    {
+     "start": 94.19,
+     "end": 97.35,
+     "text": "On the widget set mass, period, and stellar mass."
+    },
+    {
+     "start": 97.35,
+     "end": 99.53,
+     "text": "Watch the tiny orbit and the curve."
+    },
+    {
+     "start": 99.53,
+     "end": 106.27,
+     "text": "Bands mark ten, one, and three tenths of a metre per second: 1995, HARPS, ESPRESSO."
+    },
+    {
+     "start": 106.27,
+     "end": 113.11,
+     "text": "Try Jupiter, then Earth, then ten days: large K, and weeks of data, so hot Jupiters came first."
+    },
+    {
+     "start": 113.11,
+     "end": 116.55,
+     "text": "We get only m p sine i, a minimum mass."
+    },
+    {
+     "start": 116.55,
+     "end": 119.17,
+     "text": "Mean sine i is about zero point eight."
+    },
+    {
+     "start": 119.17,
+     "end": 123.33,
+     "text": "A transit, astrometry, or a resolved orbit breaks the tilt."
+    },
+    {
+     "start": 123.33,
+     "end": 128.31,
+     "text": "Geoffrey Marcy and Paul Butler confirmed it within a week, assuming decade-long orbits."
+    }
+   ],
+   "voicedHash": "d08a853e5d5b"
+  },
+  "mass-radius": {
+   "script": "Look at Neptune behind the panel. A planet with both a transit and a velocity curve has a radius and a true mass, and therefore a mean density. Rho equals three m-p over four pi R-p cubed. Rho is the mean density, m-p the planet's mass, and R-p its radius. It is mass over volume. The mass comes from the velocity semi-amplitude K, and the radius from the square root of the transit depth, delta, times the stellar radius. Earth's five point five grams per cubic centimetre is rock and iron. Jupiter's one point three three is hydrogen and helium compressed by its own gravity. Saturn's zero point six nine is less than water.\n\nDrag the test planet on the widget and notice which curve it follows, iron, rock, water, or hydrogen-helium. Add the solar-system planets for scale.\n\nThree features organise the field. Below about one point six Earth radii, planets are mostly rocky. Above that they need thick envelopes of gas or water, the boundary between super-Earths and sub-Neptunes. The radius valley is Kepler's scarcity of planets from one point five to two Earth radii. Planets born there either keep a hydrogen envelope and sit above the gap, or have it stripped by the young star's X-rays and ultraviolet and sit below. Adding mass compresses a Jupiter, so from Saturn to eighty Jupiter masses, the edge of the stars, the radius barely changes. A brown dwarf stays Jupiter-sized.\n\nSince m-p scales as M-star to the two-thirds, and R-p scales with R-star, a ten percent error in the stellar radius is a thirty percent error in density, because radius enters cubed. The star's parameters are the planet's error bars.\n\nInflated hot Jupiters are too large for their mass, heated from within by their star. Super-puffs are Neptune-mass and Jupiter-sized, with densities of cotton candy. The Galaxy's most common planets, between Earth and Neptune, are missing from the solar system. Detection finds the planets. Characterising the star makes them meaningful.",
+   "hash": "f22f86a14ce7",
+   "duration": 127.03,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.44,
+     "text": "Look at Neptune behind the panel."
+    },
+    {
+     "start": 2.44,
+     "end": 9.98,
+     "text": "A planet with both a transit and a velocity curve has a radius and a true mass, and therefore a mean density."
+    },
+    {
+     "start": 9.98,
+     "end": 14.4,
+     "text": "Rho equals three m-p over four pi R-p cubed."
+    },
+    {
+     "start": 14.4,
+     "end": 20.22,
+     "text": "Rho is the mean density, m-p the planet's mass, and R-p its radius."
+    },
+    {
+     "start": 20.22,
+     "end": 22.26,
+     "text": "It is mass over volume."
+    },
+    {
+     "start": 22.26,
+     "end": 31.34,
+     "text": "The mass comes from the velocity semi-amplitude K, and the radius from the square root of the transit depth, delta, times the stellar radius."
+    },
+    {
+     "start": 31.34,
+     "end": 35.68,
+     "text": "Earth's five point five grams per cubic centimetre is rock and iron."
+    },
+    {
+     "start": 35.68,
+     "end": 40.86,
+     "text": "Jupiter's one point three three is hydrogen and helium compressed by its own gravity."
+    },
+    {
+     "start": 40.86,
+     "end": 44.2,
+     "text": "Saturn's zero point six nine is less than water."
+    },
+    {
+     "start": 44.2,
+     "end": 51.98,
+     "text": "Drag the test planet on the widget and notice which curve it follows, iron, rock, water, or hydrogen-helium."
+    },
+    {
+     "start": 51.98,
+     "end": 54.5,
+     "text": "Add the solar-system planets for scale."
+    },
+    {
+     "start": 54.5,
+     "end": 56.74,
+     "text": "Three features organise the field."
+    },
+    {
+     "start": 56.74,
+     "end": 61.32,
+     "text": "Below about one point six Earth radii, planets are mostly rocky."
+    },
+    {
+     "start": 61.32,
+     "end": 67.63,
+     "text": "Above that they need thick envelopes of gas or water, the boundary between super-Earths and sub-Neptunes."
+    },
+    {
+     "start": 67.63,
+     "end": 73.09,
+     "text": "The radius valley is Kepler's scarcity of planets from one point five to two Earth radii."
+    },
+    {
+     "start": 73.09,
+     "end": 81.79,
+     "text": "Planets born there either keep a hydrogen envelope and sit above the gap, or have it stripped by the young star's X-rays and ultraviolet and sit below."
+    },
+    {
+     "start": 81.79,
+     "end": 89.75,
+     "text": "Adding mass compresses a Jupiter, so from Saturn to eighty Jupiter masses, the edge of the stars, the radius barely changes."
+    },
+    {
+     "start": 89.75,
+     "end": 92.23,
+     "text": "A brown dwarf stays Jupiter-sized."
+    },
+    {
+     "start": 92.23,
+     "end": 104.03,
+     "text": "Since m-p scales as M-star to the two-thirds, and R-p scales with R-star, a ten percent error in the stellar radius is a thirty percent error in density, because radius enters cubed."
+    },
+    {
+     "start": 104.03,
+     "end": 106.99,
+     "text": "The star's parameters are the planet's error bars."
+    },
+    {
+     "start": 106.99,
+     "end": 112.13,
+     "text": "Inflated hot Jupiters are too large for their mass, heated from within by their star."
+    },
+    {
+     "start": 112.13,
+     "end": 117.19,
+     "text": "Super-puffs are Neptune-mass and Jupiter-sized, with densities of cotton candy."
+    },
+    {
+     "start": 117.19,
+     "end": 122.87,
+     "text": "The Galaxy's most common planets, between Earth and Neptune, are missing from the solar system."
+    },
+    {
+     "start": 122.87,
+     "end": 124.83,
+     "text": "Detection finds the planets."
+    },
+    {
+     "start": 124.83,
+     "end": 127.03,
+     "text": "Characterising the star makes them meaningful."
+    }
+   ],
+   "voicedHash": "899fda32d530"
+  },
+  "transits": {
+   "script": "Think of an eclipsing binary whose secondary is a dark planet. Helvetios is behind the panel. Edge-on, it crosses once per period and the star dims in a transit.\nThe depth formula is delta equals delta F over F equals R sub p over R star, squared. Delta means the fractional flux drop. R sub p is the planet radius and R star the star radius. Physically the planet occults that area fraction of the star and emits no light of its own. A solar Jupiter gives one percent; an Earth eighty-four parts per million, the change when one window blind closes on a street. So depth measures radius in stellar units.\nProbability is roughly R star over a, where a is the separation. Central duration about P over pi times R star over a, P the period. Earth: half a percent, thirteen hours a year. Hot Jupiter at five hundredths of an astronomical unit: ten percent, three hours every few days.\nDrag radius, distance and inclination on the widget. The light curve, depth, duration and probability all respond. Note the flat bottom and limb-darkened shoulders. Ingress and egress measure the planet's size in units of crossing speed, as binary contacts did; their ratio to total duration gives impact parameter and inclination.\nFirst caught was HD 209458 b in 1999, predicted from radial velocity. Kepler monitored one hundred fifty thousand Cygnus stars between 2009 and 2013 to twenty parts per million; TESS the whole sky from 2018. It found over two thousand seven hundred planets: small ones outnumber giants, and most Sun-like stars have at least one.\nNear ninety degrees inclination, the velocity mass is exact, and radius plus mass yield density. Transmission spectroscopy reads the atmosphere: sodium in 2002 for HD 209458 b, and with JWST water, carbon dioxide, methane and clouds.\nKepler saw one such yearly-or-shorter transit per two hundred stars. What fraction of stars really have them, from the probability, and what does that mean for the Galaxy?",
+   "hash": "a45cda0269aa",
+   "duration": 133.43,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4,
+     "text": "Think of an eclipsing binary whose secondary is a dark planet."
+    },
+    {
+     "start": 4,
+     "end": 6.34,
+     "text": "Helvetios is behind the panel."
+    },
+    {
+     "start": 6.34,
+     "end": 11.02,
+     "text": "Edge-on, it crosses once per period and the star dims in a transit."
+    },
+    {
+     "start": 11.02,
+     "end": 17.66,
+     "text": "The depth formula is delta equals delta F over F equals R sub p over R star, squared."
+    },
+    {
+     "start": 17.66,
+     "end": 20.22,
+     "text": "Delta means the fractional flux drop."
+    },
+    {
+     "start": 20.22,
+     "end": 24.22,
+     "text": "R sub p is the planet radius and R star the star radius."
+    },
+    {
+     "start": 24.22,
+     "end": 29.3,
+     "text": "Physically the planet occults that area fraction of the star and emits no light of its own."
+    },
+    {
+     "start": 29.3,
+     "end": 37.08,
+     "text": "A solar Jupiter gives one percent; an Earth eighty-four parts per million, the change when one window blind closes on a street."
+    },
+    {
+     "start": 37.08,
+     "end": 39.82,
+     "text": "So depth measures radius in stellar units."
+    },
+    {
+     "start": 39.82,
+     "end": 44.6,
+     "text": "Probability is roughly R star over a, where a is the separation."
+    },
+    {
+     "start": 44.6,
+     "end": 50.08,
+     "text": "Central duration about P over pi times R star over a, P the period."
+    },
+    {
+     "start": 50.08,
+     "end": 53.26,
+     "text": "Earth: half a percent, thirteen hours a year."
+    },
+    {
+     "start": 53.26,
+     "end": 59.42,
+     "text": "Hot Jupiter at five hundredths of an astronomical unit: ten percent, three hours every few days."
+    },
+    {
+     "start": 59.42,
+     "end": 62.56,
+     "text": "Drag radius, distance and inclination on the widget."
+    },
+    {
+     "start": 62.56,
+     "end": 66.52,
+     "text": "The light curve, depth, duration and probability all respond."
+    },
+    {
+     "start": 66.52,
+     "end": 69.39,
+     "text": "Note the flat bottom and limb-darkened shoulders."
+    },
+    {
+     "start": 69.39,
+     "end": 79.49,
+     "text": "Ingress and egress measure the planet's size in units of crossing speed, as binary contacts did; their ratio to total duration gives impact parameter and inclination."
+    },
+    {
+     "start": 79.49,
+     "end": 87.33,
+     "text": "First caught was HD 209458 b in 1999, predicted from radial velocity."
+    },
+    {
+     "start": 87.33,
+     "end": 97.59,
+     "text": "Kepler monitored one hundred fifty thousand Cygnus stars between 2009 and 2013 to twenty parts per million; TESS the whole sky from 2018."
+    },
+    {
+     "start": 97.59,
+     "end": 104.79,
+     "text": "It found over two thousand seven hundred planets: small ones outnumber giants, and most Sun-like stars have at least one."
+    },
+    {
+     "start": 104.79,
+     "end": 111.19,
+     "text": "Near ninety degrees inclination, the velocity mass is exact, and radius plus mass yield density."
+    },
+    {
+     "start": 111.19,
+     "end": 124.03,
+     "text": "Transmission spectroscopy reads the atmosphere: sodium in 2002 for HD 209458 b, and with JWST water, carbon dioxide, methane and clouds."
+    },
+    {
+     "start": 124.03,
+     "end": 128.23,
+     "text": "Kepler saw one such yearly-or-shorter transit per two hundred stars."
+    },
+    {
+     "start": 128.23,
+     "end": 133.43,
+     "text": "What fraction of stars really have them, from the probability, and what does that mean for the Galaxy?"
+    }
+   ],
+   "voicedHash": "249f1f2d5243"
+  }
+ }
+}

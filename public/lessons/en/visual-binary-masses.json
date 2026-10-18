@@ -1,0 +1,669 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "inclination": {
+   "script": "Look at Porrima behind the panel. The angular semi-major axis in the mass belongs to the true relative orbit. You measure the apparent orbit, foreshortened by inclination i, the tilt of the orbital plane to the plane of the sky.\n\nA circle projects to an ellipse, minor axis alpha times the cosine of i, major axis the true alpha. True size is the apparent major axis; the axis ratio gives i.\n\nIf the orbit is eccentric, its major axis is generally neither the true one nor along it, and the foci are wrong. The primary must lie at a true focus; on the sky it lies at the projection of that focus, not a focus of the apparent ellipse. That offset, against the centre and the axes, recovers inclination, node, and periastron.\n\nWhen the nodes lie along the true major axis, alpha-tilde equals alpha times the cosine of i. Alpha-tilde is the apparent angular semi-major axis, alpha the true one, i the inclination. The apparent major axis itself is shortened by cosine i. Generally a rotation, then a cosine-i squeeze along one direction; Thiele–Innes fits four linear constants to measured positions.\n\nOn the widget, grey is the true orbit and colour is the telescope's view. Drag the inclination toward ninety degrees and the ellipse collapses to a line, like a coin edge-on, eclipsing. Drag node and periastron and the primary leaves the apparent focus. Ignoring i, the mass error is the cube of alpha-tilde over alpha, equal to the cube of cosine i, since mass scales as alpha cubed. At sixty degrees, a factor of eight.\n\nPorrima is two nearly identical F stars, period a hundred and sixty-nine years, eccentricity zero point eight eight, inclination a hundred and forty-eight degrees. Periastron in two thousand and five, four tenths of an arcsecond; apastron, six arcseconds. The eighteen thirties saw them rush, then slow, as Kepler's second law requires.\n\nA perfect circle, primary centred — what eccentricity and inclination? Off-centre — what then?",
+   "hash": "3e0a40d93754",
+   "duration": 128.31,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.44,
+     "text": "Look at Porrima behind the panel."
+    },
+    {
+     "start": 2.44,
+     "end": 7.54,
+     "text": "The angular semi-major axis in the mass belongs to the true relative orbit."
+    },
+    {
+     "start": 7.54,
+     "end": 14.86,
+     "text": "You measure the apparent orbit, foreshortened by inclination i, the tilt of the orbital plane to the plane of the sky."
+    },
+    {
+     "start": 14.86,
+     "end": 22.22,
+     "text": "A circle projects to an ellipse, minor axis alpha times the cosine of i, major axis the true alpha."
+    },
+    {
+     "start": 22.22,
+     "end": 27.08,
+     "text": "True size is the apparent major axis; the axis ratio gives i."
+    },
+    {
+     "start": 27.08,
+     "end": 34.38,
+     "text": "If the orbit is eccentric, its major axis is generally neither the true one nor along it, and the foci are wrong."
+    },
+    {
+     "start": 34.38,
+     "end": 42.32,
+     "text": "The primary must lie at a true focus; on the sky it lies at the projection of that focus, not a focus of the apparent ellipse."
+    },
+    {
+     "start": 42.32,
+     "end": 48.56,
+     "text": "That offset, against the centre and the axes, recovers inclination, node, and periastron."
+    },
+    {
+     "start": 48.56,
+     "end": 54.66,
+     "text": "When the nodes lie along the true major axis, alpha-tilde equals alpha times the cosine of i."
+    },
+    {
+     "start": 54.66,
+     "end": 60.98,
+     "text": "Alpha-tilde is the apparent angular semi-major axis, alpha the true one, i the inclination."
+    },
+    {
+     "start": 60.98,
+     "end": 64.91,
+     "text": "The apparent major axis itself is shortened by cosine i."
+    },
+    {
+     "start": 64.91,
+     "end": 73.15,
+     "text": "Generally a rotation, then a cosine-i squeeze along one direction; Thiele–Innes fits four linear constants to measured positions."
+    },
+    {
+     "start": 73.15,
+     "end": 77.61,
+     "text": "On the widget, grey is the true orbit and colour is the telescope's view."
+    },
+    {
+     "start": 77.61,
+     "end": 84.29,
+     "text": "Drag the inclination toward ninety degrees and the ellipse collapses to a line, like a coin edge-on, eclipsing."
+    },
+    {
+     "start": 84.29,
+     "end": 88.45,
+     "text": "Drag node and periastron and the primary leaves the apparent focus."
+    },
+    {
+     "start": 88.45,
+     "end": 97.41,
+     "text": "Ignoring i, the mass error is the cube of alpha-tilde over alpha, equal to the cube of cosine i, since mass scales as alpha cubed."
+    },
+    {
+     "start": 97.41,
+     "end": 99.71,
+     "text": "At sixty degrees, a factor of eight."
+    },
+    {
+     "start": 99.71,
+     "end": 110.15,
+     "text": "Porrima is two nearly identical F stars, period a hundred and sixty-nine years, eccentricity zero point eight eight, inclination a hundred and forty-eight degrees."
+    },
+    {
+     "start": 110.15,
+     "end": 116.55,
+     "text": "Periastron in two thousand and five, four tenths of an arcsecond; apastron, six arcseconds."
+    },
+    {
+     "start": 116.55,
+     "end": 121.77,
+     "text": "The eighteen thirties saw them rush, then slow, as Kepler's second law requires."
+    },
+    {
+     "start": 121.77,
+     "end": 126.65,
+     "text": "A perfect circle, primary centred — what eccentricity and inclination?"
+    },
+    {
+     "start": 126.65,
+     "end": 128.31,
+     "text": "Off-centre — what then?"
+    }
+   ],
+   "voicedHash": "88431f568cbd"
+  },
+  "kepler-mass": {
+   "script": "Look at Sirius behind the panel. Newton's form of Kepler's third law says P squared equals four pi squared times a cubed, divided by G times the sum of the masses. P is the period of the relative orbit, a is its semi-major axis, a one plus a two, G is the gravitational constant, and m one and m two are the masses. Rearranged, their sum equals four pi squared over G, times a cubed over P squared. A heavier pair at the same separation must orbit faster, so the masses sit downstairs.\n\nIn solar units, a in astronomical units, P in years, masses in solar masses, the constants vanish. The sum is just a cubed over P squared. Earth's orbit, a equal to one and P equal to one, gives exactly one solar mass.\n\nThe period comes straight off the apparent orbit. You measure an angular semi-major axis alpha, in arcseconds. Distance d is one over the parallax p, in parsecs, and one astronomical unit subtends one arcsecond at one parsec, so a in astronomical units equals alpha over p. The mass sum is then alpha cubed divided by p cubed times P squared, in solar masses. A ten percent error in parallax is a thirty percent error in mass. Until Hipparcos and Gaia, that term dominated every stellar mass.\n\nThe widget is this formula with error bars. Load Sirius, alpha Centauri, Procyon or seventy Ophiuchi, and read the sum. Nudge the parallax by its uncertainty and watch the mass move three times as hard. Split the sum using q: m two is the sum over one plus q, and m one is q times m two.\n\nSirius has a period of about fifty years, alpha of seven and a half arcseconds, parallax just under four tenths of an arcsecond: nearly twenty astronomical units, mass sum about three solar masses. With q of two, A is about two solar masses and white dwarf B about one, Earth-sized.",
+   "hash": "55878d271334",
+   "duration": 123.19,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.5,
+     "text": "Look at Sirius behind the panel."
+    },
+    {
+     "start": 2.5,
+     "end": 11.76,
+     "text": "Newton's form of Kepler's third law says P squared equals four pi squared times a cubed, divided by G times the sum of the masses."
+    },
+    {
+     "start": 11.76,
+     "end": 23.44,
+     "text": "P is the period of the relative orbit, a is its semi-major axis, a one plus a two, G is the gravitational constant, and m one and m two are the masses."
+    },
+    {
+     "start": 23.44,
+     "end": 29.56,
+     "text": "Rearranged, their sum equals four pi squared over G, times a cubed over P squared."
+    },
+    {
+     "start": 29.56,
+     "end": 35.26,
+     "text": "A heavier pair at the same separation must orbit faster, so the masses sit downstairs."
+    },
+    {
+     "start": 35.26,
+     "end": 42.76,
+     "text": "In solar units, a in astronomical units, P in years, masses in solar masses, the constants vanish."
+    },
+    {
+     "start": 42.76,
+     "end": 45.66,
+     "text": "The sum is just a cubed over P squared."
+    },
+    {
+     "start": 45.66,
+     "end": 51.28,
+     "text": "Earth's orbit, a equal to one and P equal to one, gives exactly one solar mass."
+    },
+    {
+     "start": 51.28,
+     "end": 53.88,
+     "text": "The period comes straight off the apparent orbit."
+    },
+    {
+     "start": 53.88,
+     "end": 58.12,
+     "text": "You measure an angular semi-major axis alpha, in arcseconds."
+    },
+    {
+     "start": 58.12,
+     "end": 69.95,
+     "text": "Distance d is one over the parallax p, in parsecs, and one astronomical unit subtends one arcsecond at one parsec, so a in astronomical units equals alpha over p."
+    },
+    {
+     "start": 69.95,
+     "end": 75.85,
+     "text": "The mass sum is then alpha cubed divided by p cubed times P squared, in solar masses."
+    },
+    {
+     "start": 75.85,
+     "end": 79.83,
+     "text": "A ten percent error in parallax is a thirty percent error in mass."
+    },
+    {
+     "start": 79.83,
+     "end": 84.27,
+     "text": "Until Hipparcos and Gaia, that term dominated every stellar mass."
+    },
+    {
+     "start": 84.27,
+     "end": 86.83,
+     "text": "The widget is this formula with error bars."
+    },
+    {
+     "start": 86.83,
+     "end": 92.87,
+     "text": "Load Sirius, alpha Centauri, Procyon or seventy Ophiuchi, and read the sum."
+    },
+    {
+     "start": 92.87,
+     "end": 97.79,
+     "text": "Nudge the parallax by its uncertainty and watch the mass move three times as hard."
+    },
+    {
+     "start": 97.79,
+     "end": 104.93,
+     "text": "Split the sum using q: m two is the sum over one plus q, and m one is q times m two."
+    },
+    {
+     "start": 104.93,
+     "end": 117.31,
+     "text": "Sirius has a period of about fifty years, alpha of seven and a half arcseconds, parallax just under four tenths of an arcsecond: nearly twenty astronomical units, mass sum about three solar masses."
+    },
+    {
+     "start": 117.31,
+     "end": 123.19,
+     "text": "With q of two, A is about two solar masses and white dwarf B about one, Earth-sized."
+    }
+   ],
+   "voicedHash": "420b050ecfeb"
+  },
+  "mass-luminosity": {
+   "script": "Look with me at Capella behind the panel. Plot mass, from visual and spectroscopic binaries, against luminosity from distance and flux. On logarithmic axes the main-sequence stars fall on a tight line. This is the mass-luminosity relation, assembled by Hertzsprung and Russell around 1913 and explained by Eddington in 1924, before we knew the stars' energy source. A star in radiative equilibrium shines at the rate heat leaks out, and that depends on mass far more steeply than on anything else.\n\nThe formula says L over L-solar is approximately M over M-solar, raised to the power three and a half, from about four tenths of a solar mass up to about ten solar masses. L is the star's luminosity, L-solar the Sun's, M the mass, M-solar the solar mass. The exponent is about two point three below four tenths of a solar mass, about four between four tenths and two, three and a half from two to twenty, and it flattens toward one for the most massive stars, where radiation pressure dominates. Ten solar masses shines about three thousand times the Sun. A tenth of a solar mass shines about a thousandth as bright.\n\nUse the widget. Slide the exponent and watch the residuals. Switch mass range and the slope changes. Notice Sirius and Procyon, white dwarfs far below, and giants above. Off the main sequence, the relation does not apply, a clue to stellar evolution.\n\nFuel supply scales with mass, burn rate with luminosity, so lifetime goes as mass over luminosity, proportional to mass to the minus two and a half. A ten-solar-mass star lives about thirty million years, the Sun ten billion, a tenth-solar-mass red dwarf several trillion years, longer than the universe, so none has died. Luminosity then gives a main-sequence mass to about ten percent, our only spectroscopic mass, calibrated by binaries. Masses span about a thousand, luminosities a hundred billion. The relation is the bridge, and every mass on it was weighed by a companion.",
+   "hash": "1fe13272f764",
+   "duration": 124.47,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.7,
+     "text": "Look with me at Capella behind the panel."
+    },
+    {
+     "start": 2.7,
+     "end": 9.3,
+     "text": "Plot mass, from visual and spectroscopic binaries, against luminosity from distance and flux."
+    },
+    {
+     "start": 9.3,
+     "end": 13.56,
+     "text": "On logarithmic axes the main-sequence stars fall on a tight line."
+    },
+    {
+     "start": 13.56,
+     "end": 25.7,
+     "text": "This is the mass-luminosity relation, assembled by Hertzsprung and Russell around 1913 and explained by Eddington in 1924, before we knew the stars' energy source."
+    },
+    {
+     "start": 25.7,
+     "end": 33.48,
+     "text": "A star in radiative equilibrium shines at the rate heat leaks out, and that depends on mass far more steeply than on anything else."
+    },
+    {
+     "start": 33.48,
+     "end": 44.78,
+     "text": "The formula says L over L-solar is approximately M over M-solar, raised to the power three and a half, from about four tenths of a solar mass up to about ten solar masses."
+    },
+    {
+     "start": 44.78,
+     "end": 51.34,
+     "text": "L is the star's luminosity, L-solar the Sun's, M the mass, M-solar the solar mass."
+    },
+    {
+     "start": 51.34,
+     "end": 65.21,
+     "text": "The exponent is about two point three below four tenths of a solar mass, about four between four tenths and two, three and a half from two to twenty, and it flattens toward one for the most massive stars, where radiation pressure dominates."
+    },
+    {
+     "start": 65.21,
+     "end": 68.89,
+     "text": "Ten solar masses shines about three thousand times the Sun."
+    },
+    {
+     "start": 68.89,
+     "end": 72.23,
+     "text": "A tenth of a solar mass shines about a thousandth as bright."
+    },
+    {
+     "start": 72.23,
+     "end": 73.31,
+     "text": "Use the widget."
+    },
+    {
+     "start": 73.31,
+     "end": 75.97,
+     "text": "Slide the exponent and watch the residuals."
+    },
+    {
+     "start": 75.97,
+     "end": 78.55,
+     "text": "Switch mass range and the slope changes."
+    },
+    {
+     "start": 78.55,
+     "end": 83.53,
+     "text": "Notice Sirius and Procyon, white dwarfs far below, and giants above."
+    },
+    {
+     "start": 83.53,
+     "end": 88.41,
+     "text": "Off the main sequence, the relation does not apply, a clue to stellar evolution."
+    },
+    {
+     "start": 88.41,
+     "end": 97.89,
+     "text": "Fuel supply scales with mass, burn rate with luminosity, so lifetime goes as mass over luminosity, proportional to mass to the minus two and a half."
+    },
+    {
+     "start": 97.89,
+     "end": 108.79,
+     "text": "A ten-solar-mass star lives about thirty million years, the Sun ten billion, a tenth-solar-mass red dwarf several trillion years, longer than the universe, so none has died."
+    },
+    {
+     "start": 108.79,
+     "end": 116.43,
+     "text": "Luminosity then gives a main-sequence mass to about ten percent, our only spectroscopic mass, calibrated by binaries."
+    },
+    {
+     "start": 116.43,
+     "end": 120.43,
+     "text": "Masses span about a thousand, luminosities a hundred billion."
+    },
+    {
+     "start": 120.43,
+     "end": 124.47,
+     "text": "The relation is the bridge, and every mass on it was weighed by a companion."
+    }
+   ],
+   "voicedHash": "9462dff17860"
+  },
+  "mass-ratio": {
+   "script": "Welcome. Look with me at seventy Ophiuchi behind the panel.\n\nA visual binary gives the mass ratio cheaply if both stars are measured against the distant background, not just one relative to the other. Each traces an ellipse about the centre of mass, which drifts in a straight line with the system's proper motion.\n\nTake the centre of mass as origin. The stars always sit on opposite sides of it, at distances in a fixed ratio. The relation is m one over m two equals r two over r one equals a two over a one equals alpha two over alpha one. m one and m two are the masses. r one and r two are distances from the centre of mass. a one and a two are the semi-major axes; alpha one and alpha two are the same axes in angle. The heavier star sits closer in, so the mass ratio is the inverse of the size ratio. Both lie at one distance d, so alpha is a divided by d and the ratios match. Projection shrinks both equally, so neither parallax nor inclination is needed.\n\nDrag the mass ratio in the widget. The ellipses change size in opposite directions while the dashed centre-of-mass line stays put. Tilt the system. The ellipses flatten, but the size ratio below does not change. Relative measurements survive projection.\n\nThe centre of mass is not marked. We infer the point that moves uniformly while the stars curve about it. That takes absolute astrometry over much of a period, against reference stars with motions of their own. Micrometer work once took decades; Gaia now supplies the frame. For seventy Ophiuchi, Herschel's binary, period about eighty-eight years, the ratio is zero point seven eight: zero point nine and zero point seven solar masses.\n\nA relative orbit alone hides the ratio, so spectroscopy or the luminosities must supply it. The mass sum needs only that orbit, so the next step matters.",
+   "hash": "177fe5637dfb",
+   "duration": 116.79,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 0.8,
+     "text": "Welcome."
+    },
+    {
+     "start": 0.8,
+     "end": 4,
+     "text": "Look with me at seventy Ophiuchi behind the panel."
+    },
+    {
+     "start": 4,
+     "end": 12.22,
+     "text": "A visual binary gives the mass ratio cheaply if both stars are measured against the distant background, not just one relative to the other."
+    },
+    {
+     "start": 12.22,
+     "end": 18.62,
+     "text": "Each traces an ellipse about the centre of mass, which drifts in a straight line with the system's proper motion."
+    },
+    {
+     "start": 18.62,
+     "end": 20.84,
+     "text": "Take the centre of mass as origin."
+    },
+    {
+     "start": 20.84,
+     "end": 25.84,
+     "text": "The stars always sit on opposite sides of it, at distances in a fixed ratio."
+    },
+    {
+     "start": 25.84,
+     "end": 35.8,
+     "text": "The relation is m one over m two equals r two over r one equals a two over a one equals alpha two over alpha one."
+    },
+    {
+     "start": 35.8,
+     "end": 38.36,
+     "text": "m one and m two are the masses."
+    },
+    {
+     "start": 38.36,
+     "end": 41.84,
+     "text": "r one and r two are distances from the centre of mass."
+    },
+    {
+     "start": 41.84,
+     "end": 48.4,
+     "text": "a one and a two are the semi-major axes; alpha one and alpha two are the same axes in angle."
+    },
+    {
+     "start": 48.4,
+     "end": 53.94,
+     "text": "The heavier star sits closer in, so the mass ratio is the inverse of the size ratio."
+    },
+    {
+     "start": 53.94,
+     "end": 59.91,
+     "text": "Both lie at one distance d, so alpha is a divided by d and the ratios match."
+    },
+    {
+     "start": 59.91,
+     "end": 64.89,
+     "text": "Projection shrinks both equally, so neither parallax nor inclination is needed."
+    },
+    {
+     "start": 64.89,
+     "end": 66.97,
+     "text": "Drag the mass ratio in the widget."
+    },
+    {
+     "start": 66.97,
+     "end": 72.39,
+     "text": "The ellipses change size in opposite directions while the dashed centre-of-mass line stays put."
+    },
+    {
+     "start": 72.39,
+     "end": 73.63,
+     "text": "Tilt the system."
+    },
+    {
+     "start": 73.63,
+     "end": 77.77,
+     "text": "The ellipses flatten, but the size ratio below does not change."
+    },
+    {
+     "start": 77.77,
+     "end": 80.13,
+     "text": "Relative measurements survive projection."
+    },
+    {
+     "start": 80.13,
+     "end": 82.13,
+     "text": "The centre of mass is not marked."
+    },
+    {
+     "start": 82.13,
+     "end": 86.15,
+     "text": "We infer the point that moves uniformly while the stars curve about it."
+    },
+    {
+     "start": 86.15,
+     "end": 92.29,
+     "text": "That takes absolute astrometry over much of a period, against reference stars with motions of their own."
+    },
+    {
+     "start": 92.29,
+     "end": 96.61,
+     "text": "Micrometer work once took decades; Gaia now supplies the frame."
+    },
+    {
+     "start": 96.61,
+     "end": 107.11,
+     "text": "For seventy Ophiuchi, Herschel's binary, period about eighty-eight years, the ratio is zero point seven eight: zero point nine and zero point seven solar masses."
+    },
+    {
+     "start": 107.11,
+     "end": 113.05,
+     "text": "A relative orbit alone hides the ratio, so spectroscopy or the luminosities must supply it."
+    },
+    {
+     "start": 113.05,
+     "end": 116.79,
+     "text": "The mass sum needs only that orbit, so the next step matters."
+    }
+   ],
+   "voicedHash": "74b50dc4d52c"
+  },
+  "visual-results": {
+   "script": "Look at Procyon behind the panel. Orbits take decades, and seven elements must be fitted to measurements scattered over them. But the method is honest: the only physics involved is Newton's. From Savary in eighteen twenty-seven to Gaia, visual binaries have given a few hundred reliable masses, concentrated on the nearest stars, where orbits are wide enough to resolve and short enough to finish. Periods run from about forty years to nearly seven hundred, and total masses from a little over one solar mass to about five and a half.\n\nThe sum, in solar masses, is alpha cubed divided by p cubed times P squared. Alpha is the angular semi-major axis in arcseconds, p the parallax in arcseconds, P the period in years. Alpha over p is the semi-major axis in astronomical units, because parallax turns angle into distance. Cube that, divide by the period squared, and Kepler's third law, pure Newton, gives the total mass. The separate masses come from the centre of mass, or a spectroscopic ratio. Castor's two stars are each close pairs, and YY Geminorum orbits far outside: six stars.\n\nThree lessons. Ordinary masses span only tenths of a solar mass to a few, while luminosities span many orders of magnitude. Next we make that quantitative. The white dwarfs in Sirius and Procyon hold about a solar mass in an Earth-sized body, a tonne per cubic centimetre, beyond the physics of eighteen sixty-two, later explained by quantum mechanics in chapter five. Hipparcos cut typical parallax error from ten percent to one, Gaia to a hundredth of a percent, so the limit is now the orbits.\n\nBessel predicted Procyon B in eighteen forty-four. Fifty years later the Lick thirty-six-inch found it, thirteenth magnitude, five arcseconds from a star ten thousand times brighter. The mass, six tenths of a solar mass, came from the orbit long before the spectrum, a white dwarf cooler and older than Sirius B. That is the star behind the panel.",
+   "hash": "f259d6ba94a5",
+   "duration": 123.83,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 2.52,
+     "text": "Look at Procyon behind the panel."
+    },
+    {
+     "start": 2.52,
+     "end": 8.02,
+     "text": "Orbits take decades, and seven elements must be fitted to measurements scattered over them."
+    },
+    {
+     "start": 8.02,
+     "end": 12.08,
+     "text": "But the method is honest: the only physics involved is Newton's."
+    },
+    {
+     "start": 12.08,
+     "end": 24.54,
+     "text": "From Savary in eighteen twenty-seven to Gaia, visual binaries have given a few hundred reliable masses, concentrated on the nearest stars, where orbits are wide enough to resolve and short enough to finish."
+    },
+    {
+     "start": 24.54,
+     "end": 32.8,
+     "text": "Periods run from about forty years to nearly seven hundred, and total masses from a little over one solar mass to about five and a half."
+    },
+    {
+     "start": 32.8,
+     "end": 38.64,
+     "text": "The sum, in solar masses, is alpha cubed divided by p cubed times P squared."
+    },
+    {
+     "start": 38.64,
+     "end": 46.18,
+     "text": "Alpha is the angular semi-major axis in arcseconds, p the parallax in arcseconds, P the period in years."
+    },
+    {
+     "start": 46.18,
+     "end": 53.1,
+     "text": "Alpha over p is the semi-major axis in astronomical units, because parallax turns angle into distance."
+    },
+    {
+     "start": 53.1,
+     "end": 59.84,
+     "text": "Cube that, divide by the period squared, and Kepler's third law, pure Newton, gives the total mass."
+    },
+    {
+     "start": 59.84,
+     "end": 64.65,
+     "text": "The separate masses come from the centre of mass, or a spectroscopic ratio."
+    },
+    {
+     "start": 64.65,
+     "end": 71.57,
+     "text": "Castor's two stars are each close pairs, and YY Geminorum orbits far outside: six stars."
+    },
+    {
+     "start": 71.57,
+     "end": 72.81,
+     "text": "Three lessons."
+    },
+    {
+     "start": 72.81,
+     "end": 79.83,
+     "text": "Ordinary masses span only tenths of a solar mass to a few, while luminosities span many orders of magnitude."
+    },
+    {
+     "start": 79.83,
+     "end": 81.77,
+     "text": "Next we make that quantitative."
+    },
+    {
+     "start": 81.77,
+     "end": 94.49,
+     "text": "The white dwarfs in Sirius and Procyon hold about a solar mass in an Earth-sized body, a tonne per cubic centimetre, beyond the physics of eighteen sixty-two, later explained by quantum mechanics in chapter five."
+    },
+    {
+     "start": 94.49,
+     "end": 102.57,
+     "text": "Hipparcos cut typical parallax error from ten percent to one, Gaia to a hundredth of a percent, so the limit is now the orbits."
+    },
+    {
+     "start": 102.57,
+     "end": 105.89,
+     "text": "Bessel predicted Procyon B in eighteen forty-four."
+    },
+    {
+     "start": 105.89,
+     "end": 113.83,
+     "text": "Fifty years later the Lick thirty-six-inch found it, thirteenth magnitude, five arcseconds from a star ten thousand times brighter."
+    },
+    {
+     "start": 113.83,
+     "end": 121.99,
+     "text": "The mass, six tenths of a solar mass, came from the orbit long before the spectrum, a white dwarf cooler and older than Sirius B."
+    },
+    {
+     "start": 121.99,
+     "end": 123.83,
+     "text": "That is the star behind the panel."
+    }
+   ],
+   "voicedHash": "4164243a6332"
+  },
+  "visual-summary": {
+   "script": "Look behind the panel, the planetary system slowly circling the Sun. The centre of mass sets the ratio. m one over m two equals a two over a one, which equals alpha two over alpha one. m one and m two are the masses, the a's the semi-major axes, the alphas the angles. Heavier star, smaller orbit. Both stars need absolute astrometry. Distance and inclination drop out. Kepler's third law gives the sum: m one plus m two equals a cubed over P squared, a in astronomical units, P in years, masses in solar masses. a is alpha over p, and because mass scales as a cubed, a parallax error is tripled in the mass. The apparent orbit is foreshortened, focus displaced. We read the inclination from where the primary sits. Ignore it and the mass is wrong by the cosine of i, cubed. A few hundred masses, a tenth to ten solar masses, nearest first, and Earth-size white dwarfs near one solar mass. On the main sequence, luminosity scales as mass to the three and a half, lifetime as mass to the minus two and a half — the only route to a single star's mass. Visual binaries supply the sum; ratio and inclination come harder. Next, close binaries: Doppler velocities replace angles, and eclipses give the inclination for nothing.",
+   "hash": "a96bd291006b",
+   "duration": 83.83,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.58,
+     "text": "Look behind the panel, the planetary system slowly circling the Sun."
+    },
+    {
+     "start": 4.58,
+     "end": 7.12,
+     "text": "The centre of mass sets the ratio."
+    },
+    {
+     "start": 7.12,
+     "end": 13.34,
+     "text": "m one over m two equals a two over a one, which equals alpha two over alpha one."
+    },
+    {
+     "start": 13.34,
+     "end": 19.36,
+     "text": "m one and m two are the masses, the a's the semi-major axes, the alphas the angles."
+    },
+    {
+     "start": 19.36,
+     "end": 21.56,
+     "text": "Heavier star, smaller orbit."
+    },
+    {
+     "start": 21.56,
+     "end": 24.34,
+     "text": "Both stars need absolute astrometry."
+    },
+    {
+     "start": 24.34,
+     "end": 26.62,
+     "text": "Distance and inclination drop out."
+    },
+    {
+     "start": 26.62,
+     "end": 37.96,
+     "text": "Kepler's third law gives the sum: m one plus m two equals a cubed over P squared, a in astronomical units, P in years, masses in solar masses."
+    },
+    {
+     "start": 37.96,
+     "end": 44.71,
+     "text": "a is alpha over p, and because mass scales as a cubed, a parallax error is tripled in the mass."
+    },
+    {
+     "start": 44.71,
+     "end": 48.31,
+     "text": "The apparent orbit is foreshortened, focus displaced."
+    },
+    {
+     "start": 48.31,
+     "end": 51.29,
+     "text": "We read the inclination from where the primary sits."
+    },
+    {
+     "start": 51.29,
+     "end": 55.17,
+     "text": "Ignore it and the mass is wrong by the cosine of i, cubed."
+    },
+    {
+     "start": 55.17,
+     "end": 63.11,
+     "text": "A few hundred masses, a tenth to ten solar masses, nearest first, and Earth-size white dwarfs near one solar mass."
+    },
+    {
+     "start": 63.11,
+     "end": 72.91,
+     "text": "On the main sequence, luminosity scales as mass to the three and a half, lifetime as mass to the minus two and a half — the only route to a single star's mass."
+    },
+    {
+     "start": 72.91,
+     "end": 77.45,
+     "text": "Visual binaries supply the sum; ratio and inclination come harder."
+    },
+    {
+     "start": 77.45,
+     "end": 83.83,
+     "text": "Next, close binaries: Doppler velocities replace angles, and eclipses give the inclination for nothing."
+    }
+   ],
+   "voicedHash": "3e4566ce891a"
+  }
+ }
+}

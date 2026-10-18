@@ -1,0 +1,862 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "close-binary-summary": {
+   "script": "Behind the panel the whole planetary system is slowly circling the Sun, the same kind of orbital clock we have been reading in these stars.\n\nK-one equals two pi a-one sine i over P, and K-two likewise. K is the velocity amplitude we measure, a the orbital radius, i the inclination, P the period. Then m-one over m-two equals K-two over K-one. Sine i cancels, and the lighter star moves faster, so neither distance nor inclination is required. Eccentricity skews the curve. Fitting gives P, K, e, omega and gamma — the eccentricity, the periastron angle and the systemic speed — but never i or the node.\n\nm-one plus m-two equals P times the cube of the sum of K-one and K-two, over two pi G sine cubed i. G is the gravitational constant. Unless i is known, only a lower limit. Single-lined, the mass function f of m equals P K-one cubed over two pi G, a strict lower limit on the companion.\n\nEclipses require cosine i less than R-one plus R-two, all over a. From the contact times and the speed v, the smaller radius R-s equals v times t-b minus t-a, all over two, and the larger radius R-l equals v times t-c minus t-a, all over two. Depths give the temperature ratio, because surface brightness scales as temperature to the fourth: B-zero minus B-p, over B-zero minus B-s, equals T-s over T-l to the fourth. B-zero is the uneclipsed light, B-p and B-s the two minima. Eclipsing and double-lined together give masses, radii, temperatures, luminosities and distance.\n\nAlgol, beta Lyrae and W Ursae Majoris curves encode R over a — detached, semi-detached or contact — and the mass transfer that rewrites evolution.\n\nEvery mass and radius that stellar structure takes as input came from these methods. They are not many, and none is easy, which is why only a few hundred stars have masses known to better than three per cent. That is what I want you to remember.",
+   "hash": "70f1a73ad33b",
+   "duration": 131.19,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 8.18,
+     "text": "Behind the panel the whole planetary system is slowly circling the Sun, the same kind of orbital clock we have been reading in these stars."
+    },
+    {
+     "start": 8.18,
+     "end": 13.92,
+     "text": "K-one equals two pi a-one sine i over P, and K-two likewise."
+    },
+    {
+     "start": 13.92,
+     "end": 21.12,
+     "text": "K is the velocity amplitude we measure, a the orbital radius, i the inclination, P the period."
+    },
+    {
+     "start": 21.12,
+     "end": 25.02,
+     "text": "Then m-one over m-two equals K-two over K-one."
+    },
+    {
+     "start": 25.02,
+     "end": 31.52,
+     "text": "Sine i cancels, and the lighter star moves faster, so neither distance nor inclination is required."
+    },
+    {
+     "start": 31.52,
+     "end": 33.68,
+     "text": "Eccentricity skews the curve."
+    },
+    {
+     "start": 33.68,
+     "end": 42.58,
+     "text": "Fitting gives P, K, e, omega and gamma — the eccentricity, the periastron angle and the systemic speed — but never i or the node."
+    },
+    {
+     "start": 42.58,
+     "end": 49.96,
+     "text": "m-one plus m-two equals P times the cube of the sum of K-one and K-two, over two pi G sine cubed i."
+    },
+    {
+     "start": 49.96,
+     "end": 52.08,
+     "text": "G is the gravitational constant."
+    },
+    {
+     "start": 52.08,
+     "end": 55.02,
+     "text": "Unless i is known, only a lower limit."
+    },
+    {
+     "start": 55.02,
+     "end": 62.98,
+     "text": "Single-lined, the mass function f of m equals P K-one cubed over two pi G, a strict lower limit on the companion."
+    },
+    {
+     "start": 62.98,
+     "end": 68.19,
+     "text": "Eclipses require cosine i less than R-one plus R-two, all over a."
+    },
+    {
+     "start": 68.19,
+     "end": 82.75,
+     "text": "From the contact times and the speed v, the smaller radius R-s equals v times t-b minus t-a, all over two, and the larger radius R-l equals v times t-c minus t-a, all over two."
+    },
+    {
+     "start": 82.75,
+     "end": 96.01,
+     "text": "Depths give the temperature ratio, because surface brightness scales as temperature to the fourth: B-zero minus B-p, over B-zero minus B-s, equals T-s over T-l to the fourth."
+    },
+    {
+     "start": 96.01,
+     "end": 101.27,
+     "text": "B-zero is the uneclipsed light, B-p and B-s the two minima."
+    },
+    {
+     "start": 101.27,
+     "end": 107.83,
+     "text": "Eclipsing and double-lined together give masses, radii, temperatures, luminosities and distance."
+    },
+    {
+     "start": 107.83,
+     "end": 118.37,
+     "text": "Algol, beta Lyrae and W Ursae Majoris curves encode R over a — detached, semi-detached or contact — and the mass transfer that rewrites evolution."
+    },
+    {
+     "start": 118.37,
+     "end": 122.97,
+     "text": "Every mass and radius that stellar structure takes as input came from these methods."
+    },
+    {
+     "start": 122.97,
+     "end": 129.67,
+     "text": "They are not many, and none is easy, which is why only a few hundred stars have masses known to better than three per cent."
+    },
+    {
+     "start": 129.67,
+     "end": 131.19,
+     "text": "That is what I want you to remember."
+    }
+   ],
+   "voicedHash": "7a0540b466d4"
+  },
+  "eccentric-orbits": {
+   "script": "Real orbits are rarely circular, and eccentricity makes the radial-velocity curve lopsided. Near periastron the star is fastest, Kepler's second law, so the velocity snaps through its extreme. Near apastron it lingers. Sharp peak, broad trough, or the reverse. Shape depends on eccentricity e and on omega, the argument of periastron, the angle in the orbital plane from the line of nodes to periastron. That angle decides whether the fast part approaches, recedes, or crosses sideways.\n\nFor one component, v sub r, the line-of-sight speed, equals gamma plus K times the quantity cosine of theta plus omega, plus e cosine omega. Gamma is the systemic velocity. Theta, the true anomaly, is the angle from periastron and advances unevenly in time. K, the semi-amplitude, equals two pi a sine i, over P and over the square root of one minus e squared. a is the semi-major axis, i the inclination, P the period. The square-root factor boosts K, and e cosine omega shifts the curve off gamma.\n\nDrag e and omega in the widget. At zero eccentricity, a pure sinusoid, any omega. As e grows the peak sharpens and moves. At ninety degrees, symmetric but a narrow maximum. At zero, skewed, slow rise, fast fall. The orbit shows why: we stay fixed, periastron turns.\n\nFitting yields P, K, e, omega and gamma, five of seven elements. Inclination hides in K; the node is invisible. A sinusoid fit to an eccentric binary biases K and the mass. A sparsely sampled eccentric planet can mimic two circular ones, section 7.4.\n\nSpica behind the panel is double-lined, two hot B stars, about four days, eccentricity point one three, ten and seven solar masses, tidally egg-shaped, omega precessing in a hundred and twenty-four years.\n\nDouble on some plates, single on others, as for Mizar A. A fifty-day orbit sampled weekly needs several cycles, about twenty weeks, to secure the period. At eccentricity point seven, watch periastron. Miss that brief swing and long-period eccentricities stay poor.",
+   "hash": "8579e8b1b9b1",
+   "duration": 139.51,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.32,
+     "text": "Real orbits are rarely circular, and eccentricity makes the radial-velocity curve lopsided."
+    },
+    {
+     "start": 6.32,
+     "end": 13.42,
+     "text": "Near periastron the star is fastest, Kepler's second law, so the velocity snaps through its extreme."
+    },
+    {
+     "start": 13.42,
+     "end": 15.66,
+     "text": "Near apastron it lingers."
+    },
+    {
+     "start": 15.66,
+     "end": 18.78,
+     "text": "Sharp peak, broad trough, or the reverse."
+    },
+    {
+     "start": 18.78,
+     "end": 28.18,
+     "text": "Shape depends on eccentricity e and on omega, the argument of periastron, the angle in the orbital plane from the line of nodes to periastron."
+    },
+    {
+     "start": 28.18,
+     "end": 33.48,
+     "text": "That angle decides whether the fast part approaches, recedes, or crosses sideways."
+    },
+    {
+     "start": 33.48,
+     "end": 43.92,
+     "text": "For one component, v sub r, the line-of-sight speed, equals gamma plus K times the quantity cosine of theta plus omega, plus e cosine omega."
+    },
+    {
+     "start": 43.92,
+     "end": 46.22,
+     "text": "Gamma is the systemic velocity."
+    },
+    {
+     "start": 46.22,
+     "end": 52.02,
+     "text": "Theta, the true anomaly, is the angle from periastron and advances unevenly in time."
+    },
+    {
+     "start": 52.02,
+     "end": 60.06,
+     "text": "K, the semi-amplitude, equals two pi a sine i, over P and over the square root of one minus e squared."
+    },
+    {
+     "start": 60.06,
+     "end": 65,
+     "text": "a is the semi-major axis, i the inclination, P the period."
+    },
+    {
+     "start": 65,
+     "end": 70.41,
+     "text": "The square-root factor boosts K, and e cosine omega shifts the curve off gamma."
+    },
+    {
+     "start": 70.41,
+     "end": 72.67,
+     "text": "Drag e and omega in the widget."
+    },
+    {
+     "start": 72.67,
+     "end": 77.01,
+     "text": "At zero eccentricity, a pure sinusoid, any omega."
+    },
+    {
+     "start": 77.01,
+     "end": 79.61,
+     "text": "As e grows the peak sharpens and moves."
+    },
+    {
+     "start": 79.61,
+     "end": 82.89,
+     "text": "At ninety degrees, symmetric but a narrow maximum."
+    },
+    {
+     "start": 82.89,
+     "end": 86.45,
+     "text": "At zero, skewed, slow rise, fast fall."
+    },
+    {
+     "start": 86.45,
+     "end": 90.91,
+     "text": "The orbit shows why: we stay fixed, periastron turns."
+    },
+    {
+     "start": 90.91,
+     "end": 95.93,
+     "text": "Fitting yields P, K, e, omega and gamma, five of seven elements."
+    },
+    {
+     "start": 95.93,
+     "end": 99.35,
+     "text": "Inclination hides in K; the node is invisible."
+    },
+    {
+     "start": 99.35,
+     "end": 103.53,
+     "text": "A sinusoid fit to an eccentric binary biases K and the mass."
+    },
+    {
+     "start": 103.53,
+     "end": 109.29,
+     "text": "A sparsely sampled eccentric planet can mimic two circular ones, section 7. 4."
+    },
+    {
+     "start": 109.29,
+     "end": 122.51,
+     "text": "Spica behind the panel is double-lined, two hot B stars, about four days, eccentricity point one three, ten and seven solar masses, tidally egg-shaped, omega precessing in a hundred and twenty-four years."
+    },
+    {
+     "start": 122.51,
+     "end": 126.55,
+     "text": "Double on some plates, single on others, as for Mizar A."
+    },
+    {
+     "start": 126.55,
+     "end": 132.59,
+     "text": "A fifty-day orbit sampled weekly needs several cycles, about twenty weeks, to secure the period."
+    },
+    {
+     "start": 132.59,
+     "end": 135.97,
+     "text": "At eccentricity point seven, watch periastron."
+    },
+    {
+     "start": 135.97,
+     "end": 139.51,
+     "text": "Miss that brief swing and long-period eccentricities stay poor."
+    }
+   ],
+   "voicedHash": "5d20997c5e44"
+  },
+  "eclipse-geometry": {
+   "script": "Look behind the panel at Algol. That is the prototype, and the widget lets you build one of your own. Set the two radii, the two temperatures and the inclination, and watch the orbit edge-on above the light curve. When the inclination is close to ninety degrees, each star in turn passes in front of the other and the combined light dips. Brightness against time, the light curve, shows two minima per orbit.\n\nThe deeper primary minimum is the hotter star being hidden. Per unit area it emits more, so covering it costs more light, even if it is the smaller star. The shallower secondary minimum is the cooler star hidden, half a period later for a circular orbit. An eccentric orbit displaces that minimum, and the shift is a free measure of e cosine omega.\n\nNow reduce the inclination in the widget. The eclipses become partial, then shallower, then they vanish. The condition is cosine i less than R one plus R two, all over a. i is the orbital inclination, R one and R two the two radii, and a the separation. At conjunction the projected separation is a times cosine i, and the stars overlap only if that gap is smaller than the sum of the radii. Two Sun-sized stars a tenth of an astronomical unit apart need i above about eighty-five degrees; a Jupiter five hundredths of an astronomical unit from a Sun-like star needs about eighty-seven. Eclipsing systems are a small, biased sample — close pairs, large stars — and that bias must be remembered.\n\nMake the smaller star much smaller and the minima grow flat bottoms: total and annular eclipses, the small star entirely hidden or entirely in front. A partial eclipse only partly overlaps. The four contacts are the limb-touch instants: the eclipse begins, totality or annularity begins, then ends, then the eclipse ends. We plot against phase, time since primary minimum divided by the period, so many orbits fold onto one curve.\n\nA light curve is a time series, not an image, and that is its strength. Photometry works on faint stars with small telescopes, every night, by anyone. Goodricke measured Algol by eye in 1782 and 83 and got the period right to a minute. Kepler and TESS have recorded millions of these curves to parts per million, and reading them is the next step.",
+   "hash": "c04d8c1c7fee",
+   "duration": 142.39,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.5,
+     "text": "Look behind the panel at Algol."
+    },
+    {
+     "start": 2.5,
+     "end": 6.56,
+     "text": "That is the prototype, and the widget lets you build one of your own."
+    },
+    {
+     "start": 6.56,
+     "end": 13.54,
+     "text": "Set the two radii, the two temperatures and the inclination, and watch the orbit edge-on above the light curve."
+    },
+    {
+     "start": 13.54,
+     "end": 20.98,
+     "text": "When the inclination is close to ninety degrees, each star in turn passes in front of the other and the combined light dips."
+    },
+    {
+     "start": 20.98,
+     "end": 25.64,
+     "text": "Brightness against time, the light curve, shows two minima per orbit."
+    },
+    {
+     "start": 25.64,
+     "end": 29.24,
+     "text": "The deeper primary minimum is the hotter star being hidden."
+    },
+    {
+     "start": 29.24,
+     "end": 35.54,
+     "text": "Per unit area it emits more, so covering it costs more light, even if it is the smaller star."
+    },
+    {
+     "start": 35.54,
+     "end": 41.62,
+     "text": "The shallower secondary minimum is the cooler star hidden, half a period later for a circular orbit."
+    },
+    {
+     "start": 41.62,
+     "end": 47.6,
+     "text": "An eccentric orbit displaces that minimum, and the shift is a free measure of e cosine omega."
+    },
+    {
+     "start": 47.6,
+     "end": 49.9,
+     "text": "Now reduce the inclination in the widget."
+    },
+    {
+     "start": 49.9,
+     "end": 54.08,
+     "text": "The eclipses become partial, then shallower, then they vanish."
+    },
+    {
+     "start": 54.08,
+     "end": 59.54,
+     "text": "The condition is cosine i less than R one plus R two, all over a."
+    },
+    {
+     "start": 59.54,
+     "end": 65.7,
+     "text": "i is the orbital inclination, R one and R two the two radii, and a the separation."
+    },
+    {
+     "start": 65.7,
+     "end": 74.13,
+     "text": "At conjunction the projected separation is a times cosine i, and the stars overlap only if that gap is smaller than the sum of the radii."
+    },
+    {
+     "start": 74.13,
+     "end": 86.01,
+     "text": "Two Sun-sized stars a tenth of an astronomical unit apart need i above about eighty-five degrees; a Jupiter five hundredths of an astronomical unit from a Sun-like star needs about eighty-seven."
+    },
+    {
+     "start": 86.01,
+     "end": 93.13,
+     "text": "Eclipsing systems are a small, biased sample — close pairs, large stars — and that bias must be remembered."
+    },
+    {
+     "start": 93.13,
+     "end": 102.33,
+     "text": "Make the smaller star much smaller and the minima grow flat bottoms: total and annular eclipses, the small star entirely hidden or entirely in front."
+    },
+    {
+     "start": 102.33,
+     "end": 105.03,
+     "text": "A partial eclipse only partly overlaps."
+    },
+    {
+     "start": 105.03,
+     "end": 113.99,
+     "text": "The four contacts are the limb-touch instants: the eclipse begins, totality or annularity begins, then ends, then the eclipse ends."
+    },
+    {
+     "start": 113.99,
+     "end": 121.07,
+     "text": "We plot against phase, time since primary minimum divided by the period, so many orbits fold onto one curve."
+    },
+    {
+     "start": 121.07,
+     "end": 125.55,
+     "text": "A light curve is a time series, not an image, and that is its strength."
+    },
+    {
+     "start": 125.55,
+     "end": 130.67,
+     "text": "Photometry works on faint stars with small telescopes, every night, by anyone."
+    },
+    {
+     "start": 130.67,
+     "end": 136.73,
+     "text": "Goodricke measured Algol by eye in 1782 and 83 and got the period right to a minute."
+    },
+    {
+     "start": 136.73,
+     "end": 142.39,
+     "text": "Kepler and TESS have recorded millions of these curves to parts per million, and reading them is the next step."
+    }
+   ],
+   "voicedHash": "f85d751a6345"
+  },
+  "lightcurve-types": {
+   "script": "I want you to look at the widget. Switch between Algol, beta Lyrae and W Ursae Majoris and watch the stars morph with the light curve. The curve's shape maps how close the stars are compared with their sizes. Algol types are well separated and nearly spherical. Light is flat between sharp minima, the secondary often much shallower. Algol itself is a three point seven solar mass B eight star and a zero point eight solar mass K subgiant, period two point eight seven days. Beta Lyrae types are tidally stretched into ellipsoids. The projected area changes all the time, so the curve has no flat parts and both minima are deep. Sheliak behind the panel has a twelve point nine day period that lengthens by nineteen seconds a year as gas streams onto a thick disc around its companion. W Ursae Majoris stars are contact systems that share one envelope. Their periods are hours, the minima equal, the light changes continuously, and the stars touch. Tens of thousands are known. Smaller effects appear as well: ellipsoidal variation, the reflection effect that brightens the curve just outside secondary minimum as each star heats the other, limb darkening, starspots that drift season to season, and Doppler beaming at the part per thousand level. Modern fits include them all. Algol poses a paradox. The lighter K subgiant has left the main sequence while the heavier B star has not. Heavier stars evolve faster, so this is backwards. The subgiant was once heavier. It evolved first and poured most of its mass onto its companion. That mass exchange leads to novae, X-ray binaries, Type Ia supernovae and gravitational wave mergers. A light curve is a one dimensional record of a three dimensional system. With a spectrum we obtain radii to one percent, temperatures, the inclination and a distance. These names state the ratio of radius to separation: detached, semi-detached or contact.",
+   "hash": "830d34af11bc",
+   "duration": 118.71,
+   "sentences": [
+    {
+     "start": 0.12,
+     "end": 1.78,
+     "text": "I want you to look at the widget."
+    },
+    {
+     "start": 1.78,
+     "end": 9.1,
+     "text": "Switch between Algol, beta Lyrae and W Ursae Majoris and watch the stars morph with the light curve."
+    },
+    {
+     "start": 9.1,
+     "end": 13.6,
+     "text": "The curve's shape maps how close the stars are compared with their sizes."
+    },
+    {
+     "start": 13.6,
+     "end": 17.06,
+     "text": "Algol types are well separated and nearly spherical."
+    },
+    {
+     "start": 17.06,
+     "end": 21.74,
+     "text": "Light is flat between sharp minima, the secondary often much shallower."
+    },
+    {
+     "start": 21.74,
+     "end": 31.2,
+     "text": "Algol itself is a three point seven solar mass B eight star and a zero point eight solar mass K subgiant, period two point eight seven days."
+    },
+    {
+     "start": 31.2,
+     "end": 34.64,
+     "text": "Beta Lyrae types are tidally stretched into ellipsoids."
+    },
+    {
+     "start": 34.64,
+     "end": 40.68,
+     "text": "The projected area changes all the time, so the curve has no flat parts and both minima are deep."
+    },
+    {
+     "start": 40.68,
+     "end": 49.96,
+     "text": "Sheliak behind the panel has a twelve point nine day period that lengthens by nineteen seconds a year as gas streams onto a thick disc around its companion."
+    },
+    {
+     "start": 49.96,
+     "end": 54.26,
+     "text": "W Ursae Majoris stars are contact systems that share one envelope."
+    },
+    {
+     "start": 54.26,
+     "end": 60.49,
+     "text": "Their periods are hours, the minima equal, the light changes continuously, and the stars touch."
+    },
+    {
+     "start": 60.49,
+     "end": 62.33,
+     "text": "Tens of thousands are known."
+    },
+    {
+     "start": 62.33,
+     "end": 78.21,
+     "text": "Smaller effects appear as well: ellipsoidal variation, the reflection effect that brightens the curve just outside secondary minimum as each star heats the other, limb darkening, starspots that drift season to season, and Doppler beaming at the part per thousand level."
+    },
+    {
+     "start": 78.21,
+     "end": 80.19,
+     "text": "Modern fits include them all."
+    },
+    {
+     "start": 80.19,
+     "end": 82.07,
+     "text": "Algol poses a paradox."
+    },
+    {
+     "start": 82.07,
+     "end": 86.85,
+     "text": "The lighter K subgiant has left the main sequence while the heavier B star has not."
+    },
+    {
+     "start": 86.85,
+     "end": 90.19,
+     "text": "Heavier stars evolve faster, so this is backwards."
+    },
+    {
+     "start": 90.19,
+     "end": 92.13,
+     "text": "The subgiant was once heavier."
+    },
+    {
+     "start": 92.13,
+     "end": 95.85,
+     "text": "It evolved first and poured most of its mass onto its companion."
+    },
+    {
+     "start": 95.85,
+     "end": 103.19,
+     "text": "That mass exchange leads to novae, X-ray binaries, Type Ia supernovae and gravitational wave mergers."
+    },
+    {
+     "start": 103.19,
+     "end": 106.99,
+     "text": "A light curve is a one dimensional record of a three dimensional system."
+    },
+    {
+     "start": 106.99,
+     "end": 112.89,
+     "text": "With a spectrum we obtain radii to one percent, temperatures, the inclination and a distance."
+    },
+    {
+     "start": 112.89,
+     "end": 118.71,
+     "text": "These names state the ratio of radius to separation: detached, semi-detached or contact."
+    }
+   ],
+   "voicedHash": "18d5e146af69"
+  },
+  "mass-function": {
+   "script": "Look at Sheliak behind the panel. With both amplitudes known, a sine i for a circular orbit is the period times K one plus K two over two pi. Kepler’s third law converts that into the mass sum: m one plus m two equals P over two pi G times the cube of K one plus K two divided by sine cubed i. m one and m two are the two masses, P the orbital period, G the gravitational constant, K one and K two the observed semi-amplitudes, and i the orbital inclination. Sine i is the only unknown and it is cubed. Eccentric orbits are adjusted by the factor one minus e squared to the three-halves. Without i we have a lower limit, each mass times sine cubed i. Eclipsing systems have i near ninety degrees, so the masses are exact. If there is no eclipse we determine i from interferometry, polarimetry or ellipsoidal variations, or we use the average of sine cubed i, three pi over sixteen, about six tenths, nearer two thirds.\n\nWhen only the primary shows lines we form the mass function. f of m is defined as m two cubed sine cubed i over the square of the total mass, and it equals P K one cubed over two pi G. The right-hand side is measured from the period and K one, and the companion mass cannot lie below f of m. An assumed inclination plus a primary mass from the spectral type then yields m two.\n\nMove the sliders on the widget while P and K one stay fixed. The companion mass changes with inclination and assumed primary mass, but it never falls below the mass function. Above three solar masses with no light the object must be a black hole. Cygnus X-one yields a companion near fifteen solar masses, weighed like Sirius B.\n\nA solar-mass primary with a ten-day period and a twenty kilometres per second amplitude produces a mass function of about eight hundredths of a solar mass. The edge-on companion is near half a solar mass. At thirty degrees the mass rises above the primary and that solution is disfavoured.",
+   "hash": "3082fa73dfd8",
+   "duration": 128.95,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.44,
+     "text": "Look at Sheliak behind the panel."
+    },
+    {
+     "start": 2.44,
+     "end": 10.96,
+     "text": "With both amplitudes known, a sine i for a circular orbit is the period times K one plus K two over two pi."
+    },
+    {
+     "start": 10.96,
+     "end": 23.32,
+     "text": "Kepler’s third law converts that into the mass sum: m one plus m two equals P over two pi G times the cube of K one plus K two divided by sine cubed i."
+    },
+    {
+     "start": 23.32,
+     "end": 35.12,
+     "text": "m one and m two are the two masses, P the orbital period, G the gravitational constant, K one and K two the observed semi-amplitudes, and i the orbital inclination."
+    },
+    {
+     "start": 35.12,
+     "end": 38.56,
+     "text": "Sine i is the only unknown and it is cubed."
+    },
+    {
+     "start": 38.56,
+     "end": 43.64,
+     "text": "Eccentric orbits are adjusted by the factor one minus e squared to the three-halves."
+    },
+    {
+     "start": 43.64,
+     "end": 48.18,
+     "text": "Without i we have a lower limit, each mass times sine cubed i."
+    },
+    {
+     "start": 48.18,
+     "end": 52.94,
+     "text": "Eclipsing systems have i near ninety degrees, so the masses are exact."
+    },
+    {
+     "start": 52.94,
+     "end": 66.65,
+     "text": "If there is no eclipse we determine i from interferometry, polarimetry or ellipsoidal variations, or we use the average of sine cubed i, three pi over sixteen, about six tenths, nearer two thirds."
+    },
+    {
+     "start": 66.65,
+     "end": 70.41,
+     "text": "When only the primary shows lines we form the mass function."
+    },
+    {
+     "start": 70.41,
+     "end": 79.47,
+     "text": "f of m is defined as m two cubed sine cubed i over the square of the total mass, and it equals P K one cubed over two pi G."
+    },
+    {
+     "start": 79.47,
+     "end": 85.87,
+     "text": "The right-hand side is measured from the period and K one, and the companion mass cannot lie below f of m."
+    },
+    {
+     "start": 85.87,
+     "end": 91.35,
+     "text": "An assumed inclination plus a primary mass from the spectral type then yields m two."
+    },
+    {
+     "start": 91.35,
+     "end": 95.11,
+     "text": "Move the sliders on the widget while P and K one stay fixed."
+    },
+    {
+     "start": 95.11,
+     "end": 101.87,
+     "text": "The companion mass changes with inclination and assumed primary mass, but it never falls below the mass function."
+    },
+    {
+     "start": 101.87,
+     "end": 106.25,
+     "text": "Above three solar masses with no light the object must be a black hole."
+    },
+    {
+     "start": 106.25,
+     "end": 111.87,
+     "text": "Cygnus X-one yields a companion near fifteen solar masses, weighed like Sirius B."
+    },
+    {
+     "start": 111.87,
+     "end": 120.99,
+     "text": "A solar-mass primary with a ten-day period and a twenty kilometres per second amplitude produces a mass function of about eight hundredths of a solar mass."
+    },
+    {
+     "start": 120.99,
+     "end": 124.07,
+     "text": "The edge-on companion is near half a solar mass."
+    },
+    {
+     "start": 124.07,
+     "end": 128.95,
+     "text": "At thirty degrees the mass rises above the primary and that solution is disfavoured."
+    }
+   ],
+   "voicedHash": "471cf388873f"
+  },
+  "radial-velocity-curves": {
+   "script": "Good morning. Look at Mizar behind the panel. A spectroscopic binary shows only each star's velocity along the line of sight, from its Doppler shift. Radial velocity v r equals c times delta lambda over lambda: c the speed of light, delta lambda the shift, lambda the rest wavelength. Against time, these are the apparent orbit.\n\nFor a circular orbit of inclination i they are two sinusoids in opposite phase, crossing at the systemic velocity. The semi-amplitudes are K one equals v one sine i equals two pi a one sine i over P, and K two equals v two sine i equals two pi a two sine i over P. K is half the swing. v is orbital speed, a the radius about the centre of mass, P the period. Sine i is the line of sight projection and vanishes face on. Same for both stars, so the ratio is clean.\n\nThe mass ratio is m one over m two equals a two over a one equals v two over v one equals K two over K one. No distance and no inclination needed. Same centre of mass. The lighter star swings farther and faster.\n\nOn the widget, set the mass ratio and watch the curves. Lower the inclination and both amplitudes shrink together, ratio unchanged. In the spectrum the lines merge at the crossings, so one spectrum then shows no binary. Follow the full period. Mizar A's K line was double on some Harvard plates and single on others.\n\nSpectroscopy catches the close, fast pairs visual astrometry cannot touch. Speed scales as the square root of mass over separation: a tenth of an astronomical unit, about ninety-five kilometres per second and twelve days; twenty astronomical units, seven kilometres per second and sixty-three years. They meet near a few astronomical units. Gamma is the systemic velocity. SB1 means only the brighter star, companion more than about five times fainter; SB2 means both. Cross-correlation reaches metres per second.",
+   "hash": "2e0b8e1c3cf5",
+   "duration": 122.87,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 1.2,
+     "text": "Good morning."
+    },
+    {
+     "start": 1.2,
+     "end": 3.36,
+     "text": "Look at Mizar behind the panel."
+    },
+    {
+     "start": 3.36,
+     "end": 10.1,
+     "text": "A spectroscopic binary shows only each star's velocity along the line of sight, from its Doppler shift."
+    },
+    {
+     "start": 10.1,
+     "end": 19.62,
+     "text": "Radial velocity v r equals c times delta lambda over lambda: c the speed of light, delta lambda the shift, lambda the rest wavelength."
+    },
+    {
+     "start": 19.62,
+     "end": 22.58,
+     "text": "Against time, these are the apparent orbit."
+    },
+    {
+     "start": 22.58,
+     "end": 29.84,
+     "text": "For a circular orbit of inclination i they are two sinusoids in opposite phase, crossing at the systemic velocity."
+    },
+    {
+     "start": 29.84,
+     "end": 41.84,
+     "text": "The semi-amplitudes are K one equals v one sine i equals two pi a one sine i over P, and K two equals v two sine i equals two pi a two sine i over P."
+    },
+    {
+     "start": 41.84,
+     "end": 43.46,
+     "text": "K is half the swing."
+    },
+    {
+     "start": 43.46,
+     "end": 48.76,
+     "text": "v is orbital speed, a the radius about the centre of mass, P the period."
+    },
+    {
+     "start": 48.76,
+     "end": 52.58,
+     "text": "Sine i is the line of sight projection and vanishes face on."
+    },
+    {
+     "start": 52.58,
+     "end": 55.62,
+     "text": "Same for both stars, so the ratio is clean."
+    },
+    {
+     "start": 55.62,
+     "end": 63.85,
+     "text": "The mass ratio is m one over m two equals a two over a one equals v two over v one equals K two over K one."
+    },
+    {
+     "start": 63.85,
+     "end": 66.41,
+     "text": "No distance and no inclination needed."
+    },
+    {
+     "start": 66.41,
+     "end": 67.89,
+     "text": "Same centre of mass."
+    },
+    {
+     "start": 67.89,
+     "end": 70.61,
+     "text": "The lighter star swings farther and faster."
+    },
+    {
+     "start": 70.61,
+     "end": 74.03,
+     "text": "On the widget, set the mass ratio and watch the curves."
+    },
+    {
+     "start": 74.03,
+     "end": 78.83,
+     "text": "Lower the inclination and both amplitudes shrink together, ratio unchanged."
+    },
+    {
+     "start": 78.83,
+     "end": 84.17,
+     "text": "In the spectrum the lines merge at the crossings, so one spectrum then shows no binary."
+    },
+    {
+     "start": 84.17,
+     "end": 85.71,
+     "text": "Follow the full period."
+    },
+    {
+     "start": 85.71,
+     "end": 90.17,
+     "text": "Mizar A's K line was double on some Harvard plates and single on others."
+    },
+    {
+     "start": 90.17,
+     "end": 94.95,
+     "text": "Spectroscopy catches the close, fast pairs visual astrometry cannot touch."
+    },
+    {
+     "start": 94.95,
+     "end": 108.61,
+     "text": "Speed scales as the square root of mass over separation: a tenth of an astronomical unit, about ninety-five kilometres per second and twelve days; twenty astronomical units, seven kilometres per second and sixty-three years."
+    },
+    {
+     "start": 108.61,
+     "end": 111.17,
+     "text": "They meet near a few astronomical units."
+    },
+    {
+     "start": 111.17,
+     "end": 113.55,
+     "text": "Gamma is the systemic velocity."
+    },
+    {
+     "start": 113.55,
+     "end": 120.49,
+     "text": "SB1 means only the brighter star, companion more than about five times fainter; SB2 means both."
+    },
+    {
+     "start": 120.49,
+     "end": 122.87,
+     "text": "Cross-correlation reaches metres per second."
+    }
+   ],
+   "voicedHash": "1a9d1c81ee4d"
+  },
+  "radii-temperatures": {
+   "script": "Take the simplest case: a circular orbit seen exactly edge-on, inclination ninety degrees, a smaller star of radius R sub s and a larger one of radius R sub l. The relative velocity across our line of sight is v, the sum of the two spectroscopic speeds. The eclipse starts at first contact t sub a, the small star is fully covered or covering at second contact t sub b, begins to emerge at t sub c, and clears at t sub d. Between the first two contacts the small star travels its own diameter; from first to third contact it travels the large star’s diameter. So R sub s equals v over two times t sub b minus t sub a, and R sub l equals v over two times t sub c minus t sub a, which is just R sub s plus v over two times t sub c minus t sub b. Those symbols are the two radii, the relative speed, and the contact times. The time to cross a diameter times the speed gives the diameter, and half of that is the radius. This is the only direct stellar radius besides interferometry, and it reaches stars thousands of light-years away.\n\nThe depths give temperatures. B zero is the brightness outside eclipse, B sub p the primary minimum when the small hot star is totally hidden, B sub s the secondary when the small star blocks an equal patch of the large one. Writing each surface flux as sigma T to the fourth and dividing, radii and distance cancel: B zero minus B sub p, over B zero minus B sub s, equals pi R sub s squared sigma T sub s to the fourth over the same for the large star, which is simply T sub s over T sub l to the fourth. The depth ratio is the fourth power of the temperature ratio when the small star is hotter and the eclipses are total or annular. Limb darkening, the cooler fainter edge of each disc, reshapes the dips and is fitted for.\n\nThe widget is in measuring mode, contacts marked, readout giving the radii and temperature ratio from the timings, depths, and spectroscopic v. Move the sliders and check the formulas recover your inputs. Then tilt the inclination off ninety degrees and watch the contacts blur and the simple formulas fail. Real fits use a full geometric model, the Wilson–Devinney code and its successors, with inclination, radii over separation, temperature ratio, limb darkening and eccentricity free.\n\nWith the spectroscopy the solution is complete: the K amplitudes and the eclipse inclination give masses and separation, timings give radii in kilometres, depths and the spectrum give temperatures, four pi R squared sigma T to the fourth gives both luminosities, and the fluxes give the distance with no parallax. That method has fixed the Large Magellanic Cloud to one percent. Look at Almaaz behind the panel: epsilon Aurigae, period twenty-seven years, an F supergiant dimmed for nearly two years by a vast dust disc, imaged crossing the star in two thousand nine, a puzzle since eighteen twenty-one.",
+   "hash": "d446f9bcb038",
+   "duration": 178.55,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 11.86,
+     "text": "Take the simplest case: a circular orbit seen exactly edge-on, inclination ninety degrees, a smaller star of radius R sub s and a larger one of radius R sub l."
+    },
+    {
+     "start": 11.86,
+     "end": 17.98,
+     "text": "The relative velocity across our line of sight is v, the sum of the two spectroscopic speeds."
+    },
+    {
+     "start": 17.98,
+     "end": 29.54,
+     "text": "The eclipse starts at first contact t sub a, the small star is fully covered or covering at second contact t sub b, begins to emerge at t sub c, and clears at t sub d."
+    },
+    {
+     "start": 29.54,
+     "end": 37.46,
+     "text": "Between the first two contacts the small star travels its own diameter; from first to third contact it travels the large star’s diameter."
+    },
+    {
+     "start": 37.46,
+     "end": 51.66,
+     "text": "So R sub s equals v over two times t sub b minus t sub a, and R sub l equals v over two times t sub c minus t sub a, which is just R sub s plus v over two times t sub c minus t sub b."
+    },
+    {
+     "start": 51.66,
+     "end": 56.46,
+     "text": "Those symbols are the two radii, the relative speed, and the contact times."
+    },
+    {
+     "start": 56.46,
+     "end": 62.08,
+     "text": "The time to cross a diameter times the speed gives the diameter, and half of that is the radius."
+    },
+    {
+     "start": 62.08,
+     "end": 68.54,
+     "text": "This is the only direct stellar radius besides interferometry, and it reaches stars thousands of light-years away."
+    },
+    {
+     "start": 68.54,
+     "end": 70.36,
+     "text": "The depths give temperatures."
+    },
+    {
+     "start": 70.36,
+     "end": 82.26,
+     "text": "B zero is the brightness outside eclipse, B sub p the primary minimum when the small hot star is totally hidden, B sub s the secondary when the small star blocks an equal patch of the large one."
+    },
+    {
+     "start": 82.26,
+     "end": 101.05,
+     "text": "Writing each surface flux as sigma T to the fourth and dividing, radii and distance cancel: B zero minus B sub p, over B zero minus B sub s, equals pi R sub s squared sigma T sub s to the fourth over the same for the large star, which is simply T sub s over T sub l to the fourth."
+    },
+    {
+     "start": 101.05,
+     "end": 108.21,
+     "text": "The depth ratio is the fourth power of the temperature ratio when the small star is hotter and the eclipses are total or annular."
+    },
+    {
+     "start": 108.21,
+     "end": 113.95,
+     "text": "Limb darkening, the cooler fainter edge of each disc, reshapes the dips and is fitted for."
+    },
+    {
+     "start": 113.95,
+     "end": 122.51,
+     "text": "The widget is in measuring mode, contacts marked, readout giving the radii and temperature ratio from the timings, depths, and spectroscopic v."
+    },
+    {
+     "start": 122.51,
+     "end": 125.83,
+     "text": "Move the sliders and check the formulas recover your inputs."
+    },
+    {
+     "start": 125.83,
+     "end": 131.59,
+     "text": "Then tilt the inclination off ninety degrees and watch the contacts blur and the simple formulas fail."
+    },
+    {
+     "start": 131.59,
+     "end": 143.27,
+     "text": "Real fits use a full geometric model, the Wilson–Devinney code and its successors, with inclination, radii over separation, temperature ratio, limb darkening and eccentricity free."
+    },
+    {
+     "start": 143.27,
+     "end": 161.27,
+     "text": "With the spectroscopy the solution is complete: the K amplitudes and the eclipse inclination give masses and separation, timings give radii in kilometres, depths and the spectrum give temperatures, four pi R squared sigma T to the fourth gives both luminosities, and the fluxes give the distance with no parallax."
+    },
+    {
+     "start": 161.27,
+     "end": 164.95,
+     "text": "That method has fixed the Large Magellanic Cloud to one percent."
+    },
+    {
+     "start": 164.95,
+     "end": 178.55,
+     "text": "Look at Almaaz behind the panel: epsilon Aurigae, period twenty-seven years, an F supergiant dimmed for nearly two years by a vast dust disc, imaged crossing the star in two thousand nine, a puzzle since eighteen twenty-one."
+    }
+   ],
+   "voicedHash": "97f832b21b4e"
+  }
+ }
+}

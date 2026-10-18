@@ -4937,6 +4937,918 @@ class CrossmatchWidget extends CanvasWidget {
 
 /* ------------------------------------------------------------ factory ---- */
 
+
+/* ================================================================================ */
+/*  CHAPTER 7 — binaries and planets                                                 */
+/* ================================================================================ */
+
+const GRAV = 6.674e-11, MSUN = 1.989e30, RSUN = 6.957e8, AU_M = 1.496e11, MEARTH = 5.972e24, REARTH = 6.371e6, DAY_SEC = 86400;
+const fmtSci = (x: number, d = 2) => (x === 0 ? '0' : Math.abs(x) >= 1e4 || Math.abs(x) < 1e-3 ? sci(x, d) : fmt(x, Math.abs(x) >= 100 ? 0 : Math.abs(x) >= 10 ? 1 : d));
+/** position of a body on a Keplerian orbit projected on the sky: e, i, node Ω, periastron ω (rad), mean anomaly M → (x east, y north) in units of a */
+function skyPos(M: number, e: number, inc: number, Om: number, om: number): { x: number; y: number; r: number; theta: number } {
+  const { theta, r } = kepler(M, e);
+  const u = theta + om;                   // argument of latitude
+  const cu = Math.cos(u), su = Math.sin(u), cO = Math.cos(Om), sO = Math.sin(Om), ci = Math.cos(inc);
+  return { x: r * (cu * sO + su * cO * ci), y: r * (cu * cO - su * sO * ci), r, theta };
+}
+/** overlap area of two discs of radii r1, r2 whose centres are d apart */
+function discOverlap(r1: number, r2: number, d: number): number {
+  if (d >= r1 + r2) return 0;
+  if (d <= Math.abs(r1 - r2)) return Math.PI * Math.min(r1, r2) ** 2;
+  const a1 = Math.acos((d * d + r1 * r1 - r2 * r2) / (2 * d * r1)), a2 = Math.acos((d * d + r2 * r2 - r1 * r1) / (2 * d * r2));
+  return r1 * r1 * (a1 - Math.sin(2 * a1) / 2) + r2 * r2 * (a2 - Math.sin(2 * a2) / 2);
+}
+function starField(ctx: CanvasRenderingContext2D, w: number, h: number, seed: number, n = 60) {
+  const rnd = mulberry(seed);
+  for (let i = 0; i < n; i++) { const x = rnd() * w, y = rnd() * h, r = 0.4 + rnd() * 1.1; ctx.fillStyle = `rgba(230,230,240,${0.25 + rnd() * 0.5})`; ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fill(); }
+}
+
+/* ------------------------------------------------- 70. optical double vs bound pair ---- */
+
+class DoubleTestWidget extends CanvasWidget {
+  private mode: 'chance' | 'bound' = 'chance';
+  private t = 0; private speed = 4;   // years per second
+  constructor() {
+    super(480 / 300);
+    this.segmented<'chance' | 'bound'>([['chance', 'Chance alignment'], ['bound', 'Bound pair']], 'chance', (m) => { this.mode = m; this.t = 0; });
+    this.playButton();
+    this.slider('Speed', 1, 10, 0.5, 4, (v) => `${fmt(v, 1)} yr/s`, (v) => { this.speed = v; });
+  }
+  private pos(t: number): { a: [number, number]; b: [number, number]; cm: [number, number] } {
+    const W = this.w * 0.58, H = this.h;
+    if (this.mode === 'chance') {
+      // two unrelated proper motions (px per year), crossing within a few arcsec around t ≈ 10 yr
+      const a: [number, number] = [W * 0.28 + t * 2.1, H * 0.52 - t * 0.9];
+      const b: [number, number] = [W * 0.34 + t * 0.6, H * 0.40 + t * 1.6];
+      return { a, b, cm: a };
+    }
+    const cm: [number, number] = [W * 0.22 + t * 2.0, H * 0.55 - t * 0.9];
+    const P = 28, e = 0.35, q = 0.6, A = 34;  // px
+    const M = (t / P) * TAU;
+    const s = skyPos(M, e, 52 * DEG, 30 * DEG, 100 * DEG);
+    const a: [number, number] = [cm[0] - s.x * A * q / (1 + q), cm[1] + s.y * A * q / (1 + q)];
+    const b: [number, number] = [cm[0] + s.x * A / (1 + q), cm[1] - s.y * A / (1 + q)];
+    return { a, b, cm };
+  }
+  protected draw(dt: number) {
+    this.t = (this.t + dt * this.speed) % 40;
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const W = this.w * 0.58;
+    c.save(); c.beginPath(); c.rect(0, 0, W, this.h); c.clip();
+    starField(c, W, this.h, 17);
+    // trails: one dot per year observed so far
+    for (let y = 0; y <= this.t; y += 1) {
+      const p = this.pos(y);
+      c.fillStyle = hexA(C.blue, 0.45); c.beginPath(); c.arc(p.a[0], p.a[1], 1.4, 0, TAU); c.fill();
+      c.fillStyle = hexA(C.accent, 0.45); c.beginPath(); c.arc(p.b[0], p.b[1], 1.4, 0, TAU); c.fill();
+    }
+    const p = this.pos(this.t);
+    if (this.mode === 'bound') { const p0 = this.pos(0), p1 = this.pos(40); this.line(p0.cm[0], p0.cm[1], p1.cm[0], p1.cm[1], C.faint, 1, [3, 4]); this.text('centre of mass', p1.cm[0] - 8, p1.cm[1] - 10, C.faint, 8, 'right'); }
+    this.glow(p.a[0], p.a[1], 12, hexA(C.blue, 0.8)); this.circle(p.a[0], p.a[1], 4.5, undefined, '#e4ecff');
+    this.glow(p.b[0], p.b[1], 9, hexA(C.accent, 0.8)); this.circle(p.b[0], p.b[1], 3.2, undefined, '#ffe7c0');
+    this.line(p.a[0], p.a[1], p.b[0], p.b[1], hexA(C.text, 0.35), 1, [2, 3]);
+    this.text(`year ${Math.floor(this.t)}`, 8, 12, C.dim, 9); this.text('N ↑  E ←', W - 8, 12, C.faint, 8, 'right');
+    c.restore();
+    // separation and position angle against time
+    const gx0 = W + 34, gx1 = this.w - 10, g1y0 = 16, g1y1 = this.h * 0.47, g2y0 = this.h * 0.58, g2y1 = this.h - 18;
+    const series: Array<{ rho: number; pa: number }> = [];
+    for (let y = 0; y <= 40; y += 0.5) { const q = this.pos(y); const dx = q.b[0] - q.a[0], dy = q.b[1] - q.a[1]; series.push({ rho: Math.hypot(dx, dy), pa: wrap360(Math.atan2(-dx, -dy) / DEG) }); }
+    const rhoMax = Math.max(...series.map((s) => s.rho)) * 1.1;
+    const plot = (y0: number, y1: number, get: (s: { rho: number; pa: number }) => number, max: number, label: string, col: string) => {
+      this.line(gx0, y1, gx1, y1, C.grid); this.line(gx0, y0, gx0, y1, C.grid);
+      c.beginPath(); series.forEach((s, k) => { const x = gx0 + (k / (series.length - 1)) * (gx1 - gx0), yy = y1 - get(s) / max * (y1 - y0); k ? c.lineTo(x, yy) : c.moveTo(x, yy); }); c.strokeStyle = hexA(col, 0.4); c.lineWidth = 1; c.stroke();
+      c.beginPath(); const n = Math.floor(this.t * 2); for (let k = 0; k <= n; k++) { const x = gx0 + (k / (series.length - 1)) * (gx1 - gx0), yy = y1 - get(series[k]) / max * (y1 - y0); k ? c.lineTo(x, yy) : c.moveTo(x, yy); } c.strokeStyle = col; c.lineWidth = 1.6; c.stroke();
+      this.text(label, gx0 + 3, y0 + 1, C.dim, 8);
+    };
+    plot(g1y0, g1y1, (s) => s.rho, rhoMax, 'separation ρ', C.green);
+    plot(g2y0, g2y1, (s) => s.pa, 360, 'position angle θ (0–360°)', C.purple);
+    this.text('years →', gx1, g2y1 + 9, C.dim, 8, 'right'); this.text('0', gx0 - 2, g2y1 + 9, C.faint, 8, 'right'); this.text('40', gx1, g2y1 + 9 + 0, C.faint, 8, 'left');
+    const cur = series[Math.min(series.length - 1, Math.floor(this.t * 2))];
+    this.setReadout([
+      ['Separation ρ', `${fmt(cur.rho / 6, 2)}″`, C.green],
+      ['Position angle θ', `${fmt(cur.pa, 0)}°`, C.purple],
+      ['Relative motion', this.mode === 'chance' ? 'straight line, constant rate — no orbit' : 'closed curve about a shared drift — bound', this.mode === 'chance' ? C.red : C.green],
+      ['Verdict after 40 yr', this.mode === 'chance' ? 'optical double' : 'physical (visual) binary'],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 71. visual binary: apparent orbit ---- */
+
+class VisualOrbitWidget extends CanvasWidget {
+  private e = 0.5; private inc = 55; private Om = 40; private om = 70; private M = 0; private speed = 0.12;
+  constructor(private mode: 'observe' | 'deproject') {
+    super(480 / 340);
+    this.playButton();
+    this.slider('Eccentricity e', 0, 0.9, 0.01, 0.5, (v) => fmt(v, 2), (v) => { this.e = v; });
+    this.slider('Inclination i', 0, 89, 1, 55, (v) => `${v}°`, (v) => { this.inc = v; });
+    this.slider('Node Ω', 0, 180, 1, 40, (v) => `${v}°`, (v) => { this.Om = v; });
+    this.slider('Periastron ω', 0, 360, 1, 70, (v) => `${v}°`, (v) => { this.om = v; });
+  }
+  protected draw(dt: number) {
+    this.M = (this.M + dt * this.speed * TAU) % TAU;
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const inc = this.inc * DEG, Om = this.Om * DEG, om = this.om * DEG, e = this.e;
+    const cx = this.w * 0.5, cy = this.h * 0.5, S = Math.min(this.w, this.h) * 0.26;
+    const X = (x: number) => cx - x * S, Y = (y: number) => cy - y * S;  // east to the left, north up
+    starField(c, this.w, this.h, 5, 40);
+    // apparent orbit
+    const pts: Array<{ x: number; y: number }> = [];
+    for (let k = 0; k <= 240; k++) { const s = skyPos(k / 240 * TAU, e, inc, Om, om); pts.push({ x: s.x, y: s.y }); }
+    // true orbit (face-on, same node orientation) for the deproject view
+    if (this.mode === 'deproject') {
+      c.beginPath(); for (let k = 0; k <= 240; k++) { const s = skyPos(k / 240 * TAU, e, 0, Om, om); k ? c.lineTo(X(s.x), Y(s.y)) : c.moveTo(X(s.x), Y(s.y)); } c.strokeStyle = hexA(C.text, 0.28); c.lineWidth = 1; c.setLineDash([2, 3]); c.stroke(); c.setLineDash([]);
+      const tc = skyPos(Math.PI, e, 0, Om, om), tp = skyPos(0, e, 0, Om, om); // apastron & periastron
+      const ctr = { x: (tc.x + tp.x) / 2, y: (tc.y + tp.y) / 2 };
+      this.circle(X(ctr.x), Y(ctr.y), 2, hexA(C.text, 0.4)); this.text('true orbit (face-on), primary at focus', X(tc.x), Y(tc.y) + 12, hexA(C.text, 0.5), 8, 'center');
+    }
+    c.beginPath(); pts.forEach((p, k) => (k ? c.lineTo(X(p.x), Y(p.y)) : c.moveTo(X(p.x), Y(p.y)))); c.strokeStyle = hexA(C.accent, this.mode === 'observe' ? 0.35 : 0.9); c.lineWidth = 1.2; c.stroke();
+    // apparent ellipse geometry: centre = midpoint of the projected major-axis endpoints; semi-axes from extremes
+    const pa = skyPos(0, e, inc, Om, om), ap = skyPos(Math.PI, e, inc, Om, om);
+    const ctr = { x: (pa.x + ap.x) / 2, y: (pa.y + ap.y) / 2 };
+    let A = 0, B = Infinity, angA = 0;
+    for (const p of pts) { const d = Math.hypot(p.x - ctr.x, p.y - ctr.y); if (d > A) { A = d; angA = Math.atan2(p.y - ctr.y, p.x - ctr.x); } }
+    for (const p of pts) { const dx = p.x - ctr.x, dy = p.y - ctr.y; const perp = Math.abs(-Math.sin(angA) * dx + Math.cos(angA) * dy); const along = Math.abs(Math.cos(angA) * dx + Math.sin(angA) * dy); if (along < A * 0.08 && perp < B) B = perp; }
+    if (!isFinite(B)) B = A * Math.cos(inc);
+    const f = Math.sqrt(Math.max(0, A * A - B * B));
+    const foci = [{ x: ctr.x + f * Math.cos(angA), y: ctr.y + f * Math.sin(angA) }, { x: ctr.x - f * Math.cos(angA), y: ctr.y - f * Math.sin(angA) }];
+    const nearest = foci.reduce((m, q) => (Math.hypot(q.x, q.y) < Math.hypot(m.x, m.y) ? q : m));
+    for (const q of foci) this.circle(X(q.x), Y(q.y), 3, C.red, undefined, 1);
+    this.text('apparent foci', X(foci[0].x) + 6, Y(foci[0].y) - 8, C.red, 8);
+    this.line(X(ctr.x) - 4, Y(ctr.y), X(ctr.x) + 4, Y(ctr.y), hexA(C.accent, 0.7)); this.line(X(ctr.x), Y(ctr.y) - 4, X(ctr.x), Y(ctr.y) + 4, hexA(C.accent, 0.7));
+    // measurements so far (observe mode)
+    if (this.mode === 'observe') {
+      const n = Math.floor(this.M / TAU * 48);
+      for (let k = 0; k <= n; k++) { const s = skyPos(k / 48 * TAU, e, inc, Om, om); c.fillStyle = hexA(C.accent, 0.85); c.beginPath(); c.arc(X(s.x), Y(s.y), 1.8, 0, TAU); c.fill(); }
+    }
+    // primary & secondary
+    const s = skyPos(this.M, e, inc, Om, om);
+    this.glow(X(0), Y(0), 14, hexA(C.blue, 0.8)); this.circle(X(0), Y(0), 5, undefined, '#e4ecff'); this.text('primary', X(0) + 8, Y(0) + 10, C.blue, 8);
+    this.glow(X(s.x), Y(s.y), 9, hexA(C.accent, 0.8)); this.circle(X(s.x), Y(s.y), 3.2, undefined, '#ffe7c0');
+    this.line(X(0), Y(0), X(s.x), Y(s.y), hexA(C.text, 0.3), 1, [2, 3]);
+    // north/east and the position angle arc
+    const rho = Math.hypot(s.x, s.y), th = wrap360(Math.atan2(s.x, s.y) / DEG);
+    this.line(X(0), Y(0), X(0), Y(0) - 40, hexA(C.text, 0.3)); this.text('N', X(0), Y(0) - 48, C.dim, 9, 'center'); this.text('E', X(0) + 48, Y(0), C.dim, 9, 'center');
+    c.beginPath(); c.arc(X(0), Y(0), 22, -Math.PI / 2, -Math.PI / 2 - th * DEG, true); c.strokeStyle = hexA(C.purple, 0.8); c.lineWidth = 1; c.stroke();
+    const off = Math.hypot(nearest.x, nearest.y);
+    this.text(this.mode === 'observe' ? 'the apparent orbit: what the micrometer or the camera records' : 'colour: apparent orbit · grey: true orbit · the primary is not at an apparent focus', this.w / 2, this.h - 10, C.dim, 8, 'center');
+    const ro: Array<[string, string, string?]> = [
+      ['Separation ρ', `${fmt(rho, 3)} a`, C.accent],
+      ['Position angle θ', `${fmt(th, 1)}°`, C.purple],
+      ['Apparent axes ã, b̃', `${fmt(A, 3)} a, ${fmt(B, 3)} a`],
+      ['Primary off apparent focus by', `${fmt(off, 3)} a${off < 0.01 ? ' — face-on or circular' : ''}`, off < 0.01 ? C.green : C.red],
+    ];
+    if (this.mode === 'deproject') ro.push(['Mass error if i ignored, (ã/a)³', `×${fmt(A ** 3, 2)}`, C.red], ['cos³ i', fmt(Math.cos(inc) ** 3, 2)]);
+    this.setReadout(ro);
+  }
+}
+
+/* ------------------------------------------------- 72. astrometric binary ---- */
+
+class AstrometricWidget extends CanvasWidget {
+  private m2 = 1.0; private P = 50; private d = 2.64; private exag = 1; private reveal = false; private t = 0; private m1 = 2.0;
+  constructor() {
+    super(480 / 260);
+    this.playButton();
+    const b = $('button', '', 'Reveal companion'); b.addEventListener('click', () => { this.reveal = !this.reveal; b.classList.toggle('active', this.reveal); }); this.controls.appendChild(b);
+    this.slider('Companion mass m₂', 0.001, 1.5, 0.001, 1.0, (v) => (v < 0.01 ? `${fmt(v * 1047, 1)} M_J` : `${fmt(v, 2)} M☉`), (v) => { this.m2 = v; });
+    this.slider('Period P', 2, 80, 1, 50, (v) => `${v} yr`, (v) => { this.P = v; });
+    this.slider('Distance d', 1.3, 20, 0.1, 2.64, (v) => `${fmt(v, 1)} pc`, (v) => { this.d = v; });
+    this.slider('Vertical exaggeration', 1, 100, 1, 1, (v) => `×${v}`, (v) => { this.exag = v; });
+  }
+  protected draw(dt: number) {
+    this.t = (this.t + dt * 6) % 100;
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    starField(c, this.w, this.h, 23, 50);
+    const a = Math.cbrt((this.m1 + this.m2) * this.P * this.P);          // AU
+    const a1 = a * this.m2 / (this.m1 + this.m2), a2 = a - a1;
+    const alpha1 = a1 / this.d, alpha2 = a2 / this.d;                      // arcsec
+    const mu = 1.3;                                                        // arcsec / yr proper motion (Sirius-like)
+    const span = mu * 100;                                                 // arcsec over 100 yr
+    const px = (this.w - 40) / span;                                       // px per arcsec horizontally
+    const X = (t: number, wob: number) => 20 + t * mu * px + wob * px * this.exag;
+    const Y = (wob: number) => this.h * 0.5 - wob * px * this.exag;
+    this.line(20, this.h * 0.5, this.w - 20, this.h * 0.5, C.faint, 1, [3, 4]);
+    const path = (amp: number, sign: number, col: string, upto: number, dots: boolean) => {
+      c.beginPath();
+      for (let t = 0; t <= upto; t += 0.25) { const ph = t / this.P * TAU; const x = X(t, sign * amp * Math.cos(ph) * 0.3), y = Y(sign * amp * Math.sin(ph)); t ? c.lineTo(x, y) : c.moveTo(x, y); }
+      c.strokeStyle = col; c.lineWidth = 1.3; c.stroke();
+      if (dots) for (let t = 0; t <= upto; t += 1) { const ph = t / this.P * TAU; c.fillStyle = col; c.beginPath(); c.arc(X(t, sign * amp * Math.cos(ph) * 0.3), Y(sign * amp * Math.sin(ph)), 1.5, 0, TAU); c.fill(); }
+    };
+    path(alpha1, 1, C.blue, this.t, true);
+    if (this.reveal) path(alpha2, -1, hexA(C.accent, 0.8), this.t, false);
+    const ph = this.t / this.P * TAU;
+    const sx = X(this.t, alpha1 * Math.cos(ph) * 0.3), sy = Y(alpha1 * Math.sin(ph));
+    this.glow(sx, sy, 16, hexA(C.blue, 0.85)); this.circle(sx, sy, 5, undefined, '#e9f0ff');
+    if (this.reveal) { const cxp = X(this.t, -alpha2 * Math.cos(ph) * 0.3), cyp = Y(-alpha2 * Math.sin(ph)); this.glow(cxp, cyp, 7, hexA(C.accent, 0.7)); this.circle(cxp, cyp, 2.5, undefined, '#ffe7c0'); this.line(sx, sy, cxp, cyp, hexA(C.text, 0.25), 1, [2, 3]); }
+    this.text(`proper motion ${fmt(mu, 1)}″/yr →   year ${Math.floor(this.t)}`, 20, 12, C.dim, 9);
+    this.text(`straight line: the centre of mass · wobble: the visible star's orbit about it${this.exag > 1 ? `  (vertical ×${this.exag})` : ''}`, this.w / 2, this.h - 10, C.dim, 8, 'center');
+    const det = alpha1 * 1000;   // mas
+    this.setReadout([
+      ['Relative orbit a (Kepler III)', `${fmt(a, 1)} AU`],
+      ['Visible star\'s orbit a₁ = a m₂/(m₁+m₂)', `${fmt(a1, 2)} AU`, C.blue],
+      ['Angular wobble α₁ = a₁/d', det >= 1000 ? `${fmt(det / 1000, 2)}″` : det >= 1 ? `${fmt(det, 1)} mas` : `${fmt(det * 1000, 1)} µas`, C.blue],
+      ['Detectable by', det > 100 ? 'meridian circle (Bessel, 1844)' : det > 1 ? 'Hipparcos-class astrometry' : det > 0.02 ? 'Gaia' : 'nothing yet', det > 0.02 ? C.green : C.red],
+      ['Primary m₁ (assumed)', `${fmt(this.m1, 1)} M☉`],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 73. classify the binary ---- */
+
+type BinClass = 'optical' | 'visual' | 'astrometric' | 'eclipsing' | 'spectrum' | 'spectroscopic';
+const BIN_CLASSES: Array<[BinClass, string]> = [['optical', 'Optical double'], ['visual', 'Visual'], ['astrometric', 'Astrometric'], ['eclipsing', 'Eclipsing'], ['spectrum', 'Spectrum'], ['spectroscopic', 'Spectroscopic']];
+const BIN_CARDS: Array<{ kind: 'tracks' | 'orbit' | 'wobble' | 'lc' | 'twotypes' | 'shifting'; answer: BinClass[]; hint: string; name: string }> = [
+  { kind: 'tracks', answer: ['optical'], hint: 'Two stars 4″ apart in 1900, 9″ apart today, drifting along two different straight lines; parallaxes 40 and 3 mas.', name: 'a pair in Aquila' },
+  { kind: 'orbit', answer: ['visual'], hint: 'Two resolved stars; position angle has swung through 200° since 1830 while the separation varied between 0.4″ and 6″.', name: 'γ Virginis' },
+  { kind: 'wobble', answer: ['astrometric'], hint: 'A single bright image whose path against the background shows a 50-year wave of 2.5″ amplitude; nothing visible beside it (in 1844).', name: 'Sirius, 1844' },
+  { kind: 'lc', answer: ['eclipsing', 'spectroscopic'], hint: 'One image; brightness drops 1.3 magnitudes for ten hours every 2.867 days, and the lines shift back and forth with the same period.', name: 'Algol' },
+  { kind: 'twotypes', answer: ['spectrum'], hint: 'One image, never seen to move or vary; the spectrum shows broad hydrogen lines of an A star together with the TiO bands of an M giant.', name: 'a composite in Cygnus' },
+  { kind: 'shifting', answer: ['spectroscopic'], hint: 'One image, constant brightness; the Ca II K line is double on some plates and single on others, with a 20.5-day rhythm.', name: 'Mizar A, 1889' },
+];
+
+class BinaryClassifyWidget extends CanvasWidget {
+  private card = 0; private picked = new Set<BinClass>(); private checked = false; private score = 0; private t = 0;
+  private btns = new Map<BinClass, HTMLElement>();
+  constructor() {
+    super(480 / 270);
+    const row = $('div', 'lw-seg');
+    for (const [k, label] of BIN_CLASSES) { const b = $('button', '', label); b.addEventListener('click', () => { if (this.checked) return; if (this.picked.has(k)) this.picked.delete(k); else this.picked.add(k); b.classList.toggle('active', this.picked.has(k)); }); this.btns.set(k, b); row.appendChild(b); }
+    this.controls.appendChild(row);
+    const check = $('button', '', 'Check'); check.addEventListener('click', () => { if (this.checked || !this.picked.size) return; this.checked = true; const ans = new Set(BIN_CARDS[this.card].answer); const ok = ans.size === this.picked.size && [...ans].every((k) => this.picked.has(k)); if (ok) this.score++; });
+    const next = $('button', '', 'Next system'); next.addEventListener('click', () => { this.card = (this.card + 1) % BIN_CARDS.length; this.picked.clear(); this.checked = false; this.btns.forEach((b) => b.classList.remove('active')); });
+    this.controls.append(check, next);
+  }
+  protected draw(dt: number) {
+    this.t += dt;
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const card = BIN_CARDS[this.card];
+    const px0 = 10, py0 = 10, pw = this.w * 0.46, ph = this.h - 20;
+    c.fillStyle = '#0f131a'; c.fillRect(px0, py0, pw, ph); c.strokeStyle = C.grid; c.strokeRect(px0, py0, pw, ph);
+    c.save(); c.beginPath(); c.rect(px0, py0, pw, ph); c.clip();
+    const cx = px0 + pw / 2, cy = py0 + ph / 2;
+    switch (card.kind) {
+      case 'tracks': { starField(c, this.w, this.h, 31, 40); for (const [x0, y0, vx, vy, col] of [[cx - 50, cy + 20, 1.1, -0.5, C.blue], [cx - 40, cy + 5, 0.3, 0.9, C.accent]] as Array<[number, number, number, number, string]>) { for (let y = 0; y < 60; y += 5) { c.fillStyle = hexA(col, 0.3 + 0.7 * y / 60); c.beginPath(); c.arc(x0 + vx * y, y0 + vy * y, 2, 0, TAU); c.fill(); } } this.text('1900 → 1960, one dot per 5 yr', cx, py0 + ph - 10, C.dim, 8, 'center'); break; }
+      case 'orbit': { starField(c, this.w, this.h, 33, 30); const e = 0.88; for (let k = 0; k < 60; k++) { const s = skyPos(k / 60 * TAU, e, 32 * DEG, 20 * DEG, 250 * DEG); c.fillStyle = hexA(C.accent, 0.8); c.beginPath(); c.arc(cx - s.x * 36 + 20, cy - s.y * 36, 1.6, 0, TAU); c.fill(); } this.glow(cx + 20, cy, 10, hexA(C.blue, 0.8)); this.circle(cx + 20, cy, 3.5, undefined, '#e4ecff'); this.text('positions of B relative to A, 1830–2020', cx, py0 + ph - 10, C.dim, 8, 'center'); break; }
+      case 'wobble': { starField(c, this.w, this.h, 35, 40); c.beginPath(); for (let x = 0; x <= pw - 20; x += 2) { const y = cy + 12 * Math.sin(x / (pw - 20) * TAU * 2); x ? c.lineTo(px0 + 10 + x, y) : c.moveTo(px0 + 10 + x, y); } c.strokeStyle = C.blue; c.lineWidth = 1.4; c.stroke(); const xx = px0 + 10 + ((this.t * 20) % (pw - 20)); this.glow(xx, cy + 12 * Math.sin((xx - px0 - 10) / (pw - 20) * TAU * 2), 14, hexA(C.blue, 0.85)); this.text('path on the sky, 100 years; nothing else seen', cx, py0 + ph - 10, C.dim, 8, 'center'); break; }
+      case 'lc': { const gx0 = px0 + 14, gx1 = px0 + pw - 10, gy0 = py0 + 20, gy1 = py0 + ph - 24; this.line(gx0, gy1, gx1, gy1, C.grid); c.beginPath(); for (let k = 0; k <= 200; k++) { const ph2 = k / 200; const dip = Math.exp(-(((ph2 - 0.5) / 0.035) ** 2)) * 0.72 + Math.exp(-(((ph2 - 0.0) / 0.035) ** 2)) * 0.08 + Math.exp(-(((ph2 - 1.0) / 0.035) ** 2)) * 0.08; const y = gy0 + dip * (gy1 - gy0 - 10); k ? c.lineTo(gx0 + ph2 * (gx1 - gx0), y) : c.moveTo(gx0 + ph2 * (gx1 - gx0), y); } c.strokeStyle = C.green; c.lineWidth = 1.6; c.stroke(); this.text('brightness against phase, P = 2.867 d; lines shift with P', cx, py0 + ph - 10, C.dim, 8, 'center'); break; }
+      case 'twotypes': { const X = (nm: number) => px0 + 10 + (nm - 400) / 300 * (pw - 20); rainbow(c, X, cy - 22, 44, 0.7); for (const nm of [410, 434, 486, 656]) { c.fillStyle = 'rgba(5,7,10,0.9)'; c.fillRect(X(nm) - 2.5, cy - 22, 5, 44); } for (const [a, b] of [[615, 627], [705, 720], [650, 653]]) { c.fillStyle = 'rgba(5,7,10,0.55)'; c.fillRect(X(a), cy - 22, X(b) - X(a), 44); } this.text('broad Balmer lines (A)  +  TiO bands (M)', cx, py0 + ph - 10, C.dim, 8, 'center'); break; }
+      case 'shifting': { const X = (nm: number) => px0 + 10 + (nm - 390) / 10 * (pw - 20); for (let row = 0; row < 5; row++) { const y = py0 + 24 + row * (ph - 50) / 4; rainbow(c, (nm) => X(nm), y - 7, 14, 0.35); const sh = 0.9 * Math.sin(row / 5 * TAU); for (const s of [sh, -sh]) { c.fillStyle = 'rgba(5,7,10,0.9)'; c.fillRect(X(393.4 + s) - 1, y - 7, 2, 14); } this.text(`night ${row * 4 + 1}`, px0 + 6, y, C.faint, 7); } this.text('the K line of Ca II on five nights', cx, py0 + ph - 10, C.dim, 8, 'center'); break; }
+    }
+    c.restore();
+    // text side
+    const tx = px0 + pw + 14, tw = this.w - tx - 10;
+    this.text(`System ${this.card + 1} of ${BIN_CARDS.length}`, tx, py0 + 10, C.dim, 9);
+    const words = card.hint.split(' '); let line = '', y = py0 + 30; c.font = '10px -apple-system, system-ui, sans-serif';
+    for (const wd of words) { const test = line ? `${line} ${wd}` : wd; if (c.measureText(test).width > tw) { this.text(line, tx, y, C.text, 10); line = wd; y += 14; } else line = test; }
+    if (line) this.text(line, tx, y, C.text, 10);
+    y += 22;
+    if (this.checked) {
+      const ans = new Set(card.answer); const ok = ans.size === this.picked.size && [...ans].every((k) => this.picked.has(k));
+      this.text(ok ? '✓ correct' : '✗ not quite', tx, y, ok ? C.green : C.red, 11); y += 16;
+      this.text(`${card.name}: ${card.answer.map((k) => BIN_CLASSES.find(([kk]) => kk === k)![1].toLowerCase()).join(' + ')}`, tx, y, C.accent, 9);
+    } else this.text('pick every class that applies, then Check', tx, y, C.faint, 9);
+    this.setReadout([['Score', `${this.score} / ${BIN_CARDS.length}`, C.green], ['Classes picked', [...this.picked].map((k) => BIN_CLASSES.find(([kk]) => kk === k)![1]).join(', ') || '—']]);
+  }
+}
+
+/* ------------------------------------------------- 74. mass ratio from the centre of mass ---- */
+
+class MassRatioWidget extends CanvasWidget {
+  private q = 1.6; private inc = 30; private t = 0;
+  constructor() {
+    super(480 / 280);
+    this.playButton();
+    this.slider('Mass ratio m₁/m₂', 1, 5, 0.1, 1.6, (v) => fmt(v, 1), (v) => { this.q = v; });
+    this.slider('Inclination i', 0, 80, 1, 30, (v) => `${v}°`, (v) => { this.inc = v; });
+  }
+  protected draw(dt: number) {
+    this.t = (this.t + dt * 4) % 60;
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    starField(c, this.w, this.h, 41, 55);
+    const P = 24, e = 0.3, A = Math.min(this.w, this.h) * 0.3;
+    const cm = (t: number) => ({ x: this.w * 0.2 + t / 60 * this.w * 0.6, y: this.h * 0.62 - t / 60 * this.h * 0.22 });
+    const a2 = A / (1 + 1 / this.q), a1 = A - a2;   // a1/a2 = m2/m1 = 1/q
+    const pos = (t: number) => { const s = skyPos(t / P * TAU, e, this.inc * DEG, 20 * DEG, 60 * DEG); const o = cm(t); return { a: { x: o.x - s.x * a1, y: o.y + s.y * a1 }, b: { x: o.x + s.x * a2, y: o.y - s.y * a2 }, o }; };
+    const o0 = cm(0), o1 = cm(60); this.line(o0.x, o0.y, o1.x, o1.y, C.faint, 1, [3, 4]); this.text('centre of mass: uniform straight-line motion', o1.x - 6, o1.y - 10, C.faint, 8, 'right');
+    for (let t = 0; t <= this.t; t += 0.5) { const p = pos(t); c.fillStyle = hexA(C.blue, 0.5); c.beginPath(); c.arc(p.a.x, p.a.y, 1.3, 0, TAU); c.fill(); c.fillStyle = hexA(C.accent, 0.5); c.beginPath(); c.arc(p.b.x, p.b.y, 1.3, 0, TAU); c.fill(); }
+    const p = pos(this.t);
+    // the two ellipses about the current CM
+    for (const [amp, sg, col] of [[a1, -1, C.blue], [a2, 1, C.accent]] as Array<[number, number, string]>) { c.beginPath(); for (let k = 0; k <= 120; k++) { const s = skyPos(k / 120 * TAU, e, this.inc * DEG, 20 * DEG, 60 * DEG); const x = p.o.x + sg * s.x * amp, y = p.o.y - sg * s.y * amp; k ? c.lineTo(x, y) : c.moveTo(x, y); } c.strokeStyle = hexA(col, 0.35); c.lineWidth = 1; c.setLineDash([2, 3]); c.stroke(); c.setLineDash([]); }
+    this.circle(p.o.x, p.o.y, 2.2, undefined, C.text);
+    this.line(p.a.x, p.a.y, p.b.x, p.b.y, hexA(C.text, 0.3), 1, [2, 3]);
+    this.glow(p.a.x, p.a.y, 13, hexA(C.blue, 0.85)); this.circle(p.a.x, p.a.y, 3 + 2.5 * Math.min(1, this.q / 3), undefined, '#e4ecff'); this.text('1', p.a.x, p.a.y - 11, C.blue, 9, 'center', 'serif');
+    this.glow(p.b.x, p.b.y, 10, hexA(C.accent, 0.85)); this.circle(p.b.x, p.b.y, 3.5, undefined, '#ffe7c0'); this.text('2', p.b.x, p.b.y - 10, C.accent, 9, 'center', 'serif');
+    this.text(`year ${Math.floor(this.t)}`, 8, 12, C.dim, 9);
+    this.setReadout([
+      ['Apparent semi-major axis of star 1, α₁', `${fmt(a1 / A, 3)} α`, C.blue],
+      ['Apparent semi-major axis of star 2, α₂', `${fmt(a2 / A, 3)} α`, C.accent],
+      ['Measured α₂/α₁ = m₁/m₂', fmt(a2 / a1, 2), C.green],
+      ['Changes with inclination?', 'no — both orbits shrink by the same factor'],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 75. mass from Kepler III ---- */
+
+const VB_PRESETS: Record<string, { alpha: number; p: number; P: number; q: number; dp: number }> = {
+  'Sirius': { alpha: 7.50, p: 0.3792, P: 50.13, q: 2.02, dp: 0.4 },
+  'α Cen AB': { alpha: 17.57, p: 0.747, P: 79.9, q: 1.23, dp: 0.2 },
+  'Procyon': { alpha: 4.3, p: 0.285, P: 40.8, q: 2.5, dp: 0.3 },
+  '70 Oph': { alpha: 4.55, p: 0.196, P: 88.4, q: 1.28, dp: 0.5 },
+  '61 Cyg': { alpha: 24.3, p: 0.286, P: 678, q: 1.11, dp: 0.2 },
+};
+
+class BinaryMassWidget extends CanvasWidget {
+  private alpha = 7.5; private p = 0.3792; private P = 50.13; private q = 2.02; private dp = 0.4; private s: { set: (v: number) => void }[] = [];
+  constructor() {
+    super(480 / 230);
+    this.segmented(Object.keys(VB_PRESETS).map((k) => [k, k] as [string, string]), 'Sirius', (k) => { const v = VB_PRESETS[k]; this.alpha = v.alpha; this.p = v.p; this.P = v.P; this.q = v.q; this.dp = v.dp; this.s[0].set(v.alpha); this.s[1].set(v.p); this.s[2].set(v.P); this.s[3].set(v.q); this.s[4].set(v.dp); });
+    this.s.push(this.slider('Angular semi-major axis α', 0.2, 30, 0.01, 7.5, (v) => `${fmt(v, 2)}″`, (v) => { this.alpha = v; }));
+    this.s.push(this.slider('Parallax p', 0.01, 0.8, 0.001, 0.3792, (v) => `${fmt(v * 1000, 0)} mas`, (v) => { this.p = v; }));
+    this.s.push(this.slider('Period P', 1, 700, 0.1, 50.13, (v) => `${fmt(v, 1)} yr`, (v) => { this.P = v; }));
+    this.s.push(this.slider('Mass ratio m₁/m₂', 0.5, 4, 0.01, 2.02, (v) => fmt(v, 2), (v) => { this.q = v; }));
+    this.s.push(this.slider('Parallax uncertainty', 0, 20, 0.1, 0.4, (v) => `±${fmt(v, 1)} %`, (v) => { this.dp = v; }));
+  }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const a = this.alpha / this.p, Msum = a ** 3 / (this.P * this.P), m2 = Msum / (1 + this.q), m1 = Msum - m2;
+    const d = 1 / this.p;
+    const lo = (this.alpha / (this.p * (1 + this.dp / 100))) ** 3 / this.P ** 2, hi = (this.alpha / (this.p * (1 - this.dp / 100))) ** 3 / this.P ** 2;
+    // orbit against the solar system, log scale 0.3–300 AU
+    const gx0 = 50, gx1 = this.w - 16, gy = this.h * 0.36;
+    const X = (au: number) => gx0 + (Math.log10(au) - Math.log10(0.3)) / 3 * (gx1 - gx0);
+    this.line(gx0, gy, gx1, gy, C.grid);
+    for (const [au, name] of [[1, 'Earth'], [5.2, 'Jupiter'], [9.5, 'Saturn'], [30, 'Neptune'], [100, '100 AU']] as Array<[number, string]>) { this.line(X(au), gy - 4, X(au), gy + 4, C.faint); this.text(name, X(au), gy + 14, C.faint, 8, 'center'); }
+    this.glow(X(a), gy, 14, hexA(C.accent, 0.8)); this.circle(X(a), gy, 4, undefined, '#ffe7c0');
+    this.text(`a = ${fmt(a, 1)} AU`, X(a), gy - 16, C.accent, 10, 'center');
+    this.text('semi-major axis of the relative orbit, a = α / p, against the solar system (log scale)', this.w / 2, 14, C.dim, 8, 'center');
+    // mass bar with the parallax error band
+    const by = this.h * 0.74, bx0 = 50, bx1 = this.w - 16, mmax = Math.max(6, hi * 1.2);
+    const BX = (m: number) => bx0 + m / mmax * (bx1 - bx0);
+    this.line(bx0, by, bx1, by, C.grid);
+    for (let m = 0; m <= mmax; m += mmax > 20 ? 10 : mmax > 8 ? 2 : 1) { this.line(BX(m), by - 3, BX(m), by + 3, C.faint); this.text(`${m}`, BX(m), by + 12, C.faint, 8, 'center'); }
+    c.fillStyle = hexA(C.red, 0.25); c.fillRect(BX(lo), by - 12, BX(hi) - BX(lo), 24);
+    c.fillStyle = hexA(C.blue, 0.8); c.fillRect(BX(0), by - 8, BX(m1) - BX(0), 16);
+    c.fillStyle = hexA(C.accent, 0.8); c.fillRect(BX(m1), by - 8, BX(Msum) - BX(m1), 16);
+    this.text(`m₁ = ${fmt(m1, 2)}`, BX(m1 / 2), by - 18, C.blue, 9, 'center'); this.text(`m₂ = ${fmt(m2, 2)}`, BX(m1 + m2 / 2), by - 18, C.accent, 9, 'center');
+    this.text('M☉', bx1 + 2, by + 12, C.faint, 8, 'right');
+    this.text(`red band: the total mass if the parallax is wrong by ±${fmt(this.dp, 1)} % → ±${fmt(3 * this.dp, 1)} % in mass`, this.w / 2, this.h - 8, C.dim, 8, 'center');
+    this.setReadout([
+      ['Distance d = 1/p', `${fmt(d, 2)} pc = ${fmt(d * 3.2616, 1)} ly`],
+      ['a = α/p', `${fmt(a, 2)} AU`, C.accent],
+      ['m₁ + m₂ = a³/P²', `${fmt(Msum, 2)} M☉  (${fmt(lo, 2)}–${fmt(hi, 2)})`, C.green],
+      ['m₁, m₂ (with the ratio)', `${fmt(m1, 2)}, ${fmt(m2, 2)} M☉`],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 76. mass–luminosity relation ---- */
+
+const ML_MS: Array<[number, number, string?, string?]> = [
+  [0.12, 0.0016, 'Proxima'], [0.16, 0.0032], [0.21, 0.0063], [0.27, 0.011], [0.33, 0.016], [0.40, 0.024], [0.47, 0.041], [0.55, 0.062], [0.63, 0.085, '61 Cyg B', 'l'], [0.70, 0.15, '61 Cyg A'],
+  [0.78, 0.26], [0.85, 0.38], [0.91, 0.50, 'α Cen B', 'l'], [1.00, 1.00, 'Sun'], [1.10, 1.52, 'α Cen A', 'l'], [1.20, 2.2], [1.33, 3.4], [1.50, 5.6], [1.70, 9.0], [1.90, 15],
+  [2.06, 25, 'Sirius A', 'l'], [2.30, 38], [2.60, 62], [3.00, 110], [3.17, 180, 'Algol A'], [3.60, 300], [4.20, 520], [5.00, 900], [6.00, 1600], [7.20, 2800],
+  [8.50, 4600], [10.0, 7500], [12.0, 13000], [15.0, 26000], [18.0, 45000], [22.0, 80000], [28.0, 150000],
+];
+const ML_OFF: Array<[number, number, string]> = [[1.02, 0.026, 'Sirius B (WD)'], [0.60, 0.00049, 'Procyon B (WD)'], [2.57, 79, 'Capella Aa+Ab (giants)'], [2.48, 73, ''], [0.70, 6.9, 'Algol B (subgiant)']];
+
+class MassLuminosityWidget extends CanvasWidget {
+  private n = 3.5; private range: 'all' | 'low' | 'mid' | 'high' = 'all'; private showOff = true;
+  constructor() {
+    super(480 / 330);
+    this.segmented<'all' | 'low' | 'mid' | 'high'>([['all', 'All'], ['low', '< 0.4 M☉'], ['mid', '0.4–2 M☉'], ['high', '> 2 M☉']], 'all', (r) => { this.range = r; });
+    const b = $('button', 'active', 'Non-main-sequence'); b.addEventListener('click', () => { this.showOff = !this.showOff; b.classList.toggle('active', this.showOff); }); this.controls.appendChild(b);
+    this.slider('Fitted exponent n in L ∝ Mⁿ', 1, 5, 0.05, 3.5, (v) => fmt(v, 2), (v) => { this.n = v; });
+  }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const gx0 = 46, gx1 = this.w - 14, gy0 = 14, gy1 = this.h - 30;
+    const X = (m: number) => gx0 + (Math.log10(m) + 1.1) / 2.7 * (gx1 - gx0), Y = (l: number) => gy1 - (Math.log10(l) + 4) / 9.6 * (gy1 - gy0);
+    for (let k = -4; k <= 5; k++) { this.line(gx0, Y(10 ** k), gx1, Y(10 ** k), C.grid); this.text(k === 0 ? '1' : `10${sup(k)}`, gx0 - 4, Y(10 ** k), C.faint, 8, 'right'); }
+    for (const m of [0.1, 0.3, 1, 3, 10, 30]) { this.line(X(m), gy0, X(m), gy1, C.grid); this.text(`${m}`, X(m), gy1 + 10, C.faint, 8, 'center'); }
+    this.text('L / L☉', gx0 + 4, gy0 + 4, C.dim, 8); this.text('M / M☉', gx1, gy1 + 20, C.dim, 8, 'right');
+    const inRange = (m: number) => this.range === 'all' || (this.range === 'low' ? m < 0.4 : this.range === 'mid' ? m >= 0.4 && m <= 2 : m > 2);
+    // fitted line through (1, 1)
+    c.beginPath(); c.moveTo(X(0.08), Y(0.08 ** this.n)); c.lineTo(X(40), Y(40 ** this.n)); c.strokeStyle = hexA(C.accent, 0.9); c.lineWidth = 1.5; c.stroke();
+    let ss = 0, cnt = 0;
+    for (const [m, l, name, side] of ML_MS) { const use = inRange(m); c.fillStyle = use ? C.star : hexA(C.star, 0.25); c.beginPath(); c.arc(X(m), Y(l), 2.6, 0, TAU); c.fill(); if (name && use) this.text(name, X(m) + (side === 'l' ? -6 : 6), Y(l) + (side === 'l' ? 4 : -5), C.dim, 7, side === 'l' ? 'right' : 'left'); if (use) { const r = Math.log10(l) - this.n * Math.log10(m); ss += r * r; cnt++; } }
+    if (this.showOff) for (const [m, l, name] of ML_OFF) { c.fillStyle = C.red; c.beginPath(); c.arc(X(m), Y(l), 3, 0, TAU); c.fill(); if (name) this.text(name, X(m) + 6, Y(l) + 1, C.red, 7); }
+    this.text(`L ∝ M^${fmt(this.n, 2)}`, X(20), Y(20 ** this.n) - 12, C.accent, 10, 'center');
+    const rms = cnt ? Math.sqrt(ss / cnt) : 0;
+    // best exponent for the selected range (least squares through the origin in log space)
+    let sxy = 0, sxx = 0; for (const [m, l] of ML_MS) if (inRange(m)) { const x = Math.log10(m), y = Math.log10(l); sxy += x * y; sxx += x * x; }
+    const best = sxx ? sxy / sxx : 0;
+    this.setReadout([
+      ['RMS scatter (dex)', fmt(rms, 2), rms < 0.15 ? C.green : rms < 0.3 ? C.accent : C.red],
+      ['Best n for this range', fmt(best, 2), C.green],
+      ['Lifetime ∝ M/L', `∝ M^${fmt(1 - this.n, 1)}`],
+      ['10 M☉: L, lifetime', `${fmtSci(10 ** this.n, 1)} L☉, ${fmtSci(1e10 * 10 ** (1 - this.n), 1)} yr`],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 77. radial-velocity curve shape ---- */
+
+class RvShapeWidget extends CanvasWidget {
+  private e = 0.4; private om = 60; private M = 0;
+  constructor() {
+    super(480 / 260);
+    this.playButton();
+    this.slider('Eccentricity e', 0, 0.9, 0.01, 0.4, (v) => fmt(v, 2), (v) => { this.e = v; });
+    this.slider('Argument of periastron ω', 0, 360, 1, 60, (v) => `${v}°`, (v) => { this.om = v; });
+  }
+  protected draw(dt: number) {
+    this.M = (this.M + dt * 0.5) % TAU;
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const e = this.e, om = this.om * DEG, K = 1 / Math.sqrt(1 - e * e);
+    const vr = (M: number) => { const { theta } = kepler(M, e); return K * (Math.cos(theta + om) + e * Math.cos(om)); };
+    // orbit, top view: observer at the bottom looking up (+y toward observer)
+    const ox = this.w * 0.25, oy = this.h * 0.48, S = Math.min(this.w * 0.17, this.h * 0.3);
+    c.beginPath(); for (let k = 0; k <= 160; k++) { const { theta, r } = kepler(k / 160 * TAU, e); const x = r * Math.cos(theta + om), y = r * Math.sin(theta + om); k ? c.lineTo(ox + x * S, oy - y * S) : c.moveTo(ox + x * S, oy - y * S); } c.strokeStyle = hexA(C.accent, 0.6); c.lineWidth = 1; c.stroke();
+    this.circle(ox, oy, 2.5, undefined, C.dim); this.text('CM', ox + 6, oy + 8, C.faint, 8);
+    const { theta, r } = kepler(this.M, e); const px = ox + r * Math.cos(theta + om) * S, py = oy - r * Math.sin(theta + om) * S;
+    const pp = { x: ox + (1 - e) * Math.cos(om) * S, y: oy - (1 - e) * Math.sin(om) * S }; this.circle(pp.x, pp.y, 2, C.purple); this.text('periastron', pp.x + 5, pp.y - 6, C.purple, 8);
+    this.line(ox - S * 0.9, oy, ox + S * 0.9, oy, C.faint, 1, [2, 4]); this.text('line of nodes', ox + S * 0.9, oy - 8, C.faint, 7, 'right');
+    const ex = ox, ey = oy + S * 1.55; this.text('▲', ex, ey - 14, C.text, 10, 'center'); this.text('to Earth', ex, ey, C.dim, 8, 'center');
+    this.glow(px, py, 11, hexA(C.blue, 0.85)); this.circle(px, py, 4, undefined, '#e4ecff');
+    // velocity arrow component along the line of sight
+    const v = vr(this.M); this.line(px, py, px, py + v * 18, v > 0 ? C.red : C.blue, 2);
+    // RV curve
+    const gx0 = this.w * 0.5, gx1 = this.w - 12, gy0 = 16, gy1 = this.h - 28, gyc = (gy0 + gy1) / 2, vmax = 3.3;
+    const GX = (f: number) => gx0 + f * (gx1 - gx0), GY = (vv: number) => gyc - vv / vmax * (gy1 - gy0) / 2;
+    this.line(gx0, gyc, gx1, gyc, C.grid); this.line(gx0, gy0, gx0, gy1, C.grid); this.text('γ', gx0 - 8, gyc, C.faint, 8);
+    c.beginPath(); for (let k = 0; k <= 200; k++) { const f = k / 200; const y = GY(vr(f * TAU)); k ? c.lineTo(GX(f), y) : c.moveTo(GX(f), y); } c.strokeStyle = C.accent; c.lineWidth = 1.6; c.stroke();
+    this.circle(GX(this.M / TAU), GY(v), 3.5, undefined, C.blue);
+    this.text('radial velocity (receding ↑)', gx0 + 4, gy0 + 2, C.dim, 8); this.text('phase →', gx1, gy1 + 10, C.dim, 8, 'right');
+    const off = e * Math.cos(om) * K;
+    let vmaxv = -Infinity, vminv = Infinity; for (let k = 0; k < 200; k++) { const vv = vr(k / 200 * TAU); if (vv > vmaxv) vmaxv = vv; if (vv < vminv) vminv = vv; }
+    this.setReadout([
+      ['K / K(e = 0)  = (1 − e²)^−½', fmt(K, 2), C.accent],
+      ['Curve offset from γ, e cos ω', `${off >= 0 ? '+' : ''}${fmt(off, 2)} K₀`],
+      ['Skew: time rising / time falling', fmt(this.riseFraction(vr), 2)],
+      ['Shape', e < 0.05 ? 'sinusoid — ω unmeasurable' : Math.abs(Math.sin(om)) > 0.9 ? 'symmetric, sharp peak' : 'asymmetric: fast on one side'],
+    ]);
+  }
+  private riseFraction(vr: (M: number) => number): number { let up = 0; for (let k = 0; k < 200; k++) if (vr((k + 1) / 200 * TAU) > vr(k / 200 * TAU)) up++; return up / (200 - up); }
+}
+
+/* ------------------------------------------------- 78. the mass function ---- */
+
+class MassFunctionWidget extends CanvasWidget {
+  private P = 10; private K1 = 20; private inc = 60; private m1 = 1.0; private s: { set: (v: number) => void }[] = [];
+  constructor() {
+    super(480 / 250);
+    this.segmented([['Example', 'Textbook'], ['51 Peg', '51 Peg b'], ['Cyg X-1', 'Cygnus X-1'], ['Sirius', 'Sirius (as SB1)']], 'Example', (k) => {
+      const v = k === '51 Peg' ? [4.23, 0.056, 80, 1.1] : k === 'Cyg X-1' ? [5.6, 75, 27, 21] : k === 'Sirius' ? [18300, 6.3, 44, 2.06] : [10, 20, 60, 1.0];
+      this.P = v[0]; this.K1 = v[1]; this.inc = v[2]; this.m1 = v[3]; this.s[0].set(Math.log10(v[0])); this.s[1].set(Math.log10(v[1])); this.s[2].set(v[2]); this.s[3].set(v[3]);
+    });
+    this.s.push(this.slider('Period P', 0, 4.5, 0.01, 1, (v) => fmtDur(10 ** v * DAY_SEC), (v) => { this.P = 10 ** v; }));
+    this.s.push(this.slider('Semi-amplitude K₁', -1.5, 2.5, 0.01, Math.log10(20), (v) => (10 ** v < 1 ? `${fmt(10 ** v * 1000, 0)} m/s` : `${fmt(10 ** v, 1)} km/s`), (v) => { this.K1 = 10 ** v; }));
+    this.s.push(this.slider('Inclination i', 5, 90, 1, 60, (v) => `${v}°`, (v) => { this.inc = v; }));
+    this.s.push(this.slider('Primary mass m₁ (from spectrum)', 0.1, 30, 0.1, 1.0, (v) => `${fmt(v, 1)} M☉`, (v) => { this.m1 = v; }));
+  }
+  private solve(f: number, m1: number, sini: number): number { let lo = 0, hi = 1e4; for (let k = 0; k < 80; k++) { const m = (lo + hi) / 2; if ((m * sini) ** 3 / (m1 + m) ** 2 > f) hi = m; else lo = m; } return (lo + hi) / 2; }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const f = (this.P * DAY_SEC) * (this.K1 * 1e3) ** 3 / (TAU * GRAV) / MSUN;   // M☉
+    const sini = Math.sin(this.inc * DEG), m2 = this.solve(f, this.m1, sini);
+    const gx0 = 50, gx1 = this.w - 14, gy0 = 14, gy1 = this.h - 26;
+    const lmin = Math.log10(Math.max(1e-5, f * 0.3)), lmax = Math.log10(Math.max(f * 1e4, m2 * 3, this.m1 * 3));
+    const X = (i: number) => gx0 + (i - 5) / 85 * (gx1 - gx0), Y = (m: number) => gy1 - (Math.log10(m) - lmin) / (lmax - lmin) * (gy1 - gy0);
+    for (let k = Math.ceil(lmin); k <= Math.floor(lmax); k++) { this.line(gx0, Y(10 ** k), gx1, Y(10 ** k), C.grid); this.text(k === 0 ? '1' : `10${sup(k)}`, gx0 - 4, Y(10 ** k), C.faint, 8, 'right'); }
+    for (const i of [10, 30, 50, 70, 90]) { this.line(X(i), gy0, X(i), gy1, C.grid); this.text(`${i}°`, X(i), gy1 + 10, C.faint, 8, 'center'); }
+    this.text('companion mass m₂ (M☉)', gx0 + 4, gy0 + 2, C.dim, 8); this.text('inclination i →', gx1, gy1 + 10, C.dim, 8, 'right');
+    // m2(i) for the assumed m1
+    c.beginPath(); for (let i = 5; i <= 90; i += 1) { const m = this.solve(f, this.m1, Math.sin(i * DEG)); i === 5 ? c.moveTo(X(i), Y(m)) : c.lineTo(X(i), Y(m)); } c.strokeStyle = C.accent; c.lineWidth = 1.6; c.stroke();
+    this.line(gx0, Y(f), gx1, Y(f), C.green, 1, [4, 3]); this.text(`f(m) = ${fmtSci(f, 2)} M☉ — absolute lower limit`, gx0 + 6, Y(f) - 8, C.green, 8);
+    this.line(gx0, Y(this.m1), gx1, Y(this.m1), hexA(C.blue, 0.6), 1, [2, 3]); this.text('m₁', gx1 - 4, Y(this.m1) - 7, C.blue, 8, 'right');
+    this.circle(X(this.inc), Y(m2), 4, undefined, C.accent);
+    this.text(`m₂ = ${fmtSci(m2, 2)} M☉ at i = ${this.inc}°`, X(this.inc) + (this.inc > 60 ? -8 : 8), Y(m2) - 10, C.accent, 9, this.inc > 60 ? 'right' : 'left');
+    const m2min = this.solve(f, this.m1, 1);
+    const kind = m2 < 0.013 ? 'planet' : m2 < 0.08 ? 'brown dwarf' : m2 < 1.4 ? 'star / white dwarf' : m2 < 3 ? 'neutron star' : 'black hole';
+    this.setReadout([
+      ['f(m) = PK₁³/2πG', `${fmtSci(f, 3)} M☉`, C.green],
+      ['m₂ minimum (i = 90°)', m2min < 0.08 ? `${fmt(m2min * 1047, 2)} M_J` : `${fmt(m2min, 2)} M☉`],
+      ['m₂ at this i', m2 < 0.08 ? `${fmt(m2 * 1047, 2)} M_J` : `${fmt(m2, 2)} M☉`, C.accent],
+      ['If dark, it is a…', kind, m2 > 3 ? C.red : C.text],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 79. eclipsing binary ---- */
+
+class EclipseWidget extends CanvasWidget {
+  private Rl = 2.6; private Rs = 1.2; private Tl = 5000; private Ts = 9000; private inc = 88; private phase = 0; private P = 2.5; private a = 12;
+  constructor(private mode: 'animate' | 'measure') {
+    super(480 / 340);
+    this.playButton();
+    this.slider('Large star radius R_l', 1, 4, 0.05, 2.6, (v) => `${fmt(v, 2)} R☉`, (v) => { this.Rl = v; if (this.Rs > v) this.Rs = v; });
+    this.slider('Small star radius R_s', 0.3, 3, 0.05, 1.2, (v) => `${fmt(v, 2)} R☉`, (v) => { this.Rs = Math.min(v, this.Rl); });
+    this.slider('T large', 3000, 12000, 100, 5000, (v) => `${v} K`, (v) => { this.Tl = v; });
+    this.slider('T small', 3000, 20000, 100, 9000, (v) => `${v} K`, (v) => { this.Ts = v; });
+    this.slider('Inclination i', 70, 90, 0.1, 88, (v) => `${fmt(v, 1)}°`, (v) => { this.inc = v; });
+  }
+  /** normalised flux at phase f (0 = small star in front) */
+  private flux(f: number): number {
+    const ph = f * TAU, ci = Math.cos(this.inc * DEG);
+    const dx = this.a * Math.sin(ph), dy = this.a * Math.cos(ph) * ci, d = Math.hypot(dx, dy);
+    const Fl = Math.PI * this.Rl ** 2 * this.Tl ** 4, Fs = Math.PI * this.Rs ** 2 * this.Ts ** 4;
+    const ov = discOverlap(this.Rl, this.Rs, d);
+    const smallInFront = Math.cos(ph) > 0;
+    const lost = smallInFront ? ov * this.Tl ** 4 : ov * this.Ts ** 4;
+    return (Fl + Fs - lost) / (Fl + Fs);
+  }
+  protected draw(dt: number) {
+    this.phase = (this.phase + dt * 0.12) % 1;
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const ph = this.phase * TAU, ci = Math.cos(this.inc * DEG);
+    // top: the system as seen from Earth
+    const cx = this.w / 2, cy = this.h * 0.25, S = Math.min(this.w / (2 * this.a + 8), this.h * 0.2 / 4.2);
+    const xl = cx - 0.3 * this.a * Math.sin(ph) * S, yl = cy + 0.3 * this.a * Math.cos(ph) * ci * S;
+    const xs = cx + 0.7 * this.a * Math.sin(ph) * S, ys = cy - 0.7 * this.a * Math.cos(ph) * ci * S;
+    const drawStar = (x: number, y: number, R: number, T: number) => { const col = tempRGB(T); this.glow(x, y, R * S * 1.6, rgba(col, 0.5)); this.circle(x, y, R * S, undefined, rgba(col)); };
+    const smallInFront = Math.cos(ph) > 0;
+    if (smallInFront) { drawStar(xl, yl, this.Rl, this.Tl); drawStar(xs, ys, this.Rs, this.Ts); } else { drawStar(xs, ys, this.Rs, this.Ts); drawStar(xl, yl, this.Rl, this.Tl); }
+    this.text(`i = ${fmt(this.inc, 1)}°  ·  a = ${this.a} R☉  ·  P = ${this.P} d`, 10, 12, C.dim, 9);
+    // light curve
+    const gx0 = 40, gx1 = this.w - 12, gy0 = this.h * 0.5, gy1 = this.h - 24;
+    let fmin = 1; const N = 400; const curve: number[] = []; for (let k = 0; k <= N; k++) { const F = this.flux(k / N); curve.push(F); if (F < fmin) fmin = F; }
+    const lo = Math.max(0, Math.min(fmin - 0.05, 0.9));
+    const GX = (f: number) => gx0 + f * (gx1 - gx0), GY = (F: number) => gy1 - (F - lo) / (1 - lo) * (gy1 - gy0);
+    this.line(gx0, gy1, gx1, gy1, C.grid); this.line(gx0, gy0, gx0, gy1, C.grid);
+    this.text('1.0', gx0 - 4, GY(1), C.faint, 8, 'right'); this.text(fmt(lo, 2), gx0 - 4, GY(lo), C.faint, 8, 'right');
+    c.beginPath(); curve.forEach((F, k) => (k ? c.lineTo(GX(k / N), GY(F)) : c.moveTo(GX(k / N), GY(F)))); c.strokeStyle = C.green; c.lineWidth = 1.6; c.stroke();
+    this.circle(GX(this.phase), GY(this.flux(this.phase)), 3.5, undefined, C.accent);
+    this.text('relative flux', gx0 + 4, gy0 - 8, C.dim, 8); this.text('phase (0 = small star in front) →', gx1, gy1 + 10, C.dim, 8, 'right');
+    const Fp = this.flux(0.5), Fs = this.flux(0);  // primary: hotter star hidden
+    const hotIsSmall = this.Ts >= this.Tl;
+    const prim = hotIsSmall ? Fp : Fs, sec = hotIsSmall ? Fs : Fp;
+    const eclipses = ci < (this.Rl + this.Rs) / this.a;
+    const ro: Array<[string, string, string?]> = [
+      ['cos i vs (R_l+R_s)/a', `${fmt(ci, 3)} ${eclipses ? '<' : '≥'} ${fmt((this.Rl + this.Rs) / this.a, 3)}: ${eclipses ? 'eclipses' : 'none'}`, eclipses ? C.green : C.red],
+      ['Primary min. (hot star hidden)', `${fmt((1 - prim) * 100, 1)} % = ${fmt(-2.5 * Math.log10(prim), 2)} mag`, C.green],
+      ['Secondary min.', `${fmt((1 - sec) * 100, 2)} %`],
+      ['Mid-eclipse', this.a * ci + this.Rs <= this.Rl ? 'total (flat bottom)' : 'partial'],
+    ];
+    if (this.mode === 'measure') {
+      // contacts for the small star crossing the large one (phase 0), from the overlap condition along the chord
+      const b = this.a * ci;                                        // impact parameter (R☉)
+      const half = (R: number) => Math.sqrt(Math.max(0, R * R - b * b));
+      const x1 = half(this.Rl + this.Rs), x2 = half(Math.abs(this.Rl - this.Rs));
+      const v = TAU * this.a * RSUN / (this.P * DAY_SEC) / 1e3;      // relative orbital speed, km/s
+      const tOf = (x: number) => x * RSUN / 1e3 / v / 3600;          // hours from mid-eclipse
+      const ta = -tOf(x1), tb = -tOf(x2), tc = tOf(x2), td = tOf(x1);
+      for (const [t, name] of [[ta, 'a'], [tb, 'b'], [tc, 'c'], [td, 'd']] as Array<[number, string]>) { const f = 0.5 + t * 3600 * 1e3 * v / (TAU * this.a * RSUN); this.line(GX(f), gy0 + 10, GX(f), gy1, hexA(C.purple, 0.7), 1, [2, 3]); this.text(`t${name}`, GX(f) + (name === 'a' || name === 'c' ? -3 : 3), gy0 + 4, C.purple, 8, name === 'a' || name === 'c' ? 'right' : 'left'); }
+      const RsEst = v / 2 * (tb - ta) * 3600 * 1e3 / RSUN, RlEst = v / 2 * (tc - ta) * 3600 * 1e3 / RSUN;
+      const B0 = 1, Bp = prim, Bs = sec; const ratio4 = (B0 - Bp) / (B0 - Bs); const Tratio = Math.pow(Math.max(ratio4, 1e-6), 0.25);
+      const total = hotIsSmall && this.a * ci + this.Rs <= this.Rl;
+      ro.push(['v = 2πa/P', `${fmt(v, 0)} km/s`], ['t_b − t_a, t_c − t_a', `${fmt(tb - ta, 2)} h, ${fmt(tc - ta, 2)} h`, C.purple],
+        ['R_s = v(t_b−t_a)/2', `${fmt(RsEst, 2)} R☉`, Math.abs(RsEst - this.Rs) < 0.05 ? C.green : C.red],
+        ['R_l = v(t_c−t_a)/2', `${fmt(RlEst, 2)} R☉`, Math.abs(RlEst - this.Rl) < 0.05 ? C.green : C.red],
+        ['True R_s, R_l', `${fmt(this.Rs, 2)}, ${fmt(this.Rl, 2)} R☉`],
+        ['T_s/T_l from depths', fmt(Tratio, 3), total ? C.green : C.red],
+        ['True T_s/T_l', fmt(this.Ts / this.Tl, 3)]);
+      if (!total) ro.push(['Note', 'depth ratio needs a hotter small star, totally eclipsed']);
+    }
+    this.setReadout(ro);
+  }
+}
+
+/* ------------------------------------------------- 80. light-curve gallery ---- */
+
+class LcGalleryWidget extends CanvasWidget {
+  private type: 'EA' | 'EB' | 'EW' = 'EA'; private phase = 0;
+  constructor() {
+    super(480 / 280);
+    this.segmented<'EA' | 'EB' | 'EW'>([['EA', 'Algol (detached)'], ['EB', 'β Lyrae (semi-detached)'], ['EW', 'W UMa (contact)']], 'EA', (t) => { this.type = t; });
+    this.playButton();
+  }
+  private params() {
+    return this.type === 'EA' ? { a: 16, R1: 2.9, R2: 3.5, T1: 12500, T2: 4500, ell: 0.0, name: 'Algol: B8 V + K2 IV, P = 2.87 d', q: 0.22 }
+      : this.type === 'EB' ? { a: 6, R1: 2.4, R2: 2.0, T1: 13000, T2: 9000, ell: 0.35, name: 'β Lyrae: tidally stretched stars, P = 12.9 d', q: 0.5 }
+        : { a: 3.6, R1: 1.8, R2: 1.5, T1: 5800, T2: 5700, ell: 0.6, name: 'W UMa: a common envelope, P = 0.33 d', q: 0.6 };
+  }
+  private flux(f: number): number {
+    const p = this.params(); const ph = f * TAU + Math.PI, ci = Math.cos(84 * DEG);
+    const d = Math.hypot(p.a * Math.sin(ph), p.a * Math.cos(ph) * ci);
+    const F1 = Math.PI * p.R1 ** 2 * p.T1 ** 4, F2 = Math.PI * p.R2 ** 2 * p.T2 ** 4, ov = discOverlap(p.R1, p.R2, d);
+    const lost = Math.cos(ph) > 0 ? ov * p.T1 ** 4 : ov * p.T2 ** 4;
+    const ellip = 1 - p.ell * 0.5 * (1 + Math.cos(2 * ph)) * 0.5;       // projected area shrinks at conjunctions
+    return (F1 + F2 - lost) / (F1 + F2) * ellip;
+  }
+  protected draw(dt: number) {
+    this.phase = (this.phase + dt * 0.15) % 1;
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const p = this.params(); const ph = this.phase * TAU + Math.PI;
+    // geometry, face-on sketch (top) with tidal stretching
+    const cx = this.w / 2, cy = this.h * 0.27, S = Math.min(this.w, this.h) * 0.021;
+    const x1 = cx - p.a * S * p.q / (1 + p.q) * Math.sin(ph) * 0 - p.a * S * (p.q / (1 + p.q)) * Math.sin(ph), x2 = cx + p.a * S * (1 / (1 + p.q)) * Math.sin(ph);
+    const y1 = cy + p.a * S * (p.q / (1 + p.q)) * Math.cos(ph) * 0.18, y2 = cy - p.a * S * (1 / (1 + p.q)) * Math.cos(ph) * 0.18;
+    const blob = (x: number, y: number, R: number, T: number, stretch: number, toward: number) => { c.save(); c.translate(x, y); c.rotate(toward); c.scale(1 + stretch, 1 - stretch * 0.4); this.glow(0, 0, R * S * 1.5, rgba(tempRGB(T), 0.45)); this.circle(0, 0, R * S, undefined, rgba(tempRGB(T))); c.restore(); };
+    const ang = Math.atan2(y2 - y1, x2 - x1);
+    if (Math.cos(ph) > 0) { blob(x1, y1, p.R1, p.T1, p.ell * 0.5, ang); blob(x2, y2, p.R2, p.T2, p.ell * 0.5, ang); } else { blob(x2, y2, p.R2, p.T2, p.ell * 0.5, ang); blob(x1, y1, p.R1, p.T1, p.ell * 0.5, ang); }
+    if (this.type === 'EB') { c.beginPath(); c.moveTo(x1 + p.R1 * S * 0.8 * Math.cos(ang), y1 + p.R1 * S * 0.8 * Math.sin(ang)); c.quadraticCurveTo((x1 + x2) / 2, (y1 + y2) / 2 - 10, x2 - p.R2 * S * Math.cos(ang), y2 - p.R2 * S * Math.sin(ang)); c.strokeStyle = hexA(C.accent, 0.5); c.lineWidth = 2; c.stroke(); this.text('gas stream', (x1 + x2) / 2, (y1 + y2) / 2 - 16, hexA(C.accent, 0.7), 7, 'center'); }
+    this.text(p.name, cx, 12, C.dim, 9, 'center');
+    // light curve
+    const gx0 = 40, gx1 = this.w - 12, gy0 = this.h * 0.5, gy1 = this.h - 22;
+    const N = 300; const cur: number[] = []; let fmin = 1; for (let k = 0; k <= N; k++) { const F = this.flux(k / N); cur.push(F); fmin = Math.min(fmin, F); }
+    const lo = Math.min(0.9, fmin - 0.05);
+    const GX = (f: number) => gx0 + f * (gx1 - gx0), GY = (F: number) => gy1 - (F - lo) / (1 - lo) * (gy1 - gy0);
+    this.line(gx0, gy1, gx1, gy1, C.grid); this.line(gx0, gy0, gx0, gy1, C.grid);
+    c.beginPath(); cur.forEach((F, k) => (k ? c.lineTo(GX(k / N), GY(F)) : c.moveTo(GX(k / N), GY(F)))); c.strokeStyle = C.green; c.lineWidth = 1.6; c.stroke();
+    this.circle(GX(this.phase), GY(this.flux(this.phase)), 3.5, undefined, C.accent);
+    this.text('relative flux', gx0 + 4, gy0 - 8, C.dim, 8); this.text('phase →', gx1, gy1 + 10, C.dim, 8, 'right');
+    const d1 = 1 - this.flux(0.5), d2 = 1 - this.flux(0);
+    this.setReadout([
+      ['Between eclipses', p.ell === 0 ? 'flat (spherical stars)' : p.ell < 0.5 ? 'varying (ellipsoidal)' : 'varying (shared envelope)', C.green],
+      ['Primary / secondary depth', `${fmt(Math.max(d1, d2) * 100, 1)} % / ${fmt(Math.min(d1, d2) * 100, 1)} %`],
+      ['R/a (how close)', `${fmt((p.R1 + p.R2) / p.a, 2)}`],
+      ['Configuration', this.type === 'EA' ? 'detached' : this.type === 'EB' ? 'semi-detached (Roche lobe)' : 'contact'],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 81. planet radial-velocity wobble ---- */
+
+class PlanetRvWidget extends CanvasWidget {
+  private mp = 317.8; private P = 4332.6; private Ms = 1; private phase = 0; private s: { set: (v: number) => void }[] = [];
+  constructor() {
+    super(480 / 270);
+    this.segmented([['Jupiter', 'Jupiter'], ['Earth', 'Earth'], ['51Peg', '51 Peg b'], ['Proxima', 'Proxima b']], 'Jupiter', (k) => {
+      const v = k === 'Jupiter' ? [317.8, 4332.6, 1.0] : k === 'Earth' ? [1, 365.25, 1.0] : k === '51Peg' ? [146, 4.23, 1.11] : [1.07, 11.19, 0.122];
+      this.mp = v[0]; this.P = v[1]; this.Ms = v[2]; this.s[0].set(Math.log10(v[0])); this.s[1].set(Math.log10(v[1])); this.s[2].set(v[2]);
+    });
+    this.playButton();
+    this.s.push(this.slider('Planet mass m_p sin i', -0.5, 3.5, 0.01, Math.log10(317.8), (v) => (10 ** v < 30 ? `${fmt(10 ** v, 2)} M⊕` : `${fmt(10 ** v / 317.8, 2)} M_J`), (v) => { this.mp = 10 ** v; }));
+    this.s.push(this.slider('Orbital period P', 0, 4.3, 0.01, Math.log10(4332.6), (v) => fmtDur(10 ** v * DAY_SEC), (v) => { this.P = 10 ** v; }));
+    this.s.push(this.slider('Star mass M★', 0.1, 2, 0.01, 1, (v) => `${fmt(v, 2)} M☉`, (v) => { this.Ms = v; }));
+  }
+  protected draw(dt: number) {
+    this.phase = (this.phase + dt * 0.4) % 1;
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const mp = this.mp * MEARTH, Ms = this.Ms * MSUN, Ps = this.P * DAY_SEC;
+    const a = Math.cbrt(GRAV * (Ms + mp) * Ps * Ps / (4 * Math.PI * Math.PI));
+    const K = Math.cbrt(2 * Math.PI * GRAV / Ps) * mp / Math.pow(Ms + mp, 2 / 3);   // m/s, i = 90°
+    // left: the star's reflex orbit (exaggerated) around the CM
+    const ox = this.w * 0.24, oy = this.h * 0.45, S = Math.min(this.w * 0.17, this.h * 0.3);
+    const ph = this.phase * TAU;
+    c.beginPath(); c.arc(ox, oy, S, 0, TAU); c.strokeStyle = hexA(C.blue, 0.5); c.lineWidth = 1; c.setLineDash([3, 4]); c.stroke(); c.setLineDash([]);
+    const px = ox + S * Math.cos(ph), py = oy - S * Math.sin(ph) * 0.35, sx = ox - S * 0.28 * Math.cos(ph), sy = oy + S * 0.28 * Math.sin(ph) * 0.35;
+    c.beginPath(); c.ellipse(ox, oy, S * 0.28, S * 0.28 * 0.35, 0, 0, TAU); c.strokeStyle = hexA(C.star, 0.5); c.stroke();
+    this.circle(ox, oy, 2, undefined, C.dim);
+    this.glow(sx, sy, 14, hexA(C.star, 0.8)); this.circle(sx, sy, 6, undefined, '#fff4d6');
+    this.circle(px, py, 3, undefined, C.blue);
+    this.text('star wobble exaggerated', ox, oy + S * 0.5 + 14, C.faint, 7, 'center');
+    const vrNow = -Math.sin(ph); this.line(sx, sy, sx, sy + vrNow * 18, vrNow > 0 ? C.red : C.blue, 2);
+    this.text('▼ to Earth', ox, this.h - 12, C.dim, 8, 'center');
+    // right: RV curve with noise bands
+    const gx0 = this.w * 0.5, gx1 = this.w - 12, gy0 = 14, gy1 = this.h - 26, gyc = (gy0 + gy1) / 2;
+    const scaleV = Math.max(K * 1.3, 0.5);
+    const GX = (f: number) => gx0 + f * (gx1 - gx0), GY = (v: number) => gyc - v / scaleV * (gy1 - gy0) / 2;
+    for (const [sig, name, col] of [[10, '1995 (10 m/s)', C.red], [1, 'HARPS (1 m/s)', C.accent], [0.3, 'ESPRESSO (0.3 m/s)', C.green]] as Array<[number, string, string]>) {
+      if (sig < scaleV * 1.2) { c.fillStyle = hexA(col, 0.08); c.fillRect(gx0, GY(sig), gx1 - gx0, GY(-sig) - GY(sig)); this.text(name, gx1 - 2, GY(sig) - 6, hexA(col, 0.8), 7, 'right'); }
+    }
+    this.line(gx0, gyc, gx1, gyc, C.grid); this.line(gx0, gy0, gx0, gy1, C.grid);
+    c.beginPath(); for (let k = 0; k <= 200; k++) { const f = k / 200; k ? c.lineTo(GX(f), GY(K * Math.sin(f * TAU))) : c.moveTo(GX(f), GY(K * Math.sin(f * TAU))); } c.strokeStyle = C.star; c.lineWidth = 1.6; c.stroke();
+    this.circle(GX(this.phase), GY(K * Math.sin(ph)), 3.5, undefined, C.star);
+    this.text(`K = ${K < 1 ? fmt(K * 100, 1) + ' cm/s' : fmt(K, K < 10 ? 2 : 1) + ' m/s'}`, gx0 + 4, gy0 + 2, C.star, 10);
+    this.text('one orbit →', gx1, gy1 + 10, C.dim, 8, 'right');
+    const detect = K > 10 ? 'easy (1995 tech)' : K > 1 ? 'modern spectrographs' : K > 0.3 ? 'state of the art' : 'not yet possible';
+    this.setReadout([
+      ['Semi-major axis a', `${fmt(a / AU_M, 3)} AU`],
+      ['K (i = 90°)', `${K < 1 ? fmt(K * 100, 1) + ' cm/s' : fmt(K, 2) + ' m/s'}`, C.star],
+      ['Star orbit radius', `${fmt(a * mp / (Ms + mp) / RSUN, 4)} R☉`],
+      ['Detectability', detect, K > 1 ? C.green : K > 0.3 ? C.accent : C.red],
+      ['Δλ/λ = K/c', fmtSci(K / C_LIGHT, 2)],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 82. transit ---- */
+
+class TransitWidget extends CanvasWidget {
+  private Rp = 11.2; private aAU = 0.05; private b = 0.3; private Rs = 1; private phase = 0; private limb = true;
+  constructor() {
+    super(480 / 300);
+    this.segmented([['hj', 'Hot Jupiter'], ['earth', 'Earth-Sun'], ['trappist', 'TRAPPIST-1e']], 'hj', (k) => {
+      const v = k === 'hj' ? [11.2, 0.05, 0.3, 1] : k === 'earth' ? [1, 1, 0.3, 1] : [0.92, 0.029, 0.2, 0.12];
+      this.Rp = v[0]; this.aAU = v[1]; this.b = v[2]; this.Rs = v[3]; this.sl[0].set(Math.log10(v[0])); this.sl[1].set(Math.log10(v[1])); this.sl[2].set(v[2]); this.sl[3].set(v[3]);
+    });
+    this.playButton();
+    const t = $('button', 'active', 'Limb darkening'); t.addEventListener('click', () => { this.limb = !this.limb; t.classList.toggle('active', this.limb); }); this.controls.appendChild(t);
+    this.sl.push(this.slider('Planet radius R_p', -0.3, 1.3, 0.01, Math.log10(11.2), (v) => `${fmt(10 ** v, 2)} R⊕`, (v) => { this.Rp = 10 ** v; }));
+    this.sl.push(this.slider('Orbit a', -2, 0.7, 0.01, Math.log10(0.05), (v) => `${fmt(10 ** v, 3)} AU`, (v) => { this.aAU = 10 ** v; }));
+    this.sl.push(this.slider('Impact parameter b = a cos i / R★', 0, 1.3, 0.01, 0.3, (v) => fmt(v, 2), (v) => { this.b = v; }));
+    this.sl.push(this.slider('Star radius R★', 0.1, 2, 0.01, 1, (v) => `${fmt(v, 2)} R☉`, (v) => { this.Rs = v; }));
+  }
+  private sl: { set: (v: number) => void }[] = [];
+  /** flux at planet centre offset (x, b) in stellar radii, with simple linear limb darkening */
+  private flux(x: number): number {
+    const k = this.Rp * REARTH / (this.Rs * RSUN); const d = Math.hypot(x, this.b);
+    if (!this.limb) { const ov = discOverlap(1, k, d); return 1 - ov / Math.PI; }
+    const u = 0.6; const I = (r: number) => 1 - u * (1 - Math.sqrt(Math.max(0, 1 - r * r)));
+    const norm = Math.PI * (1 - u / 3);
+    // numerically integrate blocked intensity over the planet disc
+    let blocked = 0; const n = 14;
+    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) { const px = x + (i + 0.5) / n * 2 * k - k, py = this.b + (j + 0.5) / n * 2 * k - k; if (Math.hypot(px - x, py - this.b) > k) continue; const r = Math.hypot(px, py); if (r < 1) blocked += I(r) * (2 * k / n) ** 2; }
+    return 1 - blocked / norm;
+  }
+  protected draw(dt: number) {
+    this.phase = (this.phase + dt * 0.25) % 1;
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const k = this.Rp * REARTH / (this.Rs * RSUN);
+    const xNow = (this.phase - 0.5) * 3.2;     // in R★
+    // star disc
+    const cx = this.w / 2, cy = this.h * 0.28, R = this.h * 0.2;
+    const g = c.createRadialGradient(cx, cy, 0, cx, cy, R); g.addColorStop(0, '#fff2c8'); g.addColorStop(1, this.limb ? '#b8862e' : '#f3d58a'); c.fillStyle = g; c.beginPath(); c.arc(cx, cy, R, 0, TAU); c.fill();
+    this.line(cx - R * 1.7, cy + this.b * R, cx + R * 1.7, cy + this.b * R, hexA(C.blue, 0.5), 1, [3, 4]);
+    this.circle(cx + xNow * R, cy + this.b * R, Math.max(1.2, k * R), undefined, '#0b0f1c');
+    this.text(`b = ${fmt(this.b, 2)}`, cx + R * 1.75, cy + this.b * R, C.blue, 8);
+    // light curve
+    const gx0 = 44, gx1 = this.w - 12, gy0 = this.h * 0.56, gy1 = this.h - 24;
+    const N = 240; const cur: number[] = []; let fmin = 1; for (let i = 0; i <= N; i++) { const F = this.flux((i / N - 0.5) * 3.2); cur.push(F); fmin = Math.min(fmin, F); }
+    const depth = 1 - fmin, lo = 1 - Math.max(depth * 1.4, 1e-5);
+    const GX = (f: number) => gx0 + f * (gx1 - gx0), GY = (F: number) => gy1 - (F - lo) / (1 - lo) * (gy1 - gy0);
+    this.line(gx0, gy1, gx1, gy1, C.grid); this.line(gx0, gy0, gx0, gy1, C.grid);
+    this.text('1', gx0 - 4, GY(1), C.faint, 8, 'right'); this.text(`−${depth < 1e-3 ? fmt(depth * 1e6, 0) + ' ppm' : fmt(depth * 100, 2) + ' %'}`, gx0 - 4, GY(fmin), C.faint, 8, 'right');
+    c.beginPath(); cur.forEach((F, i) => (i ? c.lineTo(GX(i / N), GY(F)) : c.moveTo(GX(i / N), GY(F)))); c.strokeStyle = C.green; c.lineWidth = 1.6; c.stroke();
+    this.circle(GX(this.phase), GY(this.flux(xNow)), 3.5, undefined, C.accent);
+    this.text('relative flux', gx0 + 4, gy0 - 8, C.dim, 8); this.text('time →', gx1, gy1 + 10, C.dim, 8, 'right');
+    // numbers
+    const aM = this.aAU * AU_M, RsM = this.Rs * RSUN, Ms = this.Rs ** 1.25;     // crude M–R for the readout
+    const P = TAU * Math.sqrt(aM ** 3 / (GRAV * Ms * MSUN));
+    const chord = Math.sqrt(Math.max(0, (1 + k) ** 2 - this.b ** 2)) * 2;        // in R★
+    const dur = chord * RsM / (TAU * aM / P);
+    const prob = RsM / aM;
+    const transits = this.b < 1 + k;
+    this.setReadout([
+      ['Depth (R_p/R★)²', `${fmt(k * k * 100, 3)} % = ${fmt(k * k * 1e6, 0)} ppm`, C.green],
+      ['Transit?', transits ? 'yes' : 'no (b > 1 + k)', transits ? C.green : C.red],
+      ['Period P', fmtDur(P)],
+      ['Duration', transits ? fmtDur(dur) : '—'],
+      ['Probability R★/a', `${fmt(prob * 100, 2)} % (1 in ${fmt(1 / prob, 0)})`, prob > 0.05 ? C.green : C.accent],
+      ['Shape', !transits ? '—' : this.b > 1 - k ? 'V-shaped (grazing)' : this.limb ? 'rounded bottom' : 'flat bottom'],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 83. detection methods ---- */
+
+type MethodKey = 'rv' | 'transit' | 'imaging' | 'micro' | 'astro' | 'timing';
+const METHOD_INFO: Record<MethodKey, { name: string; col: string; note: string }> = {
+  rv: { name: 'RV', col: '#6fa8ff', note: 'measures m sin i; best for massive, close planets' },
+  transit: { name: 'Transit', col: '#7fd08a', note: 'measures radius; needs i ≈ 90°, best for short P' },
+  imaging: { name: 'Imaging', col: '#f0a36a', note: 'young, self-luminous giants far from the star' },
+  micro: { name: 'Microlens.', col: '#c58cff', note: 'one-off events; sensitive to cold planets at a few AU' },
+  astro: { name: 'Astrom.', col: '#ffd86a', note: 'measures true mass; favours wide orbits (Gaia)' },
+  timing: { name: 'Timing', col: '#ff7b7b', note: 'pulsars and eclipse timing; the first confirmed planets' },
+};
+/** synthetic population: [method, mass (M⊕), separation (AU)] seeded to mimic the real catalogue layout */
+function methodPopulation(): Array<[MethodKey, number, number]> {
+  const rnd = mulberry(77); const out: Array<[MethodKey, number, number]> = [];
+  const add = (m: MethodKey, n: number, lm: number, sm: number, la: number, sa: number) => { for (let i = 0; i < n; i++) out.push([m, 10 ** (lm + gaussRand(rnd) * sm), 10 ** (la + gaussRand(rnd) * sa)]); };
+  add('rv', 180, 2.0, 0.7, -0.3, 0.6); add('rv', 80, 1.3, 0.4, -0.9, 0.4);
+  add('transit', 320, 0.7, 0.45, -1.3, 0.35); add('transit', 120, 2.3, 0.4, -1.4, 0.3);
+  add('imaging', 25, 3.3, 0.35, 1.9, 0.4); add('micro', 45, 1.9, 0.6, 0.45, 0.25); add('astro', 12, 2.6, 0.3, 0.5, 0.3); add('timing', 10, 0.8, 0.9, -0.2, 0.5);
+  return out.filter(([, m, a]) => m > 0.05 && m < 2e4 && a > 0.004 && a < 300);
+}
+const SOLAR_SYS: Array<[string, number, number]> = [['Mercury', 0.055, 0.39], ['Venus', 0.815, 0.72], ['Earth', 1, 1], ['Mars', 0.107, 1.52], ['Jupiter', 317.8, 5.2], ['Saturn', 95.2, 9.5], ['Uranus', 14.5, 19.2], ['Neptune', 17.1, 30.1]];
+
+class MethodsWidget extends CanvasWidget {
+  private on: Record<MethodKey, boolean> = { rv: true, transit: true, imaging: true, micro: true, astro: true, timing: true };
+  private pop = methodPopulation(); private focus: MethodKey | null = null;
+  constructor() {
+    super(480 / 330);
+    const bar = $('div', 'lw-seg'); bar.style.flexWrap = 'wrap';
+    (Object.keys(METHOD_INFO) as MethodKey[]).forEach((k) => {
+      const b = $('button', 'active', METHOD_INFO[k].name); b.style.borderBottom = `2px solid ${METHOD_INFO[k].col}`;
+      b.addEventListener('click', () => { this.on[k] = !this.on[k]; b.classList.toggle('active', this.on[k]); this.focus = this.on[k] ? k : null; });
+      b.addEventListener('mouseenter', () => { this.focus = k; }); bar.appendChild(b);
+    });
+    this.controls.appendChild(bar);
+  }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const gx0 = 46, gx1 = this.w - 14, gy0 = 14, gy1 = this.h - 30;
+    const X = (a: number) => gx0 + (Math.log10(a) + 2.4) / 4.9 * (gx1 - gx0), Y = (m: number) => gy1 - (Math.log10(m) + 1.4) / 5.8 * (gy1 - gy0);
+    for (let k = -1; k <= 4; k++) { this.line(gx0, Y(10 ** k), gx1, Y(10 ** k), C.grid); this.text(k === 0 ? '1' : `10${sup(k)}`, gx0 - 4, Y(10 ** k), C.faint, 8, 'right'); }
+    for (let k = -2; k <= 2; k++) { this.line(X(10 ** k), gy0, X(10 ** k), gy1, C.grid); this.text(k === 0 ? '1' : `10${sup(k)}`, X(10 ** k), gy1 + 10, C.faint, 8, 'center'); }
+    this.text('planet mass (M⊕)', gx0 + 4, gy0 + 2, C.dim, 8); this.text('separation (AU) →', gx1, gy1 + 20, C.dim, 8, 'right');
+    this.line(gx0, Y(317.8), gx1, Y(317.8), hexA(C.faint, 0.6), 1, [2, 4]); this.text('Jupiter mass', gx1 - 2, Y(317.8) - 6, C.faint, 7, 'right');
+    this.line(gx0, Y(1), gx1, Y(1), hexA(C.faint, 0.6), 1, [2, 4]);
+    const counts: Partial<Record<MethodKey, number>> = {};
+    for (const [m, mass, a] of this.pop) { if (!this.on[m]) continue; counts[m] = (counts[m] ?? 0) + 1; const dim = this.focus && this.focus !== m; c.fillStyle = hexA(METHOD_INFO[m].col, dim ? 0.15 : 0.75); c.beginPath(); c.arc(X(a), Y(mass), 2.1, 0, TAU); c.fill(); }
+    for (const [name, mass, a] of SOLAR_SYS) { this.circle(X(a), Y(mass), 3.5, '#ffffff', undefined, 1.2); this.text(name, X(a) + 5, Y(mass) - 5, C.text, 7); }
+    const total = Object.values(counts).reduce((s, v) => s + (v ?? 0), 0);
+    const ro: Array<[string, string, string?]> = [['Planets shown (synthetic)', `${total}`]];
+    if (this.focus) ro.push([METHOD_INFO[this.focus].name, METHOD_INFO[this.focus].note, METHOD_INFO[this.focus].col]);
+    ro.push(['Earth at 1 AU region', 'nearly empty', C.accent], ['Selection effect', 'easy ≠ common']);
+    this.setReadout(ro);
+  }
+}
+
+/* ------------------------------------------------- 84. mass–radius / density ---- */
+
+/** mass–radius loci for pure compositions (M⊕, R⊕), smoothed power-law fits */
+const MR_CURVES: Array<{ name: string; col: string; f: (m: number) => number }> = [
+  { name: 'iron', col: '#c8c8d0', f: (m) => 0.82 * m ** 0.27 * (m < 1 ? 1 : 1 - 0.04 * Math.log10(m)) },
+  { name: 'rock (Earth-like)', col: '#d9a066', f: (m) => 1.0 * m ** 0.28 * (m < 1 ? 1 : 1 - 0.03 * Math.log10(m)) },
+  { name: 'water world', col: '#6fc3ff', f: (m) => 1.35 * m ** 0.28 },
+  { name: 'H/He gas giant', col: '#f4d07a', f: (m) => 11.5 / Math.sqrt(1 + (m / 60) ** -1.2) },
+];
+const DENSITY_PLANETS: Array<[string, number, number]> = [['Earth', 1, 1], ['Venus', 0.815, 0.95], ['Mars', 0.107, 0.53], ['Mercury', 0.055, 0.38], ['Neptune', 17.1, 3.88], ['Uranus', 14.5, 4.01], ['Saturn', 95.2, 9.45], ['Jupiter', 317.8, 11.2], ['Kepler-10b', 3.3, 1.47], ['55 Cnc e', 8.0, 1.88], ['GJ 1214 b', 8.2, 2.74], ['Kepler-11e', 8.0, 4.19], ['WASP-17 b', 154, 22.3], ['HD 209458 b', 220, 15.4], ['TRAPPIST-1e', 0.69, 0.92], ['Kepler-36b', 4.5, 1.49], ['Kepler-36c', 8.1, 3.68], ['LHS 1140 b', 6.4, 1.73]];
+
+class DensityWidget extends CanvasWidget {
+  private m = 5; private r = 2; private drag = false;
+  constructor() {
+    super(480 / 330);
+    this.slider('Test planet mass', -1.3, 3, 0.01, Math.log10(5), (v) => `${fmt(10 ** v, 2)} M⊕`, (v) => { this.m = 10 ** v; });
+    this.slider('Test planet radius', -0.5, 1.4, 0.01, Math.log10(2), (v) => `${fmt(10 ** v, 2)} R⊕`, (v) => { this.r = 10 ** v; });
+    const move = (e: PointerEvent) => { const p = canvasPos(this.canvas, e, this.w, this.h); this.m = 10 ** ((p.x - 46) / (this.w - 60) * 4.3 - 1.3); this.r = 10 ** ((this.h - 30 - p.y) / (this.h - 44) * 1.9 - 0.5); this.m = Math.min(1000, Math.max(0.05, this.m)); this.r = Math.min(25, Math.max(0.3, this.r)); };
+    this.canvas.addEventListener('pointerdown', (e) => { this.drag = true; move(e); });
+    this.canvas.addEventListener('pointermove', (e) => { if (this.drag) move(e); });
+    window.addEventListener('pointerup', () => { this.drag = false; });
+  }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const gx0 = 46, gx1 = this.w - 14, gy0 = 14, gy1 = this.h - 30;
+    const X = (m: number) => gx0 + (Math.log10(m) + 1.3) / 4.3 * (gx1 - gx0), Y = (r: number) => gy1 - (Math.log10(r) + 0.5) / 1.9 * (gy1 - gy0);
+    for (const k of [-1, 0, 1, 2, 3]) { this.line(X(10 ** k), gy0, X(10 ** k), gy1, C.grid); this.text(k === 0 ? '1' : `10${sup(k)}`, X(10 ** k), gy1 + 10, C.faint, 8, 'center'); }
+    for (const r of [0.5, 1, 2, 4, 10, 20]) { this.line(gx0, Y(r), gx1, Y(r), C.grid); this.text(`${r}`, gx0 - 4, Y(r), C.faint, 8, 'right'); }
+    this.text('radius (R⊕)', gx0 + 4, gy0 + 2, C.dim, 8); this.text('mass (M⊕) →', gx1, gy1 + 20, C.dim, 8, 'right');
+    for (const cv of MR_CURVES) { c.beginPath(); let first = true; for (let lm = -1.3; lm <= 3; lm += 0.05) { const m = 10 ** lm; if (cv.name.startsWith('H/He') && m < 3) continue; const r = cv.f(m); first ? c.moveTo(X(m), Y(r)) : c.lineTo(X(m), Y(r)); first = false; } c.strokeStyle = hexA(cv.col, 0.75); c.lineWidth = 1.4; c.stroke(); if (cv.name.startsWith('H/He')) this.text(cv.name, X(22) + 4, Y(cv.f(22)) - 8, cv.col, 8); else { const mEnd = 900; this.text(cv.name, X(mEnd) - 4, Y(cv.f(mEnd)) - 6, cv.col, 8, 'right'); } }
+    for (const [name, m, r] of DENSITY_PLANETS) { const solar = ['Earth', 'Venus', 'Mars', 'Mercury', 'Neptune', 'Uranus', 'Saturn', 'Jupiter'].includes(name); c.fillStyle = solar ? '#ffffff' : C.accent; c.beginPath(); c.arc(X(m), Y(r), solar ? 3 : 2.5, 0, TAU); c.fill(); this.text(name, X(m) + 5, Y(r) - 4, solar ? C.text : C.accent, 7); }
+    // test planet
+    this.glow(X(this.m), Y(this.r), 12, hexA(C.green, 0.7)); this.circle(X(this.m), Y(this.r), 5, '#ffffff', C.green, 1.5);
+    const rho = this.m * MEARTH / (4 / 3 * Math.PI * (this.r * REARTH) ** 3) / 1000;   // g/cm³
+    const g = GRAV * this.m * MEARTH / (this.r * REARTH) ** 2 / 9.81;
+    const vesc = Math.sqrt(2 * GRAV * this.m * MEARTH / (this.r * REARTH)) / 1e3;
+    const best = MR_CURVES.map((cv) => ({ cv, d: Math.abs(Math.log10(cv.f(this.m) / this.r)) })).sort((a, b) => a.d - b.d)[0];
+    const kind = rho > 8 ? 'iron-rich' : rho > 3.5 ? 'rocky' : rho > 1.8 ? 'water / thick atmosphere' : rho > 0.6 ? 'gas or ice giant' : 'inflated hot giant';
+    this.setReadout([
+      ['Test planet (drag it)', `${fmt(this.m, 2)} M⊕, ${fmt(this.r, 2)} R⊕`, C.green],
+      ['Mean density (Earth 5.51)', `${fmt(rho, 2)} g/cm³`, C.green],
+      ['Nearest composition curve', best.cv.name, best.cv.col],
+      ['Likely nature', kind],
+      ['g, v_esc', `${fmt(g, 2)} g, ${fmt(vesc, 1)} km/s`],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 85. habitable-zone planet ---- */
+
+const HZ_STARS: Array<{ key: string; name: string; M: number; R: number; L: number; T: number }> = [
+  { key: 'M', name: 'M dwarf (0.12 M☉)', M: 0.12, R: 0.15, L: 0.0016, T: 3050 }, { key: 'K', name: 'K dwarf (0.7 M☉)', M: 0.7, R: 0.7, L: 0.15, T: 4600 },
+  { key: 'G', name: 'Sun-like (1 M☉)', M: 1, R: 1, L: 1, T: 5772 }, { key: 'F', name: 'F star (1.3 M☉)', M: 1.3, R: 1.3, L: 3.2, T: 6500 }, { key: 'A', name: 'A star (2 M☉)', M: 2, R: 1.8, L: 20, T: 8500 },
+];
+
+class HabitableWidget extends CanvasWidget {
+  private star = HZ_STARS[2]; private aAU = 1; private aSet!: { set: (v: number) => void }; private phase = 0;
+  constructor() {
+    super(480 / 280);
+    this.segmented(HZ_STARS.map((s) => [s.key, s.key === 'G' ? 'Sun' : s.key + ' dwarf'] as [string, string]), 'G', (k) => { this.star = HZ_STARS.find((s) => s.key === k)!; const a = Math.sqrt(this.star.L); this.aAU = a; this.aSet.set(Math.log10(a)); });
+    this.playButton();
+    this.aSet = this.slider('Planet orbit a', -2, 1, 0.01, 0, (v) => `${fmt(10 ** v, 3)} AU`, (v) => { this.aAU = 10 ** v; });
+  }
+  protected draw(dt: number) {
+    this.phase = (this.phase + dt * 0.3) % 1;
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const s = this.star;
+    const hzIn = Math.sqrt(s.L / 1.1), hzOut = Math.sqrt(s.L / 0.53);          // conservative HZ (Kopparapu-like flux limits)
+    const ox = this.w * 0.3, oy = this.h * 0.5, S = Math.min(this.w * 0.26, this.h * 0.42);
+    const R = (a: number) => (Math.log10(a) + 2.1) / 3.2 * S;                      // log radial scale
+    c.beginPath(); c.arc(ox, oy, R(hzOut), 0, TAU); c.arc(ox, oy, R(hzIn), 0, TAU, true); c.fillStyle = hexA(C.green, 0.18); c.fill('evenodd');
+    this.circle(ox, oy, R(hzIn), hexA(C.green, 0.5)); this.circle(ox, oy, R(hzOut), hexA(C.green, 0.5));
+    this.text('habitable zone', ox, oy - R(hzOut) - 6, C.green, 8, 'center');
+    const col = tempRGB(s.T); this.glow(ox, oy, 16 + s.R * 6, rgba(col, 0.7)); this.circle(ox, oy, 4 + s.R * 3, undefined, rgba(col));
+    c.beginPath(); c.arc(ox, oy, R(this.aAU), 0, TAU); c.strokeStyle = hexA(C.accent, 0.6); c.setLineDash([3, 3]); c.stroke(); c.setLineDash([]);
+    const ph = this.phase * TAU; this.circle(ox + R(this.aAU) * Math.cos(ph), oy + R(this.aAU) * Math.sin(ph), 3.5, undefined, C.accent);
+    this.text('log radial scale', ox, oy + S + 10, C.faint, 7, 'center');
+    // numbers for an Earth twin
+    const aM = this.aAU * AU_M, Teq = 278.5 * Math.pow(s.L, 0.25) / Math.sqrt(this.aAU) * Math.pow(1 - 0.3, 0.25);
+    const P = TAU * Math.sqrt(aM ** 3 / (GRAV * s.M * MSUN)), K = Math.cbrt(2 * Math.PI * GRAV / P) * MEARTH / Math.pow(s.M * MSUN, 2 / 3);
+    const depth = (REARTH / (s.R * RSUN)) ** 2, prob = s.R * RSUN / aM;
+    const astro = (aM * MEARTH / (s.M * MSUN)) / (10 * PC_M) / (DEG / 3600) * 1e6;   // µas at 10 pc
+    const inHZ = this.aAU >= hzIn && this.aAU <= hzOut;
+    const flux = s.L / this.aAU ** 2;
+    // right-hand bar chart of detectability
+    const bx = this.w * 0.58, by0 = 20, bw = this.w * 0.38;
+    const bars: Array<[string, number, number, string]> = [
+      ['RV K (m/s)', K, 1, `${fmt(K, 2)}`], ['transit depth (ppm)', depth * 1e6, 20, `${fmt(depth * 1e6, 0)}`], ['transit prob. (%)', prob * 100, 1, `${fmt(prob * 100, 2)}`], ['astrometry (µas @10 pc)', astro, 10, `${fmt(astro, 2)}`],
+    ];
+    bars.forEach(([name, v, need, label], i) => { const y = by0 + i * 34; const f = Math.min(1, Math.max(0.02, 0.5 + 0.25 * Math.log10(v / need))); this.text(name, bx, y, C.dim, 8); c.fillStyle = hexA(v >= need ? C.green : C.red, 0.7); c.fillRect(bx, y + 6, bw * f, 8); this.line(bx + bw * 0.5, y + 4, bx + bw * 0.5, y + 16, C.faint, 1); this.text(label, bx + bw * f + 4, y + 10, C.text, 8); });
+    this.text('bar midpoint = current detection limit', bx, by0 + 4 * 34, C.faint, 7);
+    this.setReadout([
+      ['Star', `${s.name}`], ['L, T', `${s.L} L☉, ${s.T} K`],
+      ['Habitable zone (conservative)', `${fmt(hzIn, 3)} – ${fmt(hzOut, 3)} AU`, C.green],
+      ['Earth twin at a', inHZ ? 'inside HZ' : flux > 1.1 ? 'too hot' : 'too cold', inHZ ? C.green : C.red], ['T_eq, P', `${fmt(Teq, 0)} K, ${fmtDur(P)}`],
+      ['Tidally locked?', this.aAU < 0.1 * Math.sqrt(s.M) ? 'likely' : 'no'],
+      ['Easiest route', s.M < 0.3 ? 'transits + RV (small star)' : s.M > 1.2 ? 'none easy (hot, few lines)' : 'long RV series / transit'],
+    ]);
+  }
+}
+
 export function createWidget(spec: WidgetSpec): Widget {
   switch (spec.type) {
     case 'ancientsky': return new AncientSkyWidget();
@@ -5005,5 +5917,21 @@ export function createWidget(spec: WidgetSpec): Widget {
     case 'skymap': return new SkyMapWidget();
     case 'datagrowth': return new DataGrowthWidget();
     case 'crossmatch': return new CrossmatchWidget();
+    case 'doubletest': return new DoubleTestWidget();
+    case 'visualorbit': return new VisualOrbitWidget(spec.mode);
+    case 'astrometric': return new AstrometricWidget();
+    case 'binaryclassify': return new BinaryClassifyWidget();
+    case 'massratio': return new MassRatioWidget();
+    case 'binarymass': return new BinaryMassWidget();
+    case 'massluminosity': return new MassLuminosityWidget();
+    case 'rvshape': return new RvShapeWidget();
+    case 'massfunction': return new MassFunctionWidget();
+    case 'eclipse': return new EclipseWidget(spec.mode);
+    case 'lcgallery': return new LcGalleryWidget();
+    case 'planetrv': return new PlanetRvWidget();
+    case 'transit': return new TransitWidget();
+    case 'methods': return new MethodsWidget();
+    case 'density': return new DensityWidget();
+    case 'habitable': return new HabitableWidget();
   }
 }

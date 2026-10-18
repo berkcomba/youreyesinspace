@@ -1,0 +1,704 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "astrometric-binaries": {
+   "script": "Look at Sirius behind the panel. If the companion is invisible — white dwarf, brown dwarf, or planet — the bright star still orbits the centre of mass while that centre drifts in a straight line. We see a straight path with a periodic wobble sewn on: an astrometric binary. Like one dancer circling an unseen partner as the pair glides across the floor.\n\nI want you to use the widget. Start from the straight path. Dial in an unseen companion and watch the oscillation. More mass makes a larger wobble; a shorter period makes it faster.\n\nIn eighteen forty-four Bessel reported wavy paths for Sirius and Procyon, periods about fifty and forty years, implying invisible companions near solar mass. Numberless visible stars, he said, prove nothing against numberless invisible ones. Alvan Clark found Sirius B in eighteen sixty-two on the predicted spot while testing an eighteen-inch objective; Procyon B in eighteen ninety-six. Both white dwarfs, the first known, ten thousand times fainter than their primaries.\n\nThe amplitude is that orbit as an angle. Alpha one equals a one over d, which equals m two over the quantity m one plus m two, times a over d. Alpha one is the angular wobble. a one is the visible star’s physical semi-major axis about the centre of mass, d is the distance. m one and m two are the masses and a the relative semi-major axis. The star takes only the fraction m two over total mass of a; divide by d for the angle. With alpha one, distance, primary mass and inclination known, the companion mass follows.\n\nA solar-mass companion wobbles Sirius by a few arcseconds. From ten parsecs Jupiter shifts the Sun half a milliarcsecond, Earth half a microarcsecond. Gaia’s fourth data release should deliver thousands of planets, four orders of magnitude finer.\n\nBessel had the period and Sirius’s orbit size about the centre of mass. Count the unknowns. What extra piece gives the companion’s mass, and why not from astrometry?",
+   "hash": "1e23e800e594",
+   "duration": 124.47,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.42,
+     "text": "Look at Sirius behind the panel."
+    },
+    {
+     "start": 2.42,
+     "end": 12.84,
+     "text": "If the companion is invisible — white dwarf, brown dwarf, or planet — the bright star still orbits the centre of mass while that centre drifts in a straight line."
+    },
+    {
+     "start": 12.84,
+     "end": 18.36,
+     "text": "We see a straight path with a periodic wobble sewn on: an astrometric binary."
+    },
+    {
+     "start": 18.36,
+     "end": 23.26,
+     "text": "Like one dancer circling an unseen partner as the pair glides across the floor."
+    },
+    {
+     "start": 23.26,
+     "end": 24.9,
+     "text": "I want you to use the widget."
+    },
+    {
+     "start": 24.9,
+     "end": 26.66,
+     "text": "Start from the straight path."
+    },
+    {
+     "start": 26.66,
+     "end": 30.3,
+     "text": "Dial in an unseen companion and watch the oscillation."
+    },
+    {
+     "start": 30.3,
+     "end": 34.66,
+     "text": "More mass makes a larger wobble; a shorter period makes it faster."
+    },
+    {
+     "start": 34.66,
+     "end": 44.78,
+     "text": "In eighteen forty-four Bessel reported wavy paths for Sirius and Procyon, periods about fifty and forty years, implying invisible companions near solar mass."
+    },
+    {
+     "start": 44.78,
+     "end": 49.82,
+     "text": "Numberless visible stars, he said, prove nothing against numberless invisible ones."
+    },
+    {
+     "start": 49.82,
+     "end": 59,
+     "text": "Alvan Clark found Sirius B in eighteen sixty-two on the predicted spot while testing an eighteen-inch objective; Procyon B in eighteen ninety-six."
+    },
+    {
+     "start": 59,
+     "end": 64.05,
+     "text": "Both white dwarfs, the first known, ten thousand times fainter than their primaries."
+    },
+    {
+     "start": 64.05,
+     "end": 66.69,
+     "text": "The amplitude is that orbit as an angle."
+    },
+    {
+     "start": 66.69,
+     "end": 74.47,
+     "text": "Alpha one equals a one over d, which equals m two over the quantity m one plus m two, times a over d."
+    },
+    {
+     "start": 74.47,
+     "end": 76.69,
+     "text": "Alpha one is the angular wobble."
+    },
+    {
+     "start": 76.69,
+     "end": 83.13,
+     "text": "a one is the visible star’s physical semi-major axis about the centre of mass, d is the distance."
+    },
+    {
+     "start": 83.13,
+     "end": 87.65,
+     "text": "m one and m two are the masses and a the relative semi-major axis."
+    },
+    {
+     "start": 87.65,
+     "end": 93.51,
+     "text": "The star takes only the fraction m two over total mass of a; divide by d for the angle."
+    },
+    {
+     "start": 93.51,
+     "end": 99.49,
+     "text": "With alpha one, distance, primary mass and inclination known, the companion mass follows."
+    },
+    {
+     "start": 99.49,
+     "end": 103.23,
+     "text": "A solar-mass companion wobbles Sirius by a few arcseconds."
+    },
+    {
+     "start": 103.23,
+     "end": 109.15,
+     "text": "From ten parsecs Jupiter shifts the Sun half a milliarcsecond, Earth half a microarcsecond."
+    },
+    {
+     "start": 109.15,
+     "end": 114.71,
+     "text": "Gaia’s fourth data release should deliver thousands of planets, four orders of magnitude finer."
+    },
+    {
+     "start": 114.71,
+     "end": 118.87,
+     "text": "Bessel had the period and Sirius’s orbit size about the centre of mass."
+    },
+    {
+     "start": 118.87,
+     "end": 120.29,
+     "text": "Count the unknowns."
+    },
+    {
+     "start": 120.29,
+     "end": 124.47,
+     "text": "What extra piece gives the companion’s mass, and why not from astrometry?"
+    }
+   ],
+   "voicedHash": "fb37971949c0"
+  },
+  "classification-summary": {
+   "script": "Look behind the panel: the whole planetary system is slowly circling the Sun, and that motion is how we weigh stars. Mass decides a star's life, and you cannot read it from a spectrum. It is weighed only through gravity, hence through binaries, and about half of all stars have companions. Optical doubles are chance alignments — unrelated proper motions, no orbit. Bound pairs share a proper motion and curve around each other. Visual binaries are resolved. Rho, the angular separation, and theta, the position angle, plotted against time, give the period and the angular semi-major axis, though projection shifts the primary off the focus. Astrometric binaries betray an unseen companion by the wobble of the visible star's path; Bessel found that for Sirius in eighteen forty-four. Spectrum binaries show two spectral types in one light. Spectroscopic binaries show lines sliding with the Doppler shift, double-lined or single-lined. Eclipsing binaries show periodic dips, and must be nearly edge-on. An eclipsing binary that is also double-lined spectroscopic gives everything: masses, radii, temperatures, luminosities, and distance. Read the classes as a list of which measurements are available. The next two sections take those lists one at a time and show how far each gets toward m one and m two, the masses we want. See you there.",
+   "hash": "17f443f72f08",
+   "duration": 85.43,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 7.82,
+     "text": "Look behind the panel: the whole planetary system is slowly circling the Sun, and that motion is how we weigh stars."
+    },
+    {
+     "start": 7.82,
+     "end": 12.04,
+     "text": "Mass decides a star's life, and you cannot read it from a spectrum."
+    },
+    {
+     "start": 12.04,
+     "end": 18.6,
+     "text": "It is weighed only through gravity, hence through binaries, and about half of all stars have companions."
+    },
+    {
+     "start": 18.6,
+     "end": 23.88,
+     "text": "Optical doubles are chance alignments — unrelated proper motions, no orbit."
+    },
+    {
+     "start": 23.88,
+     "end": 27.46,
+     "text": "Bound pairs share a proper motion and curve around each other."
+    },
+    {
+     "start": 27.46,
+     "end": 29.58,
+     "text": "Visual binaries are resolved."
+    },
+    {
+     "start": 29.58,
+     "end": 41.66,
+     "text": "Rho, the angular separation, and theta, the position angle, plotted against time, give the period and the angular semi-major axis, though projection shifts the primary off the focus."
+    },
+    {
+     "start": 41.66,
+     "end": 50.43,
+     "text": "Astrometric binaries betray an unseen companion by the wobble of the visible star's path; Bessel found that for Sirius in eighteen forty-four."
+    },
+    {
+     "start": 50.43,
+     "end": 53.89,
+     "text": "Spectrum binaries show two spectral types in one light."
+    },
+    {
+     "start": 53.89,
+     "end": 59.75,
+     "text": "Spectroscopic binaries show lines sliding with the Doppler shift, double-lined or single-lined."
+    },
+    {
+     "start": 59.75,
+     "end": 64.29,
+     "text": "Eclipsing binaries show periodic dips, and must be nearly edge-on."
+    },
+    {
+     "start": 64.29,
+     "end": 73.59,
+     "text": "An eclipsing binary that is also double-lined spectroscopic gives everything: masses, radii, temperatures, luminosities, and distance."
+    },
+    {
+     "start": 73.59,
+     "end": 76.99,
+     "text": "Read the classes as a list of which measurements are available."
+    },
+    {
+     "start": 76.99,
+     "end": 84.77,
+     "text": "The next two sections take those lists one at a time and show how far each gets toward m one and m two, the masses we want."
+    },
+    {
+     "start": 84.77,
+     "end": 85.43,
+     "text": "See you there."
+    }
+   ],
+   "voicedHash": "828cf49f66ed"
+  },
+  "eclipsing-spectroscopic": {
+   "script": "Look with me at Algol behind the panel, the demon's head. The unresolved binaries we have left show as one point of light, their double nature leaking out indirectly. Eclipsing ones have inclination near ninety degrees so the stars cross and the light dips each revolution. Algol fades over a magnitude for ten hours every two point eight seven days. Goodricke at eighteen proposed eclipses in seventeen eighty-three. We get inclination nearly free; section seven point three lets us extract radii and the temperature ratio from the light curve. Spectrum binaries superpose two types in one spectrum, an A star's hydrogen lines with K giant bands, no motion needed. That proves to us they exist and yields a luminosity ratio. Spectroscopic binaries show us Doppler shifts from section five point one, lines splitting and merging as the stars approach and recede. We call them double-lined S B two or single-lined S B one. Pickering found Mizar A at twenty point five days in eighteen eighty-nine; Vogel tied Algol's shifts to the eclipses the same year. On the table we see the yields. Visual gives m one plus m two with distance d, and m one over m two from centre-of-mass motion. Astrometry gives the companion mass with i. The mass function is m sine cubed i, where m blends the masses and i is inclination; sine cubed hides the true masses. Eclipses give i near ninety degrees, R one over a and R two over a, the radii divided by the separation, and T two over T one the temperature ratio. The overlaps are where I find the physics richest. Eclipsing and double-lined together give us masses, radii, temperatures, luminosities and distance with no parallax. A few hundred, accurate to a few percent, calibrate all stellar astrophysics. Now you try the sorting game on the widget. Assign each image, light curve, spectrum or proper-motion track to a class and notice that many fit several. Remember the classes are observational; distance, orientation and instrument decide which labels apply.",
+   "hash": "45ae631df9ef",
+   "duration": 127.35,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.88,
+     "text": "Look with me at Algol behind the panel, the demon's head."
+    },
+    {
+     "start": 3.88,
+     "end": 10.46,
+     "text": "The unresolved binaries we have left show as one point of light, their double nature leaking out indirectly."
+    },
+    {
+     "start": 10.46,
+     "end": 17.24,
+     "text": "Eclipsing ones have inclination near ninety degrees so the stars cross and the light dips each revolution."
+    },
+    {
+     "start": 17.24,
+     "end": 22.22,
+     "text": "Algol fades over a magnitude for ten hours every two point eight seven days."
+    },
+    {
+     "start": 22.22,
+     "end": 26.06,
+     "text": "Goodricke at eighteen proposed eclipses in seventeen eighty-three."
+    },
+    {
+     "start": 26.06,
+     "end": 34.08,
+     "text": "We get inclination nearly free; section seven point three lets us extract radii and the temperature ratio from the light curve."
+    },
+    {
+     "start": 34.08,
+     "end": 42.26,
+     "text": "Spectrum binaries superpose two types in one spectrum, an A star's hydrogen lines with K giant bands, no motion needed."
+    },
+    {
+     "start": 42.26,
+     "end": 46.16,
+     "text": "That proves to us they exist and yields a luminosity ratio."
+    },
+    {
+     "start": 46.16,
+     "end": 54.02,
+     "text": "Spectroscopic binaries show us Doppler shifts from section five point one, lines splitting and merging as the stars approach and recede."
+    },
+    {
+     "start": 54.02,
+     "end": 58.22,
+     "text": "We call them double-lined S B two or single-lined S B one."
+    },
+    {
+     "start": 58.22,
+     "end": 66.25,
+     "text": "Pickering found Mizar A at twenty point five days in eighteen eighty-nine; Vogel tied Algol's shifts to the eclipses the same year."
+    },
+    {
+     "start": 66.25,
+     "end": 68.27,
+     "text": "On the table we see the yields."
+    },
+    {
+     "start": 68.27,
+     "end": 75.03,
+     "text": "Visual gives m one plus m two with distance d, and m one over m two from centre-of-mass motion."
+    },
+    {
+     "start": 75.03,
+     "end": 77.91,
+     "text": "Astrometry gives the companion mass with i."
+    },
+    {
+     "start": 77.91,
+     "end": 86.19,
+     "text": "The mass function is m sine cubed i, where m blends the masses and i is inclination; sine cubed hides the true masses."
+    },
+    {
+     "start": 86.19,
+     "end": 96.67,
+     "text": "Eclipses give i near ninety degrees, R one over a and R two over a, the radii divided by the separation, and T two over T one the temperature ratio."
+    },
+    {
+     "start": 96.67,
+     "end": 99.47,
+     "text": "The overlaps are where I find the physics richest."
+    },
+    {
+     "start": 99.47,
+     "end": 107.09,
+     "text": "Eclipsing and double-lined together give us masses, radii, temperatures, luminosities and distance with no parallax."
+    },
+    {
+     "start": 107.09,
+     "end": 112.19,
+     "text": "A few hundred, accurate to a few percent, calibrate all stellar astrophysics."
+    },
+    {
+     "start": 112.19,
+     "end": 114.43,
+     "text": "Now you try the sorting game on the widget."
+    },
+    {
+     "start": 114.43,
+     "end": 121.39,
+     "text": "Assign each image, light curve, spectrum or proper-motion track to a class and notice that many fit several."
+    },
+    {
+     "start": 121.39,
+     "end": 127.35,
+     "text": "Remember the classes are observational; distance, orientation and instrument decide which labels apply."
+    }
+   ],
+   "voicedHash": "69bec06f1db4"
+  },
+  "optical-doubles": {
+   "script": "Look at Mizar behind the panel, the horse and rider in the Big Dipper's handle. The sky is only a projection. A bright nearby star and a faint distant one can fall within a few arcseconds by chance. That is an optical double. Like hikers miles apart on one sightline: no shared orbit, so nothing about masses.\n\nI want you to sort chance alignments from bound pairs, then sort the bound ones by how binarity shows itself.\n\nMotion is the oldest test. Unrelated stars have different proper motions and peel apart along straight lines over a few decades. Bound stars share the proper motion of their centre of mass and circle each other on that drift, so separation and position angle follow a curve that closes on itself.\n\nPlay forty years in the widget for a chance alignment and for a bound pair. Notice two straight tracks, then a shared drift with an orbit on it.\n\nFor centuries Mizar and Alcor looked like an optical double, twelve arcminutes apart, too wide to orbit in a lifetime. Modern parallaxes and proper motions put them near eighty-three light-years, moving together in the Ursa Major stream, probably bound a quarter of a light-year apart. Same proper motion and parallax means a common proper motion pair, almost certainly bound even if the orbit is too slow to see. Mizar itself is a visual binary, the first double star seen in a telescope, by Benedetto Castelli in sixteen seventeen, and each component is a spectroscopic binary. One naked-eye star, six suns: a hierarchical multiple of nested binaries, stable only when the orbits are well separated in size, as in alpha Centauri. A physical binary orbits a common centre of mass. Everything after this concerns these.\n\nHerschel catalogued doubles from seventeen seventy-nine to measure parallax. By eighteen oh three, Castor, gamma Virginis and seventy Ophiuchi had swung around each other, the first proof that Newton's gravity operates beyond the solar system, the foundation of stellar astrophysics.",
+   "hash": "1af507fff0a3",
+   "duration": 118.07,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.02,
+     "text": "Look at Mizar behind the panel, the horse and rider in the Big Dipper's handle."
+    },
+    {
+     "start": 5.02,
+     "end": 7.1,
+     "text": "The sky is only a projection."
+    },
+    {
+     "start": 7.1,
+     "end": 12.32,
+     "text": "A bright nearby star and a faint distant one can fall within a few arcseconds by chance."
+    },
+    {
+     "start": 12.32,
+     "end": 14.08,
+     "text": "That is an optical double."
+    },
+    {
+     "start": 14.08,
+     "end": 19.96,
+     "text": "Like hikers miles apart on one sightline: no shared orbit, so nothing about masses."
+    },
+    {
+     "start": 19.96,
+     "end": 26.6,
+     "text": "I want you to sort chance alignments from bound pairs, then sort the bound ones by how binarity shows itself."
+    },
+    {
+     "start": 26.6,
+     "end": 28.56,
+     "text": "Motion is the oldest test."
+    },
+    {
+     "start": 28.56,
+     "end": 34.24,
+     "text": "Unrelated stars have different proper motions and peel apart along straight lines over a few decades."
+    },
+    {
+     "start": 34.24,
+     "end": 43.36,
+     "text": "Bound stars share the proper motion of their centre of mass and circle each other on that drift, so separation and position angle follow a curve that closes on itself."
+    },
+    {
+     "start": 43.36,
+     "end": 47.52,
+     "text": "Play forty years in the widget for a chance alignment and for a bound pair."
+    },
+    {
+     "start": 47.52,
+     "end": 51.64,
+     "text": "Notice two straight tracks, then a shared drift with an orbit on it."
+    },
+    {
+     "start": 51.64,
+     "end": 59.11,
+     "text": "For centuries Mizar and Alcor looked like an optical double, twelve arcminutes apart, too wide to orbit in a lifetime."
+    },
+    {
+     "start": 59.11,
+     "end": 68.39,
+     "text": "Modern parallaxes and proper motions put them near eighty-three light-years, moving together in the Ursa Major stream, probably bound a quarter of a light-year apart."
+    },
+    {
+     "start": 68.39,
+     "end": 75.83,
+     "text": "Same proper motion and parallax means a common proper motion pair, almost certainly bound even if the orbit is too slow to see."
+    },
+    {
+     "start": 75.83,
+     "end": 86.49,
+     "text": "Mizar itself is a visual binary, the first double star seen in a telescope, by Benedetto Castelli in sixteen seventeen, and each component is a spectroscopic binary."
+    },
+    {
+     "start": 86.49,
+     "end": 96.63,
+     "text": "One naked-eye star, six suns: a hierarchical multiple of nested binaries, stable only when the orbits are well separated in size, as in alpha Centauri."
+    },
+    {
+     "start": 96.63,
+     "end": 99.77,
+     "text": "A physical binary orbits a common centre of mass."
+    },
+    {
+     "start": 99.77,
+     "end": 101.99,
+     "text": "Everything after this concerns these."
+    },
+    {
+     "start": 101.99,
+     "end": 106.11,
+     "text": "Herschel catalogued doubles from seventeen seventy-nine to measure parallax."
+    },
+    {
+     "start": 106.11,
+     "end": 118.07,
+     "text": "By eighteen oh three, Castor, gamma Virginis and seventy Ophiuchi had swung around each other, the first proof that Newton's gravity operates beyond the solar system, the foundation of stellar astrophysics."
+    }
+   ],
+   "voicedHash": "72b1deb54a18"
+  },
+  "visual-binaries": {
+   "script": "When we can separate both stars in the telescope, the pair is a visual binary. We measure two numbers over many nights: the angular separation rho of the fainter from the brighter, and the position angle theta of the line joining them, from north through east. Those points trace an ellipse on the sky, the apparent orbit.\n\nPress play on the widget and watch rho and theta accumulate. Change the eccentricity, the inclination and the orientation. Notice how the apparent ellipse changes shape, and how the primary slides off the focus.\n\nThe true orbit is an ellipse with the primary at one focus, by Kepler's first law. Projected on the sky it is still an ellipse, but the focus is not preserved. The primary lies at the focus only face-on. That shift encodes the inclination, which the next section uses. Shape alone is ambiguous: a circular orbit at sixty degrees looks like eccentricity zero point five.\n\nThe measurements rho of t and theta of t determine seven orbital elements. P is the period, a the angular semi-major axis, e the eccentricity, i the inclination, capital omega the position angle of the ascending node, omega the argument of periastron, and T the time of periastron passage. Only P and a enter the masses; i enters through the projection.\n\nVisual binaries are wide and slow. One arcsecond at ten parsecs equals ten astronomical units, and two solar masses take about twenty-two years to orbit. The shortest periods are a few years for the nearest stars. Many pairs take centuries and have not finished one revolution since Herschel. Look at Alula Australis behind the panel. Félix Savary computed its orbit in eighteen twenty-seven, period about sixty years, and it has revolved more than three times.\n\nSpeckle interferometry and adaptive optics reach three hundredths of an arcsecond, while CHARA and the VLTI reach a milliarcsecond and resolve spectroscopic binaries. These classes are defined by the instrument as much as by the star.",
+   "hash": "d0f853da44b5",
+   "duration": 122.23,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 5.4,
+     "text": "When we can separate both stars in the telescope, the pair is a visual binary."
+    },
+    {
+     "start": 5.4,
+     "end": 16.08,
+     "text": "We measure two numbers over many nights: the angular separation rho of the fainter from the brighter, and the position angle theta of the line joining them, from north through east."
+    },
+    {
+     "start": 16.08,
+     "end": 20.04,
+     "text": "Those points trace an ellipse on the sky, the apparent orbit."
+    },
+    {
+     "start": 20.04,
+     "end": 23.6,
+     "text": "Press play on the widget and watch rho and theta accumulate."
+    },
+    {
+     "start": 23.6,
+     "end": 27.44,
+     "text": "Change the eccentricity, the inclination and the orientation."
+    },
+    {
+     "start": 27.44,
+     "end": 32.46,
+     "text": "Notice how the apparent ellipse changes shape, and how the primary slides off the focus."
+    },
+    {
+     "start": 32.46,
+     "end": 37.66,
+     "text": "The true orbit is an ellipse with the primary at one focus, by Kepler's first law."
+    },
+    {
+     "start": 37.66,
+     "end": 42.16,
+     "text": "Projected on the sky it is still an ellipse, but the focus is not preserved."
+    },
+    {
+     "start": 42.16,
+     "end": 45.18,
+     "text": "The primary lies at the focus only face-on."
+    },
+    {
+     "start": 45.18,
+     "end": 49.4,
+     "text": "That shift encodes the inclination, which the next section uses."
+    },
+    {
+     "start": 49.4,
+     "end": 55.88,
+     "text": "Shape alone is ambiguous: a circular orbit at sixty degrees looks like eccentricity zero point five."
+    },
+    {
+     "start": 55.88,
+     "end": 60.7,
+     "text": "The measurements rho of t and theta of t determine seven orbital elements."
+    },
+    {
+     "start": 60.7,
+     "end": 75.85,
+     "text": "P is the period, a the angular semi-major axis, e the eccentricity, i the inclination, capital omega the position angle of the ascending node, omega the argument of periastron, and T the time of periastron passage."
+    },
+    {
+     "start": 75.85,
+     "end": 80.17,
+     "text": "Only P and a enter the masses; i enters through the projection."
+    },
+    {
+     "start": 80.17,
+     "end": 82.75,
+     "text": "Visual binaries are wide and slow."
+    },
+    {
+     "start": 82.75,
+     "end": 90.23,
+     "text": "One arcsecond at ten parsecs equals ten astronomical units, and two solar masses take about twenty-two years to orbit."
+    },
+    {
+     "start": 90.23,
+     "end": 93.53,
+     "text": "The shortest periods are a few years for the nearest stars."
+    },
+    {
+     "start": 93.53,
+     "end": 97.85,
+     "text": "Many pairs take centuries and have not finished one revolution since Herschel."
+    },
+    {
+     "start": 97.85,
+     "end": 100.57,
+     "text": "Look at Alula Australis behind the panel."
+    },
+    {
+     "start": 100.57,
+     "end": 108.31,
+     "text": "Félix Savary computed its orbit in eighteen twenty-seven, period about sixty years, and it has revolved more than three times."
+    },
+    {
+     "start": 108.31,
+     "end": 118.71,
+     "text": "Speckle interferometry and adaptive optics reach three hundredths of an arcsecond, while CHARA and the VLTI reach a milliarcsecond and resolve spectroscopic binaries."
+    },
+    {
+     "start": 118.71,
+     "end": 122.23,
+     "text": "These classes are defined by the instrument as much as by the star."
+    }
+   ],
+   "voicedHash": "ea78eb7525f5"
+  },
+  "why-binaries": {
+   "script": "Welcome. Mass is the master parameter of a star.\n\nChapters three and five gave us distance from parallax, luminosity from distance and flux, temperature from colour and lines, radius from luminosity and temperature, and composition from the lines. Nothing in the spectrum says how much matter a star holds, yet mass sets structure, luminosity, lifetime and death.\n\nWe have only one direct way to weigh anything: watch it pull on something else. Newton's form of Kepler's third law, section two point three, turns period and size into the sum of the masses. A lone star has no orbit. A companion is the scale, since each pulls in proportion to its mass. That is why I have written this chapter around double stars.\n\nRoughly half of Sun-like stars are binaries or multiples. The fraction is higher still among massive O and B stars. Look behind the panel. Rigil Kentaurus, alpha Centauri, the Sun's nearest neighbour, is a triple.\n\nOn the widget, switch the mass ratio presets. The heavier star moves on the smaller orbit, and the lighter one swings wide. Both orbits are always similar ellipses, one focus at the centre of mass, traversed in step. Like a seesaw, the heavy child sits nearer the pivot.\n\nThe condition is m one times r one equals m two times r two, so m one over m two equals r two over r one, which equals a two over a one. m one and m two are the masses. r one and r two are distances from the centre of mass. a one and a two are the semi-major axes. The star that moves less is the heavier one, in exact inverse proportion. A ratio of orbit sizes is a ratio of masses, and no units are required.\n\nStellar masses, the mass luminosity relation, white dwarfs, neutron stars, and the proof that black holes exist, all trace back to binaries. There is no spectroscopic mass. There is only gravity.",
+   "hash": "1b6ac1abb30d",
+   "duration": 119.67,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 1.14,
+     "text": "Welcome."
+    },
+    {
+     "start": 1.14,
+     "end": 3.98,
+     "text": "Mass is the master parameter of a star."
+    },
+    {
+     "start": 3.98,
+     "end": 16.62,
+     "text": "Chapters three and five gave us distance from parallax, luminosity from distance and flux, temperature from colour and lines, radius from luminosity and temperature, and composition from the lines."
+    },
+    {
+     "start": 16.62,
+     "end": 24.44,
+     "text": "Nothing in the spectrum says how much matter a star holds, yet mass sets structure, luminosity, lifetime and death."
+    },
+    {
+     "start": 24.44,
+     "end": 29.46,
+     "text": "We have only one direct way to weigh anything: watch it pull on something else."
+    },
+    {
+     "start": 29.46,
+     "end": 36.62,
+     "text": "Newton's form of Kepler's third law, section two point three, turns period and size into the sum of the masses."
+    },
+    {
+     "start": 36.62,
+     "end": 38.54,
+     "text": "A lone star has no orbit."
+    },
+    {
+     "start": 38.54,
+     "end": 43.02,
+     "text": "A companion is the scale, since each pulls in proportion to its mass."
+    },
+    {
+     "start": 43.02,
+     "end": 46.3,
+     "text": "That is why I have written this chapter around double stars."
+    },
+    {
+     "start": 46.3,
+     "end": 49.92,
+     "text": "Roughly half of Sun-like stars are binaries or multiples."
+    },
+    {
+     "start": 49.92,
+     "end": 53.58,
+     "text": "The fraction is higher still among massive O and B stars."
+    },
+    {
+     "start": 53.58,
+     "end": 55.12,
+     "text": "Look behind the panel."
+    },
+    {
+     "start": 55.12,
+     "end": 60.35,
+     "text": "Rigil Kentaurus, alpha Centauri, the Sun's nearest neighbour, is a triple."
+    },
+    {
+     "start": 60.35,
+     "end": 63.43,
+     "text": "On the widget, switch the mass ratio presets."
+    },
+    {
+     "start": 63.43,
+     "end": 67.97,
+     "text": "The heavier star moves on the smaller orbit, and the lighter one swings wide."
+    },
+    {
+     "start": 67.97,
+     "end": 73.85,
+     "text": "Both orbits are always similar ellipses, one focus at the centre of mass, traversed in step."
+    },
+    {
+     "start": 73.85,
+     "end": 77.21,
+     "text": "Like a seesaw, the heavy child sits nearer the pivot."
+    },
+    {
+     "start": 77.21,
+     "end": 87.97,
+     "text": "The condition is m one times r one equals m two times r two, so m one over m two equals r two over r one, which equals a two over a one."
+    },
+    {
+     "start": 87.97,
+     "end": 90.47,
+     "text": "m one and m two are the masses."
+    },
+    {
+     "start": 90.47,
+     "end": 93.93,
+     "text": "r one and r two are distances from the centre of mass."
+    },
+    {
+     "start": 93.93,
+     "end": 97.13,
+     "text": "a one and a two are the semi-major axes."
+    },
+    {
+     "start": 97.13,
+     "end": 101.69,
+     "text": "The star that moves less is the heavier one, in exact inverse proportion."
+    },
+    {
+     "start": 101.69,
+     "end": 106.57,
+     "text": "A ratio of orbit sizes is a ratio of masses, and no units are required."
+    },
+    {
+     "start": 106.57,
+     "end": 116.23,
+     "text": "Stellar masses, the mass luminosity relation, white dwarfs, neutron stars, and the proof that black holes exist, all trace back to binaries."
+    },
+    {
+     "start": 116.23,
+     "end": 118.33,
+     "text": "There is no spectroscopic mass."
+    },
+    {
+     "start": 118.33,
+     "end": 119.67,
+     "text": "There is only gravity."
+    }
+   ],
+   "voicedHash": "80bb4e2036af"
+  }
+ }
+}

@@ -62,6 +62,14 @@ const WIDGETS = {
   precession: 'an interactive view looking down on the north ecliptic pole: the 25 772-year circle of the celestial pole, nearby bright stars (Polaris, Thuban, Vega…), and a year slider from 13 000 BCE to 15 000 CE',
   spectrum: 'an interactive electromagnetic spectrum: a wavelength slider with wavelength, frequency, photon-energy and blackbody-temperature readouts, the atmosphere\'s transparency curve, and the bands of major telescopes',
 };
+/** fallback: the `/** … *\/` doc comment above each WidgetSpec member in lessons.ts */
+const WIDGET_DOCS = (() => {
+  const src = readFileSync(join(ROOT, 'src', 'data', 'lessons.ts'), 'utf8');
+  const out = {};
+  for (const m of src.matchAll(/\/\*\*\s*([^*]+?)\s*\*\/\s*\n\s*\|\s*\{\s*type:\s*'([a-z0-9]+)'/g)) out[m[2]] = m[1].replace(/\s+/g, ' ');
+  return out;
+})();
+const widgetDesc = (w) => WIDGETS[w.type] ?? (WIDGET_DOCS[w.type] ? `an interactive widget — ${WIDGET_DOCS[w.type]}${w.mode ? ` (mode: ${w.mode})` : ''}` : `an interactive ${w.type} widget`);
 const SCENES = {
   goto: (c) => `the 3-D view flies to ${c.ref.replace(/^l-/, '')}`,
   overview: (c) => `the 3-D view rises above the orbit of ${c.ref} with orbit lines shown`,
@@ -81,7 +89,7 @@ function slideText(section, step, index) {
     const s = step.scene.map((c) => SCENES[c.action]?.(c)).filter(Boolean);
     if (s.length) lines.push(`On screen behind the lesson panel: ${s.join('; ')}.`);
   }
-  if (step.widget) lines.push(`Interactive widget on the slide: ${WIDGETS[step.widget.type]}.`);
+  if (step.widget) lines.push(`Interactive widget on the slide: ${widgetDesc(step.widget)}.`);
   lines.push('');
   for (const b of step.body) {
     switch (b.kind) {
