@@ -3,7 +3,7 @@ import {
   NoColorSpace, Scene, ShaderMaterial, Vector3,
   type PerspectiveCamera,
 } from 'three';
-import { SKY_RADIUS_KM } from '../core/constants';
+import { PARSEC_KM, SKY_RADIUS_KM } from '../core/constants';
 import type { Landmark } from '../core/Universe';
 import { LANDMARK_ATLAS_GRID, LANDMARK_ATLAS_SLOT, LANDMARK_IMAGES } from '../data/landmarkImages';
 import { GalaxyCloud } from './GalaxyCloud';
@@ -22,6 +22,8 @@ export interface LandmarkScreen {
   /** apparent radius (px) */
   radiusPx: number;
   kind: Landmark['def']['kind'];
+  /** distance from the camera (km) */
+  distKm: number;
 }
 
 /**
@@ -180,8 +182,9 @@ export class LandmarkSprites {
       // landmarks don't pile onto its own label
       if (galaxyRatio(l.galaxy) > 4) continue;
       let m = this.pool[i];
-      if (!m) { m = { index: i, name: l.def.name, dir: new Vector3(), radiusPx: 0, kind: l.def.kind }; this.pool[i] = m; }
+      if (!m) { m = { index: i, name: l.def.name, dir: new Vector3(), radiusPx: 0, kind: l.def.kind, distKm: 0 }; this.pool[i] = m; }
       this.direction(i, m.dir);
+      m.distKm = l.positionPc.distanceTo(camPc) * PARSEC_KM;
       m.radiusPx = this.angularRadius(i) * pxPerRad;
       this.named.push(m);
     }

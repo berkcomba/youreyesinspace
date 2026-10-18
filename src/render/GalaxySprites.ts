@@ -1,7 +1,7 @@
 import {
   AdditiveBlending, BufferAttribute, BufferGeometry, Points, Scene, ShaderMaterial, Vector3, Vector4, type PerspectiveCamera,
 } from 'three';
-import { SKY_RADIUS_KM } from '../core/constants';
+import { PARSEC_KM, SKY_RADIUS_KM } from '../core/constants';
 import type { GalaxySource } from '../galaxy/galaxies';
 import type { NamedStarScreen } from './StarPoints';
 import { GalaxyCloud } from './GalaxyCloud';
@@ -132,13 +132,13 @@ export class GalaxySprites {
     this.named.length = 0;
     for (let i = 0; i < this.galaxies.catalogCount; i++) {
       if (i === hideIndex) continue;
-      const { angRad, ratio } = this.apparent(i);
+      const { angRad, ratio, distPc } = this.apparent(i);
       if (ratio < 6) continue;
       const m = this.apparentMag(i);
       const px = angRad * pxPerRad;
       // physical view: only naked-eye / conspicuous galaxies; boosted view: everything catalogued
       if (boost < 0.5 ? (m > 6.5 && px < 12) : (m > 14 && px < 3)) continue;
-      this.named.push({ index: i, name: this.galaxies.name(i), dir: this.direction(i), mag: m });
+      this.named.push({ index: i, name: this.galaxies.name(i), dir: this.direction(i), mag: m, distKm: distPc * PARSEC_KM });
     }
   }
 

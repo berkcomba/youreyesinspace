@@ -2,7 +2,6 @@ import {
   AdditiveBlending, BufferAttribute, BufferGeometry, Points, Scene, ShaderMaterial, Vector3, type PerspectiveCamera,
 } from 'three';
 import { PARSEC_KM, SKY_RADIUS_KM } from '../core/constants';
-import { fmtScaleDistance } from '../ui/format';
 import type { StarCatalog } from '../data/StarCatalog';
 import { bvToRgb } from '../astro/stellar';
 import { Shaders } from './shaders';
@@ -18,6 +17,8 @@ export interface NamedStarScreen {
   landmark?: boolean;
   /** label opacity (landmarks fading in); 1 when omitted */
   alpha?: number;
+  /** distance from the camera (km): appended to the label as "· 8.6 ly" */
+  distKm?: number;
 }
 
 /** camera distance from the Sun (pc) beyond which famous stars are labelled as landmarks */
@@ -153,10 +154,10 @@ export class StarPoints {
       const alpha = Math.min(1, (dSun - NEIGHBOUR_FADE_PC[0]) / (NEIGHBOUR_FADE_PC[1] - NEIGHBOUR_FADE_PC[0]));
       for (const i of this.neighbours) {
         if (i === hideIndex) continue;
-        const name = `${this.catalog.nameOf(i)} · ${fmtScaleDistance(this.distancePc(i) * PARSEC_KM)}`;
+        const distKm = this.distancePc(i) * PARSEC_KM;
         const cur = this.namedStars.find((n) => n.index === i);
-        if (cur) { cur.name = name; cur.landmark = true; cur.alpha = alpha; }
-        else this.namedStars.push({ index: i, name, dir: this.direction(i), mag: this.catalog.mags[i] + 2.5, landmark: true, alpha });
+        if (cur) { cur.landmark = true; cur.alpha = alpha; cur.distKm = distKm; }
+        else this.namedStars.push({ index: i, name: this.catalog.nameOf(i), dir: this.direction(i), mag: this.catalog.mags[i] + 2.5, landmark: true, alpha, distKm });
         this.marked.push(i);
       }
     }

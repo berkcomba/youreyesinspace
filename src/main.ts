@@ -634,8 +634,8 @@ class App implements UIHost {
   private updateFill(dt: number): void {
     const want = this.fillWant;
     want.clear();
-    const tour = this.tours.state.tour;
-    if (tour) {
+    // lessons fly to the same close-ups, so they get the same light
+    if (this.tours.state.tour || this.lessons.active) {
       const cam = this.camera;
       const t = cam.target;
       if (t && t !== this.universe.star && cam.position.distanceTo(t.position) < t.radius * 9) want.add(t.id);
@@ -1268,7 +1268,8 @@ class App implements UIHost {
       if (bh.systemStarId === u.current.starId) continue;
       let m = this.bhMarkerPool[i];
       if (!m) { m = { index: -1, name: bh.entry.name, dir: new Vector3(), mag: 0 }; this.bhMarkerPool[i] = m; }
-      u.starRelative(bh.systemStarId, camPos, m.dir).normalize();
+      m.distKm = u.starRelative(bh.systemStarId, camPos, m.dir).length();
+      m.dir.normalize();
       out.push(m);
     }
     return out;

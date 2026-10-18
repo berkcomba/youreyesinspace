@@ -40,6 +40,8 @@ const _m = new Matrix4();
 const X = new Vector3(1, 0, 0);
 const Y = new Vector3(0, 1, 0);
 const Z = new Vector3(0, 0, 1);
+/** keyboard flight controls (orbit and free mode) */
+const MOVE_KEYS = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyQ', 'KeyE', 'KeyR', 'KeyF', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
 
 function smoothstep(t: number): number {
   t = Math.min(Math.max(t, 0), 1);
@@ -362,6 +364,10 @@ export class CameraController {
       }
       this.velocity.set(0, 0, 0);
     }
+
+    // Any hand on the controls ends the automatic drift (opening backdrop, tour dwell): it must
+    // not creep back once the visitor has taken over.
+    if (this.autoOrbit !== 0 && (dx !== 0 || dy !== 0 || wheel !== 0 || touching || MOVE_KEYS.some((k) => input.down(k)))) this.autoOrbit = 0;
 
     // 3. Mouse look / orbit
     if (!this.autopilot) {

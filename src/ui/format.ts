@@ -20,7 +20,7 @@ export function fmtDistance(km: number): string {
 export function fmtScaleDistance(km: number): string {
   const a = Math.abs(km);
   const two = (v: number) => fixed(v, v < 10 ? 1 : 0);
-  if (a < AU_KM * 0.5) return `${fmtNum(km / 1e6, { maximumFractionDigits: 0 })} M km`;
+  if (a < AU_KM * 0.5) return `${two(km / 1e6)} M km`;
   if (a < LIGHT_YEAR_KM * 0.1) return `${two(km / AU_KM)} AU`;
   if (a < LIGHT_YEAR_KM * 1000) return `${two(km / LIGHT_YEAR_KM)} ly`;
   if (a < PARSEC_KM * 1e6) return `${two(km / PARSEC_KM / 1e3)} kpc`;

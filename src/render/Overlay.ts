@@ -3,6 +3,8 @@ import type { CelestialBody } from '../core/CelestialBody';
 import type { BodyView } from './BodyRenderer';
 import type { NamedStarScreen } from './StarPoints';
 import type { LandmarkScreen } from './LandmarkSprites';
+import { AU_KM } from '../core/constants';
+import { fmtScaleDistance } from '../ui/format';
 
 export interface StarSelectionScreen {
   name: string;
@@ -38,6 +40,8 @@ export interface ScreenItem {
   x: number;
   y: number;
   radiusPx: number;
+  /** camera distance (km) */
+  distance: number;
   visible: boolean;
   labelShown: boolean;
 }
@@ -66,6 +70,10 @@ const LANDMARK_COLORS: Record<string, string> = {
 const SELECTION_COLOR = 'rgba(189, 155, 108, 0.95)';
 
 const SUN_COLOR = 'rgba(255, 225, 160, 0.9)';
+/** bodies farther than this (km) carry their distance in the label: "Mars · 1.2 AU" */
+const BODY_DIST_LABEL_KM = 0.01 * AU_KM;
+/** "Name · 8.6 ly" */
+const withDist = (name: string, km?: number): string => (km === undefined ? name : `${name} · ${fmtScaleDistance(km)}`);
 
 const _v = new Vector3();
 
@@ -127,7 +135,7 @@ export class Overlay {
       const x = (_v.x * 0.5 + 0.5) * W;
       const y = (-_v.y * 0.5 + 0.5) * H;
       const visible = inFront && x > -50 && x < W + 50 && y > -50 && y < H + 50;
-      const item: ScreenItem = { body: v.body, x, y, radiusPx: v.apparentRadiusPx, visible, labelShown: false };
+      const item: ScreenItem = { body: v.body, x, y, radiusPx: v.apparentRadiusPx, distance: v.distance, visible, labelShown: false };
       this.items.push(item);
       byId.set(v.body.id, item);
     }
@@ -171,7 +179,8 @@ export class Overlay {
         const x = (_v.x * 0.5 + 0.5) * W;
         const y = (-_v.y * 0.5 + 0.5) * H;
         if (x < 0 || x > W || y < 0 || y > H) continue;
-        const w = ctx.measureText(s.name).width + 10;
+        const label = withDist(s.name, s.distKm);
+        const w = ctx.measureText(label).width + 10;
         let clash = false;
         for (const t of taken) {
           if (Math.abs(t.y - y) < 14 && x + 7 < t.x + t.w && x + 7 + w > t.x) { clash = true; break; }
@@ -192,7 +201,7 @@ export class Overlay {
           ctx.arc(x, y, 3.5, 0, Math.PI * 2);
           ctx.stroke();
         }
-        ctx.fillText(s.name, x + 7, y - 7);
+        ctx.fillText(label, x + 7, y - 7);
         ctx.globalAlpha = 1;
       }
       ctx.font = '500 12px Inter, ui-sans-serif, system-ui, sans-serif';
@@ -210,7 +219,7 @@ export class Overlay {
         const y = (-_v.y * 0.5 + 0.5) * H;
         if (x < 0 || x > W || y < 0 || y > H) continue;
         ctx.fillStyle = 'rgba(215, 190, 255, 0.6)';
-        ctx.fillText(s.name, x + 7, y + 9);
+        ctx.fillText(withDist(s.name, s.distKm), x + 7, y + 9);
       }
       ctx.font = '500 12px Inter, ui-sans-serif, system-ui, sans-serif';
     }
@@ -242,7 +251,8 @@ export class Overlay {
           ctx.globalAlpha = 1;
         }
         if (this.showLabels) {
-          const w = ctx.measureText(s.name).width + 10;
+          const label = withDist(s.name, s.distKm);
+          const w = ctx.measureText(label).width + 10;
           const lx = x + r * 0.71 + 6, ly = y - r * 0.71 - 6;
           let clash = false;
           for (const t of taken) {
@@ -251,7 +261,7 @@ export class Overlay {
           if (clash) continue;
           taken.push({ x: lx, y: ly, w });
           ctx.fillStyle = color;
-          ctx.fillText(s.name, lx, ly);
+          ctx.fillText(label, lx, ly);
         }
       }
       ctx.font = '500 12px Inter, ui-sans-serif, system-ui, sans-serif';
@@ -277,7 +287,7 @@ export class Overlay {
         ctx.stroke();
         if (this.showLabels) {
           ctx.fillStyle = TYPE_COLORS.blackhole;
-          ctx.fillText(s.name, x + 10, y - 6);
+          ctx.fillText(withDist(s.name, s.distKm), x + 10, y - 6);
         }
         ctx.globalAlpha = 1;
       }
@@ -339,7 +349,7 @@ export class Overlay {
       if (sun && b.id === 'sun' && !isSel) continue;
 
       const color = TYPE_COLORS[b.data.type] ?? 'white';
-      const label = b.name;
+      const label = it.distance > BODY_DIST_LABEL_KM ? withDist(b.name, it.distance) : b.name;
       const tw = ctx.measureText(label).width;
       const offset = Math.max(it.radiusPx, 5) + 8;
       const lx = it.x + offset, ly = it.y - offset * 0.35;
