@@ -18,6 +18,8 @@ export interface Settings {
   imagery: boolean;
   belts: boolean;
   milkyWay: boolean;
+  /** generated content beyond the catalogues: procedural stars, galaxies and the far cosmic web */
+  procedural: boolean;
   /** tint procedurally generated stars / galaxies green so they can be told from catalogue objects */
   highlightProcedural: boolean;
   bloom: boolean;
@@ -47,6 +49,7 @@ export const DEFAULT_SETTINGS: Settings = {
   imagery: true,
   belts: true,
   milkyWay: true,
+  procedural: false,
   highlightProcedural: false,
   bloom: true,
   renderScale: 1,

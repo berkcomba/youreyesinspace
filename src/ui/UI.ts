@@ -105,6 +105,7 @@ const SETTING_DEFS: SettingDef[] = [
   { key: 'belts', label: 'Asteroit / Kuiper kuşağı', kind: 'bool' },
   { key: 'milkyWay', label: 'Galaksi yıldız bulutları', kind: 'bool' },
   { key: 'galaxies', label: 'Uzak galaksiler', kind: 'bool' },
+  { key: 'procedural', label: 'Prosedürel nesneler (üretilmiş yıldızlar, galaksiler, kozmik ağ)', kind: 'bool' },
   { key: 'highlightProcedural', label: 'Prosedürel nesneleri yeşile boya', kind: 'bool' },
   { key: 'atmospheres', label: 'Atmosferler', kind: 'bool', group: 'Render' },
   { key: 'clouds', label: 'Bulutlar', kind: 'bool' },

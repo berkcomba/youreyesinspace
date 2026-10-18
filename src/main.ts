@@ -853,7 +853,11 @@ class App implements UIHost {
     const ov = this.tourOverrides;
     this.grid.setVisible(ov.eclipticGrid ?? s.eclipticGrid, ov.equatorialGrid ?? s.equatorialGrid);
     this.galaxySprites.setVisible(s.galaxies);
-    for (const sp of this.farSprites) sp.setVisible(s.galaxies);
+    // generated content: procedural stars, the procedural galaxy field and the far cosmic-web tiers
+    this.galaxySprites.setProcedural(s.procedural);
+    for (const sp of this.farSprites) sp.setVisible(s.galaxies && s.procedural);
+    this.procPoints.setVisible(s.procedural);
+    if (!s.procedural && this.selectedGalaxy !== null && this.selectedGalaxy >= this.universe.galaxies.catalogCount) this.selectGalaxy(null);
     // "what is real?" view: generated stars & galaxies in green
     this.procPoints.setHighlight(s.highlightProcedural);
     this.galaxySprites.setHighlight(s.highlightProcedural);
@@ -1068,7 +1072,8 @@ class App implements UIHost {
 
     // clouds for every galaxy within 18 radii (sprite ↔ cloud crossfade range)
     const wanted = new Set<number>();
-    for (let i = 0; i < g.count; i++) {
+    const cloudCount = this.settings.procedural ? g.count : g.catalogCount;
+    for (let i = 0; i < cloudCount; i++) {
       const dx = g.positions[i * 3] - camPc.x, dy = g.positions[i * 3 + 1] - camPc.y, dz = g.positions[i * 3 + 2] - camPc.z;
       if (Math.sqrt(dx * dx + dy * dy + dz * dz) < g.radius[i] * 18) wanted.add(i);
     }
@@ -1081,8 +1086,8 @@ class App implements UIHost {
       this.clouds.set(i, cloud);
     }
 
-    // procedural stars for the galaxy we're in
-    u.procStars.update(camPc, inside);
+    // procedural stars for the galaxy we're in (none at all when generated content is switched off)
+    u.procStars.update(camPc, this.settings.procedural ? inside : null);
 
     // sprite exaggeration: physical inside a galaxy, boosted in intergalactic space
     let nearestRatio = Infinity;

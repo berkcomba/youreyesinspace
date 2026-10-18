@@ -83,6 +83,13 @@ export class GalaxySprites {
 
   setVisible(v: boolean): void { this.enabled = v; this.applyVisibility(); }
 
+  private procVisible = true;
+  /** Show or hide the procedural galaxies (indices ≥ catalogCount); catalogue ones always draw */
+  setProcedural(on: boolean): void {
+    this.procVisible = on;
+    this.points.geometry.setDrawRange(0, on ? this.galaxies.count : this.galaxies.catalogCount);
+  }
+
   /** Tint procedural (non-catalogue) galaxies green */
   setHighlight(on: boolean): void { this.mat.uniforms.uTint.value.w = on ? 0.85 : 0; }
 
@@ -148,7 +155,8 @@ export class GalaxySprites {
     const p = g.positions;
     let best = -1;
     let bestScore = Infinity;
-    for (let i = 0; i < g.count; i++) {
+    const n = this.procVisible ? g.count : g.catalogCount;
+    for (let i = 0; i < n; i++) {
       if (i === hideIndex) continue;
       _rel.set(p[i * 3] - this.camPc.x, p[i * 3 + 1] - this.camPc.y, p[i * 3 + 2] - this.camPc.z);
       const d = _rel.length();
