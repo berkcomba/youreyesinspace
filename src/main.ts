@@ -906,10 +906,12 @@ class App implements UIHost {
     // Inside / next to a galaxy its glow is a statistical point cloud, not stars: say so instead of
     // silently ignoring the click, and tell the visitor where the selectable stars are
     if (this.clouds.size && this.cloudUnderPointer(x, y, pxPerRad)) {
-      const any = this.procPoints.namedStars.length > 0;
-      this.ui.showToast(any
-        ? _('Çözümlenmemiş yıldız alanı · tıklanabilir yıldızlar isimleriyle (YE …) işaretli')
-        : _('Çözümlenmemiş yıldız alanı · tekil yıldızlar için galaksinin içine uçun'), 3200);
+      const any = this.universe.procStars.tiers.some((t) => t.count > 0);
+      this.ui.showToast(!any
+        ? _('Çözümlenmemiş yıldız alanı · tekil yıldızlar için galaksinin içine uçun')
+        : this.settings.proceduralNames
+          ? _('Çözümlenmemiş yıldız alanı · tıklanabilir yıldızlar isimleriyle (YE …) işaretli')
+          : _('Çözümlenmemiş yıldız alanı · yakındaki tekil yıldızlar tıklanabilir (imleç değişir)'), 3200);
       return;
     }
     // Far-universe tiers (aggregated clusters / supercluster knots): no selection, just an honest one-liner
@@ -1233,7 +1235,7 @@ class App implements UIHost {
       this.starSel.radiusPx = Math.min(this.landmarkSprites.angularRadius(i) * pxPerRad, eng.height);
       starSel = this.starSel;
     }
-    const namedStars = this.procPoints.namedStars.length
+    const namedStars = s.proceduralNames && this.procPoints.namedStars.length
       ? this.starPoints.namedStars.concat(this.procPoints.namedStars)
       : this.starPoints.namedStars;
     // tour surface pin: world point on the body, hidden when it faces away from us

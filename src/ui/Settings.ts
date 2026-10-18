@@ -22,6 +22,8 @@ export interface Settings {
   milkyWay: boolean;
   /** generated content beyond the catalogues: procedural stars, galaxies and the far cosmic web */
   procedural: boolean;
+  /** labels on generated stars ("YE 6LCRMG"); the dots stay clickable without them */
+  proceduralNames: boolean;
   /** tint procedurally generated stars / galaxies green so they can be told from catalogue objects */
   highlightProcedural: boolean;
   bloom: boolean;
@@ -52,8 +54,9 @@ export const DEFAULT_SETTINGS: Settings = {
   imagery: true,
   belts: true,
   milkyWay: true,
-  procedural: false,
-  highlightProcedural: false,
+  procedural: true,
+  proceduralNames: false,
+  highlightProcedural: true,
   bloom: true,
   renderScale: 1,
   fov: 50,

@@ -615,5 +615,7 @@
   "Çözümlenmemiş yıldız alanı · tıklanabilir yıldızlar isimleriyle (YE …) işaretli": "Champ d'étoiles non résolu · les étoiles cliquables portent un nom (YE …)",
   "Çözümlenmemiş yıldız alanı · tekil yıldızlar için galaksinin içine uçun": "Champ d'étoiles non résolu · entrez dans la galaxie pour des étoiles individuelles",
   "Prosedürel nesneler (üretilmiş yıldızlar, galaksiler, kozmik ağ)": "Objets procéduraux (étoiles, galaxies et toile cosmique générées)",
-  "Etiketlerde uzaklık": "Distances dans les étiquettes"
+  "Etiketlerde uzaklık": "Distances dans les étiquettes",
+  "Prosedürel yıldız isimleri (YE …)": "Noms des étoiles procédurales (YE …)",
+  "Çözümlenmemiş yıldız alanı · yakındaki tekil yıldızlar tıklanabilir (imleç değişir)": "Champ d'étoiles non résolu · les étoiles proches sont cliquables (le curseur change)"
 }

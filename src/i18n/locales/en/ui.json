@@ -615,5 +615,7 @@
   "Çözümlenmemiş yıldız alanı · tıklanabilir yıldızlar isimleriyle (YE …) işaretli": "Unresolved star field · clickable stars carry a name (YE …)",
   "Çözümlenmemiş yıldız alanı · tekil yıldızlar için galaksinin içine uçun": "Unresolved star field · fly into the galaxy for individual stars",
   "Prosedürel nesneler (üretilmiş yıldızlar, galaksiler, kozmik ağ)": "Procedural objects (generated stars, galaxies, cosmic web)",
-  "Etiketlerde uzaklık": "Distances in labels"
+  "Etiketlerde uzaklık": "Distances in labels",
+  "Prosedürel yıldız isimleri (YE …)": "Procedural star names (YE …)",
+  "Çözümlenmemiş yıldız alanı · yakındaki tekil yıldızlar tıklanabilir (imleç değişir)": "Unresolved star field · nearby individual stars are clickable (the cursor changes)"
 }
