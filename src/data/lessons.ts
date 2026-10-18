@@ -188,7 +188,31 @@ export type WidgetSpec =
   /** mass–radius diagram with composition curves and a draggable test planet */
   | { type: 'density' }
   /** habitable zone around a chosen star, a planet placed in it, and the signals it would produce */
-  | { type: 'habitable' };
+  | { type: 'habitable' }
+  /** the Harvard sequence O5 → M8 as one slider: continuum colour and the strengths of H, He, Ca II, metal and TiO lines */
+  | { type: 'spectralseq' }
+  /** a planet's spectrum assembled from reflected sunlight (solar lines intact), the planet's reflectivity and molecular bands, and its own thermal emission */
+  | { type: 'planetspectrum' }
+  /** Boltzmann equation: populations of hydrogen's levels against temperature, with N₂/N₁ */
+  | { type: 'boltzmann' }
+  /** Saha equation: ionisation fraction of a chosen element against temperature at a chosen electron pressure */
+  | { type: 'saha' }
+  /** Boltzmann × Saha: the fraction of hydrogen in n = 2 against temperature, peaking at A0, with the spectral classes marked */
+  | { type: 'balmerpeak' }
+  /** spectra of an M dwarf, L, T and Y dwarfs and Jupiter side by side: TiO, hydrides, methane, ammonia */
+  | { type: 'coolspectra' }
+  /** the H–R diagram built star by star from real and field data, with switchable axes (spectral class / B−V / T against M_V / L) */
+  | { type: 'hrbuild' }
+  /** a main-sequence star of chosen mass: its place on the diagram, T, L, R, lifetime, drawn to scale */
+  | { type: 'hrmass' }
+  /** H–R diagram with lines of constant radius; drag a star and read its radius, shown against the Sun */
+  | { type: 'hrradius' }
+  /** the H–R diagram extended to brown dwarfs and the planets, with an age slider for the cooling objects */
+  | { type: 'hrextended' }
+  /** MK luminosity classes: a Balmer line's width against surface gravity, with the star's place on an inset diagram */
+  | { type: 'luminosityclass' }
+  /** spectroscopic parallax: classify a star's spectrum, choose the luminosity class, get a distance, compare with Gaia */
+  | { type: 'specparallax' };
 
 export type SceneCue =
   | { action: 'goto'; ref: string; kind?: 'body' | 'blackhole' | 'star' | 'landmark' | 'galaxy' }
@@ -3559,6 +3583,292 @@ const S7_4: Section = {
   ],
 };
 
+/* =============================================================== chapter 8 ===== */
+
+const S8_1: Section = {
+  id: 'spectral-line-formation',
+  number: '8.1',
+  title: 'The Formation of Spectral Lines',
+  summary: 'How a roomful of Harvard "computers" sorted a quarter of a million spectra into the sequence O B A F G K M, why that sequence turned out to be a thermometer, and the two pieces of statistical physics — Boltzmann and Saha — that explain which lines a star of a given temperature can show. With a detour through the spectra of the planets, which borrow their lines from the Sun.',
+  minutes: 30,
+  steps: [
+    {
+      id: 'harvard-classification',
+      kicker: 'Interactive · the sequence',
+      title: 'O B A F G K M: a sequence found before it was understood',
+      widget: { type: 'spectralseq' },
+      scene: [goto('Vega', 'star'), rate(1)],
+      body: [
+        p('By the 1880s two instruments had changed what a star <em>was</em> to an astronomer. Photometry (Section 3.2) turned brightness into a number; the objective prism, a thin wedge of glass placed over the front of a telescope, turned every star in the field into a tiny spectrum on the same photographic plate. Suddenly a single exposure yielded hundreds of spectra, and the obvious thing to do with hundreds of anything is to sort them. The question was: sort by what?'),
+        p('Edward Pickering, director of the Harvard College Observatory, chose the strength of the hydrogen absorption lines — the Balmer series (Section 5.3), which is conspicuous in almost every stellar spectrum. Williamina Fleming assigned letters A through Q, A for the strongest hydrogen lines. Antonia Maury, looking at higher-dispersion spectra, noticed that the line <em>widths</em> also varied and proposed a parallel scheme. Then Annie Jump Cannon, between 1911 and 1915, classified 225 300 stars for the Henry Draper Catalogue at a pace of up to three stars a minute, and in doing so pruned and reordered Fleming\'s letters into the sequence still used today: <b>O B A F G K M</b>, each class divided into tenths (B0, B1, … B9, A0). The mnemonic is older than the explanation.'),
+        p('What Cannon had done, without any theory to guide her, was to arrange the stars by surface temperature. The hottest, O stars above 30 000 K, show lines of ionised helium; A stars near 10 000 K have the strongest hydrogen lines of all; the Sun is a G2 star at 5 800 K with a forest of metal lines and the two violet lines of ionised calcium dominating; M stars below 3 700 K are striped with the bands of titanium oxide molecules. The widget runs along the sequence. Drag from O5 to M8 and watch the continuum redden, the hydrogen lines grow and then fade, the helium lines vanish, the metals and finally the molecular bands take over. The star behind the panel, Vega, is the A0 V standard against which every other class is placed.'),
+        table(
+          ['Class', 'T (K)', 'Colour', 'Defining lines', 'Example'],
+          [
+            ['O', '> 30 000', 'blue', 'He II, weak H, highly ionised metals', 'ζ Puppis, Mintaka'],
+            ['B', '10 000–30 000', 'blue-white', 'He I strongest at B2, H growing', 'Rigel, Spica'],
+            ['A', '7 500–10 000', 'white', 'H strongest at A0, Ca II appearing', 'Vega, Sirius'],
+            ['F', '6 000–7 500', 'yellow-white', 'H weakening, Ca II strong, neutral metals', 'Procyon, Canopus'],
+            ['G', '5 200–6 000', 'yellow', 'Ca II H & K dominate, many metals, CH band', 'Sun, Capella'],
+            ['K', '3 700–5 200', 'orange', 'neutral metals strong, TiO beginning', 'Arcturus, Aldebaran'],
+            ['M', '< 3 700', 'red', 'TiO and VO bands, Ca I, neutral metals', 'Betelgeuse, Proxima'],
+          ],
+          'The Harvard sequence with its modern temperature calibration. In 1999 two classes were added below M for brown dwarfs — L (1 300–2 400 K) and T (< 1 300 K) — and in 2011 a Y class for the coldest objects known; Step 7 takes the story there.',
+        ),
+        history('Cannon received no Harvard appointment until 1938, two years before her retirement, though she had by then classified more stars than anyone in history and been elected an honorary member of the Royal Astronomical Society. The Henry Draper Catalogue — nine volumes, 1918–1924 — remains in use: the HD numbers in this program\'s catalogue are hers.', 'The woman who sorted the sky'),
+      ],
+    },
+    {
+      id: 'sun-spectrum',
+      kicker: 'Interactive · a G2 V star up close',
+      title: 'The Sun\'s spectrum as a specimen of the class',
+      widget: { type: 'fraunhofer' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('Before asking why the sequence is a thermometer, it is worth looking closely at the one star whose spectrum can be recorded at any resolution we please. The Sun\'s spectrum — Fraunhofer\'s dark lines, revisited from Section 5.1 — is a typical G2 spectrum, and everything in it has to be explained by the same rules that will later explain Vega or Betelgeuse. The widget lets you drag along the solar spectrum and name the lines: the Balmer lines are present but modest (Hα at 656 nm is strong, Hβ, Hγ, Hδ progressively weaker); the two strongest lines in the whole visible spectrum are H and K of <em>singly ionised calcium</em> at 397 and 393 nm; the sodium D pair at 589 nm, the magnesium b triplet at 518 nm, and hundreds of iron lines fill the rest.'),
+        p('That ranking is the puzzle in miniature. In the Sun there are roughly half a million hydrogen atoms for every calcium atom, yet the calcium lines are far darker than the hydrogen lines. If line strength simply measured abundance, the Sun would be a calcium star. Cecilia Payne showed in her 1925 thesis that it does not and the Sun is not: the strength of a line measures the number of atoms <em>in the particular state able to absorb it</em>, and that number depends overwhelmingly on temperature. Steps 4 to 6 build that argument piece by piece.'),
+        p('Two things in the solar spectrum are not solar. The broad diffuse bands near 690 and 760 nm, and a comb of fine lines between 720 and 830 nm, are produced by oxygen and water vapour in the Earth\'s atmosphere — <em>telluric</em> lines, which appear in every ground-based spectrum of every star and strengthen toward the horizon. They are Kirchhoff\'s third law (Section 5.1) performed by our own air: a cool gas in front of a hot source. The spectroscopist either models them out or observes from space; either way, the first skill in reading a spectrum is knowing which lines were made where.'),
+        key('A spectral line\'s strength depends on three things: how many atoms of the element there are, what fraction of them are in the right ionisation stage, and what fraction of <em>those</em> are in the right energy level to absorb that line. Only the first is composition. The other two are temperature — and they are usually the ones that dominate.'),
+      ],
+    },
+    {
+      id: 'reflected-light',
+      kicker: 'Interactive · the planets borrow a spectrum',
+      title: 'What a planet\'s spectrum is made of',
+      widget: { type: 'planetspectrum' },
+      scene: [goto('saturn'), rate(1)],
+      body: [
+        p('Point a spectrograph at Saturn, behind the panel, and the first thing you see is the Sun. All of Fraunhofer\'s lines are there — H and K, the D lines, the Balmer series — at exactly their solar strengths, because a planet in visible light is a mirror, and a mirror does not edit the light it returns. This was understood early: in the 1860s William Huggins and Angelo Secchi used the presence of the solar lines in the spectra of the Moon and planets as the proof that they shine by reflection, and the <em>absence</em> of them in the spectra of nebulae as the first hint that nebulae are something else entirely.'),
+        p('On top of the borrowed spectrum each planet writes its own signature in two ways. First, its surface or atmosphere reflects some wavelengths better than others — that is simply its colour. Mars is red because iron oxides absorb blue; Earth\'s oceans and air scatter blue; the ice of Enceladus reflects everything. Second, if the planet has an atmosphere, the sunlight passes through it twice, down and back up, and the molecules absorb at their characteristic wavelengths. Jupiter and Saturn show a set of deep bands at 619, 727, 790 and especially 890 nm that puzzled observers for decades until Rupert Wildt identified them in 1932 as <em>methane</em>; Venus shows carbon dioxide; the Earth, seen from afar, shows the oxygen A-band at 760 nm, water vapour, and a sudden rise in reflectivity beyond 700 nm — the "red edge" of chlorophyll, the most conspicuous sign of life on the only planet known to have it.'),
+        p('The widget assembles a planet\'s spectrum from these parts: the solar spectrum, multiplied by the planet\'s reflectivity curve with its molecular bands, plus — switch to the infrared — the planet\'s <em>own</em> thermal emission, a Planck curve (Section 3.4) at a temperature of a few hundred kelvin or less. Notice where the two cross. In the visible every planet is a reflector; beyond about 4 µm Jupiter and Saturn, and beyond 3 µm Venus, radiate more than they reflect. Jupiter in fact emits 1.7 times the power it receives from the Sun, the leftover heat of its formation leaking out; that single number is the first clue that giant planets and the faintest stars form one continuous family, which Step 7 and Section 8.2 pursue.'),
+        compare(
+          { title: 'A star\'s spectrum', items: ['Continuum from its own hot photosphere', 'Absorption lines formed in its own atmosphere', 'Line pattern set by its temperature (this section)', 'Peak wavelength from Wien\'s law: visible for most stars'] },
+          { title: 'A planet\'s spectrum', items: ['Reflected sunlight: the solar lines copied unchanged', 'Extra molecular bands from the planet\'s atmosphere', 'Colour from surface and atmospheric scattering', 'Thermal emission of its own in the infrared, peaking at 10–100 µm'] },
+        ),
+        note('Exoplanet spectroscopy (Section 7.4) is this step at a distance of light-years. During a transit, starlight filtered through the planet\'s atmosphere carries the planet\'s molecular bands; at secondary eclipse the planet\'s thermal emission disappears behind the star and can be measured by subtraction. JWST has recorded water, carbon dioxide, methane and sulphur dioxide in exoplanet atmospheres by exactly the two mechanisms the widget shows.', 'Across the light-years'),
+      ],
+    },
+    {
+      id: 'boltzmann-levels',
+      kicker: 'Interactive · ingredient one',
+      title: 'Boltzmann: which level is an atom in?',
+      widget: { type: 'boltzmann' },
+      scene: [goto('Sirius', 'star'), rate(1)],
+      body: [
+        p('A Balmer absorption line is made when a hydrogen atom <em>already sitting in the second energy level</em> absorbs a photon and jumps higher. An atom in the ground state cannot do it; the photon energies that would lift it from n = 1 lie in the ultraviolet Lyman series. So the strength of the Balmer lines is not proportional to the amount of hydrogen but to the amount of hydrogen in level 2 — and that is a question of temperature.'),
+        p('In a gas at temperature T, atoms are constantly knocked up and down their energy ladders by collisions. Statistical mechanics gives the resulting steady state: the ratio of the number of atoms in two levels depends only on the energy difference between them compared with the typical thermal energy kT, and on how many distinct quantum states each level contains (its <em>statistical weight</em> g). This is the Boltzmann equation. Its exponential is unforgiving: at the Sun\'s photospheric temperature, kT is about half an electron-volt, while the gap from n = 1 to n = 2 in hydrogen is 10.2 eV. Only one atom in a hundred million is in level 2. The Sun\'s Balmer lines are made by that tiny minority.'),
+        eq('\\frac{N_b}{N_a} = \\frac{g_b}{g_a}\\,e^{-(E_b - E_a)/kT}', 'The Boltzmann equation. For hydrogen g_n = 2n², so g₂/g₁ = 4; the exponential wins by many orders of magnitude at any stellar temperature. The widget plots the populations of the first few levels as bars and the ratio N₂/N₁ against T.', 'Boltzmann'),
+        p('Raise the temperature in the widget and watch level 2 fill. At 10 000 K — Sirius, behind the panel, is close to this — N₂/N₁ has climbed to about 3 × 10⁻⁵, three hundred times the solar value; at 20 000 K it is 1 × 10⁻², and the curve is still rising steeply. If Boltzmann were the whole story, the Balmer lines would simply keep strengthening with temperature and O stars would have the darkest hydrogen lines in the sky. They have almost none. Something else must be removing the hydrogen atoms faster than heat can excite them.'),
+        example('At what temperature are there as many hydrogen atoms in n = 2 as in n = 1? Set N₂/N₁ = 1: 4 exp(−10.2 eV/kT) = 1, so kT = 10.2 eV / ln 4 = 7.36 eV, T ≈ 85 000 K. No normal stellar photosphere is that hot — and as the next step shows, hydrogen would not survive as neutral atoms long before reaching it.', 'A temperature that stars never reach'),
+      ],
+    },
+    {
+      id: 'saha-ionization',
+      kicker: 'Interactive · ingredient two',
+      title: 'Saha: is the atom still an atom?',
+      widget: { type: 'saha' },
+      scene: [goto('Rigel', 'star'), rate(1)],
+      body: [
+        p('The missing piece is ionisation. A sufficiently energetic collision, or a photon, can remove an electron altogether; the atom becomes an ion, with a different and usually much sparser set of spectral lines, and the free electron joins a gas of electrons that is itself trying to recombine with ions. In 1920 the Indian physicist Meghnad Saha applied the same statistical reasoning as Boltzmann to this balance between ionisation and recombination and obtained the equation that bears his name. It is the equation that made the spectral sequence a thermometer.'),
+        eq('\\frac{N_{i+1}}{N_i} = \\frac{2\\,Z_{i+1}}{n_e\\,Z_i}\\left(\\frac{2\\pi m_e kT}{h^2}\\right)^{3/2} e^{-\\chi_i/kT}', 'The Saha equation. χ_i is the ionisation energy (13.6 eV for hydrogen), Z the partition functions (sums over the levels of each stage, weighted by Boltzmann factors), n_e the free-electron density. Higher T pushes toward ionisation; higher electron density pushes back, because recombination needs an electron to catch.', 'Saha'),
+        p('Two features of the equation shape the whole of stellar spectroscopy. First, it is sharp: because of the exponential combined with the T^{3/2} factor, an element goes from almost wholly neutral to almost wholly ionised over a temperature range of only a few thousand kelvin. For hydrogen in a stellar atmosphere the transition sits near 10 000 K: half the hydrogen is ionised at about 9 600 K, 95 per cent by 11 000 K. Second, it depends on the electron density. A tenuous atmosphere, where electrons are scarce, ionises at a <em>lower</em> temperature than a dense one — which is why, as Section 8.2 will show, a giant star and a dwarf star of the same temperature do not have the same spectrum.'),
+        p('In the widget choose an element and an electron pressure and watch the ionisation fraction switch on. Calcium, with an ionisation energy of only 6.1 eV, is already mostly Ca II at the Sun\'s temperature — which is why the Sun\'s strongest lines belong to ionised calcium, and why those lines fade in A stars, where calcium goes on to lose a second electron. Helium needs 24.6 eV and stays neutral until the B stars; its ionised lines mark the O stars, where Rigel\'s neighbours in Orion, behind the panel, live. Every boundary in Cannon\'s sequence is a Saha transition for some element.'),
+        history('Saha, working in Calcutta with few resources and no spectroscope of his own, published the theory in the <em>Philosophical Magazine</em> in 1920 and applied it at once to the Harvard sequence, correctly placing the classes in temperature order and predicting where each element\'s lines should appear and disappear. Ralph Fowler and E. A. Milne refined the method in 1923–24; Cecilia Payne used it in 1925 to show that all stars have essentially the same composition and that hydrogen is overwhelmingly the most abundant element — a result so contrary to expectation that she was persuaded to call it "almost certainly not real" in her own thesis. Within four years it was accepted.', 'From Calcutta to the composition of the stars'),
+      ],
+    },
+    {
+      id: 'balmer-peak',
+      kicker: 'Interactive · the two combined',
+      title: 'Why the hydrogen lines peak at A0',
+      widget: { type: 'balmerpeak' },
+      scene: [goto('Altair', 'star'), rate(1)],
+      body: [
+        p('Now put the two ingredients together. The number of hydrogen atoms able to absorb a Balmer line is the number of <em>neutral</em> atoms (Saha) times the fraction of those that are in level 2 (Boltzmann). The first factor falls off a cliff above 10 000 K; the second climbs steeply with temperature throughout. Their product rises, peaks, and falls — and the peak sits at about 9 900 K, almost exactly the temperature of an A0 star. The Balmer-line maximum that Pickering used as the anchor of his classification is the point where the gas is hot enough to populate level 2 but not yet hot enough to strip the electrons away.'),
+        eq('\\frac{N_2}{N_{\\rm total}} = \\left(\\frac{N_2}{N_1 + N_2}\\right)\\left(\\frac{N_{\\rm I}}{N_{\\rm I} + N_{\\rm II}}\\right)', 'The fraction of all hydrogen that can absorb a Balmer photon. The first bracket is Boltzmann (ignoring the tiny populations of n ≥ 3), the second is Saha. Even at the peak only about one hydrogen atom in 200 000 is in level 2 — enough, because there is so much hydrogen.'),
+        p('The widget draws both factors and their product against temperature, with the Harvard classes marked along the top. Move the electron-pressure slider: a lower pressure shifts the Saha cliff to lower temperature and the peak slides with it, slightly cooler. The same logic, with different ionisation energies and level spacings, places every line in the sequence. Neutral helium lines peak at B2 (22 000 K); ionised calcium peaks at K0 and vanishes by F0; neutral iron lines strengthen all the way down to the K stars; titanium oxide can only survive as a molecule below about 4 000 K, so its bands define class M. Cannon\'s letters are a table of Saha–Boltzmann maxima, one per element.'),
+        think('Altair, behind the panel, is an A7 star rotating so fast — about 290 km/s at the equator — that it is visibly flattened and its poles are some 1 500 K hotter than its equator. Its spectral lines are broad, smeared by the Doppler shifts of the approaching and receding limbs. Which parts of this section\'s argument are unaffected by rotation, and which measurement (line strength, line width, line position) would you distrust? This is the kind of "other influence" that a careful classifier learns to recognise and set aside — not a failure of the physics, but an extra parameter.'),
+      ],
+    },
+    {
+      id: 'cool-end',
+      kicker: 'Interactive · beyond M',
+      title: 'Molecules, brown dwarfs and the planets again',
+      widget: { type: 'coolspectra' },
+      scene: [goto('Proxima Centauri', 'star'), rate(1)],
+      body: [
+        p('Below about 4 000 K the photosphere is cool enough for atoms to stay bound together, and the spectrum stops being a set of lines and becomes a set of <em>bands</em>: a molecule has vibrational and rotational levels packed between its electronic ones, so a single electronic transition fans out into hundreds of closely spaced lines that blend into a broad trough. Titanium oxide and vanadium oxide bands cut the red spectrum of an M star like Proxima, behind the panel, into a saw-tooth; the continuum is scarcely recognisable. The Sun has a few molecules too — the CH band at 430 nm, faint CN — in its cooler sunspots and upper photosphere.'),
+        p('Keep cooling and even the oxides condense out into dust grains. Below about 2 400 K the TiO bands weaken and vanish, replaced by metal hydrides (FeH, CrH) and enormously broadened lines of neutral sodium and potassium: this is class <b>L</b>, defined in 1999 when the 2MASS and DENIS infrared surveys began to find objects fainter and redder than any M dwarf. Below 1 300 K methane appears — the same molecule, with the same bands, that Wildt found in Jupiter — and water vapour dominates the infrared: class <b>T</b>, whose prototype Gliese 229 B was imaged in 1995. Below about 500 K ammonia joins in: class <b>Y</b>, whose coolest member, WISE 0855−0714 at about 250 K, is colder than a summer day on Earth and was found in 2014.'),
+        p('Most of these objects are <em>brown dwarfs</em>: bodies of 13 to 80 Jupiter masses that formed like stars but never grew massive enough to sustain hydrogen fusion, and have been cooling ever since. Their spectral class is therefore a function of age as well as mass — a 0.05 M☉ brown dwarf is an L dwarf at 100 million years and a T dwarf at a few billion. And at the bottom of the sequence the brown dwarfs meet the planets. Jupiter, at 125 K with methane and ammonia bands, would be classified as a late Y dwarf if it shone by its own light; in the infrared, where its own heat dominates (Step 3), it very nearly does. The widget lines up an M dwarf, an L, a T, a Y and Jupiter: the same sequence of absorbers appears in order, and Jupiter is simply its last entry.'),
+        terms(
+          ['Molecular band', 'An absorption feature made of many blended rotational–vibrational lines of one electronic transition; sharp on one side (the band head), fading on the other.'],
+          ['Brown dwarf', 'An object between ~13 and ~80 Jupiter masses: too light to fuse hydrogen steadily, massive enough to fuse deuterium briefly. Cools through M, L, T and Y with age.'],
+          ['L, T, Y classes', 'Extensions of the Harvard sequence below M, defined in 1999 (L, T) and 2011 (Y) from infrared surveys; marked by hydrides and alkalis (L), methane (T), ammonia (Y).'],
+          ['Condensation', 'Below ~2 000 K refractory molecules form dust grains, removing their bands from the spectrum and veiling the continuum — the main reason L spectra differ from M.'],
+        ),
+        key('Temperature decides what can exist in a photosphere: ions, atoms, molecules or dust, in that order as the gas cools. The spectral sequence from O to Y — and on to Jupiter — is a single tour down that ladder.'),
+      ],
+    },
+    {
+      id: 'lines-summary',
+      kicker: 'Summary',
+      title: 'Spectral lines in brief',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Harvard (Pickering, Fleming, Maury, Cannon) sorted stellar spectra by hydrogen-line strength and arrived at O B A F G K M — later understood as a temperature sequence from 40 000 K to 2 500 K, extended to L, T and Y.',
+          'A line\'s strength measures the number of atoms in the right ionisation stage and energy level, not the element\'s abundance: in the Sun, Ca II H and K outdo the Balmer lines despite calcium being 500 000 times rarer.',
+          'Boltzmann: N_b/N_a = (g_b/g_a) e^{−ΔE/kT}. Only ~1 in 10⁸ solar hydrogen atoms is in n = 2.',
+          'Saha: N_{i+1}/N_i ∝ (T^{3/2}/n_e) e^{−χ/kT}. Ionisation switches on over a few thousand kelvin; lower electron density ionises sooner.',
+          'Their product puts the Balmer maximum at ~9 900 K (A0). Each element\'s lines peak where it is just hot enough to excite and not yet hot enough to ionise.',
+          'Below 4 000 K molecules (TiO, VO), then dust, hydrides, methane and ammonia take over; brown dwarfs cool through M → L → T → Y, and Jupiter is the sequence\'s last entry.',
+          'Planets reflect the solar spectrum with its lines intact, add their own molecular bands, and emit thermally in the infrared.',
+        ),
+        key('Two equations — Boltzmann and Saha — turned a filing system into physics. With them a spectrum read in a few minutes gives a star\'s temperature to a few per cent; Section 8.2 shows what happens when that temperature is plotted against luminosity.'),
+      ],
+    },
+  ],
+};
+
+const S8_2: Section = {
+  id: 'hr-diagram',
+  number: '8.2',
+  title: 'The Hertzsprung–Russell Diagram',
+  summary: 'Plot luminosity against temperature for a few hundred stars and the points refuse to scatter: a diagonal main sequence, a clump of giants, a sprinkling of white dwarfs. Why the diagram has that shape, how mass runs along the main sequence, where the planets would fall, how the width of a line reveals a star\'s size, and how the whole thing becomes a distance indicator.',
+  minutes: 30,
+  steps: [
+    {
+      id: 'two-astronomers',
+      kicker: 'Interactive · the diagram appears',
+      title: 'Hertzsprung, Russell, and a plot that would not scatter',
+      widget: { type: 'hrbuild' },
+      scene: [goto('Alcyone', 'star'), rate(1)],
+      body: [
+        p('Around 1905 the Danish chemist-turned-astronomer Ejnar Hertzsprung, working with Maury\'s "c" stars — the ones with unusually narrow lines — noticed that they had vanishingly small proper motions and were therefore far away and intrinsically very bright, while other stars of the same colour were nearby and faint. The same colour, two wildly different luminosities: there had to be two kinds of red star. By 1911 he had plotted colour against apparent magnitude for the Pleiades (Alcyone, their brightest member, is behind the panel) and the Hyades — clusters whose stars all lie at the same distance, so that apparent magnitude stands in for luminosity — and found that the points fell along a narrow band.'),
+        p('Independently, at Princeton, Henry Norris Russell gathered every star with a measured parallax, converted apparent to absolute magnitude, and in 1913 plotted absolute magnitude against Harvard spectral class. His diagram showed the same band running from bright blue to faint red — he called its stars <em>dwarfs</em> — and a second group of bright red stars above it, the <em>giants</em>. Russell published first and with the larger sample; the Dutch astronomer Bengt Strömgren named it the Hertzsprung–Russell diagram in 1933. The widget rebuilds it. Press play and watch the stars accumulate; switch the horizontal axis between spectral class, colour index and temperature and the vertical between absolute magnitude and luminosity — the shape never changes, because they are all the same two physical quantities in different clothes.'),
+        p('What the shape says is this. If a star could have any luminosity at any temperature, the diagram would be a uniform cloud. It is not: some 85 to 90 per cent of stars fall on the diagonal <b>main sequence</b>, a few per cent form the giant branch at the upper right, a sparse scattering of supergiants runs across the top, and a tail of faint hot stars — the <b>white dwarfs</b>, first recognised when Sirius B turned out to be an A star ten thousand times too faint — sits at the lower left. Stars, evidently, are not free to be anything; a star of a given temperature can have only a few possible luminosities. Explaining why occupies the rest of this course. Here we read the map.'),
+        timeline([
+          { when: '1905–07', title: 'Hertzsprung: two kinds of red star', text: 'Narrow-lined (Maury "c") red stars are distant and luminous; broad-lined ones are near and faint. Published in an obscure photography journal and ignored.' },
+          { when: '1911', title: 'Cluster colour–magnitude diagrams', text: 'Hertzsprung plots the Pleiades and Hyades; a narrow sequence appears because all members share one distance.' },
+          { when: '1913', title: 'Russell\'s diagram', text: 'Absolute magnitude against spectral class for parallax stars, shown at the Royal Astronomical Society; dwarfs and giants named.' },
+          { when: '1914–24', title: 'Eddington', text: 'Shows that main-sequence luminosity is set by mass; the mass–luminosity relation of Section 7.2 explains the main sequence as a mass sequence.' },
+          { when: '1943', title: 'MK luminosity classes', text: 'Morgan, Keenan and Kellman add a second coordinate to spectral classification (Step 5).' },
+        ]),
+      ],
+    },
+    {
+      id: 'main-sequence',
+      kicker: 'Interactive · the diagonal',
+      title: 'The main sequence is a mass sequence',
+      widget: { type: 'hrmass' },
+      scene: [goto('Spica', 'star'), rate(1)],
+      body: [
+        p('Run along the main sequence from lower right to upper left and one quantity changes monotonically: mass. The binary-star masses of Chapter 7, plotted against position on the main sequence, show it directly. Red M dwarfs at the bottom have a tenth of a solar mass; the Sun sits in the middle; Spica\'s primary, behind the panel, is a B1 star of eleven solar masses; the O stars at the top reach 50 to 100. Luminosity rises with mass roughly as M^3.5 (Section 7.2), temperature more gently as about M^0.5, and radius as M^0.8 or so — a 10 M☉ star is only about six times the Sun\'s diameter but five thousand times its luminosity. The widget\'s single slider is mass: watch the star slide along the sequence, change colour and size, and read off its properties.'),
+        p('Why a <em>sequence</em> at all? Because a main-sequence star is a hydrogen-burning object in equilibrium, and for a given mass and composition there is exactly one structure that balances gravity against pressure while radiating what the core produces. The mass fixes the central temperature and pressure, these fix the fusion rate, and the fusion rate is the luminosity. Composition shifts the sequence slightly — metal-poor stars are a little bluer and brighter — and that small shift is what gives the main sequence its width. The sequence is not a track that stars move along; a star arrives at its place when fusion begins and stays very nearly there until the hydrogen in its core is spent.'),
+        eq('\\tau_{\\rm MS} \\approx 10^{10}\\,{\\rm yr}\\;\\frac{M/M_\\odot}{L/L_\\odot} \\approx 10^{10}\\,{\\rm yr}\\,\\left(\\frac{M}{M_\\odot}\\right)^{-2.5}', 'Main-sequence lifetime: fuel ∝ M, consumption rate ∝ L. Spica\'s 11 M☉ primary has perhaps 20 million years; a 0.2 M☉ red dwarf will last a trillion. No M dwarf has yet left the main sequence anywhere in the universe.'),
+        p('The lifetime formula explains the census. Massive stars are rare partly because star formation makes few of them and partly because those it makes die quickly; faint red dwarfs make up three quarters of all stars in the Galaxy yet not one is visible to the naked eye. The bright stars behind the panel are a sample biased toward the luminous: of the hundred brightest stars in the sky, not a single one is less massive than the Sun, while of the hundred <em>nearest</em>, more than seventy are M dwarfs.'),
+        note('The lower end of the main sequence is at about 0.08 M☉ (75 Jupiter masses), below which the core never gets hot enough for sustained hydrogen fusion and the object is a brown dwarf. The upper end is less sharp — radiation pressure disrupts stars above roughly 150 M☉ — and the most massive stars known, in the R136 cluster of the Large Magellanic Cloud, are near 200 M☉ and probably formed by mergers.', 'The ends of the sequence'),
+      ],
+    },
+    {
+      id: 'giants-and-dwarfs',
+      kicker: 'Interactive · reading radius off the diagram',
+      title: 'Giants, supergiants and white dwarfs: the radius lines',
+      widget: { type: 'hrradius' },
+      scene: [goto('Betelgeuse', 'star'), rate(1)],
+      body: [
+        p('The stars off the main sequence are what give the diagram its interpretive power. Luminosity depends on only two things — surface area and surface temperature — through the Stefan–Boltzmann law (Section 3.4). Two stars of the same temperature emit the same power <em>per square metre</em>; if one is ten thousand times more luminous it must have ten thousand times the area, a hundred times the radius. That is Hertzsprung\'s two kinds of red star: the faint ones are dwarfs a little smaller than the Sun, the bright ones are giants tens of solar radii across and supergiants hundreds.'),
+        eq('L = 4\\pi R^2 \\sigma T^4 \\qquad\\Longrightarrow\\qquad \\log L = 2\\log R + 4\\log T + {\\rm const}', 'On a log–log H–R diagram lines of constant radius are straight, sloping down to the right. The widget draws them; drag the star anywhere on the diagram and its radius is read off at once — and shown to scale against the Sun.'),
+        p('Betelgeuse, behind the panel, is an M2 supergiant: about 3 600 K, cooler than the Sun, but some 100 000 times more luminous, which requires a radius near 900 R☉ — placed at the Sun it would swallow Mars and reach most of the way to Jupiter. At the other corner Sirius B is hotter than Sirius A yet 400 times fainter than the Sun; its radius comes out at 0.008 R☉, roughly the Earth\'s. A solar mass packed into the Earth\'s volume is a million times the density of water, and in 1926 Eddington remarked that the message of the companion of Sirius, when decoded, ran: "I am composed of material 3 000 times denser than anything you have ever come across." White dwarfs were the first objects to show that matter has states not found on Earth.'),
+        table(
+          ['Region', 'Typical R', 'Typical L', 'What they are'],
+          [
+            ['Main sequence (dwarfs, V)', '0.1–15 R☉', '10⁻⁴–10⁶ L☉', 'Core hydrogen burning; most stars'],
+            ['Subgiants (IV)', '2–5 R☉', '3–30 L☉', 'Core hydrogen exhausted, beginning to expand'],
+            ['Giants (III)', '10–100 R☉', '10²–10³ L☉', 'Shell hydrogen or core helium burning'],
+            ['Supergiants (I)', '100–1 500 R☉', '10⁴–10⁶ L☉', 'Massive stars in late evolution; rare'],
+            ['White dwarfs', '~0.01 R☉', '10⁻⁴–10⁻² L☉', 'Dead cores, no fusion, cooling for ever'],
+          ],
+          'The H–R diagram\'s neighbourhoods, with the Roman-numeral luminosity classes that Step 5 introduces.',
+        ),
+        think('Two stars have the same apparent brightness and the same spectral class. One is a giant, one a dwarf. Which is farther away, and by roughly what factor if the giant is 100 times more luminous? Now suppose you could not tell which was which: how large would your distance error be? That problem is exactly what Step 5 was invented to solve.'),
+      ],
+    },
+    {
+      id: 'planets-on-hr',
+      kicker: 'Interactive · the bottom right corner',
+      title: 'Where the planets fall on the diagram',
+      widget: { type: 'hrextended' },
+      scene: [goto('jupiter'), rate(1)],
+      body: [
+        p('The H–R diagram is usually drawn to end at the coolest M dwarfs, around 2 500 K and 10⁻⁴ L☉. Nothing in the physics stops there. Any body with a temperature radiates according to Planck\'s law, and any body with a radius has a luminosity L = 4πR²σT⁴ — so Jupiter, behind the panel, has a place on the diagram as surely as Betelgeuse does. Its effective temperature is 125 K; its radius is a tenth of the Sun\'s; its thermal luminosity works out at 8 × 10¹⁷ W, about 2 × 10⁻⁹ L☉. On an extended diagram it lies far below and to the right of the last star, on the same line of constant radius as the brown dwarfs, because a brown dwarf and Jupiter are nearly the same size: above about one Jupiter mass, adding mass compresses the body rather than enlarging it.'),
+        p('The widget extends both axes down to the planets. Along the way it passes the brown dwarfs, whose positions drift with time — unlike main-sequence stars they have no fusion to hold them steady, so they slide down and to the right as they cool, and the slider for age moves them. Jupiter itself is on such a track: four and a half billion years ago it was several times more luminous and perhaps 600 K at the surface, a respectable T dwarf. Saturn follows, dimmer and cooler; the Earth, radiating as a 255 K body from the top of its atmosphere, sits at 3 × 10⁻¹⁰ L☉; Venus, hotter in its clouds than the Earth despite its brilliant albedo, is nearby. None of them is a star, but all of them obey the law that draws the radius lines, and the diagram makes that continuity plain.'),
+        eq('L_{\\rm Jup} = 4\\pi R_{\\rm Jup}^2 \\sigma T_{\\rm eff}^4 = 4\\pi(7.15\\times10^7\\,{\\rm m})^2\\,\\sigma\\,(125\\,{\\rm K})^4 \\approx 8.9\\times10^{17}\\,{\\rm W}', 'Jupiter\'s own luminosity — about 1.7 times the sunlight it absorbs. The excess is gravitational energy from its continuing slow contraction, a few centimetres a year, exactly the energy source Kelvin and Helmholtz once proposed for the Sun.'),
+        p('There is a lesson in the comparison. On the diagram a planet differs from a star only in degree — a lower temperature, a smaller luminosity, the same radius law. What makes the Sun a star and Jupiter a planet is not on the diagram at all: it is mass, which decides whether the core can ignite. The H–R diagram displays the <em>consequences</em> of mass with great clarity and never displays mass itself; the connection between the two is the subject of Chapter 7 behind us and of stellar structure ahead.'),
+        note('Directly imaged exoplanets (Section 7.4) are placed on exactly this extended diagram. Young giant planets such as those of HR 8799, a few tens of millions of years old, are still at 800–1 100 K and 10⁻⁵ L☉ — bright enough to photograph next to their star — and their colours and spectra are compared with brown-dwarf cooling tracks to estimate their masses. The planets of other suns are studied with the same diagram as the stars of our own sky.', 'Imaged planets on the diagram'),
+      ],
+    },
+    {
+      id: 'mk-classes',
+      kicker: 'Interactive · the second coordinate',
+      title: 'Morgan–Keenan: luminosity from the width of a line',
+      widget: { type: 'luminosityclass' },
+      scene: [goto('Deneb', 'star'), rate(1)],
+      body: [
+        p('Hertzsprung\'s original clue was that Maury\'s narrow-lined stars were the giants, and the reason follows from Section 8.1. A giant and a dwarf of the same spectral class have the same temperature but radically different sizes; the giant\'s gravity at the surface is hundreds or thousands of times weaker, so its atmosphere is far more tenuous. Two consequences. First, with fewer electrons about, the Saha equation ionises each element at a lower temperature, so the ratios of ionised to neutral lines are subtly different. Second, and more visibly, spectral lines are broadened by collisions and by the electric fields of neighbouring charged particles (<em>pressure</em> or <em>Stark broadening</em>); in a dense dwarf atmosphere the hydrogen lines are smeared into broad wings, in a giant\'s they are sharp.'),
+        p('In 1943 William Morgan, Philip Keenan and Edith Kellman at Yerkes Observatory turned this into a system: alongside the Harvard temperature class, a Roman-numeral <b>luminosity class</b> from Ia (the most luminous supergiants) through Ib, II, III (giants), IV (subgiants) to V (main sequence, "dwarfs"), each defined by the appearance of specific line ratios and widths on standard spectra. The Sun is G2 V; Deneb, behind the panel, is A2 Ia, an A star like Vega in temperature but 200 000 times the Sun\'s luminosity with hydrogen lines as thin as pencil strokes; Aldebaran is K5 III; Sirius B, a white dwarf, is written DA2, a separate notation. Every star in this program\'s information panel carries an MK type.'),
+        p('The widget shows the physics. Choose a temperature class and slide the surface gravity from a supergiant\'s log g ≈ 0 to a dwarf\'s log g ≈ 4.5: the same Balmer line narrows or broadens, the luminosity class changes, and the star moves vertically on the inset H–R diagram. The horizontal coordinate of the diagram is temperature; the MK class supplies the vertical one from the spectrum alone, with no need to know the distance. That last phrase is the point of the next step.'),
+        table(
+          ['Class', 'Name', 'log g (cgs)', 'Line appearance', 'Examples'],
+          [
+            ['Ia, Iab, Ib', 'Supergiants', '0–1.5', 'Very narrow H; strong ionised lines', 'Deneb (A2 Ia), Betelgeuse (M2 Iab), Rigel (B8 Ia)'],
+            ['II', 'Bright giants', '1.5–2.5', 'Narrow', 'Canopus (A9 II)'],
+            ['III', 'Giants', '2–3', 'Moderately narrow; CN, Sr II strong in cool stars', 'Arcturus (K1.5 III), Aldebaran (K5 III), Capella (G8 III)'],
+            ['IV', 'Subgiants', '3–4', 'Intermediate', 'Procyon (F5 IV–V), Altair (A7 IV–V)'],
+            ['V', 'Dwarfs (main sequence)', '4–5', 'Broad H wings; strong neutral lines', 'Sun (G2 V), Sirius (A1 V), Vega (A0 V), Proxima (M5.5 V)'],
+          ],
+          'The MK luminosity classes. Surface gravity g = GM/R² is the physical variable; at fixed temperature it tracks radius and hence luminosity.',
+        ),
+        history('Antonia Maury\'s 1897 catalogue, with its "a, b, c" line-width subdivisions, was the first to encode luminosity in a spectral type. Pickering disliked the complication and the Harvard system dropped it; Hertzsprung wrote to him in 1908 that ignoring the c-stars was "nearly the same thing as if a zoologist, who has detected the deciding differences between a whale and a fish, would continue in classifying them together." Maury\'s insight waited forty-six years for Morgan and Keenan to make it official.', 'The whale and the fish'),
+      ],
+    },
+    {
+      id: 'spectroscopic-parallax',
+      kicker: 'Interactive · a distance from a spectrum',
+      title: 'Spectroscopic parallax: the diagram as a ruler',
+      widget: { type: 'specparallax' },
+      scene: [goto('Antares', 'star'), rate(1)],
+      body: [
+        p('Here is the payoff. A star\'s spectrum, classified on the MK system, places it at a definite point on the H–R diagram — and the vertical coordinate of that point is an absolute magnitude. Compare it with the apparent magnitude and the distance modulus (Section 3.2) gives the distance. The method is called <em>spectroscopic parallax</em>, though no parallax is measured; it was, before Gaia, the only way to reach stars beyond a few hundred parsecs individually, and it remains the way to reach them in other galaxies.'),
+        eq('m - M_V = 5\\log_{10}\\!\\left(\\frac{d}{10\\,{\\rm pc}}\\right) \\qquad\\Longrightarrow\\qquad d = 10^{(m - M_V + 5)/5}\\ {\\rm pc}', 'The distance modulus with M_V supplied by the MK class. An uncertainty of ±0.5 magnitude in M_V — typical for a careful classification — is an uncertainty of ±25 per cent in distance; the main sequence\'s intrinsic width adds about as much again.'),
+        p('In the widget, pick a star, read its spectral type from the (simulated) spectrum, choose the luminosity class, and the distance follows; the catalogue\'s Gaia distance is shown for comparison once you commit. Try Antares, behind the panel: M1.5 with razor-thin lines — class Iab, M_V about −5.3, apparent magnitude 1.0, so a distance near 180 pc, which Gaia confirms within the errors. Now deliberately misclassify it as a dwarf, M_V = +9.5: the distance collapses to 0.2 pc, closer than Proxima, which is absurd. The absurdity is the point. The luminosity class is worth a factor of a thousand in distance, and it is read from the width of a few lines.'),
+        p('The method has known failure modes, and a good astronomer lists them before trusting a number. Interstellar dust dims and reddens starlight, making a star look fainter (and therefore farther) and cooler than it is; the correction requires the colour excess, measured by comparing the observed colour index with the one the spectral type demands (Section 3.6). Unresolved binaries are brighter than single stars of their class. Rapid rotators, metal-poor stars and chemically peculiar stars sit off the standard sequences. None of this breaks the method; it bounds it. Spectroscopic parallaxes of individual stars are good to 20–30 per cent, and for clusters, where hundreds of stars can be fitted to the main sequence at once, to a few per cent — the technique that calibrated the Cepheids that calibrated the galaxies.'),
+        example('Spica appears at V = 0.98. Its spectrum is B1 with broad lines: class V, for which the calibration gives M_V ≈ −3.6. Then m − M = 4.6, so d = 10^{(4.6+5)/5} = 10^{1.92} ≈ 83 pc. The Hipparcos parallax gives 77 ± 4 pc. Spica is in fact a close binary (Section 7.3) whose companion adds about 0.3 magnitude; correcting for it moves the spectroscopic estimate to 72 pc, within the error either way.', 'Spica by two routes'),
+      ],
+    },
+    {
+      id: 'chapter-close',
+      kicker: 'Chapter close',
+      title: 'The classification of stellar spectra in one page',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'The Harvard sequence O B A F G K M (+ L T Y) is a temperature sequence, found empirically by Cannon and explained by Saha and Boltzmann: each element\'s lines peak where it is excited but not yet ionised; the Balmer peak at A0 (~9 900 K) anchors the scheme.',
+          'Line strength measures atoms in the right state, not abundance; the Sun\'s strongest visible lines are from ionised calcium, half a million times rarer than hydrogen.',
+          'Planets reflect the solar spectrum with its lines intact, add their own molecular bands (CH₄ on Jupiter and Saturn, CO₂ on Venus, O₂ and the red edge on Earth) and emit their own heat in the infrared; Jupiter radiates 1.7× what it receives.',
+          'The H–R diagram (Hertzsprung 1911, Russell 1913) plots L against T: ~90 % of stars on a main sequence that is a mass sequence (L ∝ M^3.5, τ ∝ M^−2.5), with giants, supergiants and white dwarfs set apart by radius (L = 4πR²σT⁴).',
+          'Extended downward, the diagram reaches brown dwarfs and the planets along the same radius lines; what separates a star from a planet is mass, which the diagram shows only indirectly.',
+          'MK luminosity classes Ia–V read surface gravity from line widths and ratios (pressure broadening, Saha at lower n_e), giving a second coordinate from the spectrum alone.',
+          'Spectroscopic parallax: MK type → M_V, with m → distance; good to ~25 % per star, a few per cent for clusters; beware reddening, binaries and peculiar stars.',
+        ),
+        key('Chapter 8 is where a star stops being a point of light and becomes a physical object with a temperature, a size and — by inference — a mass and an age. Every later chapter on stellar structure and evolution is an attempt to explain the H–R diagram: why the main sequence is where it is, why giants exist, why white dwarfs are left behind. Keep the diagram in mind as the map on which all of that will be drawn.'),
+        { kind: 'callout', tone: 'think', title: 'Critical interpretation', html: 'The spectral sequence and the H–R diagram are models, and it is fair to ask what they leave out. They do: rotation (Altair), magnetic activity, binarity (Spica), metallicity, interstellar reddening and departures from thermal equilibrium in tenuous atmospheres all displace a star from its textbook position, and a classifier who ignores them will misjudge a temperature or a distance. But notice the form of each exception: it is an <em>additional parameter</em> acting on top of the Saha–Boltzmann physics, not a rival to it. The same equations describe the plasma in a laboratory arc and the ionosphere of the Earth; their predictions for stellar line strengths have been tested against tens of millions of spectra. The diagram\'s "simplification" is likewise its strength — it reduces a star to the two quantities, luminosity and temperature, that are both measurable and physically decisive, and then invites every other parameter to explain the residuals. A fair critique therefore targets specific calibrations (the M_V of a given MK class, the temperature scale of M dwarfs, the treatment of convection in model atmospheres), where real revisions continue, rather than the framework. Popular cosmology texts are not the place to look for these; the technical literature of model atmospheres is.' },
+        { kind: 'callout', tone: 'history', title: 'Suggested reading', html: 'Carroll & Ostlie, <em>An Introduction to Modern Astrophysics</em>, Chapter 8, which this chapter follows; D. F. Gray, <em>The Observation and Analysis of Stellar Photospheres</em> (3rd ed., 2005) for line formation in depth; R. O. Gray & C. J. Corbally, <em>Stellar Spectral Classification</em> (2009) for the MK system and its standards; C. Payne, <em>Stellar Atmospheres</em> (1925), the thesis that applied Saha to the sequence; D. Sobel, <em>The Glass Universe</em> (2016) on Fleming, Maury, Cannon and Payne; J. D. Kirkpatrick\'s 2005 review of the L and T dwarfs. The Gaia colour–magnitude diagram of two billion stars is the modern H–R diagram and can be browsed online.' },
+        { kind: 'callout', tone: 'think', title: 'Problems to try', html: '(1) Find the temperature at which N₂/N₁ for hydrogen equals 10⁻², 10⁻⁴ and 10⁻⁶. (2) Using the Saha equation with n_e = 10²⁰ m⁻³, find the temperature at which hydrogen is 50 % ionised; repeat for n_e = 10¹⁸ m⁻³ and comment on giants versus dwarfs. (3) Show that the fraction of hydrogen in n = 2 peaks near 9 900 K for P_e = 20 N m⁻² and find the peak value. (4) Calcium has χ = 6.11 eV and partition functions Z_I = 1.32, Z_II = 2.30 at 5 800 K. Find Ca II/Ca I in the solar photosphere (n_e ≈ 1.9 × 10¹⁹ m⁻³) and compare with hydrogen; then compare the number of Ca II ions in the ground state with the number of H atoms in n = 2, given N(Ca)/N(H) = 2 × 10⁻⁶. (5) Jupiter: T_eff = 124 K, R = 7.15 × 10⁷ m. Compute its luminosity, its absorbed solar power (albedo 0.34, a = 5.2 AU) and their ratio; place it on an L–T diagram with the Sun and a 0.08 M☉ star (T = 2 500 K, R = 0.1 R☉). (6) Betelgeuse: T = 3 600 K, L = 1.2 × 10⁵ L☉. Find R in solar units and in AU. Sirius B: T = 25 000 K, L = 0.026 L☉; find R and the mean density for M = 1.0 M☉. (7) Deneb is A2 Ia with V = 1.25 and M_V ≈ −8.4; find its spectroscopic-parallax distance and compare with its Gaia distance of ~800 pc (strongly uncertain). What interstellar extinction A_V would reconcile a 10 % discrepancy? (8) A star is classified K0 and has V = 8.0. Compute its distance if it is a dwarf (M_V = +5.9) and if it is a giant (M_V = +0.7). What single extra measurement would decide? (9) Explain, using the Saha equation, why the Ca II H and K lines are strongest in K0 stars rather than in the Sun or in A stars.' },
+      ],
+    },
+  ],
+};
+
 export const COURSE: Course = {
   id: 'astrophysics',
   title: 'Introduction to Astrophysics',
@@ -3612,6 +3922,13 @@ export const COURSE: Course = {
       title: 'Binary Systems and Stellar Parameters',
       summary: 'Why a star can only be weighed by a companion; the classes of double star; masses from visual orbits, velocity curves and eclipses; the mass–luminosity relation; and the same methods, pushed a million times further, finding planets around other suns.',
       sections: [S7_1, S7_2, S7_3, S7_4],
+    },
+    {
+      id: 'ch8',
+      number: 8,
+      title: 'The Classification of Stellar Spectra',
+      summary: 'How the Harvard sequence was found and why it is a thermometer; Boltzmann and Saha; the spectra of the planets; the Hertzsprung–Russell diagram, its main sequence, giants, white dwarfs and planets; luminosity classes and distances from a spectrum.',
+      sections: [S8_1, S8_2],
     },
   ],
 };

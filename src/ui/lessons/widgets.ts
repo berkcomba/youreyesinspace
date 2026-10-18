@@ -5849,6 +5849,623 @@ class HabitableWidget extends CanvasWidget {
   }
 }
 
+
+/* =========================================================== chapter 8 widgets ===== */
+
+const K_EV = 8.617333e-5;                         // Boltzmann constant in eV/K
+/** Harvard class boundaries (log T anchors, O5 → M9) */
+const HARVARD: Array<[string, number]> = [['O', 42000], ['B', 30000], ['A', 9900], ['F', 7200], ['G', 6000], ['K', 5200], ['M', 3800]];
+const M9_T = 2400;
+/** temperature for a point along the sequence: 0 = O5 … 69 = M9 (class index × 10 + subclass) */
+function seqTemp(v: number): number {
+  const ci = Math.min(6, Math.floor(v / 10)), sub = v - ci * 10;
+  const T0 = HARVARD[ci][1], T1 = ci < 6 ? HARVARD[ci + 1][1] : M9_T;
+  return 10 ** (Math.log10(T0) + (Math.log10(T1) - Math.log10(T0)) * sub / 10);
+}
+function spectralClass(T: number): string {
+  for (let i = 0; i < HARVARD.length; i++) {
+    const T0 = HARVARD[i][1], T1 = i < 6 ? HARVARD[i + 1][1] : M9_T;
+    if (T <= T0 && T > T1) { const f = (Math.log10(T0) - Math.log10(T)) / (Math.log10(T0) - Math.log10(T1)); return `${HARVARD[i][0]}${Math.min(9, Math.floor(f * 10))}`; }
+  }
+  return T > HARVARD[0][1] ? 'O3' : T > 1300 ? 'L' : T > 500 ? 'T' : 'Y';
+}
+const sigm = (x: number) => 1 / (1 + Math.exp(-x));
+const lgauss = (T: number, Tp: number, w: number) => Math.exp(-(((Math.log10(T) - Math.log10(Tp)) / w) ** 2));
+/** Boltzmann: N₂/N₁ for hydrogen */
+const boltz21 = (T: number) => 4 * Math.exp(-10.2 / (K_EV * T));
+/** Saha: N_{i+1}/N_i for ionisation energy chi (eV), partition ratio 2Z₊/Z, electron pressure Pe (N/m²) */
+function sahaRatio(T: number, Pe: number, chi: number, zr: number): number {
+  const ne = Pe / (K_B * T);
+  return (zr / ne) * Math.pow(2 * Math.PI * M_E * K_B * T / (H_PLANCK * H_PLANCK), 1.5) * Math.exp(-chi / (K_EV * T));
+}
+/** fraction of all hydrogen in n = 2 (Boltzmann × Saha) */
+function balmerFraction(T: number, Pe: number): number { const b = boltz21(T), s = sahaRatio(T, Pe, 13.6, 1); return (b / (1 + b)) * (1 / (1 + s)); }
+/** absorption features of a stellar photosphere at temperature T: [nm, depth, width nm] */
+function stellarLines(T: number): Array<[number, number, number, string]> {
+  const H = Math.min(1, balmerFraction(T, 20) / balmerFraction(9900, 20)) ** 0.5;
+  const HeI = 0.55 * lgauss(T, 22000, 0.11), HeII = 0.5 * sigm((T - 33000) / 3500);
+  const CaII = Math.min(1, lgauss(T, 5000, 0.14) * 1.1) * sigm((10500 - T) / 600);
+  const met = 0.55 * sigm((6800 - T) / 600) * sigm((T - 3200) / 300), Na = 0.6 * lgauss(T, 4300, 0.16), Mg = 0.45 * lgauss(T, 5600, 0.12), CH = 0.35 * lgauss(T, 5400, 0.08);
+  const TiO = 0.75 * sigm((3900 - T) / 180);
+  const out: Array<[number, number, number, string]> = [];
+  for (const [nm, f] of [[656.3, 1], [486.1, 0.85], [434.0, 0.7], [410.2, 0.55], [397.0, 0.45]] as Array<[number, number]>) out.push([nm, H * 0.85 * f, 1.2 + 2.5 * H, 'H']);
+  for (const nm of [447.1, 471.3, 501.6, 587.6, 667.8]) out.push([nm, HeI, 0.9, 'He I']);
+  for (const nm of [454.1, 468.6, 541.1]) out.push([nm, HeII, 0.9, 'He II']);
+  out.push([393.4, CaII * 0.95, 1.6, 'Ca II K'], [396.8, CaII * 0.85, 1.6, 'Ca II H']);
+  out.push([589.3, Na * 0.8, 0.8, 'Na D'], [518.0, Mg * 0.7, 1.2, 'Mg b'], [430.5, CH * 0.8, 1.6, 'CH G']);
+  for (const nm of [438.4, 527.0, 532.8, 495.7, 404.6, 440.5, 466.8, 516.7, 558.9, 614.1, 643.0]) out.push([nm, met * 0.5, 0.5, 'Fe I']);
+  out.push([422.7, met * 0.9 * sigm((5200 - T) / 400), 0.7, 'Ca I']);
+  for (const [nm, w] of [[628, 10], [714, 12], [768, 10]] as Array<[number, number]>) out.push([nm + w / 2, TiO, w, 'TiO']);
+  return out;
+}
+/** draw an absorption spectrum strip: continuum at T times the given features */
+function drawSpectrumStrip(ctx: CanvasRenderingContext2D, x0: number, x1: number, y: number, h: number, T: number, lines: Array<[number, number, number, string]>, l0 = 380, l1 = 780, gain = 1) {
+  const span = l1 - l0, n = Math.max(60, Math.floor(x1 - x0));
+  const norm = planck(Math.max(l0, Math.min(l1, 2.9e6 / T)) * 1e-9, T);
+  for (let i = 0; i < n; i++) {
+    const nm = l0 + (i + 0.5) / n * span; let a = 1;
+    for (const [c, d, w] of lines) { const dd = (nm - c) / Math.max(w, span / n * 0.8); if (Math.abs(dd) < 4) a *= 1 - d * Math.exp(-dd * dd * 1.2); }
+    const I = Math.min(1, gain * a * planck(nm * 1e-9, T) / norm); const col = waveRGB(nm);
+    ctx.fillStyle = rgba([col[0] * I, col[1] * I, col[2] * I]); ctx.fillRect(x0 + i / n * (x1 - x0), y, (x1 - x0) / n + 0.6, h);
+  }
+}
+/** MK absolute magnitudes M_V by temperature anchor and luminosity class [Ia, Ib, II, III, IV, V] */
+const MK_T = [22000, 9700, 6500, 5800, 5200, 3600];
+const MK_MV: number[][] = [[-6.8, -6.0, -5.0, -3.5, -3.0, -2.5], [-7.1, -5.0, -2.8, -0.1, 0.3, 0.6], [-8.2, -5.0, -2.3, 1.2, 2.3, 3.5], [-8.0, -4.6, -2.0, 0.4, 3.0, 4.8], [-7.5, -4.5, -2.2, 0.7, 3.1, 5.9], [-7.0, -4.6, -2.5, -0.6, 7.0, 9.9]];
+const MK_NAMES = ['Ia', 'Ib', 'II', 'III', 'IV', 'V'];
+function mkMv(T: number, cls: number): number {
+  const lt = Math.log10(T); const c0 = Math.floor(cls), c1 = Math.min(5, c0 + 1), fc = cls - c0;
+  const at = (i: number) => MK_MV[i][c0] * (1 - fc) + MK_MV[i][c1] * fc;
+  if (lt >= Math.log10(MK_T[0])) return at(0); if (lt <= Math.log10(MK_T[5])) return at(5);
+  for (let i = 0; i < 5; i++) { const a = Math.log10(MK_T[i]), b = Math.log10(MK_T[i + 1]); if (lt <= a && lt >= b) { const f = (a - lt) / (a - b); return at(i) * (1 - f) + at(i + 1) * f; } }
+  return at(5);
+}
+const bolCorr = (T: number) => (T > 5772 ? -6 : -30) * (Math.log10(T) - 3.76) ** 2;      // crude bolometric correction
+const lumFromMv = (Mv: number, T: number) => 10 ** ((4.74 - (Mv + bolCorr(T))) / 2.5);
+const mvFromLum = (L: number, T: number) => 4.74 - 2.5 * Math.log10(L) - bolCorr(T);
+const radiusFromLT = (L: number, T: number) => Math.sqrt(L) * (5772 / T) ** 2;
+/** B−V from temperature (Ballesteros, inverted numerically) */
+function bvFromT(T: number): number { let lo = -0.4, hi = 2.2; for (let k = 0; k < 40; k++) { const m = (lo + hi) / 2; const Tm = 4600 * (1 / (0.92 * m + 1.7) + 1 / (0.92 * m + 0.62)); if (Tm > T) lo = m; else hi = m; } return (lo + hi) / 2; }
+/** main-sequence relations from mass (M☉) */
+function mainSequence(M: number): { L: number; R: number; T: number } {
+  const L = M < 0.43 ? 0.23 * M ** 2.3 : M < 2 ? M ** 4 : M < 55 ? 1.4 * M ** 3.5 : 32000 * M;
+  const R = M < 1 ? M ** 0.8 : M < 2 ? M ** 0.57 : 2 ** 0.57 * (M / 2) ** 0.65;
+  return { L, R, T: 5772 * Math.pow(L / (R * R), 0.25) };
+}
+const LSUN_W = 3.828e26;
+
+/* ------------------------------------------------- 86. the Harvard sequence ---- */
+
+const SEQ_EXAMPLES: Array<[string, string]> = [['O', 'ζ Puppis (O4), Mintaka (O9.5)'], ['B', 'Spica (B1), Rigel (B8)'], ['A', 'Vega (A0), Sirius (A1), Altair (A7)'], ['F', 'Canopus (F0), Procyon (F5)'], ['G', 'Sun (G2), Capella (G8)'], ['K', 'Arcturus (K1.5), Aldebaran (K5)'], ['M', 'Betelgeuse (M2), Proxima (M5.5)']];
+
+class SpectralSeqWidget extends CanvasWidget {
+  private v = 20;
+  constructor() {
+    super(480 / 330);
+    this.slider('Spectral type', 0, 69, 1, 20, (v) => `${HARVARD[Math.min(6, Math.floor(v / 10))][0]}${v % 10}`, (v) => { this.v = v; });
+  }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const T = seqTemp(this.v), ci = Math.min(6, Math.floor(this.v / 10));
+    const x0 = 34, x1 = this.w - 10;
+    // reference strips
+    const refs = [0, 10, 20, 30, 40, 50, 60];
+    const sh = 13; let y = 10;
+    refs.forEach((rv, i) => { const Tr = seqTemp(rv); drawSpectrumStrip(c, x0, x1, y, sh, Tr, stellarLines(Tr)); this.text(`${HARVARD[i][0]}0`, x0 - 6, y + sh / 2, i === ci ? C.accent : C.dim, 9, 'right', 'mono'); if (i === ci) { c.strokeStyle = C.accent; c.lineWidth = 1; c.strokeRect(x0 - 1, y - 1, x1 - x0 + 2, sh + 2); } y += sh + 3; });
+    // main spectrum
+    const ys = y + 10, hs = 60;
+    const lines = stellarLines(T);
+    drawSpectrumStrip(c, x0, x1, ys, hs, T, lines);
+    const X = (nm: number) => x0 + (nm - 380) / 400 * (x1 - x0);
+    let lastX = -99, row = 0;
+    const labelled = new Set<string>();
+    for (const [nm, d, , name] of lines.slice().sort((a, b) => a[0] - b[0])) { if (d < 0.12) continue; if (name === 'Fe I' && labelled.has('Fe I')) continue; if (name === 'TiO' && labelled.has('TiO')) continue; const x = X(nm); row = x - lastX < 22 && lastX > -99 ? (row + 1) % 2 : 0; lastX = x; this.text(name, x, ys + hs + 9 + row * 9, C.dim, 7, 'center'); this.line(x, ys + hs, x, ys + hs + 3, C.faint); labelled.add(name); }
+    // intensity trace
+    const yg0 = ys + hs + 30, yg1 = this.h - 22;
+    c.beginPath(); for (let px = 0; px <= x1 - x0; px += 2) { const nm = 380 + px / (x1 - x0) * 400; let a = 1; for (const [cn, d, w] of lines) { const dd = (nm - cn) / Math.max(w, 1.2); if (Math.abs(dd) < 4) a *= 1 - d * Math.exp(-dd * dd * 1.2); } const I = a * planck(nm * 1e-9, T) / planck(Math.max(380, Math.min(780, 2.9e6 / T)) * 1e-9, T); const yy = yg1 - I * (yg1 - yg0); px ? c.lineTo(x0 + px, yy) : c.moveTo(x0 + px, yy); } c.strokeStyle = C.text; c.lineWidth = 1; c.stroke();
+    for (const nm of [400, 500, 600, 700]) { this.line(X(nm), yg1, X(nm), yg1 + 3, C.line); this.text(`${nm}`, X(nm), yg1 + 10, C.dim, 8, 'center', 'mono'); }
+    this.text('nm', x1, yg1 + 10, C.dim, 8, 'right');
+    const strongest = lines.filter((l) => l[1] > 0.15).sort((a, b) => b[1] - a[1]).map((l) => l[3]).filter((v, i, arr) => arr.indexOf(v) === i).slice(0, 4).join(', ');
+    const bv = bvFromT(T);
+    this.setReadout([
+      ['Type', spectralClass(T), C.accent], ['Temperature', `${fmt(T, 0)} K`],
+      ['B − V', `${bv >= 0 ? '+' : ''}${fmt(bv, 2)}`], ['Strongest lines', strongest || '—'],
+      ['Examples', SEQ_EXAMPLES[ci][1]], ['Balmer strength (A0 = 1)', fmt(Math.min(1, balmerFraction(T, 20) / balmerFraction(9900, 20)), 2), C.green],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 87. a planet's spectrum ---- */
+
+type PlanetSpec = { name: string; a: number; T: number; A: (nm: number) => number; bands: Array<[number, number, number, string]>; note: string };
+const PLANET_SPECTRA: PlanetSpec[] = [
+  { name: 'Moon', a: 1, T: 390, A: (nm) => 0.08 + 0.06 * (nm - 400) / 600, bands: [], note: 'grey, slightly reddish regolith; no atmosphere, no bands' },
+  { name: 'Venus', a: 0.723, T: 230, A: (nm) => 0.75 * sigm((nm - 380) / 40) * (nm < 500 ? 0.75 + 0.25 * (nm - 380) / 120 : 1), bands: [[870, 0.08, 6, 'CO₂'], [1050, 0.12, 8, 'CO₂'], [1200, 0.15, 10, 'CO₂']], note: 'sulphuric-acid clouds: bright, UV absorber in the blue, CO₂ bands in the near-IR' },
+  { name: 'Earth', a: 1, T: 255, A: (nm) => 0.42 * (nm < 500 ? 1 : 0.65 + 0.35 * Math.exp(-(nm - 500) / 300)) * (nm > 700 ? 1.12 : 1), bands: [[760, 0.45, 2.5, 'O₂ A'], [687, 0.25, 2, 'O₂ B'], [720, 0.2, 8, 'H₂O'], [820, 0.2, 8, 'H₂O'], [940, 0.4, 12, 'H₂O'], [1130, 0.45, 15, 'H₂O'], [1400, 0.7, 25, 'H₂O']], note: 'Rayleigh-blue, O₂ A-band, water, the vegetation red edge past 700 nm' },
+  { name: 'Mars', a: 1.524, T: 210, A: (nm) => 0.08 + 0.2 * sigm((nm - 560) / 50), bands: [[2000, 0.2, 30, 'CO₂']], note: 'iron oxides absorb the blue: red surface, thin CO₂ air' },
+  { name: 'Jupiter', a: 5.2, T: 125, A: (nm) => 0.32 + 0.22 * sigm((nm - 480) / 50), bands: [[619, 0.3, 5, 'CH₄'], [727, 0.5, 6, 'CH₄'], [790, 0.35, 5, 'CH₄'], [890, 0.8, 9, 'CH₄'], [1000, 0.5, 10, 'CH₄'], [1150, 0.6, 15, 'CH₄'], [1350, 0.8, 25, 'CH₄+H₂O'], [1650, 0.7, 30, 'CH₄'], [2200, 0.8, 50, 'CH₄'], [645, 0.12, 5, 'NH₃']], note: 'ammonia clouds, methane bands deepening to the red and infrared; emits 1.7× what it absorbs' },
+  { name: 'Saturn', a: 9.58, T: 95, A: (nm) => 0.3 + 0.2 * sigm((nm - 500) / 60), bands: [[619, 0.25, 5, 'CH₄'], [727, 0.45, 6, 'CH₄'], [790, 0.3, 5, 'CH₄'], [890, 0.7, 9, 'CH₄'], [1150, 0.5, 15, 'CH₄'], [1350, 0.75, 25, 'CH₄+H₂O'], [1650, 0.6, 30, 'CH₄'], [2200, 0.75, 50, 'CH₄']], note: 'a hazier Jupiter: the same methane bands, weaker; emits 2.3× what it absorbs' },
+];
+
+class PlanetSpectrumWidget extends CanvasWidget {
+  private body = PLANET_SPECTRA[4]; private range: 'vis' | 'ir' = 'vis';
+  constructor() {
+    super(480 / 290);
+    this.segmented(PLANET_SPECTRA.map((p) => [p.name, p.name] as [string, string]), 'Jupiter', (k) => { this.body = PLANET_SPECTRA.find((p) => p.name === k)!; });
+    this.segmented<'vis' | 'ir'>([['vis', 'Visible 380–1000 nm'], ['ir', 'Infrared 0.4–50 µm']], 'vis', (r) => { this.range = r; });
+  }
+  /** reflected and thermal spectral radiance per unit area (W m⁻² m⁻¹ sr⁻¹) */
+  private parts(nm: number): { refl: number; therm: number } {
+    const b = this.body; const dil = (RSUN / (b.a * AU_M)) ** 2;
+    let lines = 1; for (const f of FRAUNHOFER) { const d = (nm - f.nm) / Math.max(f.width, 0.8); if (Math.abs(d) < 4) lines *= 1 - f.depth * Math.exp(-d * d * 1.4); }
+    let bands = 1; for (const [cn, dpt, w] of b.bands) { const d = (nm - cn) / w; if (Math.abs(d) < 4) bands *= 1 - dpt * Math.exp(-d * d * 1.2); }
+    const A = Math.max(0.02, b.A(Math.min(nm, 1000)));
+    return { refl: A * bands * lines * planck(nm * 1e-9, 5772) * dil, therm: 0.95 * planck(nm * 1e-9, b.T) };
+  }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const b = this.body, gx0 = 44, gx1 = this.w - 12;
+    if (this.range === 'vis') {
+      const l0 = 380, l1 = 1000, X = (nm: number) => gx0 + (nm - l0) / (l1 - l0) * (gx1 - gx0);
+      const ys = 12, hs = 54, n = gx1 - gx0;
+      const norm = Math.max(...Array.from({ length: 50 }, (_, i) => this.parts(l0 + i / 50 * (l1 - l0)).refl));
+      for (let i = 0; i < n; i++) { const nm = l0 + (i + 0.5) / n * (l1 - l0); const I = Math.min(1, this.parts(nm).refl / norm); const col = nm <= 780 ? waveRGB(nm) : [140, 64, 50] as [number, number, number]; c.fillStyle = rgba([col[0] * I, col[1] * I, col[2] * I]); c.fillRect(gx0 + i, ys, 1.6, hs); }
+      this.text('reflected sunlight', gx0 + 4, ys + hs + 9, C.dim, 8); this.text('← visible | near-infrared →', X(780), ys + hs + 9, C.faint, 7, 'center'); this.line(X(780), ys, X(780), ys + hs, hexA(C.text, 0.3), 1, [2, 3]);
+      const yg0 = ys + hs + 24, yg1 = this.h - 24;
+      // solar reference (dashed) and planet
+      const sun = (nm: number) => planck(nm * 1e-9, 5772) / planck(500e-9, 5772) * 0.9;
+      c.beginPath(); for (let i = 0; i <= n; i += 2) { const nm = l0 + i / n * (l1 - l0); const y = yg1 - sun(nm) * (yg1 - yg0); i ? c.lineTo(gx0 + i, y) : c.moveTo(gx0 + i, y); } c.strokeStyle = hexA(C.sun, 0.45); c.setLineDash([3, 3]); c.lineWidth = 1; c.stroke(); c.setLineDash([]);
+      c.beginPath(); for (let i = 0; i <= n; i++) { const nm = l0 + i / n * (l1 - l0); const y = yg1 - this.parts(nm).refl / norm * 0.95 * (yg1 - yg0); i ? c.lineTo(gx0 + i, y) : c.moveTo(gx0 + i, y); } c.strokeStyle = C.text; c.lineWidth = 1.2; c.stroke();
+      for (const [cn, dpt, , name] of b.bands) if (cn < l1 && dpt > 0.15) { this.text(name, X(cn), yg0 - 2, C.accent, 7, 'center'); this.line(X(cn), yg0 + 2, X(cn), yg0 + 8, hexA(C.accent, 0.6)); }
+      for (const f of FRAUNHOFER) if (f.depth > 0.6 && f.nm < 700) this.text(f.letter, X(f.nm), yg1 - 6, hexA(C.sun, 0.8), 7, 'center', 'serif');
+      for (const nm of [400, 500, 600, 700, 800, 900, 1000]) { this.line(X(nm), yg1, X(nm), yg1 + 3, C.line); this.text(`${nm}`, X(nm), yg1 + 10, C.dim, 8, 'center', 'mono'); }
+      this.text('— planet  ‑ ‑ Sun  letters = solar lines', gx0 + 2, yg0 + 8, C.dim, 7);
+    } else {
+      const lm0 = Math.log10(0.4), lm1 = Math.log10(50), X = (um: number) => gx0 + (Math.log10(um) - lm0) / (lm1 - lm0) * (gx1 - gx0);
+      const gy0 = 14, gy1 = this.h - 24;
+      const samples: Array<[number, number, number]> = []; let top = -Infinity;
+      for (let i = 0; i <= 300; i++) { const um = 10 ** (lm0 + i / 300 * (lm1 - lm0)); const p = this.parts(um * 1000); const r = Math.log10(p.refl * um * 1e-6 + 1e-30), t = Math.log10(p.therm * um * 1e-6 + 1e-30); samples.push([um, r, t]); top = Math.max(top, r, t); }
+      const bot = top - 6, Y = (v: number) => gy1 - Math.max(0, Math.min(1, (v - bot) / (top - bot))) * (gy1 - gy0);
+      for (let k = 0; k <= 6; k++) { const y = Y(top - k); this.line(gx0, y, gx1, y, C.grid); this.text(k ? `10${sup(-k)}` : '1', gx0 - 4, y, C.faint, 8, 'right'); }
+      c.beginPath(); samples.forEach(([um, r], i) => (i ? c.lineTo(X(um), Y(r)) : c.moveTo(X(um), Y(r)))); c.strokeStyle = C.sun; c.lineWidth = 1.4; c.stroke();
+      c.beginPath(); samples.forEach(([um, , t], i) => (i ? c.lineTo(X(um), Y(t)) : c.moveTo(X(um), Y(t)))); c.strokeStyle = C.red; c.lineWidth = 1.4; c.stroke();
+      for (const um of [0.5, 1, 2, 5, 10, 20, 50]) { this.line(X(um), gy1, X(um), gy1 + 3, C.line); this.text(`${um}`, X(um), gy1 + 10, C.dim, 8, 'center', 'mono'); }
+      this.text('µm', gx1, gy1 + 10, C.dim, 8, 'right'); this.text('λF_λ (relative, log)', gx0 + 4, gy0 + 2, C.dim, 8);
+      this.text('reflected sunlight', X(0.6), Y(samples[40][1]) - 10, C.sun, 8); this.text(`thermal emission, ${b.T} K`, X(12), Y(samples.find((s) => s[0] > 12)![2]) - 10, C.red, 8, 'center');
+      for (const [cn, dpt, , name] of b.bands) if (cn >= 1000 && dpt > 0.4) this.text(name, X(cn / 1000), Y(samples.find((s) => s[0] * 1000 > cn)![1]) + 10, C.accent, 7, 'center');
+    }
+    // crossover
+    let cross = NaN; for (let um = 0.5; um < 60; um *= 1.02) { const p = this.parts(um * 1000); if (p.therm > p.refl) { cross = um; break; } }
+    const peak = 2898 / b.T;
+    const Fsun = 1361 / b.a ** 2, Aeff = 0.3, Teq = Math.pow(Fsun * (1 - Aeff) / (4 * SIGMA_SB), 0.25);
+    this.setReadout([
+      ['Body', b.name, C.accent], ['Visible albedo, T_emit', `≈ ${fmt(b.A(550), 2)}, ${b.T} K`],
+      ['Its own glow peaks at', `${fmt(peak, 1)} µm`, C.red], ['Thermal beats reflected beyond', isNaN(cross) ? '> 50 µm' : `${fmt(cross, 1)} µm`],
+      ['Equilibrium T for albedo 0.3', `${fmt(Teq, 0)} K`], ['Signature', b.note],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 88. Boltzmann ---- */
+
+class BoltzmannWidget extends CanvasWidget {
+  private T = 5800;
+  constructor() { super(480 / 260); this.slider('Temperature', Math.log10(3000), Math.log10(40000), 0.005, Math.log10(5800), (v) => `${fmt(10 ** v, 0)} K`, (v) => { this.T = 10 ** v; }); }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const T = this.T, kT = K_EV * T;
+    // left: level ladder with populations (log bars)
+    const lx0 = 40, lx1 = this.w * 0.42, ly0 = 14, ly1 = this.h - 26;
+    const E = (n: number) => -13.6 / (n * n), Ey = (e: number) => ly1 - (e + 13.6) / 13.6 * (ly1 - ly0) * 0.92;
+    const pop = (n: number) => (n * n) * Math.exp(-(E(n) - E(1)) / kT);
+    for (let n = 1; n <= 6; n++) { const y = Ey(E(n)); this.line(lx0, y, lx1, y, hexA(C.text, 0.5)); const lp = Math.log10(pop(n)); const f = Math.max(0, (lp + 12) / 12); c.fillStyle = hexA(n === 2 ? C.accent : C.blue, 0.6); c.fillRect(lx0, y - 5, (lx1 - lx0) * f, 4); this.text(`n=${n}`, lx0 - 4, y, C.dim, 8, 'right', 'mono'); if (n <= 3) this.text(`${sci(pop(n), 1)}`, lx0 + (lx1 - lx0) * f + 4, y - 3, n === 2 ? C.accent : C.dim, 7, 'left', 'mono'); }
+    this.line(lx0, Ey(0), lx1, Ey(0), C.faint, 1, [3, 3]); this.text('ionised', lx1, Ey(0) - 6, C.faint, 7, 'right');
+    this.text('N_n / N₁ (log bars, 10⁻¹² … 1)', lx0, ly1 + 10, C.dim, 7);
+    // right: N2/N1 against T
+    const gx0 = this.w * 0.52, gx1 = this.w - 12, gy0 = 14, gy1 = this.h - 26;
+    const lT0 = Math.log10(3000), lT1 = Math.log10(40000);
+    const X = (TT: number) => gx0 + (Math.log10(TT) - lT0) / (lT1 - lT0) * (gx1 - gx0), Y = (r: number) => gy1 - (Math.log10(r) + 12) / 12 * (gy1 - gy0);
+    for (let k = -12; k <= 0; k += 2) { this.line(gx0, Y(10 ** k), gx1, Y(10 ** k), C.grid); this.text(k ? `10${sup(k)}` : '1', gx0 - 3, Y(10 ** k), C.faint, 7, 'right'); }
+    for (const TT of [3000, 5000, 10000, 20000, 40000]) { this.line(X(TT), gy1, X(TT), gy1 + 3, C.line); this.text(`${TT / 1000}k`, X(TT), gy1 + 10, C.dim, 7, 'center', 'mono'); }
+    c.beginPath(); for (let i = 0; i <= 120; i++) { const TT = 10 ** (lT0 + i / 120 * (lT1 - lT0)); const y = Y(Math.max(1e-12, boltz21(TT))); i ? c.lineTo(X(TT), y) : c.moveTo(X(TT), y); } c.strokeStyle = C.accent; c.lineWidth = 1.6; c.stroke();
+    this.circle(X(T), Y(Math.max(1e-12, boltz21(T))), 3.5, undefined, C.accent); this.text('N₂ / N₁', gx0 + 4, gy0 + 2, C.accent, 8);
+    for (const [TT, name] of [[5772, 'Sun'], [9700, 'Vega'], [22000, 'B2']] as Array<[number, string]>) { this.line(X(TT), gy0, X(TT), gy1, hexA(C.faint, 0.5), 1, [2, 4]); this.text(name, X(TT), gy1 - 4, C.faint, 7, 'center'); }
+    const r21 = boltz21(T);
+    this.setReadout([
+      ['kT', `${fmt(kT, 2)} eV  (E₂ − E₁ = 10.2 eV)`], ['N₂ / N₁', sci(r21, 2), C.accent],
+      ['Atoms in n = 2', r21 > 0.01 ? `1 in ${fmt(1 / r21, 0)}` : `1 in ${sci(1 / r21, 1)}`], ['N₃ / N₁', sci(9 * Math.exp(-12.09 / kT), 2)],
+      ['Trend', 'rises steeply with T — but see Saha', C.dim],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 89. Saha ---- */
+
+const SAHA_EL: Array<{ key: string; name: string; chi: number; zr: number; note: string }> = [
+  { key: 'H', name: 'H I → H II', chi: 13.6, zr: 1, note: 'half ionised near 9 600 K at P_e = 20 N/m²' },
+  { key: 'He', name: 'He I → He II', chi: 24.6, zr: 4, note: 'neutral through the B stars; He II lines define class O' },
+  { key: 'Ca', name: 'Ca I → Ca II', chi: 6.11, zr: 2 * 2.30 / 1.32, note: 'already ionised in the Sun — hence the strength of H and K' },
+  { key: 'Na', name: 'Na I → Na II', chi: 5.14, zr: 1, note: 'the D lines fade above the G stars as sodium ionises' },
+  { key: 'Fe', name: 'Fe I → Fe II', chi: 7.90, zr: 2 * 40 / 25, note: 'neutral-iron lines strong in K stars, Fe II in A and F' },
+];
+
+class SahaWidget extends CanvasWidget {
+  private elem = SAHA_EL[0]; private Pe = 20; private T = 5800;
+  constructor() {
+    super(480 / 260);
+    this.segmented(SAHA_EL.map((e) => [e.key, e.name] as [string, string]), 'H', (k) => { this.elem = SAHA_EL.find((e) => e.key === k)!; });
+    this.slider('Electron pressure P_e', -1, 3, 0.05, Math.log10(20), (v) => `${fmt(10 ** v, 10 ** v < 10 ? 1 : 0)} N/m²`, (v) => { this.Pe = 10 ** v; });
+    this.slider('Temperature', Math.log10(2500), Math.log10(60000), 0.005, Math.log10(5800), (v) => `${fmt(10 ** v, 0)} K`, (v) => { this.T = 10 ** v; });
+  }
+  private frac(T: number) { const r = sahaRatio(T, this.Pe, this.elem.chi, this.elem.zr); return r / (1 + r); }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const gx0 = 44, gx1 = this.w - 12, gy0 = 24, gy1 = this.h - 26;
+    const lT0 = Math.log10(2500), lT1 = Math.log10(60000);
+    const X = (T: number) => gx0 + (Math.log10(T) - lT0) / (lT1 - lT0) * (gx1 - gx0), Y = (f: number) => gy1 - f * (gy1 - gy0);
+    for (const f of [0, 0.25, 0.5, 0.75, 1]) { this.line(gx0, Y(f), gx1, Y(f), C.grid); this.text(`${f * 100}%`, gx0 - 4, Y(f), C.faint, 8, 'right'); }
+    for (const T of [3000, 5000, 10000, 20000, 40000]) { this.line(X(T), gy1, X(T), gy1 + 3, C.line); this.text(`${T / 1000}k`, X(T), gy1 + 10, C.dim, 8, 'center', 'mono'); }
+    // Harvard classes along the top
+    for (let i = 0; i < HARVARD.length; i++) { const T0 = HARVARD[i][1], T1 = i < 6 ? HARVARD[i + 1][1] : M9_T; const xa = Math.max(gx0, X(Math.min(T0, 60000))), xb = Math.max(gx0, X(T1)); c.fillStyle = rgba(tempRGB(Math.sqrt(T0 * T1)), 0.18); c.fillRect(xb, 6, xa - xb, 10); this.text(HARVARD[i][0], (xa + xb) / 2, 11, C.dim, 8, 'center'); }
+    // other pressures faint
+    for (const p of [0.2, 2000]) { const keep = this.Pe; this.Pe = p; c.beginPath(); for (let i = 0; i <= 160; i++) { const T = 10 ** (lT0 + i / 160 * (lT1 - lT0)); const y = Y(this.frac(T)); i ? c.lineTo(X(T), y) : c.moveTo(X(T), y); } c.strokeStyle = hexA(C.accent, 0.2); c.lineWidth = 1; c.stroke(); this.Pe = keep; }
+    c.beginPath(); for (let i = 0; i <= 200; i++) { const T = 10 ** (lT0 + i / 200 * (lT1 - lT0)); const y = Y(this.frac(T)); i ? c.lineTo(X(T), y) : c.moveTo(X(T), y); } c.strokeStyle = C.accent; c.lineWidth = 1.8; c.stroke();
+    this.circle(X(this.T), Y(this.frac(this.T)), 4, undefined, C.accent);
+    this.text('ionised fraction', gx0 + 4, gy0 + 2, C.dim, 8); this.text('faint curves: P_e = 0.2 and 2000 N/m²', gx1 - 2, gy1 - 6, C.faint, 7, 'right');
+    let lo = 2500, hi = 60000; for (let k = 0; k < 50; k++) { const m = Math.sqrt(lo * hi); if (this.frac(m) < 0.5) lo = m; else hi = m; }
+    const T50 = Math.sqrt(lo * hi); const f = this.frac(this.T);
+    this.setReadout([
+      ['χ, 2Z₊/Z', `${fmt(this.elem.chi, 2)} eV, ${fmt(this.elem.zr, 2)}`], ['Half ionised at', `${fmt(T50, 0)} K  (${spectralClass(T50)})`, C.accent],
+      ['At T', `${fmt(f * 100, f > 0.99 || f < 0.01 ? 3 : 1)} % ionised`], ['n_e at T', `${sci(this.Pe / (K_B * this.T), 1)} m⁻³`],
+      ['Lower P_e →', 'ionises at lower T (giants)', C.dim], ['Note', this.elem.note],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 90. the Balmer peak ---- */
+
+class BalmerPeakWidget extends CanvasWidget {
+  private Pe = 20;
+  constructor() { super(480 / 250); this.slider('Electron pressure P_e', -1, 3, 0.05, Math.log10(20), (v) => `${fmt(10 ** v, 10 ** v < 10 ? 1 : 0)} N/m²`, (v) => { this.Pe = 10 ** v; }); }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const gx0 = 44, gx1 = this.w - 12, gy0 = 26, gy1 = this.h - 26, T0 = 4000, T1 = 25000;
+    const X = (T: number) => gx0 + (T - T0) / (T1 - T0) * (gx1 - gx0), Y = (f: number) => gy1 - f * (gy1 - gy0);
+    for (const f of [0, 0.5, 1]) this.line(gx0, Y(f), gx1, Y(f), C.grid);
+    for (const T of [5000, 10000, 15000, 20000, 25000]) { this.line(X(T), gy1, X(T), gy1 + 3, C.line); this.text(`${T / 1000}k`, X(T), gy1 + 10, C.dim, 8, 'center', 'mono'); }
+    for (let i = 1; i < HARVARD.length; i++) { const Ta = Math.min(T1, HARVARD[i][1]), Tb = i < 6 ? HARVARD[i + 1][1] : M9_T; if (Ta < T0) continue; const xa = X(Ta), xb = X(Math.max(T0, Tb)); c.fillStyle = rgba(tempRGB(Math.sqrt(Ta * Math.max(T0, Tb))), 0.18); c.fillRect(xb, 6, xa - xb, 10); this.text(HARVARD[i][0], (xa + xb) / 2, 11, C.dim, 8, 'center'); }
+    let peakT = T0, peakF = 0; const prod: number[] = [];
+    for (let i = 0; i <= 210; i++) { const T = T0 + i / 210 * (T1 - T0); const f = balmerFraction(T, this.Pe); prod.push(f); if (f > peakF) { peakF = f; peakT = T; } }
+    const plot = (fn: (T: number) => number, col: string, dash?: number[]) => { c.beginPath(); for (let i = 0; i <= 210; i++) { const T = T0 + i / 210 * (T1 - T0); const y = Y(fn(T)); i ? c.lineTo(X(T), y) : c.moveTo(X(T), y); } c.strokeStyle = col; c.lineWidth = dash ? 1 : 1.8; if (dash) c.setLineDash(dash); c.stroke(); c.setLineDash([]); };
+    plot((T) => { const b = boltz21(T); return b / (1 + b) / 0.03; }, C.blue, [4, 3]);
+    plot((T) => 1 / (1 + sahaRatio(T, this.Pe, 13.6, 1)), C.red, [4, 3]);
+    plot((T) => balmerFraction(T, this.Pe) / peakF, C.green);
+    this.line(X(peakT), gy0, X(peakT), gy1, hexA(C.green, 0.5), 1, [2, 3]); this.text(`peak ${fmt(peakT, 0)} K`, X(peakT) + 4, gy0 + 10, C.green, 8);
+    this.text('Boltzmann N₂/(N₁+N₂) ×33', X(17000), Y(0.62), C.blue, 8); this.text('Saha N_I/N_total', X(5200), Y(0.93), C.red, 8); this.text('product (scaled)', X(peakT) + 4, Y(0.75), C.green, 8);
+    const fSun = balmerFraction(5772, this.Pe);
+    this.setReadout([
+      ['Peak of N₂/N_total', `${fmt(peakT, 0)} K (${spectralClass(peakT)})`, C.green], ['Peak fraction', `${sci(peakF, 2)}`],
+      ['At the Sun', `${sci(fSun, 2)} (${fmt(fSun / peakF * 100, 1)} % of peak)`], ['At 20 000 K', `${sci(balmerFraction(20000, this.Pe), 2)}`],
+      ['Lower P_e', 'shifts the peak cooler', C.dim],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 91. the cool end ---- */
+
+type CoolObj = { key: string; name: string; T: number; ex: string; mass: string; feats: Array<[number, number, number, string]>; refl?: boolean };
+const COOL_OBJS: CoolObj[] = [
+  { key: 'M', name: 'M5 V', T: 3000, ex: 'Proxima Centauri', mass: '0.12 M☉', feats: [[0.62, 0.5, 0.012, 'TiO'], [0.66, 0.45, 0.012, 'TiO'], [0.71, 0.6, 0.015, 'TiO'], [0.77, 0.55, 0.015, 'TiO'], [0.82, 0.4, 0.015, 'TiO'], [0.74, 0.3, 0.008, 'VO'], [1.4, 0.25, 0.05, 'H₂O'], [1.9, 0.3, 0.06, 'H₂O'], [2.3, 0.2, 0.03, 'CO'], [0.589, 0.4, 0.004, 'Na']] },
+  { key: 'L', name: 'L5', T: 1700, ex: '2MASS 1507−16', mass: '~0.06 M☉', feats: [[0.77, 0.7, 0.03, 'K I'], [0.59, 0.5, 0.02, 'Na I'], [0.87, 0.4, 0.015, 'FeH'], [0.99, 0.45, 0.015, 'FeH'], [0.86, 0.3, 0.01, 'CrH'], [1.4, 0.55, 0.06, 'H₂O'], [1.9, 0.6, 0.07, 'H₂O'], [2.3, 0.3, 0.04, 'CO'], [1.15, 0.2, 0.03, 'H₂O']] },
+  { key: 'T', name: 'T5', T: 1100, ex: 'Gliese 229 B', mass: '~0.04 M☉', feats: [[0.77, 0.8, 0.05, 'K I'], [1.15, 0.6, 0.04, 'CH₄'], [1.35, 0.85, 0.06, 'H₂O+CH₄'], [1.65, 0.75, 0.05, 'CH₄'], [1.9, 0.8, 0.07, 'H₂O'], [2.2, 0.8, 0.08, 'CH₄'], [1.0, 0.3, 0.02, 'FeH'], [2.35, 0.4, 0.04, 'CH₄']] },
+  { key: 'Y', name: 'Y1', T: 400, ex: 'WISE 0855−0714 (250 K)', mass: '~0.005–0.01 M☉', feats: [[1.15, 0.7, 0.04, 'CH₄'], [1.35, 0.9, 0.07, 'H₂O+CH₄'], [1.5, 0.5, 0.03, 'NH₃'], [1.65, 0.85, 0.05, 'CH₄'], [1.9, 0.9, 0.08, 'H₂O'], [2.2, 0.9, 0.09, 'CH₄'], [1.03, 0.4, 0.02, 'NH₃']] },
+  { key: 'J', name: 'Jupiter', T: 125, ex: 'reflected sunlight + 5 µm glow', mass: '0.001 M☉', refl: true, feats: [[0.619, 0.3, 0.006, 'CH₄'], [0.727, 0.5, 0.007, 'CH₄'], [0.79, 0.35, 0.006, 'CH₄'], [0.89, 0.8, 0.01, 'CH₄'], [1.0, 0.5, 0.012, 'CH₄'], [1.15, 0.6, 0.02, 'CH₄'], [1.35, 0.85, 0.03, 'CH₄+H₂O'], [1.65, 0.7, 0.04, 'CH₄'], [2.2, 0.85, 0.06, 'CH₄'], [0.645, 0.12, 0.006, 'NH₃']] },
+];
+
+class CoolSpectraWidget extends CanvasWidget {
+  private sel = 'M';
+  constructor() { super(480 / 320); this.segmented(COOL_OBJS.map((o) => [o.key, o.name] as [string, string]), 'M', (k) => { this.sel = k; }); }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const gx0 = 52, gx1 = this.w - 10, l0 = 0.5, l1 = 2.5, X = (um: number) => gx0 + (um - l0) / (l1 - l0) * (gx1 - gx0);
+    const rowH = (this.h - 50) / COOL_OBJS.length;
+    COOL_OBJS.forEach((o, i) => {
+      const y0 = 8 + i * rowH, y1 = y0 + rowH - 8, on = o.key === this.sel;
+      const flux = (um: number) => { let a = 1; for (const [cn, d, w] of o.feats) { const dd = (um - cn) / w; if (Math.abs(dd) < 4) a *= 1 - d * Math.exp(-dd * dd * 1.2); } const cont = Math.pow(o.refl ? planck(um * 1e-6, 5772) * um ** 2 : planck(um * 1e-6, o.T) * um ** 2, 0.25); return a * cont; };
+      let top = 0; for (let k = 0; k <= 100; k++) top = Math.max(top, flux(l0 + k / 100 * (l1 - l0)));
+      c.beginPath(); for (let px = 0; px <= gx1 - gx0; px++) { const um = l0 + px / (gx1 - gx0) * (l1 - l0); const y = y1 - flux(um) / top * (y1 - y0) * 0.9; px ? c.lineTo(gx0 + px, y) : c.moveTo(gx0 + px, y); } c.strokeStyle = on ? C.accent : hexA(C.text, 0.45); c.lineWidth = on ? 1.6 : 1; c.stroke();
+      this.text(o.name, gx0 - 6, (y0 + y1) / 2 - 5, on ? C.accent : C.dim, 9, 'right'); this.text(`${o.T} K`, gx0 - 6, (y0 + y1) / 2 + 6, C.faint, 7, 'right', 'mono');
+      if (on) { const done = new Set<string>(); for (const [cn, d, , name] of o.feats) if (d > 0.3 && !done.has(name)) { done.add(name); this.text(name, X(cn), y0 + 2, C.accent, 7, 'center'); } }
+    });
+    const yax = this.h - 22;
+    for (const um of [0.5, 1, 1.5, 2, 2.5]) { this.line(X(um), yax, X(um), yax + 3, C.line); this.text(`${um}`, X(um), yax + 10, C.dim, 8, 'center', 'mono'); }
+    this.text('µm', gx1, yax + 10, C.dim, 8, 'right'); this.line(X(0.78), 8, X(0.78), yax, hexA(C.text, 0.15), 1, [2, 4]); this.text('visible | infrared', X(0.78), yax - 2, C.faint, 7, 'center');
+    const o = COOL_OBJS.find((q) => q.key === this.sel)!;
+    const absorbers = [...new Set(o.feats.filter((f) => f[1] > 0.3).map((f) => f[3]))].join(', ');
+    this.setReadout([
+      ['Object', `${o.name} — ${o.ex}`, C.accent], ['Temperature, mass', `${o.T} K, ${o.mass}`],
+      ['Dominant absorbers', absorbers], ['Light source', o.refl ? 'reflected sunlight (own glow only in mid-IR)' : 'its own photosphere'],
+      ['Status', o.key === 'M' ? 'star: hydrogen fusion' : o.key === 'J' ? 'planet: never fused' : 'brown dwarf: cooling since birth'],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 92. building the H–R diagram ---- */
+
+type HRStar = { name?: string; T: number; L: number; kind: 'ms' | 'g' | 'sg' | 'wd' };
+const HR_NAMED: HRStar[] = [
+  { name: 'Sun', T: 5772, L: 1, kind: 'ms' }, { name: 'Sirius A', T: 9940, L: 25, kind: 'ms' }, { name: 'Vega', T: 9600, L: 40, kind: 'ms' }, { name: 'Spica', T: 25300, L: 20500, kind: 'ms' }, { name: 'Proxima', T: 3040, L: 0.0017, kind: 'ms' }, { name: 'Barnard', T: 3130, L: 0.0035, kind: 'ms' }, { name: 'Altair', T: 7550, L: 10.6, kind: 'ms' }, { name: 'Procyon', T: 6530, L: 6.9, kind: 'ms' }, { name: 'α Cen B', T: 5260, L: 0.5, kind: 'ms' }, { name: '61 Cyg A', T: 4530, L: 0.15, kind: 'ms' }, { name: 'Regulus', T: 12460, L: 290, kind: 'ms' }, { name: 'Achernar', T: 15000, L: 3150, kind: 'ms' }, { name: 'ζ Pup', T: 40000, L: 800000, kind: 'ms' },
+  { name: 'Arcturus', T: 4290, L: 170, kind: 'g' }, { name: 'Aldebaran', T: 3900, L: 440, kind: 'g' }, { name: 'Capella', T: 4970, L: 79, kind: 'g' }, { name: 'Pollux', T: 4670, L: 33, kind: 'g' }, { name: 'Gacrux', T: 3630, L: 820, kind: 'g' },
+  { name: 'Betelgeuse', T: 3600, L: 120000, kind: 'sg' }, { name: 'Antares', T: 3660, L: 75000, kind: 'sg' }, { name: 'Rigel', T: 12100, L: 120000, kind: 'sg' }, { name: 'Deneb', T: 8500, L: 196000, kind: 'sg' }, { name: 'Canopus', T: 7400, L: 10700, kind: 'sg' }, { name: 'Polaris', T: 6015, L: 1260, kind: 'sg' },
+  { name: 'Sirius B', T: 25200, L: 0.026, kind: 'wd' }, { name: 'Procyon B', T: 7740, L: 0.00049, kind: 'wd' }, { name: '40 Eri B', T: 16500, L: 0.013, kind: 'wd' }, { name: 'Van Maanen 2', T: 6220, L: 0.00017, kind: 'wd' },
+];
+function hrField(): HRStar[] {
+  const rnd = mulberry(8); const out: HRStar[] = [];
+  for (let i = 0; i < 320; i++) { const lm = -1.1 + Math.pow(rnd(), 0.55) * 2.6; const M = 10 ** lm; const ms = mainSequence(M); out.push({ T: ms.T * 10 ** (gaussRand(rnd) * 0.02), L: ms.L * 10 ** (gaussRand(rnd) * 0.12), kind: 'ms' }); }
+  for (let i = 0; i < 45; i++) out.push({ T: 3700 + rnd() * 1500, L: 10 ** (1.3 + rnd() * 1.6), kind: 'g' });
+  for (let i = 0; i < 10; i++) out.push({ T: 10 ** (3.55 + rnd() * 0.75), L: 10 ** (4 + rnd() * 1.6), kind: 'sg' });
+  for (let i = 0; i < 28; i++) { const T = 10 ** (3.75 + rnd() * 0.75); out.push({ T, L: (0.012 ** 2) * (T / 5772) ** 4 * 10 ** (gaussRand(rnd) * 0.2), kind: 'wd' }); }
+  return out;
+}
+const KIND_COL: Record<HRStar['kind'], string> = { ms: '#ffffff', g: '#f0a36a', sg: '#ff7b7b', wd: '#8fb7ff' };
+
+class HrBuildWidget extends CanvasWidget {
+  private field = hrField(); private shown = 0; private xa: 'type' | 'bv' | 'T' = 'type'; private ya: 'Mv' | 'L' = 'Mv';
+  constructor() {
+    super(480 / 360);
+    this.playButton(); this.playing = true;
+    this.segmented<'type' | 'bv' | 'T'>([['type', 'x: spectral class'], ['bv', 'x: B−V'], ['T', 'x: temperature']], 'type', (v) => { this.xa = v; });
+    this.segmented<'Mv' | 'L'>([['Mv', 'y: M_V'], ['L', 'y: L/L☉']], 'Mv', (v) => { this.ya = v; });
+    const b = $('button', 'lw-btn', 'Restart'); b.addEventListener('click', () => { this.shown = 0; this.playing = true; }); this.controls.appendChild(b);
+  }
+  protected draw(dt: number) {
+    const total = HR_NAMED.length + this.field.length;
+    if (this.playing) this.shown = Math.min(total, this.shown + dt * 60);
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const gx0 = 46, gx1 = this.w - 14, gy0 = 18, gy1 = this.h - 30;
+    const lT0 = Math.log10(45000), lT1 = Math.log10(2600);
+    const xOf = (T: number) => { if (this.xa === 'bv') { const bv = bvFromT(T); return gx0 + (bv + 0.4) / 2.4 * (gx1 - gx0); } return gx0 + (lT0 - Math.log10(T)) / (lT0 - lT1) * (gx1 - gx0); };
+    const yOf = (L: number, T: number) => { if (this.ya === 'L') return gy1 - (Math.log10(L) + 5) / 11.5 * (gy1 - gy0); const Mv = mvFromLum(L, T); return gy0 + (Mv + 11) / 28 * (gy1 - gy0); };
+    // axes
+    if (this.ya === 'L') for (let k = -4; k <= 6; k += 2) { const y = yOf(10 ** k, 5772); this.line(gx0, y, gx1, y, C.grid); this.text(k ? `10${sup(k)}` : '1', gx0 - 4, y, C.faint, 8, 'right'); }
+    else for (let m = -10; m <= 15; m += 5) { const y = gy0 + (m + 11) / 28 * (gy1 - gy0); this.line(gx0, y, gx1, y, C.grid); this.text(`${m > 0 ? '+' : ''}${m}`, gx0 - 4, y, C.faint, 8, 'right'); }
+    if (this.xa === 'type') for (let i = 0; i < HARVARD.length; i++) { const T0 = Math.min(45000, HARVARD[i][1]), T1 = i < 6 ? HARVARD[i + 1][1] : 2600; const xa = xOf(T0), xb = xOf(T1); c.fillStyle = rgba(tempRGB(Math.sqrt(T0 * T1)), 0.12); c.fillRect(xa, gy0, xb - xa, gy1 - gy0); this.text(HARVARD[i][0], (xa + xb) / 2, gy1 + 10, C.dim, 9, 'center'); }
+    else if (this.xa === 'bv') for (const bv of [-0.4, 0, 0.4, 0.8, 1.2, 1.6, 2.0]) { const x = gx0 + (bv + 0.4) / 2.4 * (gx1 - gx0); this.line(x, gy1, x, gy1 + 3, C.line); this.text(`${bv >= 0 ? '+' : ''}${fmt(bv, 1)}`, x, gy1 + 10, C.dim, 8, 'center', 'mono'); }
+    else for (const T of [40000, 20000, 10000, 5000, 3000]) { const x = xOf(T); this.line(x, gy1, x, gy1 + 3, C.line); this.text(`${T / 1000}k`, x, gy1 + 10, C.dim, 8, 'center', 'mono'); }
+    this.text(this.ya === 'L' ? 'L / L☉' : 'M_V', gx0 + 4, gy0 + 2, C.dim, 8); this.text(this.xa === 'type' ? 'spectral class →' : this.xa === 'bv' ? 'B − V →' : '← temperature', gx1, gy1 + 20, C.dim, 8, 'right');
+    // stars: field first, then named on top
+    const n = Math.floor(this.shown); const counts = { ms: 0, g: 0, sg: 0, wd: 0 };
+    const all = [...this.field, ...HR_NAMED];
+    for (let i = 0; i < n; i++) { const s = all[i]; counts[s.kind]++; const x = xOf(s.T), y = yOf(s.L, s.T); if (x < gx0 || x > gx1 || y < gy0 || y > gy1) continue; c.fillStyle = hexA(KIND_COL[s.kind], s.name ? 1 : 0.55); c.beginPath(); c.arc(x, y, s.name ? 2.8 : 1.8, 0, TAU); c.fill(); if (s.name) this.text(s.name, x + 4, y - 4, hexA(KIND_COL[s.kind], 0.9), 7); }
+    if (n >= total) { this.text('main sequence', xOf(7000), yOf(7, 7000) - 14, C.text, 9, 'center'); this.text('giants', xOf(4200), yOf(200, 4200) - 12, KIND_COL.g, 9, 'center'); this.text('supergiants', xOf(8000), yOf(80000, 8000) - 12, KIND_COL.sg, 9, 'center'); this.text('white dwarfs', xOf(14000), yOf(0.004, 14000) + 14, KIND_COL.wd, 9, 'center'); }
+    const tot = Math.max(1, n);
+    this.setReadout([
+      ['Stars plotted', `${n} / ${total}`], ['Main sequence', `${fmt(counts.ms / tot * 100, 0)} %`, KIND_COL.ms],
+      ['Giants / supergiants', `${fmt(counts.g / tot * 100, 0)} % / ${fmt(counts.sg / tot * 100, 0)} %`, KIND_COL.g], ['White dwarfs', `${fmt(counts.wd / tot * 100, 0)} %`, KIND_COL.wd],
+      ['Axes', 'same shape whatever the clothes', C.dim],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 93. the main sequence as a mass sequence ---- */
+
+class HrMassWidget extends CanvasWidget {
+  private M = 1;
+  constructor() { super(480 / 300); this.slider('Mass', -1.1, 2, 0.01, 0, (v) => `${fmt(10 ** v, 10 ** v < 1 ? 2 : 1)} M☉`, (v) => { this.M = 10 ** v; }); }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const gx0 = 44, gx1 = this.w * 0.6, gy0 = 14, gy1 = this.h - 28;
+    const lT0 = Math.log10(60000), lT1 = Math.log10(2500), lL0 = -4, lL1 = 6.5;
+    const X = (T: number) => gx0 + (lT0 - Math.log10(T)) / (lT0 - lT1) * (gx1 - gx0), Y = (L: number) => gy1 - (Math.log10(L) - lL0) / (lL1 - lL0) * (gy1 - gy0);
+    for (let k = -4; k <= 6; k += 2) { this.line(gx0, Y(10 ** k), gx1, Y(10 ** k), C.grid); this.text(k ? `10${sup(k)}` : '1', gx0 - 4, Y(10 ** k), C.faint, 8, 'right'); }
+    for (const T of [40000, 20000, 10000, 5000, 3000]) { this.line(X(T), gy1, X(T), gy1 + 3, C.line); this.text(`${T / 1000}k`, X(T), gy1 + 10, C.dim, 8, 'center', 'mono'); }
+    this.text('L / L☉', gx0 + 4, gy0 + 2, C.dim, 8); this.text('← T', gx1, gy1 + 20, C.dim, 8, 'right');
+    c.beginPath(); for (let i = 0; i <= 100; i++) { const M = 10 ** (-1.1 + i / 100 * 3.1); const ms = mainSequence(M); i ? c.lineTo(X(ms.T), Y(ms.L)) : c.moveTo(X(ms.T), Y(ms.L)); } c.strokeStyle = hexA(C.text, 0.5); c.lineWidth = 1.5; c.stroke();
+    for (const M of [0.1, 0.3, 1, 3, 10, 30, 100]) { const ms = mainSequence(M); this.circle(X(ms.T), Y(ms.L), 2, undefined, C.faint); this.text(`${M}`, X(ms.T) + 5, Y(ms.L) + 4, C.faint, 7, 'left', 'mono'); }
+    const ms = mainSequence(this.M), col = tempRGB(ms.T);
+    this.glow(X(ms.T), Y(ms.L), 10, rgba(col, 0.8)); this.circle(X(ms.T), Y(ms.L), 4, '#ffffff', rgba(col));
+    // star vs Sun to scale (radius), right panel
+    const px = this.w * 0.8, py = this.h * 0.45, S = Math.min(this.w * 0.17, this.h * 0.32) / Math.max(1, ms.R) * (ms.R > 1 ? 1 : 1);
+    const rStar = ms.R * S, rSun = 1 * S;
+    this.circle(px, py, rSun, hexA(C.sun, 0.8), undefined, 1, [3, 3]);
+    this.glow(px, py, rStar * 1.4, rgba(col, 0.5)); this.circle(px, py, Math.max(1.5, rStar), undefined, rgba(col));
+    this.text(ms.R > 1 ? 'dashed: the Sun' : 'dashed circle: the Sun', px, py + Math.max(rStar, rSun) + 14, C.dim, 8, 'center');
+    const tau = 1e10 * this.M / ms.L, logg = 2 + Math.log10(274 * this.M / ms.R ** 2);
+    this.setReadout([
+      ['Mass', `${fmt(this.M, 2)} M☉`, C.accent], ['Type', `${spectralClass(ms.T)} V`],
+      ['T, L', `${fmt(ms.T, 0)} K, ${sci(ms.L, 2)} L☉`], ['R, log g', `${fmt(ms.R, 2)} R☉, ${fmt(logg, 2)}`],
+      ['Main-sequence lifetime', tau > 1e10 ? `${sci(tau, 1)} yr (longer than the universe)` : tau > 1e8 ? `${fmt(tau / 1e9, 1)} Gyr` : `${fmt(tau / 1e6, 0)} Myr`, tau < 1e8 ? C.red : C.green],
+      ['Status', this.M < 0.08 ? 'below 0.08 M☉: a brown dwarf, no sustained fusion' : this.M > 150 ? 'above ~150 M☉: unstable to radiation pressure' : 'hydrogen-burning main-sequence star'],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 94. radius lines ---- */
+
+const HR_PRESETS: Array<[string, number, number]> = [['Sun', 5772, 1], ['Sirius B', 25200, 0.026], ['Proxima', 3040, 0.0017], ['Rigel', 12100, 120000], ['Aldebaran', 3900, 440], ['Betelgeuse', 3600, 120000]];
+
+class HrRadiusWidget extends CanvasWidget {
+  private T = 5772; private L = 1; private drag = false;
+  private readonly gx0 = 44; private readonly lT0 = Math.log10(60000); private readonly lT1 = Math.log10(2500); private readonly lL0 = -5; private readonly lL1 = 6.5;
+  constructor() {
+    super(480 / 300);
+    this.segmented(HR_PRESETS.map((p) => [p[0], p[0]] as [string, string]), 'Sun', (k) => { const p = HR_PRESETS.find((q) => q[0] === k)!; this.T = p[1]; this.L = p[2]; });
+    const move = (e: PointerEvent) => { const p = canvasPos(this.canvas, e, this.w, this.h); const gx1 = this.w * 0.62, gy0 = 14, gy1 = this.h - 28; const lT = this.lT0 - (p.x - this.gx0) / (gx1 - this.gx0) * (this.lT0 - this.lT1); const lL = this.lL0 + (gy1 - p.y) / (gy1 - gy0) * (this.lL1 - this.lL0); this.T = 10 ** Math.max(this.lT1, Math.min(this.lT0, lT)); this.L = 10 ** Math.max(this.lL0, Math.min(this.lL1, lL)); };
+    this.canvas.addEventListener('pointerdown', (e) => { this.drag = true; move(e); });
+    this.canvas.addEventListener('pointermove', (e) => { if (this.drag) move(e); });
+    window.addEventListener('pointerup', () => { this.drag = false; });
+    this.canvas.style.cursor = 'crosshair';
+  }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const gx0 = this.gx0, gx1 = this.w * 0.62, gy0 = 14, gy1 = this.h - 28;
+    const X = (T: number) => gx0 + (this.lT0 - Math.log10(T)) / (this.lT0 - this.lT1) * (gx1 - gx0), Y = (L: number) => gy1 - (Math.log10(L) - this.lL0) / (this.lL1 - this.lL0) * (gy1 - gy0);
+    for (let k = -4; k <= 6; k += 2) { this.line(gx0, Y(10 ** k), gx1, Y(10 ** k), C.grid); this.text(k ? `10${sup(k)}` : '1', gx0 - 4, Y(10 ** k), C.faint, 8, 'right'); }
+    for (const T of [40000, 20000, 10000, 5000, 3000]) { this.line(X(T), gy1, X(T), gy1 + 3, C.line); this.text(`${T / 1000}k`, X(T), gy1 + 10, C.dim, 8, 'center', 'mono'); }
+    // radius lines
+    for (const R of [0.001, 0.01, 0.1, 1, 10, 100, 1000]) { const Lf = (T: number) => R * R * (T / 5772) ** 4; c.beginPath(); c.moveTo(X(60000), Y(Lf(60000))); c.lineTo(X(2500), Y(Lf(2500))); c.strokeStyle = hexA(C.purple, 0.45); c.lineWidth = 1; c.setLineDash([3, 4]); c.stroke(); c.setLineDash([]); const Tl = 10 ** (this.lT0 - 0.1); const yl = Y(Lf(Tl)); if (yl > gy0 && yl < gy1) this.text(`${R} R☉`, X(Tl), yl - 6, C.purple, 7); else { const Tr = 10 ** (this.lT1 + 0.08); const yr = Y(Lf(Tr)); if (yr > gy0 && yr < gy1) this.text(`${R} R☉`, X(Tr), yr - 6, C.purple, 7, 'right'); } }
+    // MS guide
+    c.beginPath(); for (let i = 0; i <= 60; i++) { const ms = mainSequence(10 ** (-1.1 + i / 60 * 3)); i ? c.lineTo(X(ms.T), Y(ms.L)) : c.moveTo(X(ms.T), Y(ms.L)); } c.strokeStyle = hexA(C.text, 0.25); c.lineWidth = 3; c.stroke();
+    for (const [name, T, L] of HR_PRESETS) { this.circle(X(T), Y(L), 2, undefined, C.dim); this.text(name, X(T) + 4, Y(L) - 4, C.dim, 7); }
+    const R = radiusFromLT(this.L, this.T), col = tempRGB(this.T);
+    this.glow(X(this.T), Y(this.L), 10, rgba(col, 0.8)); this.circle(X(this.T), Y(this.L), 4.5, '#ffffff', rgba(col));
+    // scale picture
+    const px = this.w * 0.81, py = this.h * 0.42, box = Math.min(this.w * 0.17, this.h * 0.3);
+    const big = Math.max(R, 1), s = box / big;
+    this.circle(px, py, Math.max(1.5, 1 * s), hexA(C.sun, 0.9), R < 1 ? hexA(C.sun, 0.25) : undefined, 1, R >= 1 ? [3, 3] : undefined);
+    this.glow(px, py, Math.max(2, R * s) * 1.3, rgba(col, 0.5)); this.circle(px, py, Math.max(1.5, R * s), undefined, rgba(col));
+    this.text(R >= 1 ? 'dashed: the Sun' : 'yellow: the Sun', px, py + box + 12, C.dim, 8, 'center');
+    const reach = R * RSUN / AU_M;
+    this.setReadout([
+      ['Drag the star', `T = ${fmt(this.T, 0)} K, L = ${sci(this.L, 2)} L☉`], ['Radius R = √L (T☉/T)²', R < 0.05 ? `${fmt(R, 4)} R☉ = ${fmt(R * RSUN / REARTH, 1)} R⊕` : `${fmt(R, R < 10 ? 2 : 0)} R☉`, C.purple],
+      ['Placed at the Sun, it would reach', reach > 30 ? `${fmt(reach, 1)} AU — past ${reach > 9.5 ? 'Saturn' : reach > 5.2 ? 'Jupiter' : reach > 1.5 ? 'Mars' : 'Earth'}` : reach > 0.3 ? `${fmt(reach, 2)} AU (${reach > 1.5 ? 'past Mars' : reach > 1 ? 'past Earth' : reach > 0.7 ? 'past Venus' : 'past Mercury'})` : `${fmt(R * RSUN / 1e6, 0)} thousand km`],
+      ['Region', R > 100 ? 'supergiant' : R > 5 ? 'giant' : R > 0.05 ? 'dwarf (main sequence)' : 'white dwarf'],
+      ['Mean density if 1 M☉', `${sci(MSUN / (4 / 3 * Math.PI * (R * RSUN) ** 3) / 1000, 1)} g/cm³`],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 95. the extended diagram ---- */
+
+class HrExtendedWidget extends CanvasWidget {
+  private age = 4.5;
+  constructor() { super(480 / 330); this.slider('Age of the cooling objects', -3, 1, 0.01, Math.log10(4.5), (v) => (10 ** v < 1 ? `${fmt(10 ** v * 1000, 0)} Myr` : `${fmt(10 ** v, 1)} Gyr`), (v) => { this.age = 10 ** v; }); }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const gx0 = 46, gx1 = this.w - 14, gy0 = 14, gy1 = this.h - 30;
+    const lT0 = 4.75, lT1 = 1.75, lL0 = -12, lL1 = 6.5;
+    const X = (T: number) => gx0 + (lT0 - Math.log10(T)) / (lT0 - lT1) * (gx1 - gx0), Y = (L: number) => gy1 - (Math.log10(L) - lL0) / (lL1 - lL0) * (gy1 - gy0);
+    for (let k = -12; k <= 6; k += 3) { this.line(gx0, Y(10 ** k), gx1, Y(10 ** k), C.grid); this.text(k ? `10${sup(k)}` : '1', gx0 - 4, Y(10 ** k), C.faint, 8, 'right'); }
+    for (const T of [30000, 10000, 3000, 1000, 300, 100]) { this.line(X(T), gy1, X(T), gy1 + 3, C.line); this.text(`${T >= 1000 ? T / 1000 + ' 000' : T} K`, X(T), gy1 + 10, C.dim, 8, 'center', 'mono'); }
+    this.text('L / L☉', gx0 + 4, gy0 + 2, C.dim, 8);
+    // radius lines
+    for (const [R, lab] of [[1, '1 R☉'], [0.1, '0.1 R☉ ≈ R_Jup'], [0.009, '0.009 R☉ ≈ R⊕']] as Array<[number, string]>) { const Lf = (T: number) => R * R * (T / 5772) ** 4; c.beginPath(); c.moveTo(X(10 ** lT0), Y(Lf(10 ** lT0))); c.lineTo(X(10 ** lT1), Y(Lf(10 ** lT1))); c.strokeStyle = hexA(C.purple, 0.4); c.setLineDash([3, 4]); c.lineWidth = 1; c.stroke(); c.setLineDash([]); const Tl = 40000; this.text(lab, X(Tl) + 3, Y(Lf(Tl)) + 9, C.purple, 7, 'left'); }
+    // main sequence
+    c.beginPath(); for (let i = 0; i <= 60; i++) { const ms = mainSequence(10 ** (-1.1 + i / 60 * 3)); i ? c.lineTo(X(ms.T), Y(ms.L)) : c.moveTo(X(ms.T), Y(ms.L)); } c.strokeStyle = hexA(C.text, 0.5); c.lineWidth = 2.5; c.stroke(); this.text('main sequence', X(20000), Y(8000) - 12, C.text, 8, 'center');
+    // zones
+    const zone = (T0: number, T1: number, name: string, col: string) => { c.fillStyle = hexA(col, 0.08); c.fillRect(X(T0), gy0, X(T1) - X(T0), gy1 - gy0); this.text(name, (X(T0) + X(T1)) / 2, gy0 + 10, hexA(col, 0.8), 8, 'center'); };
+    zone(2400, 1300, 'L', '#f0a36a'); zone(1300, 500, 'T', '#c58cff'); zone(500, 120, 'Y', '#6fc3ff');
+    // cooling objects
+    const t = this.age;
+    const bd = (M: number) => ({ L: 4e-5 * Math.pow(M / 0.05, 2.64) * Math.pow(t, -1.3), T: 1550 * Math.pow(M / 0.05, 0.83) * Math.pow(t, -0.32) });
+    for (const [M, name] of [[0.07, '0.07 M☉'], [0.05, '0.05 M☉'], [0.03, '0.03 M☉'], [0.015, '15 M_J']] as Array<[number, string]>) {
+      c.beginPath(); for (let i = 0; i <= 40; i++) { const tt = 10 ** (-3 + i / 40 * 4); const o = { L: 4e-5 * Math.pow(M / 0.05, 2.64) * Math.pow(tt, -1.3), T: 1550 * Math.pow(M / 0.05, 0.83) * Math.pow(tt, -0.32) }; i ? c.lineTo(X(o.T), Y(o.L)) : c.moveTo(X(o.T), Y(o.L)); } c.strokeStyle = hexA(C.accent, 0.3); c.lineWidth = 1; c.stroke();
+      const o = bd(M); this.circle(X(o.T), Y(o.L), 3, undefined, C.accent); this.text(name, X(o.T) + 5, Y(o.L) + 3, C.accent, 7);
+    }
+    const jup = { T: 125 * Math.pow(t / 4.5, -0.32), L: 2.3e-9 * Math.pow(t / 4.5, -1.3) }, sat = { T: 95 * Math.pow(t / 4.5, -0.32), L: 5.1e-10 * Math.pow(t / 4.5, -1.3) };
+    const fixed: Array<[string, number, number, string, number, number, CanvasTextAlign]> = [['Sun', 5772, 1, C.sun, 5, -4, 'left'], ['Proxima', 3040, 0.0017, '#ff9a6a', 5, -4, 'left'], ['Sirius B', 25200, 0.026, '#8fb7ff', 5, -4, 'left'], ['Gl 229 B', 950, 6e-6, '#c58cff', 5, -4, 'left'], ['WISE 0855', 250, 3.7e-8, '#6fc3ff', -5, -4, 'right'], ['Earth 255 K', 255, 3.2e-10, '#6fa8ff', -5, -3, 'right'], ['Venus 230 K', 230, 1.9e-10, '#f4d07a', 5, 9, 'left'], ['Mars 210 K', 210, 4.2e-11, '#e07a5f', -5, 8, 'right']];
+    for (const [name, T, L, col, dx, dy, al] of fixed) { this.circle(X(T), Y(L), 3, undefined, col); this.text(name, X(T) + dx, Y(L) + dy, col, 7, al); }
+    for (const [name, o, col, dx, dy, al] of [['Jupiter', jup, '#f4c37a', 6, -6, 'left'], ['Saturn', sat, '#e8d7a0', 6, 10, 'left']] as Array<[string, { T: number; L: number }, string, number, number, CanvasTextAlign]>) { this.glow(X(o.T), Y(o.L), 8, hexA(col, 0.7)); this.circle(X(o.T), Y(o.L), 3.5, '#ffffff', col); this.text(name, X(o.T) + dx, Y(o.L) + dy, col, 8, al); }
+    this.setReadout([
+      ['Age shown', t < 1 ? `${fmt(t * 1000, 0)} Myr` : `${fmt(t, 1)} Gyr`, C.accent],
+      ['Jupiter', `${fmt(jup.T, 0)} K, ${sci(jup.L, 1)} L☉`, '#f4c37a'], ['…in watts', `${sci(jup.L * LSUN_W, 1)} W`],
+      ['Jupiter\'s class if self-luminous', jup.T > 1300 ? 'L' : jup.T > 500 ? 'T' : 'Y (beyond Y)'],
+      ['Earth\'s thermal glow', '3 × 10⁻¹⁰ L☉'],
+      ['Star vs planet', 'decided by mass, not shown here', C.dim],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 96. luminosity classes ---- */
+
+const LC_TEMPS: Array<[string, number]> = [['B2', 22000], ['A0', 9700], ['F5', 6500], ['G2', 5800], ['K0', 5200], ['M2', 3600]];
+const LC_EXAMPLES: Record<string, string[]> = { B2: ['χ² Ori (B2 Ia)', 'κ Ori (B0.5 Ia)', 'β CMa (B1 II–III)', 'γ Peg (B2 IV)', 'Spica (B1 V)', ''], A0: ['Deneb (A2 Ia)', 'η Leo (A0 Ib)', 'β Ori (B8 Ia)', 'δ UMa (A3 III)', 'Altair (A7 IV–V)', 'Vega (A0 V)'], F5: ['α Lep (F0 Ib)', 'Polaris (F7 Ib)', 'Canopus (A9 II)', 'ι Per (F8 III)', 'Procyon (F5 IV–V)', 'π³ Ori (F6 V)'], G2: ['β Aqr (G0 Ib)', 'ε Gem (G8 Ib)', 'ε Leo (G1 II)', 'Capella (G8 III)', 'β Hyi (G2 IV)', 'Sun (G2 V)'], K0: ['ε Peg (K2 Ib)', 'ζ Cep (K1 Ib)', 'ν Oph (K0 II)', 'Arcturus (K1.5 III)', 'η Cep (K0 IV)', 'σ Dra (K0 V)'], M2: ['Betelgeuse (M2 Iab)', 'Antares (M1.5 Iab)', 'ρ Per (M4 II)', 'Gacrux (M3.5 III)', '', 'Lacaille 8760 (M0 V)'] };
+const classFromLogg = (g: number) => g >= 3.9 ? 5 : g >= 3.2 ? 4 : g >= 2.2 ? 3 : g >= 1.3 ? 2 : g >= 0.6 ? 1 : 0;
+const classFrac = (g: number) => { const centres = [0.3, 1.0, 1.8, 2.6, 3.6, 4.4]; if (g <= centres[0]) return 0; if (g >= centres[5]) return 5; for (let i = 0; i < 5; i++) if (g >= centres[i] && g <= centres[i + 1]) return i + (g - centres[i]) / (centres[i + 1] - centres[i]); return 5; };
+
+class LuminosityClassWidget extends CanvasWidget {
+  private tc = 'A0'; private logg = 4.2;
+  constructor() {
+    super(480 / 290);
+    this.segmented(LC_TEMPS.map((t) => [t[0], t[0]] as [string, string]), 'A0', (k) => { this.tc = k; });
+    this.slider('Surface gravity log g', 0, 5, 0.05, 4.2, (v) => fmt(v, 2), (v) => { this.logg = v; });
+  }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const T = LC_TEMPS.find((t) => t[0] === this.tc)![1];
+    const cls = classFromLogg(this.logg), cf = classFrac(this.logg), Mv = mkMv(T, cf), L = lumFromMv(Mv, T), R = radiusFromLT(L, T);
+    // left: Hγ profile
+    const lx0 = 14, lx1 = this.w * 0.56, ly0 = 14, ly1 = this.h - 28;
+    const depthH = Math.min(1, balmerFraction(T, 20) / balmerFraction(9900, 20)) ** 0.4 * 0.75 + 0.05;
+    const wStark = 1.3 * 10 ** (0.4 * (this.logg - 4.4)) * (T > 5000 ? 1 : 0.6);           // nm, half width of the wings
+    const core = 0.04 + 0.03 * Math.sqrt(T / 10000);
+    const prof = (dl: number) => 1 - depthH * (0.65 / (1 + (dl / wStark) ** 2) ** 1.1 + 0.35 * Math.exp(-((dl / core) ** 2)));
+    const span = 6, Xl = (dl: number) => lx0 + (dl + span) / (2 * span) * (lx1 - lx0), Yl = (I: number) => ly1 - I * (ly1 - ly0) * 0.9;
+    this.line(lx0, Yl(1), lx1, Yl(1), C.grid); this.line(lx0, ly1, lx1, ly1, C.grid);
+    // strip
+    for (let px = 0; px <= lx1 - lx0; px++) { const dl = -span + px / (lx1 - lx0) * 2 * span; const I = prof(dl); const col = waveRGB(434); c.fillStyle = rgba([col[0] * I, col[1] * I, col[2] * I]); c.fillRect(lx0 + px, ly0, 1.3, 16); }
+    c.beginPath(); for (let px = 0; px <= lx1 - lx0; px++) { const dl = -span + px / (lx1 - lx0) * 2 * span; const y = Yl(prof(dl)); px ? c.lineTo(lx0 + px, y) : c.moveTo(lx0 + px, y); } c.strokeStyle = C.text; c.lineWidth = 1.4; c.stroke();
+    for (const dl of [-4, -2, 0, 2, 4]) { this.line(Xl(dl), ly1, Xl(dl), ly1 + 3, C.line); this.text(`${dl >= 0 ? '+' : ''}${dl}`, Xl(dl), ly1 + 10, C.dim, 8, 'center', 'mono'); }
+    this.text('Hγ 434 nm: Δλ (nm)', lx1, ly1 + 20, C.dim, 8, 'right');
+    // equivalent width
+    let ew = 0; for (let dl = -20; dl <= 20; dl += 0.02) ew += (1 - prof(dl)) * 0.02;
+    this.text(`equivalent width ≈ ${fmt(ew * 10, 1)} Å`, lx0 + 4, ly0 + 26, C.dim, 8);
+    // right: inset HR with class loci
+    const gx0 = this.w * 0.64, gx1 = this.w - 12, gy0 = 14, gy1 = this.h - 28;
+    const lT0 = Math.log10(30000), lT1 = Math.log10(3000);
+    const X = (TT: number) => gx0 + (lT0 - Math.log10(TT)) / (lT0 - lT1) * (gx1 - gx0), Y = (mv: number) => gy0 + (mv + 9) / 20 * (gy1 - gy0);
+    for (let ci = 0; ci < 6; ci++) { c.beginPath(); for (let i = 0; i <= 30; i++) { const TT = 10 ** (lT0 - i / 30 * (lT0 - lT1)); const y = Y(mkMv(TT, ci)); i ? c.lineTo(X(TT), y) : c.moveTo(X(TT), y); } c.strokeStyle = hexA(ci === cls ? C.accent : C.text, ci === cls ? 0.9 : 0.25); c.lineWidth = ci === 5 ? 2 : 1; c.stroke(); this.text(MK_NAMES[ci], gx1 - 2, Y(mkMv(3000, ci)) - 4, ci === cls ? C.accent : C.faint, 7, 'right'); }
+    for (const m of [-8, -4, 0, 4, 8]) this.text(`${m > 0 ? '+' : ''}${m}`, gx0 - 3, Y(m), C.faint, 7, 'right', 'mono');
+    this.text('M_V', gx0 + 2, gy0 + 2, C.dim, 7);
+    this.circle(X(T), Y(Mv), 4, '#ffffff', C.accent);
+    const ex = LC_EXAMPLES[this.tc][cls];
+    this.setReadout([
+      ['Type', `${this.tc} ${MK_NAMES[cls]}`, C.accent], ['log g → class', `${fmt(this.logg, 2)}: ${cls === 5 ? 'dwarf' : cls === 4 ? 'subgiant' : cls === 3 ? 'giant' : cls === 2 ? 'bright giant' : 'supergiant'}`],
+      ['M_V, L', `${Mv > 0 ? '+' : ''}${fmt(Mv, 1)}, ${sci(L, 1)} L☉`], ['Radius', R > 10 ? `${fmt(R, 0)} R☉` : `${fmt(R, 1)} R☉`],
+      ['Hγ wings', wStark > 0.6 ? 'broad — dense atmosphere' : wStark > 0.2 ? 'moderate' : 'narrow — tenuous atmosphere', C.dim], ['Example', ex || '—'],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 97. spectroscopic parallax ---- */
+
+type SpStar = { name: string; type: string; T: number; cls: number; V: number; d: number; note: string };
+const SP_STARS: SpStar[] = [
+  { name: 'Antares', type: 'M1.5', T: 3660, cls: 0.5, V: 1.0, d: 170, note: 'razor-thin lines, strong TiO: a supergiant' },
+  { name: 'Spica', type: 'B1', T: 25300, cls: 5, V: 0.98, d: 77, note: 'broad He I and H lines: a dwarf (also a close binary)' },
+  { name: 'Deneb', type: 'A2', T: 8500, cls: 0, V: 1.25, d: 800, note: 'the narrowest Balmer lines of any bright A star' },
+  { name: 'Arcturus', type: 'K1.5', T: 4290, cls: 3, V: -0.05, d: 11.3, note: 'moderately narrow lines, strong CN: a giant' },
+  { name: 'Vega', type: 'A0', T: 9600, cls: 5, V: 0.03, d: 7.7, note: 'broad Balmer wings: the A0 V standard' },
+  { name: 'Canopus', type: 'A9', T: 7400, cls: 2, V: -0.74, d: 95, note: 'narrow lines, Fe II strong: a bright giant' },
+  { name: 'Barnard\'s Star', type: 'M4', T: 3130, cls: 5, V: 9.5, d: 1.83, note: 'broad Ca I, pressure-broadened K I: a dwarf' },
+  { name: 'Polaris', type: 'F7', T: 6015, cls: 1, V: 1.98, d: 133, note: 'narrow lines of an Ib supergiant (a Cepheid)' },
+];
+
+class SpecParallaxWidget extends CanvasWidget {
+  private star = SP_STARS[0]; private pick: number | null = null; private btns: HTMLButtonElement[] = [];
+  constructor() {
+    super(480 / 240);
+    this.segmented(SP_STARS.map((s) => [s.name, s.name] as [string, string]), 'Antares', (k) => { this.star = SP_STARS.find((s) => s.name === k)!; this.pick = null; this.btns.forEach((b) => b.classList.remove('active')); });
+    const bar = $('div', 'lw-seg'); const lab = $('span', 'lw-caption', 'Luminosity class: '); lab.style.marginRight = '6px'; this.controls.appendChild(lab);
+    MK_NAMES.forEach((n, i) => { const b = $('button', '', n) as HTMLButtonElement; b.addEventListener('click', () => { this.pick = i; this.btns.forEach((x) => x.classList.toggle('active', x === b)); }); this.btns.push(b); bar.appendChild(b); });
+    this.controls.appendChild(bar);
+  }
+  protected draw() {
+    const c = this.ctx; c.fillStyle = C.bg; c.fillRect(0, 0, this.w, this.h);
+    const s = this.star;
+    // simulated spectrum with class-dependent line widths
+    const x0 = 14, x1 = this.w - 14, ys = 12, hs = 50;
+    const lines = stellarLines(s.T).map(([nm, d, w, name]) => [nm, d, name === 'TiO' ? w : w * Math.max(0.05, 10 ** (0.45 * (classFracToLogg(s.cls) - 4.4))), name] as [number, number, number, string]);
+    drawSpectrumStrip(c, x0, x1, ys, hs, s.T, lines);
+    this.text(`${s.name}: V = ${fmt(s.V, 2)}, spectrum classified ${s.type} — which luminosity class?`, x0, ys + hs + 12, C.dim, 8);
+    // zoom on Hβ / Ca region: profile
+    const gx0 = 44, gx1 = this.w - 14, gy0 = ys + hs + 24, gy1 = this.h - 24;
+    const zc = s.T > 5000 ? 486.1 : 422.7, zs = s.T > 5000 ? 5 : 1.5;
+    c.beginPath(); for (let px = 0; px <= gx1 - gx0; px++) { const nm = zc - zs + px / (gx1 - gx0) * 2 * zs; let a = 1; for (const [cn, d, w] of lines) { const dd = (nm - cn) / Math.max(w, 0.05); if (Math.abs(dd) < 4) a *= 1 - d * Math.exp(-dd * dd * 1.2); } const y = gy1 - a * (gy1 - gy0) * 0.9; px ? c.lineTo(gx0 + px, y) : c.moveTo(gx0 + px, y); } c.strokeStyle = C.text; c.lineWidth = 1.3; c.stroke();
+    this.line(gx0, gy1, gx1, gy1, C.grid); this.text(`${s.T > 5000 ? 'Hβ' : 'Ca I'} ${zc} nm, ±${zs} nm`, gx0 + 4, gy0 + 2, C.dim, 8); this.text(s.note, gx1 - 2, gy0 + 2, C.faint, 7, 'right');
+    const ro: Array<[string, string, string?]> = [['Spectral type (given)', s.type, C.accent]];
+    if (this.pick === null) ro.push(['Luminosity class', 'choose one below'], ['M_V, distance', '— waiting for the class —'], ['Hint', 'line widths: narrow ⇒ tenuous ⇒ luminous']);
+    else {
+      const Mv = mkMv(s.T, this.pick), d = 10 ** ((s.V - Mv + 5) / 5), ratio = d / s.d, right = Math.abs(this.pick - s.cls) <= 0.5;
+      ro.push(['Chosen class → M_V', `${MK_NAMES[this.pick]}: ${Mv > 0 ? '+' : ''}${fmt(Mv, 1)}`], ['d = 10^((m−M+5)/5)', d > 1000 ? `${fmt(d / 1000, 2)} kpc` : `${fmt(d, d < 10 ? 2 : 0)} pc`, right ? C.green : C.red],
+        ['Gaia / Hipparcos distance', `${fmt(s.d, s.d < 10 ? 2 : 0)} pc`], ['Ratio', `${fmt(ratio, 2)}× ${right ? '— consistent within the class width' : ratio > 1 ? '— far too distant: class too luminous' : '— far too near: class too faint'}`, right ? C.green : C.red]);
+      if (right) ro.push(['Actual class', `${MK_NAMES[Math.round(s.cls)]}`, C.green]);
+    }
+    this.setReadout(ro);
+  }
+}
+const classFracToLogg = (cf: number) => [0.3, 1.0, 1.8, 2.6, 3.6, 4.4][Math.round(cf)];
+
 export function createWidget(spec: WidgetSpec): Widget {
   switch (spec.type) {
     case 'ancientsky': return new AncientSkyWidget();
@@ -5933,5 +6550,17 @@ export function createWidget(spec: WidgetSpec): Widget {
     case 'methods': return new MethodsWidget();
     case 'density': return new DensityWidget();
     case 'habitable': return new HabitableWidget();
+    case 'spectralseq': return new SpectralSeqWidget();
+    case 'planetspectrum': return new PlanetSpectrumWidget();
+    case 'boltzmann': return new BoltzmannWidget();
+    case 'saha': return new SahaWidget();
+    case 'balmerpeak': return new BalmerPeakWidget();
+    case 'coolspectra': return new CoolSpectraWidget();
+    case 'hrbuild': return new HrBuildWidget();
+    case 'hrmass': return new HrMassWidget();
+    case 'hrradius': return new HrRadiusWidget();
+    case 'hrextended': return new HrExtendedWidget();
+    case 'luminosityclass': return new LuminosityClassWidget();
+    case 'specparallax': return new SpecParallaxWidget();
   }
 }

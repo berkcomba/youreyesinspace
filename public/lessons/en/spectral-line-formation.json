@@ -1,0 +1,950 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "balmer-peak": {
+   "script": "Now we put the two ingredients together. Atoms that absorb a Balmer line are the neutrals from Saha, times Boltzmann's share in level two. N sub two over N total equals the ratio of N sub two to the sum of N sub one and N sub two, times the ratio of N Roman one to the sum of N Roman one and N Roman two. N sub two is level two, N sub one the ground state, N total every hydrogen atom. N Roman one is still neutral, N Roman two ionised. The first bracket is Boltzmann, ignoring levels above two. The second is Saha. Saha falls off a cliff above about ten thousand kelvin, while Boltzmann climbs steeply throughout. The product rises, peaks, and falls near ninety-nine hundred kelvin, almost exactly an A zero star. Pickering's anchor is that peak: hot enough for level two, not yet hot enough to ionise. Only one hydrogen in two hundred thousand sits in level two, enough because there is so much of it.\n\nTry the widget. It draws both factors and their product against temperature, Harvard classes along the top. Lower the electron pressure slider. The Saha cliff shifts cooler, and the peak slides slightly with it. The same logic, different ionisation energies and level spacings, places every line. Neutral helium peaks at B two, about twenty-two thousand kelvin. Ionised calcium peaks at K zero and vanishes by F zero. Neutral iron strengthens down to the K stars. Titanium oxide survives only below about four thousand kelvin, so its bands define class M. Cannon's letters are a table of Saha-Boltzmann maxima, one per element.\n\nLook at Altair behind the panel. An A seven star, spinning at about two hundred ninety kilometres per second, flattened, poles fifteen hundred kelvin hotter than the equator. Its lines are broad from Doppler shifts of the two limbs. The population argument is unaffected. Distrust the width and the position. A careful classifier sets that aside, not a failure of the physics.",
+   "hash": "480d7d78227e",
+   "duration": 125.11,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.74,
+     "text": "Now we put the two ingredients together."
+    },
+    {
+     "start": 2.74,
+     "end": 9.56,
+     "text": "Atoms that absorb a Balmer line are the neutrals from Saha, times Boltzmann's share in level two."
+    },
+    {
+     "start": 9.56,
+     "end": 22.12,
+     "text": "N sub two over N total equals the ratio of N sub two to the sum of N sub one and N sub two, times the ratio of N Roman one to the sum of N Roman one and N Roman two."
+    },
+    {
+     "start": 22.12,
+     "end": 28.56,
+     "text": "N sub two is level two, N sub one the ground state, N total every hydrogen atom."
+    },
+    {
+     "start": 28.56,
+     "end": 32.72,
+     "text": "N Roman one is still neutral, N Roman two ionised."
+    },
+    {
+     "start": 32.72,
+     "end": 36.54,
+     "text": "The first bracket is Boltzmann, ignoring levels above two."
+    },
+    {
+     "start": 36.54,
+     "end": 38.26,
+     "text": "The second is Saha."
+    },
+    {
+     "start": 38.26,
+     "end": 44.14,
+     "text": "Saha falls off a cliff above about ten thousand kelvin, while Boltzmann climbs steeply throughout."
+    },
+    {
+     "start": 44.14,
+     "end": 50.92,
+     "text": "The product rises, peaks, and falls near ninety-nine hundred kelvin, almost exactly an A zero star."
+    },
+    {
+     "start": 50.92,
+     "end": 56.66,
+     "text": "Pickering's anchor is that peak: hot enough for level two, not yet hot enough to ionise."
+    },
+    {
+     "start": 56.66,
+     "end": 62.54,
+     "text": "Only one hydrogen in two hundred thousand sits in level two, enough because there is so much of it."
+    },
+    {
+     "start": 62.54,
+     "end": 63.63,
+     "text": "Try the widget."
+    },
+    {
+     "start": 63.63,
+     "end": 68.95,
+     "text": "It draws both factors and their product against temperature, Harvard classes along the top."
+    },
+    {
+     "start": 68.95,
+     "end": 71.05,
+     "text": "Lower the electron pressure slider."
+    },
+    {
+     "start": 71.05,
+     "end": 75.03,
+     "text": "The Saha cliff shifts cooler, and the peak slides slightly with it."
+    },
+    {
+     "start": 75.03,
+     "end": 80.65,
+     "text": "The same logic, different ionisation energies and level spacings, places every line."
+    },
+    {
+     "start": 80.65,
+     "end": 85.09,
+     "text": "Neutral helium peaks at B two, about twenty-two thousand kelvin."
+    },
+    {
+     "start": 85.09,
+     "end": 89.13,
+     "text": "Ionised calcium peaks at K zero and vanishes by F zero."
+    },
+    {
+     "start": 89.13,
+     "end": 92.03,
+     "text": "Neutral iron strengthens down to the K stars."
+    },
+    {
+     "start": 92.03,
+     "end": 98.41,
+     "text": "Titanium oxide survives only below about four thousand kelvin, so its bands define class M."
+    },
+    {
+     "start": 98.41,
+     "end": 103.15,
+     "text": "Cannon's letters are a table of Saha-Boltzmann maxima, one per element."
+    },
+    {
+     "start": 103.15,
+     "end": 105.11,
+     "text": "Look at Altair behind the panel."
+    },
+    {
+     "start": 105.11,
+     "end": 113.23,
+     "text": "An A seven star, spinning at about two hundred ninety kilometres per second, flattened, poles fifteen hundred kelvin hotter than the equator."
+    },
+    {
+     "start": 113.23,
+     "end": 116.45,
+     "text": "Its lines are broad from Doppler shifts of the two limbs."
+    },
+    {
+     "start": 116.45,
+     "end": 118.91,
+     "text": "The population argument is unaffected."
+    },
+    {
+     "start": 118.91,
+     "end": 120.97,
+     "text": "Distrust the width and the position."
+    },
+    {
+     "start": 120.97,
+     "end": 125.11,
+     "text": "A careful classifier sets that aside, not a failure of the physics."
+    }
+   ],
+   "voicedHash": "0b4b2a509fbe"
+  },
+  "boltzmann-levels": {
+   "script": "A Balmer line forms when a hydrogen atom already in level two absorbs a photon and jumps higher. Ground-state atoms cannot make Balmer lines; the photons that would excite them from level one are ultraviolet Lyman photons. So line strength measures the hydrogen in level two, not the total amount, and temperature sets that population.\n\nCollisions shuffle atoms up and down. The Boltzmann equation gives the steady ratio: N sub b over N sub a equals g sub b over g sub a times e to the power of minus E sub b minus E sub a all over k T. The N's count atoms in the two levels, the g's are the statistical weights — how many quantum states each level has — the E's are the energies, k is Boltzmann’s constant and T the temperature. The exponential is unforgiving because the gaps greatly exceed k T.\n\nFor hydrogen the weights give g two over g one equal to four. At solar photospheric temperatures k T is only about half an electron-volt against a ten point two electron-volt gap, so only one atom in a hundred million occupies level two. The Sun’s Balmer lines come from that fraction.\n\nI encourage you to raise the temperature on the widget and watch level two’s population bar grow while the ratio curve of N two over N one climbs. Near ten thousand kelvin, Sirius behind the panel is about that hot, the ratio reaches three times ten to the minus five, three hundred times the solar figure. At twenty thousand kelvin it is near one hundredth and still rising steeply.\n\nWere Boltzmann excitation the full story, Balmer lines would strengthen toward the hottest stars, yet O stars show almost no hydrogen lines. Some other process removes neutral atoms faster than collisions can excite them. Getting equal numbers in levels one and two would take about eighty-five thousand kelvin, beyond any normal photosphere, where hydrogen is no longer neutral.",
+   "hash": "47a8bcd8b40a",
+   "duration": 113.59,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 6.78,
+     "text": "A Balmer line forms when a hydrogen atom already in level two absorbs a photon and jumps higher."
+    },
+    {
+     "start": 6.78,
+     "end": 14.48,
+     "text": "Ground-state atoms cannot make Balmer lines; the photons that would excite them from level one are ultraviolet Lyman photons."
+    },
+    {
+     "start": 14.48,
+     "end": 21.36,
+     "text": "So line strength measures the hydrogen in level two, not the total amount, and temperature sets that population."
+    },
+    {
+     "start": 21.36,
+     "end": 23.74,
+     "text": "Collisions shuffle atoms up and down."
+    },
+    {
+     "start": 23.74,
+     "end": 36.54,
+     "text": "The Boltzmann equation gives the steady ratio: N sub b over N sub a equals g sub b over g sub a times e to the power of minus E sub b minus E sub a all over k T."
+    },
+    {
+     "start": 36.54,
+     "end": 48.6,
+     "text": "The N's count atoms in the two levels, the g's are the statistical weights — how many quantum states each level has — the E's are the energies, k is Boltzmann’s constant and T the temperature."
+    },
+    {
+     "start": 48.6,
+     "end": 53,
+     "text": "The exponential is unforgiving because the gaps greatly exceed k T."
+    },
+    {
+     "start": 53,
+     "end": 57.05,
+     "text": "For hydrogen the weights give g two over g one equal to four."
+    },
+    {
+     "start": 57.05,
+     "end": 67.73,
+     "text": "At solar photospheric temperatures k T is only about half an electron-volt against a ten point two electron-volt gap, so only one atom in a hundred million occupies level two."
+    },
+    {
+     "start": 67.73,
+     "end": 70.61,
+     "text": "The Sun’s Balmer lines come from that fraction."
+    },
+    {
+     "start": 70.61,
+     "end": 78.83,
+     "text": "I encourage you to raise the temperature on the widget and watch level two’s population bar grow while the ratio curve of N two over N one climbs."
+    },
+    {
+     "start": 78.83,
+     "end": 88.47,
+     "text": "Near ten thousand kelvin, Sirius behind the panel is about that hot, the ratio reaches three times ten to the minus five, three hundred times the solar figure."
+    },
+    {
+     "start": 88.47,
+     "end": 92.65,
+     "text": "At twenty thousand kelvin it is near one hundredth and still rising steeply."
+    },
+    {
+     "start": 92.65,
+     "end": 100.95,
+     "text": "Were Boltzmann excitation the full story, Balmer lines would strengthen toward the hottest stars, yet O stars show almost no hydrogen lines."
+    },
+    {
+     "start": 100.95,
+     "end": 105.29,
+     "text": "Some other process removes neutral atoms faster than collisions can excite them."
+    },
+    {
+     "start": 105.29,
+     "end": 113.59,
+     "text": "Getting equal numbers in levels one and two would take about eighty-five thousand kelvin, beyond any normal photosphere, where hydrogen is no longer neutral."
+    }
+   ],
+   "voicedHash": "3c95b28d1664"
+  },
+  "cool-end": {
+   "script": "Look at Proxima behind the panel. Below about four thousand kelvin, atoms stay bound and lines become bands. Vibrational and rotational levels sit between the electronic ones, so one transition fans into a trough of hundreds of lines. That molecular band is sharp at the head and fades the other way, like a smeared barcode.\n\nTitanium oxide and vanadium oxide cut Proxima's red light into a saw-tooth. The Sun has CH near four hundred thirty nanometres and faint CN, in cooler sunspots and the upper photosphere.\n\nStep through the widget: M, L, T, Y, then Jupiter. Notice oxides, hydrides, methane, and ammonia, in order.\n\nBelow about twenty-four hundred kelvin the oxides vanish. Metal hydrides, iron hydride and chromium hydride, plus hugely broadened neutral sodium and potassium, mark class L, defined in nineteen ninety-nine from the 2MASS and DENIS surveys. Below about two thousand kelvin, condensation pulls refractories into dust and veils the continuum, so L differs from M.\n\nBelow thirteen hundred kelvin methane appears, the same bands Wildt found in Jupiter, and water vapour dominates the infrared: class T. Gliese two twenty-nine B was imaged in nineteen ninety-five. Below about five hundred kelvin ammonia joins in: class Y. The coolest WISE object on screen, found in twenty fourteen near two hundred fifty kelvin, colder than a summer day.\n\nMost are brown dwarfs, about thirteen to eighty Jupiter masses. They formed like stars, too light for steady hydrogen fusion, but massive enough to fuse deuterium briefly, cooling ever since. Class tracks age and mass. Five hundredths of a solar mass is an L dwarf at a hundred million years and a T dwarf at a few billion. Jupiter, at a hundred twenty-five kelvin, would be a late Y dwarf if it shone by its own light. In the infrared, where its own heat dominates, it nearly does. Jupiter is last on the widget. Temperature decides: ions, atoms, molecules, then dust. O to Y to Jupiter is one tour down that ladder.",
+   "hash": "5bf48ace345e",
+   "duration": 132.15,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.54,
+     "text": "Look at Proxima behind the panel."
+    },
+    {
+     "start": 2.54,
+     "end": 7.94,
+     "text": "Below about four thousand kelvin, atoms stay bound and lines become bands."
+    },
+    {
+     "start": 7.94,
+     "end": 15.82,
+     "text": "Vibrational and rotational levels sit between the electronic ones, so one transition fans into a trough of hundreds of lines."
+    },
+    {
+     "start": 15.82,
+     "end": 21.34,
+     "text": "That molecular band is sharp at the head and fades the other way, like a smeared barcode."
+    },
+    {
+     "start": 21.34,
+     "end": 26.92,
+     "text": "Titanium oxide and vanadium oxide cut Proxima's red light into a saw-tooth."
+    },
+    {
+     "start": 26.92,
+     "end": 34.7,
+     "text": "The Sun has CH near four hundred thirty nanometres and faint CN, in cooler sunspots and the upper photosphere."
+    },
+    {
+     "start": 34.7,
+     "end": 39.64,
+     "text": "Step through the widget: M, L, T, Y, then Jupiter."
+    },
+    {
+     "start": 39.64,
+     "end": 44.08,
+     "text": "Notice oxides, hydrides, methane, and ammonia, in order."
+    },
+    {
+     "start": 44.08,
+     "end": 48.22,
+     "text": "Below about twenty-four hundred kelvin the oxides vanish."
+    },
+    {
+     "start": 48.22,
+     "end": 60.24,
+     "text": "Metal hydrides, iron hydride and chromium hydride, plus hugely broadened neutral sodium and potassium, mark class L, defined in nineteen ninety-nine from the 2MASS and DENIS surveys."
+    },
+    {
+     "start": 60.24,
+     "end": 68.23,
+     "text": "Below about two thousand kelvin, condensation pulls refractories into dust and veils the continuum, so L differs from M."
+    },
+    {
+     "start": 68.23,
+     "end": 77.61,
+     "text": "Below thirteen hundred kelvin methane appears, the same bands Wildt found in Jupiter, and water vapour dominates the infrared: class T."
+    },
+    {
+     "start": 77.61,
+     "end": 81.71,
+     "text": "Gliese two twenty-nine B was imaged in nineteen ninety-five."
+    },
+    {
+     "start": 81.71,
+     "end": 86.17,
+     "text": "Below about five hundred kelvin ammonia joins in: class Y."
+    },
+    {
+     "start": 86.17,
+     "end": 93.45,
+     "text": "The coolest WISE object on screen, found in twenty fourteen near two hundred fifty kelvin, colder than a summer day."
+    },
+    {
+     "start": 93.45,
+     "end": 97.39,
+     "text": "Most are brown dwarfs, about thirteen to eighty Jupiter masses."
+    },
+    {
+     "start": 97.39,
+     "end": 105.13,
+     "text": "They formed like stars, too light for steady hydrogen fusion, but massive enough to fuse deuterium briefly, cooling ever since."
+    },
+    {
+     "start": 105.13,
+     "end": 107.13,
+     "text": "Class tracks age and mass."
+    },
+    {
+     "start": 107.13,
+     "end": 113.01,
+     "text": "Five hundredths of a solar mass is an L dwarf at a hundred million years and a T dwarf at a few billion."
+    },
+    {
+     "start": 113.01,
+     "end": 118.59,
+     "text": "Jupiter, at a hundred twenty-five kelvin, would be a late Y dwarf if it shone by its own light."
+    },
+    {
+     "start": 118.59,
+     "end": 122.41,
+     "text": "In the infrared, where its own heat dominates, it nearly does."
+    },
+    {
+     "start": 122.41,
+     "end": 124.31,
+     "text": "Jupiter is last on the widget."
+    },
+    {
+     "start": 124.31,
+     "end": 128.79,
+     "text": "Temperature decides: ions, atoms, molecules, then dust."
+    },
+    {
+     "start": 128.79,
+     "end": 132.15,
+     "text": "O to Y to Jupiter is one tour down that ladder."
+    }
+   ],
+   "voicedHash": "dcba50c7257a"
+  },
+  "harvard-classification": {
+   "script": "Look at Vega behind the panel. By the eighteen eighties two instruments had changed what a star was. Photometry turned brightness into a number. The objective prism, a thin wedge of glass over a telescope, turned every star in the field into a tiny spectrum on one plate. One exposure gave hundreds of spectra, and hundreds of anything beg to be sorted. Sort by what?\n\nEdward Pickering chose the strength of the hydrogen lines, the Balmer series. Williamina Fleming labelled letters A through Q, A for the strongest hydrogen. Antonia Maury saw the widths vary and proposed a parallel scheme. Annie Jump Cannon, between nineteen eleven and nineteen fifteen, classified about two hundred twenty-five thousand stars for the Draper catalogue, up to three a minute, and pruned those letters into the sequence we still use: O, B, A, F, G, K, M, each class in tenths. The rhyme is older than the reason, a map drawn before the terrain was known. With no theory at all, she had sorted them by surface temperature.\n\nLook at the table. O stars, hotter than thirty thousand kelvin, are blue and show ionised helium. Hydrogen is strongest not there, but in the A stars, near ten thousand kelvin. Our Sun is a G two, about fifty-eight hundred kelvin, metal lines and two violet lines of ionised calcium. M stars, cooler than thirty-seven hundred kelvin, are red and striped with titanium oxide.\n\nI want you to drag the widget from O five to M eight. Watch the continuum redden. Watch hydrogen grow and then fade, helium vanish, and the metals and finally the molecular bands take over. Vega, the A zero V standard behind the panel, is the star every other class is placed against.\n\nCannon waited until nineteen thirty-eight for a Harvard appointment, two years before she retired, though she had classified more stars than anyone. The Henry Draper numbers in this catalogue are hers. She found the order before anyone could explain it.",
+   "hash": "7f7282ce54ea",
+   "duration": 119.03,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.16,
+     "text": "Look at Vega behind the panel."
+    },
+    {
+     "start": 2.16,
+     "end": 6.26,
+     "text": "By the eighteen eighties two instruments had changed what a star was."
+    },
+    {
+     "start": 6.26,
+     "end": 9.02,
+     "text": "Photometry turned brightness into a number."
+    },
+    {
+     "start": 9.02,
+     "end": 17,
+     "text": "The objective prism, a thin wedge of glass over a telescope, turned every star in the field into a tiny spectrum on one plate."
+    },
+    {
+     "start": 17,
+     "end": 21.96,
+     "text": "One exposure gave hundreds of spectra, and hundreds of anything beg to be sorted."
+    },
+    {
+     "start": 21.96,
+     "end": 23.26,
+     "text": "Sort by what?"
+    },
+    {
+     "start": 23.26,
+     "end": 27.7,
+     "text": "Edward Pickering chose the strength of the hydrogen lines, the Balmer series."
+    },
+    {
+     "start": 27.7,
+     "end": 32.78,
+     "text": "Williamina Fleming labelled letters A through Q, A for the strongest hydrogen."
+    },
+    {
+     "start": 32.78,
+     "end": 36.98,
+     "text": "Antonia Maury saw the widths vary and proposed a parallel scheme."
+    },
+    {
+     "start": 36.98,
+     "end": 54.66,
+     "text": "Annie Jump Cannon, between nineteen eleven and nineteen fifteen, classified about two hundred twenty-five thousand stars for the Draper catalogue, up to three a minute, and pruned those letters into the sequence we still use: O, B, A, F, G, K, M, each class in tenths."
+    },
+    {
+     "start": 54.66,
+     "end": 59.16,
+     "text": "The rhyme is older than the reason, a map drawn before the terrain was known."
+    },
+    {
+     "start": 59.16,
+     "end": 62.97,
+     "text": "With no theory at all, she had sorted them by surface temperature."
+    },
+    {
+     "start": 62.97,
+     "end": 64.25,
+     "text": "Look at the table."
+    },
+    {
+     "start": 64.25,
+     "end": 69.51,
+     "text": "O stars, hotter than thirty thousand kelvin, are blue and show ionised helium."
+    },
+    {
+     "start": 69.51,
+     "end": 74.57,
+     "text": "Hydrogen is strongest not there, but in the A stars, near ten thousand kelvin."
+    },
+    {
+     "start": 74.57,
+     "end": 81.79,
+     "text": "Our Sun is a G two, about fifty-eight hundred kelvin, metal lines and two violet lines of ionised calcium."
+    },
+    {
+     "start": 81.79,
+     "end": 87.53,
+     "text": "M stars, cooler than thirty-seven hundred kelvin, are red and striped with titanium oxide."
+    },
+    {
+     "start": 87.53,
+     "end": 90.71,
+     "text": "I want you to drag the widget from O five to M eight."
+    },
+    {
+     "start": 90.71,
+     "end": 92.49,
+     "text": "Watch the continuum redden."
+    },
+    {
+     "start": 92.49,
+     "end": 99.17,
+     "text": "Watch hydrogen grow and then fade, helium vanish, and the metals and finally the molecular bands take over."
+    },
+    {
+     "start": 99.17,
+     "end": 105.25,
+     "text": "Vega, the A zero V standard behind the panel, is the star every other class is placed against."
+    },
+    {
+     "start": 105.25,
+     "end": 113.39,
+     "text": "Cannon waited until nineteen thirty-eight for a Harvard appointment, two years before she retired, though she had classified more stars than anyone."
+    },
+    {
+     "start": 113.39,
+     "end": 116.53,
+     "text": "The Henry Draper numbers in this catalogue are hers."
+    },
+    {
+     "start": 116.53,
+     "end": 119.03,
+     "text": "She found the order before anyone could explain it."
+    }
+   ],
+   "voicedHash": "3c381609c17a"
+  },
+  "lines-summary": {
+   "script": "Behind the panel the planets circle the Sun, reflecting solar lines, adding molecular bands, and emitting infrared. Pickering, Fleming, Maury and Cannon sorted hydrogen-line strength into O, B, A, F, G, K, M, from forty thousand kelvin to twenty-five hundred, then L, T and Y. Strength counts the right ion and level, not abundance. Solar calcium two H and K beat the Balmer lines, though calcium is half a million times rarer. Boltzmann says N b over N a equals g b over g a times e to the minus delta E over k T. N counts atoms, g is the statistical weight, delta E the energy gap, k Boltzmann’s constant, and T temperature. Only one solar hydrogen in a hundred million is in n equals two. Saha says N i plus one over N i is proportional to T to the three-halves over n e, times e to the minus chi over k T. Chi is the ionisation energy, n e the electron density. Ionisation switches on over a few thousand kelvin, and lower density ionises sooner. Together they put the Balmer maximum near ten thousand kelvin, type A zero, hot enough to excite, not yet to ionise. Below four thousand kelvin, titanium oxide, vanadium oxide, dust, hydrides, methane and ammonia take over. Brown dwarfs cool through M, L, T and Y, and Jupiter is last. Two equations turned filing into physics. A spectrum gives temperature to a few per cent. Next I plot temperature against luminosity.",
+   "hash": "85436362e1c5",
+   "duration": 96.63,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 7.64,
+     "text": "Behind the panel the planets circle the Sun, reflecting solar lines, adding molecular bands, and emitting infrared."
+    },
+    {
+     "start": 7.64,
+     "end": 19.94,
+     "text": "Pickering, Fleming, Maury and Cannon sorted hydrogen-line strength into O, B, A, F, G, K, M, from forty thousand kelvin to twenty-five hundred, then L, T and Y."
+    },
+    {
+     "start": 19.94,
+     "end": 23.54,
+     "text": "Strength counts the right ion and level, not abundance."
+    },
+    {
+     "start": 23.54,
+     "end": 29.78,
+     "text": "Solar calcium two H and K beat the Balmer lines, though calcium is half a million times rarer."
+    },
+    {
+     "start": 29.78,
+     "end": 37.1,
+     "text": "Boltzmann says N b over N a equals g b over g a times e to the minus delta E over k T."
+    },
+    {
+     "start": 37.1,
+     "end": 45.02,
+     "text": "N counts atoms, g is the statistical weight, delta E the energy gap, k Boltzmann’s constant, and T temperature."
+    },
+    {
+     "start": 45.02,
+     "end": 49.21,
+     "text": "Only one solar hydrogen in a hundred million is in n equals two."
+    },
+    {
+     "start": 49.21,
+     "end": 57.99,
+     "text": "Saha says N i plus one over N i is proportional to T to the three-halves over n e, times e to the minus chi over k T."
+    },
+    {
+     "start": 57.99,
+     "end": 62.39,
+     "text": "Chi is the ionisation energy, n e the electron density."
+    },
+    {
+     "start": 62.39,
+     "end": 67.77,
+     "text": "Ionisation switches on over a few thousand kelvin, and lower density ionises sooner."
+    },
+    {
+     "start": 67.77,
+     "end": 75.57,
+     "text": "Together they put the Balmer maximum near ten thousand kelvin, type A zero, hot enough to excite, not yet to ionise."
+    },
+    {
+     "start": 75.57,
+     "end": 83.87,
+     "text": "Below four thousand kelvin, titanium oxide, vanadium oxide, dust, hydrides, methane and ammonia take over."
+    },
+    {
+     "start": 83.87,
+     "end": 88.75,
+     "text": "Brown dwarfs cool through M, L, T and Y, and Jupiter is last."
+    },
+    {
+     "start": 88.75,
+     "end": 91.37,
+     "text": "Two equations turned filing into physics."
+    },
+    {
+     "start": 91.37,
+     "end": 94.09,
+     "text": "A spectrum gives temperature to a few per cent."
+    },
+    {
+     "start": 94.09,
+     "end": 96.63,
+     "text": "Next I plot temperature against luminosity."
+    }
+   ],
+   "voicedHash": "33a648db78d4"
+  },
+  "reflected-light": {
+   "script": "Look at Saturn behind the panel. If we aim a spectrograph at it, we first see the Sun. All the Fraunhofer lines are copied at their solar strengths, H and K, the D lines, the Balmer series, because in visible light a planet acts as a mirror, and a mirror does not change the light it sends back. Huggins and Secchi saw this in the eighteen sixties: solar lines proved the Moon and planets shine by reflection, while missing lines hinted that nebulae are different.\nThe planet then writes on that borrowed spectrum. Its colour is just which wavelengths it reflects best. Iron oxides absorb blue so Mars is red. Earth's oceans and air scatter blue. Enceladus's ice reflects almost all light. Atmosphere adds bands because sunlight goes through twice. Methane in Jupiter and Saturn cuts deep features near six hundred twenty, seven hundred thirty, seven hundred ninety and especially eight hundred ninety nanometres, as Rupert Wildt showed in nineteen thirty-two. Venus adds carbon dioxide. Earth adds oxygen near seven hundred sixty nanometres, water, and chlorophyll's red edge past seven hundred nanometres, life's clearest distant marker.\nTry the widget. Start with the solar spectrum, lines untouched. Multiply by reflectivity and the molecular bands. Switch to infrared and watch the Planck curve of the planet's own heat, only a few hundred kelvin. See the crossing point. Visible wavelengths are all reflection. Past four micrometres the gas giants, and past three micrometres Venus, emit more than they reflect. Jupiter sends out one point seven times the power it gets from the Sun, old formation heat, linking giant planets to the faintest stars.\nStars make their continuum and lines themselves, temperature fixing the pattern and Wien's law putting the peak in the visible. Planets copy solar lines, add bands and colour, and peak thermally at ten to a hundred micrometres. Far away, transits and secondary eclipses use these same two effects, and JWST has recorded water, carbon dioxide, methane and sulphur dioxide.",
+   "hash": "088b2f9ddd85",
+   "duration": 124.15,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 2.16,
+     "text": "Look at Saturn behind the panel."
+    },
+    {
+     "start": 2.16,
+     "end": 5.64,
+     "text": "If we aim a spectrograph at it, we first see the Sun."
+    },
+    {
+     "start": 5.64,
+     "end": 18.44,
+     "text": "All the Fraunhofer lines are copied at their solar strengths, H and K, the D lines, the Balmer series, because in visible light a planet acts as a mirror, and a mirror does not change the light it sends back."
+    },
+    {
+     "start": 18.44,
+     "end": 27.98,
+     "text": "Huggins and Secchi saw this in the eighteen sixties: solar lines proved the Moon and planets shine by reflection, while missing lines hinted that nebulae are different."
+    },
+    {
+     "start": 27.98,
+     "end": 30.66,
+     "text": "The planet then writes on that borrowed spectrum."
+    },
+    {
+     "start": 30.66,
+     "end": 34.02,
+     "text": "Its colour is just which wavelengths it reflects best."
+    },
+    {
+     "start": 34.02,
+     "end": 37.16,
+     "text": "Iron oxides absorb blue so Mars is red."
+    },
+    {
+     "start": 37.16,
+     "end": 39.56,
+     "text": "Earth's oceans and air scatter blue."
+    },
+    {
+     "start": 39.56,
+     "end": 42.44,
+     "text": "Enceladus's ice reflects almost all light."
+    },
+    {
+     "start": 42.44,
+     "end": 45.9,
+     "text": "Atmosphere adds bands because sunlight goes through twice."
+    },
+    {
+     "start": 45.9,
+     "end": 57.96,
+     "text": "Methane in Jupiter and Saturn cuts deep features near six hundred twenty, seven hundred thirty, seven hundred ninety and especially eight hundred ninety nanometres, as Rupert Wildt showed in nineteen thirty-two."
+    },
+    {
+     "start": 57.96,
+     "end": 60.06,
+     "text": "Venus adds carbon dioxide."
+    },
+    {
+     "start": 60.06,
+     "end": 69.43,
+     "text": "Earth adds oxygen near seven hundred sixty nanometres, water, and chlorophyll's red edge past seven hundred nanometres, life's clearest distant marker."
+    },
+    {
+     "start": 69.43,
+     "end": 70.57,
+     "text": "Try the widget."
+    },
+    {
+     "start": 70.57,
+     "end": 73.43,
+     "text": "Start with the solar spectrum, lines untouched."
+    },
+    {
+     "start": 73.43,
+     "end": 76.61,
+     "text": "Multiply by reflectivity and the molecular bands."
+    },
+    {
+     "start": 76.61,
+     "end": 82.17,
+     "text": "Switch to infrared and watch the Planck curve of the planet's own heat, only a few hundred kelvin."
+    },
+    {
+     "start": 82.17,
+     "end": 83.65,
+     "text": "See the crossing point."
+    },
+    {
+     "start": 83.65,
+     "end": 85.91,
+     "text": "Visible wavelengths are all reflection."
+    },
+    {
+     "start": 85.91,
+     "end": 92.41,
+     "text": "Past four micrometres the gas giants, and past three micrometres Venus, emit more than they reflect."
+    },
+    {
+     "start": 92.41,
+     "end": 100.55,
+     "text": "Jupiter sends out one point seven times the power it gets from the Sun, old formation heat, linking giant planets to the faintest stars."
+    },
+    {
+     "start": 100.55,
+     "end": 107.45,
+     "text": "Stars make their continuum and lines themselves, temperature fixing the pattern and Wien's law putting the peak in the visible."
+    },
+    {
+     "start": 107.45,
+     "end": 113.97,
+     "text": "Planets copy solar lines, add bands and colour, and peak thermally at ten to a hundred micrometres."
+    },
+    {
+     "start": 113.97,
+     "end": 124.15,
+     "text": "Far away, transits and secondary eclipses use these same two effects, and JWST has recorded water, carbon dioxide, methane and sulphur dioxide."
+    }
+   ],
+   "voicedHash": "e04aab6055eb"
+  },
+  "saha-ionization": {
+   "script": "A collision or a photon can remove an electron, leaving an ion with a sparser spectrum. In nineteen twenty Meghnad Saha applied Boltzmann's statistics to that balance and made the spectral sequence a thermometer.\n\nIn words, N i plus one over N i equals two, Z i plus one, over n e times Z i, times two pi m e k T over h squared to the three halves, times e to the minus chi i over k T. N counts atoms in each stage. Z is the partition function, levels summed with Boltzmann weights. n e is free electron density, m e electron mass, k Boltzmann's constant, T temperature, h Planck's constant. Chi i is the ionisation energy, thirteen point six electronvolts for hydrogen. Both factors rise with heat and drive ionisation; more electrons oppose it, because recombination needs an electron to catch.\n\nAn element ionises across a few thousand kelvin. Hydrogen in a stellar atmosphere is half ionised near ninety six hundred kelvin, ninety five percent by eleven thousand. Scarce electrons mean a thin atmosphere ionises cooler than a dense one, so a giant and a dwarf at the same temperature differ in spectrum.\n\nIn the widget, choose an element and an electron pressure and watch the ionisation fraction switch on. Calcium needs six point one electronvolts and is mostly singly ionised at solar temperature; its lines fade in the A stars when it loses a second electron. Helium needs twenty four point six electronvolts and stays neutral until the B stars; ionised helium marks the O stars. Look at Rigel behind the panel. Every boundary in Cannon's sequence is a Saha transition.\n\nSaha, in Calcutta, with few resources and no spectroscope, published in nineteen twenty and ordered the Harvard classes by temperature. Fowler and Milne refined it. In nineteen twenty five Cecilia Payne showed stars share one composition, hydrogen overwhelming the rest, and was pressed to call that almost certainly not real. Accepted within four years.",
+   "hash": "daf8dd79feb6",
+   "duration": 126.39,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 6.24,
+     "text": "A collision or a photon can remove an electron, leaving an ion with a sparser spectrum."
+    },
+    {
+     "start": 6.24,
+     "end": 14.14,
+     "text": "In nineteen twenty Meghnad Saha applied Boltzmann's statistics to that balance and made the spectral sequence a thermometer."
+    },
+    {
+     "start": 14.14,
+     "end": 29.52,
+     "text": "In words, N i plus one over N i equals two, Z i plus one, over n e times Z i, times two pi m e k T over h squared to the three halves, times e to the minus chi i over k T."
+    },
+    {
+     "start": 29.52,
+     "end": 31.68,
+     "text": "N counts atoms in each stage."
+    },
+    {
+     "start": 31.68,
+     "end": 35.96,
+     "text": "Z is the partition function, levels summed with Boltzmann weights."
+    },
+    {
+     "start": 35.96,
+     "end": 44.62,
+     "text": "n e is free electron density, m e electron mass, k Boltzmann's constant, T temperature, h Planck's constant."
+    },
+    {
+     "start": 44.62,
+     "end": 50.14,
+     "text": "Chi i is the ionisation energy, thirteen point six electronvolts for hydrogen."
+    },
+    {
+     "start": 50.14,
+     "end": 57.9,
+     "text": "Both factors rise with heat and drive ionisation; more electrons oppose it, because recombination needs an electron to catch."
+    },
+    {
+     "start": 57.9,
+     "end": 61.04,
+     "text": "An element ionises across a few thousand kelvin."
+    },
+    {
+     "start": 61.04,
+     "end": 68.61,
+     "text": "Hydrogen in a stellar atmosphere is half ionised near ninety six hundred kelvin, ninety five percent by eleven thousand."
+    },
+    {
+     "start": 68.61,
+     "end": 76.55,
+     "text": "Scarce electrons mean a thin atmosphere ionises cooler than a dense one, so a giant and a dwarf at the same temperature differ in spectrum."
+    },
+    {
+     "start": 76.55,
+     "end": 82.63,
+     "text": "In the widget, choose an element and an electron pressure and watch the ionisation fraction switch on."
+    },
+    {
+     "start": 82.63,
+     "end": 92.07,
+     "text": "Calcium needs six point one electronvolts and is mostly singly ionised at solar temperature; its lines fade in the A stars when it loses a second electron."
+    },
+    {
+     "start": 92.07,
+     "end": 99.85,
+     "text": "Helium needs twenty four point six electronvolts and stays neutral until the B stars; ionised helium marks the O stars."
+    },
+    {
+     "start": 99.85,
+     "end": 101.85,
+     "text": "Look at Rigel behind the panel."
+    },
+    {
+     "start": 101.85,
+     "end": 105.35,
+     "text": "Every boundary in Cannon's sequence is a Saha transition."
+    },
+    {
+     "start": 105.35,
+     "end": 113.59,
+     "text": "Saha, in Calcutta, with few resources and no spectroscope, published in nineteen twenty and ordered the Harvard classes by temperature."
+    },
+    {
+     "start": 113.59,
+     "end": 115.51,
+     "text": "Fowler and Milne refined it."
+    },
+    {
+     "start": 115.51,
+     "end": 124.81,
+     "text": "In nineteen twenty five Cecilia Payne showed stars share one composition, hydrogen overwhelming the rest, and was pressed to call that almost certainly not real."
+    },
+    {
+     "start": 124.81,
+     "end": 126.39,
+     "text": "Accepted within four years."
+    }
+   ],
+   "voicedHash": "0377b0961b96"
+  },
+  "sun-spectrum": {
+   "script": "Look behind the panel: we have flown in close on the Sun, a perfectly ordinary G2 star. Before we ask why the spectral sequence works as a thermometer, it is worth studying the one star whose spectrum we can record at any resolution we please. Those dark Fraunhofer lines, the ones we met back in section five, are a typical G2 spectrum. The same rules that explain them will later explain Vega or Betelgeuse.\n\nDrag the cursor along the widget, zoom in, and name the lines as you go. The Balmer lines of hydrogen are present but modest. H alpha at six hundred and fifty-six nanometres is strong; H beta, H gamma and H delta grow steadily weaker. The two darkest lines in the whole visible spectrum are H and K of singly ionised calcium, near three hundred and ninety-seven and three hundred and ninety-three nanometres. You will also catch the sodium D pair around five hundred and eighty-nine nanometres, the magnesium b triplet near five hundred and eighteen nanometres, and a thicket of iron lines filling the rest.\n\nThat ranking is the puzzle in miniature. The Sun holds roughly half a million hydrogen atoms for every calcium atom, yet the calcium lines are far darker. If line strength simply counted atoms, the Sun would be a calcium star. Cecilia Payne showed in her nineteen twenty-five thesis that it does not, and the Sun is not. A line’s strength measures only the atoms sitting in the particular state able to absorb it, and that number depends overwhelmingly on temperature. The next few steps build that argument piece by piece.\n\nTwo features here are not solar at all. The broad diffuse bands near six hundred and ninety and seven hundred and sixty nanometres, and the comb of fine lines between about seven hundred and twenty and eight hundred and thirty nanometres, come from oxygen and water vapour in our own air. These telluric lines appear in every ground-based spectrum and strengthen toward the horizon. They are Kirchhoff’s third law performed by the atmosphere itself: a cool gas in front of a hot source. We either model them out or observe from space. The first skill in reading a spectrum is knowing which lines were made where.\n\nThink of it as counting singers in a choir by how loudly one note carries through an open window: the loudest voice is not always the most numerous, and some of the sound is the wind. A line’s strength depends on how many atoms of the element exist, what fraction are in the right ionisation stage, and what fraction of those sit in the right energy level. Only the first is composition. The other two are temperature, and they usually dominate.",
+   "hash": "c628af25d4ec",
+   "duration": 152.95,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 6.84,
+     "text": "Look behind the panel: we have flown in close on the Sun, a perfectly ordinary G2 star."
+    },
+    {
+     "start": 6.84,
+     "end": 15.74,
+     "text": "Before we ask why the spectral sequence works as a thermometer, it is worth studying the one star whose spectrum we can record at any resolution we please."
+    },
+    {
+     "start": 15.74,
+     "end": 22.28,
+     "text": "Those dark Fraunhofer lines, the ones we met back in section five, are a typical G2 spectrum."
+    },
+    {
+     "start": 22.28,
+     "end": 26.64,
+     "text": "The same rules that explain them will later explain Vega or Betelgeuse."
+    },
+    {
+     "start": 26.64,
+     "end": 31.6,
+     "text": "Drag the cursor along the widget, zoom in, and name the lines as you go."
+    },
+    {
+     "start": 31.6,
+     "end": 35.02,
+     "text": "The Balmer lines of hydrogen are present but modest."
+    },
+    {
+     "start": 35.02,
+     "end": 42.7,
+     "text": "H alpha at six hundred and fifty-six nanometres is strong; H beta, H gamma and H delta grow steadily weaker."
+    },
+    {
+     "start": 42.7,
+     "end": 52.56,
+     "text": "The two darkest lines in the whole visible spectrum are H and K of singly ionised calcium, near three hundred and ninety-seven and three hundred and ninety-three nanometres."
+    },
+    {
+     "start": 52.56,
+     "end": 63.86,
+     "text": "You will also catch the sodium D pair around five hundred and eighty-nine nanometres, the magnesium b triplet near five hundred and eighteen nanometres, and a thicket of iron lines filling the rest."
+    },
+    {
+     "start": 63.86,
+     "end": 66.28,
+     "text": "That ranking is the puzzle in miniature."
+    },
+    {
+     "start": 66.28,
+     "end": 73.18,
+     "text": "The Sun holds roughly half a million hydrogen atoms for every calcium atom, yet the calcium lines are far darker."
+    },
+    {
+     "start": 73.18,
+     "end": 77.81,
+     "text": "If line strength simply counted atoms, the Sun would be a calcium star."
+    },
+    {
+     "start": 77.81,
+     "end": 83.25,
+     "text": "Cecilia Payne showed in her nineteen twenty-five thesis that it does not, and the Sun is not."
+    },
+    {
+     "start": 83.25,
+     "end": 91.17,
+     "text": "A line’s strength measures only the atoms sitting in the particular state able to absorb it, and that number depends overwhelmingly on temperature."
+    },
+    {
+     "start": 91.17,
+     "end": 94.49,
+     "text": "The next few steps build that argument piece by piece."
+    },
+    {
+     "start": 94.49,
+     "end": 97.03,
+     "text": "Two features here are not solar at all."
+    },
+    {
+     "start": 97.03,
+     "end": 110.37,
+     "text": "The broad diffuse bands near six hundred and ninety and seven hundred and sixty nanometres, and the comb of fine lines between about seven hundred and twenty and eight hundred and thirty nanometres, come from oxygen and water vapour in our own air."
+    },
+    {
+     "start": 110.37,
+     "end": 115.43,
+     "text": "These telluric lines appear in every ground-based spectrum and strengthen toward the horizon."
+    },
+    {
+     "start": 115.43,
+     "end": 121.59,
+     "text": "They are Kirchhoff’s third law performed by the atmosphere itself: a cool gas in front of a hot source."
+    },
+    {
+     "start": 121.59,
+     "end": 124.47,
+     "text": "We either model them out or observe from space."
+    },
+    {
+     "start": 124.47,
+     "end": 128.57,
+     "text": "The first skill in reading a spectrum is knowing which lines were made where."
+    },
+    {
+     "start": 128.57,
+     "end": 138.47,
+     "text": "Think of it as counting singers in a choir by how loudly one note carries through an open window: the loudest voice is not always the most numerous, and some of the sound is the wind."
+    },
+    {
+     "start": 138.47,
+     "end": 147.97,
+     "text": "A line’s strength depends on how many atoms of the element exist, what fraction are in the right ionisation stage, and what fraction of those sit in the right energy level."
+    },
+    {
+     "start": 147.97,
+     "end": 149.93,
+     "text": "Only the first is composition."
+    },
+    {
+     "start": 149.93,
+     "end": 152.95,
+     "text": "The other two are temperature, and they usually dominate."
+    }
+   ],
+   "voicedHash": "470d2fa78521"
+  }
+ }
+}

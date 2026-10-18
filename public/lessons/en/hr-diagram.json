@@ -1,0 +1,992 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "chapter-close": {
+   "script": "Look with me at the system circling the Sun behind the panel. O, B, A, F, G, K, M, and L, T, Y, are a temperature sequence. Cannon found it; Saha and Boltzmann explained it. Lines peak where an atom is excited but not yet ionised. Balmer lines peak at A zero, about ninety-nine hundred kelvin. Strength counts atoms in the right state, not abundance. Ionised calcium, half a million times rarer than hydrogen, makes the Sun's strongest lines.\n\nThe Hertzsprung–Russell diagram plots luminosity against temperature. About ninety percent of stars form a mass sequence. Luminosity L scales as mass M to the power three and a half, so more mass means much more light. Lifetime tau scales as M to the minus two and a half, so those stars die sooner. Giants, supergiants and white dwarfs stand apart by radius. Luminosity equals four pi R squared sigma T to the fourth. L is power, R is radius, sigma is the Stefan–Boltzmann constant, T is effective temperature. The same lines reach brown dwarfs and the planets behind the panel. Mass separates a star from a planet; we see mass only indirectly.\n\nLuminosity class gives spectroscopic parallax, good to twenty-five percent. A star has a temperature, a size, and by inference a mass and an age. We will need this map.",
+   "hash": "efe772c92ffe",
+   "duration": 87.67,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.78,
+     "text": "Look with me at the system circling the Sun behind the panel."
+    },
+    {
+     "start": 3.78,
+     "end": 11.96,
+     "text": "O, B, A, F, G, K, M, and L, T, Y, are a temperature sequence."
+    },
+    {
+     "start": 11.96,
+     "end": 15.6,
+     "text": "Cannon found it; Saha and Boltzmann explained it."
+    },
+    {
+     "start": 15.6,
+     "end": 19.4,
+     "text": "Lines peak where an atom is excited but not yet ionised."
+    },
+    {
+     "start": 19.4,
+     "end": 23.92,
+     "text": "Balmer lines peak at A zero, about ninety-nine hundred kelvin."
+    },
+    {
+     "start": 23.92,
+     "end": 27.56,
+     "text": "Strength counts atoms in the right state, not abundance."
+    },
+    {
+     "start": 27.56,
+     "end": 33.68,
+     "text": "Ionised calcium, half a million times rarer than hydrogen, makes the Sun's strongest lines."
+    },
+    {
+     "start": 33.68,
+     "end": 37.82,
+     "text": "The Hertzsprung–Russell diagram plots luminosity against temperature."
+    },
+    {
+     "start": 37.82,
+     "end": 41.04,
+     "text": "About ninety percent of stars form a mass sequence."
+    },
+    {
+     "start": 41.04,
+     "end": 47.87,
+     "text": "Luminosity L scales as mass M to the power three and a half, so more mass means much more light."
+    },
+    {
+     "start": 47.87,
+     "end": 53.37,
+     "text": "Lifetime tau scales as M to the minus two and a half, so those stars die sooner."
+    },
+    {
+     "start": 53.37,
+     "end": 57.45,
+     "text": "Giants, supergiants and white dwarfs stand apart by radius."
+    },
+    {
+     "start": 57.45,
+     "end": 61.89,
+     "text": "Luminosity equals four pi R squared sigma T to the fourth."
+    },
+    {
+     "start": 61.89,
+     "end": 68.61,
+     "text": "L is power, R is radius, sigma is the Stefan–Boltzmann constant, T is effective temperature."
+    },
+    {
+     "start": 68.61,
+     "end": 72.41,
+     "text": "The same lines reach brown dwarfs and the planets behind the panel."
+    },
+    {
+     "start": 72.41,
+     "end": 76.91,
+     "text": "Mass separates a star from a planet; we see mass only indirectly."
+    },
+    {
+     "start": 76.91,
+     "end": 81.89,
+     "text": "Luminosity class gives spectroscopic parallax, good to twenty-five percent."
+    },
+    {
+     "start": 81.89,
+     "end": 86.39,
+     "text": "A star has a temperature, a size, and by inference a mass and an age."
+    },
+    {
+     "start": 86.39,
+     "end": 87.67,
+     "text": "We will need this map."
+    }
+   ],
+   "voicedHash": "0d282fa48b01"
+  },
+  "giants-and-dwarfs": {
+   "script": "Look behind the panel — that is Betelgeuse, and the scale of it is the whole point of this step. The stars that sit off the main sequence are what give the Hertzsprung–Russell diagram its real interpretive power. Luminosity is fixed by only two things, surface area and surface temperature, through the Stefan–Boltzmann law from section 3.4.\n\nThe relation is luminosity L equals four pi R squared times sigma T to the fourth. L is the total power the star radiates, R its radius, sigma the Stefan–Boltzmann constant, and T the surface temperature. A hot surface radiates a flux that climbs as temperature to the fourth; multiply by the area, which grows as radius squared, and you have the luminosity. Take logarithms and log L equals two log R plus four log T plus a constant. Hold the radius fixed and, on a log–log diagram, that becomes a straight line sloping down to the right. The widget draws those lines. Drag the star anywhere and its radius is read off at once, shown to scale against the Sun. Park it on a cool luminous star, then on a hot faint one, and watch the radius leap by factors of thousands.\n\nTwo stars at the same temperature emit the same power per square metre. If one is ten thousand times more luminous it must have ten thousand times the area, hence a hundred times the radius. That is Hertzsprung’s two kinds of red star: the faint ones are dwarfs a little smaller than the Sun; the bright ones are giants tens of solar radii across, and supergiants hundreds.\n\nBetelgeuse is an M2 supergiant, about thirty-six hundred kelvin, cooler than the Sun, yet some one hundred thousand times more luminous, which forces a radius near nine hundred solar radii. Set in the Sun’s place it would swallow Mars and reach most of the way to Jupiter. At the other corner Sirius B is hotter than Sirius A yet four hundred times fainter than the Sun; its radius comes out near eight thousandths of a solar radius, roughly the Earth’s. A solar mass in the Earth’s volume is a million times the density of water. Eddington remarked in 1926 that the companion of Sirius, once decoded, said it was composed of material three thousand times denser than anything we had ever come across. White dwarfs were the first proof that matter has states not found on Earth.\n\nSit with this. Two stars share the same apparent brightness and the same spectral class; one is a giant, one a dwarf. Which is farther, and by what factor if the giant is a hundred times more luminous? If you could not tell them apart, how large would your distance error be? That is exactly the problem the next step was built to solve.",
+   "hash": "8af4189722fe",
+   "duration": 156.47,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.84,
+     "text": "Look behind the panel — that is Betelgeuse, and the scale of it is the whole point of this step."
+    },
+    {
+     "start": 5.84,
+     "end": 12.1,
+     "text": "The stars that sit off the main sequence are what give the Hertzsprung–Russell diagram its real interpretive power."
+    },
+    {
+     "start": 12.1,
+     "end": 20.64,
+     "text": "Luminosity is fixed by only two things, surface area and surface temperature, through the Stefan–Boltzmann law from section 3. 4."
+    },
+    {
+     "start": 20.64,
+     "end": 26.76,
+     "text": "The relation is luminosity L equals four pi R squared times sigma T to the fourth."
+    },
+    {
+     "start": 26.76,
+     "end": 34.98,
+     "text": "L is the total power the star radiates, R its radius, sigma the Stefan–Boltzmann constant, and T the surface temperature."
+    },
+    {
+     "start": 34.98,
+     "end": 44.28,
+     "text": "A hot surface radiates a flux that climbs as temperature to the fourth; multiply by the area, which grows as radius squared, and you have the luminosity."
+    },
+    {
+     "start": 44.28,
+     "end": 49.78,
+     "text": "Take logarithms and log L equals two log R plus four log T plus a constant."
+    },
+    {
+     "start": 49.78,
+     "end": 56.3,
+     "text": "Hold the radius fixed and, on a log–log diagram, that becomes a straight line sloping down to the right."
+    },
+    {
+     "start": 56.3,
+     "end": 58.3,
+     "text": "The widget draws those lines."
+    },
+    {
+     "start": 58.3,
+     "end": 63.86,
+     "text": "Drag the star anywhere and its radius is read off at once, shown to scale against the Sun."
+    },
+    {
+     "start": 63.86,
+     "end": 70.64,
+     "text": "Park it on a cool luminous star, then on a hot faint one, and watch the radius leap by factors of thousands."
+    },
+    {
+     "start": 70.64,
+     "end": 74.74,
+     "text": "Two stars at the same temperature emit the same power per square metre."
+    },
+    {
+     "start": 74.74,
+     "end": 81.41,
+     "text": "If one is ten thousand times more luminous it must have ten thousand times the area, hence a hundred times the radius."
+    },
+    {
+     "start": 81.41,
+     "end": 92.25,
+     "text": "That is Hertzsprung’s two kinds of red star: the faint ones are dwarfs a little smaller than the Sun; the bright ones are giants tens of solar radii across, and supergiants hundreds."
+    },
+    {
+     "start": 92.25,
+     "end": 104.33,
+     "text": "Betelgeuse is an M2 supergiant, about thirty-six hundred kelvin, cooler than the Sun, yet some one hundred thousand times more luminous, which forces a radius near nine hundred solar radii."
+    },
+    {
+     "start": 104.33,
+     "end": 108.67,
+     "text": "Set in the Sun’s place it would swallow Mars and reach most of the way to Jupiter."
+    },
+    {
+     "start": 108.67,
+     "end": 119.19,
+     "text": "At the other corner Sirius B is hotter than Sirius A yet four hundred times fainter than the Sun; its radius comes out near eight thousandths of a solar radius, roughly the Earth’s."
+    },
+    {
+     "start": 119.19,
+     "end": 123.39,
+     "text": "A solar mass in the Earth’s volume is a million times the density of water."
+    },
+    {
+     "start": 123.39,
+     "end": 133.61,
+     "text": "Eddington remarked in 1926 that the companion of Sirius, once decoded, said it was composed of material three thousand times denser than anything we had ever come across."
+    },
+    {
+     "start": 133.61,
+     "end": 137.79,
+     "text": "White dwarfs were the first proof that matter has states not found on Earth."
+    },
+    {
+     "start": 137.79,
+     "end": 138.91,
+     "text": "Sit with this."
+    },
+    {
+     "start": 138.91,
+     "end": 144.91,
+     "text": "Two stars share the same apparent brightness and the same spectral class; one is a giant, one a dwarf."
+    },
+    {
+     "start": 144.91,
+     "end": 149.55,
+     "text": "Which is farther, and by what factor if the giant is a hundred times more luminous?"
+    },
+    {
+     "start": 149.55,
+     "end": 153.53,
+     "text": "If you could not tell them apart, how large would your distance error be?"
+    },
+    {
+     "start": 153.53,
+     "end": 156.47,
+     "text": "That is exactly the problem the next step was built to solve."
+    }
+   ],
+   "voicedHash": "20e4515838a1"
+  },
+  "main-sequence": {
+   "script": "Look at Spica behind the panel. That blue star sits high on the main sequence because of its mass. Run your eye from the lower right up to the upper left and one quantity changes steadily the whole way: mass. The binary-star masses from Chapter 7, plotted against position, show it directly. Red M dwarfs at the bottom have about a tenth of a solar mass. The Sun sits in the middle. Spica’s primary is a B1 star of eleven solar masses. The O stars at the top reach fifty to a hundred.\n\nLuminosity climbs steeply with mass, roughly as mass to the power three and a half, as we saw in Section 7.2. Temperature rises more gently, about as the square root of mass, and radius only as mass to the power zero point eight or so. A ten-solar-mass star is only about six times the Sun’s diameter, yet five thousand times as luminous. The widget’s single slider is mass. Drag it, and watch the star slide along the sequence, change colour and size, and read off temperature, luminosity, radius, and lifetime.\n\nWhy a sequence at all? A main-sequence star is a hydrogen-burning object in equilibrium. For a given mass and composition there is exactly one structure that balances gravity against pressure while radiating what the core produces. Mass fixes the central temperature and pressure; those fix the fusion rate; and the fusion rate is the luminosity. Composition shifts the sequence slightly — metal-poor stars are a little bluer and brighter — and that small shift gives the sequence its width. It is not a track stars crawl along. A star arrives when fusion begins and stays nearly there until the core hydrogen is spent.\n\nThe lifetime follows at once. Tau sub M S, the main-sequence lifetime, is about ten billion years times mass over solar mass, divided by luminosity over solar luminosity. Fuel scales with mass; the consumption rate scales with luminosity. Since luminosity goes roughly as mass to the three and a half, that ratio simplifies to about ten billion years times mass over solar mass, raised to the power minus two and a half. Spica’s eleven-solar-mass primary has perhaps twenty million years. A red dwarf of two tenths of a solar mass will last a trillion years. No M dwarf has yet left the main sequence anywhere in the universe.\n\nThat formula explains the census. Massive stars are rare because formation makes few of them and because those it makes die quickly. Faint red dwarfs are three quarters of all stars in the Galaxy, yet none is visible to the naked eye. The bright stars behind the panel are biased toward the luminous: of the hundred brightest, not one is less massive than the Sun, while of the hundred nearest, more than seventy are M dwarfs.\n\nThe lower end sits near eight hundredths of a solar mass, about seventy-five Jupiter masses. Below that the core never gets hot enough for sustained hydrogen fusion, and the object is a brown dwarf. The upper end is less sharp. Radiation pressure disrupts stars above roughly a hundred and fifty solar masses, and the most massive stars known, in the R136 cluster of the Large Magellanic Cloud, are near two hundred solar masses and probably formed by mergers.",
+   "hash": "82cb78552f3f",
+   "duration": 191.35,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.08,
+     "text": "Look at Spica behind the panel."
+    },
+    {
+     "start": 2.08,
+     "end": 6.08,
+     "text": "That blue star sits high on the main sequence because of its mass."
+    },
+    {
+     "start": 6.08,
+     "end": 12.94,
+     "text": "Run your eye from the lower right up to the upper left and one quantity changes steadily the whole way: mass."
+    },
+    {
+     "start": 12.94,
+     "end": 18.8,
+     "text": "The binary-star masses from Chapter 7, plotted against position, show it directly."
+    },
+    {
+     "start": 18.8,
+     "end": 22.78,
+     "text": "Red M dwarfs at the bottom have about a tenth of a solar mass."
+    },
+    {
+     "start": 22.78,
+     "end": 24.54,
+     "text": "The Sun sits in the middle."
+    },
+    {
+     "start": 24.54,
+     "end": 28.74,
+     "text": "Spica’s primary is a B1 star of eleven solar masses."
+    },
+    {
+     "start": 28.74,
+     "end": 31.94,
+     "text": "The O stars at the top reach fifty to a hundred."
+    },
+    {
+     "start": 31.94,
+     "end": 39.5,
+     "text": "Luminosity climbs steeply with mass, roughly as mass to the power three and a half, as we saw in Section 7. 2."
+    },
+    {
+     "start": 39.5,
+     "end": 47.14,
+     "text": "Temperature rises more gently, about as the square root of mass, and radius only as mass to the power zero point eight or so."
+    },
+    {
+     "start": 47.14,
+     "end": 53.78,
+     "text": "A ten-solar-mass star is only about six times the Sun’s diameter, yet five thousand times as luminous."
+    },
+    {
+     "start": 53.78,
+     "end": 56.1,
+     "text": "The widget’s single slider is mass."
+    },
+    {
+     "start": 56.1,
+     "end": 65.02,
+     "text": "Drag it, and watch the star slide along the sequence, change colour and size, and read off temperature, luminosity, radius, and lifetime."
+    },
+    {
+     "start": 65.02,
+     "end": 66.7,
+     "text": "Why a sequence at all?"
+    },
+    {
+     "start": 66.7,
+     "end": 70.68,
+     "text": "A main-sequence star is a hydrogen-burning object in equilibrium."
+    },
+    {
+     "start": 70.68,
+     "end": 79.04,
+     "text": "For a given mass and composition there is exactly one structure that balances gravity against pressure while radiating what the core produces."
+    },
+    {
+     "start": 79.04,
+     "end": 85.68,
+     "text": "Mass fixes the central temperature and pressure; those fix the fusion rate; and the fusion rate is the luminosity."
+    },
+    {
+     "start": 85.68,
+     "end": 93.64,
+     "text": "Composition shifts the sequence slightly — metal-poor stars are a little bluer and brighter — and that small shift gives the sequence its width."
+    },
+    {
+     "start": 93.64,
+     "end": 96.13,
+     "text": "It is not a track stars crawl along."
+    },
+    {
+     "start": 96.13,
+     "end": 101.25,
+     "text": "A star arrives when fusion begins and stays nearly there until the core hydrogen is spent."
+    },
+    {
+     "start": 101.25,
+     "end": 103.29,
+     "text": "The lifetime follows at once."
+    },
+    {
+     "start": 103.29,
+     "end": 113.09,
+     "text": "Tau sub M S, the main-sequence lifetime, is about ten billion years times mass over solar mass, divided by luminosity over solar luminosity."
+    },
+    {
+     "start": 113.09,
+     "end": 117.29,
+     "text": "Fuel scales with mass; the consumption rate scales with luminosity."
+    },
+    {
+     "start": 117.29,
+     "end": 127.85,
+     "text": "Since luminosity goes roughly as mass to the three and a half, that ratio simplifies to about ten billion years times mass over solar mass, raised to the power minus two and a half."
+    },
+    {
+     "start": 127.85,
+     "end": 131.99,
+     "text": "Spica’s eleven-solar-mass primary has perhaps twenty million years."
+    },
+    {
+     "start": 131.99,
+     "end": 136.11,
+     "text": "A red dwarf of two tenths of a solar mass will last a trillion years."
+    },
+    {
+     "start": 136.11,
+     "end": 139.97,
+     "text": "No M dwarf has yet left the main sequence anywhere in the universe."
+    },
+    {
+     "start": 139.97,
+     "end": 142.27,
+     "text": "That formula explains the census."
+    },
+    {
+     "start": 142.27,
+     "end": 147.83,
+     "text": "Massive stars are rare because formation makes few of them and because those it makes die quickly."
+    },
+    {
+     "start": 147.83,
+     "end": 153.65,
+     "text": "Faint red dwarfs are three quarters of all stars in the Galaxy, yet none is visible to the naked eye."
+    },
+    {
+     "start": 153.65,
+     "end": 164.45,
+     "text": "The bright stars behind the panel are biased toward the luminous: of the hundred brightest, not one is less massive than the Sun, while of the hundred nearest, more than seventy are M dwarfs."
+    },
+    {
+     "start": 164.45,
+     "end": 169.85,
+     "text": "The lower end sits near eight hundredths of a solar mass, about seventy-five Jupiter masses."
+    },
+    {
+     "start": 169.85,
+     "end": 175.73,
+     "text": "Below that the core never gets hot enough for sustained hydrogen fusion, and the object is a brown dwarf."
+    },
+    {
+     "start": 175.73,
+     "end": 177.59,
+     "text": "The upper end is less sharp."
+    },
+    {
+     "start": 177.59,
+     "end": 191.35,
+     "text": "Radiation pressure disrupts stars above roughly a hundred and fifty solar masses, and the most massive stars known, in the R136 cluster of the Large Magellanic Cloud, are near two hundred solar masses and probably formed by mergers."
+    }
+   ],
+   "voicedHash": "3ea6b67a4b42"
+  },
+  "mk-classes": {
+   "script": "Look with me at Deneb behind the panel. Hertzsprung's clue was that Maury's narrow-lined stars were the giants. The reason is gravity.\n\nSame spectral class means same temperature, not same size. Surface gravity is g equals G M over R squared: G is Newton's constant, M is the mass, R the radius. A giant's R makes g hundreds or thousands of times weaker, so the atmosphere is tenuous. At fixed temperature, g tracks radius and hence luminosity.\n\nTwo consequences. With fewer electrons, the Saha equation ionises each element at a lower temperature, and ionised-to-neutral ratios shift. Collisions and neighbouring electric fields broaden the lines. We call that pressure, or Stark, broadening. Dwarf hydrogen lines grow broad wings; giant lines stay sharp.\n\nIn 1943 William Morgan, Philip Keenan and Edith Kellman at Yerkes built luminosity classes beside the Harvard type. Ia marks the most luminous supergiants, then Ib, II the bright giants, III the giants, IV subgiants, and V the main-sequence dwarfs. The Sun is G two V. Deneb is A two Ia, Vega's temperature, about two hundred thousand times the Sun's luminosity, lines thin as pencil strokes. Aldebaran is K five III. Sirius B is D A two, a separate notation. Panels here show the MK type.\n\nTry this with me. Pick a temperature class, then slide gravity from log g about zero, a supergiant, to about four and a half, a dwarf. Log g is the base-ten logarithm of g, in centimetre-gram-second units. The Balmer line narrows or broadens, the class changes, and the star moves vertically on the inset diagram. The horizontal coordinate is temperature; the MK class gives the vertical one from the spectrum alone, no distance required. That is the next step's point.\n\nMaury's 1897 types used a, b and c for line width. Pickering dropped them. In 1908 Hertzsprung wrote that ignoring the c-stars was nearly like a zoologist who can tell a whale from a fish and still classifies them together. Recognition waited forty-six years.",
+   "hash": "c14042fc07e9",
+   "duration": 135.35,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.96,
+     "text": "Look with me at Deneb behind the panel."
+    },
+    {
+     "start": 2.96,
+     "end": 7.4,
+     "text": "Hertzsprung's clue was that Maury's narrow-lined stars were the giants."
+    },
+    {
+     "start": 7.4,
+     "end": 9.14,
+     "text": "The reason is gravity."
+    },
+    {
+     "start": 9.14,
+     "end": 13.58,
+     "text": "Same spectral class means same temperature, not same size."
+    },
+    {
+     "start": 13.58,
+     "end": 21.4,
+     "text": "Surface gravity is g equals G M over R squared: G is Newton's constant, M is the mass, R the radius."
+    },
+    {
+     "start": 21.4,
+     "end": 27.34,
+     "text": "A giant's R makes g hundreds or thousands of times weaker, so the atmosphere is tenuous."
+    },
+    {
+     "start": 27.34,
+     "end": 31.56,
+     "text": "At fixed temperature, g tracks radius and hence luminosity."
+    },
+    {
+     "start": 31.56,
+     "end": 33,
+     "text": "Two consequences."
+    },
+    {
+     "start": 33,
+     "end": 41.12,
+     "text": "With fewer electrons, the Saha equation ionises each element at a lower temperature, and ionised-to-neutral ratios shift."
+    },
+    {
+     "start": 41.12,
+     "end": 44.36,
+     "text": "Collisions and neighbouring electric fields broaden the lines."
+    },
+    {
+     "start": 44.36,
+     "end": 47.44,
+     "text": "We call that pressure, or Stark, broadening."
+    },
+    {
+     "start": 47.44,
+     "end": 51.9,
+     "text": "Dwarf hydrogen lines grow broad wings; giant lines stay sharp."
+    },
+    {
+     "start": 51.9,
+     "end": 59.9,
+     "text": "In 1943 William Morgan, Philip Keenan and Edith Kellman at Yerkes built luminosity classes beside the Harvard type."
+    },
+    {
+     "start": 59.9,
+     "end": 70.43,
+     "text": "Ia marks the most luminous supergiants, then Ib, II the bright giants, III the giants, IV subgiants, and V the main-sequence dwarfs."
+    },
+    {
+     "start": 70.43,
+     "end": 72.37,
+     "text": "The Sun is G two V."
+    },
+    {
+     "start": 72.37,
+     "end": 80.73,
+     "text": "Deneb is A two Ia, Vega's temperature, about two hundred thousand times the Sun's luminosity, lines thin as pencil strokes."
+    },
+    {
+     "start": 80.73,
+     "end": 83.01,
+     "text": "Aldebaran is K five III."
+    },
+    {
+     "start": 83.01,
+     "end": 86.67,
+     "text": "Sirius B is D A two, a separate notation."
+    },
+    {
+     "start": 86.67,
+     "end": 88.93,
+     "text": "Panels here show the MK type."
+    },
+    {
+     "start": 88.93,
+     "end": 90.17,
+     "text": "Try this with me."
+    },
+    {
+     "start": 90.17,
+     "end": 97.89,
+     "text": "Pick a temperature class, then slide gravity from log g about zero, a supergiant, to about four and a half, a dwarf."
+    },
+    {
+     "start": 97.89,
+     "end": 102.83,
+     "text": "Log g is the base-ten logarithm of g, in centimetre-gram-second units."
+    },
+    {
+     "start": 102.83,
+     "end": 109.25,
+     "text": "The Balmer line narrows or broadens, the class changes, and the star moves vertically on the inset diagram."
+    },
+    {
+     "start": 109.25,
+     "end": 116.59,
+     "text": "The horizontal coordinate is temperature; the MK class gives the vertical one from the spectrum alone, no distance required."
+    },
+    {
+     "start": 116.59,
+     "end": 118.51,
+     "text": "That is the next step's point."
+    },
+    {
+     "start": 118.51,
+     "end": 123.07,
+     "text": "Maury's 1897 types used a, b and c for line width."
+    },
+    {
+     "start": 123.07,
+     "end": 124.45,
+     "text": "Pickering dropped them."
+    },
+    {
+     "start": 124.45,
+     "end": 133.25,
+     "text": "In 1908 Hertzsprung wrote that ignoring the c-stars was nearly like a zoologist who can tell a whale from a fish and still classifies them together."
+    },
+    {
+     "start": 133.25,
+     "end": 135.35,
+     "text": "Recognition waited forty-six years."
+    }
+   ],
+   "voicedHash": "5ef1c3f17b5d"
+  },
+  "planets-on-hr": {
+   "script": "Look at Jupiter behind the panel. The Hertzsprung–Russell diagram usually stops at the coolest M dwarfs, near two thousand five hundred kelvin, but physics does not stop. I place Jupiter there as surely as Betelgeuse.\n\nL Jupiter equals four pi R Jupiter squared sigma T effective to the fourth. L Jupiter is the power Jupiter radiates. R Jupiter is its radius, about seventy-two million metres, a tenth of the Sun. Sigma is the Stefan–Boltzmann constant, linking temperature to power per unit area. T effective is one hundred and twenty-five kelvin, the matching black body temperature. It holds because power is the area, four pi R squared, times T to the fourth. I get about nine times ten to the seventeen watts, near two times ten to the minus nine solar luminosities. That is about one point seven times the sunlight Jupiter absorbs. The excess is gravitational energy from contracting a few centimetres a year, the Kelvin–Helmholtz source once proposed for the Sun.\n\nJupiter lies far below and right of the last star, on the brown dwarfs' constant-radius line. Above about one Jupiter mass, adding mass compresses the body rather than enlarging it.\n\nDrag the age slider. Brown dwarfs have no fusion to hold them steady, so as the age rises they slide down and to the right. Jupiter slides with them, still on that line. Four and a half billion years ago it was several times brighter, perhaps six hundred kelvin, a T dwarf. Saturn is dimmer. Earth, at two hundred and fifty-five kelvin from the top of its atmosphere, sits near three times ten to the minus ten solar luminosities. Venus is nearby, hotter in its clouds despite a brilliant albedo.\n\nHere a planet differs from a star only in degree. Mass decides if the core can ignite, and mass is never plotted, only the consequences. The planets of H R eight seven nine nine are photographed and weighed on these same cooling tracks.",
+   "hash": "a9d18adbaefb",
+   "duration": 117.75,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.32,
+     "text": "Look at Jupiter behind the panel."
+    },
+    {
+     "start": 2.32,
+     "end": 11.06,
+     "text": "The Hertzsprung–Russell diagram usually stops at the coolest M dwarfs, near two thousand five hundred kelvin, but physics does not stop."
+    },
+    {
+     "start": 11.06,
+     "end": 14.06,
+     "text": "I place Jupiter there as surely as Betelgeuse."
+    },
+    {
+     "start": 14.06,
+     "end": 19.3,
+     "text": "L Jupiter equals four pi R Jupiter squared sigma T effective to the fourth."
+    },
+    {
+     "start": 19.3,
+     "end": 22.04,
+     "text": "L Jupiter is the power Jupiter radiates."
+    },
+    {
+     "start": 22.04,
+     "end": 27.36,
+     "text": "R Jupiter is its radius, about seventy-two million metres, a tenth of the Sun."
+    },
+    {
+     "start": 27.36,
+     "end": 32.78,
+     "text": "Sigma is the Stefan–Boltzmann constant, linking temperature to power per unit area."
+    },
+    {
+     "start": 32.78,
+     "end": 37.84,
+     "text": "T effective is one hundred and twenty-five kelvin, the matching black body temperature."
+    },
+    {
+     "start": 37.84,
+     "end": 43.76,
+     "text": "It holds because power is the area, four pi R squared, times T to the fourth."
+    },
+    {
+     "start": 43.76,
+     "end": 50.56,
+     "text": "I get about nine times ten to the seventeen watts, near two times ten to the minus nine solar luminosities."
+    },
+    {
+     "start": 50.56,
+     "end": 54.38,
+     "text": "That is about one point seven times the sunlight Jupiter absorbs."
+    },
+    {
+     "start": 54.38,
+     "end": 62.19,
+     "text": "The excess is gravitational energy from contracting a few centimetres a year, the Kelvin–Helmholtz source once proposed for the Sun."
+    },
+    {
+     "start": 62.19,
+     "end": 68.09,
+     "text": "Jupiter lies far below and right of the last star, on the brown dwarfs' constant-radius line."
+    },
+    {
+     "start": 68.09,
+     "end": 73.37,
+     "text": "Above about one Jupiter mass, adding mass compresses the body rather than enlarging it."
+    },
+    {
+     "start": 73.37,
+     "end": 74.99,
+     "text": "Drag the age slider."
+    },
+    {
+     "start": 74.99,
+     "end": 81.11,
+     "text": "Brown dwarfs have no fusion to hold them steady, so as the age rises they slide down and to the right."
+    },
+    {
+     "start": 81.11,
+     "end": 84.21,
+     "text": "Jupiter slides with them, still on that line."
+    },
+    {
+     "start": 84.21,
+     "end": 90.53,
+     "text": "Four and a half billion years ago it was several times brighter, perhaps six hundred kelvin, a T dwarf."
+    },
+    {
+     "start": 90.53,
+     "end": 91.93,
+     "text": "Saturn is dimmer."
+    },
+    {
+     "start": 91.93,
+     "end": 99.67,
+     "text": "Earth, at two hundred and fifty-five kelvin from the top of its atmosphere, sits near three times ten to the minus ten solar luminosities."
+    },
+    {
+     "start": 99.67,
+     "end": 104.13,
+     "text": "Venus is nearby, hotter in its clouds despite a brilliant albedo."
+    },
+    {
+     "start": 104.13,
+     "end": 107.19,
+     "text": "Here a planet differs from a star only in degree."
+    },
+    {
+     "start": 107.19,
+     "end": 112.83,
+     "text": "Mass decides if the core can ignite, and mass is never plotted, only the consequences."
+    },
+    {
+     "start": 112.83,
+     "end": 117.75,
+     "text": "The planets of H R eight seven nine nine are photographed and weighed on these same cooling tracks."
+    }
+   ],
+   "voicedHash": "e6340f7bad2a"
+  },
+  "spectroscopic-parallax": {
+   "script": "Here is the payoff. An MK classification places the star on the Hertzsprung-Russell diagram, and the height is an absolute magnitude. Compare that with the apparent magnitude, and the distance modulus from Section 3.2 gives the distance. We call this spectroscopic parallax, though no parallax is measured. Before Gaia, only this reached past a few hundred parsecs, and still reaches other galaxies.\n\nm minus M sub V equals five log base ten of d over ten parsecs, so d equals ten to the power of m minus M sub V plus five, over five, in parsecs. m is apparent magnitude. M sub V is absolute visual magnitude from the class, at ten parsecs. d is distance. Tenfold farther means five magnitudes fainter. Half a magnitude wrong in M sub V is twenty-five percent in distance, and the main sequence width adds as much again.\n\nIn the widget, read the simulated spectrum, choose the luminosity class, commit, and compare with Gaia. Antares, behind the panel: M one point five, razor-thin lines, class one a b, absolute magnitude about minus five point three, apparent magnitude one, near one hundred eighty parsecs. Gaia agrees. Call it a dwarf at plus nine point five: two tenths of a parsec, closer than Proxima. That absurdity is the point, a factor of a thousand from the line widths.\n\nDust dims and reddens, so the star looks fainter, cooler, farther. Correct with colour excess, Section 3.6. Unresolved binaries are too bright. Rapid rotators, metal-poor and chemically peculiar stars sit off the sequences. It bounds the method. Twenty to thirty percent for stars, a few percent for clusters, which calibrated the Cepheids and the galaxies.\n\nSpica, about magnitude one, B one, broad lines, class five, absolute magnitude minus three point six. m minus M is four point six, so ten to the one point nine two, about eighty-three parsecs. Hipparcos, seventy-seven plus or minus four. Correct the companion's third of a magnitude to seventy-two parsecs, within the errors.",
+   "hash": "29c26117055a",
+   "duration": 135.99,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 1.7,
+     "text": "Here is the payoff."
+    },
+    {
+     "start": 1.7,
+     "end": 9.1,
+     "text": "An MK classification places the star on the Hertzsprung-Russell diagram, and the height is an absolute magnitude."
+    },
+    {
+     "start": 9.1,
+     "end": 15.64,
+     "text": "Compare that with the apparent magnitude, and the distance modulus from Section 3. 2 gives the distance."
+    },
+    {
+     "start": 15.64,
+     "end": 20.5,
+     "text": "We call this spectroscopic parallax, though no parallax is measured."
+    },
+    {
+     "start": 20.5,
+     "end": 26.84,
+     "text": "Before Gaia, only this reached past a few hundred parsecs, and still reaches other galaxies."
+    },
+    {
+     "start": 26.84,
+     "end": 38.74,
+     "text": "m minus M sub V equals five log base ten of d over ten parsecs, so d equals ten to the power of m minus M sub V plus five, over five, in parsecs."
+    },
+    {
+     "start": 38.74,
+     "end": 40.62,
+     "text": "m is apparent magnitude."
+    },
+    {
+     "start": 40.62,
+     "end": 45.68,
+     "text": "M sub V is absolute visual magnitude from the class, at ten parsecs."
+    },
+    {
+     "start": 45.68,
+     "end": 47.16,
+     "text": "d is distance."
+    },
+    {
+     "start": 47.16,
+     "end": 50.32,
+     "text": "Tenfold farther means five magnitudes fainter."
+    },
+    {
+     "start": 50.32,
+     "end": 57.76,
+     "text": "Half a magnitude wrong in M sub V is twenty-five percent in distance, and the main sequence width adds as much again."
+    },
+    {
+     "start": 57.76,
+     "end": 64.14,
+     "text": "In the widget, read the simulated spectrum, choose the luminosity class, commit, and compare with Gaia."
+    },
+    {
+     "start": 64.14,
+     "end": 77.85,
+     "text": "Antares, behind the panel: M one point five, razor-thin lines, class one a b, absolute magnitude about minus five point three, apparent magnitude one, near one hundred eighty parsecs."
+    },
+    {
+     "start": 77.85,
+     "end": 79.13,
+     "text": "Gaia agrees."
+    },
+    {
+     "start": 79.13,
+     "end": 85.01,
+     "text": "Call it a dwarf at plus nine point five: two tenths of a parsec, closer than Proxima."
+    },
+    {
+     "start": 85.01,
+     "end": 89.39,
+     "text": "That absurdity is the point, a factor of a thousand from the line widths."
+    },
+    {
+     "start": 89.39,
+     "end": 93.93,
+     "text": "Dust dims and reddens, so the star looks fainter, cooler, farther."
+    },
+    {
+     "start": 93.93,
+     "end": 97.33,
+     "text": "Correct with colour excess, Section 3. 6."
+    },
+    {
+     "start": 97.33,
+     "end": 99.67,
+     "text": "Unresolved binaries are too bright."
+    },
+    {
+     "start": 99.67,
+     "end": 104.89,
+     "text": "Rapid rotators, metal-poor and chemically peculiar stars sit off the sequences."
+    },
+    {
+     "start": 104.89,
+     "end": 106.39,
+     "text": "It bounds the method."
+    },
+    {
+     "start": 106.39,
+     "end": 113.09,
+     "text": "Twenty to thirty percent for stars, a few percent for clusters, which calibrated the Cepheids and the galaxies."
+    },
+    {
+     "start": 113.09,
+     "end": 121.45,
+     "text": "Spica, about magnitude one, B one, broad lines, class five, absolute magnitude minus three point six."
+    },
+    {
+     "start": 121.45,
+     "end": 127.79,
+     "text": "m minus M is four point six, so ten to the one point nine two, about eighty-three parsecs."
+    },
+    {
+     "start": 127.79,
+     "end": 131.11,
+     "text": "Hipparcos, seventy-seven plus or minus four."
+    },
+    {
+     "start": 131.11,
+     "end": 135.99,
+     "text": "Correct the companion's third of a magnitude to seventy-two parsecs, within the errors."
+    }
+   ],
+   "voicedHash": "3590fcf92f66"
+  },
+  "two-astronomers": {
+   "script": "Welcome. I love this diagram, because the points would not scatter.\n\nLook behind the panel — Alcyone, brightest of the Pleiades. Around nineteen oh five the Danish chemist turned astronomer Ejnar Hertzsprung, working with Maury’s c stars, the ones with unusually narrow lines, noticed they had vanishingly small proper motions. They were far away, and therefore intrinsically very bright, while other stars of the same colour were nearby and faint. Same colour, two wildly different luminosities. There had to be two kinds of red star. He published in an obscure photography journal, and was ignored.\n\nBy nineteen eleven he plotted colour against apparent magnitude for the Pleiades and the Hyades. Stars in a cluster share one distance, so apparent magnitude stands in for luminosity. The points fell along a narrow band.\n\nAt Princeton, Henry Norris Russell gathered every star with a measured parallax, turned apparent magnitude into absolute magnitude, and in nineteen thirteen plotted that against Harvard spectral class. The same band ran from bright blue to faint red. He called its stars dwarfs, and the bright red stars above them giants. Russell published first, with the larger sample. In nineteen thirty-three Bengt Strömgren named it the Hertzsprung Russell diagram.\n\nPress play on the widget and watch the stars accumulate. Switch the horizontal axis between spectral class, colour index and temperature, and the vertical between absolute magnitude and luminosity. The shape never changes. These are the same two physical quantities in different clothes.\n\nIf a star could have any luminosity at any temperature, you would see a uniform cloud. You do not. Some eighty-five to ninety per cent of stars lie on the main sequence. A few per cent form the giant branch upper right. Supergiants cross the top. Faint hot white dwarfs sit lower left, first recognised in Sirius B, an A star ten thousand times too faint. A given temperature allows only a few luminosities. Why that is so fills the rest of this course. Here we read the map.",
+   "hash": "315332b64efe",
+   "duration": 124.15,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 0.96,
+     "text": "Welcome."
+    },
+    {
+     "start": 0.96,
+     "end": 4.52,
+     "text": "I love this diagram, because the points would not scatter."
+    },
+    {
+     "start": 4.52,
+     "end": 8.88,
+     "text": "Look behind the panel — Alcyone, brightest of the Pleiades."
+    },
+    {
+     "start": 8.88,
+     "end": 21.48,
+     "text": "Around nineteen oh five the Danish chemist turned astronomer Ejnar Hertzsprung, working with Maury’s c stars, the ones with unusually narrow lines, noticed they had vanishingly small proper motions."
+    },
+    {
+     "start": 21.48,
+     "end": 28.36,
+     "text": "They were far away, and therefore intrinsically very bright, while other stars of the same colour were nearby and faint."
+    },
+    {
+     "start": 28.36,
+     "end": 31.72,
+     "text": "Same colour, two wildly different luminosities."
+    },
+    {
+     "start": 31.72,
+     "end": 34.3,
+     "text": "There had to be two kinds of red star."
+    },
+    {
+     "start": 34.3,
+     "end": 37.98,
+     "text": "He published in an obscure photography journal, and was ignored."
+    },
+    {
+     "start": 37.98,
+     "end": 43.32,
+     "text": "By nineteen eleven he plotted colour against apparent magnitude for the Pleiades and the Hyades."
+    },
+    {
+     "start": 43.32,
+     "end": 49.04,
+     "text": "Stars in a cluster share one distance, so apparent magnitude stands in for luminosity."
+    },
+    {
+     "start": 49.04,
+     "end": 51.34,
+     "text": "The points fell along a narrow band."
+    },
+    {
+     "start": 51.34,
+     "end": 63.11,
+     "text": "At Princeton, Henry Norris Russell gathered every star with a measured parallax, turned apparent magnitude into absolute magnitude, and in nineteen thirteen plotted that against Harvard spectral class."
+    },
+    {
+     "start": 63.11,
+     "end": 66.25,
+     "text": "The same band ran from bright blue to faint red."
+    },
+    {
+     "start": 66.25,
+     "end": 70.65,
+     "text": "He called its stars dwarfs, and the bright red stars above them giants."
+    },
+    {
+     "start": 70.65,
+     "end": 73.73,
+     "text": "Russell published first, with the larger sample."
+    },
+    {
+     "start": 73.73,
+     "end": 78.57,
+     "text": "In nineteen thirty-three Bengt Strömgren named it the Hertzsprung Russell diagram."
+    },
+    {
+     "start": 78.57,
+     "end": 81.73,
+     "text": "Press play on the widget and watch the stars accumulate."
+    },
+    {
+     "start": 81.73,
+     "end": 89.97,
+     "text": "Switch the horizontal axis between spectral class, colour index and temperature, and the vertical between absolute magnitude and luminosity."
+    },
+    {
+     "start": 89.97,
+     "end": 91.67,
+     "text": "The shape never changes."
+    },
+    {
+     "start": 91.67,
+     "end": 94.95,
+     "text": "These are the same two physical quantities in different clothes."
+    },
+    {
+     "start": 94.95,
+     "end": 101.05,
+     "text": "If a star could have any luminosity at any temperature, you would see a uniform cloud. You do not."
+    },
+    {
+     "start": 101.05,
+     "end": 104.87,
+     "text": "Some eighty-five to ninety per cent of stars lie on the main sequence."
+    },
+    {
+     "start": 104.87,
+     "end": 107.79,
+     "text": "A few per cent form the giant branch upper right."
+    },
+    {
+     "start": 107.79,
+     "end": 109.69,
+     "text": "Supergiants cross the top."
+    },
+    {
+     "start": 109.69,
+     "end": 117.15,
+     "text": "Faint hot white dwarfs sit lower left, first recognised in Sirius B, an A star ten thousand times too faint."
+    },
+    {
+     "start": 117.15,
+     "end": 120.29,
+     "text": "A given temperature allows only a few luminosities."
+    },
+    {
+     "start": 120.29,
+     "end": 122.93,
+     "text": "Why that is so fills the rest of this course."
+    },
+    {
+     "start": 122.93,
+     "end": 124.15,
+     "text": "Here we read the map."
+    }
+   ],
+   "voicedHash": "8551c09f4fd0"
+  }
+ }
+}
