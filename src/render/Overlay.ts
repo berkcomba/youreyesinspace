@@ -104,6 +104,9 @@ export class Overlay {
   showStarNames = false;
   /** labels drawn in the last frame (for click / hover hit-testing) */
   private readonly labelHits: LabelHit[] = [];
+  /** star names that won a spot last frame: they keep priority so declutter does not flicker */
+  private shownStars = new Set<string>();
+  private shownStarsNext = new Set<string>();
   showGalaxyNames = true;
   /** procedural star labels in green (matches the point tint of the same setting) */
   highlightProcedural = false;
@@ -187,7 +190,11 @@ export class Overlay {
     if (this.showStarNames || anyLandmarkStar) {
       ctx.font = '400 11px Inter, ui-sans-serif, system-ui, sans-serif';
       const taken: Array<{ x: number; y: number; w: number }> = sunBox ? [sunBox] : [];
-      const sortedStars = [...namedStars].sort((a, b) => (a.index === 0 ? -99 : a.mag) - (b.index === 0 ? -99 : b.mag));
+      const shown = this.shownStars;
+      const rank = (s: NamedStarScreen): number => (s.index === 0 ? -99 : s.mag - (shown.has(s.name) ? 0.5 : 0));
+      const sortedStars = [...namedStars].sort((a, b) => rank(a) - rank(b));
+      const next = this.shownStarsNext;
+      next.clear();
       for (const s of sortedStars) {
         if (!this.showStarNames && !s.landmark) continue;
         if (selectedStar && selectedStar.kind === 'star' && selectedStar.name === s.name) continue;
@@ -205,6 +212,7 @@ export class Overlay {
         }
         if (clash) continue;
         taken.push({ x: x + 7, y, w });
+        next.add(s.name);
         this.labelHits.push({ kind: 'star', index: s.index, name: s.name, id: s.id, x: x + 7, y: y - 14, w, h: 14 });
         // fade the faintest labels so dense fields don't turn into a wall of text
         const fade = s.index === 0 || s.landmark ? 1 : Math.max(0.45, Math.min(1, 1 - (s.mag - 1.5) / 4));
@@ -223,6 +231,8 @@ export class Overlay {
         ctx.fillText(label, x + 7, y - 7);
         ctx.globalAlpha = 1;
       }
+      this.shownStarsNext = shown;
+      this.shownStars = next;
       ctx.font = '500 12px Inter, ui-sans-serif, system-ui, sans-serif';
     }
 

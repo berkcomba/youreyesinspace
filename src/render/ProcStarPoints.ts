@@ -16,6 +16,8 @@ export const PROCEDURAL_TINT: [number, number, number] = [0.35, 1.0, 0.55];
 /** Label candidates: brightest generated stars from the camera's position */
 const LABEL_MAG_LIMIT = 3.8;
 const LABEL_MAX = 140;
+/** a star already labelled keeps its label until it fades this much past the limit (no flicker at the edge) */
+const LABEL_HYSTERESIS = 0.6;
 
 const _rel = new Vector3();
 const _proj = new Vector3();
@@ -34,6 +36,8 @@ export class ProcStarPoints {
   private readonly camPc = new Vector3();
   /** bright generated stars offered to the overlay as labels (refreshed a few times per second) */
   readonly namedStars: NamedStarScreen[] = [];
+  /** tier + buffer index behind each label, so its direction can follow the camera every frame */
+  private readonly labelRefs: Array<{ v: TierView; i: number }> = [];
   private labelAcc = 1;
   private labelVersion = -1;
   private readonly labelCam = new Vector3(Infinity, Infinity, Infinity);
@@ -102,19 +106,39 @@ export class ProcStarPoints {
       v.mat.uniforms.uHideIndex.value = hideId !== null ? (t.indexOf.get(hideId) ?? -1) : -1;
     }
 
-    // label candidates – only when the camera moved noticeably or the cells changed
+    // label set – re-chosen a few times per second or when the cells changed; between refreshes the
+    // existing labels track the camera every frame so they glide instead of jumping
     this.labelAcc += dt;
     const moved = this.labelCam.distanceToSquared(camPc) > 1e-4;
-    if (this.labelAcc >= 0.25 && (moved || versionSum !== this.labelVersion)) {
+    if (versionSum !== this.labelVersion || (this.labelAcc >= 0.25 && moved)) {
       this.labelAcc = 0;
       this.labelVersion = versionSum;
       this.labelCam.copy(camPc);
       this.refreshLabels(hideId);
+    } else {
+      this.trackLabels();
+    }
+  }
+
+  /** Update direction, distance and magnitude of the current labels from the current camera position */
+  private trackLabels(): void {
+    for (let k = 0; k < this.namedStars.length; k++) {
+      const { v, i } = this.labelRefs[k];
+      const p = v.tier.positions;
+      const s = this.namedStars[k];
+      s.dir.set(p[i * 3] - v.camRel.x, p[i * 3 + 1] - v.camRel.y, p[i * 3 + 2] - v.camRel.z);
+      const d = Math.max(s.dir.length(), 1e-7);
+      s.dir.divideScalar(d);
+      s.distKm = d * PARSEC_KM;
+      s.mag = v.tier.absMags[i] + 5 * Math.log10(d) - 5;
     }
   }
 
   private refreshLabels(hideId: string | null): void {
-    const found: Array<{ id: string; m: number; x: number; y: number; z: number }> = [];
+    const keep = new Set<string>();
+    for (const s of this.namedStars) if (s.id) keep.add(s.id);
+    const found: Array<{ v: TierView; i: number; id: string; m: number; x: number; y: number; z: number; kept: boolean }> = [];
+    const limit = LABEL_MAG_LIMIT + (keep.size ? LABEL_HYSTERESIS : 0);
     for (const v of this.views) {
       const t = v.tier;
       const p = t.positions;
@@ -122,17 +146,28 @@ export class ProcStarPoints {
         const dx = p[i * 3] - v.camRel.x, dy = p[i * 3 + 1] - v.camRel.y, dz = p[i * 3 + 2] - v.camRel.z;
         const d2 = dx * dx + dy * dy + dz * dz;
         // m = M + 5·log10(d) − 5  ⇒  m ≤ limit ⇔ d² ≤ 10^((limit − M + 5)/2.5)
-        if (d2 > Math.pow(10, (LABEL_MAG_LIMIT - t.absMags[i] + 5) / 2.5)) continue;
+        if (d2 > Math.pow(10, (limit - t.absMags[i] + 5) / 2.5)) continue;
         const m = t.absMags[i] + 2.5 * Math.log10(Math.max(d2, 1e-14)) - 5;
-        if (t.ids[i] === hideId) continue;
-        found.push({ id: t.ids[i], m, x: dx, y: dy, z: dz });
+        const id = t.ids[i];
+        if (id === hideId) continue;
+        const kept = keep.has(id);
+        if (!kept && m > LABEL_MAG_LIMIT) continue; // newcomers must clear the strict limit
+        found.push({ v, i, id, m, x: dx, y: dy, z: dz, kept });
       }
     }
-    found.sort((a, b) => a.m - b.m);
+    // brightest first; a label that is already on screen wins ties against a newcomer
+    found.sort((a, b) => (a.m - (a.kept ? LABEL_HYSTERESIS : 0)) - (b.m - (b.kept ? LABEL_HYSTERESIS : 0)));
+    const old = new Map<string, NamedStarScreen>();
+    for (const s of this.namedStars) if (s.id) old.set(s.id, s);
     this.namedStars.length = 0;
+    this.labelRefs.length = 0;
     for (const f of found.slice(0, LABEL_MAX)) {
-      const dir = new Vector3(f.x, f.y, f.z);
-      this.namedStars.push({ index: -1, id: f.id, name: ProcStars.nameOf(f.id), distKm: dir.length() * PARSEC_KM, dir: dir.normalize(), mag: f.m });
+      const d = Math.max(Math.hypot(f.x, f.y, f.z), 1e-7);
+      let s = old.get(f.id);
+      if (s) { s.dir.set(f.x, f.y, f.z).divideScalar(d); s.distKm = d * PARSEC_KM; s.mag = f.m; }
+      else s = { index: -1, id: f.id, name: ProcStars.nameOf(f.id), distKm: d * PARSEC_KM, dir: new Vector3(f.x, f.y, f.z).divideScalar(d), mag: f.m };
+      this.namedStars.push(s);
+      this.labelRefs.push({ v: f.v, i: f.i });
     }
   }
 
