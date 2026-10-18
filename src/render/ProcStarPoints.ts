@@ -2,7 +2,7 @@ import {
   AdditiveBlending, BufferAttribute, BufferGeometry, DynamicDrawUsage, Points, Scene, ShaderMaterial, Vector3, Vector4,
   type PerspectiveCamera,
 } from 'three';
-import { SKY_RADIUS_KM } from '../core/constants';
+import { PARSEC_KM, SKY_RADIUS_KM } from '../core/constants';
 import { ProcStars, type ProcTier } from '../galaxy/ProcStars';
 import type { NamedStarScreen } from './StarPoints';
 import { Shaders } from './shaders';
@@ -131,7 +131,8 @@ export class ProcStarPoints {
     found.sort((a, b) => a.m - b.m);
     this.namedStars.length = 0;
     for (const f of found.slice(0, LABEL_MAX)) {
-      this.namedStars.push({ index: -1, name: ProcStars.nameOf(f.id), dir: new Vector3(f.x, f.y, f.z).normalize(), mag: f.m });
+      const dir = new Vector3(f.x, f.y, f.z);
+      this.namedStars.push({ index: -1, name: ProcStars.nameOf(f.id), distKm: dir.length() * PARSEC_KM, dir: dir.normalize(), mag: f.m });
     }
   }
 

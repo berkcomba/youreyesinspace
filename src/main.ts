@@ -42,6 +42,8 @@ const TOUR_HOP_S = 1.6;
 const BACKDROP_ORBIT = 0.03;
 /** camera distance from the Sun (pc, ≈ 200 AU: beyond the planets) from which the Sun is marked with its distance */
 const SUN_MARKER_PC = 0.001;
+/** scratch */
+const _dir = new Vector3();
 
 class App implements UIHost {
   readonly universe: Universe;
@@ -168,7 +170,8 @@ class App implements UIHost {
       if (e.pointerType !== 'mouse' || this.input.dragging || this.input.locked) { this.overlay.hoverId = null; return; }
       const b = this.overlay.pick(e.clientX, e.clientY, 16);
       this.overlay.hoverId = b?.id ?? null;
-      sceneCanvas.style.cursor = b ? 'pointer' : 'default';
+      // stars, landmarks and galaxies have no hover ring, but the pointer tells which dots can be clicked
+      sceneCanvas.style.cursor = b || this.overlay.hitSun(e.clientX, e.clientY) || this.hitSky(e.clientX, e.clientY) ? 'pointer' : 'default';
     });
 
     // Galaxy-scale state for the first frame
@@ -883,31 +886,24 @@ class App implements UIHost {
       return;
     }
     const eng = this.engine;
-    const u = this.universe;
-    const star = this.starPoints.pick(x, y, eng.camera, eng.width, eng.height, u.current.catalogIndex, 14 * tol);
-    if (star !== null) {
-      this.selectStar(`c${star}`);
-      if (dbl) this.goToStar(`c${star}`);
-      return;
-    }
-    const proc = this.procPoints.pick(x, y, eng.camera, eng.width, eng.height, u.current.starId, 14 * tol);
-    if (proc !== null) {
-      this.selectStar(proc);
-      if (dbl) this.goToStar(proc);
-      return;
-    }
-    const lm = this.landmarkSprites.pick(x, y, eng.camera, eng.width, eng.height, 14 * tol);
-    if (lm !== null) {
-      this.selectLandmark(lm);
-      if (dbl) this.goToLandmark(lm);
+    const hit = this.hitSky(x, y, tol);
+    if (hit) {
+      switch (hit.kind) {
+        case 'star': this.selectStar(hit.id); if (dbl) this.goToStar(hit.id); break;
+        case 'landmark': this.selectLandmark(hit.index); if (dbl) this.goToLandmark(hit.index); break;
+        case 'galaxy': this.selectGalaxy(hit.index); if (dbl) this.goToGalaxy(hit.index); break;
+      }
       return;
     }
     const fovRad = eng.camera.fov * DEG;
     const pxPerRad = eng.height / 2 / Math.tan(fovRad / 2);
-    const gal = this.galaxySprites.pick(x, y, eng.camera, eng.width, eng.height, pxPerRad, this.galaxyBoost, u.currentGalaxy ?? -1, 14 * tol);
-    if (gal !== null) {
-      this.selectGalaxy(gal);
-      if (dbl) this.goToGalaxy(gal);
+    // Inside / next to a galaxy its glow is a statistical point cloud, not stars: say so instead of
+    // silently ignoring the click, and tell the visitor where the selectable stars are
+    if (this.clouds.size && this.cloudUnderPointer(x, y, pxPerRad)) {
+      const any = this.procPoints.namedStars.length > 0;
+      this.ui.showToast(any
+        ? _('Çözümlenmemiş yıldız alanı · tıklanabilir yıldızlar isimleriyle (YE …) işaretli')
+        : _('Çözümlenmemiş yıldız alanı · tekil yıldızlar için galaksinin içine uçun'), 3200);
       return;
     }
     // Far-universe tiers (aggregated clusters / supercluster knots): no selection, just an honest one-liner
@@ -922,6 +918,36 @@ class App implements UIHost {
       this.ui.showToast(`${kind} · ${_('temsilî; katalog kaydı değil')} · ~${fmtScaleDistance(sp.apparent(i).distPc * PARSEC_KM)}`, 3200);
       return;
     }
+  }
+
+  /** Anything selectable on the sky at a screen point: catalogue / generated star, landmark, galaxy */
+  private hitSky(x: number, y: number, tol = 1): { kind: 'star'; id: string } | { kind: 'landmark' | 'galaxy'; index: number } | null {
+    const eng = this.engine;
+    const u = this.universe;
+    const star = this.starPoints.pick(x, y, eng.camera, eng.width, eng.height, u.current.catalogIndex, 14 * tol);
+    if (star !== null) return { kind: 'star', id: `c${star}` };
+    const proc = this.procPoints.pick(x, y, eng.camera, eng.width, eng.height, u.current.starId, 14 * tol);
+    if (proc !== null) return { kind: 'star', id: proc };
+    const lm = this.landmarkSprites.pick(x, y, eng.camera, eng.width, eng.height, 14 * tol);
+    if (lm !== null) return { kind: 'landmark', index: lm };
+    const pxPerRad = eng.height / 2 / Math.tan((eng.camera.fov * DEG) / 2);
+    const gal = this.galaxySprites.pick(x, y, eng.camera, eng.width, eng.height, pxPerRad, this.galaxyBoost, u.currentGalaxy ?? -1, 14 * tol);
+    if (gal !== null) return { kind: 'galaxy', index: gal };
+    return null;
+  }
+
+  /** Is the screen point on the resolved point cloud of a nearby galaxy (unresolved star light)? */
+  private cloudUnderPointer(x: number, y: number, pxPerRad: number): boolean {
+    const eng = this.engine;
+    for (const i of this.clouds.keys()) {
+      const { angRad, ratio } = this.galaxySprites.apparent(i);
+      if (ratio < 1.2) return true; // inside: the whole sky is the cloud
+      this.galaxySprites.direction(i, _dir).multiplyScalar(1e11).project(eng.camera);
+      if (_dir.z > 1 || _dir.z < -1) continue;
+      const sx = (_dir.x * 0.5 + 0.5) * eng.width, sy = (-_dir.y * 0.5 + 0.5) * eng.height;
+      if (Math.hypot(sx - x, sy - y) < angRad * pxPerRad) return true;
+    }
+    return false;
   }
 
   private onKey(code: string, e: KeyboardEvent): void {
