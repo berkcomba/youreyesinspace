@@ -186,8 +186,10 @@ export class Overlay {
     // Star names (behind everything). Brightest first; later labels skip occupied spots.
     // Landmarks (the Sun and famous stars, far from home) are shown with the markers even when
     // star names are off: they are the only way to find the way around the galaxy.
-    const anyLandmarkStar = this.showMarkers && !this.showStarNames && namedStars.some((s) => s.landmark);
-    if (this.showStarNames || anyLandmarkStar) {
+    // Generated-star names (entries with an id) are governed by their own setting upstream, so they
+    // draw even when catalogue star names are off.
+    const anyForced = !this.showStarNames && namedStars.some((s) => (s.landmark && this.showMarkers) || s.id !== undefined);
+    if (this.showStarNames || anyForced) {
       ctx.font = '400 11px Inter, ui-sans-serif, system-ui, sans-serif';
       const taken: Array<{ x: number; y: number; w: number }> = sunBox ? [sunBox] : [];
       const shown = this.shownStars;
@@ -196,7 +198,7 @@ export class Overlay {
       const next = this.shownStarsNext;
       next.clear();
       for (const s of sortedStars) {
-        if (!this.showStarNames && !s.landmark) continue;
+        if (!this.showStarNames && !(s.landmark && this.showMarkers) && s.id === undefined) continue;
         if (selectedStar && selectedStar.kind === 'star' && selectedStar.name === s.name) continue;
         if (occluders.length && occluded(s.dir)) continue;
         _v.copy(s.dir).multiplyScalar(1e11).project(camera);
