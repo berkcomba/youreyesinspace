@@ -18,6 +18,8 @@ export interface Settings {
   /** boulder layer when flying through a ring system */
   ringParticles: boolean;
   shadows: boolean;
+  /** close to a body, fade in a work light so the night side is not pitch black (as in tours) */
+  nearLight: boolean;
   /** NASA satellite imagery on Earth / Moon / Mars (streamed) */
   imagery: boolean;
   belts: boolean;
@@ -54,6 +56,7 @@ export const DEFAULT_SETTINGS: Settings = {
   rings: true,
   ringParticles: true,
   shadows: true,
+  nearLight: true,
   imagery: true,
   belts: true,
   milkyWay: true,

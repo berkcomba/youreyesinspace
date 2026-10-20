@@ -114,6 +114,7 @@ const SETTING_DEFS: SettingDef[] = [
   { key: 'rings', label: 'Halkalar', kind: 'bool' },
   { key: 'ringParticles', label: 'Halka parçacıkları', kind: 'bool' },
   { key: 'shadows', label: 'Tutulma / halka gölgeleri', kind: 'bool' },
+  { key: 'nearLight', label: 'Yakınken gece tarafını aydınlat', kind: 'bool' },
   { key: 'imagery', label: 'Uydu görüntüleri (NASA)', kind: 'bool' },
   { key: 'bloom', label: 'Bloom (parıltı)', kind: 'bool' },
   { key: 'exposure', label: 'Pozlama', kind: 'range', min: 0.3, max: 2.5, step: 0.05 },

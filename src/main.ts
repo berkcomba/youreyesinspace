@@ -637,13 +637,17 @@ class App implements UIHost {
   private updateFill(dt: number): void {
     const want = this.fillWant;
     want.clear();
+    const cam = this.camera;
     // lessons fly to the same close-ups, so they get the same light
     if (this.tours.state.tour || this.lessons.active) {
-      const cam = this.camera;
       const t = cam.target;
       if (t && t !== this.universe.star && cam.position.distanceTo(t.position) < t.radius * 9) want.add(t.id);
       if (this.ghost && !this.ghost.leaving) want.add(this.ghost.body.id);
       if (this.surfacePin && !this.pinLeaving) want.add(this.surfacePin.bodyId);
+    } else if (this.settings.nearLight) {
+      // free flight: the same work light fades in once we are close to the body we are at
+      const t = cam.target ?? cam.reference;
+      if (t && t !== this.universe.star && cam.position.distanceTo(t.position) < t.radius * 6) want.add(t.id);
     }
     const step = dt / 2;
     for (const id of want) if (!this.fill.has(id)) this.fill.set(id, 0);
