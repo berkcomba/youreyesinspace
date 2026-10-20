@@ -282,7 +282,10 @@ export class TileGlobe {
     // sub-camera point (geocentric, good enough for culling) and horizon angle
     const camLat = Math.asin(Math.min(1, Math.max(-1, _camLocal.y / camDist))) / DEG;
     const camLon = Math.atan2(-_camLocal.z, _camLocal.x) / DEG;
-    const horizon = Math.acos(Math.min(1, this.Re / Math.max(camDist, this.Re))) / DEG;
+    // horizon angle (at the body centre) for the local radius under the camera
+    const sl = Math.sin(camLat * DEG), cl = Math.cos(camLat * DEG);
+    const rLoc = (this.Re * this.Rp) / Math.sqrt((this.Rp * cl) ** 2 + (this.Re * sl) ** 2);
+    const horizon = Math.acos(Math.min(1, rLoc / Math.max(camDist, rLoc))) / DEG;
 
     _m4.copy(camera.matrixWorld).invert().premultiply(camera.projectionMatrix);
     _frustum.setFromProjectionMatrix(_m4);
@@ -295,12 +298,28 @@ export class TileGlobe {
     const visit = (n: TileNode): void => {
       n.lastUsed = now;
       // --- horizon cull: closest point of the lat/lon rectangle to the sub-camera point
-      const lat = Math.min(n.cLat1, Math.max(n.cLat0, camLat));
       let dl = camLon - n.cLon0;
       dl -= Math.floor(dl / 360) * 360; // 0..360 east of the west edge
       const w = n.cLon1 - n.cLon0;
-      const lon = dl <= w ? camLon : (dl - w < 360 - dl ? n.cLon1 : n.cLon0);
-      const ang = angularDistance(camLat, camLon, lat, lon);
+      let lat: number, lon: number;
+      if (dl <= w) {
+        // the camera meridian crosses the tile: nearest point is straight north/south
+        lat = Math.min(n.cLat1, Math.max(n.cLat0, camLat));
+        lon = camLon;
+      } else {
+        // nearest point lies on an edge meridian — but not at the camera latitude: the geodesic
+        // foot on a meridian sits poleward of it (tan φ* = tan φc / cos Δλ), so clamping the
+        // latitude alone over-estimates the distance and drops visible tiles near the limb
+        lon = dl - w < 360 - dl ? n.cLon1 : n.cLon0;
+        const dlon = (lon - camLon) * DEG;
+        const foot = Math.atan2(Math.sin(camLat * DEG), Math.cos(camLat * DEG) * Math.cos(dlon)) / DEG;
+        lat = Math.min(n.cLat1, Math.max(n.cLat0, Math.min(90, Math.max(-90, foot))));
+      }
+      let ang = angularDistance(camLat, camLon, lat, lon);
+      if (dl > w) {
+        // the edge's end points too, in case the foot lies outside the band
+        ang = Math.min(ang, angularDistance(camLat, camLon, n.cLat0, lon), angularDistance(camLat, camLon, n.cLat1, lon));
+      }
       if (ang > horizon + n.span * 0.05 + 2) return;
       // --- frustum cull (camera-relative world space)
       _p.copy(n.center).applyQuaternion(b.rotation).add(b.position).sub(camPos);
