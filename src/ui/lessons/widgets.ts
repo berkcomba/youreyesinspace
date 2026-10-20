@@ -3929,6 +3929,7 @@ function mulberry(seed: number) { let a = seed >>> 0; return () => { a = (a + 0x
 const gaussRand = (rnd: () => number) => Math.sqrt(-2 * Math.log(rnd() + 1e-12)) * Math.cos(TAU * rnd());
 const fmtAngle = (as: number) => (as < 1e-3 ? `${fmt(as * 1e6, 0)} µas` : as < 1 ? `${fmt(as * 1e3, as < 0.01 ? 1 : 0)} mas` : as < 60 ? `${fmt(as, as < 10 ? 2 : 1)}″` : as < 3600 ? `${fmt(as / 60, 1)}′` : `${fmt(as / 3600, 2)}°`);
 const fmtLen = (m: number) => (m < 1e-3 ? `${fmt(m * 1e6, 0)} µm` : m < 1e-2 ? `${fmt(m * 1e3, 1)} mm` : m < 1 ? `${fmt(m * 100, 0)} cm` : m < 1e3 ? `${fmt(m, m < 10 ? 1 : 0)} m` : `${fmt(m / 1e3, 0)} km`);
+const fmtYr = (y: number) => (y >= 1e9 ? `${fmt(y / 1e9, 2)} Gyr` : y >= 1e6 ? `${fmt(y / 1e6, 1)} Myr` : y >= 1e3 ? `${fmt(y / 1e3, 1)} kyr` : `${fmt(y, 0)} yr`);
 const fmtDur = (s: number) => (s < 1 ? `${fmt(s * 1e3, 0)} ms` : s < 60 ? `${fmt(s, 1)} s` : s < 3600 ? `${fmt(s / 60, 1)} min` : s < 86400 ? `${fmt(s / 3600, 1)} h` : s < 86400 * 365 ? `${fmt(s / 86400, 1)} d` : `${fmt(s / 86400 / 365.25, 1)} yr`);
 const SCOPES: Array<[string, number, string]> = [
   ['eye', 0.007, 'dark-adapted pupil'], ['Galileo 1609', 0.037, 'refractor, 20×'], ['20 cm amateur', 0.2, 'Schmidt–Cassegrain'], ['Yerkes 1897', 1.02, 'largest refractor'], ['Herschel 1789', 1.2, 'speculum reflector'],
@@ -8067,6 +8068,1112 @@ class AbundancesWidget extends CanvasWidget {
   }
 }
 
+/* ==================================================== Chapter 10 widgets ==== */
+
+/** coarse standard solar model: r/R☉, T (K), ρ (kg m⁻³), M_r/M☉, L_r/L☉, X, κ̄ (m² kg⁻¹) */
+const SSM: Array<[number, number, number, number, number, number, number]> = [
+  [0.00, 1.57e7, 1.50e5, 0.000, 0.000, 0.34, 0.12],
+  [0.05, 1.52e7, 1.30e5, 0.009, 0.080, 0.40, 0.13],
+  [0.10, 1.34e7, 9.00e4, 0.070, 0.420, 0.50, 0.15],
+  [0.15, 1.16e7, 5.60e4, 0.190, 0.750, 0.62, 0.19],
+  [0.20, 9.90e6, 3.50e4, 0.340, 0.920, 0.68, 0.25],
+  [0.25, 8.40e6, 2.10e4, 0.490, 0.980, 0.70, 0.32],
+  [0.30, 7.10e6, 1.20e4, 0.610, 0.995, 0.71, 0.40],
+  [0.40, 5.30e6, 4.00e3, 0.800, 1.000, 0.71, 0.65],
+  [0.50, 3.90e6, 1.30e3, 0.900, 1.000, 0.71, 1.00],
+  [0.60, 2.90e6, 4.00e2, 0.955, 1.000, 0.71, 1.60],
+  [0.70, 2.25e6, 1.50e2, 0.980, 1.000, 0.71, 2.60],
+  [0.75, 1.80e6, 8.00e1, 0.988, 1.000, 0.71, 6.0],
+  [0.80, 1.30e6, 3.50e1, 0.993, 1.000, 0.71, 20],
+  [0.90, 6.00e5, 5.00e0, 0.999, 1.000, 0.71, 150],
+  [0.95, 3.00e5, 1.00e0, 0.9998, 1.000, 0.71, 400],
+  [0.99, 5.00e4, 5.00e-2, 1.000, 1.000, 0.73, 600],
+  [1.00, 5.77e3, 2.00e-4, 1.000, 1.000, 0.74, 0.05],
+];
+const SSM_RCZ = 0.713;
+function ssmAt(x: number): { T: number; rho: number; M: number; L: number; X: number; kap: number; mu: number; P: number } {
+  x = Math.min(1, Math.max(0, x));
+  let i = 0; while (i < SSM.length - 2 && SSM[i + 1][0] <= x) i++;
+  const a = SSM[i], b = SSM[i + 1];
+  const f = (x - a[0]) / (b[0] - a[0]);
+  const lin = (k: number) => a[k] + f * (b[k] - a[k]);
+  const lg = (k: number) => 10 ** (Math.log10(a[k]) + f * (Math.log10(b[k]) - Math.log10(a[k])));
+  const T = lg(1), rho = lg(2), M = lin(3), L = lin(4), X = lin(5), kap = lg(6);
+  const Y = 0.98 - X;
+  const mu = 1 / (2 * X + 0.75 * Y + 0.5 * 0.02);
+  const P = rho * K_B * T / (mu * M_H);
+  return { T, rho, M, L, X, kap, mu, P };
+}
+const A_RAD = 4 * SIGMA_SB / C_LIGHT;
+const MJUP = 1.898e27, RJUP = 7.1492e7;
+const GAMMA_AD = 5 / 3;
+
+/* ------------------------------------------------ 10.1a hydrostatic shell ---- */
+
+class HydrostaticWidget extends CanvasWidget {
+  private x = 0.3;
+  constructor() {
+    super(1.8);
+    this.slider('Shell radius r / R☉', 0.01, 0.99, 0.01, this.x, (v) => fmt(v, 2), (v) => { this.x = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const x = this.x;
+    const m = ssmAt(x);
+    const r = x * RSUN;
+    const g = GRAV * m.M * MSUN / (r * r);
+    const dPdr = -g * m.rho;
+    // left: star cross-section
+    const cx = w * 0.22, cy = h * 0.5, R = Math.min(w * 0.19, h * 0.42);
+    const grad = c.createRadialGradient(cx, cy, 0, cx, cy, R);
+    for (let k = 0; k <= 10; k++) { const T = ssmAt(k / 10).T; grad.addColorStop(k / 10, rgba(tempRGB(2300 + 4400 * Math.sqrt(T / 1.57e7)), 0.95)); }
+    c.fillStyle = grad; c.beginPath(); c.arc(cx, cy, R, 0, TAU); c.fill();
+    this.circle(cx, cy, R * SSM_RCZ, hexA('#fff', 0.25), undefined, 1, [3, 3]);
+    this.circle(cx, cy, R * x, '#fff', undefined, 2);
+    this.circle(cx, cy, R * (x + 0.03), hexA('#fff', 0.5), undefined, 1);
+    this.text('shell', cx + R * x * 0.71 + 6, cy - R * x * 0.71 - 6, '#fff', 9);
+    this.text('convection zone →', cx + R * 0.75, cy + R * 0.75, hexA('#fff', 0.5), 8);
+    // middle: force diagram on the shell element
+    const fx = w * 0.5, fy = h * 0.5;
+    const Fg = g * m.rho, Fb = m.P / (0.05 * RSUN), Fa = (m.P + dPdr * 0.05 * RSUN) / (0.05 * RSUN);  // per volume over a 0.05 R☉ slab
+    const sc = 60 / Math.max(Fb, 1e-30);
+    c.fillStyle = hexA(C.accent, 0.5); c.fillRect(fx - 28, fy - 14, 56, 28); c.strokeStyle = C.accent; c.strokeRect(fx - 28, fy - 14, 56, 28);
+    // arrows point AT the slab from outside it: tip = yTip, tail = yTip ∓ len
+    const arrow = (x0: number, yTip: number, len: number, col: string, lab: string, side: number) => {
+      const d = Math.sign(len);                 // +1: pushes up (tail below), −1: pushes down (tail above)
+      const yTail = yTip + d * Math.abs(len);
+      this.line(x0, yTail, x0, yTip, col, 2.5);
+      this.line(x0, yTip, x0 - 4, yTip + d * 7, col, 2.5); this.line(x0, yTip, x0 + 4, yTip + d * 7, col, 2.5);
+      this.text(lab, x0 + side * 8, (yTip + yTail) / 2, col, 9, side > 0 ? 'left' : 'right');
+    };
+    arrow(fx, fy + 14 + 2, Math.max(8, Fb * sc), C.green, 'P below ↑', -1);
+    arrow(fx + 12, fy - 14 - 2, -Math.max(8, Fa * sc), C.red, 'P above ↓', 1);
+    arrow(fx - 12, fy - 14 - 2, -Math.max(6, Fg * sc), C.blue, 'gravity ↓', -1);
+    this.text('net force = 0', fx, fy + 14 + 2 + Math.max(8, Fb * sc) + 14, C.dim, 9, 'center');
+    this.text('forces per unit volume', fx, fy - 100, C.dim, 8, 'center');
+    this.text('on a 0.05 R☉ slab', fx, fy - 90, C.dim, 8, 'center');
+    // right: P(r)
+    const x0 = w * 0.66, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (xx: number) => x0 + xx * (x1 - x0);
+    const Y = (P: number) => y1 - 6 - (Math.log10(Math.max(P, 1e4)) - 4) / 12.5 * (y1 - y0 - 12);
+    c.beginPath(); for (let xx = 0; xx <= 1; xx += 0.01) { const px = X(xx), py = Y(ssmAt(xx).P); xx === 0 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = C.sun; c.lineWidth = 2; c.stroke();
+    this.circle(X(x), Y(m.P), 4, '#fff', C.sun);
+    this.text('log P (Pa)', x1 - 4, y0 + 10, C.dim, 9, 'right');
+    for (const lp of [6, 10, 14]) { this.line(x0, Y(10 ** lp), x1, Y(10 ** lp), hexA(C.grid, 0.9)); this.text(`${lp}`, x0 - 3, Y(10 ** lp), C.dim, 8, 'right'); }
+    this.text('0', X(0), y1 + 10, C.dim, 8, 'center'); this.text('r / R☉', (x0 + x1) / 2, y1 + 10, C.dim, 9, 'center'); this.text('1', X(1), y1 + 10, C.dim, 8, 'center');
+    this.line(X(SSM_RCZ), y0, X(SSM_RCZ), y1, hexA(C.text, 0.25), 1, [2, 3]);
+    const tff = Math.sqrt(RSUN ** 3 / (GRAV * MSUN));
+    this.setReadout([
+      ['r, M_r', `${fmt(x, 2)} R☉, ${fmt(m.M, 3)} M☉`],
+      ['P, ρ', `${sci(m.P, 2)} Pa, ${sci(m.rho, 1)}`],
+      ['g = GM_r/r²', `${fmt(g, 0)} m/s²`, C.blue],
+      ['dP/dr = −ρg', `${sci(dPdr, 2)} Pa/m`, C.sun],
+    ]);
+    this.text(`free-fall time if pressure vanished: ${fmt(tff / 60, 0)} min`, w * 0.5, h - 10, C.dim, 9, 'center');
+  }
+}
+
+/* ------------------------------------------------ 10.1b central pressure ---- */
+
+const PC_BODIES: Array<[string, number, number, number, string]> = [   // name, M (kg), R (m), model P_c (Pa), colour
+  ['Sun', MSUN, RSUN, 2.3e16, C.sun],
+  ['Proxima Cen', 0.12 * MSUN, 0.15 * RSUN, 2e17, C.red],
+  ['Spica A', 11 * MSUN, 7.5 * RSUN, 2e15, C.blue],
+  ['Sirius B', 1.0 * MSUN, 0.0084 * RSUN, 4e23, C.star],
+  ['Jupiter', MJUP, RJUP, 4e12, C.accent],
+  ['Saturn', 5.683e26, 5.8232e7, 1.5e12, C.venus],
+  ['Earth', MEARTH, REARTH, 3.6e11, C.earth],
+  ['Moon', 7.342e22, 1.7374e6, 5e9, C.dim],
+];
+class CentralPressureWidget extends CanvasWidget {
+  private sel = 0;
+  private lM = 0; private lR = 0;
+  constructor() {
+    super(1.8);
+    this.segmented(PC_BODIES.map((b, i) => [String(i), b[0]] as [string, string]), '0', (v) => { this.sel = +v; const b = PC_BODIES[this.sel]; this.lM = Math.log10(b[1] / MSUN); this.lR = Math.log10(b[2] / RSUN); this.sM.set(this.lM); this.sR.set(this.lR); });
+    this.sM = this.slider('Mass', -8, 2.5, 0.05, this.lM, (v) => `${sci(10 ** v, 1)} M☉`, (v) => { this.lM = v; this.sel = -1; });
+    this.sR = this.slider('Radius', -3, 3, 0.05, this.lR, (v) => `${sci(10 ** v, 1)} R☉`, (v) => { this.lR = v; this.sel = -1; });
+  }
+  private sM: ReturnType<CanvasWidget['slider']>;
+  private sR: ReturnType<CanvasWidget['slider']>;
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const M = 10 ** this.lM * MSUN, R = 10 ** this.lR * RSUN;
+    const crude = 3 * GRAV * M * M / (4 * Math.PI * R ** 4);
+    const rhoBar = M / (4 / 3 * Math.PI * R ** 3);
+    const x0 = 50, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const lp0 = 8, lp1 = 25;
+    const Y = (P: number) => y1 - 6 - (Math.log10(P) - lp0) / (lp1 - lp0) * (y1 - y0 - 12);
+    for (let lp = 10; lp <= 24; lp += 2) { this.line(x0, Y(10 ** lp), x1, Y(10 ** lp), hexA(C.grid, 0.9)); this.text(`10${sup(lp)}`, x0 - 4, Y(10 ** lp), C.dim, 8, 'right'); }
+    this.text('central pressure (Pa)', x0 + 6, y0 + 10, C.dim, 9);
+    const n = PC_BODIES.length + 1, bw = (x1 - x0 - 20) / n;
+    PC_BODIES.forEach(([name, m, r, pm, col], i) => {
+      const bx = x0 + 10 + i * bw;
+      const cr = 3 * GRAV * m * m / (4 * Math.PI * r ** 4);
+      c.fillStyle = hexA(col, this.sel === i ? 0.95 : 0.45); c.fillRect(bx + 4, Y(cr), bw * 0.4 - 4, y1 - 6 - Y(cr));
+      c.fillStyle = hexA(col, this.sel === i ? 0.95 : 0.6); c.fillRect(bx + bw * 0.45, Y(pm), bw * 0.4 - 4, y1 - 6 - Y(pm));
+      c.strokeStyle = hexA('#fff', 0.5); c.strokeRect(bx + bw * 0.45, Y(pm), bw * 0.4 - 4, y1 - 6 - Y(pm));
+      this.text(name, bx + bw / 2, y1 + 10, this.sel === i ? C.text : C.dim, 8, 'center');
+      this.text(`×${fmt(pm / cr, 0)}`, bx + bw / 2, Y(pm) - 8, col, 8, 'center');
+    });
+    // custom bar
+    const bx = x0 + 10 + PC_BODIES.length * bw;
+    c.fillStyle = hexA('#fff', 0.7); c.fillRect(bx + bw * 0.2, Y(crude), bw * 0.5, y1 - 6 - Y(crude));
+    this.text('yours', bx + bw / 2, y1 + 10, C.text, 8, 'center');
+    this.text('faint bar: crude 3GM²/4πR⁴ · outlined bar: real model', x0 + 6, y0 + 22, C.dim, 8);
+    this.text('×N = central-condensation factor (model / crude)', x0 + 6, y0 + 32, C.dim, 8);
+    const sel = this.sel >= 0 ? PC_BODIES[this.sel] : null;
+    this.setReadout([
+      ['M, R', `${sci(M / MSUN, 2)} M☉, ${sci(R / RSUN, 2)} R☉`],
+      ['Mean density', `${sci(rhoBar, 2)} kg/m³`],
+      ['Crude P_c', `${sci(crude, 2)} Pa`, '#fff'],
+      ['Model P_c', sel ? `${sci(sel[3], 1)} Pa` : '—', sel ? sel[4] : C.dim],
+    ]);
+  }
+}
+
+/* ---------------------------------------------------- 10.1c mass shells ---- */
+
+type ShellProfile = 'uniform' | 'linear' | 'sun' | 'earth';
+const PREM: Array<[number, number]> = [[0, 13090], [0.19, 12170], [0.191, 12170], [0.545, 9900], [0.546, 5570], [0.7, 5000], [0.895, 4400], [0.896, 3400], [0.99, 3380], [0.995, 2900], [1, 2600]];
+class MassShellsWidget extends CanvasWidget {
+  private prof: ShellProfile = 'sun';
+  private x = 0.5;
+  constructor() {
+    super(1.8);
+    this.segmented<ShellProfile>([['uniform', 'Uniform'], ['linear', 'Linear fall'], ['sun', 'Sun (model)'], ['earth', 'Earth (seismology)']], this.prof, (v) => { this.prof = v; });
+    this.slider('Radius r / R', 0.02, 1, 0.01, this.x, (v) => fmt(v, 2), (v) => { this.x = v; });
+  }
+  private rho(x: number): number {   // relative to mean
+    switch (this.prof) {
+      case 'uniform': return 1;
+      case 'linear': return 4 * (1 - x);
+      case 'sun': return ssmAt(x).rho / 1408;
+      case 'earth': { for (let i = 0; i < PREM.length - 1; i++) { if (x >= PREM[i][0] && x <= PREM[i + 1][0]) { const f = (x - PREM[i][0]) / Math.max(1e-6, PREM[i + 1][0] - PREM[i][0]); return (PREM[i][1] + f * (PREM[i + 1][1] - PREM[i][1])) / 5514; } } return 0.5; }
+    }
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const N = 400; const Mr: number[] = [0]; let acc = 0;
+    for (let i = 1; i <= N; i++) { const xx = i / N; acc += 3 * xx * xx * this.rho(xx - 0.5 / N) / N; Mr.push(acc); }
+    const Mtot = Mr[N];
+    const M = (x: number) => Mr[Math.min(N, Math.round(x * N))] / Mtot;
+    const g = (x: number) => (x > 0 ? M(x) / (x * x) : 0);
+    let gmax = 0; for (let i = 1; i <= N; i++) gmax = Math.max(gmax, g(i / N));
+    let half = 1; for (let i = 1; i <= N; i++) if (M(i / N) >= 0.5) { half = i / N; break; }
+    // left: shells
+    const cx = w * 0.24, cy = h * 0.5, R = Math.min(w * 0.21, h * 0.43);
+    const rmax = Math.max(...Array.from({ length: 50 }, (_, i) => this.rho((i + 0.5) / 50)));
+    for (let i = 40; i >= 1; i--) { const xx = i / 40; const d = this.rho(xx - 0.0125) / rmax; c.fillStyle = rgba([255, 200 + 40 * (1 - d), 120 + 100 * (1 - d)], 0.15 + 0.85 * d ** 0.5); c.beginPath(); c.arc(cx, cy, R * xx, 0, TAU); c.fill(); }
+    this.circle(cx, cy, R * this.x, '#fff', undefined, 2);
+    this.circle(cx, cy, R * half, hexA(C.green, 0.8), undefined, 1, [3, 3]);
+    this.text('half-mass radius', cx, cy + R + 14, C.green, 9, 'center');
+    // right: M_r and g
+    const x0 = w * 0.54, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (xx: number) => x0 + xx * (x1 - x0);
+    const Y = (v: number) => y1 - 6 - v * (y1 - y0 - 12);
+    c.beginPath(); for (let i = 0; i <= N; i += 2) { const px = X(i / N), py = Y(M(i / N)); i === 0 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = C.sun; c.lineWidth = 2; c.stroke();
+    c.beginPath(); for (let i = 1; i <= N; i += 2) { const px = X(i / N), py = Y(g(i / N) / gmax); i === 1 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = C.blue; c.lineWidth = 1.5; c.stroke();
+    c.beginPath(); for (let i = 1; i <= N; i += 2) { const px = X(i / N), py = Y(this.rho(i / N) / rmax); i === 1 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = hexA(C.text, 0.5); c.lineWidth = 1; c.setLineDash([3, 3]); c.stroke(); c.setLineDash([]);
+    this.line(X(this.x), y0, X(this.x), y1, hexA('#fff', 0.4), 1, [2, 3]);
+    this.circle(X(this.x), Y(M(this.x)), 4, '#fff', C.sun);
+    this.text('M_r / M', x1 - 6, y0 + 12, C.sun, 9, 'right'); this.text('g / g_max', x1 - 6, y0 + 24, C.blue, 9, 'right'); this.text('ρ / ρ_max', x1 - 6, y0 + 36, C.dim, 9, 'right');
+    this.text('0', X(0), y1 + 10, C.dim, 8, 'center'); this.text('r / R', (x0 + x1) / 2, y1 + 10, C.dim, 9, 'center'); this.text('1', X(1), y1 + 10, C.dim, 8, 'center');
+    this.setReadout([
+      ['r / R', fmt(this.x, 2)],
+      ['ρ(r) / ρ̄', fmt(this.rho(this.x), 2)],
+      ['M_r / M', fmt(M(this.x), 3), C.sun],
+      ['Half the mass inside', `${fmt(half, 2)} R`, C.green],
+    ]);
+  }
+}
+
+/* ---------------------------------------------- 10.2a mean molecular weight ---- */
+
+class MeanMolecularWidget extends CanvasWidget {
+  private X = 0.70; private Y = 0.28;
+  private ion = true;
+  private sY: ReturnType<CanvasWidget['slider']> | null = null;
+  constructor() {
+    super(1.9);
+    this.segmented<'ion' | 'neu'>([['ion', 'Fully ionised'], ['neu', 'Neutral']], 'ion', (v) => { this.ion = v === 'ion'; });
+    this.slider('Hydrogen X', 0, 1, 0.01, this.X, (v) => fmt(v, 2), (v) => { this.X = v; if (this.X + this.Y > 1) { this.Y = 1 - this.X; this.sY?.set(this.Y); } });
+    this.sY = this.slider('Helium Y', 0, 1, 0.01, this.Y, (v) => fmt(v, 2), (v) => { this.Y = Math.min(v, 1 - this.X); this.sY?.set(this.Y); });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const X = this.X, Y = this.Y, Z = Math.max(0, 1 - X - Y);
+    const muI = 1 / (2 * X + 0.75 * Y + 0.5 * Z), muN = 1 / (X + 0.25 * Y + Z / 16), muE = 1 / (X + 0.5 * Y + 0.5 * Z);
+    const mu = this.ion ? muI : muN;
+    const rho = 1.5e5, T = 1.57e7;
+    const P = rho * K_B * T / (mu * M_H), n = rho / (mu * M_H);
+    // particle box: 1 kg scaled → counts proportional to 1/μ contributions
+    const bx = 14, by = 14, bw = w * 0.5, bh = h - 44;
+    c.fillStyle = hexA(C.grid, 0.5); c.fillRect(bx, by, bw, bh); c.strokeStyle = C.line; c.strokeRect(bx, by, bw, bh);
+    const rnd = mulberry(3);
+    const nH = Math.round(X * 60), nHe = Math.round(Y * 15), nZ = Math.round(Z * 20);
+    const dot = (col: string, r: number) => { const x = bx + 6 + rnd() * (bw - 12), y = by + 6 + rnd() * (bh - 12); this.circle(x, y, r, undefined, col); return [x, y]; };
+    for (let i = 0; i < nH; i++) { const [x, y] = dot(C.red, 3); if (this.ion) this.circle(x + 6 + rnd() * 4, y - 4 + rnd() * 8, 1.5, undefined, C.blue); }
+    for (let i = 0; i < nHe; i++) { const [x, y] = dot(C.accent, 4.5); if (this.ion) for (let k = 0; k < 2; k++) this.circle(x + 7 + rnd() * 5, y - 6 + rnd() * 12, 1.5, undefined, C.blue); }
+    for (let i = 0; i < nZ; i++) { const [x, y] = dot(C.green, 6); if (this.ion) for (let k = 0; k < 4; k++) this.circle(x + 9 + rnd() * 6, y - 8 + rnd() * 16, 1.5, undefined, C.blue); }
+    this.text(`1 kg: ${this.ion ? 'nuclei + free electrons' : 'neutral atoms'}`, bx + 6, by + bh - 10, C.dim, 9);
+    this.text('H', bx + 6, by + 10, C.red, 9); this.text('He', bx + 22, by + 10, C.accent, 9); this.text('metals', bx + 42, by + 10, C.green, 9); if (this.ion) this.text('e⁻', bx + 82, by + 10, C.blue, 9);
+    // μ scale
+    const sx0 = w * 0.58, sx1 = w - 14, sy = h * 0.4;
+    this.line(sx0, sy, sx1, sy, C.line, 2);
+    const Xm = (m: number) => sx0 + (m - 0.4) / 1.6 * (sx1 - sx0);
+    // tick labels alternate above / below the scale so they never collide
+    for (const [m, lab, col, up] of [[0.5, 'ionised H', C.red, 1], [0.62, 'Sun core', C.sun, 0], [1.0, 'neutral H', C.dim, 1], [1.33, 'ionised He', C.accent, 0]] as Array<[number, string, string, number]>) { this.line(Xm(m), sy - 5, Xm(m), sy + 5, col); this.text(lab, Xm(m), up ? sy - 12 : sy + 16, col, 8, 'center'); }
+    this.circle(Xm(mu), sy, 6, '#fff', C.star);
+    this.text(`μ = ${fmt(mu, 3)}`, sx0, sy - 34, C.star, 12);
+    this.text('0.4', sx0, sy + 28, C.dim, 8, 'center'); this.text('2.0', sx1, sy + 28, C.dim, 8, 'center');
+    // pressure bar relative to solar
+    const Pref = rho * K_B * T / (0.62 * M_H);
+    const py = h * 0.7;
+    this.text('P at solar-centre ρ, T', sx0, py - 24, C.dim, 9); this.text('relative to μ = 0.62:', sx0, py - 13, C.dim, 9);
+    c.fillStyle = hexA(C.grid, 1); c.fillRect(sx0, py, sx1 - sx0, 14);
+    c.fillStyle = C.sun; c.fillRect(sx0, py, (sx1 - sx0) * Math.min(1, P / Pref / 1.3), 14);
+    this.text(`${fmt(P / Pref, 2)} ×`, sx1 - 4, py + 7, '#000', 9, 'right');
+    this.setReadout([
+      ['X, Y, Z', `${fmt(X, 2)}, ${fmt(Y, 2)}, ${fmt(Z, 2)}`],
+      ['μ (ionised / neutral)', `${fmt(muI, 3)} / ${fmt(muN, 2)}`, C.star],
+      ['μ_e, n per m³', `${fmt(muE, 2)}, ${sci(n, 2)}`],
+      ['P at solar centre', `${sci(P, 2)} Pa`, C.sun],
+    ]);
+  }
+}
+
+/* ---------------------------------------------------- 10.2b pressure mix ---- */
+
+const HBAR = 1.054571817e-34;
+function pDeg(rho: number, muE = 2): number {
+  const n = rho / (muE * M_H);
+  const nr = (3 * Math.PI * Math.PI) ** (2 / 3) / 5 * HBAR * HBAR / M_E * n ** (5 / 3);
+  const ur = (3 * Math.PI * Math.PI) ** (1 / 3) / 4 * HBAR * C_LIGHT * n ** (4 / 3);
+  return Math.min(nr, ur);
+}
+class PressureMixWidget extends CanvasWidget {
+  private lT = Math.log10(1.57e7);
+  private lRho = Math.log10(1.5e5);
+  private mu = 0.62;
+  constructor() {
+    super(1.7);
+    this.slider('Temperature', 3.5, 9, 0.05, this.lT, (v) => `${sci(10 ** v, 1)} K`, (v) => { this.lT = v; });
+    this.slider('Probe density', -8, 12, 0.1, this.lRho, (v) => `${sci(10 ** v, 1)} kg/m³`, (v) => { this.lRho = v; });
+    this.slider('μ (gas)', 0.5, 2, 0.01, this.mu, (v) => fmt(v, 2), (v) => { this.mu = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const T = 10 ** this.lT;
+    const x0 = 50, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const lr0 = -8, lr1 = 12, lp0 = 0, lp1 = 30;
+    const X = (lr: number) => x0 + (lr - lr0) / (lr1 - lr0) * (x1 - x0);
+    const Y = (P: number) => y1 - 6 - (Math.min(lp1, Math.max(lp0, Math.log10(Math.max(P, 1e-30)))) - lp0) / (lp1 - lp0) * (y1 - y0 - 12);
+    for (let lp = 0; lp <= 30; lp += 5) { this.line(x0, Y(10 ** lp), x1, Y(10 ** lp), hexA(C.grid, 0.9)); this.text(`10${sup(lp)}`, x0 - 4, Y(10 ** lp), C.dim, 8, 'right'); }
+    for (let lr = -8; lr <= 12; lr += 4) { this.line(X(lr), y1, X(lr), y1 + 3, C.dim); this.text(`10${sup(lr)}`, X(lr), y1 + 11, C.dim, 8, 'center'); }
+    this.text('ρ (kg m⁻³)', x1, y1 + 22, C.dim, 9, 'right'); this.text('P (Pa)', x0 + 4, y0 + 10, C.dim, 9);
+    const Pg = (rho: number) => rho * K_B * T / (this.mu * M_H);
+    const Pr = A_RAD * T ** 4 / 3;
+    const curve = (f: (rho: number) => number, col: string, wd: number, dash?: number[]) => { c.beginPath(); for (let lr = lr0; lr <= lr1; lr += 0.1) { const px = X(lr), py = Y(f(10 ** lr)); lr === lr0 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = col; c.lineWidth = wd; c.setLineDash(dash ?? []); c.stroke(); c.setLineDash([]); };
+    curve(Pg, C.sun, 1.5, [5, 3]);
+    curve(() => Pr, C.purple, 1.5, [5, 3]);
+    curve((rho) => pDeg(rho), C.blue, 1.5, [5, 3]);
+    curve((rho) => Pg(rho) + Pr + pDeg(rho), C.star, 2.2);
+    this.text('ideal gas ∝ ρT', X(-3), Y(Pg(1e-3)) - 10, C.sun, 9);
+    this.text('radiation aT⁴/3', X(-7.5), Y(Pr) - 8, C.purple, 9);
+    this.text('degenerate e⁻ ∝ ρ^5/3 (→ ρ^4/3)', X(5), Y(pDeg(1e5)) + 14, C.blue, 9);
+    // objects: [label, ρ, T, colour, dx, dy, align] — offsets chosen so labels do not collide
+    const objs: Array<[string, number, number, string, number, number, CanvasTextAlign]> = [
+      ['Sun centre', 1.5e5, 1.57e7, C.sun, 6, -8, 'left'], ['Sirius B centre', 3e10, 2.5e7, C.star, -6, 4, 'right'],
+      ['Jupiter centre', 2e4, 2e4, C.accent, 4, 13, 'left'], ['60 M☉ star centre', 2e3, 4e7, C.purple, -6, 2, 'right'],
+      ['supergiant envelope', 1e-6, 1e5, C.red, 4, 13, 'left'], ['neutron-star crust', 1e12, 1e8, C.blue, -6, 14, 'right'],
+    ];
+    for (const [lab, rho, To, col, dx, dy, al] of objs) { const Pt = rho * K_B * To / (0.62 * M_H) + A_RAD * To ** 4 / 3 + pDeg(rho); this.circle(X(Math.log10(rho)), Y(Pt), 3, col); this.text(lab, X(Math.log10(rho)) + dx, Y(Pt) + dy, col, 8, al); }
+    // probe
+    const rho = 10 ** this.lRho;
+    const pg = Pg(rho), pd = pDeg(rho), tot = pg + Pr + pd;
+    this.line(X(this.lRho), y0, X(this.lRho), y1, hexA('#fff', 0.35), 1, [2, 3]);
+    this.circle(X(this.lRho), Y(tot), 5, '#fff', C.star);
+    const dom = pg >= Pr && pg >= pd ? 'ideal gas' : Pr >= pd ? 'radiation' : 'degenerate electrons';
+    this.setReadout([
+      ['P_gas / P_rad / P_deg', `${fmt(100 * pg / tot, 0)} / ${fmt(100 * Pr / tot, 0)} / ${fmt(100 * pd / tot, 0)} %`],
+      ['Total P', `${sci(tot, 2)} Pa`, C.star],
+      ['Dominant', dom, dom === 'ideal gas' ? C.sun : dom === 'radiation' ? C.purple : C.blue],
+      ['Degenerate when T <', `${sci(1300 * (rho / 2) ** (2 / 3), 1)} K`],
+    ]);
+  }
+}
+
+/* -------------------------------------------------- 10.2c giant radius ---- */
+
+const MR_OBJ: Array<[string, number, number, string, number, number, CanvasTextAlign]> = [   // name, M (M_Jup), R (R_Jup), colour, label dx, dy, align
+  ['Mars', 0.000338, 0.0474, C.mars, 5, -7, 'left'], ['Venus', 0.00256, 0.0846, C.venus, -6, 4, 'right'], ['Earth', 0.00315, 0.0892, C.earth, 5, -7, 'left'],
+  ['Uranus', 0.0457, 0.357, C.blue, -6, 11, 'right'], ['Neptune', 0.0540, 0.346, C.blue, 5, -7, 'left'],
+  ['Saturn', 0.299, 0.843, C.venus, -6, 11, 'right'], ['Jupiter', 1, 1, C.accent, 6, 9, 'left'], ['HD 209458 b', 0.69, 1.38, C.red, 6, 3, 'left'], ['WASP-17 b', 0.49, 1.93, C.red, 5, -7, 'left'], ['Kepler-7 b', 0.43, 1.61, C.red, -6, 3, 'right'],
+  ['Gliese 229 B', 40, 0.9, C.purple, -6, 12, 'right'], ['Teide 1', 55, 1.0, C.purple, 4, 12, 'left'], ['TRAPPIST-1', 94, 1.16, C.red, 5, 11, 'left'], ['Proxima Cen', 126, 1.5, C.red, 5, -7, 'left'], ['Sun', 1047, 9.73, C.sun, -6, 4, 'right'],
+];
+class GiantRadiusWidget extends CanvasWidget {
+  private lM = 0;
+  constructor() {
+    super(1.8);
+    this.slider('Mass', -3.5, 3.1, 0.02, this.lM, (v) => `${sci(10 ** v, 2)} M_Jup`, (v) => { this.lM = v; });
+  }
+  private rH(M: number): number { const x = M / 0.76; return 1.67 * x ** (1 / 3) / (1 + x ** (2 / 3)) ** 0.7; }
+  private rRock(M: number): number { return 0.0892 * (M / 0.00315) ** 0.27; }
+  private rMS(M: number): number { const Ms = M / 1047; return Ms < 0.08 ? 0 : 9.73 * (Ms < 1 ? Ms ** 0.8 : Ms ** 0.57); }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const x0 = 50, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const lm0 = -3.6, lm1 = 3.2, lr0 = -1.5, lr1 = 1.2;
+    const X = (lm: number) => x0 + (lm - lm0) / (lm1 - lm0) * (x1 - x0);
+    const Y = (R: number) => y1 - 6 - (Math.log10(R) - lr0) / (lr1 - lr0) * (y1 - y0 - 12);
+    for (const lr of [-1, 0, 1]) { this.line(x0, Y(10 ** lr), x1, Y(10 ** lr), hexA(C.grid, 0.9)); this.text(lr === 0 ? '1 R_Jup' : `10${sup(lr)}`, x0 - 4, Y(10 ** lr), C.dim, 8, 'right'); }
+    for (const lm of [-3, -2, -1, 0, 1, 2, 3]) { this.line(X(lm), y1, X(lm), y1 + 3, C.dim); this.text(lm === 0 ? '1 M_Jup' : `10${sup(lm)}`, X(lm), y1 + 11, C.dim, 8, 'center'); }
+    this.text('mass', x1, y1 + 22, C.dim, 9, 'right');
+    const curve = (f: (M: number) => number, a: number, b: number, col: string, wd: number, dash?: number[]) => { c.beginPath(); let st = false; for (let lm = a; lm <= b; lm += 0.02) { const R = f(10 ** lm); if (R <= 0) continue; const px = X(lm), py = Y(R); st ? c.lineTo(px, py) : c.moveTo(px, py); st = true; } c.strokeStyle = col; c.lineWidth = wd; c.setLineDash(dash ?? []); c.stroke(); c.setLineDash([]); };
+    curve((M) => this.rRock(M), lm0, 0.5, C.mars, 1.5, [4, 3]);
+    curve((M) => this.rH(M), lm0, Math.log10(80), C.accent, 2.2);
+    curve((M) => this.rMS(M), Math.log10(84), lm1, C.sun, 2);
+    this.text('cold H/He: R ∝ M^⅓ then M^−⅓', X(-2.6), Y(this.rH(10 ** -2.6)) - 12, C.accent, 9);
+    this.text('rock / iron', X(-2.8), Y(this.rRock(10 ** -2.8)) + 12, C.mars, 9);
+    this.line(X(Math.log10(13)), y0, X(Math.log10(13)), y1, hexA(C.purple, 0.5), 1, [2, 3]); this.text('D burning ≥ 13 M_Jup', X(Math.log10(13)) - 4, y0 + 10, C.purple, 8, 'right');
+    this.line(X(Math.log10(80)), y0, X(Math.log10(80)), y1, hexA(C.sun, 0.5), 1, [2, 3]); this.text('H burning', X(Math.log10(80)) + 3, y0 + 10, C.sun, 8); this.text('≥ 80 M_Jup', X(Math.log10(80)) + 3, y0 + 20, C.sun, 8);
+    for (const [name, M, R, col, dx, dy, al] of MR_OBJ) { this.circle(X(Math.log10(M)), Y(R), 3, '#000', col); this.text(name, X(Math.log10(M)) + dx, Y(R) + dy, col, 8, al); }
+    const M = 10 ** this.lM;
+    const R = M < 84 ? this.rH(M) : this.rMS(M);
+    this.circle(X(this.lM), Y(R), 5, '#fff', C.star);
+    const rhoBar = M * MJUP / (4 / 3 * Math.PI * (R * RJUP) ** 3);
+    this.setReadout([
+      ['Mass', M < 0.01 ? `${fmt(M / 0.00315, 2)} M⊕` : M > 84 ? `${fmt(M / 1047, 3)} M☉` : `${fmt(M, 2)} M_Jup`],
+      ['Radius (R_Jup, R⊕)', `${fmt(R, 2)}, ${fmt(R / 0.0892, 1)}`, C.star],
+      ['Mean density', `${fmt(rhoBar, 0)} kg/m³`],
+      ['Regime', M < 1 ? 'ordinary, R ∝ M^⅓' : M < 80 ? 'degenerate, R ≈ const' : 'star: thermal pressure'],
+    ]);
+  }
+}
+
+/* ---------------------------------------------- 10.3a Kelvin–Helmholtz time ---- */
+
+const KH_PRESETS: Array<[string, number, number, number]> = [   // name, log M/M☉, log R/R☉, log L/L☉
+  ['Sun', 0, 0, 0], ['Jupiter (excess heat)', Math.log10(9.55e-4), Math.log10(0.1028), Math.log10(3.3e17 / LSUN_W)], ['Saturn (excess heat)', Math.log10(2.86e-4), Math.log10(0.0837), Math.log10(1.6e17 / LSUN_W)],
+  ['Sirius A', Math.log10(2.06), Math.log10(1.71), Math.log10(25.4)], ['Betelgeuse', Math.log10(17), Math.log10(900), Math.log10(1.2e5)], ['Proxima Cen', Math.log10(0.12), Math.log10(0.154), Math.log10(0.0017)],
+];
+class KhTimescaleWidget extends CanvasWidget {
+  private lM = 0; private lR = 0; private lL = 0;
+  private sl: Array<ReturnType<CanvasWidget['slider']>> = [];
+  constructor() {
+    super(1.9);
+    this.segmented(KH_PRESETS.map((p, i) => [String(i), p[0]] as [string, string]), '0', (v) => { const p = KH_PRESETS[+v]; this.lM = p[1]; this.lR = p[2]; this.lL = p[3]; this.sl[0].set(this.lM); this.sl[1].set(this.lR); this.sl[2].set(this.lL); });
+    this.sl.push(this.slider('Mass', -4, 2, 0.05, 0, (v) => `${sci(10 ** v, 1)} M☉`, (v) => { this.lM = v; }));
+    this.sl.push(this.slider('Radius', -2, 3.5, 0.05, 0, (v) => `${sci(10 ** v, 1)} R☉`, (v) => { this.lR = v; }));
+    this.sl.push(this.slider('Luminosity', -10, 6, 0.1, 0, (v) => `${sci(10 ** v, 1)} L☉`, (v) => { this.lL = v; }));
+  }
+  protected draw() {
+    const w = this.w, h = this.h;
+    const M = 10 ** this.lM * MSUN, R = 10 ** this.lR * RSUN, L = 10 ** this.lL * LSUN_W;
+    const yr = 3.156e7;
+    const tKH = GRAV * M * M / (2 * R * L) / yr;
+    const tNuc = 0.007 * 0.1 * M * C_LIGHT ** 2 / L / yr;
+    const tDyn = Math.sqrt(R ** 3 / (GRAV * M));
+    // timeline
+    const x0 = 20, x1 = w - 20, ty = h * 0.42;
+    const lt0 = 2, lt1 = 14;
+    const X = (t: number) => x0 + (Math.min(lt1, Math.max(lt0, Math.log10(t))) - lt0) / (lt1 - lt0) * (x1 - x0);
+    this.line(x0, ty, x1, ty, C.line, 2);
+    for (let lt = lt0; lt <= lt1; lt += 2) { this.line(X(10 ** lt), ty - 4, X(10 ** lt), ty + 4, C.dim); this.text(`10${sup(lt)} yr`, X(10 ** lt), ty + 16, C.dim, 8, 'center'); }
+    const marks: Array<[number, string, string, number]> = [[5e3, 'recorded history', C.dim, -22], [6.6e7, 'end of dinosaurs', C.dim, -36], [4.54e9, 'age of Earth', C.earth, -50], [1.26e10, 'oldest clusters', C.dim, -64], [1.38e10, 'universe', C.purple, -78]];
+    for (const [t, lab, col, dy] of marks) { this.line(X(t), ty, X(t), ty + dy, hexA(col, 0.6), 1, [2, 2]); this.text(lab, X(t), ty + dy - 6, col, 8, 'center'); }
+    const flag = (t: number, lab: string, col: string, dy: number) => { this.line(X(t), ty, X(t), ty + dy, col, 2); this.circle(X(t), ty, 4, '#000', col); this.text(lab, X(t), ty + dy + (dy > 0 ? 10 : -8), col, 10, 'center'); };
+    flag(tKH, `t_KH = ${fmtYr(tKH)}`, C.sun, 36);
+    flag(tNuc, `t_nuc = ${fmtYr(tNuc)}`, C.green, 60);
+    const verdict = tKH > 4.5e9 ? 'gravity alone could have powered it for the age of the solar system' : tKH > 1e8 ? 'gravity could power it for a geologically long time, but not the age of the Earth' : 'gravity could not power it for geological time: a nuclear source is required';
+    this.text(verdict, w / 2, h - 28, tKH > 4.5e9 ? C.green : C.red, 10, 'center');
+    this.text(`dynamical (free-fall) time: ${fmtDur(tDyn)} · t_KH / t_dyn = ${sci(tKH * yr / tDyn, 1)}`, w / 2, h - 12, C.dim, 9, 'center');
+    this.setReadout([
+      ['GM²/2R (available)', `${sci(GRAV * M * M / (2 * R), 2)} J`],
+      ['t_KH = GM²/2RL', fmtYr(tKH), C.sun],
+      ['t_nuc (0.07 % of Mc²)', fmtYr(tNuc), C.green],
+      ['t_nuc / t_KH', sci(tNuc / tKH, 1)],
+    ]);
+  }
+}
+
+/* ------------------------------------------------ 10.3b binding energy ---- */
+
+const BE: Array<[string, number, number]> = [   // symbol, A, B/A (MeV)
+  ['²H', 2, 1.112], ['³H', 3, 2.827], ['³He', 3, 2.573], ['⁴He', 4, 7.074], ['⁶Li', 6, 5.332], ['⁷Li', 7, 5.606], ['⁹Be', 9, 6.463], ['¹⁰B', 10, 6.475], ['¹¹B', 11, 6.928],
+  ['¹²C', 12, 7.680], ['¹³C', 13, 7.470], ['¹⁴N', 14, 7.476], ['¹⁶O', 16, 7.976], ['²⁰Ne', 20, 8.032], ['²⁴Mg', 24, 8.261], ['²⁸Si', 28, 8.448], ['³²S', 32, 8.493], ['⁴⁰Ca', 40, 8.551],
+  ['⁴⁸Ti', 48, 8.723], ['⁵²Cr', 52, 8.776], ['⁵⁶Fe', 56, 8.790], ['⁵⁸Ni', 58, 8.732], ['⁶²Ni', 62, 8.795], ['⁶⁴Zn', 64, 8.736], ['⁸⁴Kr', 84, 8.717], ['¹⁰⁷Ag', 107, 8.554], ['¹²⁰Sn', 120, 8.505],
+  ['¹⁵⁰Nd', 150, 8.250], ['¹⁹⁷Au', 197, 7.916], ['²⁰⁸Pb', 208, 7.867], ['²³⁵U', 235, 7.591], ['²³⁸U', 238, 7.570],
+];
+class BindingEnergyWidget extends CanvasWidget {
+  private hover = -1;
+  private step = 0;
+  constructor() {
+    super(1.8);
+    this.segmented<'0' | '1' | '2' | '3'>([['0', '4 ¹H → ⁴He'], ['1', '3 ⁴He → ¹²C'], ['2', '¹²C → … → ⁵⁶Fe'], ['3', '²³⁵U fission']], '0', (v) => { this.step = +v; });
+    this.canvas.addEventListener('pointermove', (e) => { const { x, y } = canvasPos(this.canvas, e, this.w, this.h); let best = -1, bd = 1e9; BE.forEach(([, A, b], i) => { const d = Math.hypot(this.X(A) - x, this.Y(b) - y); if (d < bd) { bd = d; best = i; } }); this.hover = bd < 18 ? best : -1; });
+    this.canvas.addEventListener('pointerleave', () => { this.hover = -1; });
+  }
+  private X(A: number): number { return 46 + Math.log10(A) / Math.log10(260) * (this.w - 58); }
+  private Y(b: number): number { return this.h - 36 - b / 9.5 * (this.h - 52); }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const x0 = 46, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    for (const b of [2, 4, 6, 8]) { this.line(x0, this.Y(b), x1, this.Y(b), hexA(C.grid, 0.9)); this.text(`${b}`, x0 - 4, this.Y(b), C.dim, 8, 'right'); }
+    for (const A of [1, 2, 4, 8, 16, 32, 64, 128, 256]) { this.line(this.X(A), y1, this.X(A), y1 + 3, C.dim); this.text(`${A}`, this.X(A), y1 + 11, C.dim, 8, 'center'); }
+    this.text('mass number A', x1, y1 + 22, C.dim, 9, 'right'); this.text('binding energy per nucleon (MeV)', x0 + 6, y0 + 10, C.dim, 9);
+    c.beginPath(); BE.forEach(([, A, b], i) => { const px = this.X(A), py = this.Y(b); i === 0 ? c.moveTo(px, py) : c.lineTo(px, py); }); c.strokeStyle = hexA(C.star, 0.6); c.lineWidth = 1.2; c.stroke();
+    BE.forEach(([sym, A, b], i) => { const hi = i === this.hover; this.circle(this.X(A), this.Y(b), hi ? 5 : 3, hi ? '#fff' : undefined, A === 4 || A === 12 || A === 16 || A === 56 ? C.sun : C.star); if (hi || ['⁴He', '¹²C', '¹⁶O', '⁵⁶Fe', '²³⁸U'].includes(sym)) this.text(sym, this.X(A), this.Y(b) - 10, hi ? '#fff' : C.dim, 9, 'center'); });
+    this.circle(this.X(1), this.Y(0), 3, undefined, C.red); this.text('¹H', this.X(1) + 6, this.Y(0) - 6, C.red, 9);
+    // highlighted step
+    const steps: Array<[number, number, number, number, string]> = [[1, 0, 4, 7.074, 'H → He: 7.07 MeV per nucleon released (0.7 % of mass)'], [4, 7.074, 12, 7.680, 'He → C: 0.61 MeV per nucleon'], [12, 7.680, 56, 8.790, 'C → Fe: 1.11 MeV per nucleon, over several burning stages'], [235, 7.591, 118, 8.50, 'U → two fragments: 0.9 MeV per nucleon — fission releases energy too']];
+    const [Aa, ba, Ab, bb, lab] = steps[this.step];
+    this.line(this.X(Aa), this.Y(ba), this.X(Ab), this.Y(bb), C.green, 2.5);
+    this.circle(this.X(Ab), this.Y(bb), 6, C.green, undefined, 2);
+    this.text(lab, (x0 + x1) / 2, y1 - 12, C.green, 10, 'center');
+    const hv = this.hover >= 0 ? BE[this.hover] : null;
+    this.setReadout([
+      ['Hovered nucleus', hv ? `${hv[0]} (A = ${hv[1]})` : '—', hv ? '#fff' : C.dim],
+      ['B/A', hv ? `${fmt(hv[2], 3)} MeV` : '—'],
+      ['Total binding', hv ? `${fmt(hv[1] * hv[2], 1)} MeV` : '—'],
+      ['Step shown', `${fmt(bb - ba, 2)} MeV / nucleon`, C.green],
+    ]);
+  }
+}
+
+/* ------------------------------------------------------ 10.3c Gamow peak ---- */
+
+const GAMOW_RX: Array<[string, number, number, number]> = [['p + p', 1, 1, 0.5], ['p + ¹²C (CNO)', 1, 6, 12 / 13], ['⁴He + ⁴He', 2, 2, 2], ['¹²C + ¹²C', 6, 6, 6]];
+class GamowWidget extends CanvasWidget {
+  private rx = 0;
+  private lT = Math.log10(1.57e7);
+  constructor() {
+    super(1.8);
+    this.segmented(GAMOW_RX.map((r, i) => [String(i), r[0]] as [string, string]), '0', (v) => { this.rx = +v; });
+    this.slider('Temperature', 6.3, 9.3, 0.02, this.lT, (v) => `${sci(10 ** v, 2)} K`, (v) => { this.lT = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const [, Z1, Z2, mu] = GAMOW_RX[this.rx];
+    const T = 10 ** this.lT;
+    const kT = K_EV * T / 1000;                           // keV
+    const b = 31.28 * Z1 * Z2 * Math.sqrt(mu);          // keV^1/2
+    const E0 = (b * kT / 2) ** (2 / 3);
+    const dE = 4 * Math.sqrt(E0 * kT / 3);
+    const nu = (3 * E0 / kT - 2) / 3;
+    const Emax = E0 + 3 * dE + 3 * kT;
+    const x0 = 44, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (E: number) => x0 + E / Emax * (x1 - x0);
+    const Y = (v: number) => y1 - 6 - v * (y1 - y0 - 12);
+    const mb = (E: number) => Math.exp(-E / kT);
+    const tun = (E: number) => Math.exp(-b / Math.sqrt(E));
+    const prodMax = mb(E0) * tun(E0);
+    const curve = (f: (E: number) => number, col: string, wd: number, dash?: number[]) => { c.beginPath(); for (let i = 1; i <= 300; i++) { const E = Emax * i / 300; const px = X(E), py = Y(Math.min(1, f(E))); i === 1 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = col; c.lineWidth = wd; c.setLineDash(dash ?? []); c.stroke(); c.setLineDash([]); };
+    curve(mb, C.red, 1.5, [4, 3]);
+    curve((E) => tun(E) / tun(Emax), C.blue, 1.5, [4, 3]);
+    c.beginPath(); c.moveTo(X(0), Y(0)); for (let i = 1; i <= 300; i++) { const E = Emax * i / 300; c.lineTo(X(E), Y(mb(E) * tun(E) / prodMax * 0.85)); } c.lineTo(X(Emax), Y(0)); c.closePath(); c.fillStyle = hexA(C.sun, 0.3); c.fill();
+    curve((E) => mb(E) * tun(E) / prodMax * 0.85, C.sun, 2.2);
+    this.line(X(E0), y0, X(E0), y1, hexA(C.sun, 0.5), 1, [2, 3]);
+    this.text(`E₀ = ${fmt(E0, 1)} keV`, X(E0) + 4, y0 + 12, C.sun, 10);
+    this.text(`width ${fmt(dE, 1)} keV`, X(E0) + 4, y0 + 24, C.sun, 9);
+    this.line(X(kT), y1 - 14, X(kT), y1, C.red, 1); this.text(`kT = ${fmt(kT, 2)} keV`, X(kT) + 3, y1 - 10, C.red, 9);
+    this.text('Maxwell–Boltzmann e^(−E/kT)', x1 - 8, y0 + 12, C.red, 9, 'right');
+    this.text('tunnelling e^(−b/√E)', x1 - 8, y0 + 24, C.blue, 9, 'right');
+    this.text('product: Gamow peak', x1 - 8, y0 + 36, C.sun, 9, 'right');
+    this.text('energy (keV) →', x1, y1 + 12, C.dim, 9, 'right');
+    const Ecoul = 1.44 * Z1 * Z2 / 1.4 * 1000;   // keV at 1.4 fm
+    this.setReadout([
+      ['Coulomb barrier', `${fmt(Ecoul / 1000, 2)} MeV = ${fmt(Ecoul / kT, 0)} kT`],
+      ['Gamow peak E₀', `${fmt(E0, 1)} keV = ${fmt(E0 / kT, 1)} kT`, C.sun],
+      ['Peak height e^(−3E₀/kT)', sci(Math.exp(-3 * E0 / kT), 1)],
+      ['Rate ∝ T^ν, ν ≈', fmt(nu, 1), C.green],
+    ]);
+  }
+}
+
+
+/* ------------------------------------------------------- 10.3d pp chain ---- */
+
+interface PpNode { id: string; x: number; y: number; lab: string; col: string }
+interface PpEdge { from: string; to: string; lab: string; rate: number; branch: number }
+const PP_NODES: PpNode[] = [
+  { id: 'p1', x: 0.08, y: 0.25, lab: '¹H', col: C.red }, { id: 'p2', x: 0.08, y: 0.55, lab: '¹H', col: C.red },
+  { id: 'd', x: 0.26, y: 0.4, lab: '²H', col: C.accent }, { id: 'he3', x: 0.44, y: 0.4, lab: '³He', col: C.sun },
+  { id: 'he4', x: 0.86, y: 0.4, lab: '⁴He', col: C.green },
+  { id: 'be7', x: 0.62, y: 0.68, lab: '⁷Be', col: C.purple }, { id: 'li7', x: 0.78, y: 0.82, lab: '⁷Li', col: C.purple }, { id: 'b8', x: 0.78, y: 0.56, lab: '⁸B', col: C.blue },
+];
+const PP_EDGES: PpEdge[] = [
+  { from: 'p1', to: 'd', lab: 'p + p → d + e⁺ + ν (0.42 MeV ν)  ·  9 Gyr', rate: 0.15, branch: 0 },
+  { from: 'p2', to: 'd', lab: '', rate: 0.15, branch: 0 },
+  { from: 'd', to: 'he3', lab: 'd + p → ³He + γ  ·  1 s', rate: 1.2, branch: 0 },
+  { from: 'he3', to: 'he4', lab: '³He + ³He → ⁴He + 2p  ·  10⁶ yr (PP I, 69 %)', rate: 0.5, branch: 1 },
+  { from: 'he3', to: 'be7', lab: '³He + ⁴He → ⁷Be + γ (PP II/III, 31 %)', rate: 0.4, branch: 2 },
+  { from: 'be7', to: 'li7', lab: '⁷Be + e⁻ → ⁷Li + ν (0.86 MeV ν)', rate: 0.6, branch: 2 },
+  { from: 'li7', to: 'he4', lab: '⁷Li + p → 2 ⁴He', rate: 0.9, branch: 2 },
+  { from: 'be7', to: 'b8', lab: '⁷Be + p → ⁸B + γ (PP III, 0.1 %)', rate: 0.5, branch: 3 },
+  { from: 'b8', to: 'he4', lab: '⁸B → ⁸Be* + e⁺ + ν (≤ 15 MeV ν) → 2 ⁴He', rate: 0.8, branch: 3 },
+];
+class PpChainWidget extends CanvasWidget {
+  private branch = 1;
+  private t = 0;
+  private hover = -1;
+  constructor() {
+    super(1.8);
+    this.segmented<'1' | '2' | '3'>([['1', 'PP I (69 %)'], ['2', 'PP II (31 %)'], ['3', 'PP III (0.1 %)']], '1', (v) => { this.branch = +v; });
+    this.playButton();
+    this.canvas.addEventListener('pointermove', (e) => { const { x, y } = canvasPos(this.canvas, e, this.w, this.h); let best = -1, bd = 1e9; PP_EDGES.forEach((ed, i) => { const a = this.pos(ed.from), b = this.pos(ed.to); const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2; const d = Math.hypot(mx - x, my - y); if (d < bd) { bd = d; best = i; } }); this.hover = bd < 40 ? best : -1; });
+  }
+  private pos(id: string): [number, number] { const n = PP_NODES.find((k) => k.id === id)!; return [20 + n.x * (this.w - 40), 14 + n.y * (this.h - 60)]; }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    this.t += dt;
+    const active = (ed: PpEdge) => ed.branch === 0 || ed.branch === this.branch || (ed.branch === 2 && this.branch === 3 && ed.to !== 'li7' && ed.from !== 'li7');
+    PP_EDGES.forEach((ed, i) => {
+      const a = this.pos(ed.from), b = this.pos(ed.to);
+      const on = active(ed);
+      this.line(a[0], a[1], b[0], b[1], on ? hexA(C.text, 0.5) : hexA(C.text, 0.12), on ? 1.5 : 1);
+      if (on) {
+        const k = 3; for (let j = 0; j < k; j++) { const ph = ((this.t * ed.rate * 0.5 + j / k) % 1); const px = a[0] + (b[0] - a[0]) * ph, py = a[1] + (b[1] - a[1]) * ph; this.glow(px, py, 7, hexA(C.sun, 0.9)); }
+      }
+      if (i === this.hover && ed.lab) { const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2; c.fillStyle = 'rgba(0,0,0,0.75)'; const tw = ed.lab.length * 5.4 + 12; c.fillRect(Math.min(w - tw - 4, Math.max(4, mx - tw / 2)), my - 22, tw, 16); this.text(ed.lab, Math.min(w - tw / 2 - 4, Math.max(tw / 2 + 4, mx)), my - 14, C.star, 9, 'center'); }
+    });
+    for (const n of PP_NODES) {
+      const [x, y] = this.pos(n.id);
+      const on = PP_EDGES.some((ed) => active(ed) && (ed.from === n.id || ed.to === n.id));
+      this.circle(x, y, 13, on ? n.col : hexA(n.col, 0.3), on ? hexA(n.col, 0.3) : 'rgba(0,0,0,0)', 1.5);
+      this.text(n.lab, x, y, on ? C.text : C.faint, 11, 'center');
+    }
+    this.text('hover an arrow for the reaction · glowing dots run at the relative speed of each step (slowest sped up enormously)', w / 2, h - 32, C.dim, 8, 'center');
+    const eNu = this.branch === 1 ? 0.53 : this.branch === 2 ? 1.69 : 7.8;
+    const eMax = this.branch === 1 ? 0.42 : this.branch === 2 ? 0.86 : 15;
+    this.setReadout([
+      ['Net: 4 ¹H → ⁴He + 2e⁺ + 2ν', '26.73 MeV'],
+      ['Lost to ν per ⁴He', `${fmt(eNu, 2)} MeV`, C.purple],
+      ['Max ν energy', `${fmt(eMax, 2)} MeV`, C.purple],
+      ['Bottleneck (weak)', 'p + p ≈ 9 Gyr', C.red],
+    ]);
+  }
+}
+
+/* -------------------------------------------------- 10.3e pp vs CNO vs 3α ---- */
+
+function epsPP(rho: number, X: number, T: number): number { const T6 = T / 1e6; return 0.241 * rho * X * X * T6 ** (-2 / 3) * Math.exp(-33.80 * T6 ** (-1 / 3)); }
+function epsCNO(rho: number, X: number, Xcno: number, T: number): number { const T6 = T / 1e6; return 8.67e20 * rho * X * Xcno * T6 ** (-2 / 3) * Math.exp(-152.28 * T6 ** (-1 / 3)); }
+function eps3a(rho: number, Y: number, T: number): number { const T8 = T / 1e8; return 50.9 * rho * rho * Y ** 3 * T8 ** -3 * Math.exp(-44.027 / T8); }
+class PpCnoWidget extends CanvasWidget {
+  private lRho = Math.log10(1.5e5);
+  private X = 0.7;
+  private Xcno = 0.01;
+  constructor() {
+    super(1.7);
+    this.slider('Density', 2, 6, 0.1, this.lRho, (v) => `${sci(10 ** v, 1)} kg/m³`, (v) => { this.lRho = v; });
+    this.slider('Hydrogen X', 0.01, 0.75, 0.01, this.X, (v) => fmt(v, 2), (v) => { this.X = v; });
+    this.slider('CNO fraction X_CNO', 0.0001, 0.03, 0.0001, this.Xcno, (v) => fmt(v, 4), (v) => { this.Xcno = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const rho = 10 ** this.lRho, X = this.X, Y = Math.max(0.02, 0.98 - X);
+    const x0 = 50, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const lt0 = 6.5, lt1 = 8.5, le0 = -8, le1 = 10;
+    const Xp = (lT: number) => x0 + (lT - lt0) / (lt1 - lt0) * (x1 - x0);
+    const Yp = (e: number) => y1 - 6 - (Math.min(le1, Math.max(le0, Math.log10(Math.max(e, 1e-30)))) - le0) / (le1 - le0) * (y1 - y0 - 12);
+    for (let le = -6; le <= 8; le += 2) { this.line(x0, Yp(10 ** le), x1, Yp(10 ** le), hexA(C.grid, 0.9)); this.text(`10${sup(le)}`, x0 - 4, Yp(10 ** le), C.dim, 8, 'right'); }
+    for (const lT of [6.5, 7, 7.5, 8, 8.5]) { this.line(Xp(lT), y1, Xp(lT), y1 + 3, C.dim); this.text(`${sci(10 ** lT, 0)}`, Xp(lT), y1 + 11, C.dim, 8, 'center'); }
+    this.text('T (K)', x1, y1 + 22, C.dim, 9, 'right'); this.text('ε (W kg⁻¹)', x0 + 4, y0 + 10, C.dim, 9);
+    const curve = (f: (T: number) => number, col: string) => { c.beginPath(); let st = false; for (let lT = lt0; lT <= lt1; lT += 0.01) { const e = f(10 ** lT); if (e < 10 ** le0) { st = false; continue; } const px = Xp(lT), py = Yp(e); st ? c.lineTo(px, py) : c.moveTo(px, py); st = true; } c.strokeStyle = col; c.lineWidth = 2; c.stroke(); };
+    curve((T) => epsPP(rho, X, T), C.sun);
+    curve((T) => epsCNO(rho, X, this.Xcno, T), C.blue);
+    curve((T) => eps3a(rho, Y, T), C.red);
+    this.text('pp chain ~T⁴', Xp(6.85), Yp(epsPP(rho, X, 10 ** 6.85)) - 12, C.sun, 9);
+    this.text('CNO cycle ~T¹⁷', Xp(7.45), Yp(epsCNO(rho, X, this.Xcno, 10 ** 7.45)) - 12, C.blue, 9);
+    this.text('triple-α ~T⁴¹', Xp(8.1), Yp(eps3a(rho, Y, 10 ** 8.1)) - 12, C.red, 9);
+    // crossover
+    let Tx = 0; for (let lT = 6.8; lT <= 8; lT += 0.002) { if (epsCNO(rho, X, this.Xcno, 10 ** lT) > epsPP(rho, X, 10 ** lT)) { Tx = 10 ** lT; break; } }
+    if (Tx) { this.line(Xp(Math.log10(Tx)), y0, Xp(Math.log10(Tx)), y1, hexA(C.green, 0.6), 1, [3, 3]); this.text(`pp = CNO at ${sci(Tx, 2)} K`, Xp(Math.log10(Tx)) + 4, y0 + 12, C.green, 9); }
+    const stars: Array<[string, number]> = [['Proxima', 4.5e6], ['Sun', 1.57e7], ['Sirius A', 2.1e7], ['Spica', 3.0e7], ['He core flash', 1.0e8], ['He burning', 1.5e8]];
+    stars.forEach(([lab, T], i) => { const lT = Math.log10(T); if (lT < lt0 || lT > lt1) return; this.line(Xp(lT), y1 - 4, Xp(lT), y1 - 14 - (i % 2) * 10, C.dim); this.text(lab, Xp(lT), y1 - 20 - (i % 2) * 10, C.dim, 8, 'center'); });
+    const Ts = 1.57e7;
+    const ep = epsPP(rho, X, Ts), ec = epsCNO(rho, X, this.Xcno, Ts);
+    this.setReadout([
+      ['ε_pp at T☉ (W/kg)', sci(ep, 2), C.sun],
+      ['ε_CNO at T☉ (W/kg)', sci(ec, 2), C.blue],
+      ['CNO share at T☉', `${fmt(100 * ec / (ep + ec), 1)} %`],
+      ['pp = CNO at', Tx ? `${fmt(Tx / 1e6, 1)} MK` : '—', C.green],
+    ]);
+  }
+}
+
+/* -------------------------------------------- 10.4a radiative gradient ---- */
+
+class RadGradientWidget extends CanvasWidget {
+  private x = 0.5;
+  private kMul = 1; private lMul = 1;
+  constructor() {
+    super(1.8);
+    this.slider('Probe r / R☉', 0.02, 0.98, 0.01, this.x, (v) => fmt(v, 2), (v) => { this.x = v; });
+    this.slider('Opacity × ', 0.1, 10, 0.1, this.kMul, (v) => `×${fmt(v, 1)}`, (v) => { this.kMul = v; });
+    this.slider('Luminosity × ', 0.1, 10, 0.1, this.lMul, (v) => `×${fmt(v, 1)}`, (v) => { this.lMul = v; });
+  }
+  private grads(x: number): { rad: number; ad: number } {
+    const m = ssmAt(x); const r = x * RSUN;
+    const g = GRAV * m.M * MSUN / (r * r);
+    const rad = 3 / (4 * A_RAD * C_LIGHT) * (m.kap * this.kMul * m.rho / m.T ** 3) * (m.L * this.lMul * LSUN_W) / (4 * Math.PI * r * r);
+    const ad = (1 - 1 / GAMMA_AD) * m.mu * M_H * g / K_B;
+    return { rad, ad };
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const x0 = 50, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (x: number) => x0 + x * (x1 - x0);
+    const lg0 = -4, lg1 = 1;
+    const Y = (gval: number) => y1 - 6 - (Math.min(lg1, Math.max(lg0, Math.log10(gval))) - lg0) / (lg1 - lg0) * (y1 - y0 - 12);
+    for (let lg = -4; lg <= 1; lg++) { this.line(x0, Y(10 ** lg), x1, Y(10 ** lg), hexA(C.grid, 0.9)); this.text(`10${sup(lg)}`, x0 - 4, Y(10 ** lg), C.dim, 8, 'right'); }
+    this.text('|dT/dr| (K per metre)', x0 + 4, y0 + 10, C.dim, 9);
+    for (const x of [0, 0.25, 0.5, 0.75, 1]) this.text(fmt(x, 2), X(x), y1 + 10, C.dim, 8, 'center');
+    this.text('r / R☉', x1, y1 + 22, C.dim, 9, 'right');
+    // convective shading
+    let first = -1;
+    for (let i = 2; i <= 98; i++) { const x = i / 100; const gr = this.grads(x); if (gr.rad > gr.ad && first < 0) first = x; if (gr.rad > gr.ad) { c.fillStyle = hexA(C.accent, 0.12); c.fillRect(X(x - 0.005), y0, X(x + 0.005) - X(x - 0.005), y1 - y0); } }
+    const curve = (f: (x: number) => number, col: string, wd: number, dash?: number[]) => { c.beginPath(); for (let i = 2; i <= 98; i++) { const x = i / 100; const px = X(x), py = Y(f(x)); i === 2 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = col; c.lineWidth = wd; c.setLineDash(dash ?? []); c.stroke(); c.setLineDash([]); };
+    curve((x) => this.grads(x).ad, C.green, 1.8, [5, 3]);
+    curve((x) => this.grads(x).rad, C.sun, 2.2);
+    this.text('radiative gradient needed to carry L_r', x0 + 8, y0 + 24, C.sun, 9);
+    this.text('adiabatic gradient (1 − 1/γ) μm_H g/k', x0 + 8, y0 + 36, C.green, 9);
+    if (first > 0) { this.line(X(first), y0, X(first), y1, C.accent, 1.5, [3, 3]); this.text(`convection from ${fmt(first, 2)} R☉`, X(first) - 4, y1 - 12, C.accent, 9, 'right'); }
+    this.line(X(SSM_RCZ), y0, X(SSM_RCZ), y0 + 14, hexA('#fff', 0.5), 1); this.text('0.713 (helioseismic)', X(SSM_RCZ) + 3, y0 + 8, hexA('#fff', 0.6), 8);
+    const gr = this.grads(this.x); const m = ssmAt(this.x);
+    this.circle(X(this.x), Y(gr.rad), 4, '#fff', C.sun); this.circle(X(this.x), Y(gr.ad), 4, '#fff', C.green);
+    this.setReadout([
+      ['r: T, ρ, κ̄', `${sci(m.T, 2)} K, ${sci(m.rho, 1)}, ${fmt(m.kap * this.kMul, 2)}`],
+      ['|dT/dr|_rad', `${sci(gr.rad * 1000, 2)} K/km`, C.sun],
+      ['|dT/dr|_ad', `${sci(gr.ad * 1000, 2)} K/km`, C.green],
+      ['Transport here', gr.rad > gr.ad ? 'convective' : 'radiative', gr.rad > gr.ad ? C.accent : C.blue],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 10.4b Schwarzschild ---- */
+
+class ConvectionWidget extends CanvasWidget {
+  private mode: 'star' | 'air' = 'air';
+  private ratio = 1.3;      // actual / adiabatic gradient
+  private y = 0.05; private v = 0; private t = 0;
+  constructor() {
+    super(1.8);
+    this.segmented<'air' | 'star'>([['air', 'Earth\'s atmosphere'], ['star', 'Stellar layer']], this.mode, (v) => { this.mode = v; this.reset(); });
+    this.slider('Actual gradient / adiabatic', 0.3, 2, 0.01, this.ratio, (v) => fmt(v, 2), (v) => { this.ratio = v; this.reset(); });
+    const b = $('button', 'lw-btn', 'Release bubble'); b.addEventListener('click', () => this.reset()); this.controls.appendChild(b);
+    this.playButton();
+  }
+  private reset() { this.y = 0.05; this.v = 0; this.t = 0; }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    const air = this.mode === 'air';
+    const g = air ? 9.8 : 274, T0 = air ? 300 : 2e6, H = air ? 10 : 1e5;                   // height scale: km
+    const Gad = air ? 9.8 : (1 - 1 / GAMMA_AD) * 0.62 * M_H * g / K_B * 1000;             // K per km
+    const Gen = this.ratio * Gad;
+    // integrate bubble (y in km, dimensionless time scaled)
+    const tscale = air ? 60 : 3e4;   // seconds per animation second
+    if (dt > 0) {
+      const steps = 20; const ddt = dt * tscale / steps;
+      for (let i = 0; i < steps; i++) {
+        const Tb = T0 - Gad * this.y, Te = T0 - Gen * this.y;
+        const a = g * (Tb - Te) / Te;                 // m/s²
+        this.v += a * ddt; this.y += this.v * ddt / 1000;
+        this.v *= 1 - 0.02 * ddt / tscale * 60;
+        if (this.y > H) { this.y = H; this.v = 0; }
+        if (this.y < 0) { this.y = 0; this.v = Math.abs(this.v) * 0.3; }
+      }
+      this.t += dt;
+    }
+    // left: layer with bubble
+    const lx0 = 16, lx1 = w * 0.42, ly0 = 14, ly1 = h - 30;
+    const Yh = (yk: number) => ly1 - yk / H * (ly1 - ly0);
+    for (let i = 0; i < 24; i++) { const yk = (i + 0.5) / 24 * H; const Te = T0 - Gen * yk; const f = (Te - (T0 - Gad * H * 2)) / (Gad * H * 2); c.fillStyle = air ? `rgba(${120 + 120 * f},${160 + 60 * f},${255},0.5)` : rgba(tempRGB(2500 + 20000 * Math.max(0, Math.min(1, f))), 0.6); c.fillRect(lx0, Yh((i + 1) / 24 * H), lx1 - lx0, (ly1 - ly0) / 24 + 1); }
+    c.strokeStyle = C.line; c.strokeRect(lx0, ly0, lx1 - lx0, ly1 - ly0);
+    const Tb = T0 - Gad * this.y, Te = T0 - Gen * this.y;
+    const bx = (lx0 + lx1) / 2, by = Yh(this.y);
+    this.circle(bx, by, 14, '#fff', Tb > Te ? hexA(C.red, 0.6) : hexA(C.blue, 0.6), 1.5);
+    this.text(`${Tb > Te ? '+' : ''}${fmt(Tb - Te, air ? 1 : 0)} K`, bx, by - 22, Tb > Te ? C.red : C.blue, 10, 'center');
+    this.text(air ? 'ground' : 'deeper layer', (lx0 + lx1) / 2, ly1 + 10, C.dim, 9, 'center');
+    this.text(air ? `${H} km` : `${sci(H, 0)} km`, lx0 + 4, ly0 + 10, C.dim, 8);
+    // right: T vs height
+    const x0 = w * 0.5, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const Tlo = T0 - 2 * Gad * H, Thi = T0;
+    const X = (T: number) => x0 + 6 + (T - Tlo) / (Thi - Tlo) * (x1 - x0 - 12);
+    const Y = (yk: number) => y1 - 6 - yk / H * (y1 - y0 - 12);
+    this.line(X(T0), Y(0), X(Math.max(Tlo, T0 - Gad * H)), Y(H), C.green, 2, [5, 3]);
+    this.line(X(T0), Y(0), X(Math.max(Tlo, T0 - Gen * H)), Y(Math.min(H, (T0 - Tlo) / Gen)), C.sun, 2);
+    this.circle(X(Tb), Y(this.y), 5, '#fff', Tb > Te ? C.red : C.blue);
+    this.text('adiabat (bubble)', x1 - 6, y0 + 12, C.green, 9, 'right'); this.text('environment', x1 - 6, y0 + 24, C.sun, 9, 'right');
+    this.text('T →', x1 - 4, y1 + 12, C.dim, 9, 'right'); this.text('height ↑', x0 + 4, y0 + 10, C.dim, 9);
+    const stable = this.ratio < 1;
+    const N = Math.sqrt(Math.abs(g * (Gad - Gen) / 1000 / T0));
+    this.text(stable ? 'STABLE: bubble oscillates' : 'UNSTABLE: bubble runs away', (x0 + x1) / 2, y1 - 24, stable ? C.blue : C.red, 10, 'center');
+    this.text(stable ? '(Brunt–Väisälä oscillation)' : '(convection sets in)', (x0 + x1) / 2, y1 - 12, stable ? C.blue : C.red, 9, 'center');
+    this.setReadout([
+      ['Adiabatic gradient', air ? `${fmt(Gad, 1)} K/km (g/c_p)` : `${sci(Gad, 2)} K/km`, C.green],
+      ['Actual gradient', air ? `${fmt(Gen, 1)} K/km` : `${sci(Gen, 2)} K/km`, C.sun],
+      ['Schwarzschild', stable ? 'stable (radiative)' : 'convective', stable ? C.blue : C.red],
+      [stable ? 'Oscillation period' : 'e-folding time', fmtDur(stable ? TAU / N : 1 / N)],
+    ]);
+  }
+}
+
+/* -------------------------------------------------- 10.4c mixing length ---- */
+
+class MixingLengthWidget extends CanvasWidget {
+  private x = 0.9;
+  private alpha = 1.8;
+  private t = 0;
+  private seeds: Array<[number, number, number]> = Array.from({ length: 26 }, (_, i) => { const r = mulberry(i + 1); return [r(), r(), r()]; });
+  constructor() {
+    super(1.8);
+    this.slider('Depth r / R☉ (convection zone)', 0.72, 0.999, 0.001, this.x, (v) => fmt(v, 3), (v) => { this.x = v; });
+    this.slider('Mixing-length α', 0.5, 3, 0.1, this.alpha, (v) => fmt(v, 1), (v) => { this.alpha = v; });
+    this.playButton();
+  }
+  private mlt(x: number) {
+    const m = ssmAt(x); const r = x * RSUN;
+    const g = GRAV * m.M * MSUN / (r * r);
+    const HP = m.P / (m.rho * g);
+    const ell = this.alpha * HP;
+    const F = LSUN_W / (4 * Math.PI * r * r);
+    const cP = 2.5 * K_B / (m.mu * M_H);
+    const v = Math.cbrt(g * ell * F / (m.rho * cP * m.T));
+    const dT = F / (m.rho * cP * v);
+    const dnab = dT / m.T * HP / ell;
+    return { HP, ell, F, v, dT, dnab, T: m.T, rho: m.rho };
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    this.t += dt;
+    const q = this.mlt(this.x);
+    // left: granulation cartoon, speed scaled to v
+    const gx0 = 14, gy0 = 14, gs = Math.min(w * 0.4, h - 44);
+    c.save(); c.beginPath(); c.rect(gx0, gy0, gs, gs); c.clip();
+    c.fillStyle = '#5a3a10'; c.fillRect(gx0, gy0, gs, gs);
+    const sp = Math.min(0.5, q.v / 4000);
+    for (const [sx, sy, ph] of this.seeds) {
+      const life = ((this.t * sp * 0.6 + ph) % 1);
+      const rr = gs * 0.13 * Math.sin(life * Math.PI);
+      const gg = c.createRadialGradient(gx0 + sx * gs, gy0 + sy * gs, 0, gx0 + sx * gs, gy0 + sy * gs, Math.max(1, rr));
+      gg.addColorStop(0, 'rgba(255,225,160,1)'); gg.addColorStop(0.75, 'rgba(240,190,110,0.9)'); gg.addColorStop(1, 'rgba(90,58,16,0)');
+      c.fillStyle = gg; c.beginPath(); c.arc(gx0 + sx * gs, gy0 + sy * gs, Math.max(1, rr), 0, TAU); c.fill();
+    }
+    c.restore(); c.strokeStyle = C.line; c.strokeRect(gx0, gy0, gs, gs);
+    this.text('granulation (schematic): hot gas up in the cells, cool gas down in the lanes', gx0, gy0 + gs + 12, C.dim, 8);
+    // right: v_c and δT vs r
+    const x0 = w * 0.52, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (x: number) => x0 + (x - 0.72) / 0.279 * (x1 - x0);
+    const Yv = (v: number) => y1 - 6 - (Math.log10(Math.max(v, 1)) - 0) / 3.5 * (y1 - y0 - 12);
+    for (const lv of [0, 1, 2, 3]) { this.line(x0, Yv(10 ** lv), x1, Yv(10 ** lv), hexA(C.grid, 0.9)); this.text(`10${sup(lv)}`, x0 - 4, Yv(10 ** lv), C.dim, 8, 'right'); }
+    this.text('v_c (m/s)', x0 + 4, y0 + 10, C.sun, 9);
+    c.beginPath(); for (let x = 0.72; x <= 0.999; x += 0.003) { const px = X(x), py = Yv(this.mlt(x).v); x === 0.72 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = C.sun; c.lineWidth = 2; c.stroke();
+    const YdT = (d: number) => y1 - 6 - (Math.log10(Math.max(d, 1e-6)) + 6) / 9 * (y1 - y0 - 12);
+    c.beginPath(); for (let x = 0.72; x <= 0.999; x += 0.003) { const px = X(x), py = YdT(this.mlt(x).dT); x === 0.72 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = C.red; c.lineWidth = 1.5; c.setLineDash([4, 3]); c.stroke(); c.setLineDash([]);
+    this.text('δT (K, 10⁻⁶…10³, dashed)', x1 - 6, y0 + 10, C.red, 9, 'right');
+    this.line(X(this.x), y0, X(this.x), y1, hexA('#fff', 0.4), 1, [2, 3]);
+    this.circle(X(this.x), Yv(q.v), 4, '#fff', C.sun);
+    for (const x of [0.75, 0.85, 0.95]) this.text(fmt(x, 2), X(x), y1 + 10, C.dim, 8, 'center');
+    this.text('r / R☉', x1, y1 + 22, C.dim, 9, 'right');
+    this.setReadout([
+      ['H_P, ℓ = αH_P (Mm)', `${fmt(q.HP / 1e6, 1)}, ${fmt(q.ell / 1e6, 1)}`],
+      ['Convective velocity', `${q.v < 100 ? fmt(q.v, 1) : fmt(q.v, 0)} m/s`, C.sun],
+      ['Temperature excess δT', q.dT < 0.01 ? `${sci(q.dT, 1)} K` : `${fmt(q.dT, 2)} K`, C.red],
+      ['∇ − ∇_ad', sci(q.dnab, 1)],
+    ]);
+  }
+}
+
+/* ------------------------------------------------------ 10.5a polytrope ---- */
+
+function laneEmden(n: number): { xi: number[]; th: number[]; xi1: number; dth1: number } {
+  const xi: number[] = [0], th: number[] = [1];
+  let x = 1e-4, y = 1 - x * x / 6, z = -x / 3;
+  const hstep = 0.005;
+  const f = (xx: number, yy: number, zz: number) => -Math.pow(Math.max(yy, 0), n) - 2 * zz / xx;
+  let guard = 0;
+  while (y > 0 && guard++ < 20000) {
+    const k1y = z, k1z = f(x, y, z);
+    const k2y = z + hstep / 2 * k1z, k2z = f(x + hstep / 2, y + hstep / 2 * k1y, z + hstep / 2 * k1z);
+    const k3y = z + hstep / 2 * k2z, k3z = f(x + hstep / 2, y + hstep / 2 * k2y, z + hstep / 2 * k2z);
+    const k4y = z + hstep * k3z, k4z = f(x + hstep, y + hstep * k3y, z + hstep * k3z);
+    y += hstep / 6 * (k1y + 2 * k2y + 2 * k3y + k4y); z += hstep / 6 * (k1z + 2 * k2z + 2 * k3z + k4z); x += hstep;
+    xi.push(x); th.push(Math.max(0, y));
+    if (x > 40) break;
+  }
+  return { xi, th, xi1: x, dth1: z };
+}
+class PolytropeWidget extends CanvasWidget {
+  private n = 1.5;
+  private cache: ReturnType<typeof laneEmden> | null = null; private cacheN = NaN;
+  constructor() {
+    super(1.8);
+    this.slider('Polytropic index n', 0, 4.9, 0.1, this.n, (v) => fmt(v, 1), (v) => { this.n = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const n = this.n;
+    if (this.cacheN !== n || !this.cache) { this.cache = laneEmden(n); this.cacheN = n; }
+    const { xi, th, xi1, dth1 } = this.cache;
+    const cond = n >= 4.9 ? Infinity : -xi1 / (3 * dth1);
+    const x0 = 44, x1 = w * 0.6, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (r: number) => x0 + r * (x1 - x0);
+    const Y = (v: number) => y1 - 6 - v * (y1 - y0 - 12);
+    // density profile ρ/ρ_c = θ^n
+    c.beginPath(); xi.forEach((xx, i) => { const px = X(Math.min(1, xx / xi1)), py = Y(Math.pow(th[i], n)); i === 0 ? c.moveTo(px, py) : c.lineTo(px, py); }); c.strokeStyle = C.sun; c.lineWidth = 2.2; c.stroke();
+    // mass profile m/M = -ξ²θ' / (-ξ1²θ'(ξ1))
+    const mtot = -xi1 * xi1 * dth1;
+    c.beginPath(); for (let i = 1; i < xi.length; i++) { const dth = (th[i] - th[i - 1]) / (xi[i] - xi[i - 1]); const m = -xi[i] * xi[i] * dth / mtot; const px = X(Math.min(1, xi[i] / xi1)), py = Y(Math.min(1, m)); i === 1 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = C.green; c.lineWidth = 1.5; c.stroke();
+    // Sun overlay
+    c.beginPath(); for (let x = 0; x <= 1; x += 0.01) { const px = X(x), py = Y(ssmAt(x).rho / 1.5e5); x === 0 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = hexA(C.text, 0.5); c.lineWidth = 1; c.setLineDash([3, 3]); c.stroke(); c.setLineDash([]);
+    // legend in the empty left-middle region (density still high above it, mass still low below it)
+    this.text('ρ / ρ_c = θⁿ', X(0.06), Y(0.46), C.sun, 9); this.text('m(r) / M', X(0.06), Y(0.40), C.green, 9); this.text('Sun (dashed)', X(0.06), Y(0.34), C.dim, 9);
+    this.text('0', X(0), y1 + 10, C.dim, 8, 'center'); this.text('r / R', (x0 + x1) / 2, y1 + 10, C.dim, 9, 'center'); this.text('1', X(1), y1 + 10, C.dim, 8, 'center');
+    // right: cross-section
+    const cx = w * 0.8, cy = h * 0.47, R = Math.min(w * 0.17, h * 0.38);
+    for (let k = 40; k >= 1; k--) { const r = k / 40; let i = 0; while (i < xi.length - 1 && xi[i] / xi1 < r) i++; const d = Math.pow(th[i], n); c.fillStyle = rgba(tempRGB(2300 + 4400 * d ** 0.4), 0.3 + 0.7 * d ** 0.5); c.beginPath(); c.arc(cx, cy, R * r, 0, TAU); c.fill(); }
+    this.circle(cx, cy, R, C.line);
+    this.text(`n = ${fmt(n, 1)}`, cx, cy + R + 14, C.text, 10, 'center');
+    const note = n < 0.3 ? 'uniform sphere' : Math.abs(n - 1) < 0.15 ? 'Jupiter / Saturn: R independent of M' : Math.abs(n - 1.5) < 0.15 ? 'fully convective star, white dwarf (NR)' : Math.abs(n - 3) < 0.2 ? 'Eddington standard model, Chandrasekhar WD' : n > 4.5 ? 'radius → ∞' : '';
+    if (note) this.text(note, cx, cy + R + 26, C.accent, 8, 'center');
+    this.setReadout([
+      ['ξ₁ (surface)', Number.isFinite(cond) ? fmt(xi1, 3) : '∞'],
+      ['ρ_c / ρ̄', Number.isFinite(cond) ? fmt(cond, cond < 100 ? 2 : 0) : '∞', C.sun],
+      ['−ξ₁²θ′(ξ₁)', fmt(mtot, 3), C.green],
+      ['Half-mass radius', (() => { for (let i = 1; i < xi.length; i++) { const dth = (th[i] - th[i - 1]) / (xi[i] - xi[i - 1]); if (-xi[i] * xi[i] * dth / mtot >= 0.5) return `${fmt(xi[i] / xi1, 2)} R`; } return '—'; })()],
+    ]);
+  }
+}
+
+/* --------------------------------------------------- 10.5b solar model ---- */
+
+class SolarModelWidget extends CanvasWidget {
+  private x = 0.25;
+  private view: 'trp' | 'mlx' = 'trp';
+  private drag = false;
+  constructor() {
+    super(1.8);
+    this.segmented<'trp' | 'mlx'>([['trp', 'T, ρ, P'], ['mlx', 'M_r, L_r, X']], this.view, (v) => { this.view = v; });
+    this.slider('Cursor r / R☉', 0, 1, 0.005, this.x, (v) => fmt(v, 3), (v) => { this.x = v; });
+    const move = (e: PointerEvent) => { const { x } = canvasPos(this.canvas, e, this.w, this.h); const x0 = 50, x1 = this.w - 12; this.x = Math.min(1, Math.max(0, (x - x0) / (x1 - x0))); };
+    this.canvas.addEventListener('pointerdown', (e) => { this.drag = true; move(e); });
+    this.canvas.addEventListener('pointermove', (e) => { if (this.drag) move(e); });
+    window.addEventListener('pointerup', () => { this.drag = false; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const x0 = 50, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (x: number) => x0 + x * (x1 - x0);
+    c.fillStyle = hexA(C.accent, 0.08); c.fillRect(X(SSM_RCZ), y0, x1 - X(SSM_RCZ), y1 - y0);
+    this.text('convection zone', X(SSM_RCZ) + 4, y1 - 10, C.accent, 8);
+    for (const x of [0, 0.25, 0.5, 0.75, 1]) this.text(fmt(x, 2), X(x), y1 + 10, C.dim, 8, 'center');
+    this.text('r / R☉', x1, y1 + 22, C.dim, 9, 'right');
+    const m = ssmAt(this.x);
+    if (this.view === 'trp') {
+      const Y = (v: number) => y1 - 6 - v * (y1 - y0 - 12);
+      // each quantity relative to its central value: P falls fastest, T slowest
+      const c0 = ssmAt(0);
+      const lines: Array<[string, (q: ReturnType<typeof ssmAt>) => number, string]> = [['T / T_c', (q) => q.T / c0.T, C.sun], ['ρ / ρ_c', (q) => q.rho / c0.rho, C.green], ['P / P_c', (q) => q.P / c0.P, C.blue]];
+      lines.forEach(([lab, f, col], i) => { c.beginPath(); for (let x = 0; x <= 1; x += 0.005) { const px = X(x), py = Y(Math.min(1, Math.max(0, f(ssmAt(x))))); x === 0 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = col; c.lineWidth = 2; c.stroke(); this.text(lab, x1 - 8, y0 + 12 + i * 12, col, 9, 'right'); this.circle(X(this.x), Y(Math.min(1, Math.max(0, f(m)))), 4, '#fff', col); });
+      for (const v of [0.25, 0.5, 0.75, 1]) { this.line(x0, Y(v), x1, Y(v), hexA(C.grid, 0.9)); this.text(fmt(v, 2), x0 - 4, Y(v), C.dim, 8, 'right'); }
+      this.text(`T_c = ${sci(c0.T, 2)} K · ρ_c = ${sci(c0.rho, 2)} kg/m³ · P_c = ${sci(c0.P, 2)} Pa`, x0 + 8, y0 + 12, C.dim, 8);
+    } else {
+      const Y = (v: number) => y1 - 6 - v * (y1 - y0 - 12);
+      const lines: Array<[string, (q: ReturnType<typeof ssmAt>) => number, string]> = [['M_r / M☉', (q) => q.M, C.sun], ['L_r / L☉', (q) => q.L, C.green], ['X (hydrogen)', (q) => q.X, C.blue]];
+      lines.forEach(([lab, f, col], i) => { c.beginPath(); for (let x = 0; x <= 1; x += 0.005) { const px = X(x), py = Y(f(ssmAt(x))); x === 0 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = col; c.lineWidth = 2; c.stroke(); this.text(lab, x0 + 8, y0 + 12 + i * 12, col, 9); this.circle(X(this.x), Y(f(m)), 4, '#fff', col); });
+      for (const v of [0.25, 0.5, 0.75, 1]) { this.line(x0, Y(v), x1, Y(v), hexA(C.grid, 0.9)); this.text(fmt(v, 2), x0 - 4, Y(v), C.dim, 8, 'right'); }
+    }
+    this.line(X(this.x), y0, X(this.x), y1, hexA('#fff', 0.4), 1, [2, 3]);
+    this.setReadout([
+      ['T, ρ (K, kg/m³)', `${sci(m.T, 2)}, ${sci(m.rho, 2)}`, C.sun],
+      ['P', `${sci(m.P, 2)} Pa`, C.blue],
+      ['M_r, L_r', `${fmt(m.M, 3)} M☉, ${fmt(m.L, 3)} L☉`, C.green],
+      ['X, μ', `${fmt(m.X, 2)}, ${fmt(m.mu, 2)}`],
+    ]);
+  }
+}
+
+/* ------------------------------------------------ 10.6a ends of the sequence ---- */
+
+class MsRangeWidget extends CanvasWidget {
+  private lM = Math.log10(0.05);
+  constructor() {
+    super(1.8);
+    this.slider('Mass', -3.2, 2.5, 0.02, this.lM, (v) => (10 ** v < 0.1 ? `${fmt(10 ** v * 1047, 1)} M_Jup` : `${fmt(10 ** v, 2)} M☉`), (v) => { this.lM = v; });
+  }
+  private Tpeak(M: number): number { return 3e6 * (M / 0.08) ** 1.1; }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const M = 10 ** this.lM;
+    // left: peak central T vs mass (0.0005–0.3)
+    const x0 = 46, x1 = w * 0.5, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const lm0 = -3.2, lm1 = -0.5;
+    const X = (lm: number) => x0 + (lm - lm0) / (lm1 - lm0) * (x1 - x0);
+    const Y = (T: number) => y1 - 6 - (Math.log10(T) - 4) / 3.2 * (y1 - y0 - 12);
+    for (let lt = 4; lt <= 7; lt++) { this.line(x0, Y(10 ** lt), x1, Y(10 ** lt), hexA(C.grid, 0.9)); this.text(`10${sup(lt)}`, x0 - 4, Y(10 ** lt), C.dim, 8, 'right'); }
+    this.text('peak central T (K) of a contracting body', x0 + 6, y0 + 10, C.dim, 8);
+    for (const [lm, lab] of [[-3, '1 M_Jup'], [-2, '10'], [Math.log10(0.08), '80 M_Jup'], [-0.5, '0.3 M☉']] as Array<[number, string]>) this.text(lab, X(lm), y1 + 10, C.dim, 8, 'center');
+    c.beginPath(); for (let lm = lm0; lm <= lm1; lm += 0.02) { const px = X(lm), py = Y(this.Tpeak(10 ** lm)); lm === lm0 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = C.sun; c.lineWidth = 2.2; c.stroke();
+    for (const [T, lab, col, dy] of [[3e6, 'H ignition', C.sun, -7], [2.5e6, 'Li burning', C.green, 9], [5e5, 'D burning', C.purple, -7]] as Array<[number, string, string, number]>) { this.line(x0, Y(T), x1, Y(T), hexA(col, 0.6), 1, [4, 3]); this.text(lab, x1 - 4, Y(T) + dy, col, 8, 'right'); }
+    this.line(X(Math.log10(0.08)), y0, X(Math.log10(0.08)), y1, hexA(C.sun, 0.4), 1, [2, 3]);
+    this.line(X(Math.log10(0.013)), y0, X(Math.log10(0.013)), y1, hexA(C.purple, 0.4), 1, [2, 3]);
+    this.text('planets', X(-2.6), y0 + 24, C.dim, 8, 'center'); this.text('brown dwarfs', X(-1.55), y0 + 24, C.purple, 8, 'center'); this.text('stars', X(-0.75), y0 + 24, C.sun, 8, 'center');
+    if (this.lM <= lm1) this.circle(X(this.lM), Y(this.Tpeak(M)), 5, '#fff', C.star);
+    // right: L/L_Edd on the MS (0.08–300)
+    const rx0 = w * 0.58, rx1 = w - 12;
+    axesBox(c, rx0, y0, rx1, y1);
+    const RX = (lm: number) => rx0 + (lm + 1.1) / 3.6 * (rx1 - rx0);
+    const RY = (g: number) => y1 - 6 - (Math.log10(g) + 7) / 7.3 * (y1 - y0 - 12);
+    for (let lg = -6; lg <= 0; lg += 2) { this.line(rx0, RY(10 ** lg), rx1, RY(10 ** lg), hexA(C.grid, 0.9)); this.text(`10${sup(lg)}`, rx0 - 4, RY(10 ** lg), C.dim, 8, 'right'); }
+    this.text('L / L_Edd along the main sequence', rx1 - 4, y1 - 10, C.dim, 8, 'right');
+    for (const [lm, lab] of [[-1, '0.1'], [0, '1'], [1, '10'], [2, '100 M☉']] as Array<[number, string]>) this.text(lab, RX(lm), y1 + 10, C.dim, 8, 'center');
+    const gam = (Mm: number) => mainSequence(Mm).L / (3.2e4 * Mm);
+    c.beginPath(); for (let lm = Math.log10(0.08); lm <= 2.5; lm += 0.02) { const px = RX(lm), py = RY(gam(10 ** lm)); lm <= Math.log10(0.08) + 1e-9 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = C.red; c.lineWidth = 2.2; c.stroke();
+    this.line(rx0, RY(1), rx1, RY(1), C.red, 1, [4, 3]); this.text('Eddington limit', rx1 - 4, RY(1) + 9, C.red, 8, 'right');
+    this.line(rx0, RY(0.5), rx1, RY(0.5), hexA(C.accent, 0.6), 1, [2, 3]); this.text('strong winds, eruptions', rx1 - 4, RY(0.5) + 9, C.accent, 8, 'right');
+    const objs: Array<[string, number]> = [['Proxima', 0.12], ['Sun', 1], ['Spica', 11], ['η Car', 100], ['R136a1', 200]];
+    for (const [lab, Mm] of objs) { const px = RX(Math.log10(Mm)), py = RY(gam(Mm)); this.circle(px, py, 3, '#000', C.star); if (Mm > 50) this.text(lab, px - 5, py + 10, C.dim, 8, 'right'); else this.text(lab, px + 4, py - 7, C.dim, 8); }
+    if (M >= 0.08) this.circle(RX(this.lM), RY(gam(M)), 5, '#fff', C.star);
+    const kind = M < 0.013 ? 'planet: no fusion ever' : M < 0.065 ? 'brown dwarf: burns D only' : M < 0.08 ? 'brown dwarf: burns D and Li, not H' : M < 100 ? 'star' : 'above the Eddington limit: unstable';
+    this.setReadout([
+      ['Mass', M < 0.1 ? `${fmt(M * 1047, 1)} M_Jup` : `${fmt(M, 2)} M☉`],
+      ['Peak central T', M < 0.3 ? `${sci(this.Tpeak(M), 1)} K` : `> ${sci(this.Tpeak(0.3), 1)} K`, C.sun],
+      ['L / L_Edd', M >= 0.08 ? sci(gam(M), 1) : '—', C.red],
+      ['Nature', kind, M < 0.08 ? C.purple : M < 100 ? C.sun : C.red],
+    ]);
+  }
+}
+
+/* --------------------------------------------- 10.6b main-sequence structure ---- */
+
+const MS_INT: Array<[number, number, number, number, number]> = [   // log M, log T_c, log ρ_c, conv-envelope mass fraction, conv-core mass fraction
+  [-1, 6.65, 5.7, 1, 0], [-0.52, 6.88, 5.18, 1, 0], [-0.3, 7.0, 5.1, 0.35, 0], [0, 7.196, 5.18, 0.02, 0], [0.11, 7.26, 5.0, 0.002, 0.03], [0.3, 7.32, 4.78, 0, 0.2], [0.7, 7.42, 4.3, 0, 0.25], [1, 7.49, 3.95, 0, 0.3], [1.48, 7.58, 3.4, 0, 0.5], [1.78, 7.61, 3.3, 0, 0.65],
+];
+function msInterior(M: number): { Tc: number; rhoc: number; fenv: number; fcore: number } {
+  const lm = Math.max(-1, Math.min(1.78, Math.log10(M)));
+  let i = 0; while (i < MS_INT.length - 2 && MS_INT[i + 1][0] <= lm) i++;
+  const a = MS_INT[i], b = MS_INT[i + 1]; const f = (lm - a[0]) / (b[0] - a[0]);
+  const L = (k: number) => a[k] + f * (b[k] - a[k]);
+  return { Tc: 10 ** L(1), rhoc: 10 ** L(2), fenv: L(3), fcore: L(4) };
+}
+class MsStructureWidget extends CanvasWidget {
+  private lM = Math.log10(2);
+  private t = 0;
+  constructor() {
+    super(1.8);
+    this.slider('Mass', -1, 1.78, 0.02, this.lM, (v) => `${fmt(10 ** v, 2)} M☉`, (v) => { this.lM = v; });
+    this.playButton();
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    this.t += dt;
+    const M = 10 ** this.lM;
+    const ms = mainSequence(M), q = msInterior(M);
+    const rEnv = q.fenv >= 1 ? 0 : 1 - Math.pow(q.fenv, 0.35) * 0.9;         // inner radius of convective envelope (fraction)
+    const rCore = q.fcore > 0 ? 0.12 + 0.45 * Math.pow(q.fcore, 0.6) : 0;    // outer radius of convective core
+    const rBurn = 0.25;
+    const cx = w * 0.3, cy = h * 0.47, R = Math.min(w * 0.26, h * 0.4);
+    // interior shading: hot white core → orange → surface colour at the rim
+    const g = c.createRadialGradient(cx, cy, 0, cx, cy, R);
+    g.addColorStop(0, '#fff6dc'); g.addColorStop(0.35, rgba(tempRGB(5200), 1)); g.addColorStop(0.85, rgba(tempRGB(3600), 1)); g.addColorStop(1, rgba(tempRGB(ms.T), 1));
+    c.fillStyle = g; c.beginPath(); c.arc(cx, cy, R, 0, TAU); c.fill();
+    // burning core shading
+    c.fillStyle = hexA('#fff', 0.15); c.beginPath(); c.arc(cx, cy, R * rBurn, 0, TAU); c.fill();
+    // convective cells
+    const cells = (r0: number, r1: number) => {
+      const nR = Math.max(1, Math.round((r1 - r0) * 6)), nA = 14;
+      for (let i = 0; i < nR; i++) for (let j = 0; j < nA; j++) {
+        const rr = R * (r0 + (i + 0.5) / nR * (r1 - r0)), a = (j / nA) * TAU + this.t * 0.3 * (i % 2 ? 1 : -1);
+        const sz = R * (r1 - r0) / nR * 0.45;
+        c.strokeStyle = hexA('#fff', 0.8); c.lineWidth = 1.3; c.beginPath(); c.arc(cx + rr * Math.cos(a), cy + rr * Math.sin(a), sz, a + this.t * 2, a + this.t * 2 + 4.5); c.stroke();
+      }
+    };
+    if (q.fenv > 0) cells(rEnv, 1);
+    if (q.fcore > 0) cells(0, rCore);
+    this.circle(cx, cy, R, C.line);
+    if (q.fenv > 0 && q.fenv < 1) this.circle(cx, cy, R * rEnv, hexA('#fff', 0.5), undefined, 1, [3, 3]);
+    if (q.fcore > 0) this.circle(cx, cy, R * rCore, hexA('#fff', 0.5), undefined, 1, [3, 3]);
+    this.text(`${spectralClass(ms.T)} V · ${fmt(M, 2)} M☉`, cx, cy + R + 14, C.text, 10, 'center');
+    // right: legend + bars
+    const x0 = w * 0.62, x1 = w - 12;
+    const bar = (y: number, lab: string, v: number, col: string) => { this.text(lab, x0, y, C.text, 10); c.fillStyle = hexA(C.grid, 1); c.fillRect(x0, y + 8, x1 - x0, 12); c.fillStyle = col; c.fillRect(x0, y + 8, (x1 - x0) * Math.min(1, v), 12); this.text(`${fmt(100 * v, v < 0.01 && v > 0 ? 1 : 0)} % of mass`, x1 - 4, y + 14, '#000', 9, 'right'); };
+    bar(h * 0.12, 'convective envelope', q.fenv, C.accent);
+    bar(h * 0.32, 'convective core', q.fcore, C.blue);
+    const cno = M < 1 ? 0.01 * M ** 4 : Math.min(1, 0.01 * M ** 6);
+    bar(h * 0.52, 'CNO share of burning', Math.min(1, cno), C.red);
+    this.text(M < 1.3 ? 'lower main sequence: pp chain,' : 'upper main sequence: CNO cycle,', x0, h * 0.74, C.dim, 8);
+    this.text(M < 1.3 ? 'radiative core, convective envelope' : 'convective core, radiative envelope', x0, h * 0.74 + 11, C.dim, 8);
+    this.text(M < 0.35 ? '(fully convective below 0.35 M☉)' : M > 50 ? '(radiation pressure important)' : '', x0, h * 0.74 + 23, C.dim, 8);
+    this.setReadout([
+      ['T_c, ρ_c', `${sci(q.Tc, 2)} K, ${sci(q.rhoc, 1)}`, C.sun],
+      ['L☉, R☉, T_eff', `${fmtSci(ms.L)}, ${fmt(ms.R, 2)}, ${fmt(ms.T, 0)} K`],
+      ['Dominant chain', cno > 0.5 ? 'CNO cycle' : 'pp chain', cno > 0.5 ? C.red : C.sun],
+      ['Mixed zones', `${q.fenv >= 1 ? 'whole star' : `env ${fmt(100 * q.fenv, 0)} %`}, core ${fmt(100 * q.fcore, 0)} %`],
+    ]);
+  }
+}
+
+/* ------------------------------------------------------- 10.6c lifetimes ---- */
+
+class MsLifetimeWidget extends CanvasWidget {
+  private lM = 0;
+  private lAge = Math.log10(4.6e9);
+  constructor() {
+    super(1.8);
+    this.slider('Mass', -1, 2, 0.02, this.lM, (v) => `${fmt(10 ** v, 2)} M☉`, (v) => { this.lM = v; });
+    this.slider('Cluster age', 6, 10.15, 0.05, this.lAge, (v) => fmtYr(10 ** v), (v) => { this.lAge = v; });
+  }
+  // fraction of the hydrogen a star gets to burn on the main sequence: ~all of it when fully convective
+  // (below ~0.4 M☉), ~10 % for Sun-like stars, more for massive stars with growing convective cores
+  private tMS(M: number): number { const fuel = 0.1 + 0.8 / (1 + Math.exp((M - 0.4) / 0.04)) + Math.max(0, Math.min(0.3, 0.15 * Math.log10(M / 1.2))); const ms = mainSequence(M); return 1e10 * (fuel / 0.1) * M / ms.L; }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const x0 = 50, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (lm: number) => x0 + (lm + 1) / 3 * (x1 - x0);
+    const lt0 = 5.5, lt1 = 13.5;
+    const Y = (t: number) => y1 - 6 - (Math.min(lt1, Math.max(lt0, Math.log10(t))) - lt0) / (lt1 - lt0) * (y1 - y0 - 12);
+    for (let lt = 6; lt <= 13; lt++) { this.line(x0, Y(10 ** lt), x1, Y(10 ** lt), hexA(C.grid, 0.9)); this.text(`10${sup(lt)}`, x0 - 4, Y(10 ** lt), C.dim, 8, 'right'); }
+    for (const [lm, lab] of [[-1, '0.1'], [0, '1'], [1, '10'], [2, '100 M☉']] as Array<[number, string]>) this.text(lab, X(lm), y1 + 10, C.dim, 8, 'center');
+    this.text('main-sequence lifetime (yr)', x0 + 6, y0 + 10, C.dim, 9);
+    const marks: Array<[number, string, string]> = [[1.38e10, 'age of the universe', C.purple], [4.6e9, 'age of the Sun', C.sun], [6.6e7, 'since the dinosaurs', C.dim], [3e5, 'Homo sapiens', C.dim]];
+    for (const [t, lab, col] of marks) { this.line(x0, Y(t), x1, Y(t), hexA(col, 0.6), 1, [4, 3]); this.text(lab, x1 - 6, Y(t) - 7, col, 8, 'right'); }
+    c.beginPath(); for (let lm = -1; lm <= 2; lm += 0.02) { const px = X(lm), py = Y(this.tMS(10 ** lm)); lm === -1 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = C.star; c.lineWidth = 2.2; c.stroke();
+    // cluster age → turn-off mass
+    const age = 10 ** this.lAge;
+    let mto = 100; for (let lm = -1; lm <= 2; lm += 0.005) { if (this.tMS(10 ** lm) < age) { mto = 10 ** lm; break; } }
+    c.fillStyle = hexA(C.red, 0.1); c.fillRect(X(Math.log10(mto)), y0, x1 - X(Math.log10(mto)), y1 - y0);
+    this.line(X(Math.log10(mto)), y0, X(Math.log10(mto)), y1, C.red, 1.5, [3, 3]);
+    this.text(`turn-off ${fmt(mto, 2)} M☉: stars above have left the sequence`, X(Math.log10(mto)) + 4, y0 + 24, C.red, 8);
+    this.line(x0, Y(age), x1, Y(age), hexA(C.red, 0.5), 1);
+    const M = 10 ** this.lM; const t = this.tMS(M); const ms = mainSequence(M);
+    this.circle(X(this.lM), Y(t), 5, '#fff', C.star);
+    this.setReadout([
+      ['Mass, type', `${fmt(M, 2)} M☉, ${spectralClass(ms.T)} V`],
+      ['Luminosity', `${fmtSci(ms.L)} L☉`],
+      ['Main-sequence lifetime', fmtYr(t), C.star],
+      ['Generations since Big Bang', t > 1.38e10 ? 'none finished yet' : fmt(1.38e10 / t, 1), t > 1.38e10 ? C.green : C.red],
+    ]);
+  }
+}
+
 export function createWidget(spec: WidgetSpec): Widget {
   switch (spec.type) {
     case 'ancientsky': return new AncientSkyWidget();
@@ -8184,5 +9291,24 @@ export function createWidget(spec: WidgetSpec): Widget {
     case 'rotation': return new RotationWidget();
     case 'curveofgrowth': return new CurveOfGrowthWidget();
     case 'abundances': return new AbundancesWidget();
+    case 'hydrostatic': return new HydrostaticWidget();
+    case 'centralpressure': return new CentralPressureWidget();
+    case 'massshells': return new MassShellsWidget();
+    case 'meanmolecular': return new MeanMolecularWidget();
+    case 'pressuremix': return new PressureMixWidget();
+    case 'giantradius': return new GiantRadiusWidget();
+    case 'khtimescale': return new KhTimescaleWidget();
+    case 'bindingenergy': return new BindingEnergyWidget();
+    case 'gamow': return new GamowWidget();
+    case 'ppchain': return new PpChainWidget();
+    case 'ppcno': return new PpCnoWidget();
+    case 'radgradient': return new RadGradientWidget();
+    case 'convection': return new ConvectionWidget();
+    case 'mixinglength': return new MixingLengthWidget();
+    case 'polytrope': return new PolytropeWidget();
+    case 'solarmodel': return new SolarModelWidget();
+    case 'msrange': return new MsRangeWidget();
+    case 'msstructure': return new MsStructureWidget();
+    case 'mslifetime': return new MsLifetimeWidget();
   }
 }

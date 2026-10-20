@@ -1,0 +1,468 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "central-pressure": {
+   "script": "Look at Jupiter behind the panel. I replace the derivatives by differences over the whole body. The gradient is minus P-c over R, surface pressure nothing. Use mass M, the mean density, and radius R. Central pressure is then G times M times the mean density, over R. Mean density is three M over four pi R cubed, so P-c is about three G M squared over four pi R to the fourth.\n\nP-c is central pressure, G Newton's constant, M and R are mass and radius. Three over four pi is sphere geometry. It is the weight overhead. I multiply by a factor of order ten to a hundred, because real bodies are centrally condensed.\n\nFor the Sun that gives three times ten to the fourteen pascals, about three billion atmospheres. Models give about two times ten to the sixteen pascals, a hundred times higher. The central density is a hundred and fifty thousand kilograms per cubic metre, a hundred times the mean. Pressure goes as M squared over R to the fourth.\n\nTry the widget. Click the Sun, then Jupiter, then a white dwarf. Watch the condensation factor. The estimate stays within a factor of ten to a hundred, white dwarf then star then planet.\n\nJupiter has a thousandth of the Sun's mass and a tenth of the Sun's radius, so M squared over R to the fourth gives a few million atmospheres, near ten to the twelve pascals, models near four times ten to the twelve. Hydrogen goes metallic inside about eight tenths of the radius, electrons shared, an ocean driving a field twenty thousand times Earth's. Saturn's metallic region is smaller and its field weaker.\n\nWith gravity nearly constant, Earth's pressure is mean density times g, the gravity, times R over two, about two times ten to the eleven pascals. Seismology gives nearly four times ten to the eleven, the iron core twice as dense as the rock. Diamond anvils reach that in the lab.",
+   "hash": "26dba9de0fa9",
+   "duration": 120.31,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.44,
+     "text": "Look at Jupiter behind the panel."
+    },
+    {
+     "start": 2.44,
+     "end": 6.26,
+     "text": "I replace the derivatives by differences over the whole body."
+    },
+    {
+     "start": 6.26,
+     "end": 11.1,
+     "text": "The gradient is minus P-c over R, surface pressure nothing."
+    },
+    {
+     "start": 11.1,
+     "end": 15.22,
+     "text": "Use mass M, the mean density, and radius R."
+    },
+    {
+     "start": 15.22,
+     "end": 20,
+     "text": "Central pressure is then G times M times the mean density, over R."
+    },
+    {
+     "start": 20,
+     "end": 28.4,
+     "text": "Mean density is three M over four pi R cubed, so P-c is about three G M squared over four pi R to the fourth."
+    },
+    {
+     "start": 28.4,
+     "end": 34.12,
+     "text": "P-c is central pressure, G Newton's constant, M and R are mass and radius."
+    },
+    {
+     "start": 34.12,
+     "end": 36.92,
+     "text": "Three over four pi is sphere geometry."
+    },
+    {
+     "start": 36.92,
+     "end": 38.62,
+     "text": "It is the weight overhead."
+    },
+    {
+     "start": 38.62,
+     "end": 44.26,
+     "text": "I multiply by a factor of order ten to a hundred, because real bodies are centrally condensed."
+    },
+    {
+     "start": 44.26,
+     "end": 50.64,
+     "text": "For the Sun that gives three times ten to the fourteen pascals, about three billion atmospheres."
+    },
+    {
+     "start": 50.64,
+     "end": 56.06,
+     "text": "Models give about two times ten to the sixteen pascals, a hundred times higher."
+    },
+    {
+     "start": 56.06,
+     "end": 62.07,
+     "text": "The central density is a hundred and fifty thousand kilograms per cubic metre, a hundred times the mean."
+    },
+    {
+     "start": 62.07,
+     "end": 65.19,
+     "text": "Pressure goes as M squared over R to the fourth."
+    },
+    {
+     "start": 65.19,
+     "end": 66.31,
+     "text": "Try the widget."
+    },
+    {
+     "start": 66.31,
+     "end": 69.57,
+     "text": "Click the Sun, then Jupiter, then a white dwarf."
+    },
+    {
+     "start": 69.57,
+     "end": 71.49,
+     "text": "Watch the condensation factor."
+    },
+    {
+     "start": 71.49,
+     "end": 76.87,
+     "text": "The estimate stays within a factor of ten to a hundred, white dwarf then star then planet."
+    },
+    {
+     "start": 76.87,
+     "end": 90.65,
+     "text": "Jupiter has a thousandth of the Sun's mass and a tenth of the Sun's radius, so M squared over R to the fourth gives a few million atmospheres, near ten to the twelve pascals, models near four times ten to the twelve."
+    },
+    {
+     "start": 90.65,
+     "end": 99.01,
+     "text": "Hydrogen goes metallic inside about eight tenths of the radius, electrons shared, an ocean driving a field twenty thousand times Earth's."
+    },
+    {
+     "start": 99.01,
+     "end": 102.37,
+     "text": "Saturn's metallic region is smaller and its field weaker."
+    },
+    {
+     "start": 102.37,
+     "end": 112.37,
+     "text": "With gravity nearly constant, Earth's pressure is mean density times g, the gravity, times R over two, about two times ten to the eleven pascals."
+    },
+    {
+     "start": 112.37,
+     "end": 118.23,
+     "text": "Seismology gives nearly four times ten to the eleven, the iron core twice as dense as the rock."
+    },
+    {
+     "start": 118.23,
+     "end": 120.31,
+     "text": "Diamond anvils reach that in the lab."
+    }
+   ],
+   "voicedHash": "d332a89d46d3"
+  },
+  "he-summary": {
+   "script": "Behind the panel, the planetary system slowly circling the Sun. dP by dr equals minus G M sub r rho over r squared. P is pressure, r distance from the centre, G Newton's constant, M sub r enclosed mass, rho density. Minus means outward fall, zero at the centre, enough to hold each layer. Without pressure, the free-fall time is the square root of R cubed over G M, about thirty minutes for the Sun, R radius, M mass. Crude central pressure, three G M squared over four pi R to the fourth: three times ten to the fourteen pascals for the Sun. Central condensation raises it to about two point three times ten to the sixteen pascals. Jupiter is near ten to the twelve pascals, enough to make hydrogen metallic, a white dwarf ten to the twenty-three pascals. Mass conservation, dM sub r by dr equals four pi r squared rho, closes the mass bookkeeping. Seismology inverts it for the Earth, helioseismology for the Sun. Two equations, three unknowns, P, rho and M sub r. We need an equation of state, an energy equation and a transport equation. Everything inside a star follows from a balance of forces, a balance of energy, and the properties of hot gas. This section supplied the forces; the next three supply the rest.",
+   "hash": "7aa23bed8fff",
+   "duration": 86.71,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 4.48,
+     "text": "Behind the panel, the planetary system slowly circling the Sun."
+    },
+    {
+     "start": 4.48,
+     "end": 10.06,
+     "text": "dP by dr equals minus G M sub r rho over r squared."
+    },
+    {
+     "start": 10.06,
+     "end": 18.48,
+     "text": "P is pressure, r distance from the centre, G Newton's constant, M sub r enclosed mass, rho density."
+    },
+    {
+     "start": 18.48,
+     "end": 23.54,
+     "text": "Minus means outward fall, zero at the centre, enough to hold each layer."
+    },
+    {
+     "start": 23.54,
+     "end": 32.7,
+     "text": "Without pressure, the free-fall time is the square root of R cubed over G M, about thirty minutes for the Sun, R radius, M mass."
+    },
+    {
+     "start": 32.7,
+     "end": 41.74,
+     "text": "Crude central pressure, three G M squared over four pi R to the fourth: three times ten to the fourteen pascals for the Sun."
+    },
+    {
+     "start": 41.74,
+     "end": 47.29,
+     "text": "Central condensation raises it to about two point three times ten to the sixteen pascals."
+    },
+    {
+     "start": 47.29,
+     "end": 55.05,
+     "text": "Jupiter is near ten to the twelve pascals, enough to make hydrogen metallic, a white dwarf ten to the twenty-three pascals."
+    },
+    {
+     "start": 55.05,
+     "end": 62.87,
+     "text": "Mass conservation, dM sub r by dr equals four pi r squared rho, closes the mass bookkeeping."
+    },
+    {
+     "start": 62.87,
+     "end": 67.37,
+     "text": "Seismology inverts it for the Earth, helioseismology for the Sun."
+    },
+    {
+     "start": 67.37,
+     "end": 71.93,
+     "text": "Two equations, three unknowns, P, rho and M sub r."
+    },
+    {
+     "start": 71.93,
+     "end": 76.31,
+     "text": "We need an equation of state, an energy equation and a transport equation."
+    },
+    {
+     "start": 76.31,
+     "end": 82.89,
+     "text": "Everything inside a star follows from a balance of forces, a balance of energy, and the properties of hot gas."
+    },
+    {
+     "start": 82.89,
+     "end": 86.71,
+     "text": "This section supplied the forces; the next three supply the rest."
+    }
+   ],
+   "voicedHash": "9ae44eb81b54"
+  },
+  "mass-conservation": {
+   "script": "The hydrostatic equation still contains M sub r, the mass inside radius r, so it cannot be solved until we know how that mass is piled up. That is the second equation of stellar structure, and it is nothing more than bookkeeping. Picture the star as a stack of thin shells. A shell of radius r and thickness d r has volume four pi r squared d r; multiply by the density rho and its mass is four pi r squared rho d r. Sum those shells from the centre outward and you build M sub r.\n\nIn differential form that reads d M sub r over d r equals four pi r squared rho. M sub r is the enclosed mass, rho is the local density, and four pi r squared is the area of the spherical shell, so density times area times thickness is mass. Integrate out to the surface and you recover the total mass M. At the centre, M sub r goes to zero as r cubed: a point holds no mass.\n\nTry the widget. Choose a density profile — uniform, gently falling, or centrally condensed like the Sun — and drag the radius. Beside it you will see the cumulative mass and the local gravity, g equals G M sub r over r squared, with G Newton’s constant. For a uniform sphere, M sub r grows as r cubed and g rises linearly to the surface. For a centrally condensed star, most of the mass sits inside a small radius, so M sub r saturates early and g peaks deep inside before falling. In the Sun, half the mass lies within a quarter of the radius, and the outer half of the radius holds only a few percent.\n\nTwo equations, three unknowns — pressure, density, and M sub r — so the chapter is the hunt for what closes the system.\n\nLook at the Earth behind the panel. This bookkeeping has been done most precisely there, not by looking but by listening. Earthquake waves speed up or slow down with the density and rigidity of the rock they cross, and a century of seismograms has been inverted into a profile from crust to core: about three thousand kilograms per cubic metre at the surface, about fifty-five hundred at the base of the mantle, a jump to about ten thousand at the top of the liquid iron core, and about thirteen thousand at the centre. Integrating four pi r squared rho over that profile reproduces the Earth’s mass as measured by satellite orbits, which is the check that the profile is right. The Sun has been treated the same way since the nineteen eighties, with its own acoustic oscillations — helioseismology, which section ten point five returns to.\n\nA third way uses M sub r as the independent variable: d r over d M sub r equals one over four pi r squared rho, and d P over d M sub r equals minus G M sub r over four pi r to the fourth. Evolution codes prefer this Lagrangian form, because a parcel of gas keeps its M sub r as the star expands or contracts, while its radius changes.",
+   "hash": "502b1079d504",
+   "duration": 175.99,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 10.3,
+     "text": "The hydrostatic equation still contains M sub r, the mass inside radius r, so it cannot be solved until we know how that mass is piled up."
+    },
+    {
+     "start": 10.3,
+     "end": 15.5,
+     "text": "That is the second equation of stellar structure, and it is nothing more than bookkeeping."
+    },
+    {
+     "start": 15.5,
+     "end": 18.4,
+     "text": "Picture the star as a stack of thin shells."
+    },
+    {
+     "start": 18.4,
+     "end": 29.34,
+     "text": "A shell of radius r and thickness d r has volume four pi r squared d r; multiply by the density rho and its mass is four pi r squared rho d r."
+    },
+    {
+     "start": 29.34,
+     "end": 33.3,
+     "text": "Sum those shells from the centre outward and you build M sub r."
+    },
+    {
+     "start": 33.3,
+     "end": 39.4,
+     "text": "In differential form that reads d M sub r over d r equals four pi r squared rho."
+    },
+    {
+     "start": 39.4,
+     "end": 50.38,
+     "text": "M sub r is the enclosed mass, rho is the local density, and four pi r squared is the area of the spherical shell, so density times area times thickness is mass."
+    },
+    {
+     "start": 50.38,
+     "end": 53.94,
+     "text": "Integrate out to the surface and you recover the total mass M."
+    },
+    {
+     "start": 53.94,
+     "end": 59.44,
+     "text": "At the centre, M sub r goes to zero as r cubed: a point holds no mass."
+    },
+    {
+     "start": 59.44,
+     "end": 60.58,
+     "text": "Try the widget."
+    },
+    {
+     "start": 60.58,
+     "end": 67.68,
+     "text": "Choose a density profile — uniform, gently falling, or centrally condensed like the Sun — and drag the radius."
+    },
+    {
+     "start": 67.68,
+     "end": 76.3,
+     "text": "Beside it you will see the cumulative mass and the local gravity, g equals G M sub r over r squared, with G Newton’s constant."
+    },
+    {
+     "start": 76.3,
+     "end": 82.38,
+     "text": "For a uniform sphere, M sub r grows as r cubed and g rises linearly to the surface."
+    },
+    {
+     "start": 82.38,
+     "end": 91.71,
+     "text": "For a centrally condensed star, most of the mass sits inside a small radius, so M sub r saturates early and g peaks deep inside before falling."
+    },
+    {
+     "start": 91.71,
+     "end": 98.47,
+     "text": "In the Sun, half the mass lies within a quarter of the radius, and the outer half of the radius holds only a few percent."
+    },
+    {
+     "start": 98.47,
+     "end": 106.59,
+     "text": "Two equations, three unknowns — pressure, density, and M sub r — so the chapter is the hunt for what closes the system."
+    },
+    {
+     "start": 106.59,
+     "end": 108.53,
+     "text": "Look at the Earth behind the panel."
+    },
+    {
+     "start": 108.53,
+     "end": 113.45,
+     "text": "This bookkeeping has been done most precisely there, not by looking but by listening."
+    },
+    {
+     "start": 113.45,
+     "end": 134.93,
+     "text": "Earthquake waves speed up or slow down with the density and rigidity of the rock they cross, and a century of seismograms has been inverted into a profile from crust to core: about three thousand kilograms per cubic metre at the surface, about fifty-five hundred at the base of the mantle, a jump to about ten thousand at the top of the liquid iron core, and about thirteen thousand at the centre."
+    },
+    {
+     "start": 134.93,
+     "end": 143.83,
+     "text": "Integrating four pi r squared rho over that profile reproduces the Earth’s mass as measured by satellite orbits, which is the check that the profile is right."
+    },
+    {
+     "start": 143.83,
+     "end": 153.29,
+     "text": "The Sun has been treated the same way since the nineteen eighties, with its own acoustic oscillations — helioseismology, which section ten point five returns to."
+    },
+    {
+     "start": 153.29,
+     "end": 167.27,
+     "text": "A third way uses M sub r as the independent variable: d r over d M sub r equals one over four pi r squared rho, and d P over d M sub r equals minus G M sub r over four pi r to the fourth."
+    },
+    {
+     "start": 167.27,
+     "end": 175.99,
+     "text": "Evolution codes prefer this Lagrangian form, because a parcel of gas keeps its M sub r as the star expands or contracts, while its radius changes."
+    }
+   ],
+   "voicedHash": "bc0a2b62a116"
+  },
+  "pressure-gravity-balance": {
+   "script": "Welcome. Look at the Sun behind the panel.\n\nLast chapter read the light a star emits. I'm asking what that light cannot show. We never see below the photosphere, and change takes millions of years, so the interior is built from gravity, gas laws, nuclear reactions, and energy transport, then checked against mass, radius, luminosity, composition, and sometimes vibrations and neutrinos. It starts almost embarrassingly simply.\n\nThe Sun has held its size through history and, geology says, for billions of years. Gravity pulls every gram inward. Deeper gas is squeezed harder, and across a thin shell that pressure difference is exactly the upward force gravity demands.\n\nPicture a small cylinder at radius r, area A, height d r. Its weight is g times rho times A times d r, and g equals G M sub r over r squared. Pressure below pushes up, P of r times A. Pressure above pushes down, P of r plus d r times A. Stay still, and pressure must fall outward at that rate.\n\nThe equation of hydrostatic equilibrium: d P over d r equals minus G times M sub r times rho over r squared, which equals minus rho g. P is pressure, r is distance from the centre, G the gravitational constant, M sub r the enclosed mass, rho the density, g the local gravity. The minus sign means pressure decreases outward. Same for Earth's mantle, the ocean, and the air you breathe: constant g, Earth's mass instead of M sub r.\n\nDrag the shell in the widget from centre to surface. Three forces are drawn to scale. At the centre no mass is inside, gravity vanishes, and the curve is flat, then steep, then flat where density falls. Pressure is nowhere constant. Without pressure the free-fall time is about half an hour, square root of R cubed over G M.\n\nBalance is forces, not energy. Which equation, still to come, decides whether a slightly compressed star springs back or keeps collapsing?",
+   "hash": "fff394da1075",
+   "duration": 128.31,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 1.16,
+     "text": "Welcome."
+    },
+    {
+     "start": 1.16,
+     "end": 3.3,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 3.3,
+     "end": 6.2,
+     "text": "Last chapter read the light a star emits."
+    },
+    {
+     "start": 6.2,
+     "end": 8.74,
+     "text": "I'm asking what that light cannot show."
+    },
+    {
+     "start": 8.74,
+     "end": 26.58,
+     "text": "We never see below the photosphere, and change takes millions of years, so the interior is built from gravity, gas laws, nuclear reactions, and energy transport, then checked against mass, radius, luminosity, composition, and sometimes vibrations and neutrinos."
+    },
+    {
+     "start": 26.58,
+     "end": 29.18,
+     "text": "It starts almost embarrassingly simply."
+    },
+    {
+     "start": 29.18,
+     "end": 34.42,
+     "text": "The Sun has held its size through history and, geology says, for billions of years."
+    },
+    {
+     "start": 34.42,
+     "end": 36.98,
+     "text": "Gravity pulls every gram inward."
+    },
+    {
+     "start": 36.98,
+     "end": 44.26,
+     "text": "Deeper gas is squeezed harder, and across a thin shell that pressure difference is exactly the upward force gravity demands."
+    },
+    {
+     "start": 44.26,
+     "end": 49.4,
+     "text": "Picture a small cylinder at radius r, area A, height d r."
+    },
+    {
+     "start": 49.4,
+     "end": 56.56,
+     "text": "Its weight is g times rho times A times d r, and g equals G M sub r over r squared."
+    },
+    {
+     "start": 56.56,
+     "end": 60.16,
+     "text": "Pressure below pushes up, P of r times A."
+    },
+    {
+     "start": 60.16,
+     "end": 64.61,
+     "text": "Pressure above pushes down, P of r plus d r times A."
+    },
+    {
+     "start": 64.61,
+     "end": 68.19,
+     "text": "Stay still, and pressure must fall outward at that rate."
+    },
+    {
+     "start": 68.19,
+     "end": 78.51,
+     "text": "The equation of hydrostatic equilibrium: d P over d r equals minus G times M sub r times rho over r squared, which equals minus rho g."
+    },
+    {
+     "start": 78.51,
+     "end": 88.95,
+     "text": "P is pressure, r is distance from the centre, G the gravitational constant, M sub r the enclosed mass, rho the density, g the local gravity."
+    },
+    {
+     "start": 88.95,
+     "end": 91.99,
+     "text": "The minus sign means pressure decreases outward."
+    },
+    {
+     "start": 91.99,
+     "end": 99.23,
+     "text": "Same for Earth's mantle, the ocean, and the air you breathe: constant g, Earth's mass instead of M sub r."
+    },
+    {
+     "start": 99.23,
+     "end": 102.29,
+     "text": "Drag the shell in the widget from centre to surface."
+    },
+    {
+     "start": 102.29,
+     "end": 104.45,
+     "text": "Three forces are drawn to scale."
+    },
+    {
+     "start": 104.45,
+     "end": 112.47,
+     "text": "At the centre no mass is inside, gravity vanishes, and the curve is flat, then steep, then flat where density falls."
+    },
+    {
+     "start": 112.47,
+     "end": 114.33,
+     "text": "Pressure is nowhere constant."
+    },
+    {
+     "start": 114.33,
+     "end": 120.21,
+     "text": "Without pressure the free-fall time is about half an hour, square root of R cubed over G M."
+    },
+    {
+     "start": 120.21,
+     "end": 122.63,
+     "text": "Balance is forces, not energy."
+    },
+    {
+     "start": 122.63,
+     "end": 128.31,
+     "text": "Which equation, still to come, decides whether a slightly compressed star springs back or keeps collapsing?"
+    }
+   ],
+   "voicedHash": "73f315535fa9"
+  }
+ }
+}

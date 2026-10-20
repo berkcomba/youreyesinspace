@@ -1,0 +1,325 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "boundary-vogt-russell": {
+   "script": "Look at the Sun behind the panel. Four equations need four boundary conditions, two at each end. At the centre, enclosed mass M sub r and luminosity L sub r are both zero at r equals zero, since a point holds nothing. At the surface temperature T and pressure P go to zero at r equals R. More carefully, match an atmosphere at optical depth tau equals two thirds, with T equal to T sub eff, the effective temperature. Split conditions mean you guess central pressure and temperature, integrate out, guess luminosity and radius, integrate in, and adjust until they meet. Schwarzschild guessed on calculators; Henyey solves the star at once.\n\nThe Vogt–Russell theorem, from the nineteen twenties, says mass and composition versus enclosed mass fix everything: radius, luminosity, central temperature. Exceptions exist, but ordinary stars obey it, so same composition and different mass make the main sequence, one line. Fusion changes composition, structure changes, the star moves. Evolution is the theorem over time.\n\nDrag the cursor across the widget. Half the mass is inside a quarter of the radius, and ninety-nine per cent of the light comes from a similar distance. Central hydrogen drops from zero point seven one to zero point three five; the surface is untouched. Temperature falls from sixteen million kelvin to six thousand, mostly in the outer convective thirty per cent, starting near zero point seven solar radii. Sound speed matches the data to a tenth of a per cent.\n\nThat check is helioseismology. Ten million modes, periods near five minutes, speeds of centimetres per second, invert to the sound speed c, the square root of gamma P over rho, proportional to the square root of T over mu. Gamma is the adiabatic index, P pressure, rho density, T temperature and mu the mean molecular weight. This fixed the convection zone, the helium and the core rotation, and put the neutrino problem on the neutrino. Bahcall's model matched SNO to one per cent after forty years.",
+   "hash": "0e03be08bbd9",
+   "duration": 124.79,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.44,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 2.44,
+     "end": 6.82,
+     "text": "Four equations need four boundary conditions, two at each end."
+    },
+    {
+     "start": 6.82,
+     "end": 15.94,
+     "text": "At the centre, enclosed mass M sub r and luminosity L sub r are both zero at r equals zero, since a point holds nothing."
+    },
+    {
+     "start": 15.94,
+     "end": 20.56,
+     "text": "At the surface temperature T and pressure P go to zero at r equals R."
+    },
+    {
+     "start": 20.56,
+     "end": 29.36,
+     "text": "More carefully, match an atmosphere at optical depth tau equals two thirds, with T equal to T sub eff, the effective temperature."
+    },
+    {
+     "start": 29.36,
+     "end": 38.5,
+     "text": "Split conditions mean you guess central pressure and temperature, integrate out, guess luminosity and radius, integrate in, and adjust until they meet."
+    },
+    {
+     "start": 38.5,
+     "end": 42.98,
+     "text": "Schwarzschild guessed on calculators; Henyey solves the star at once."
+    },
+    {
+     "start": 42.98,
+     "end": 52.72,
+     "text": "The Vogt–Russell theorem, from the nineteen twenties, says mass and composition versus enclosed mass fix everything: radius, luminosity, central temperature."
+    },
+    {
+     "start": 52.72,
+     "end": 60.26,
+     "text": "Exceptions exist, but ordinary stars obey it, so same composition and different mass make the main sequence, one line."
+    },
+    {
+     "start": 60.26,
+     "end": 64.53,
+     "text": "Fusion changes composition, structure changes, the star moves."
+    },
+    {
+     "start": 64.53,
+     "end": 66.79,
+     "text": "Evolution is the theorem over time."
+    },
+    {
+     "start": 66.79,
+     "end": 68.85,
+     "text": "Drag the cursor across the widget."
+    },
+    {
+     "start": 68.85,
+     "end": 74.89,
+     "text": "Half the mass is inside a quarter of the radius, and ninety-nine per cent of the light comes from a similar distance."
+    },
+    {
+     "start": 74.89,
+     "end": 80.91,
+     "text": "Central hydrogen drops from zero point seven one to zero point three five; the surface is untouched."
+    },
+    {
+     "start": 80.91,
+     "end": 89.95,
+     "text": "Temperature falls from sixteen million kelvin to six thousand, mostly in the outer convective thirty per cent, starting near zero point seven solar radii."
+    },
+    {
+     "start": 89.95,
+     "end": 92.95,
+     "text": "Sound speed matches the data to a tenth of a per cent."
+    },
+    {
+     "start": 92.95,
+     "end": 95.23,
+     "text": "That check is helioseismology."
+    },
+    {
+     "start": 95.23,
+     "end": 107.37,
+     "text": "Ten million modes, periods near five minutes, speeds of centimetres per second, invert to the sound speed c, the square root of gamma P over rho, proportional to the square root of T over mu."
+    },
+    {
+     "start": 107.37,
+     "end": 114.53,
+     "text": "Gamma is the adiabatic index, P pressure, rho density, T temperature and mu the mean molecular weight."
+    },
+    {
+     "start": 114.53,
+     "end": 120.81,
+     "text": "This fixed the convection zone, the helium and the core rotation, and put the neutrino problem on the neutrino."
+    },
+    {
+     "start": 120.81,
+     "end": 124.79,
+     "text": "Bahcall's model matched SNO to one per cent after forty years."
+    }
+   ],
+   "voicedHash": "ba07809f90eb"
+  },
+  "models-summary": {
+   "script": "Look behind the panel: the whole planetary system circling the Sun. Four equations: hydrostatic equilibrium, mass conservation, energy generation, and energy transport. Pressure P of density rho, temperature T, and composition X, equation of state. Kappa-bar, mean opacity, and epsilon, the energy generation rate, follow rho, T, and X. Enclosed mass M sub r and luminosity L sub r are zero at the centre. P and T are zero at the surface, or an atmosphere. Shoot from both ends, or Henyey relaxation. Polytropes: P equals K times rho to the power one plus one over n. K constant, n the index, reduces to Lane-Emden. n one, Jupiter, radius independent of mass. n one point five: degenerate or fully convective. n three: Eddington's standard model and the Chandrasekhar limit. Vogt-Russell: mass and composition profile fix the structure, so the main sequence is a line and composition change forces evolution. T sub c about sixteen million kelvin, rho sub c a hundred and fifty thousand kilograms per cubic metre, P sub c twenty-three quadrillion pascals, X sub c zero point three five, convection from zero point seven one solar radii. Helioseismology: sound speed to a tenth of a percent, neutrinos to one percent. A model isn't a picture but a solution: four equations, three tables, mass and composition in, the star out.",
+   "hash": "b90bd73a5ddb",
+   "duration": 97.91,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 4.68,
+     "text": "Look behind the panel: the whole planetary system circling the Sun."
+    },
+    {
+     "start": 4.68,
+     "end": 12.58,
+     "text": "Four equations: hydrostatic equilibrium, mass conservation, energy generation, and energy transport."
+    },
+    {
+     "start": 12.58,
+     "end": 18.68,
+     "text": "Pressure P of density rho, temperature T, and composition X, equation of state."
+    },
+    {
+     "start": 18.68,
+     "end": 26.32,
+     "text": "Kappa-bar, mean opacity, and epsilon, the energy generation rate, follow rho, T, and X."
+    },
+    {
+     "start": 26.32,
+     "end": 32.12,
+     "text": "Enclosed mass M sub r and luminosity L sub r are zero at the centre."
+    },
+    {
+     "start": 32.12,
+     "end": 35.96,
+     "text": "P and T are zero at the surface, or an atmosphere."
+    },
+    {
+     "start": 35.96,
+     "end": 39.06,
+     "text": "Shoot from both ends, or Henyey relaxation."
+    },
+    {
+     "start": 39.06,
+     "end": 44.24,
+     "text": "Polytropes: P equals K times rho to the power one plus one over n."
+    },
+    {
+     "start": 44.24,
+     "end": 48.62,
+     "text": "K constant, n the index, reduces to Lane-Emden."
+    },
+    {
+     "start": 48.62,
+     "end": 52.43,
+     "text": "n one, Jupiter, radius independent of mass."
+    },
+    {
+     "start": 52.43,
+     "end": 56.09,
+     "text": "n one point five: degenerate or fully convective."
+    },
+    {
+     "start": 56.09,
+     "end": 60.43,
+     "text": "n three: Eddington's standard model and the Chandrasekhar limit."
+    },
+    {
+     "start": 60.43,
+     "end": 68.97,
+     "text": "Vogt-Russell: mass and composition profile fix the structure, so the main sequence is a line and composition change forces evolution."
+    },
+    {
+     "start": 68.97,
+     "end": 85.09,
+     "text": "T sub c about sixteen million kelvin, rho sub c a hundred and fifty thousand kilograms per cubic metre, P sub c twenty-three quadrillion pascals, X sub c zero point three five, convection from zero point seven one solar radii."
+    },
+    {
+     "start": 85.09,
+     "end": 90.77,
+     "text": "Helioseismology: sound speed to a tenth of a percent, neutrinos to one percent."
+    },
+    {
+     "start": 90.77,
+     "end": 97.91,
+     "text": "A model isn't a picture but a solution: four equations, three tables, mass and composition in, the star out."
+    }
+   ],
+   "voicedHash": "ab19b6b8e3bb"
+  },
+  "the-four-equations": {
+   "script": "Here is the whole problem. Four equations in the radius. Hydrostatic equilibrium: dP over dr equals minus G M_r rho over r squared. P pressure, r radius, G Newton's constant, M_r enclosed mass, rho density. Mass: dM_r over dr equals four pi r squared rho. Energy: dL_r over dr equals four pi r squared rho epsilon, L_r luminosity, epsilon the power per unit mass. Transport: dT over dr, T the temperature, follows radiation or the adiabatic gradient, by the Schwarzschild criterion. Three relations carry the physics, pressure, opacity and nuclear rate, versus density, temperature and composition.\n\nBefore computers, P equals K rho to the power one plus one over n. K is a gas constant, n the index, a polytrope. It is exact for degenerate stars, n one point five non-relativistic, n three relativistic. Hydrostatic equilibrium and mass become the Lane–Emden equation: one over xi squared, times d by d xi of xi squared d theta by d xi, equals minus theta to the n. Xi is a dimensionless radius, and theta to the n is the dimensionless density. Rho equals rho_c theta to the n, r equals alpha xi, and alpha squared equals n plus one, times K, times rho_c to the power of the quantity one over n minus one, over four pi G. Theta is one at the centre, slope zero; the surface is its first zero.\n\nJupiter behind the panel is nearly P proportional to rho squared, so n equals one and theta equals sine of xi over xi. Radius independent of mass: R equals pi times the square root of K over two pi G. Saturn, a third the mass, is only sixteen per cent smaller. Set n to one in the widget. Density falls gently, condensation a little over three, close to Juno, enough to estimate the moment of inertia and the winds. Set n to three, Eddington's model, radiation a fixed share of pressure. Condensation about fifty; the Sun nearer a hundred.",
+   "hash": "33f4f080e985",
+   "duration": 137.27,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 1.8,
+     "text": "Here is the whole problem."
+    },
+    {
+     "start": 1.8,
+     "end": 4,
+     "text": "Four equations in the radius."
+    },
+    {
+     "start": 4,
+     "end": 11.42,
+     "text": "Hydrostatic equilibrium: dP over dr equals minus G M_r rho over r squared."
+    },
+    {
+     "start": 11.42,
+     "end": 19.1,
+     "text": "P pressure, r radius, G Newton's constant, M_r enclosed mass, rho density."
+    },
+    {
+     "start": 19.1,
+     "end": 24.5,
+     "text": "Mass: dM_r over dr equals four pi r squared rho."
+    },
+    {
+     "start": 24.5,
+     "end": 34.5,
+     "text": "Energy: dL_r over dr equals four pi r squared rho epsilon, L_r luminosity, epsilon the power per unit mass."
+    },
+    {
+     "start": 34.5,
+     "end": 43.68,
+     "text": "Transport: dT over dr, T the temperature, follows radiation or the adiabatic gradient, by the Schwarzschild criterion."
+    },
+    {
+     "start": 43.68,
+     "end": 51.26,
+     "text": "Three relations carry the physics, pressure, opacity and nuclear rate, versus density, temperature and composition."
+    },
+    {
+     "start": 51.26,
+     "end": 56.38,
+     "text": "Before computers, P equals K rho to the power one plus one over n."
+    },
+    {
+     "start": 56.38,
+     "end": 60.32,
+     "text": "K is a gas constant, n the index, a polytrope."
+    },
+    {
+     "start": 60.32,
+     "end": 67.04,
+     "text": "It is exact for degenerate stars, n one point five non-relativistic, n three relativistic."
+    },
+    {
+     "start": 67.04,
+     "end": 78.91,
+     "text": "Hydrostatic equilibrium and mass become the Lane–Emden equation: one over xi squared, times d by d xi of xi squared d theta by d xi, equals minus theta to the n."
+    },
+    {
+     "start": 78.91,
+     "end": 83.85,
+     "text": "Xi is a dimensionless radius, and theta to the n is the dimensionless density."
+    },
+    {
+     "start": 83.85,
+     "end": 97.41,
+     "text": "Rho equals rho_c theta to the n, r equals alpha xi, and alpha squared equals n plus one, times K, times rho_c to the power of the quantity one over n minus one, over four pi G."
+    },
+    {
+     "start": 97.41,
+     "end": 102.29,
+     "text": "Theta is one at the centre, slope zero; the surface is its first zero."
+    },
+    {
+     "start": 102.29,
+     "end": 109.93,
+     "text": "Jupiter behind the panel is nearly P proportional to rho squared, so n equals one and theta equals sine of xi over xi."
+    },
+    {
+     "start": 109.93,
+     "end": 116.01,
+     "text": "Radius independent of mass: R equals pi times the square root of K over two pi G."
+    },
+    {
+     "start": 116.01,
+     "end": 119.65,
+     "text": "Saturn, a third the mass, is only sixteen per cent smaller."
+    },
+    {
+     "start": 119.65,
+     "end": 121.51,
+     "text": "Set n to one in the widget."
+    },
+    {
+     "start": 121.51,
+     "end": 129.35,
+     "text": "Density falls gently, condensation a little over three, close to Juno, enough to estimate the moment of inertia and the winds."
+    },
+    {
+     "start": 129.35,
+     "end": 134.17,
+     "text": "Set n to three, Eddington's model, radiation a fixed share of pressure."
+    },
+    {
+     "start": 134.17,
+     "end": 137.27,
+     "text": "Condensation about fifty; the Sun nearer a hundred."
+    }
+   ],
+   "voicedHash": "b1c7e9ac10b8"
+  }
+ }
+}

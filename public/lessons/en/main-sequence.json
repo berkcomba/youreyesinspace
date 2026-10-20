@@ -1,0 +1,433 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "chapter-close": {
+   "script": "We look behind the panel where the planetary system slowly circles the Sun. Hydrostatic equilibrium is dee P dee r equals minus G M_r rho over r squared, supporting the weight. Mass conservation is dee M_r dee r equals four pi r squared rho. Together they give central pressure scaling as G M squared over R to the fourth — ten to the sixteen pascals in the Sun, ten to the twelve in Jupiter, ten to the twenty-three in a white dwarf. Ideal gas pressure is P equals rho k T over mu m_H, with one over mu about two X plus three-quarters Y plus half Z. Radiation pressure is a T to the fourth over three. Degenerate pressure proportional to rho to the five-thirds forces radius proportional to mass to the minus one-third. The Kelvin-Helmholtz time G M squared over two R L is ten million years. The nuclear time zero point zero zero seven times zero point one M c squared over L is ten billion years. dee L_r dee r equals four pi r squared rho epsilon. The radiative gradient dee T dee r proportional to kappa-bar rho L_r over T cubed r squared yields L proportional to mu to the fourth M cubed over kappa-bar. Convection above the adiabatic gradient of zero point four. Main-sequence lifetime is ten billion years times mass to the minus two point five. In short, give the equations a mass and a composition and they return a star, correct to a tenth of a percent for the Sun. Run them forward and they write the life and death of stars.",
+   "hash": "3b386dec4853",
+   "duration": 96.63,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 4.96,
+     "text": "We look behind the panel where the planetary system slowly circles the Sun."
+    },
+    {
+     "start": 4.96,
+     "end": 13.28,
+     "text": "Hydrostatic equilibrium is dee P dee r equals minus G M_r rho over r squared, supporting the weight."
+    },
+    {
+     "start": 13.28,
+     "end": 18.82,
+     "text": "Mass conservation is dee M_r dee r equals four pi r squared rho."
+    },
+    {
+     "start": 18.82,
+     "end": 31.2,
+     "text": "Together they give central pressure scaling as G M squared over R to the fourth — ten to the sixteen pascals in the Sun, ten to the twelve in Jupiter, ten to the twenty-three in a white dwarf."
+    },
+    {
+     "start": 31.2,
+     "end": 40.76,
+     "text": "Ideal gas pressure is P equals rho k T over mu m_H, with one over mu about two X plus three-quarters Y plus half Z."
+    },
+    {
+     "start": 40.76,
+     "end": 44.12,
+     "text": "Radiation pressure is a T to the fourth over three."
+    },
+    {
+     "start": 44.12,
+     "end": 50.75,
+     "text": "Degenerate pressure proportional to rho to the five-thirds forces radius proportional to mass to the minus one-third."
+    },
+    {
+     "start": 50.75,
+     "end": 55.83,
+     "text": "The Kelvin-Helmholtz time G M squared over two R L is ten million years."
+    },
+    {
+     "start": 55.83,
+     "end": 62.65,
+     "text": "The nuclear time zero point zero zero seven times zero point one M c squared over L is ten billion years."
+    },
+    {
+     "start": 62.65,
+     "end": 66.87,
+     "text": "dee L_r dee r equals four pi r squared rho epsilon."
+    },
+    {
+     "start": 66.87,
+     "end": 77.67,
+     "text": "The radiative gradient dee T dee r proportional to kappa-bar rho L_r over T cubed r squared yields L proportional to mu to the fourth M cubed over kappa-bar."
+    },
+    {
+     "start": 77.67,
+     "end": 81.35,
+     "text": "Convection above the adiabatic gradient of zero point four."
+    },
+    {
+     "start": 81.35,
+     "end": 86.39,
+     "text": "Main-sequence lifetime is ten billion years times mass to the minus two point five."
+    },
+    {
+     "start": 86.39,
+     "end": 93.59,
+     "text": "In short, give the equations a mass and a composition and they return a star, correct to a tenth of a percent for the Sun."
+    },
+    {
+     "start": 93.59,
+     "end": 96.63,
+     "text": "Run them forward and they write the life and death of stars."
+    }
+   ],
+   "voicedHash": "0d6d18165c64"
+  },
+  "inside-main-sequence-stars": {
+   "script": "Look behind the panel — we have flown out to Sirius. Sirius A, at about two solar masses, is the mirror image of the Sun inside, and that contrast is the point of this step.\n\nThe models show the main sequence is two families stitched together near one point three solar masses. Below the join, stars burn hydrogen by the proton-proton chain. The energy generation rate rises only as temperature to the fourth power — a gentle dependence — so the burning spreads over a sizeable core. The radiative temperature gradient there stays below the adiabatic one, and the core remains radiative. The envelope, though, is cool enough for the opacity peaks of partly ionised hydrogen and helium, so heat cannot escape by radiation alone and the outer layers convect. That zone deepens as mass falls: about two percent of the Sun’s mass, and the whole star below about a third of a solar mass.\n\nAbove the join, the carbon-nitrogen-oxygen cycle takes over. Its rate climbs as temperature to the seventeenth power — brutally steep — so the burning collapses into a tiny volume with an enormous flux, and the core must convect. The envelope is hot and fully ionised, opacity is low, and it stays radiative. Sirius A holds about twenty percent of its mass in that convective core, under a radiative envelope.\n\nSweep the widget from a tenth of a solar mass up toward sixty. Watch the convective envelope shrink to nothing near one point three solar masses as a convective core appears and grows, reaching half the mass near thirty solar masses. The readouts give central temperature and density, the dominant chain, and the mass in each zone. Central density falls even as the centre gets hotter, because massive stars are much larger for their mass.\n\nStructure decides how a star ages. A mixed convective core exhausts hydrogen all at once, so a massive star leaves the sequence abruptly — the hook on a cluster diagram. A radiative core burns outward from the centre, so a Sun-like star drifts slowly brighter; the Sun is already about thirty percent more luminous than at birth. A fully convective red dwarf mixes its whole supply and can burn nearly all its hydrogen, which is why it lives far longer than a simple mass-over-luminosity guess. The nuclear time scale was a first estimate. The interior sharpens it.",
+   "hash": "93d628af4de6",
+   "duration": 139.51,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.52,
+     "text": "Look behind the panel — we have flown out to Sirius."
+    },
+    {
+     "start": 3.52,
+     "end": 11.6,
+     "text": "Sirius A, at about two solar masses, is the mirror image of the Sun inside, and that contrast is the point of this step."
+    },
+    {
+     "start": 11.6,
+     "end": 17.38,
+     "text": "The models show the main sequence is two families stitched together near one point three solar masses."
+    },
+    {
+     "start": 17.38,
+     "end": 21.92,
+     "text": "Below the join, stars burn hydrogen by the proton-proton chain."
+    },
+    {
+     "start": 21.92,
+     "end": 30.46,
+     "text": "The energy generation rate rises only as temperature to the fourth power — a gentle dependence — so the burning spreads over a sizeable core."
+    },
+    {
+     "start": 30.46,
+     "end": 36.52,
+     "text": "The radiative temperature gradient there stays below the adiabatic one, and the core remains radiative."
+    },
+    {
+     "start": 36.52,
+     "end": 46.78,
+     "text": "The envelope, though, is cool enough for the opacity peaks of partly ionised hydrogen and helium, so heat cannot escape by radiation alone and the outer layers convect."
+    },
+    {
+     "start": 46.78,
+     "end": 54.6,
+     "text": "That zone deepens as mass falls: about two percent of the Sun’s mass, and the whole star below about a third of a solar mass."
+    },
+    {
+     "start": 54.6,
+     "end": 58.56,
+     "text": "Above the join, the carbon-nitrogen-oxygen cycle takes over."
+    },
+    {
+     "start": 58.56,
+     "end": 68.58,
+     "text": "Its rate climbs as temperature to the seventeenth power — brutally steep — so the burning collapses into a tiny volume with an enormous flux, and the core must convect."
+    },
+    {
+     "start": 68.58,
+     "end": 74.39,
+     "text": "The envelope is hot and fully ionised, opacity is low, and it stays radiative."
+    },
+    {
+     "start": 74.39,
+     "end": 80.53,
+     "text": "Sirius A holds about twenty percent of its mass in that convective core, under a radiative envelope."
+    },
+    {
+     "start": 80.53,
+     "end": 84.25,
+     "text": "Sweep the widget from a tenth of a solar mass up toward sixty."
+    },
+    {
+     "start": 84.25,
+     "end": 93.87,
+     "text": "Watch the convective envelope shrink to nothing near one point three solar masses as a convective core appears and grows, reaching half the mass near thirty solar masses."
+    },
+    {
+     "start": 93.87,
+     "end": 99.61,
+     "text": "The readouts give central temperature and density, the dominant chain, and the mass in each zone."
+    },
+    {
+     "start": 99.61,
+     "end": 105.73,
+     "text": "Central density falls even as the centre gets hotter, because massive stars are much larger for their mass."
+    },
+    {
+     "start": 105.73,
+     "end": 108.09,
+     "text": "Structure decides how a star ages."
+    },
+    {
+     "start": 108.09,
+     "end": 116.41,
+     "text": "A mixed convective core exhausts hydrogen all at once, so a massive star leaves the sequence abruptly — the hook on a cluster diagram."
+    },
+    {
+     "start": 116.41,
+     "end": 125.57,
+     "text": "A radiative core burns outward from the centre, so a Sun-like star drifts slowly brighter; the Sun is already about thirty percent more luminous than at birth."
+    },
+    {
+     "start": 125.57,
+     "end": 135.35,
+     "text": "A fully convective red dwarf mixes its whole supply and can burn nearly all its hydrogen, which is why it lives far longer than a simple mass-over-luminosity guess."
+    },
+    {
+     "start": 135.35,
+     "end": 138.05,
+     "text": "The nuclear time scale was a first estimate."
+    },
+    {
+     "start": 138.05,
+     "end": 139.51,
+     "text": "The interior sharpens it."
+    }
+   ],
+   "voicedHash": "e2dcc3e5478e"
+  },
+  "lifetimes": {
+   "script": "Look at Rigel behind the panel. Lifetime is fuel over burn rate: core hydrogen times the energy per kilogram, over the luminosity. Fuel scales with mass. Luminosity scales roughly as mass to the three and a half, steeper at low mass and shallower at high mass, where radiation pressure flattens it toward mass to the first. The lifetime goes as mass to the minus two and a half.\n\nt sub M S, the main-sequence lifetime, is about ten to the ten years times M over M solar, divided by L over L solar. Near a solar mass that is ten to the ten years times M over M solar, to the power minus two and a half. M is the mass, L the luminosity, and solar means the Sun. Light outruns the fuel. The Sun has ten billion years. Ten solar masses, thirty million. A fifth of a solar mass, a trillion years, a hundred times the age of the universe, so no red dwarf has left. At low mass the exponent nears minus three and a half, where the whole star is fuel; near the Eddington limit it nears minus one. Rigel, twenty solar masses, lasted eight million years, is a supergiant on the next fuel, and will not last another million.\n\nDrag the slider. Watch lifetime, luminosity, spectral type and the number already dead against the universe, the Sun, the Earth and history. Notice that every O star is younger than the first flowering plants. Clusters burn from the top like a candle, and the turn-off clocks their age. For every O star alive, ten thousand have exploded. At one and a half solar masses, death comes before complex life; half a solar mass locks and scorches the habitable zone. Globular turn-offs near eight tenths of a solar mass, twelve to thirteen billion years, seemed older than the universe in the nineteen nineties. Which numbers would have had to be wrong, and did opacities, nuclear rates, helioseismology and parallaxes settle it?",
+   "hash": "6ba14b54761a",
+   "duration": 117.43,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.48,
+     "text": "Look at Rigel behind the panel."
+    },
+    {
+     "start": 2.48,
+     "end": 9.64,
+     "text": "Lifetime is fuel over burn rate: core hydrogen times the energy per kilogram, over the luminosity."
+    },
+    {
+     "start": 9.64,
+     "end": 11.42,
+     "text": "Fuel scales with mass."
+    },
+    {
+     "start": 11.42,
+     "end": 21.54,
+     "text": "Luminosity scales roughly as mass to the three and a half, steeper at low mass and shallower at high mass, where radiation pressure flattens it toward mass to the first."
+    },
+    {
+     "start": 21.54,
+     "end": 24.8,
+     "text": "The lifetime goes as mass to the minus two and a half."
+    },
+    {
+     "start": 24.8,
+     "end": 33.98,
+     "text": "t sub M S, the main-sequence lifetime, is about ten to the ten years times M over M solar, divided by L over L solar."
+    },
+    {
+     "start": 33.98,
+     "end": 40.42,
+     "text": "Near a solar mass that is ten to the ten years times M over M solar, to the power minus two and a half."
+    },
+    {
+     "start": 40.42,
+     "end": 44.82,
+     "text": "M is the mass, L the luminosity, and solar means the Sun."
+    },
+    {
+     "start": 44.82,
+     "end": 46.46,
+     "text": "Light outruns the fuel."
+    },
+    {
+     "start": 46.46,
+     "end": 48.54,
+     "text": "The Sun has ten billion years."
+    },
+    {
+     "start": 48.54,
+     "end": 51.12,
+     "text": "Ten solar masses, thirty million."
+    },
+    {
+     "start": 51.12,
+     "end": 58.04,
+     "text": "A fifth of a solar mass, a trillion years, a hundred times the age of the universe, so no red dwarf has left."
+    },
+    {
+     "start": 58.04,
+     "end": 65.93,
+     "text": "At low mass the exponent nears minus three and a half, where the whole star is fuel; near the Eddington limit it nears minus one."
+    },
+    {
+     "start": 65.93,
+     "end": 73.79,
+     "text": "Rigel, twenty solar masses, lasted eight million years, is a supergiant on the next fuel, and will not last another million."
+    },
+    {
+     "start": 73.79,
+     "end": 75.07,
+     "text": "Drag the slider."
+    },
+    {
+     "start": 75.07,
+     "end": 82.67,
+     "text": "Watch lifetime, luminosity, spectral type and the number already dead against the universe, the Sun, the Earth and history."
+    },
+    {
+     "start": 82.67,
+     "end": 86.51,
+     "text": "Notice that every O star is younger than the first flowering plants."
+    },
+    {
+     "start": 86.51,
+     "end": 91.11,
+     "text": "Clusters burn from the top like a candle, and the turn-off clocks their age."
+    },
+    {
+     "start": 91.11,
+     "end": 94.79,
+     "text": "For every O star alive, ten thousand have exploded."
+    },
+    {
+     "start": 94.79,
+     "end": 102.51,
+     "text": "At one and a half solar masses, death comes before complex life; half a solar mass locks and scorches the habitable zone."
+    },
+    {
+     "start": 102.51,
+     "end": 110.57,
+     "text": "Globular turn-offs near eight tenths of a solar mass, twelve to thirteen billion years, seemed older than the universe in the nineteen nineties."
+    },
+    {
+     "start": 110.57,
+     "end": 117.43,
+     "text": "Which numbers would have had to be wrong, and did opacities, nuclear rates, helioseismology and parallaxes settle it?"
+    }
+   ],
+   "voicedHash": "534447fad9ea"
+  },
+  "mass-range": {
+   "script": "Look with me at Proxima Centauri behind the panel. At zero point one two solar masses its luminosity is about two thousandths of the Sun's, and it burns for four trillion years. The virial theorem heats a contracting hydrogen sphere until the interior becomes degenerate. Further contraction then no longer raises the temperature, so the centre peaks and cools. Below about three million kelvin the proton-proton chain never ignites. The floor is M minimum, approximately zero point zero eight solar masses, for hydrogen ignition: the smallest mass that becomes a star, about eighty Jupiter masses, because degeneracy halts the heating before hydrogen can burn. The deuterium ignition limit sits lower: zero point zero one three solar masses, about thirteen Jupiter masses. Between thirteen and eighty Jupiter masses are the brown dwarfs. They glow on gravity and a brief burn of deuterium, and of lithium above sixty-five Jupiter masses, then fade through types L, T and Y. A lithium line proves the dwarf. Drag the widget across that range. At zero point zero five solar masses the peak central temperature is two million kelvin, enough for deuterium and lithium, not hydrogen, and the track cools to a few hundred kelvin, cooler than a kitchen oven. Jupiter peaked near fifty thousand kelvin and never burned deuterium. The gap to the smallest star is a factor of eighty in mass, where degeneracy, the Gamow peak and convection all matter at once. L Edd equals four pi G M c over kappa-bar sub e s, about thirty-two thousand solar luminosities per solar mass. G is Newton's constant, M the mass, c the speed of light, and kappa-bar the electron-scattering opacity. There, radiation force on the electrons balances gravity. Near one hundred solar masses stars shed mass. In R136, in the Large Magellanic Cloud, the heaviest are one hundred fifty to two hundred fifty solar masses and will be stripped in a million years. Whether stars form above one hundred fifty solar masses is open.",
+   "hash": "0445ead9aebf",
+   "duration": 124.79,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.48,
+     "text": "Look with me at Proxima Centauri behind the panel."
+    },
+    {
+     "start": 3.48,
+     "end": 11.6,
+     "text": "At zero point one two solar masses its luminosity is about two thousandths of the Sun's, and it burns for four trillion years."
+    },
+    {
+     "start": 11.6,
+     "end": 17.12,
+     "text": "The virial theorem heats a contracting hydrogen sphere until the interior becomes degenerate."
+    },
+    {
+     "start": 17.12,
+     "end": 22.48,
+     "text": "Further contraction then no longer raises the temperature, so the centre peaks and cools."
+    },
+    {
+     "start": 22.48,
+     "end": 27.04,
+     "text": "Below about three million kelvin the proton-proton chain never ignites."
+    },
+    {
+     "start": 27.04,
+     "end": 41.34,
+     "text": "The floor is M minimum, approximately zero point zero eight solar masses, for hydrogen ignition: the smallest mass that becomes a star, about eighty Jupiter masses, because degeneracy halts the heating before hydrogen can burn."
+    },
+    {
+     "start": 41.34,
+     "end": 48.66,
+     "text": "The deuterium ignition limit sits lower: zero point zero one three solar masses, about thirteen Jupiter masses."
+    },
+    {
+     "start": 48.66,
+     "end": 52.44,
+     "text": "Between thirteen and eighty Jupiter masses are the brown dwarfs."
+    },
+    {
+     "start": 52.44,
+     "end": 61.42,
+     "text": "They glow on gravity and a brief burn of deuterium, and of lithium above sixty-five Jupiter masses, then fade through types L, T and Y."
+    },
+    {
+     "start": 61.42,
+     "end": 63.63,
+     "text": "A lithium line proves the dwarf."
+    },
+    {
+     "start": 63.63,
+     "end": 65.75,
+     "text": "Drag the widget across that range."
+    },
+    {
+     "start": 65.75,
+     "end": 78.01,
+     "text": "At zero point zero five solar masses the peak central temperature is two million kelvin, enough for deuterium and lithium, not hydrogen, and the track cools to a few hundred kelvin, cooler than a kitchen oven."
+    },
+    {
+     "start": 78.01,
+     "end": 82.03,
+     "text": "Jupiter peaked near fifty thousand kelvin and never burned deuterium."
+    },
+    {
+     "start": 82.03,
+     "end": 90.19,
+     "text": "The gap to the smallest star is a factor of eighty in mass, where degeneracy, the Gamow peak and convection all matter at once."
+    },
+    {
+     "start": 90.19,
+     "end": 98.37,
+     "text": "L Edd equals four pi G M c over kappa-bar sub e s, about thirty-two thousand solar luminosities per solar mass."
+    },
+    {
+     "start": 98.37,
+     "end": 105.15,
+     "text": "G is Newton's constant, M the mass, c the speed of light, and kappa-bar the electron-scattering opacity."
+    },
+    {
+     "start": 105.15,
+     "end": 109.01,
+     "text": "There, radiation force on the electrons balances gravity."
+    },
+    {
+     "start": 109.01,
+     "end": 111.95,
+     "text": "Near one hundred solar masses stars shed mass."
+    },
+    {
+     "start": 111.95,
+     "end": 121.37,
+     "text": "In R136, in the Large Magellanic Cloud, the heaviest are one hundred fifty to two hundred fifty solar masses and will be stripped in a million years."
+    },
+    {
+     "start": 121.37,
+     "end": 124.79,
+     "text": "Whether stars form above one hundred fifty solar masses is open."
+    }
+   ],
+   "voicedHash": "68b7450ae2e9"
+  }
+ }
+}

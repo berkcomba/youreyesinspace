@@ -254,7 +254,45 @@ export type WidgetSpec =
   /** Curve of growth: equivalent width vs column density through the linear, saturated and damping regimes */
   | { type: 'curveofgrowth' }
   /** Solar photospheric abundances as a bar chart with the CI-chondrite values overlaid; X, Y, Z readout */
-  | { type: 'abundances' };
+  | { type: 'abundances' }
+  /** Hydrostatic balance: a shell inside a Sun-like star that can be dragged from centre to surface, with gravity and the two pressure forces drawn to scale and the P(r) curve */
+  | { type: 'hydrostatic' }
+  /** Central-pressure estimator GM²/R⁴ with central-condensation factors for the Sun, red dwarf, blue giant, white dwarf, Jupiter, Saturn, Earth, Moon */
+  | { type: 'centralpressure' }
+  /** Mass conservation: stacked shells for a chosen density profile; cumulative mass M_r and local gravity g(r) as the radius is dragged */
+  | { type: 'massshells' }
+  /** Mean molecular weight μ from X, Y, Z sliders and ionisation state, with the resulting ideal-gas pressure and particle count */
+  | { type: 'meanmolecular' }
+  /** Log–log plot of ideal-gas, radiation and degenerate electron pressure against density at a chosen temperature, with the Sun's centre, Sirius B and other objects marked */
+  | { type: 'pressuremix' }
+  /** Cold mass–radius curve from the Earth to the bottom of the main sequence showing the Jupiter-mass radius maximum, with planets, brown dwarfs and exoplanets placed */
+  | { type: 'giantradius' }
+  /** Kelvin–Helmholtz time calculator for any M, R, L, compared with geological and cluster ages and the nuclear time scale; presets for Sun, Jupiter, Saturn */
+  | { type: 'khtimescale' }
+  /** Binding energy per nucleon against mass number for the stable nuclei, hoverable, with the energy released by fusion steps highlighted */
+  | { type: 'bindingenergy' }
+  /** Gamow peak: Maxwell–Boltzmann tail × tunnelling probability for a chosen reaction and temperature, showing the peak energy and the steep T dependence of the rate */
+  | { type: 'gamow' }
+  /** Animated proton–proton chain with switchable PP I / II / III branches, per-step rates and energy tally, neutrino energies */
+  | { type: 'ppchain' }
+  /** Energy generation rate of pp, CNO and triple-alpha against temperature, with the central temperatures of real stars marked and the pp/CNO crossover */
+  | { type: 'ppcno' }
+  /** Radiative temperature gradient required for a given luminosity against opacity and density, with solar layers placed and the convection-zone boundary */
+  | { type: 'radgradient' }
+  /** Schwarzschild criterion: a bubble released in a layer whose temperature gradient the student sets, rising away or oscillating back; Earth's dry adiabatic lapse rate mode */
+  | { type: 'convection' }
+  /** Mixing-length estimates of convective velocity, temperature excess and superadiabaticity against depth in the solar convection zone; granulation cartoon */
+  | { type: 'mixinglength' }
+  /** Lane–Emden solver: density and mass profiles for polytropic index n, central condensation, with Jupiter (n = 1) and the Sun compared */
+  | { type: 'polytrope' }
+  /** Standard solar model profiles T, ρ, P, M_r, L_r, X against radius with a draggable cursor and the convection-zone boundary */
+  | { type: 'solarmodel' }
+  /** Ends of the main sequence: peak central temperature of a contracting object against mass (brown-dwarf and hydrogen-burning limits) and L/L_Edd along the main sequence */
+  | { type: 'msrange' }
+  /** Cross-section of a main-sequence star for a chosen mass: convective and radiative zones, burning core, surface colour, central T and ρ */
+  | { type: 'msstructure' }
+  /** Main-sequence lifetime against mass with the ages of the universe, Sun and Earth marked; mass slider reports lifetime, luminosity and spectral type */
+  | { type: 'mslifetime' };
 
 export type SceneCue =
   | { action: 'goto'; ref: string; kind?: 'body' | 'blackhole' | 'star' | 'landmark' | 'galaxy' }
@@ -4387,6 +4425,491 @@ const S9_5: Section = {
   ],
 };
 
+/* ============================================================== chapter 10 ===== */
+
+const S10_1: Section = {
+  id: 'hydrostatic-equilibrium',
+  number: '10.1',
+  title: 'Hydrostatic Equilibrium',
+  summary: 'A star is a ball of gas that neither collapses nor explodes. That single fact, written as an equation, already fixes the pressure at the centre of the Sun to within a factor of a few — and the same equation holds inside Jupiter, the Earth and a white dwarf.',
+  minutes: 20,
+  steps: [
+    {
+      id: 'pressure-gravity-balance',
+      kicker: 'Interactive · the first equation',
+      title: 'Gravity pulls in, pressure pushes out',
+      widget: { type: 'hydrostatic' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('Chapter 9 read the light that leaves a star. This chapter asks what the light cannot show: what is inside. We cannot see below the photosphere, and the time scales of stellar change are millions of years, so the interior must be reasoned out from physics we trust — gravity, gas laws, nuclear reactions, the transport of energy — and the reasoning checked against the few numbers a star does give us: its mass, radius, luminosity, composition, and in a handful of cases its vibrations and its neutrinos. The result, the theory of stellar structure, is one of the triumphs of twentieth-century physics, and it starts with an idea that is almost embarrassingly simple.'),
+        p('The Sun has not changed its size noticeably in recorded history; the geological record says it has shone steadily for billions of years. Yet every gram of it is pulled inward by the gravity of all the grams beneath it. Something must push back, and the only candidate is pressure: the gas deeper down is compressed harder than the gas above, and the difference in pressure across any thin shell supplies exactly the upward force that gravity demands. Take a small cylinder of gas at radius r, of area A and height dr. Gravity pulls it down with force g ρ A dr, where g = GM_r/r² and M_r is the mass inside r; the pressure below pushes up with P(r) A, the pressure above pushes down with P(r + dr) A. For the cylinder to stay put the pressure must <em>fall</em> outward at exactly the rate gravity prescribes.'),
+        eq('\\frac{dP}{dr} = -G\\frac{M_r\\,\\rho}{r^2} = -\\rho\\,g', 'The equation of hydrostatic equilibrium. The minus sign says pressure decreases outward. It applies to any self-gravitating fluid at rest: the Sun, the Earth\'s mantle, the ocean, the air you are breathing (with g constant and M_r replaced by the Earth\'s mass).'),
+        p('The widget shows a shell inside a star of the Sun\'s mass and lets you move it from the centre to the surface. The three forces on it — gravity down, pressure from below, pressure from above — are drawn to scale, and the readouts give the local pressure gradient. Two things to notice. At the centre gravity vanishes (there is no mass inside r = 0), so the pressure gradient is zero: the pressure curve is flat at the centre and steepens outward before flattening again where the density falls. And the pressure is <em>not</em> constant anywhere: a star in equilibrium is a star in which every layer is being squeezed just hard enough. If the pressure were somehow switched off, the Sun would collapse on the free-fall time scale √(R³/GM) — about half an hour.'),
+        think('Hydrostatic equilibrium is a statement about forces, not about energy. A star can be in perfect hydrostatic balance while its core is slowly contracting over millions of years, or while it is steadily losing energy to space. Which equation, still to come in this chapter, decides whether the balance is also <em>stable</em> — whether a slightly compressed star springs back or keeps collapsing?'),
+      ],
+    },
+    {
+      id: 'central-pressure',
+      kicker: 'Interactive · an estimate worth remembering',
+      title: 'The pressure at the centre of the Sun — and of Jupiter',
+      widget: { type: 'centralpressure' },
+      scene: [goto('jupiter'), rate(1)],
+      body: [
+        p('One does not need a detailed model to get the central pressure of a star roughly right. Replace the derivatives in the hydrostatic equation by differences over the whole star: dP/dr ≈ (P_surface − P_centre)/R ≈ −P_c/R, M_r ≈ M, ρ ≈ mean density, r ≈ R. Then P_c ≈ G M ρ̄/R, and with ρ̄ = 3M/4πR³ this is P_c ≈ 3GM²/4πR⁴. For the Sun that gives 3 × 10¹⁴ Pa — three billion atmospheres. The true value from detailed models is 2.3 × 10¹⁶ Pa, a hundred times larger, because the real Sun is strongly centrally condensed: its central density is 150 000 kg m⁻³, a hundred times the mean. But the scaling is right, and the scaling is the point: central pressure goes as M²/R⁴.'),
+        eq('P_c \\sim \\frac{3GM^2}{4\\pi R^4}\\times(\\text{a factor of order 10–100 for central condensation})', 'Order-of-magnitude central pressure. For the Sun the crude estimate is 3 × 10¹⁴ Pa and the model value 2.3 × 10¹⁶ Pa. The same formula with Jupiter\'s mass and radius gives ~10¹² Pa; Jupiter\'s modelled centre is near 4 × 10¹² Pa.'),
+        p('The widget applies the estimate to a gallery of bodies: the Sun, a red dwarf, a blue giant, a white dwarf, Jupiter, Saturn, the Earth and the Moon, each with its own central-condensation factor from detailed models. Jupiter, behind the panel, is the instructive case. It has a thousandth of the Sun\'s mass and a tenth of its radius, so M²/R⁴ is ten thousand times smaller — a few million atmospheres. That is enough to compress hydrogen until its electrons are shared between nuclei and it conducts like a metal, below about 0.8 of Jupiter\'s radius; the planet\'s magnetic field, twenty thousand times stronger than the Earth\'s, is generated in that metallic-hydrogen ocean. Saturn, with a third of the mass, has a smaller metallic region and a weaker field. Hydrostatic equilibrium, a gas law and the known masses and radii are enough to predict all of this.'),
+        table(
+          ['Body', 'M (M☉)', 'R (R☉)', 'Crude P_c (Pa)', 'Model P_c (Pa)', 'Central ρ (kg m⁻³)'],
+          [
+            ['Sun', '1', '1', '3 × 10¹⁴', '2.3 × 10¹⁶', '1.5 × 10⁵'],
+            ['Proxima Centauri (M5.5 V)', '0.12', '0.15', '8 × 10¹⁵', '~2 × 10¹⁷', '~6 × 10⁵'],
+            ['Spica A (B1 V)', '11', '7.5', '1 × 10¹⁴', '~2 × 10¹⁵', '~1 × 10⁴'],
+            ['Sirius B (white dwarf)', '1.0', '0.0084', '6 × 10²²', '~4 × 10²³', '~3 × 10¹⁰'],
+            ['Jupiter', '9.5 × 10⁻⁴', '0.10', '2 × 10¹²', '~4 × 10¹²', '~2 × 10⁴'],
+            ['Earth', '3.0 × 10⁻⁶', '9.2 × 10⁻³', '1.7 × 10¹¹', '3.6 × 10¹¹', '1.3 × 10⁴'],
+          ],
+          'Central pressures from the M²/R⁴ estimate and from detailed models. The estimate is always within a factor of ten to a hundred, and the ordering — white dwarf ≫ star ≫ planet — is right.',
+        ),
+        example('Earth\'s central pressure can be reached from the same equation with g nearly constant through the mantle: P ≈ ρ̄ g R/2 ≈ 5 500 × 9.8 × 6.4 × 10⁶ / 2 ≈ 1.7 × 10¹¹ Pa. Seismology gives 3.6 × 10¹¹ Pa, the difference again being central condensation — the iron core is twice as dense as the rock. Diamond-anvil cells reach these pressures in the laboratory, which is how we know what iron does at the Earth\'s centre.', 'The Earth as a check'),
+      ],
+    },
+    {
+      id: 'mass-conservation',
+      kicker: 'Interactive · the second equation',
+      title: 'Mass conservation: counting the shells',
+      widget: { type: 'massshells' },
+      scene: [goto('earth'), rate(1)],
+      body: [
+        p('The hydrostatic equation contains M_r, the mass inside radius r, so it cannot be solved on its own: we need to know how mass is distributed. That is supplied by the second equation of stellar structure, which is nothing more than bookkeeping. A thin shell of radius r and thickness dr has volume 4πr² dr and mass 4πr²ρ dr; summing shells from the centre outward gives M_r. In differential form it reads dM_r/dr = 4πr²ρ. Two equations, three unknowns — P, ρ, M_r — and the story of this chapter is the hunt for the equations that close the system.'),
+        eq('\\frac{dM_r}{dr} = 4\\pi r^2\\rho', 'Mass conservation (or mass continuity). Integrated to the surface it gives the total mass M; at the centre M_r → 0 as r³.'),
+        p('The widget stacks the shells. Choose a density profile — uniform, a gently falling one, or a centrally condensed one like the Sun\'s — and drag the radius: the cumulative mass M_r and the local gravity g = GM_r/r² are plotted beside it. For a uniform sphere M_r grows as r³ and g rises linearly to the surface; for a centrally condensed star most of the mass is inside a small radius, M_r saturates early and g peaks deep inside before falling. In the Sun half the mass lies within a quarter of the radius, and the outer half of the radius holds only a few per cent.'),
+        p('The Earth, behind the panel, is the body for which this bookkeeping has been done most precisely — not by looking but by listening. Earthquake waves speed up or slow down with the density and rigidity of the rock they cross, and a century of seismograms has been inverted into a density profile from crust to core: 2 800 kg m⁻³ at the surface, 5 500 at the base of the mantle, a jump to 9 900 at the top of the liquid iron core, 13 000 at the centre. Integrating 4πr²ρ over that profile reproduces the Earth\'s mass as measured by satellite orbits, which is the check that the profile is right. The Sun has been treated the same way since the 1980s, using its own acoustic oscillations — helioseismology, which Section 10.5 returns to.'),
+        note('A third way to write these equations uses M_r instead of r as the independent variable: dr/dM_r = 1/4πr²ρ and dP/dM_r = −GM_r/4πr⁴. Stellar-evolution codes prefer this "Lagrangian" form because a given parcel of gas keeps its M_r as the star expands or contracts, whereas its r changes.', 'Which variable?'),
+      ],
+    },
+    {
+      id: 'he-summary',
+      kicker: 'Summary',
+      title: 'Hydrostatic equilibrium in brief',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'A star in equilibrium has pressure decreasing outward exactly fast enough to hold up each layer: dP/dr = −GM_rρ/r². The gradient is zero at the centre and the free-fall time, if pressure vanished, is √(R³/GM) ≈ 30 min for the Sun.',
+          'Crude estimate P_c ≈ 3GM²/4πR⁴: 3 × 10¹⁴ Pa for the Sun (true: 2.3 × 10¹⁶ because of central condensation), ~10¹² Pa for Jupiter — enough to make hydrogen metallic — and 10²³ Pa in a white dwarf.',
+          'Mass conservation dM_r/dr = 4πr²ρ closes the mass bookkeeping; for the Earth it has been inverted from seismology, for the Sun from helioseismology.',
+          'Two equations, three unknowns (P, ρ, M_r): an equation of state, an energy equation and a transport equation are still needed.',
+        ),
+        key('Everything inside a star follows from a balance of forces, a balance of energy, and the properties of hot gas. This section supplied the forces; the next three supply the rest.'),
+      ],
+    },
+  ],
+};
+
+const S10_2: Section = {
+  id: 'pressure-eos',
+  number: '10.2',
+  title: 'Pressure Equation of State',
+  summary: 'What pressure a gas of given density, temperature and composition exerts: the ideal gas and its mean molecular weight, the pressure of light, and the quantum pressure of crowded electrons — the last of which is what holds up Jupiter and the white dwarfs.',
+  minutes: 24,
+  steps: [
+    {
+      id: 'ideal-gas-mu',
+      kicker: 'Interactive · the gas law for a star',
+      title: 'The ideal gas and the mean molecular weight',
+      widget: { type: 'meanmolecular' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('To close the equations we need an <b>equation of state</b>: pressure as a function of density, temperature and composition. For most of most stars the answer is the one learned in school. The particles of a stellar interior are so hot that they fly past one another almost without interaction, and the pressure is the kinetic pressure of an ideal gas, P = nkT, with n the number of particles per cubic metre. The subtlety is counting the particles. The gas is a mixture of nuclei of different masses and, when ionised, of the electrons they have shed; a kilogram of fully ionised hydrogen contains twice as many particles as a kilogram of neutral hydrogen, and a kilogram of helium a quarter as many nuclei as a kilogram of hydrogen.'),
+        p('All of this is packed into one number, the <b>mean molecular weight</b> μ: the average mass of a free particle in units of the hydrogen mass, so that n = ρ/μm_H and P = ρkT/μm_H. For a fully ionised gas of hydrogen mass fraction X, helium Y and metals Z, each hydrogen contributes two particles per m_H, each helium three per 4m_H, and each heavier atom about (1 + A/2) per Am_H ≈ half a particle per m_H. For the Sun\'s interior composition, X = 0.70, Y = 0.28, Z = 0.02, μ = 0.62; for a neutral gas of the same composition μ = 1.30. The difference is a factor of two in the pressure at the same ρ and T, which is why the ionisation state of the gas is not a detail.'),
+        eq('P_{\\rm gas} = \\frac{\\rho k T}{\\mu m_H}, \\qquad \\frac{1}{\\mu_{\\rm ion}} \\approx 2X + \\tfrac{3}{4}Y + \\tfrac{1}{2}Z, \\qquad \\frac{1}{\\mu_{\\rm neutral}} \\approx X + \\tfrac{1}{4}Y + \\frac{Z}{\\langle A\\rangle}', 'The ideal-gas pressure and the mean molecular weight of fully ionised and neutral gas. Partially ionised gas, as in a stellar envelope, requires the Saha equation of Section 8.1 to count the free electrons.'),
+        p('The widget lets you set X, Y and Z and the ionisation state and reports μ, together with the pressure and the particle count for a fixed ρ and T. Slide the composition from pure hydrogen (μ = 0.5 ionised) to pure helium (μ = 1.33) and watch the pressure fall by a factor of 2.7: a helium star of the same density and temperature cannot hold up as much weight as a hydrogen star, so it must be hotter or denser. That is the deep reason the core of a star changes when it burns hydrogen into helium — μ rises, the pressure support weakens, the core contracts and heats — and it is the first hint of the evolution Chapters 12 and 13 will follow. The Sun\'s core μ has already crept from 0.61 to 0.85 in 4.6 billion years, and its central temperature has risen in response.'),
+        terms(
+          ['Equation of state', 'P(ρ, T, composition). Ideal gas plus radiation for most stars; degenerate for white dwarfs, neutron stars and giant-planet interiors.'],
+          ['Mean molecular weight μ', 'Mean particle mass in units of m_H. 0.5 for ionised H, 0.62 for solar interior, 1.33 for ionised He, 2 for fully ionised iron-group.'],
+          ['μ_e', 'Mean mass per <em>electron</em>, 1/μ_e = X + Y/2 + Z/2 ≈ 2/(1 + X). It governs the degenerate electron pressure of the next step.'],
+          ['Mass fractions X, Y, Z', 'Hydrogen, helium and everything else by mass; X + Y + Z = 1. Solar: 0.74/0.25/0.013 at the surface, 0.35/0.63/0.02 at the present centre.'],
+        ),
+      ],
+    },
+    {
+      id: 'radiation-degeneracy',
+      kicker: 'Interactive · two more pressures',
+      title: 'The pressure of light and the pressure of crowded electrons',
+      widget: { type: 'pressuremix' },
+      scene: [goto('Sirius', 'star'), rate(1)],
+      body: [
+        p('Two other kinds of pressure matter in stars, at opposite extremes. The first, from Section 9.1, is <b>radiation pressure</b>, P_rad = aT⁴/3. Because it grows as T⁴ while the gas pressure grows only as ρT, it takes over in hot, low-density gas — the interiors of the most massive stars. In the Sun\'s centre it is 0.06 per cent of the total; at 20 M☉ it is a quarter; by 100 M☉ it is dominant, and the star is a bubble of light barely held together by its own weight. The total pressure is then P = ρkT/μm_H + aT⁴/3, and Eddington\'s classic treatment of stellar structure was built on exactly this sum.'),
+        p('The second appears at the other extreme, in cold dense gas, and it has no classical counterpart. Electrons obey the Pauli exclusion principle (Section 5.4): no two can occupy the same quantum state. Squeeze a gas until the electrons are closer together than their de Broglie wavelength and they are forced into states of ever higher momentum simply because the low ones are full. The momentum they carry exerts a pressure that does not depend on temperature at all — a <b>degenerate</b> gas would push back just as hard at absolute zero. For non-relativistic electrons the pressure goes as ρ^{5/3}; when the density is so high that the electrons move near c, it softens to ρ^{4/3}, with consequences that Chapter 16 will make dramatic.'),
+        eq('P_{\\rm rad} = \\tfrac{1}{3}aT^4, \\qquad P_{\\rm deg,\\,NR} = \\frac{(3\\pi^2)^{2/3}}{5}\\frac{\\hbar^2}{m_e}\\left(\\frac{\\rho}{\\mu_e m_H}\\right)^{5/3}, \\qquad P_{\\rm deg,\\,UR} = \\frac{(3\\pi^2)^{1/3}}{4}\\hbar c\\left(\\frac{\\rho}{\\mu_e m_H}\\right)^{4/3}', 'Radiation pressure and the non-relativistic (NR) and ultra-relativistic (UR) degenerate electron pressures. Degeneracy sets in when kT is below the Fermi energy, roughly when T < 1.3 × 10⁵ K × (ρ/μ_e in kg m⁻³)^{2/3} × 10⁻⁴ … i.e. T/ρ^{2/3} ≲ 1 300 K m² kg^{−2/3}.'),
+        p('The widget plots the three pressures against density at a temperature you choose, on a log–log diagram, and marks where real objects sit. At the Sun\'s centre the ideal gas wins by a wide margin. Increase the density by a hundred thousand at the same temperature and the degenerate curve crosses the ideal-gas line: that is a white dwarf. Sirius B, the faint companion behind the panel, has the Sun\'s mass in the Earth\'s volume, a density of three tonnes per cubic centimetre, and is supported entirely by degenerate electrons — its heat is irrelevant to its structure, which is why it can cool for billions of years without shrinking. Lower the density toward 10⁻⁶ kg m⁻³ and raise T to 10⁷ K and radiation takes over instead: that is the envelope of a supergiant.'),
+        history('The degenerate equation of state was derived by Ralph Fowler in December 1926, two months after Dirac\'s paper on the statistics of electrons, explicitly to explain how Sirius B could be so dense without collapsing — Eddington had called the star\'s density "absurd" two years earlier. Fowler\'s student Chandrasekhar added the relativistic form in 1930, on the ship bringing him from Madras to Cambridge, and found the mass limit that bears his name.', 'A problem solved on a ship'),
+      ],
+    },
+    {
+      id: 'giant-planets',
+      kicker: 'Interactive · the planets as a laboratory',
+      title: 'Why Jupiter is as large as a planet can be',
+      widget: { type: 'giantradius' },
+      scene: [goto('jupiter'), rate(1)],
+      body: [
+        p('The equation of state has a consequence we can see in our own solar system. Ask how the radius of a cold ball of hydrogen depends on its mass. At low mass the material is ordinary matter with a roughly fixed density, so R grows as M^{1/3}: the Earth is bigger than Mars because it has more rock. At high mass the interior is pressure-ionised and electron degeneracy dominates, and the degenerate relation P ∝ ρ^{5/3} combined with hydrostatic equilibrium gives the opposite dependence, R ∝ M^{−1/3}: adding mass makes the object <em>smaller</em>, as it does for white dwarfs. In between there is a maximum, and for hydrogen-rich composition it falls almost exactly at Jupiter\'s mass, with a radius of about 1.1 Jupiter radii.'),
+        p('The widget draws this mass–radius curve from the Earth to the bottom of the main sequence and places the solar-system bodies, known exoplanets and brown dwarfs on it. Saturn, with 30 per cent of Jupiter\'s mass, is 84 per cent of its radius; a brown dwarf of 50 Jupiter masses is slightly <em>smaller</em> than Jupiter; and the curve only turns up again at 0.08 M☉, where hydrogen fusion begins and thermal pressure takes over from degeneracy. Every giant planet in the Galaxy, however massive, is about the size of Jupiter — a prediction made in 1969 by Zapolsky and Salpeter, decades before any exoplanet was found, and confirmed now by hundreds of transiting giants, with scatter that reflects their heavy-element content and their heating by the parent star.'),
+        eq('R \\propto M^{1/3} \\ (\\text{incompressible}), \\qquad R \\propto M^{-1/3} \\ (\\text{degenerate}), \\qquad R_{\\max} \\approx 1.1\\,R_{\\rm Jup}\\ \\text{at}\\ M \\approx 1\\text{–}3\\,M_{\\rm Jup}', 'Mass–radius scaling for a cold self-gravitating body. The peak radius for a hydrogen–helium composition is near Jupiter\'s mass; for a rock-iron composition the curve is lower and the peak is pushed beyond the range of real planets.'),
+        p('This is the same physics as the white dwarfs, running the other way. Jupiter\'s interior is only mildly degenerate — the electrons are partly degenerate, the ions a hot classical fluid at 20 000 K — so the planet is also still contracting, by about a millimetre a year, and radiating the gravitational energy released, which is why it emits 1.7 times the sunlight it absorbs. Section 10.3 returns to that. Behind the panel the planet is the most massive object in the solar system after the Sun, and it is the largest one that can exist: a hydrogen body a hundred times heavier would be no bigger, only denser, until at 80 Jupiter masses it became a star.'),
+        compare(
+          { title: 'Low mass: ordinary matter', items: ['Density set by chemistry, ~constant', 'R ∝ M^{1/3}', 'Earth, Mars, Uranus, Neptune', 'Pressure from electron shells of atoms'] },
+          { title: 'High mass: degenerate matter', items: ['Density set by gravity squeezing electrons', 'R ∝ M^{−1/3}', 'Brown dwarfs, white dwarfs', 'Pressure from the exclusion principle'] },
+        ),
+      ],
+    },
+    {
+      id: 'eos-summary',
+      kicker: 'Summary',
+      title: 'The equation of state in brief',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Ideal gas: P = ρkT/μm_H with μ the mean particle mass in units of m_H; 1/μ ≈ 2X + ¾Y + ½Z when fully ionised (0.62 for the solar interior). Burning H to He raises μ and weakens pressure support — the engine of stellar evolution.',
+          'Radiation pressure aT⁴/3 dominates in the most massive stars (a quarter of the total at 20 M☉).',
+          'Degenerate electron pressure, from the Pauli principle, is independent of T: P ∝ ρ^{5/3} (non-relativistic), ρ^{4/3} (relativistic). It supports white dwarfs like Sirius B and the interiors of giant planets.',
+          'Mass–radius: R ∝ M^{1/3} for ordinary matter, M^{−1/3} for degenerate matter; the maximum for hydrogen is ≈ 1.1 R_Jup at about Jupiter\'s mass, so all giant planets and brown dwarfs are Jupiter-sized.',
+        ),
+        key('Three pressures — thermal, radiation, degeneracy — and the mean molecular weight that converts density into particle count: with these the force balance of Section 10.1 can be solved, once we know the temperature. The temperature is set by energy, which comes next.'),
+      ],
+    },
+  ],
+};
+
+const S10_3: Section = {
+  id: 'energy-sources',
+  number: '10.3',
+  title: 'Stellar Energy Sources',
+  summary: 'Where the energy comes from: gravity, which keeps Jupiter and Saturn warm but could run the Sun for only ten million years; the nuclear binding energy that runs it for ten billion; the quantum tunnelling that lets protons fuse at a temperature a thousand times too low; and the two chains that turn hydrogen into helium.',
+  minutes: 32,
+  steps: [
+    {
+      id: 'gravity-as-source',
+      kicker: 'Interactive · the Kelvin–Helmholtz time',
+      title: 'Gravity as an energy source: from Saturn to the Sun',
+      widget: { type: 'khtimescale' },
+      scene: [goto('saturn'), rate(1)],
+      body: [
+        p('A star radiates energy away; something must supply it. The first serious proposal, by Helmholtz in 1854 and Kelvin in 1862, was gravity itself. A contracting sphere releases gravitational potential energy, and by the virial theorem of Section 2.4 half of it goes into heating the gas and half is radiated. The total potential energy available is of order GM²/R — more precisely 3GM²/5R for a uniform sphere, several times that for a centrally condensed star — so a star of luminosity L can shine on contraction for a time t_KH ≈ GM²/(2RL). For the Sun that is about ten million years, and for a time this looked like the answer. Kelvin used it to argue that the Earth was no older, to the dismay of geologists and of Darwin, whose rocks and species needed hundreds of millions.'),
+        eq('t_{\\rm KH} \\approx \\frac{G M^2}{2 R L} \\approx 1.6\\times10^7\\ {\\rm yr}\\ \\left(\\frac{M}{M_\\odot}\\right)^2\\left(\\frac{R_\\odot}{R}\\right)\\left(\\frac{L_\\odot}{L}\\right)', 'The Kelvin–Helmholtz (thermal) time scale: how long gravitational contraction could sustain the present luminosity. It is also the time a star needs to adjust its thermal structure — the time it takes a pre-main-sequence star to contract onto the main sequence, and the time the Sun would take to notice if its core stopped fusing.'),
+        p('The geologists were right and gravity cannot power the Sun — but it does power the giant planets. Saturn, behind the panel, radiates 2.5 times the energy it receives from the Sun; Jupiter 1.7 times; Neptune 2.6 times. For Jupiter the excess is explained by the slow Kelvin–Helmholtz contraction left over from its formation 4.6 billion years ago — the planet shrinks by about a millimetre a year and cools by a kelvin per million years. Saturn is too bright for that alone: being smaller it should have cooled faster. The extra comes from <em>helium rain</em>, droplets of helium condensing out of the metallic hydrogen and falling toward the centre, releasing gravitational energy as they go. It is Helmholtz\'s mechanism working inside a planet, and the depleted helium in Saturn\'s upper atmosphere, measured by Cassini, is its signature.'),
+        p('The widget computes t_KH for any mass, radius and luminosity you set, and compares it with the ages we know: the Earth\'s 4.5 billion years from radioactive dating, the age of the oldest star clusters, and the nuclear time scale of the next step. For the Sun the gravitational budget is short by a factor of a thousand. For Jupiter the budget is comfortably longer than the age of the solar system, and the planet\'s present luminosity is almost exactly what a contraction model predicts — the first quantitative success of the mechanism, a century after Kelvin.'),
+        think('If the Sun had been contracting for its whole 4.6-billion-year life, by what factor would its radius have had to shrink each million years, and how big would it have been when the Earth\'s oldest rocks formed? Fossil shells record the length of the day and month but also, in principle, the solar constant. What geological evidence would have told Kelvin he was wrong, had he looked?'),
+      ],
+    },
+    {
+      id: 'nuclear-binding',
+      kicker: 'Interactive · the binding-energy curve',
+      title: 'Mass into energy: the nuclear time scale',
+      widget: { type: 'bindingenergy' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('The resolution came from Section 4.4: E = mc². A helium nucleus has a mass 0.7 per cent less than four protons. Fuse four protons into helium and that 0.7 per cent of their mass — 26.7 MeV per helium nucleus — appears as energy. Suppose the Sun converts a tenth of its hydrogen this way, the fraction in its hot core. The energy released is 0.007 × 0.1 × M☉c² ≈ 1.3 × 10⁴⁴ J, and at the present luminosity that lasts 10¹⁰ years. The nuclear time scale is a thousand times the Kelvin–Helmholtz time, longer than the age of the Earth, longer than the age of the oldest rocks and clusters — long enough. Eddington saw this in 1920, four years before anyone understood how the fusion could happen.'),
+        eq('t_{\\rm nuc} \\approx \\frac{0.007\\times 0.1\\,M c^2}{L} \\approx 10^{10}\\ {\\rm yr}\\ \\left(\\frac{M}{M_\\odot}\\right)\\left(\\frac{L_\\odot}{L}\\right)', 'The nuclear time scale for core hydrogen burning. Because L rises steeply with mass (L ∝ M^{3.5}), massive stars live far shorter lives: 10 M☉ for 20 million years, 0.5 M☉ for a hundred billion.'),
+        p('Why 0.7 per cent, and why helium? The widget plots the <b>binding energy per nucleon</b> against mass number for every stable nucleus — the most important curve in nuclear astrophysics. It rises steeply from hydrogen through helium (which is a conspicuously tightly bound peak at A = 4), climbs more gently through carbon, oxygen and silicon, reaches a broad maximum of 8.8 MeV per nucleon at iron and nickel, and declines slowly toward uranium. Fusing light nuclei moves up the curve and releases energy; so does splitting heavy ones. Hydrogen to helium is the single biggest step — it releases 6.7 MeV per nucleon, against 0.6 for helium to carbon and barely 1 for everything from carbon to iron combined — which is why hydrogen burning dominates every star\'s life, and why nothing beyond iron can be a fuel at all.'),
+        p('Hover along the curve. The sawtooth at low mass — ⁴He, ¹²C, ¹⁶O standing above their neighbours — is the extra stability of nuclei built from alpha particles, and it is why the universe\'s chemistry is dominated by these elements. The peak at ⁵⁶Fe/⁶²Ni is where the attractive strong force, which saturates, is finally beaten by the Coulomb repulsion of the protons, which does not. The elements beyond are made not by burning but by neutron capture, in the deaths of stars, a story for Chapter 15.'),
+        note('Four protons have mass 4 × 1.007 276 u = 4.029 1 u; a helium-4 nucleus 4.001 5 u. Difference 0.027 6 u = 25.7 MeV, plus the annihilation of the two positrons produced (2 × 1.02 MeV) gives 26.73 MeV per helium nucleus, of which an average 0.5 MeV escapes as neutrinos in the pp chain and about 1.7 MeV in the CNO cycle.', 'The arithmetic'),
+      ],
+    },
+    {
+      id: 'coulomb-tunnelling',
+      kicker: 'Interactive · why fusion is possible at all',
+      title: 'The Coulomb barrier, tunnelling and the Gamow peak',
+      widget: { type: 'gamow' },
+      scene: [goto('Proxima Centauri', 'star'), rate(1)],
+      body: [
+        p('There is an obstacle. Two protons repel each other electrically, and the strong force that binds them operates only within about a femtometre. To bring them that close against the Coulomb repulsion requires an energy of Z₁Z₂e²/4πε₀r ≈ 1.4 MeV. The mean thermal energy of a proton at the Sun\'s central 1.57 × 10⁷ K is (3/2)kT ≈ 2 keV, a thousand times smaller. Even the fastest protons in the Maxwell–Boltzmann tail — and there are 10⁵⁷ of them — fall short: the fraction with energy above 1 MeV is e^{−1000/2} ≈ 10⁻²¹⁷, and there are not that many protons in the universe. Classically the Sun cannot shine. Eddington, told this, replied that his critics should "go and find a hotter place".'),
+        p('Quantum mechanics is the escape. A proton is a wave, and a wave meeting a barrier higher than its energy does not stop: its amplitude decays inside the barrier and a small part leaks through. George Gamow computed this <b>tunnelling</b> probability in 1928 (for alpha decay, the same process run backward), and it is exponential in the ratio of the barrier\'s "thickness" to the particle\'s de Broglie wavelength: P ∝ exp(−b/√E) with b depending on the charges and the reduced mass. The lower the energy, the thicker the barrier at the point where the particle meets it, and the smaller the leakage — but it is never zero.'),
+        eq('\\sigma(E) \\propto \\frac{1}{E}\\,e^{-b E^{-1/2}}, \\qquad b = \\frac{\\pi\\sqrt{2\\mu_m}\\,Z_1 Z_2 e^2}{\\hbar\\,4\\pi\\varepsilon_0}, \\qquad E_0 = \\left(\\frac{b\\,kT}{2}\\right)^{2/3}', 'The tunnelling cross-section (the prefactor 1/E is the geometric size of the wave) and the Gamow peak energy E₀ at which the product of the Maxwell–Boltzmann tail (falling with E) and the tunnelling factor (rising with E) is largest. For p + p at the solar centre E₀ ≈ 6 keV, three times kT; for the CNO cycle, with Z = 6–8, E₀ ≈ 25 keV.'),
+        p('The widget multiplies the two exponentials. The red curve is the Maxwell–Boltzmann distribution, dying away at high energy; the blue curve is the tunnelling probability, rising from nothing; their product, the <b>Gamow peak</b>, is a narrow window of energies at a few times kT where essentially all the fusion happens. Raise the temperature and the peak shifts to higher energy and grows enormously — the reaction rate for p + p near 10⁷ K goes as T⁴, and for reactions between heavier nuclei, whose barrier is higher, the dependence is steeper still: T¹⁷ for the CNO cycle, T⁴⁰ for helium burning. That extreme sensitivity is what makes stars into thermostats, and it is why Proxima Centauri, behind the panel, with a central temperature only half the Sun\'s, has a luminosity 600 times lower: fusion barely ticks over in the coolest stars.'),
+        history('Robert Atkinson and Fritz Houtermans applied Gamow\'s tunnelling to stars in 1929, within a year of its discovery, and showed that protons could indeed react in the Sun\'s core. The detailed chains took another decade: Hans Bethe and Charles Critchfield worked out the pp chain in 1938, and Bethe and, independently, Carl von Weizsäcker the CNO cycle in 1938–39. Bethe\'s paper "Energy Production in Stars" earned the 1967 Nobel Prize.', '1928–1939'),
+      ],
+    },
+    {
+      id: 'pp-chain',
+      kicker: 'Interactive · the Sun\'s reaction',
+      title: 'The proton–proton chain',
+      widget: { type: 'ppchain' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('Four protons do not meet at once; hydrogen is burnt in steps. The first is the hardest. Two protons tunnel together, but the diproton is not bound — it flies apart in 10⁻²² s unless, during that instant, one proton converts into a neutron by the weak interaction, emitting a positron and a neutrino. The weak force is so weak that a given proton in the Sun\'s core waits on average nine billion years for this to happen, which is exactly why the Sun lasts as long as it does: the slowest step sets the pace. The deuteron that results captures a proton within a second to make helium-3, and in the dominant branch (PP I, 69 per cent in the Sun) two helium-3 nuclei combine into helium-4, returning two protons. Net: 4 ¹H → ⁴He + 2e⁺ + 2ν_e + 26.73 MeV, of which about 0.26 MeV per neutrino escapes.'),
+        list(
+          '<b>¹H + ¹H → ²H + e⁺ + ν_e</b> — the weak-interaction bottleneck; mean wait 9 × 10⁹ yr per proton at the solar centre.',
+          '<b>²H + ¹H → ³He + γ</b> — fast (seconds); deuterium never accumulates.',
+          '<b>³He + ³He → ⁴He + 2 ¹H</b> — PP I, 69 %; or <b>³He + ⁴He → ⁷Be + γ</b>, leading to PP II (⁷Be + e⁻ → ⁷Li + ν; ⁷Li + p → 2 ⁴He, 31 %) and PP III (⁷Be + p → ⁸B → ⁸Be + e⁺ + ν; 0.1 %, but the source of the high-energy neutrinos first detected).',
+        ),
+        p('The widget animates the chain: particles are drawn in, each step fires at a rate proportional to its real speed (scaled so that the slowest is visible at all), and the energy released at each step is tallied. Switch between the branches and notice how the neutrino energies differ — PP I gives 0.42 MeV neutrinos at most, PP III up to 15 MeV — because the branching is what Ray Davis\'s chlorine experiment in the Homestake mine, from 1968, was sensitive to. It saw one third of the predicted rate. For thirty years the "solar neutrino problem" was either an error in the stellar model or new physics; in 2001 the Sudbury Neutrino Observatory showed that the missing electron neutrinos had changed flavour in flight. The model of the Sun\'s core was right to a few per cent; it was the neutrino that needed fixing.'),
+        eq('\\epsilon_{pp} \\approx 1.08\\times10^{-12}\\,\\rho\\,X^2\\,f_{pp}\\,\\psi_{pp}\\,C_{pp}\\,T_6^{4}\\ \\ {\\rm W\\,kg^{-1}} \\quad (T_6 = T/10^6\\,{\\rm K},\\ \\text{near}\\ T_6 \\approx 15)', 'Energy generation rate of the pp chain near the solar central temperature, with correction factors of order one (screening f, branching ψ, higher-order terms C). The power-law index 4 is a local approximation; the exact rate is the T-weighted Gamow integral.'),
+        example('At the Sun\'s centre, ρ = 1.5 × 10⁵ kg m⁻³, X = 0.35, T₆ = 15.7, the pp rate is about 0.018 W kg⁻¹ — less than the metabolic heat of a human body per kilogram. The Sun is luminous not because its core is intense but because there is 2 × 10²⁹ kg of it burning at once.', 'A surprisingly feeble furnace'),
+      ],
+    },
+    {
+      id: 'cno-triple-alpha',
+      kicker: 'Interactive · the hotter alternatives',
+      title: 'The CNO cycle and the triple-alpha process',
+      widget: { type: 'ppcno' },
+      scene: [goto('Spica', 'star'), rate(1)],
+      body: [
+        p('In a star hotter than the Sun hydrogen finds a faster route to helium, using carbon as a catalyst. A ¹²C nucleus captures a proton to become ¹³N, which decays to ¹³C; two more proton captures and a decay take it through ¹⁴N and ¹⁵O to ¹⁵N; a final proton capture splits ¹⁵N into ¹²C and ⁴He. The carbon is returned, four protons have become a helium nucleus, and 26.7 MeV has been released — a little more of it as neutrinos than in the pp chain. Because every step involves a nucleus of charge 6, 7 or 8, the Coulomb barriers are far higher than for p + p, the Gamow peak sits at higher energy, and the rate rises as roughly T¹⁷ near 2 × 10⁷ K. The CNO cycle is negligible below 1.5 × 10⁷ K and dominant above about 1.8 × 10⁷ K; the Sun, at 1.57 × 10⁷ K, gets 1 per cent of its energy from it.'),
+        p('The widget plots ε_pp and ε_CNO against temperature on a log scale, for a composition you can set, and marks the central temperatures of real stars. The crossover near 1.8 × 10⁷ K corresponds to a main-sequence mass of about 1.3 M☉ — spectral type F5. Below it, stars burn by the pp chain; above it, by the CNO cycle. Spica, behind the panel, at 11 M☉ and a central temperature of 3 × 10⁷ K, runs almost entirely on CNO. The steep temperature dependence has a structural consequence: in a CNO star the energy generation is concentrated in a tiny central region, the energy flux there is enormous, and radiation cannot carry it — the core convects. Section 10.6 will use that fact to divide the main sequence in two.'),
+        eq('\\epsilon_{\\rm CNO} \\approx 8.24\\times10^{-31}\\,\\rho\\,X\\,X_{\\rm CNO}\\,T_6^{19.9}\\ {\\rm W\\,kg^{-1}}, \\qquad \\epsilon_{3\\alpha} \\approx 50.9\\,\\rho^2\\,Y^3\\,T_8^{41}\\ {\\rm W\\,kg^{-1}}', 'CNO-cycle energy generation near T₆ = 15 and triple-alpha near T₈ = 1 (T₈ = T/10⁸ K). The exponents are local power-law fits; they shrink at higher T. Note that the triple-alpha rate goes as ρ², since it is effectively a three-body reaction.'),
+        p('The widget\'s third curve belongs to the next stage of a star\'s life. When the core hydrogen is exhausted, the helium ash can itself burn — but only at a hundred million kelvin, because the barrier between two helium nuclei is four times that between protons, and only through a remarkable coincidence. Two ⁴He make ⁸Be, which is unbound and falls apart in 10⁻¹⁶ s; but in that instant a third ⁴He can be captured, and ¹²C has an excited state at almost exactly the right energy to make the capture resonant. Fred Hoyle predicted that state in 1953 from the simple fact that carbon exists; it was found in the laboratory within months. The <b>triple-alpha</b> process, with its T⁴¹ dependence, is the thermostat of the red giants and the origin of every carbon atom in your body.'),
+        table(
+          ['Process', 'Fuel → ash', 'Ignition T', 'Rate ∝', 'Energy per nucleon', 'Where'],
+          [
+            ['pp chain', '4 ¹H → ⁴He', '4 × 10⁶ K', 'ρX² T⁴', '6.7 MeV', 'Sun and stars < 1.3 M☉'],
+            ['CNO cycle', '4 ¹H → ⁴He (C, N, O catalysts)', '1.5 × 10⁷ K', 'ρX X_CNO T¹⁷–²⁰', '6.7 MeV (more in ν)', 'stars > 1.3 M☉; 1 % of Sun'],
+            ['triple-alpha', '3 ⁴He → ¹²C', '1 × 10⁸ K', 'ρ²Y³ T⁴¹', '0.6 MeV', 'red-giant cores, horizontal branch'],
+            ['carbon burning', '¹²C + ¹²C → ²⁰Ne, ²³Na, ²⁴Mg', '6 × 10⁸ K', 'very steep', '~0.5 MeV', 'stars > 8 M☉'],
+            ['deuterium burning', '²H + ¹H → ³He', '1 × 10⁶ K', '—', '—', 'brown dwarfs > 13 M_Jup, young stars'],
+          ],
+          'The main thermonuclear processes. Each successive fuel needs a higher temperature and yields less energy per nucleon, so the later stages are progressively shorter.',
+        ),
+      ],
+    },
+    {
+      id: 'energy-summary',
+      kicker: 'Summary',
+      title: 'Stellar energy sources in brief',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Gravitational contraction supplies GM²/2R ≈ 10⁷ yr of solar luminosity (the Kelvin–Helmholtz time) — too short for the Sun, but it powers Jupiter\'s and Neptune\'s excess heat; Saturn adds helium rain.',
+          'Fusion of H to He releases 0.7 % of the rest mass (26.7 MeV per ⁴He); burning a tenth of the Sun gives 10¹⁰ yr. The binding-energy curve peaks at iron: fusion of light nuclei and fission of heavy ones both release energy; nothing beyond iron is fuel.',
+          'The Coulomb barrier (~1 MeV) is a thousand times the thermal energy; quantum tunnelling, P ∝ exp(−b/√E), combined with the Maxwell–Boltzmann tail gives the Gamow peak at a few kT and rates that go as T⁴ (pp), T¹⁷ (CNO), T⁴¹ (3α).',
+          'pp chain: p + p → d + e⁺ + ν is the weak bottleneck (9 Gyr per proton); branches PP I/II/III differ in neutrino energy, which is how the solar neutrino problem was posed and solved. CNO uses carbon as a catalyst and takes over above 1.8 × 10⁷ K (M > 1.3 M☉). Triple-alpha, via Hoyle\'s resonance, makes carbon at 10⁸ K.',
+          'Energy equation: dL_r/dr = 4πr²ρε, with ε(ρ, T, composition) the energy released per kilogram per second.',
+        ),
+        key('With ε we have the third structure equation. The fourth and last is about getting the energy out — which is also what sets the temperature gradient and therefore, through the equation of state, the pressure.'),
+      ],
+    },
+  ],
+};
+
+const S10_4: Section = {
+  id: 'energy-transport',
+  number: '10.4',
+  title: 'Energy Transport and Thermodynamics',
+  summary: 'How heat gets from the core to the surface: by radiation, when the gas is transparent enough, and by convection, when it is not. The radiative temperature gradient, the adiabatic gradient, the Schwarzschild criterion that decides between them — the same rule that decides whether a summer afternoon produces thunderclouds.',
+  minutes: 26,
+  steps: [
+    {
+      id: 'radiative-gradient',
+      kicker: 'Interactive · heat by photons',
+      title: 'The radiative temperature gradient',
+      widget: { type: 'radgradient' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('Energy generated in the core must flow outward to the surface, and in most of most stars it flows as light — the random-walking photons of Section 9.3. Radiative transport is driven by a temperature gradient: the photons arriving at a point from below come from slightly hotter gas than those from above, so the net flux is proportional to how fast T changes with depth, and inversely proportional to how opaque the gas is. Section 9.4\'s moment equation dP_rad/dτ = F/c, with P_rad = aT⁴/3 and dτ = −κ̄ρ dr, gives the result at once: the flux is the gradient of the radiation pressure divided by the opacity.'),
+        eq('\\frac{dT}{dr} = -\\frac{3}{4ac}\\,\\frac{\\bar\\kappa\\rho}{T^3}\\,\\frac{L_r}{4\\pi r^2}', 'The radiative temperature gradient. It is steep where the opacity is high, where the luminosity passing through is large, where the radius is small, and where the temperature is low (the T⁻³ comes from the diffusivity of radiation ∝ T³/κρ). κ̄ is the Rosseland mean of Section 9.2.'),
+        p('The widget plots the temperature gradient a given luminosity requires against the opacity and density of the gas, and shows where real layers of the Sun fall. Deep in the core the opacity is modest, the temperature high and the gradient gentle — a few kelvin per kilometre, less than the temperature gradient of the Earth\'s crust. Move outward: the temperature falls, the opacity rises as hydrogen and helium begin to recombine (the peak of Section 9.2\'s Rosseland curve) and the required gradient steepens. At about 0.7 R☉ it becomes steeper than the gas can sustain, and radiation hands over to convection. That boundary is sharp and it has been measured: helioseismology places the base of the solar convection zone at 0.713 ± 0.001 R☉.'),
+        p('The equation is also the key to Eddington\'s mass–luminosity relation. Combine dT/dr with hydrostatic equilibrium and the ideal gas law, and eliminate the gradients by the same crude differencing as in Section 10.1: L ∝ R⁴T⁴/κ̄ρR² with T ∝ μM/R and ρ ∝ M/R³ gives L ∝ μ⁴M³/κ̄. The radius cancels. A star\'s luminosity is set by its mass and opacity, not by its energy source — the nuclear reactions simply adjust their temperature until they supply what the envelope is leaking. Eddington found this in 1924 and used it to predict that fusion, whatever it was, must be a steep function of temperature; the observed relation of Section 7.2, L ∝ M^{3.5}, is this result with the opacity\'s density and temperature dependence folded in.'),
+        key('The luminosity of a main-sequence star is fixed by how fast its envelope can leak energy — by mass, mean molecular weight and opacity — and the core\'s fusion rate adjusts to match. This is why the mass–luminosity relation was derived before anyone knew what powered stars.'),
+      ],
+    },
+    {
+      id: 'convection-criterion',
+      kicker: 'Interactive · when the gas boils',
+      title: 'The adiabatic gradient and the Schwarzschild criterion',
+      widget: { type: 'convection' },
+      scene: [goto('earth'), rate(1)],
+      body: [
+        p('Imagine a bubble of gas slightly hotter than its surroundings. It is less dense, so it rises. As it rises the pressure around it falls and it expands and cools — adiabatically, if it rises faster than it can exchange heat, which in a star it does. Whether it keeps rising depends on a comparison: does the bubble, cooling at the adiabatic rate, stay warmer than the surrounding gas, whose temperature falls at the actual gradient of the star? If the surroundings cool with height <em>faster</em> than the bubble does, the bubble stays buoyant and accelerates away: the layer is unstable and convects. If the surroundings cool more slowly, the bubble soon finds itself cooler and denser than its environment, sinks back, and the layer is stable. This is the <b>Schwarzschild criterion</b> (Karl Schwarzschild, 1906), and it says that convection sets in wherever the actual temperature gradient is steeper than the adiabatic one.'),
+        eq('\\left|\\frac{dT}{dr}\\right|_{\\rm actual} > \\left|\\frac{dT}{dr}\\right|_{\\rm ad} = \\left(1 - \\frac{1}{\\gamma}\\right)\\frac{T}{P}\\left|\\frac{dP}{dr}\\right| = \\left(1-\\frac{1}{\\gamma}\\right)\\frac{\\mu m_H}{k}\\,g \\quad \\Longrightarrow\\ \\text{convection}', 'The Schwarzschild criterion and the adiabatic gradient for an ideal gas with ratio of specific heats γ (5/3 for a monatomic gas). Equivalently, in terms of the logarithmic gradient ∇ = d ln T/d ln P: convection when ∇_rad > ∇_ad = 1 − 1/γ = 0.4.'),
+        p('The widget releases a bubble in a layer whose temperature gradient you control and shows whether it rises away or oscillates back; the environment\'s gradient and the adiabatic gradient are drawn side by side. The Earth\'s atmosphere, behind the panel, is the laboratory. Dry air cools adiabatically at 9.8 K per kilometre of ascent — the number is g/c_p, and it is the same formula as in the star. On a clear morning the ground heats, the air just above it has a gradient steeper than that, and it convects: the thermals that glider pilots and hawks ride, capped by cumulus clouds where the rising air reaches its dew point. At night the ground cools, the gradient inverts, and the air is stable — smoke lies flat, fog pools in valleys. Thunderstorms are the Schwarzschild criterion violated by ten kilometres of atmosphere at once.'),
+        p('Three things make a stellar layer convective, and each shows up in a different kind of star. A high opacity makes the radiative gradient steep: this is why cool stars, whose envelopes contain the H⁻ and hydrogen-ionisation opacity peaks, have deep convective envelopes, and why the Sun\'s outer 29 per cent by radius (2 per cent by mass) is boiling. A high energy flux through a small area has the same effect: this is why the CNO-burning cores of massive stars convect. And a low adiabatic gradient — a small γ — makes the gas easy to destabilise: where hydrogen or helium is partially ionised, energy put into the gas goes into ionising it rather than heating it, γ drops toward 1, and the ionisation zone convects almost automatically.'),
+        compare(
+          { title: 'Stable (radiative) layer', items: ['Actual gradient shallower than adiabatic', 'Displaced bubble returns: oscillates at the Brunt–Väisälä frequency', 'Energy carried by photons', 'Sun from the centre to 0.71 R☉; night-time atmosphere'] },
+          { title: 'Unstable (convective) layer', items: ['Actual gradient steeper than adiabatic', 'Displaced bubble runs away; mixing', 'Energy carried by moving gas', 'Sun from 0.71 R☉ to the surface; cores of stars > 1.3 M☉; daytime thermals'] },
+        ),
+      ],
+    },
+    {
+      id: 'convection-in-stars',
+      kicker: 'Interactive · mixing length and granulation',
+      title: 'Convection in stars: what it carries and what it looks like',
+      widget: { type: 'mixinglength' },
+      scene: [goto('Betelgeuse', 'star'), rate(1)],
+      body: [
+        p('Convection, once started, is brutally effective. A rising element of gas carries its excess heat content with it, and the flux is roughly ρ c_P v ΔT, the density times the heat capacity times the velocity times the temperature excess. Deep in a star the density is so high that a temperature excess of a thousandth of a kelvin, moving at a few metres per second, carries the entire luminosity. The consequence is that a convective layer\'s gradient is pinned almost exactly at the adiabatic value: the slightest excess drives enough convection to flatten it. This is a gift to the model-builder — in a deep convection zone one may simply set dT/dr equal to the adiabatic gradient and ignore the messy fluid dynamics — and it is why the structure of the Sun\'s convection zone is known better than the physics of the convection itself.'),
+        p('Near the surface the gift is withdrawn. The density falls, the gas must move faster and carry a larger temperature excess to transport the same flux, and the gradient becomes noticeably <em>superadiabatic</em>. Here the standard tool is the <b>mixing-length theory</b> of Erika Böhm-Vitense (1958): a bubble travels a distance ℓ = α H_P, some multiple α of the pressure scale height, before dissolving into its surroundings. The parameter α, typically 1.5 to 2, is calibrated by requiring a solar model to reproduce the Sun\'s radius — an honest confession that the theory is a parametrisation, not a derivation. The widget implements it: choose the flux to be carried and the depth, and it returns the convective velocity, the temperature excess, and how far the gradient departs from adiabatic.'),
+        eq('F_{\\rm conv} \\approx \\rho\\,c_P\\,v_c\\,\\delta T, \\qquad v_c \\approx \\sqrt{\\frac{g\\,\\ell}{T}\\,\\delta T}, \\qquad \\ell = \\alpha H_P = \\alpha\\,\\frac{P}{\\rho g}', 'Mixing-length estimates of the convective flux, velocity and mixing length. In the solar convection zone v_c ranges from ~10 m s⁻¹ at the base to ~2 km s⁻¹ at the top, and δT from 10⁻⁶ K relative to 10⁻¹ K.'),
+        p('At the top of the Sun\'s convection zone we can watch it happen. The photosphere is tiled with <b>granules</b>, bright cells a thousand kilometres across where hot gas rises, separated by dark lanes where it cools and sinks, each living about ten minutes — the visible tops of convective bubbles. Spectral lines in the granules are blueshifted and those in the lanes redshifted by about a kilometre per second, which is how the velocities are measured; the convective blueshift of Section 9.5\'s line profiles is this asymmetry averaged over the disc. Betelgeuse, behind the panel, is the other extreme. In a supergiant the pressure scale height is a tenth of the radius, the mixing length is comparable to the star, and interferometric images show a handful of enormous convective cells, each a sizeable fraction of the disc, that brighten and fade over months — the cause of its irregular variability, and of the "Great Dimming" of 2019–20, when a cooling cell helped expel a cloud of dust across the star\'s face.'),
+        note('Convection does one more thing radiation cannot: it mixes. A convective core keeps itself chemically uniform, feeding fresh hydrogen to the centre until the whole core is exhausted at once. A convective envelope dredges nuclear products up to the surface — which is how carbon stars and the lithium depletion of Section 9.5 arise — and in fully convective low-mass stars the entire star is one mixed reservoir, so they can burn all their hydrogen, not just the central tenth.', 'Convection mixes'),
+      ],
+    },
+    {
+      id: 'transport-summary',
+      kicker: 'Summary',
+      title: 'Energy transport in brief',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Radiative transport: dT/dr = −(3/4ac)(κ̄ρ/T³)(L_r/4πr²); steep where opacity, flux or density is high. Combined with hydrostatic equilibrium it gives L ∝ μ⁴M³/κ̄ — the mass–luminosity relation, independent of the energy source.',
+          'Convection sets in where the actual gradient exceeds the adiabatic one (Schwarzschild): ∇_rad > ∇_ad = 1 − 1/γ. Earth\'s dry adiabatic lapse rate 9.8 K/km is the same formula; thermals and thunderstorms are the criterion in action.',
+          'Causes: high opacity (envelopes of cool stars, including the Sun\'s outer 29 %), high flux per area (CNO cores of massive stars), low γ in ionisation zones.',
+          'Deep convection pins the gradient to adiabatic; near the surface mixing-length theory with ℓ = αH_P (α ≈ 1.5–2, calibrated on the Sun) gives v_c and δT. Granulation is the visible top of the solar convection zone; Betelgeuse has a few star-sized cells. Convection mixes, radiation does not.',
+        ),
+        key('Four equations now: hydrostatic equilibrium, mass conservation, energy generation, and energy transport (radiative or convective). With an equation of state, an opacity and a nuclear rate, they determine a star.'),
+      ],
+    },
+  ],
+};
+
+const S10_5: Section = {
+  id: 'stellar-models',
+  number: '10.5',
+  title: 'Stellar Model Building',
+  summary: 'Putting the pieces together: the four differential equations and the three constitutive relations, the boundary conditions that pin them down, the theorem that says mass and composition determine everything, the polytropes that can be solved by hand — Jupiter among them — and the standard solar model that the Sun\'s own oscillations have tested to a tenth of a per cent.',
+  minutes: 24,
+  steps: [
+    {
+      id: 'the-four-equations',
+      kicker: 'Interactive · a model you can solve by hand',
+      title: 'The equations of stellar structure, and the polytropes',
+      widget: { type: 'polytrope' },
+      scene: [goto('jupiter'), rate(1)],
+      body: [
+        p('Here is the whole problem. Four ordinary differential equations in the radius: dP/dr = −GM_rρ/r² (hydrostatic equilibrium), dM_r/dr = 4πr²ρ (mass), dL_r/dr = 4πr²ρε (energy), and dT/dr given by radiation or by the adiabatic gradient, whichever the Schwarzschild criterion selects (transport). Four unknown functions, P, M_r, L_r and T, with ρ eliminated through the equation of state. Three <em>constitutive relations</em> — P(ρ, T, X_i), κ̄(ρ, T, X_i) and ε(ρ, T, X_i) — supply the physics of the gas, and they are where most of the real work lies: tables of opacity from millions of atomic transitions, nuclear rates from accelerator measurements extrapolated down the Gamow peak, equations of state that handle partial ionisation and partial degeneracy at once.'),
+        p('Before the computer, one solved a simplified version. Suppose the pressure depends on density alone, as a power law: P = Kρ^{1+1/n}. Such a model is called a <b>polytrope</b> of index n, and the hydrostatic and mass equations combine into a single second-order equation, the Lane–Emden equation, for a dimensionless density profile. It is exact for a degenerate star — n = 1.5 non-relativistic, n = 3 relativistic — and a surprisingly good approximation elsewhere: n = 3 describes a star in which radiation pressure is a fixed fraction of the total, Eddington\'s "standard model" of 1926, which reproduces the Sun\'s run of pressure and density to within a factor of two. The widget solves the Lane–Emden equation for any n from 0 to 4.9 and shows the density and mass profiles, the central condensation ρ_c/ρ̄, and the total radius.'),
+        eq('P = K\\rho^{1+1/n}, \\qquad \\frac{1}{\\xi^2}\\frac{d}{d\\xi}\\left(\\xi^2\\frac{d\\theta}{d\\xi}\\right) = -\\theta^n, \\qquad \\rho = \\rho_c\\theta^n, \\quad r = \\alpha\\xi, \\quad \\alpha^2 = \\frac{(n+1)K\\rho_c^{1/n-1}}{4\\pi G}', 'The polytropic equation of state and the Lane–Emden equation (Jonathan Homer Lane 1870, Robert Emden 1907). Boundary conditions θ(0) = 1, θ′(0) = 0; the surface is the first zero of θ. Analytic solutions exist for n = 0 (uniform sphere), 1 (θ = sin ξ/ξ) and 5 (infinite radius).'),
+        p('Jupiter, behind the panel, is the textbook example of a polytrope — and of the n = 1 case, the one with the elegant closed-form solution. Compressed hydrogen–helium at Jupiter\'s pressures behaves very nearly as P ∝ ρ², which is n = 1, and for n = 1 the radius is independent of the mass: R = π√(K/2πG), fixed by the equation of state alone. That is the mass–radius peak of Section 10.2 seen from another direction, and it is why Saturn, with a third of the mass, is only 16 per cent smaller than Jupiter. Set n = 1 in the widget and compare the density profile with the one Juno\'s gravity measurements have given: the fit is good enough that Jupiter\'s moment of inertia, central density and the depth of its winds have all been first estimated with this one-line model before the detailed ones were built.'),
+        table(
+          ['n', 'ρ_c / ρ̄', 'ξ₁ (surface)', 'Applies to'],
+          [
+            ['0', '1', '2.449', 'uniform sphere (rocky planets, roughly)'],
+            ['1', '3.29', 'π = 3.142', 'Jupiter, Saturn; neutron stars approximately; R independent of M'],
+            ['1.5', '5.99', '3.654', 'non-relativistic white dwarfs; fully convective stars (adiabatic, γ = 5/3); brown dwarfs'],
+            ['3', '54.2', '6.897', 'Eddington standard model; relativistic white dwarfs at the Chandrasekhar limit; the Sun roughly'],
+            ['5', '∞', '∞', 'infinite radius, finite mass (Plummer sphere, used for star clusters)'],
+          ],
+          'Properties of the Lane–Emden solutions. The central condensation grows rapidly with n; the Sun\'s real value, 150 000/1 400 ≈ 107, lies between n = 3 and n = 3.5.',
+        ),
+      ],
+    },
+    {
+      id: 'boundary-vogt-russell',
+      kicker: 'Interactive · the standard solar model',
+      title: 'Boundary conditions, the Vogt–Russell theorem and the Sun',
+      widget: { type: 'solarmodel' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('Four first-order equations need four boundary conditions. Two are at the centre: M_r = 0 and L_r = 0 at r = 0. Two are at the surface, where in the simplest treatment T = 0 and P = 0 at r = R — or, more carefully, where the interior is matched onto a model atmosphere of Chapter 9 at the photosphere, τ = 2/3, T = T_eff. Because two conditions are given at each end rather than four at one, the problem cannot be integrated straight through: one guesses the central P and T, integrates outward, guesses the surface L and R, integrates inward, and adjusts all four until the two solutions meet smoothly at some fitting point. Martin Schwarzschild\'s book of 1958 did this on desk calculators; Louis Henyey\'s relaxation method of 1964, which treats the whole star at once as a large set of coupled algebraic equations, is what every modern code uses.'),
+        p('The structure of the problem leads to a striking conclusion, stated by Heinrich Vogt in 1926 and Henry Norris Russell in 1927: given its total mass and its composition as a function of M_r, a star\'s structure is uniquely determined — its radius, its luminosity, its central temperature, everything. The <b>Vogt–Russell theorem</b> is not a theorem in the strict sense (there are exotic exceptions) but it is true for all ordinary stars, and it is the reason the H–R diagram has a main sequence: stars of the same composition and different masses form a one-parameter family, a line. It is also the reason stars evolve. Fusion changes the composition; a changed composition means a different structure; so the star must move in the diagram. Evolution is the Vogt–Russell theorem applied over time.'),
+        p('The widget shows the <b>standard solar model</b>: temperature, density, pressure, enclosed mass, luminosity and hydrogen abundance from the centre to the surface, with a cursor you can drag. Notice how concentrated the Sun is. Half the mass lies within 0.25 R☉; 99 per cent of the luminosity is generated within 0.24 R☉; the central hydrogen fraction has fallen from 0.71 to 0.35 while the surface is untouched; the temperature drops from 15.7 million kelvin to 5 772 across the radius, but most of that drop is in the outer, convective 30 per cent. The convection zone, where the gradient snaps to adiabatic, begins at 0.713 R☉, and the model\'s sound-speed profile matches the one measured from the Sun\'s oscillations to within 0.1 per cent through most of the interior.'),
+        p('That last check is <b>helioseismology</b>. The Sun rings with ten million acoustic modes, excited by its convection, with periods near five minutes and amplitudes of a few centimetres per second in Doppler shift; each mode samples a different depth, and their frequencies, measured since the 1980s by networks of telescopes (GONG, BiSON) and by the SOHO spacecraft, can be inverted for the sound speed c = √(γP/ρ) ∝ √(T/μ) as a function of radius, just as earthquakes are inverted for the Earth\'s interior. The inversion fixed the depth of the convection zone, measured the helium abundance of the envelope, showed that the Sun\'s core rotates no faster than its surface, and, by ruling out an unusual core, helped settle the solar neutrino problem on the side of the neutrino. No other star\'s interior has been seen so directly — although the Kepler and TESS spacecraft have since measured oscillations in tens of thousands of other stars, and the field is now simply asteroseismology.'),
+        history('The first digital solar models were computed in the 1950s; by 1964 John Bahcall and Raymond Davis had used one to predict the solar neutrino flux Davis then set out to catch. Bahcall refined the standard solar model for forty years, publishing updated neutrino predictions as the opacities and nuclear rates improved; the 2001 SNO result agreed with his total flux to 1 %. It is probably the longest sustained confrontation between a single theoretical model and experiment in the history of astrophysics, and the model won.', 'The model that was right'),
+      ],
+    },
+    {
+      id: 'models-summary',
+      kicker: 'Summary',
+      title: 'Stellar model building in brief',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Four equations — hydrostatic equilibrium, mass conservation, energy generation, energy transport — plus three constitutive relations P(ρ,T,X), κ̄(ρ,T,X), ε(ρ,T,X); boundary conditions M_r = L_r = 0 at the centre, P = T = 0 (or an atmosphere) at the surface; solved by shooting from both ends or by Henyey relaxation.',
+          'Polytropes P = Kρ^{1+1/n} reduce the problem to the Lane–Emden equation: n = 1 fits Jupiter and gives R independent of M; n = 1.5 degenerate or fully convective stars; n = 3 Eddington\'s standard model and the Chandrasekhar limit.',
+          'Vogt–Russell: mass and composition profile determine the whole structure. Hence the main sequence is a line, and composition change forces evolution.',
+          'Standard solar model: T_c = 1.57 × 10⁷ K, ρ_c = 1.5 × 10⁵ kg m⁻³, P_c = 2.3 × 10¹⁶ Pa, X_c = 0.35, convection zone from 0.713 R☉; verified by helioseismology to 0.1 % in sound speed and by the solar neutrino flux to 1 %.',
+        ),
+        key('A stellar model is not a picture but a solution: four equations, three tables of physics, two numbers in (mass and composition) and the whole star out. The Sun is the one case in which the solution has been checked from the inside.'),
+      ],
+    },
+  ],
+};
+
+const S10_6: Section = {
+  id: 'main-sequence',
+  number: '10.6',
+  title: 'The Main Sequence',
+  summary: 'What the models say about the line that most stars live on: why it ends at 0.08 solar masses on one side and near 100 on the other, why its lower half and upper half are built differently inside, and why a star\'s mass fixes not only its brightness but how long it has to live.',
+  minutes: 22,
+  steps: [
+    {
+      id: 'mass-range',
+      kicker: 'Interactive · the ends of the sequence',
+      title: 'From brown dwarfs to the Eddington limit',
+      widget: { type: 'msrange' },
+      scene: [goto('Proxima Centauri', 'star'), rate(1)],
+      body: [
+        p('Build models of contracting hydrogen spheres of every mass and ask which ones ever reach a temperature high enough to burn hydrogen steadily. Below a critical mass the answer is none. A contracting object heats up, by the virial theorem, until its interior becomes degenerate; after that further contraction no longer raises the temperature, the object reaches a maximum central temperature and then cools. If that maximum is below about 3 × 10⁶ K the pp chain never ignites in earnest. The dividing line is 0.08 M☉, about 80 Jupiter masses. Below it are the <b>brown dwarfs</b>, which glow dimly for a while on gravitational energy and on the brief burning of their primordial deuterium (above 13 Jupiter masses) and lithium (above 65), and then fade for ever. Proxima Centauri, behind the panel, at 0.12 M☉, is comfortably a star — but only just: its luminosity is 0.0017 L☉, and it will burn for four trillion years.'),
+        p('At the other end the limit is set by radiation. As the mass increases the central temperature rises only slowly but the luminosity rises steeply, and with it the radiation pressure of Section 10.2. Near 100 M☉ the outward force of light on the outer layers approaches gravity — the <b>Eddington limit</b>, L_Edd = 4πGMc/κ̄, where κ̄ is the electron-scattering opacity — and the star becomes violently unstable, shedding mass in eruptions. The most massive stars known, in the R136 cluster of the Large Magellanic Cloud, are estimated at 150–250 M☉ and are losing mass at a rate that will strip them in a million years. Whether a star can even form above about 150 M☉, or whether its own radiation blows away the material before it arrives, is an open question.'),
+        eq('M_{\\min} \\approx 0.08\\,M_\\odot \\ (\\text{H ignition}), \\qquad 0.013\\,M_\\odot \\approx 13\\,M_{\\rm Jup}\\ (\\text{D ignition}), \\qquad L_{\\rm Edd} = \\frac{4\\pi G M c}{\\bar\\kappa_{\\rm es}} \\approx 3.2\\times10^4\\,\\frac{M}{M_\\odot}\\,L_\\odot', 'The lower limit of the main sequence, the deuterium-burning limit used to separate brown dwarfs from planets, and the Eddington luminosity that sets the upper limit near 100 M☉ where L_MS ≈ L_Edd.'),
+        p('The widget plots the central temperature a contracting object reaches against its mass, and the Eddington ratio L/L_Edd along the main sequence, with the limits marked and the known objects placed. Drag across the brown-dwarf range: at 0.05 M☉ the peak central temperature is 2 × 10⁶ K — enough to burn deuterium and lithium, not hydrogen — and the object settles into a cooling track that takes it through spectral types L, T and Y, down to temperatures of a few hundred kelvin, cooler than a kitchen oven. Jupiter, at 0.001 M☉, never gets near even deuterium burning; its centre peaked at perhaps 50 000 K during formation. The gap between the largest planet and the smallest star is a factor of 80 in mass, and the objects in it are the ones for which the physics of this chapter — degeneracy, the Gamow peak, convection — all matter at once.'),
+        terms(
+          ['Brown dwarf', 'Object of 13–80 M_Jup: burns deuterium (and lithium above 65 M_Jup) but never hydrogen steadily; cools indefinitely. Spectral types L, T, Y. First confirmed 1995 (Gliese 229 B, Teide 1).'],
+          ['Hydrogen-burning limit', '≈ 0.075–0.08 M☉ for solar composition; lower for metal-poor gas. Set by degeneracy halting the temperature rise during contraction.'],
+          ['Eddington limit', 'Luminosity at which radiation force on electrons balances gravity: 3.2 × 10⁴ L☉ per solar mass for electron scattering. Main-sequence stars reach it near 100 M☉; also the limit for accreting black holes.'],
+          ['Lithium test', 'Objects below ~65 M_Jup never destroy their lithium; the Li 670.8 nm line in a cool dwarf\'s spectrum proves it is a brown dwarf (Rebolo et al. 1992).'],
+        ),
+      ],
+    },
+    {
+      id: 'inside-main-sequence-stars',
+      kicker: 'Interactive · two kinds of main-sequence star',
+      title: 'Convective cores, convective envelopes',
+      widget: { type: 'msstructure' },
+      scene: [goto('Sirius', 'star'), rate(1)],
+      body: [
+        p('The models reveal that the main sequence is two families stitched together at about 1.3 M☉. Below the join, the <b>lower main sequence</b>, stars burn hydrogen by the pp chain, whose gentle T⁴ dependence spreads the energy generation over a sizeable core; the radiative gradient there stays below the adiabatic one and the core is radiative. Their envelopes, however, are cool enough for the opacity peaks of hydrogen and helium ionisation, so the outer layers convect — a convection zone that deepens with decreasing mass, from 2 per cent of the Sun\'s mass to the whole star below 0.35 M☉. Above the join, the <b>upper main sequence</b>, the CNO cycle\'s T¹⁷ concentrates the burning into a tiny volume with an enormous flux, and the core convects; the envelope, hot and fully ionised, has low opacity and is radiative. Sirius A, behind the panel, at 2.1 M☉ has a convective core holding 20 per cent of its mass under a radiative envelope — the mirror image of the Sun.'),
+        p('The widget draws a cross-section of a main-sequence star for any mass from 0.1 to 60 M☉: convective regions in the moving pattern, radiative ones plain, the burning core shaded by energy generation, and the surface at the right colour. Sweep the mass and watch the convective envelope shrink to nothing near 1.3 M☉ as the convective core appears and grows, reaching half the mass at 30 M☉. The readouts give the central temperature and density, the dominant chain, and the fraction of the mass in each zone — all from the same equations, run many times.'),
+        table(
+          ['Mass (M☉)', 'Type', 'T_c (10⁶ K)', 'ρ_c (kg m⁻³)', 'Core', 'Envelope', 'Burning'],
+          [
+            ['0.1', 'M6 V', '4.5', '5 × 10⁵', 'convective', 'convective (fully)', 'pp'],
+            ['0.3', 'M3 V', '7.5', '1.5 × 10⁵', 'convective', 'convective (fully)', 'pp'],
+            ['1.0', 'G2 V', '15.7', '1.5 × 10⁵', 'radiative', 'convective (outer 29 % R, 2 % M)', 'pp (99 %)'],
+            ['1.3', 'F5 V', '18', '1 × 10⁵', 'marginal', 'thin convective', 'pp ≈ CNO'],
+            ['2', 'A5 V', '21', '6 × 10⁴', 'convective (20 % M)', 'radiative', 'CNO'],
+            ['10', 'B2 V', '31', '9 × 10³', 'convective (30 % M)', 'radiative', 'CNO'],
+            ['60', 'O5 V', '41', '2 × 10³', 'convective (65 % M)', 'radiative, radiation-pressure dominated', 'CNO'],
+          ],
+          'Interior conditions along the zero-age main sequence from standard models. Central density falls with mass even as the temperature rises, because massive stars are much larger for their mass.',
+        ),
+        p('Why does the structure matter? Because it decides how a star ages. A convective core is kept mixed, so a massive star exhausts hydrogen throughout its core at once and leaves the main sequence abruptly, with a helium core already of significant mass; the "hook" in the upper main sequence of a cluster H–R diagram is this event. A radiative core burns from the centre out, building up helium gradually, so a Sun-like star drifts slowly brighter — the Sun is 30 per cent more luminous than when it formed — and leaves the sequence gently. A fully convective red dwarf mixes its entire supply into the core and can burn almost all its hydrogen, which is one reason its lifetime is so much longer than the simple M/L scaling suggests. Section 10.3\'s nuclear time scale was a first guess; the structure sharpens it.'),
+      ],
+    },
+    {
+      id: 'lifetimes',
+      kicker: 'Interactive · how long a star has',
+      title: 'Main-sequence lifetimes',
+      widget: { type: 'mslifetime' },
+      scene: [goto('Rigel', 'star'), rate(1)],
+      body: [
+        p('A star\'s main-sequence lifetime is its fuel divided by the rate it burns it: the core hydrogen mass times the energy per kilogram, over the luminosity. Fuel scales with mass; luminosity scales roughly as M^{3.5} on the middle main sequence (steeper below, shallower above, where radiation pressure flattens it toward M¹); so the lifetime goes as M^{−2.5}. The Sun has ten billion years; a 10 M☉ star has thirty million; a 0.2 M☉ star has a trillion, a hundred times the present age of the universe — no red dwarf has yet left the main sequence anywhere, ever. Rigel, behind the panel, at about 20 M☉ and 120 000 L☉, had a main-sequence life of some eight million years and has already finished it; it is now a supergiant burning the next fuel, and it will not last another million.'),
+        eq('t_{\\rm MS} \\approx 10^{10}\\ {\\rm yr}\\ \\frac{M/M_\\odot}{L/L_\\odot} \\approx 10^{10}\\ {\\rm yr}\\left(\\frac{M}{M_\\odot}\\right)^{-2.5}', 'Main-sequence lifetime for stars near a solar mass. The exponent is closer to −3.5 at low mass (where L ∝ M⁴·⁵… and the whole star is fuel) and to −1 at the highest masses (L ∝ M near the Eddington limit, so lifetimes converge on ~3 million years).'),
+        p('The widget plots lifetime against mass from the models, with the current age of the universe, the age of the Sun, the age of the Earth and the length of recorded history marked, and a mass slider that reports the lifetime, the luminosity, the spectral type and the total number of such stars that have ever had time to die. Two consequences are worth drawing out. The present-day main sequence is a mixture of stars of all ages up to 13 billion years at the low-mass end and only the newborn at the high-mass end: every O star in the sky is younger than the first flowering plants. And a star cluster, born all at once, loses its main sequence from the top down, like a candle burning from the tip; the mass at which the sequence ends — the <em>turn-off</em> — is a clock that reads the cluster\'s age, the principal way the ages of the oldest stars, and hence a lower limit on the age of the universe, have been found.'),
+        p('The numbers also explain the census of Section 8.2. Massive stars are rare partly because few are made but mostly because they die so fast: for every O star alive there are ten thousand that have already exploded. And the Sun\'s middle-aged steadiness is a matter of mass. Had the Sun been 1.5 M☉, it would have left the main sequence two billion years ago, before complex life; had it been 0.5 M☉, it would barely have changed in brightness since the Earth formed, but its habitable zone would lie so close that any planet there would be tidally locked and flare-scorched. The physics of this chapter is, among other things, the reason the Earth\'s history has been possible at all.'),
+        think('Globular clusters have turn-off masses near 0.8 M☉, giving ages of 12–13 billion years. In the 1990s, when the Hubble constant was thought to be high, this made the oldest stars older than the universe. Which numbers in this chapter would have had to be wrong for the stars to be younger — and which independent measurements (think of opacities, nuclear rates, helioseismology, parallaxes) ultimately settled it in favour of the stars and against the old cosmology?'),
+      ],
+    },
+    {
+      id: 'chapter-close',
+      kicker: 'Chapter close',
+      title: 'The interiors of stars in one page',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Hydrostatic equilibrium dP/dr = −GM_rρ/r² and mass conservation dM_r/dr = 4πr²ρ: P_c ~ GM²/R⁴ — 10¹⁶ Pa in the Sun, 10¹² in Jupiter (metallic hydrogen), 10²³ in a white dwarf.',
+          'Equation of state: ideal gas P = ρkT/μm_H with 1/μ ≈ 2X + ¾Y + ½Z; radiation aT⁴/3 in massive stars; degenerate electrons P ∝ ρ^{5/3} in white dwarfs and giant planets — hence R ∝ M^{−1/3} and the Jupiter-sized maximum.',
+          'Energy: Kelvin–Helmholtz GM²/2RL ≈ 10⁷ yr (too short for the Sun; right for Jupiter and Saturn\'s excess heat); nuclear 0.007 × 0.1 Mc²/L ≈ 10¹⁰ yr; binding-energy curve peaks at iron; tunnelling and the Gamow peak; pp chain (T⁴, weak bottleneck), CNO (T¹⁷, above 1.3 M☉), triple-alpha (T⁴¹, Hoyle resonance); dL_r/dr = 4πr²ρε.',
+          'Transport: radiative dT/dr ∝ κ̄ρL_r/T³r², giving L ∝ μ⁴M³/κ̄; convection where ∇ > ∇_ad = 0.4 (Schwarzschild; Earth\'s 9.8 K/km), pinned to adiabatic deep down, mixing length near the surface; granules and Betelgeuse\'s giant cells.',
+          'Models: four equations + P, κ̄, ε; boundary conditions; polytropes (n = 1 Jupiter, n = 3 Eddington); Vogt–Russell; the standard solar model confirmed by helioseismology (0.1 %) and neutrinos (1 %).',
+          'Main sequence: 0.08 M☉ (brown dwarfs below; 13 M_Jup deuterium limit) to ~100 M☉ (Eddington); lower MS radiative core + convective envelope, upper MS convective core + radiative envelope, join at 1.3 M☉; t_MS ≈ 10¹⁰ yr (M/M☉)^{−2.5}; cluster turn-off ages.',
+        ),
+        key('Chapter 10 is where astrophysics becomes predictive. Give the equations a mass and a composition and they return a star — its size, brightness, colour, interior and lifetime — and in the one case we can check from inside, the Sun, they are right to a tenth of a per cent. The same equations, allowed to run forward in time as the composition changes, are the subject of the chapters that follow: the life and death of stars.'),
+        { kind: 'callout', tone: 'history', title: 'Suggested reading', html: 'Carroll & Ostlie, <em>An Introduction to Modern Astrophysics</em>, Chapter 10, which this chapter follows; R. Kippenhahn, A. Weigert & A. Weiss, <em>Stellar Structure and Evolution</em> (2nd ed., 2012), the standard graduate text; D. D. Clayton, <em>Principles of Stellar Evolution and Nucleosynthesis</em> (1968/1983) for the nuclear physics; A. S. Eddington, <em>The Internal Constitution of the Stars</em> (1926), still readable and often right; M. Schwarzschild, <em>Structure and Evolution of the Stars</em> (1958); J. Christensen-Dalsgaard, "Helioseismology", <em>Reviews of Modern Physics</em> 74, 1073 (2002); J. N. Bahcall, <em>Neutrino Astrophysics</em> (1989); T. Guillot & D. Gautier on giant-planet interiors in <em>Treatise on Geophysics</em> (2015); A. Burrows et al., "The theory of brown dwarfs and extrasolar giant planets", <em>Rev. Mod. Phys.</em> 73, 719 (2001).' },
+        { kind: 'callout', tone: 'think', title: 'Problems to try', html: '(1) Estimate the central pressure of Saturn (M = 5.7 × 10²⁶ kg, R = 5.8 × 10⁷ m) and of a 0.6 M☉ white dwarf of Earth\'s radius; compare with the Sun. (2) Compute μ for fully ionised gas with X = 0.70, Y = 0.28, Z = 0.02 and for the present solar centre X = 0.35, Y = 0.63; by what factor has the central pressure support per unit ρT changed? (3) At the Sun\'s centre (T = 1.57 × 10⁷ K, ρ = 1.5 × 10⁵ kg m⁻³) compute P_gas, P_rad and the non-relativistic degenerate pressure; confirm the ordering. (4) Find the density at which electrons become degenerate at 10⁷ K and compare with Sirius B\'s mean density. (5) Compute the Kelvin–Helmholtz time for Jupiter (L = 3.3 × 10¹⁷ W excess) and show it exceeds the age of the solar system. (6) Compute the Gamow peak energy and width for p + p, p + ¹²C and ⁴He + ⁴He at 1.5 × 10⁷ K and 1 × 10⁸ K. (7) Using ε_pp ∝ T⁴ and ε_CNO ∝ T¹⁷ with the normalisations in Section 10.3, find the temperature at which they are equal for X = 0.7, X_CNO = 0.01. (8) The Sun\'s luminosity passes through a sphere of radius 0.5 R☉ where T = 4 × 10⁶ K, ρ = 1 300 kg m⁻³, κ̄ = 1 m² kg⁻¹; find dT/dr and compare with the adiabatic gradient there (g = 540 m s⁻², μ = 0.6). (9) Show that the dry adiabatic lapse rate of the Earth\'s atmosphere is g/c_p and evaluate it; why is the observed average (6.5 K/km) smaller? (10) Solve the Lane–Emden equation for n = 1 analytically and show R = π√(K/2πG); using Jupiter\'s R, find K and predict Saturn\'s radius. (11) A cluster\'s main-sequence turn-off is at M = 1.1 M☉; estimate its age. Repeat for a turn-off at 0.85 M☉ and comment on the implied minimum age of the universe. (12) Using L_Edd, find the mass at which a main-sequence star with L ≈ 1.2 × 10⁴ (M/M☉)^{2.5} L☉ (valid above 20 M☉) reaches 1/2 of the Eddington luminosity.' },
+      ],
+    },
+  ],
+};
+
 export const COURSE: Course = {
   id: 'astrophysics',
   title: 'Introduction to Astrophysics',
@@ -4453,6 +4976,12 @@ export const COURSE: Course = {
       title: 'Stellar Atmospheres',
       summary: 'How light escapes a star and what it carries: the radiation field, opacity and optical depth, the random walk of photons, the transfer equation and its gray solution, limb darkening, and the profiles of spectral lines that reveal temperature, pressure, rotation and the composition of the Sun.',
       sections: [S9_1, S9_2, S9_3, S9_4, S9_5],
+    },
+    {
+      id: 'ch10', number: 10,
+      title: 'The Interiors of Stars',
+      summary: 'What holds a star up and what makes it shine: hydrostatic equilibrium, the gas laws of hot and of degenerate matter, gravitational and nuclear energy, the Gamow peak, radiative and convective transport, the equations of stellar structure and the standard solar model, and the main sequence from brown dwarfs to the Eddington limit — with Jupiter, Saturn and the Earth as working examples.',
+      sections: [S10_1, S10_2, S10_3, S10_4, S10_5, S10_6],
     },
   ],
 };

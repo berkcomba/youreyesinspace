@@ -1,0 +1,754 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "cno-triple-alpha": {
+   "script": "Look at Spica behind the panel, eleven solar masses, at thirty million kelvin. Carbon, a relay baton rather than fuel, is returned, and four protons become one helium nucleus, releasing twenty-six point seven mega-electronvolts, slightly more of it as neutrinos than in the proton-proton chain.\n\nEvery step uses charge six, seven or eight, so the Coulomb barriers and the Gamow peak sit higher, and near twenty million kelvin the rate rises as roughly temperature to the seventeenth. Epsilon CNO is about eight times ten to the minus thirty-one, times density, times X, times X CNO, times T-six to the nineteen point nine, in watts per kilogram. Epsilon is power per kilogram. Density is mass per volume, X the hydrogen fraction, X CNO the catalyst fraction, and T-six temperature in millions of kelvin. It is a local fit, negligible below fifteen million kelvin and dominant above about eighteen million. The Sun, at fifteen point seven million, gets one per cent of its energy from CNO.\n\nOn the widget, vary the composition and watch the log plot, stellar centres marked. Proton-proton and CNO cross near eighteen million kelvin, about one point three solar masses. Spica runs almost entirely on CNO. Burning sits in a tiny core that must convect, the split we use in section ten point six.\n\nThe third curve is triple-alpha. Helium burns only near a hundred million kelvin, the barrier four times the proton barrier. Two helium nuclei make beryllium-eight, gone in ten to the minus sixteen seconds, and a third is captured on a resonance Hoyle predicted in nineteen fifty-three because carbon exists. They found it within months. Epsilon three-alpha is fifty point nine, times density squared, times Y cubed, times T-eight to the forty-one, in watts per kilogram. Y is the helium fraction, T-eight temperature in hundreds of millions of kelvin, and density squared appears because this is a three-body reaction. That dependence thermostats the red giants, and the origin of every carbon atom in your body.",
+   "hash": "a6787ed29bde",
+   "duration": 129.27,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.6,
+     "text": "Look at Spica behind the panel, eleven solar masses, at thirty million kelvin."
+    },
+    {
+     "start": 5.6,
+     "end": 20.04,
+     "text": "Carbon, a relay baton rather than fuel, is returned, and four protons become one helium nucleus, releasing twenty-six point seven mega-electronvolts, slightly more of it as neutrinos than in the proton-proton chain."
+    },
+    {
+     "start": 20.04,
+     "end": 31.24,
+     "text": "Every step uses charge six, seven or eight, so the Coulomb barriers and the Gamow peak sit higher, and near twenty million kelvin the rate rises as roughly temperature to the seventeenth."
+    },
+    {
+     "start": 31.24,
+     "end": 43.36,
+     "text": "Epsilon CNO is about eight times ten to the minus thirty-one, times density, times X, times X CNO, times T-six to the nineteen point nine, in watts per kilogram."
+    },
+    {
+     "start": 43.36,
+     "end": 45.58,
+     "text": "Epsilon is power per kilogram."
+    },
+    {
+     "start": 45.58,
+     "end": 54.42,
+     "text": "Density is mass per volume, X the hydrogen fraction, X CNO the catalyst fraction, and T-six temperature in millions of kelvin."
+    },
+    {
+     "start": 54.42,
+     "end": 60.58,
+     "text": "It is a local fit, negligible below fifteen million kelvin and dominant above about eighteen million."
+    },
+    {
+     "start": 60.58,
+     "end": 65.97,
+     "text": "The Sun, at fifteen point seven million, gets one per cent of its energy from CNO."
+    },
+    {
+     "start": 65.97,
+     "end": 71.21,
+     "text": "On the widget, vary the composition and watch the log plot, stellar centres marked."
+    },
+    {
+     "start": 71.21,
+     "end": 77.39,
+     "text": "Proton-proton and CNO cross near eighteen million kelvin, about one point three solar masses."
+    },
+    {
+     "start": 77.39,
+     "end": 80.17,
+     "text": "Spica runs almost entirely on CNO."
+    },
+    {
+     "start": 80.17,
+     "end": 85.63,
+     "text": "Burning sits in a tiny core that must convect, the split we use in section ten point six."
+    },
+    {
+     "start": 85.63,
+     "end": 87.81,
+     "text": "The third curve is triple-alpha."
+    },
+    {
+     "start": 87.81,
+     "end": 93.35,
+     "text": "Helium burns only near a hundred million kelvin, the barrier four times the proton barrier."
+    },
+    {
+     "start": 93.35,
+     "end": 104.59,
+     "text": "Two helium nuclei make beryllium-eight, gone in ten to the minus sixteen seconds, and a third is captured on a resonance Hoyle predicted in nineteen fifty-three because carbon exists."
+    },
+    {
+     "start": 104.59,
+     "end": 106.35,
+     "text": "They found it within months."
+    },
+    {
+     "start": 106.35,
+     "end": 115.93,
+     "text": "Epsilon three-alpha is fifty point nine, times density squared, times Y cubed, times T-eight to the forty-one, in watts per kilogram."
+    },
+    {
+     "start": 115.93,
+     "end": 124.25,
+     "text": "Y is the helium fraction, T-eight temperature in hundreds of millions of kelvin, and density squared appears because this is a three-body reaction."
+    },
+    {
+     "start": 124.25,
+     "end": 129.27,
+     "text": "That dependence thermostats the red giants, and the origin of every carbon atom in your body."
+    }
+   ],
+   "voicedHash": "ea0a45329a85"
+  },
+  "coulomb-tunnelling": {
+   "script": "There is a real obstacle here. Two protons repel each other electrically, and the strong force that can bind them only acts within about a femtometre. Bringing them that close against the Coulomb repulsion costs an energy of Z one Z two e squared over four pi epsilon zero r, roughly one point four mega electron volts. Z one and Z two are the nuclear charges, e the elementary charge, epsilon zero the permittivity of free space, and r that tiny separation. Yet at the Sun’s centre, about sixteen million kelvin, the mean thermal energy is three halves k T, only about two kilo electron volts. k is Boltzmann’s constant. A thousand times too small. Even the Maxwell–Boltzmann tail fails classically: the fraction above one mega electron volt is e to the minus one thousand over two, about ten to the minus two hundred and seventeen, and there are not that many protons in the universe. Classically the Sun cannot shine. Eddington told his critics to go and find a hotter place.\n\nQuantum mechanics saves us. A proton is a wave, and a wave meeting a barrier higher than its energy does not stop dead. Its amplitude decays inside the barrier and a little leaks through. Gamow computed that tunnelling probability in nineteen twenty-eight. It is exponential in the barrier’s thickness compared with the de Broglie wavelength: the probability goes as the exponential of minus b over the square root of E. Lower energy means a thicker barrier and less leakage, but never zero.\n\nThe reaction cross-section is sigma of E proportional to one over E times e to the minus b E to the minus one half. That one over E is simply the geometric size of the wave. The constant b equals pi times the square root of two mu m, times Z one Z two e squared, all over h-bar times four pi epsilon zero. Mu m is the reduced mass, h-bar Planck’s constant over two pi. Fusion peaks where the falling thermal tail and the rising tunnelling factor multiply most strongly, at the Gamow energy E zero, which is b k T over two, all raised to the two-thirds power. For proton plus proton at the solar centre that sits near six kilo electron volts, about three times k T; for the CNO cycle, higher charges, nearer twenty-five.\n\nTry the widget. The red curve is the Maxwell–Boltzmann distribution dying at high energy; the blue curve is the tunnelling probability rising from almost nothing; their product is the narrow Gamow peak. Raise the temperature and watch the peak shift upward and grow enormously. Near ten million kelvin the proton-proton rate scales roughly as temperature to the fourth; heavier nuclei are steeper still, temperature to the seventeenth for CNO, to the fortieth for helium burning. That sensitivity makes a star a thermostat. Look at Proxima Centauri behind the panel: central temperature only half the Sun’s, luminosity six hundred times lower. Fusion barely ticks over.\n\nAtkinson and Houtermans applied Gamow’s idea to stars in nineteen twenty-nine. The chains followed a decade later: Bethe and Critchfield the pp chain, Bethe and independently von Weizsäcker the CNO cycle, in nineteen thirty-eight and thirty-nine. Bethe’s paper earned the nineteen sixty-seven Nobel Prize.",
+   "hash": "76a17857e378",
+   "duration": 196.15,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.14,
+     "text": "There is a real obstacle here."
+    },
+    {
+     "start": 2.14,
+     "end": 9.2,
+     "text": "Two protons repel each other electrically, and the strong force that can bind them only acts within about a femtometre."
+    },
+    {
+     "start": 9.2,
+     "end": 20.68,
+     "text": "Bringing them that close against the Coulomb repulsion costs an energy of Z one Z two e squared over four pi epsilon zero r, roughly one point four mega electron volts."
+    },
+    {
+     "start": 20.68,
+     "end": 30.44,
+     "text": "Z one and Z two are the nuclear charges, e the elementary charge, epsilon zero the permittivity of free space, and r that tiny separation."
+    },
+    {
+     "start": 30.44,
+     "end": 39.68,
+     "text": "Yet at the Sun’s centre, about sixteen million kelvin, the mean thermal energy is three halves k T, only about two kilo electron volts."
+    },
+    {
+     "start": 39.68,
+     "end": 41.68,
+     "text": "k is Boltzmann’s constant."
+    },
+    {
+     "start": 41.68,
+     "end": 43.7,
+     "text": "A thousand times too small."
+    },
+    {
+     "start": 43.7,
+     "end": 57.32,
+     "text": "Even the Maxwell–Boltzmann tail fails classically: the fraction above one mega electron volt is e to the minus one thousand over two, about ten to the minus two hundred and seventeen, and there are not that many protons in the universe."
+    },
+    {
+     "start": 57.32,
+     "end": 59.7,
+     "text": "Classically the Sun cannot shine."
+    },
+    {
+     "start": 59.7,
+     "end": 62.9,
+     "text": "Eddington told his critics to go and find a hotter place."
+    },
+    {
+     "start": 62.9,
+     "end": 64.78,
+     "text": "Quantum mechanics saves us."
+    },
+    {
+     "start": 64.78,
+     "end": 70.24,
+     "text": "A proton is a wave, and a wave meeting a barrier higher than its energy does not stop dead."
+    },
+    {
+     "start": 70.24,
+     "end": 74.36,
+     "text": "Its amplitude decays inside the barrier and a little leaks through."
+    },
+    {
+     "start": 74.36,
+     "end": 78.06,
+     "text": "Gamow computed that tunnelling probability in nineteen twenty-eight."
+    },
+    {
+     "start": 78.06,
+     "end": 87.06,
+     "text": "It is exponential in the barrier’s thickness compared with the de Broglie wavelength: the probability goes as the exponential of minus b over the square root of E."
+    },
+    {
+     "start": 87.06,
+     "end": 91.38,
+     "text": "Lower energy means a thicker barrier and less leakage, but never zero."
+    },
+    {
+     "start": 91.38,
+     "end": 98.67,
+     "text": "The reaction cross-section is sigma of E proportional to one over E times e to the minus b E to the minus one half."
+    },
+    {
+     "start": 98.67,
+     "end": 102.19,
+     "text": "That one over E is simply the geometric size of the wave."
+    },
+    {
+     "start": 102.19,
+     "end": 111.89,
+     "text": "The constant b equals pi times the square root of two mu m, times Z one Z two e squared, all over h-bar times four pi epsilon zero."
+    },
+    {
+     "start": 111.89,
+     "end": 116.71,
+     "text": "Mu m is the reduced mass, h-bar Planck’s constant over two pi."
+    },
+    {
+     "start": 116.71,
+     "end": 128.47,
+     "text": "Fusion peaks where the falling thermal tail and the rising tunnelling factor multiply most strongly, at the Gamow energy E zero, which is b k T over two, all raised to the two-thirds power."
+    },
+    {
+     "start": 128.47,
+     "end": 139.29,
+     "text": "For proton plus proton at the solar centre that sits near six kilo electron volts, about three times k T; for the CNO cycle, higher charges, nearer twenty-five."
+    },
+    {
+     "start": 139.29,
+     "end": 140.35,
+     "text": "Try the widget."
+    },
+    {
+     "start": 140.35,
+     "end": 150.95,
+     "text": "The red curve is the Maxwell–Boltzmann distribution dying at high energy; the blue curve is the tunnelling probability rising from almost nothing; their product is the narrow Gamow peak."
+    },
+    {
+     "start": 150.95,
+     "end": 154.95,
+     "text": "Raise the temperature and watch the peak shift upward and grow enormously."
+    },
+    {
+     "start": 154.95,
+     "end": 166.71,
+     "text": "Near ten million kelvin the proton-proton rate scales roughly as temperature to the fourth; heavier nuclei are steeper still, temperature to the seventeenth for CNO, to the fortieth for helium burning."
+    },
+    {
+     "start": 166.71,
+     "end": 169.49,
+     "text": "That sensitivity makes a star a thermostat."
+    },
+    {
+     "start": 169.49,
+     "end": 176.79,
+     "text": "Look at Proxima Centauri behind the panel: central temperature only half the Sun’s, luminosity six hundred times lower."
+    },
+    {
+     "start": 176.79,
+     "end": 178.69,
+     "text": "Fusion barely ticks over."
+    },
+    {
+     "start": 178.69,
+     "end": 183.15,
+     "text": "Atkinson and Houtermans applied Gamow’s idea to stars in nineteen twenty-nine."
+    },
+    {
+     "start": 183.15,
+     "end": 193.09,
+     "text": "The chains followed a decade later: Bethe and Critchfield the pp chain, Bethe and independently von Weizsäcker the CNO cycle, in nineteen thirty-eight and thirty-nine."
+    },
+    {
+     "start": 193.09,
+     "end": 196.15,
+     "text": "Bethe’s paper earned the nineteen sixty-seven Nobel Prize."
+    }
+   ],
+   "voicedHash": "e45ff6adf5e4"
+  },
+  "energy-summary": {
+   "script": "Look behind the panel: the planets circle the Sun on a clock that contraction cannot keep wound. Contraction supplies an energy G M squared over two R. G is the gravitational constant, M the mass, R the radius. At solar luminosity that store lasts about ten million years, the Kelvin–Helmholtz time. Far too short for the Sun, but it still powers the excess heat of Jupiter and Neptune, and Saturn adds helium rain.\n\nFusion frees seven tenths of a percent of the rest mass, twenty-six point seven mega-electronvolts per helium-four, so a tenth of the Sun lasts ten billion years. Binding energy peaks at iron. Light nuclei fuse, heavy ones fission, and nothing beyond iron is fuel.\n\nThe Coulomb barrier is about one mega-electronvolt, a thousand times the thermal energy. Tunnelling probability is proportional to the exponential of minus b over the square root of E. E is the particle energy, and b is set by the barrier. With the Maxwell–Boltzmann tail, the Gamow peak sits at a few kT, like a handful of runners clearing a wall the crowd cannot jump. Rates then scale as temperature to the fourth for the proton-proton chain, the seventeenth for CNO, and the forty-first for triple-alpha.\n\nProton plus proton to deuterium, a positron, and a neutrino is the weak bottleneck, nine billion years per proton. The three branches differ in neutrino energy, which posed and solved the solar neutrino problem. Carbon catalyses the CNO cycle above eighteen million kelvin, above one point three solar masses. Triple-alpha, through Hoyle's resonance, makes carbon near a hundred million kelvin.\n\nd L sub r over d r equals four pi r squared rho epsilon. L sub r is the luminosity inside radius r, rho the density, epsilon the energy per kilogram per second. Four pi r squared times density is mass per unit radius, and epsilon turns that mass into power. Epsilon depends on density, temperature, and composition. With epsilon we have the third structure equation. The fourth gets the energy out, which sets the temperature gradient and therefore, through the equation of state, the pressure.\n\nThat is the energy budget of a star.",
+   "hash": "cf3d6fa8c250",
+   "duration": 136.95,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.04,
+     "text": "Look behind the panel: the planets circle the Sun on a clock that contraction cannot keep wound."
+    },
+    {
+     "start": 6.04,
+     "end": 10.24,
+     "text": "Contraction supplies an energy G M squared over two R."
+    },
+    {
+     "start": 10.24,
+     "end": 15.14,
+     "text": "G is the gravitational constant, M the mass, R the radius."
+    },
+    {
+     "start": 15.14,
+     "end": 21,
+     "text": "At solar luminosity that store lasts about ten million years, the Kelvin–Helmholtz time."
+    },
+    {
+     "start": 21,
+     "end": 28.5,
+     "text": "Far too short for the Sun, but it still powers the excess heat of Jupiter and Neptune, and Saturn adds helium rain."
+    },
+    {
+     "start": 28.5,
+     "end": 38.7,
+     "text": "Fusion frees seven tenths of a percent of the rest mass, twenty-six point seven mega-electronvolts per helium-four, so a tenth of the Sun lasts ten billion years."
+    },
+    {
+     "start": 38.7,
+     "end": 40.82,
+     "text": "Binding energy peaks at iron."
+    },
+    {
+     "start": 40.82,
+     "end": 46.04,
+     "text": "Light nuclei fuse, heavy ones fission, and nothing beyond iron is fuel."
+    },
+    {
+     "start": 46.04,
+     "end": 51.46,
+     "text": "The Coulomb barrier is about one mega-electronvolt, a thousand times the thermal energy."
+    },
+    {
+     "start": 51.46,
+     "end": 57.14,
+     "text": "Tunnelling probability is proportional to the exponential of minus b over the square root of E."
+    },
+    {
+     "start": 57.14,
+     "end": 60.86,
+     "text": "E is the particle energy, and b is set by the barrier."
+    },
+    {
+     "start": 60.86,
+     "end": 69.11,
+     "text": "With the Maxwell–Boltzmann tail, the Gamow peak sits at a few kT, like a handful of runners clearing a wall the crowd cannot jump."
+    },
+    {
+     "start": 69.11,
+     "end": 77.49,
+     "text": "Rates then scale as temperature to the fourth for the proton-proton chain, the seventeenth for CNO, and the forty-first for triple-alpha."
+    },
+    {
+     "start": 77.49,
+     "end": 85.31,
+     "text": "Proton plus proton to deuterium, a positron, and a neutrino is the weak bottleneck, nine billion years per proton."
+    },
+    {
+     "start": 85.31,
+     "end": 90.97,
+     "text": "The three branches differ in neutrino energy, which posed and solved the solar neutrino problem."
+    },
+    {
+     "start": 90.97,
+     "end": 97.45,
+     "text": "Carbon catalyses the CNO cycle above eighteen million kelvin, above one point three solar masses."
+    },
+    {
+     "start": 97.45,
+     "end": 102.77,
+     "text": "Triple-alpha, through Hoyle's resonance, makes carbon near a hundred million kelvin."
+    },
+    {
+     "start": 102.77,
+     "end": 107.69,
+     "text": "d L sub r over d r equals four pi r squared rho epsilon."
+    },
+    {
+     "start": 107.69,
+     "end": 115.01,
+     "text": "L sub r is the luminosity inside radius r, rho the density, epsilon the energy per kilogram per second."
+    },
+    {
+     "start": 115.01,
+     "end": 121.53,
+     "text": "Four pi r squared times density is mass per unit radius, and epsilon turns that mass into power."
+    },
+    {
+     "start": 121.53,
+     "end": 125.23,
+     "text": "Epsilon depends on density, temperature, and composition."
+    },
+    {
+     "start": 125.23,
+     "end": 128.07,
+     "text": "With epsilon we have the third structure equation."
+    },
+    {
+     "start": 128.07,
+     "end": 134.93,
+     "text": "The fourth gets the energy out, which sets the temperature gradient and therefore, through the equation of state, the pressure."
+    },
+    {
+     "start": 134.93,
+     "end": 136.95,
+     "text": "That is the energy budget of a star."
+    }
+   ],
+   "voicedHash": "07217bf2537d"
+  },
+  "gravity-as-source": {
+   "script": "Welcome. A star radiates; something must supply that energy. Saturn, behind the panel, radiates two and a half times the sunlight it receives. Jupiter, one point seven times; Neptune, two point six. Helmholtz, eighteen fifty-four, and Kelvin, eighteen sixty-two, proposed gravity.\n\nA contracting sphere frees gravitational potential energy. From the virial theorem in Section two point four, half heats the gas and half is radiated. So you can spend about G M squared over two R, or three G M squared over five R if uniform, several times more if centrally condensed. Divide by luminosity. The Kelvin–Helmholtz time, t sub K H, is approximately G M squared over two R L. G is the gravitational constant, M the mass, R the radius, L the luminosity. In solar units, about sixteen million years times M over the solar mass, squared, times solar radius over R, times solar luminosity over L. For the Sun, of order ten million years. Kelvin set the Earth's age to that, dismaying geologists and Darwin. They were right; gravity falls short by a thousand.\n\nBut gravity does power the giant planets. Jupiter's extra light is leftover contraction over four point six billion years: a millimetre a year, a kelvin per million years. Smaller Saturn should have cooled faster; contraction alone fails. Helium rain does the rest — droplets falling through metallic hydrogen, releasing energy as they fall. Cassini saw missing helium. t sub K H is also the thermal time for a young star to reach the main sequence.\n\nTry the widget: Sun, then Jupiter, then Saturn. Watch t sub K H against the Earth's four and a half billion years from radioactive dating, the oldest clusters, and the nuclear scale next. Jupiter's budget outlasts the solar system, and the brightness matches a contraction model, a century late.\n\nIf contraction ran for four point six billion years, by what factor per million years would the radius shrink, and what solar-constant clue in fossil shells would have caught Kelvin?",
+   "hash": "0d3fae783088",
+   "duration": 127.99,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 0.84,
+     "text": "Welcome."
+    },
+    {
+     "start": 0.84,
+     "end": 4.36,
+     "text": "A star radiates; something must supply that energy."
+    },
+    {
+     "start": 4.36,
+     "end": 9.6,
+     "text": "Saturn, behind the panel, radiates two and a half times the sunlight it receives."
+    },
+    {
+     "start": 9.6,
+     "end": 14.14,
+     "text": "Jupiter, one point seven times; Neptune, two point six."
+    },
+    {
+     "start": 14.14,
+     "end": 20.02,
+     "text": "Helmholtz, eighteen fifty-four, and Kelvin, eighteen sixty-two, proposed gravity."
+    },
+    {
+     "start": 20.02,
+     "end": 23.72,
+     "text": "A contracting sphere frees gravitational potential energy."
+    },
+    {
+     "start": 23.72,
+     "end": 29.36,
+     "text": "From the virial theorem in Section two point four, half heats the gas and half is radiated."
+    },
+    {
+     "start": 29.36,
+     "end": 38.5,
+     "text": "So you can spend about G M squared over two R, or three G M squared over five R if uniform, several times more if centrally condensed."
+    },
+    {
+     "start": 38.5,
+     "end": 40.32,
+     "text": "Divide by luminosity."
+    },
+    {
+     "start": 40.32,
+     "end": 46.84,
+     "text": "The Kelvin–Helmholtz time, t sub K H, is approximately G M squared over two R L."
+    },
+    {
+     "start": 46.84,
+     "end": 52.98,
+     "text": "G is the gravitational constant, M the mass, R the radius, L the luminosity."
+    },
+    {
+     "start": 52.98,
+     "end": 62.86,
+     "text": "In solar units, about sixteen million years times M over the solar mass, squared, times solar radius over R, times solar luminosity over L."
+    },
+    {
+     "start": 62.86,
+     "end": 65.51,
+     "text": "For the Sun, of order ten million years."
+    },
+    {
+     "start": 65.51,
+     "end": 69.87,
+     "text": "Kelvin set the Earth's age to that, dismaying geologists and Darwin."
+    },
+    {
+     "start": 69.87,
+     "end": 73.09,
+     "text": "They were right; gravity falls short by a thousand."
+    },
+    {
+     "start": 73.09,
+     "end": 75.67,
+     "text": "But gravity does power the giant planets."
+    },
+    {
+     "start": 75.67,
+     "end": 83.33,
+     "text": "Jupiter's extra light is leftover contraction over four point six billion years: a millimetre a year, a kelvin per million years."
+    },
+    {
+     "start": 83.33,
+     "end": 87.47,
+     "text": "Smaller Saturn should have cooled faster; contraction alone fails."
+    },
+    {
+     "start": 87.47,
+     "end": 93.59,
+     "text": "Helium rain does the rest — droplets falling through metallic hydrogen, releasing energy as they fall."
+    },
+    {
+     "start": 93.59,
+     "end": 95.61,
+     "text": "Cassini saw missing helium."
+    },
+    {
+     "start": 95.61,
+     "end": 100.53,
+     "text": "t sub K H is also the thermal time for a young star to reach the main sequence."
+    },
+    {
+     "start": 100.53,
+     "end": 104.13,
+     "text": "Try the widget: Sun, then Jupiter, then Saturn."
+    },
+    {
+     "start": 104.13,
+     "end": 112.11,
+     "text": "Watch t sub K H against the Earth's four and a half billion years from radioactive dating, the oldest clusters, and the nuclear scale next."
+    },
+    {
+     "start": 112.11,
+     "end": 118.25,
+     "text": "Jupiter's budget outlasts the solar system, and the brightness matches a contraction model, a century late."
+    },
+    {
+     "start": 118.25,
+     "end": 127.99,
+     "text": "If contraction ran for four point six billion years, by what factor per million years would the radius shrink, and what solar-constant clue in fossil shells would have caught Kelvin?"
+    }
+   ],
+   "voicedHash": "62a21d4f5529"
+  },
+  "nuclear-binding": {
+   "script": "Look behind the panel: we have flown out to the Sun. Its endurance comes from energy equals mass times c squared. Helium weighs seven tenths of a percent less than four protons. Fuse them and that mass defect appears as energy, about twenty-seven mega-electron-volts per nucleus. Burn a tenth of the hydrogen, the hot core's share, and the Sun releases roughly ten to the forty-four joules, enough for ten billion years at its present luminosity. That nuclear time scale is a thousand times the Kelvin-Helmholtz time, longer than the Earth and the oldest rocks. Eddington had it in nineteen twenty, before the reactions were known.\n\nThe nuclear time t nuclear is approximately zero point zero zero seven times zero point one times M c squared over L, or about ten billion years times M over solar mass times solar luminosity over L. M is mass, L luminosity, c the speed of light. Those factors are the mass defect and the core fuel fraction; energy over power gives the life. Since luminosity scales about as mass to the three and a half, ten solar masses live twenty million years and half a solar mass a hundred billion.\n\nHover the widget and watch the fusion steps highlight on the binding-energy curve, binding energy per nucleon against mass number. Picture a mountain of stability — climbing releases energy. It leaps to a peak at helium, then climbs gently through carbon, oxygen and silicon to nearly nine mega-electron-volts per nucleon at iron and nickel, then declines toward uranium. Hydrogen to helium frees nearly seven mega-electron-volts per nucleon; later steps free far less. So hydrogen burning dominates, and iron ends the fuel supply.\n\nThe sawtooth — helium, carbon and oxygen above their neighbours — is alpha-particle stability, which is why those elements rule chemistry. Beyond iron the strong force has saturated and lost to Coulomb repulsion; the heavy elements form by neutron capture in stellar deaths, chapter fifteen.",
+   "hash": "7d0969ca906c",
+   "duration": 121.59,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.46,
+     "text": "Look behind the panel: we have flown out to the Sun."
+    },
+    {
+     "start": 3.46,
+     "end": 7.56,
+     "text": "Its endurance comes from energy equals mass times c squared."
+    },
+    {
+     "start": 7.56,
+     "end": 11.64,
+     "text": "Helium weighs seven tenths of a percent less than four protons."
+    },
+    {
+     "start": 11.64,
+     "end": 18.34,
+     "text": "Fuse them and that mass defect appears as energy, about twenty-seven mega-electron-volts per nucleus."
+    },
+    {
+     "start": 18.34,
+     "end": 28.86,
+     "text": "Burn a tenth of the hydrogen, the hot core's share, and the Sun releases roughly ten to the forty-four joules, enough for ten billion years at its present luminosity."
+    },
+    {
+     "start": 28.86,
+     "end": 35.8,
+     "text": "That nuclear time scale is a thousand times the Kelvin-Helmholtz time, longer than the Earth and the oldest rocks."
+    },
+    {
+     "start": 35.8,
+     "end": 39.76,
+     "text": "Eddington had it in nineteen twenty, before the reactions were known."
+    },
+    {
+     "start": 39.76,
+     "end": 53.38,
+     "text": "The nuclear time t nuclear is approximately zero point zero zero seven times zero point one times M c squared over L, or about ten billion years times M over solar mass times solar luminosity over L."
+    },
+    {
+     "start": 53.38,
+     "end": 57.34,
+     "text": "M is mass, L luminosity, c the speed of light."
+    },
+    {
+     "start": 57.34,
+     "end": 63.31,
+     "text": "Those factors are the mass defect and the core fuel fraction; energy over power gives the life."
+    },
+    {
+     "start": 63.31,
+     "end": 71.77,
+     "text": "Since luminosity scales about as mass to the three and a half, ten solar masses live twenty million years and half a solar mass a hundred billion."
+    },
+    {
+     "start": 71.77,
+     "end": 79.19,
+     "text": "Hover the widget and watch the fusion steps highlight on the binding-energy curve, binding energy per nucleon against mass number."
+    },
+    {
+     "start": 79.19,
+     "end": 82.79,
+     "text": "Picture a mountain of stability — climbing releases energy."
+    },
+    {
+     "start": 82.79,
+     "end": 93.97,
+     "text": "It leaps to a peak at helium, then climbs gently through carbon, oxygen and silicon to nearly nine mega-electron-volts per nucleon at iron and nickel, then declines toward uranium."
+    },
+    {
+     "start": 93.97,
+     "end": 100.43,
+     "text": "Hydrogen to helium frees nearly seven mega-electron-volts per nucleon; later steps free far less."
+    },
+    {
+     "start": 100.43,
+     "end": 104.19,
+     "text": "So hydrogen burning dominates, and iron ends the fuel supply."
+    },
+    {
+     "start": 104.19,
+     "end": 112.53,
+     "text": "The sawtooth — helium, carbon and oxygen above their neighbours — is alpha-particle stability, which is why those elements rule chemistry."
+    },
+    {
+     "start": 112.53,
+     "end": 121.59,
+     "text": "Beyond iron the strong force has saturated and lost to Coulomb repulsion; the heavy elements form by neutron capture in stellar deaths, chapter fifteen."
+    }
+   ],
+   "voicedHash": "a6d99baca0a4"
+  },
+  "pp-chain": {
+   "script": "Let's look at the Sun behind the panel. Four protons never meet at once. Two protons tunnel into an unbound diproton flying apart in ten to the minus twenty-two seconds unless the weak interaction turns one into a neutron, emitting a positron and a neutrino. A core proton waits on average nine billion years. The slowest step sets the pace, so the Sun endures.\n\nWithin a second the deuteron captures a proton to make helium-three. PP one, sixty-nine per cent, turns two helium-three into helium-four plus two protons. PP two, thirty-one per cent, and PP three, a tenth of a per cent, go through beryllium-seven. Net: four protons to helium-four, two positrons, two electron neutrinos, twenty-six point seven three mega-electronvolts, with zero point two six mega-electronvolts escaping per neutrino.\n\nThe energy generation rate, epsilon pp, is about one point zero eight times ten to the minus twelve times rho times X squared times f pp times psi pp times C pp times T six to the fourth, in watts per kilogram. Rho is density, X the hydrogen mass fraction. f, psi and C are order-one corrections: screening, branching, higher-order terms. T six is temperature in millions of kelvin. Power four approximates the Gamow integral.\n\nAt the centre, rho one point five times ten to the fifth kilograms per cubic metre, X zero point three five, T six fifteen point seven, the rate is about zero point zero one eight watts per kilogram, less than human metabolic heat per kilogram. Two times ten to the twenty-nine kilograms burn at once, not an intense core.\n\nSwitch the branches on the widget. Rates are scaled so the slow step shows, and energy is tallied. PP one neutrinos reach only zero point four two mega-electronvolts, PP three at fifteen. Davis's chlorine experiment, from nineteen sixty-eight, saw a third of the predicted rate. Sudbury, in two thousand and one, showed the electron neutrinos changed flavour in flight. The core model was right to a few per cent.",
+   "hash": "b2c71abc0c3b",
+   "duration": 132.79,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.54,
+     "text": "Let's look at the Sun behind the panel."
+    },
+    {
+     "start": 2.54,
+     "end": 5.08,
+     "text": "Four protons never meet at once."
+    },
+    {
+     "start": 5.08,
+     "end": 17.7,
+     "text": "Two protons tunnel into an unbound diproton flying apart in ten to the minus twenty-two seconds unless the weak interaction turns one into a neutron, emitting a positron and a neutrino."
+    },
+    {
+     "start": 17.7,
+     "end": 21.14,
+     "text": "A core proton waits on average nine billion years."
+    },
+    {
+     "start": 21.14,
+     "end": 24.78,
+     "text": "The slowest step sets the pace, so the Sun endures."
+    },
+    {
+     "start": 24.78,
+     "end": 28.88,
+     "text": "Within a second the deuteron captures a proton to make helium-three."
+    },
+    {
+     "start": 28.88,
+     "end": 35.5,
+     "text": "PP one, sixty-nine per cent, turns two helium-three into helium-four plus two protons."
+    },
+    {
+     "start": 35.5,
+     "end": 42.4,
+     "text": "PP two, thirty-one per cent, and PP three, a tenth of a per cent, go through beryllium-seven."
+    },
+    {
+     "start": 42.4,
+     "end": 55.58,
+     "text": "Net: four protons to helium-four, two positrons, two electron neutrinos, twenty-six point seven three mega-electronvolts, with zero point two six mega-electronvolts escaping per neutrino."
+    },
+    {
+     "start": 55.58,
+     "end": 71.05,
+     "text": "The energy generation rate, epsilon pp, is about one point zero eight times ten to the minus twelve times rho times X squared times f pp times psi pp times C pp times T six to the fourth, in watts per kilogram."
+    },
+    {
+     "start": 71.05,
+     "end": 74.73,
+     "text": "Rho is density, X the hydrogen mass fraction."
+    },
+    {
+     "start": 74.73,
+     "end": 80.83,
+     "text": "f, psi and C are order-one corrections: screening, branching, higher-order terms."
+    },
+    {
+     "start": 80.83,
+     "end": 83.67,
+     "text": "T six is temperature in millions of kelvin."
+    },
+    {
+     "start": 83.67,
+     "end": 86.57,
+     "text": "Power four approximates the Gamow integral."
+    },
+    {
+     "start": 86.57,
+     "end": 102.45,
+     "text": "At the centre, rho one point five times ten to the fifth kilograms per cubic metre, X zero point three five, T six fifteen point seven, the rate is about zero point zero one eight watts per kilogram, less than human metabolic heat per kilogram."
+    },
+    {
+     "start": 102.45,
+     "end": 107.41,
+     "text": "Two times ten to the twenty-nine kilograms burn at once, not an intense core."
+    },
+    {
+     "start": 107.41,
+     "end": 109.25,
+     "text": "Switch the branches on the widget."
+    },
+    {
+     "start": 109.25,
+     "end": 113.37,
+     "text": "Rates are scaled so the slow step shows, and energy is tallied."
+    },
+    {
+     "start": 113.37,
+     "end": 119.85,
+     "text": "PP one neutrinos reach only zero point four two mega-electronvolts, PP three at fifteen."
+    },
+    {
+     "start": 119.85,
+     "end": 125.25,
+     "text": "Davis's chlorine experiment, from nineteen sixty-eight, saw a third of the predicted rate."
+    },
+    {
+     "start": 125.25,
+     "end": 130.41,
+     "text": "Sudbury, in two thousand and one, showed the electron neutrinos changed flavour in flight."
+    },
+    {
+     "start": 130.41,
+     "end": 132.79,
+     "text": "The core model was right to a few per cent."
+    }
+   ],
+   "voicedHash": "9e0289cb1096"
+  }
+ }
+}

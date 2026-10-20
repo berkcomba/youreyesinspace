@@ -1,0 +1,508 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "convection-criterion": {
+   "script": "Look at Earth behind the panel. A hotter bubble is less dense and rises, expands, and cools. In a star it rises too fast to exchange heat, so cooling is adiabatic. If the surroundings cool faster with height, the bubble stays buoyant and runs away. If they cool more slowly, it sinks back. That is Schwarzschild's criterion, from 1906.\n\nThe absolute value of the actual d T by d r, greater than the absolute value of the adiabatic d T by d r, means convection. It equals one minus one over gamma, times T over P, times the absolute value of d P by d r, or one minus one over gamma times mu m H over k times g. T is temperature, r radius, P pressure, gamma the ratio of specific heats, five thirds for monatomic gas, mu mean molecular weight, m H hydrogen mass, k Boltzmann's constant, g gravity. Falling pressure and gamma set that cooling. Nabla is d ln T over d ln P. Convection if radiative nabla exceeds adiabatic nabla, one minus one over gamma, point four.\n\nIn the widget, steepen past the adiabatic line and the bubble runs away. Flatten it and it oscillates back. Earth mode is nine point eight kelvin per kilometre, g over c p. Morning thermals lift hawks and gliders to cumulus. At night smoke lies flat and fog pools. Thunderstorms break this over ten kilometres.\n\nOpacity from H minus and hydrogen ionisation steepens the radiative gradient, so cool-star envelopes convect, and the Sun boils in its outer twenty-nine percent by radius, two percent by mass. High flux convects the CNO cores of massive stars. Gamma near one, heat going into ionisation, convects automatically. Shallower, the bubble oscillates at the Brunt-Väisälä frequency and photons carry energy, inside point seven one solar radii, and night air. Steeper, moving gas mixes and carries energy, outside that radius, in cores above one point three solar masses, and in daytime thermals.",
+   "hash": "afcf8c9a6037",
+   "duration": 131.19,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.12,
+     "text": "Look at Earth behind the panel."
+    },
+    {
+     "start": 2.12,
+     "end": 6.74,
+     "text": "A hotter bubble is less dense and rises, expands, and cools."
+    },
+    {
+     "start": 6.74,
+     "end": 11.82,
+     "text": "In a star it rises too fast to exchange heat, so cooling is adiabatic."
+    },
+    {
+     "start": 11.82,
+     "end": 16.78,
+     "text": "If the surroundings cool faster with height, the bubble stays buoyant and runs away."
+    },
+    {
+     "start": 16.78,
+     "end": 19.44,
+     "text": "If they cool more slowly, it sinks back."
+    },
+    {
+     "start": 19.44,
+     "end": 23.68,
+     "text": "That is Schwarzschild's criterion, from 1906."
+    },
+    {
+     "start": 23.68,
+     "end": 32.8,
+     "text": "The absolute value of the actual d T by d r, greater than the absolute value of the adiabatic d T by d r, means convection."
+    },
+    {
+     "start": 32.8,
+     "end": 45.26,
+     "text": "It equals one minus one over gamma, times T over P, times the absolute value of d P by d r, or one minus one over gamma times mu m H over k times g."
+    },
+    {
+     "start": 45.26,
+     "end": 60.02,
+     "text": "T is temperature, r radius, P pressure, gamma the ratio of specific heats, five thirds for monatomic gas, mu mean molecular weight, m H hydrogen mass, k Boltzmann's constant, g gravity."
+    },
+    {
+     "start": 60.02,
+     "end": 62.64,
+     "text": "Falling pressure and gamma set that cooling."
+    },
+    {
+     "start": 62.64,
+     "end": 66.17,
+     "text": "Nabla is d ln T over d ln P."
+    },
+    {
+     "start": 66.17,
+     "end": 72.67,
+     "text": "Convection if radiative nabla exceeds adiabatic nabla, one minus one over gamma, point four."
+    },
+    {
+     "start": 72.67,
+     "end": 77.25,
+     "text": "In the widget, steepen past the adiabatic line and the bubble runs away."
+    },
+    {
+     "start": 77.25,
+     "end": 79.43,
+     "text": "Flatten it and it oscillates back."
+    },
+    {
+     "start": 79.43,
+     "end": 84.01,
+     "text": "Earth mode is nine point eight kelvin per kilometre, g over c p."
+    },
+    {
+     "start": 84.01,
+     "end": 87.17,
+     "text": "Morning thermals lift hawks and gliders to cumulus."
+    },
+    {
+     "start": 87.17,
+     "end": 90.13,
+     "text": "At night smoke lies flat and fog pools."
+    },
+    {
+     "start": 90.13,
+     "end": 92.87,
+     "text": "Thunderstorms break this over ten kilometres."
+    },
+    {
+     "start": 92.87,
+     "end": 105.15,
+     "text": "Opacity from H minus and hydrogen ionisation steepens the radiative gradient, so cool-star envelopes convect, and the Sun boils in its outer twenty-nine percent by radius, two percent by mass."
+    },
+    {
+     "start": 105.15,
+     "end": 108.59,
+     "text": "High flux convects the CNO cores of massive stars."
+    },
+    {
+     "start": 108.59,
+     "end": 113.39,
+     "text": "Gamma near one, heat going into ionisation, convects automatically."
+    },
+    {
+     "start": 113.39,
+     "end": 122.49,
+     "text": "Shallower, the bubble oscillates at the Brunt-Väisälä frequency and photons carry energy, inside point seven one solar radii, and night air."
+    },
+    {
+     "start": 122.49,
+     "end": 131.19,
+     "text": "Steeper, moving gas mixes and carries energy, outside that radius, in cores above one point three solar masses, and in daytime thermals."
+    }
+   ],
+   "voicedHash": "ed3246dd357b"
+  },
+  "convection-in-stars": {
+   "script": "Convection, once started, is brutally effective. The flux is roughly rho times c p times v times delta T: density times specific heat at constant pressure, times velocity, times temperature excess. Rho is density, c p the heat per kelvin, v the rise speed, and delta T the excess, the extra heat swept up with the flow. Deep down, a thousandth of a kelvin at a few metres per second carries the whole luminosity, pinning the gradient at the adiabatic value. We set that gradient and ignore the fluid dynamics, so the zone is known better than the convection itself.\n\nNear the surface, density falls and the gradient turns superadiabatic. In Erika Böhm-Vitense’s mixing-length theory of nineteen fifty-eight, a bubble travels ell, alpha times the pressure scale height, then dissolves. Alpha, one point five to two, is fit to the Sun’s radius: a parametrisation, not a derivation.\n\nVelocity is the square root of g times ell times delta T, divided by T. Gravity speeds the buoyant blob over that length. Ell is alpha P over rho g, how far pressure falls by a factor of e. Speed runs from ten metres per second at the base to two kilometres per second at the top, and delta T from a millionth of a kelvin to a tenth of a kelvin.\n\nTry the widget. Choose flux and depth. Deep down, velocity and excess stay tiny and the gradient is adiabatic. Near the surface they jump, and superadiabaticity appears. The cartoon shows granules a thousand kilometres across, lasting ten minutes, with shifts of a kilometre per second that average to the convective blueshift.\n\nLook at Betelgeuse behind the panel. Scale height a tenth of the radius, huge cells fading over months, including the cooling cell that expelled dust in the Great Dimming of twenty nineteen.\n\nConvection also mixes, like a spoon radiation lacks. A core stays uniform and is exhausted all at once. An envelope dredges products up, making carbon stars and lithium depletion. Fully convective stars burn all their hydrogen, not just the central tenth.",
+   "hash": "55279b9ac183",
+   "duration": 126.71,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 3.66,
+     "text": "Convection, once started, is brutally effective."
+    },
+    {
+     "start": 3.66,
+     "end": 14.42,
+     "text": "The flux is roughly rho times c p times v times delta T: density times specific heat at constant pressure, times velocity, times temperature excess."
+    },
+    {
+     "start": 14.42,
+     "end": 23.66,
+     "text": "Rho is density, c p the heat per kelvin, v the rise speed, and delta T the excess, the extra heat swept up with the flow."
+    },
+    {
+     "start": 23.66,
+     "end": 31.88,
+     "text": "Deep down, a thousandth of a kelvin at a few metres per second carries the whole luminosity, pinning the gradient at the adiabatic value."
+    },
+    {
+     "start": 31.88,
+     "end": 37.78,
+     "text": "We set that gradient and ignore the fluid dynamics, so the zone is known better than the convection itself."
+    },
+    {
+     "start": 37.78,
+     "end": 42.4,
+     "text": "Near the surface, density falls and the gradient turns superadiabatic."
+    },
+    {
+     "start": 42.4,
+     "end": 51.24,
+     "text": "In Erika Böhm-Vitense’s mixing-length theory of nineteen fifty-eight, a bubble travels ell, alpha times the pressure scale height, then dissolves."
+    },
+    {
+     "start": 51.24,
+     "end": 57.84,
+     "text": "Alpha, one point five to two, is fit to the Sun’s radius: a parametrisation, not a derivation."
+    },
+    {
+     "start": 57.84,
+     "end": 63.1,
+     "text": "Velocity is the square root of g times ell times delta T, divided by T."
+    },
+    {
+     "start": 63.1,
+     "end": 66.13,
+     "text": "Gravity speeds the buoyant blob over that length."
+    },
+    {
+     "start": 66.13,
+     "end": 71.15,
+     "text": "Ell is alpha P over rho g, how far pressure falls by a factor of e."
+    },
+    {
+     "start": 71.15,
+     "end": 79.91,
+     "text": "Speed runs from ten metres per second at the base to two kilometres per second at the top, and delta T from a millionth of a kelvin to a tenth of a kelvin."
+    },
+    {
+     "start": 79.91,
+     "end": 81.01,
+     "text": "Try the widget."
+    },
+    {
+     "start": 81.01,
+     "end": 82.63,
+     "text": "Choose flux and depth."
+    },
+    {
+     "start": 82.63,
+     "end": 87.11,
+     "text": "Deep down, velocity and excess stay tiny and the gradient is adiabatic."
+    },
+    {
+     "start": 87.11,
+     "end": 90.97,
+     "text": "Near the surface they jump, and superadiabaticity appears."
+    },
+    {
+     "start": 90.97,
+     "end": 100.13,
+     "text": "The cartoon shows granules a thousand kilometres across, lasting ten minutes, with shifts of a kilometre per second that average to the convective blueshift."
+    },
+    {
+     "start": 100.13,
+     "end": 102.23,
+     "text": "Look at Betelgeuse behind the panel."
+    },
+    {
+     "start": 102.23,
+     "end": 110.65,
+     "text": "Scale height a tenth of the radius, huge cells fading over months, including the cooling cell that expelled dust in the Great Dimming of twenty nineteen."
+    },
+    {
+     "start": 110.65,
+     "end": 114.39,
+     "text": "Convection also mixes, like a spoon radiation lacks."
+    },
+    {
+     "start": 114.39,
+     "end": 117.67,
+     "text": "A core stays uniform and is exhausted all at once."
+    },
+    {
+     "start": 117.67,
+     "end": 122.37,
+     "text": "An envelope dredges products up, making carbon stars and lithium depletion."
+    },
+    {
+     "start": 122.37,
+     "end": 126.71,
+     "text": "Fully convective stars burn all their hydrogen, not just the central tenth."
+    }
+   ],
+   "voicedHash": "4dcf8cb1657e"
+  },
+  "radiative-gradient": {
+   "script": "Welcome. Energy in the core must reach the surface as random-walking photons. Look at the Sun behind the panel. Photons from below come from hotter gas than those from above, so net flux scales with the gradient and inversely with opacity.\n\nd T over d r equals minus three over four a c, times kappa-bar rho over T cubed, times the flux, L sub r over four pi r squared. T is temperature, r radius, the gradient. a is the radiation constant, c the speed of light, kappa-bar the Rosseland mean opacity, rho the density, and L sub r the luminosity at radius r. It holds because flux is the gradient of radiation pressure over opacity, and radiation pressure is a T to the fourth over three. Steep at high opacity, large luminosity, small radius, or low temperature. The inverse T cubed is the diffusivity, scaling as T cubed over kappa rho.\n\nOn the widget, vary opacity and density and watch the gradient a given luminosity needs. Notice where the solar layers sit. In the core the gradient is a few kelvin per kilometre, gentler than the Earth's crust. Outward, temperature falls, opacity rises as hydrogen and helium recombine, and the gradient steepens. Near seven tenths of a solar radius it is too steep, and radiation yields to convection. Helioseismology puts the base at point seven one three solar radii, to a thousandth.\n\nWith hydrostatic equilibrium and the ideal gas law, temperature scales as mu, the mean molecular weight, times mass over radius, and density as mass over radius cubed. The radius cancels, and luminosity is proportional to mu to the fourth times mass cubed over kappa-bar. Mass and opacity set it, not the fuel. Fusion adjusts to match the leak. Eddington found this in nineteen twenty-four. Observed luminosity scales near mass to the three and a half, opacity included.\n\nA main-sequence luminosity is fixed by the envelope's leak, and the core matches. The relation came before we knew the fuel.",
+   "hash": "5dbd93f15f2e",
+   "duration": 127.67,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 1.14,
+     "text": "Welcome."
+    },
+    {
+     "start": 1.14,
+     "end": 5.64,
+     "text": "Energy in the core must reach the surface as random-walking photons."
+    },
+    {
+     "start": 5.64,
+     "end": 7.8,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 7.8,
+     "end": 15.88,
+     "text": "Photons from below come from hotter gas than those from above, so net flux scales with the gradient and inversely with opacity."
+    },
+    {
+     "start": 15.88,
+     "end": 27.12,
+     "text": "d T over d r equals minus three over four a c, times kappa-bar rho over T cubed, times the flux, L sub r over four pi r squared."
+    },
+    {
+     "start": 27.12,
+     "end": 30.72,
+     "text": "T is temperature, r radius, the gradient."
+    },
+    {
+     "start": 30.72,
+     "end": 41.1,
+     "text": "a is the radiation constant, c the speed of light, kappa-bar the Rosseland mean opacity, rho the density, and L sub r the luminosity at radius r."
+    },
+    {
+     "start": 41.1,
+     "end": 48.94,
+     "text": "It holds because flux is the gradient of radiation pressure over opacity, and radiation pressure is a T to the fourth over three."
+    },
+    {
+     "start": 48.94,
+     "end": 54.38,
+     "text": "Steep at high opacity, large luminosity, small radius, or low temperature."
+    },
+    {
+     "start": 54.38,
+     "end": 59.84,
+     "text": "The inverse T cubed is the diffusivity, scaling as T cubed over kappa rho."
+    },
+    {
+     "start": 59.84,
+     "end": 65.53,
+     "text": "On the widget, vary opacity and density and watch the gradient a given luminosity needs."
+    },
+    {
+     "start": 65.53,
+     "end": 67.67,
+     "text": "Notice where the solar layers sit."
+    },
+    {
+     "start": 67.67,
+     "end": 72.77,
+     "text": "In the core the gradient is a few kelvin per kilometre, gentler than the Earth's crust."
+    },
+    {
+     "start": 72.77,
+     "end": 79.69,
+     "text": "Outward, temperature falls, opacity rises as hydrogen and helium recombine, and the gradient steepens."
+    },
+    {
+     "start": 79.69,
+     "end": 85.19,
+     "text": "Near seven tenths of a solar radius it is too steep, and radiation yields to convection."
+    },
+    {
+     "start": 85.19,
+     "end": 90.75,
+     "text": "Helioseismology puts the base at point seven one three solar radii, to a thousandth."
+    },
+    {
+     "start": 90.75,
+     "end": 101.73,
+     "text": "With hydrostatic equilibrium and the ideal gas law, temperature scales as mu, the mean molecular weight, times mass over radius, and density as mass over radius cubed."
+    },
+    {
+     "start": 101.73,
+     "end": 108.09,
+     "text": "The radius cancels, and luminosity is proportional to mu to the fourth times mass cubed over kappa-bar."
+    },
+    {
+     "start": 108.09,
+     "end": 110.87,
+     "text": "Mass and opacity set it, not the fuel."
+    },
+    {
+     "start": 110.87,
+     "end": 113.05,
+     "text": "Fusion adjusts to match the leak."
+    },
+    {
+     "start": 113.05,
+     "end": 115.59,
+     "text": "Eddington found this in nineteen twenty-four."
+    },
+    {
+     "start": 115.59,
+     "end": 120.71,
+     "text": "Observed luminosity scales near mass to the three and a half, opacity included."
+    },
+    {
+     "start": 120.71,
+     "end": 125.61,
+     "text": "A main-sequence luminosity is fixed by the envelope's leak, and the core matches."
+    },
+    {
+     "start": 125.61,
+     "end": 127.67,
+     "text": "The relation came before we knew the fuel."
+    }
+   ],
+   "voicedHash": "d027886c2e6b"
+  },
+  "transport-summary": {
+   "script": "Behind the panel the whole planetary system is slowly circling the Sun. Every world out there is lit by a star, and we can now say how that star moves its heat.\n\nRadiative transport sets the temperature gradient. Dee T by dee r equals minus three over four a c, times kappa-bar rho over T cubed, times L sub r over four pi r squared. T is temperature, r is radius, a is the radiation constant, c the speed of light, kappa-bar the mean opacity, rho the density, and L sub r the luminosity at radius r. The minus sign means temperature falls outward, and the fall is steep wherever opacity, flux, or density is high, because the radiation then has a harder time carrying the flow. Join that to hydrostatic equilibrium and luminosity scales as mu to the fourth, times mass cubed, over kappa-bar. Mu is the mean molecular weight. That mass–luminosity relation does not depend on the energy source. The structure, not the furnace, fixes how bright the star must be.\n\nConvection sets in when nabla rad exceeds nabla ad, and nabla ad equals one minus one over gamma. Nabla rad is the radiative gradient the flux would demand, nabla ad the adiabatic gradient a rising parcel actually follows, and gamma the ratio of specific heats. If the demand is steeper than adiabatic, the parcel keeps rising. That is Schwarzschild’s test. Earth’s dry adiabatic lapse rate, nine point eight kelvin per kilometre, is the same formula, and thermals and thunderstorms are the criterion in action. The drivers are high opacity in cool envelopes, including the Sun’s outer twenty-nine percent, high flux per area in the CNO cores of massive stars, and low gamma in ionisation zones.\n\nDeep convection pins the gradient to the adiabatic value. Near the surface, mixing-length theory sets the mixing length ell equal to alpha times the pressure scale height H sub P, with alpha about one and a half to two, calibrated on the Sun, and from that we get the convective speed and the temperature excess. Granulation is the visible top of the solar convection zone. Betelgeuse has only a few star-sized cells. Convection mixes. Radiation does not.\n\nFour equations now close the problem: hydrostatic equilibrium, mass conservation, energy generation, and energy transport, radiative or convective. With an equation of state, an opacity, and a nuclear rate, they determine a star.",
+   "hash": "b3d88316ce6f",
+   "duration": 151.03,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 4.68,
+     "text": "Behind the panel the whole planetary system is slowly circling the Sun."
+    },
+    {
+     "start": 4.68,
+     "end": 10.36,
+     "text": "Every world out there is lit by a star, and we can now say how that star moves its heat."
+    },
+    {
+     "start": 10.36,
+     "end": 13.42,
+     "text": "Radiative transport sets the temperature gradient."
+    },
+    {
+     "start": 13.42,
+     "end": 23.28,
+     "text": "Dee T by dee r equals minus three over four a c, times kappa-bar rho over T cubed, times L sub r over four pi r squared."
+    },
+    {
+     "start": 23.28,
+     "end": 35.8,
+     "text": "T is temperature, r is radius, a is the radiation constant, c the speed of light, kappa-bar the mean opacity, rho the density, and L sub r the luminosity at radius r."
+    },
+    {
+     "start": 35.8,
+     "end": 46.26,
+     "text": "The minus sign means temperature falls outward, and the fall is steep wherever opacity, flux, or density is high, because the radiation then has a harder time carrying the flow."
+    },
+    {
+     "start": 46.26,
+     "end": 53.98,
+     "text": "Join that to hydrostatic equilibrium and luminosity scales as mu to the fourth, times mass cubed, over kappa-bar."
+    },
+    {
+     "start": 53.98,
+     "end": 56.08,
+     "text": "Mu is the mean molecular weight."
+    },
+    {
+     "start": 56.08,
+     "end": 59.98,
+     "text": "That mass–luminosity relation does not depend on the energy source."
+    },
+    {
+     "start": 59.98,
+     "end": 64.2,
+     "text": "The structure, not the furnace, fixes how bright the star must be."
+    },
+    {
+     "start": 64.2,
+     "end": 71.46,
+     "text": "Convection sets in when nabla rad exceeds nabla ad, and nabla ad equals one minus one over gamma."
+    },
+    {
+     "start": 71.46,
+     "end": 81.83,
+     "text": "Nabla rad is the radiative gradient the flux would demand, nabla ad the adiabatic gradient a rising parcel actually follows, and gamma the ratio of specific heats."
+    },
+    {
+     "start": 81.83,
+     "end": 85.89,
+     "text": "If the demand is steeper than adiabatic, the parcel keeps rising."
+    },
+    {
+     "start": 85.89,
+     "end": 87.87,
+     "text": "That is Schwarzschild’s test."
+    },
+    {
+     "start": 87.87,
+     "end": 97.19,
+     "text": "Earth’s dry adiabatic lapse rate, nine point eight kelvin per kilometre, is the same formula, and thermals and thunderstorms are the criterion in action."
+    },
+    {
+     "start": 97.19,
+     "end": 108.95,
+     "text": "The drivers are high opacity in cool envelopes, including the Sun’s outer twenty-nine percent, high flux per area in the CNO cores of massive stars, and low gamma in ionisation zones."
+    },
+    {
+     "start": 108.95,
+     "end": 112.45,
+     "text": "Deep convection pins the gradient to the adiabatic value."
+    },
+    {
+     "start": 112.45,
+     "end": 126.89,
+     "text": "Near the surface, mixing-length theory sets the mixing length ell equal to alpha times the pressure scale height H sub P, with alpha about one and a half to two, calibrated on the Sun, and from that we get the convective speed and the temperature excess."
+    },
+    {
+     "start": 126.89,
+     "end": 130.41,
+     "text": "Granulation is the visible top of the solar convection zone."
+    },
+    {
+     "start": 130.41,
+     "end": 133.21,
+     "text": "Betelgeuse has only a few star-sized cells."
+    },
+    {
+     "start": 133.21,
+     "end": 134.57,
+     "text": "Convection mixes."
+    },
+    {
+     "start": 134.57,
+     "end": 136.15,
+     "text": "Radiation does not."
+    },
+    {
+     "start": 136.15,
+     "end": 146.27,
+     "text": "Four equations now close the problem: hydrostatic equilibrium, mass conservation, energy generation, and energy transport, radiative or convective."
+    },
+    {
+     "start": 146.27,
+     "end": 151.03,
+     "text": "With an equation of state, an opacity, and a nuclear rate, they determine a star."
+    }
+   ],
+   "voicedHash": "cf68de2e8642"
+  }
+ }
+}

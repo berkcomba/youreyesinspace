@@ -1,0 +1,453 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "eos-summary": {
+   "script": "Look out at the whole planetary system slowly circling the Sun behind the panel. Those worlds, and the stars that light them, stay up because pressure balances gravity, and the equation of state is how we get that pressure from density and temperature.\n\nFor an ideal gas, pressure equals density times Boltzmann’s constant times temperature, divided by mu times the hydrogen mass. Mu is the mean particle mass measured in units of that hydrogen mass. When the gas is fully ionised, one over mu is about two X plus three-quarters Y plus one-half Z, with X, Y and Z the mass fractions of hydrogen, helium and heavier elements. In the solar interior that gives mu about zero point six two. Fuse hydrogen into helium and mu rises, so the same density and temperature give less pressure. That loss of support is the engine of stellar evolution — a bit like a bridge that gets heavier as you walk across it, and slowly sags.\n\nRadiation pressure, the radiation constant times temperature to the fourth, all over three, dominates only in the most massive stars: about a quarter of the total at twenty solar masses.\n\nDegenerate electron pressure comes from the Pauli principle and does not care about temperature. It scales as density to the five-thirds when non-relativistic, and density to the four-thirds when relativistic. It holds up white dwarfs like Sirius B, and the deep interiors of giant planets.\n\nThe mass–radius relation flips. Ordinary matter has radius proportional to mass to the one-third; degenerate matter has radius proportional to mass to the minus one-third. For hydrogen the radius peaks near one point one Jupiter radii at about Jupiter’s mass, so giant planets and brown dwarfs are all roughly Jupiter-sized — much like the ones circling out there.\n\nThree pressures — thermal, radiation and degeneracy — plus the mean molecular weight that turns density into a particle count: with those, the force balance from the last section can be solved once we know the temperature. Temperature is set by energy, and that comes next.",
+   "hash": "376c211b5ca8",
+   "duration": 124.47,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 5.04,
+     "text": "Look out at the whole planetary system slowly circling the Sun behind the panel."
+    },
+    {
+     "start": 5.04,
+     "end": 14.62,
+     "text": "Those worlds, and the stars that light them, stay up because pressure balances gravity, and the equation of state is how we get that pressure from density and temperature."
+    },
+    {
+     "start": 14.62,
+     "end": 23.14,
+     "text": "For an ideal gas, pressure equals density times Boltzmann’s constant times temperature, divided by mu times the hydrogen mass."
+    },
+    {
+     "start": 23.14,
+     "end": 27.34,
+     "text": "Mu is the mean particle mass measured in units of that hydrogen mass."
+    },
+    {
+     "start": 27.34,
+     "end": 39.74,
+     "text": "When the gas is fully ionised, one over mu is about two X plus three-quarters Y plus one-half Z, with X, Y and Z the mass fractions of hydrogen, helium and heavier elements."
+    },
+    {
+     "start": 39.74,
+     "end": 43.8,
+     "text": "In the solar interior that gives mu about zero point six two."
+    },
+    {
+     "start": 43.8,
+     "end": 49.96,
+     "text": "Fuse hydrogen into helium and mu rises, so the same density and temperature give less pressure."
+    },
+    {
+     "start": 49.96,
+     "end": 58.02,
+     "text": "That loss of support is the engine of stellar evolution — a bit like a bridge that gets heavier as you walk across it, and slowly sags."
+    },
+    {
+     "start": 58.02,
+     "end": 69.21,
+     "text": "Radiation pressure, the radiation constant times temperature to the fourth, all over three, dominates only in the most massive stars: about a quarter of the total at twenty solar masses."
+    },
+    {
+     "start": 69.21,
+     "end": 74.19,
+     "text": "Degenerate electron pressure comes from the Pauli principle and does not care about temperature."
+    },
+    {
+     "start": 74.19,
+     "end": 81.03,
+     "text": "It scales as density to the five-thirds when non-relativistic, and density to the four-thirds when relativistic."
+    },
+    {
+     "start": 81.03,
+     "end": 86.13,
+     "text": "It holds up white dwarfs like Sirius B, and the deep interiors of giant planets."
+    },
+    {
+     "start": 86.13,
+     "end": 88.47,
+     "text": "The mass–radius relation flips."
+    },
+    {
+     "start": 88.47,
+     "end": 96.57,
+     "text": "Ordinary matter has radius proportional to mass to the one-third; degenerate matter has radius proportional to mass to the minus one-third."
+    },
+    {
+     "start": 96.57,
+     "end": 108.33,
+     "text": "For hydrogen the radius peaks near one point one Jupiter radii at about Jupiter’s mass, so giant planets and brown dwarfs are all roughly Jupiter-sized — much like the ones circling out there."
+    },
+    {
+     "start": 108.33,
+     "end": 121.31,
+     "text": "Three pressures — thermal, radiation and degeneracy — plus the mean molecular weight that turns density into a particle count: with those, the force balance from the last section can be solved once we know the temperature."
+    },
+    {
+     "start": 121.31,
+     "end": 124.47,
+     "text": "Temperature is set by energy, and that comes next."
+    }
+   ],
+   "voicedHash": "9db1bd76cb3b"
+  },
+  "giant-planets": {
+   "script": "Look at Jupiter behind the panel. After the Sun, Jupiter is the most massive body we have, and about as large as a planet can be.\n\nHow does the radius of a cold hydrogen ball depend on its mass? At low mass you have ordinary matter, density set by chemistry and roughly fixed. R is proportional to M to the one third, the incompressible case. R is the radius, M the mass. So Earth outgrows Mars, and Uranus and Neptune sit on that same branch.\n\nAt high mass the interior is pressure ionised and electron degeneracy dominates. P is proportional to rho to the five thirds: P is pressure, rho is density. Hydrostatic equilibrium then reverses the size law, so R is proportional to M to the minus one third. Add mass and the object shrinks, the same physics as the white dwarfs running the other way. Gravity squeezes the electrons, and the exclusion principle supplies the pressure.\n\nBetween them the maximum radius, R max, is about one point one Jupiter radii for hydrogen and helium, at about one to three Jupiter masses.\n\nSlide the mass upward on the widget and notice the hump at Jupiter. You will see Saturn with thirty percent of Jupiter's mass yet eighty four percent of its radius. A brown dwarf of fifty Jupiter masses is slightly smaller than Jupiter. The curve turns up again only near eight hundredths of a solar mass, where fusion begins and thermal pressure takes over.\n\nZapolsky and Salpeter predicted this in nineteen sixty nine, decades before any exoplanet, and hundreds of transiting giants confirm it. Jupiter is only mildly degenerate, electrons partly degenerate, ions a classical fluid at twenty thousand kelvin, so it still contracts by about a millimetre a year, radiating gravitational energy, and emits about one point seven times the sunlight it absorbs. A hydrogen body a hundred times heavier would be no bigger, only denser, until at eighty Jupiter masses it became a star.",
+   "hash": "2edd3850e7e7",
+   "duration": 120.31,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.44,
+     "text": "Look at Jupiter behind the panel."
+    },
+    {
+     "start": 2.44,
+     "end": 9.08,
+     "text": "After the Sun, Jupiter is the most massive body we have, and about as large as a planet can be."
+    },
+    {
+     "start": 9.08,
+     "end": 13.32,
+     "text": "How does the radius of a cold hydrogen ball depend on its mass?"
+    },
+    {
+     "start": 13.32,
+     "end": 19.1,
+     "text": "At low mass you have ordinary matter, density set by chemistry and roughly fixed."
+    },
+    {
+     "start": 19.1,
+     "end": 23.92,
+     "text": "R is proportional to M to the one third, the incompressible case."
+    },
+    {
+     "start": 23.92,
+     "end": 26.34,
+     "text": "R is the radius, M the mass."
+    },
+    {
+     "start": 26.34,
+     "end": 31.46,
+     "text": "So Earth outgrows Mars, and Uranus and Neptune sit on that same branch."
+    },
+    {
+     "start": 31.46,
+     "end": 36.58,
+     "text": "At high mass the interior is pressure ionised and electron degeneracy dominates."
+    },
+    {
+     "start": 36.58,
+     "end": 42.36,
+     "text": "P is proportional to rho to the five thirds: P is pressure, rho is density."
+    },
+    {
+     "start": 42.36,
+     "end": 49.18,
+     "text": "Hydrostatic equilibrium then reverses the size law, so R is proportional to M to the minus one third."
+    },
+    {
+     "start": 49.18,
+     "end": 54.52,
+     "text": "Add mass and the object shrinks, the same physics as the white dwarfs running the other way."
+    },
+    {
+     "start": 54.52,
+     "end": 59.3,
+     "text": "Gravity squeezes the electrons, and the exclusion principle supplies the pressure."
+    },
+    {
+     "start": 59.3,
+     "end": 68.61,
+     "text": "Between them the maximum radius, R max, is about one point one Jupiter radii for hydrogen and helium, at about one to three Jupiter masses."
+    },
+    {
+     "start": 68.61,
+     "end": 72.43,
+     "text": "Slide the mass upward on the widget and notice the hump at Jupiter."
+    },
+    {
+     "start": 72.43,
+     "end": 77.55,
+     "text": "You will see Saturn with thirty percent of Jupiter's mass yet eighty four percent of its radius."
+    },
+    {
+     "start": 77.55,
+     "end": 81.75,
+     "text": "A brown dwarf of fifty Jupiter masses is slightly smaller than Jupiter."
+    },
+    {
+     "start": 81.75,
+     "end": 88.61,
+     "text": "The curve turns up again only near eight hundredths of a solar mass, where fusion begins and thermal pressure takes over."
+    },
+    {
+     "start": 88.61,
+     "end": 97.17,
+     "text": "Zapolsky and Salpeter predicted this in nineteen sixty nine, decades before any exoplanet, and hundreds of transiting giants confirm it."
+    },
+    {
+     "start": 97.17,
+     "end": 113.03,
+     "text": "Jupiter is only mildly degenerate, electrons partly degenerate, ions a classical fluid at twenty thousand kelvin, so it still contracts by about a millimetre a year, radiating gravitational energy, and emits about one point seven times the sunlight it absorbs."
+    },
+    {
+     "start": 113.03,
+     "end": 120.31,
+     "text": "A hydrogen body a hundred times heavier would be no bigger, only denser, until at eighty Jupiter masses it became a star."
+    }
+   ],
+   "voicedHash": "90109327f0f2"
+  },
+  "ideal-gas-mu": {
+   "script": "Look at the Sun behind the panel. To close the equations we need an equation of state: pressure from density, temperature and composition. For most of most stars it is the ideal gas from school. The particles are so hot they barely interact.\n\nP equals n k T: pressure, particle number per cubic metre, Boltzmann's constant, temperature. Counting n is the subtlety. Ionised hydrogen has twice as many particles per kilogram as neutral hydrogen, and helium a quarter as many nuclei per kilogram.\n\nMu, the mean molecular weight, is the average particle mass in hydrogen masses. So n equals rho over mu mH, and P gas equals rho k T over mu mH. Mu mH is the mass of one particle, so a larger mu means fewer particles and less pressure at the same density and temperature.\n\nFor ionised gas, one over mu ion is about two X plus three quarters Y plus one half Z. X, Y and Z are the hydrogen, helium and metal mass fractions, summing to one: two particles per hydrogen, three per four for helium, about half for the metals. Neutral gas binds the electrons, so one over mu neutral is about X plus a quarter Y plus Z over the mean atomic weight. Partial ionisation needs the Saha equation.\n\nThe Sun's mix, X zero point seven, Y zero point two eight, Z zero point zero two, has mu zero point six two ionised and one point three neutral: twice the pressure.\n\nOn the widget, go from pure hydrogen, mu one half ionised, to pure helium, mu about one point three three. At fixed density and temperature the pressure falls by about two point seven. Helium holds less weight, so the star must be hotter or denser. Burning hydrogen to helium raises mu, support weakens, the core contracts and heats. In four point six billion years the Sun's core mu crept from zero point six one to zero point eight five, and the centre warmed.",
+   "hash": "5e9def062a25",
+   "duration": 122.55,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.22,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 2.22,
+     "end": 8.68,
+     "text": "To close the equations we need an equation of state: pressure from density, temperature and composition."
+    },
+    {
+     "start": 8.68,
+     "end": 12.48,
+     "text": "For most of most stars it is the ideal gas from school."
+    },
+    {
+     "start": 12.48,
+     "end": 15.46,
+     "text": "The particles are so hot they barely interact."
+    },
+    {
+     "start": 15.46,
+     "end": 22.66,
+     "text": "P equals n k T: pressure, particle number per cubic metre, Boltzmann's constant, temperature."
+    },
+    {
+     "start": 22.66,
+     "end": 24.94,
+     "text": "Counting n is the subtlety."
+    },
+    {
+     "start": 24.94,
+     "end": 32.9,
+     "text": "Ionised hydrogen has twice as many particles per kilogram as neutral hydrogen, and helium a quarter as many nuclei per kilogram."
+    },
+    {
+     "start": 32.9,
+     "end": 38.18,
+     "text": "Mu, the mean molecular weight, is the average particle mass in hydrogen masses."
+    },
+    {
+     "start": 38.18,
+     "end": 45.04,
+     "text": "So n equals rho over mu mH, and P gas equals rho k T over mu mH."
+    },
+    {
+     "start": 45.04,
+     "end": 53,
+     "text": "Mu mH is the mass of one particle, so a larger mu means fewer particles and less pressure at the same density and temperature."
+    },
+    {
+     "start": 53,
+     "end": 60.06,
+     "text": "For ionised gas, one over mu ion is about two X plus three quarters Y plus one half Z."
+    },
+    {
+     "start": 60.06,
+     "end": 70.71,
+     "text": "X, Y and Z are the hydrogen, helium and metal mass fractions, summing to one: two particles per hydrogen, three per four for helium, about half for the metals."
+    },
+    {
+     "start": 70.71,
+     "end": 78.59,
+     "text": "Neutral gas binds the electrons, so one over mu neutral is about X plus a quarter Y plus Z over the mean atomic weight."
+    },
+    {
+     "start": 78.59,
+     "end": 81.63,
+     "text": "Partial ionisation needs the Saha equation."
+    },
+    {
+     "start": 81.63,
+     "end": 93.69,
+     "text": "The Sun's mix, X zero point seven, Y zero point two eight, Z zero point zero two, has mu zero point six two ionised and one point three neutral: twice the pressure."
+    },
+    {
+     "start": 93.69,
+     "end": 101.27,
+     "text": "On the widget, go from pure hydrogen, mu one half ionised, to pure helium, mu about one point three three."
+    },
+    {
+     "start": 101.27,
+     "end": 105.63,
+     "text": "At fixed density and temperature the pressure falls by about two point seven."
+    },
+    {
+     "start": 105.63,
+     "end": 109.75,
+     "text": "Helium holds less weight, so the star must be hotter or denser."
+    },
+    {
+     "start": 109.75,
+     "end": 115.39,
+     "text": "Burning hydrogen to helium raises mu, support weakens, the core contracts and heats."
+    },
+    {
+     "start": 115.39,
+     "end": 122.55,
+     "text": "In four point six billion years the Sun's core mu crept from zero point six one to zero point eight five, and the centre warmed."
+    }
+   ],
+   "voicedHash": "a62f42539e6c"
+  },
+  "radiation-degeneracy": {
+   "script": "Look at Sirius behind the panel. Radiation pressure, P rad, equals a T to the fourth over three. Photon pressure: a is the radiation constant, T the temperature. The fourth power of T beats density times T. Six hundredths of one per cent at the Sun's centre, a quarter at twenty solar masses, dominant at a hundred solar masses, a bubble of light, barely held by its weight. P equals rho k T over mu m H, plus a T to the fourth over three. Rho, density, k Boltzmann's constant, mu, mean molecular weight, m H, hydrogen mass. Eddington's sum.\n\nNo classical counterpart. Pauli: no two electrons share a state. Inside a de Broglie wavelength the slow states fill, so momentum rises. Even at absolute zero.\n\nP deg NR equals three pi squared to the two thirds, over five, times h-bar squared over m e, times rho over mu e m H to the five thirds. H-bar, the reduced Planck constant, m e the electron mass, mu e the nucleons per electron. Near the speed of light it softens. P deg UR equals three pi squared to the one third, over four, times h-bar c, times rho over mu e m H to the four thirds. c is the speed of light. Chapter sixteen.\n\nDegeneracy, below the Fermi energy: temperature over density to the two thirds below about thirteen hundred kelvin metres squared per kilogram to the minus two thirds.\n\nChoose a temperature on the widget. Sun's centre: ideal gas wins. A hundred thousand times denser, degeneracy crosses: a white dwarf. Sirius B behind the panel: solar mass, Earth volume, three tonnes per cubic centimetre, degenerate electrons only, cools billions of years without shrinking. Near a millionth of a kilogram per cubic metre, at ten million kelvin, radiation wins: a supergiant envelope.\n\nFowler, nineteen twenty-six, after Dirac, after Eddington called the density absurd. Chandrasekhar added relativity in nineteen thirty, on the ship from Madras to Cambridge, found the mass limit.",
+   "hash": "4cdff23af1db",
+   "duration": 132.79,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.4,
+     "text": "Look at Sirius behind the panel."
+    },
+    {
+     "start": 2.4,
+     "end": 7.28,
+     "text": "Radiation pressure, P rad, equals a T to the fourth over three."
+    },
+    {
+     "start": 7.28,
+     "end": 12.22,
+     "text": "Photon pressure: a is the radiation constant, T the temperature."
+    },
+    {
+     "start": 12.22,
+     "end": 15.58,
+     "text": "The fourth power of T beats density times T."
+    },
+    {
+     "start": 15.58,
+     "end": 26.3,
+     "text": "Six hundredths of one per cent at the Sun's centre, a quarter at twenty solar masses, dominant at a hundred solar masses, a bubble of light, barely held by its weight."
+    },
+    {
+     "start": 26.3,
+     "end": 31.92,
+     "text": "P equals rho k T over mu m H, plus a T to the fourth over three."
+    },
+    {
+     "start": 31.92,
+     "end": 39.32,
+     "text": "Rho, density, k Boltzmann's constant, mu, mean molecular weight, m H, hydrogen mass."
+    },
+    {
+     "start": 39.32,
+     "end": 40.7,
+     "text": "Eddington's sum."
+    },
+    {
+     "start": 40.7,
+     "end": 42.48,
+     "text": "No classical counterpart."
+    },
+    {
+     "start": 42.48,
+     "end": 45.5,
+     "text": "Pauli: no two electrons share a state."
+    },
+    {
+     "start": 45.5,
+     "end": 50.34,
+     "text": "Inside a de Broglie wavelength the slow states fill, so momentum rises."
+    },
+    {
+     "start": 50.34,
+     "end": 52.12,
+     "text": "Even at absolute zero."
+    },
+    {
+     "start": 52.12,
+     "end": 62.56,
+     "text": "P deg NR equals three pi squared to the two thirds, over five, times h-bar squared over m e, times rho over mu e m H to the five thirds."
+    },
+    {
+     "start": 62.56,
+     "end": 69.25,
+     "text": "H-bar, the reduced Planck constant, m e the electron mass, mu e the nucleons per electron."
+    },
+    {
+     "start": 69.25,
+     "end": 71.37,
+     "text": "Near the speed of light it softens."
+    },
+    {
+     "start": 71.37,
+     "end": 81.07,
+     "text": "P deg UR equals three pi squared to the one third, over four, times h-bar c, times rho over mu e m H to the four thirds."
+    },
+    {
+     "start": 81.07,
+     "end": 82.65,
+     "text": "c is the speed of light."
+    },
+    {
+     "start": 82.65,
+     "end": 84.03,
+     "text": "Chapter sixteen."
+    },
+    {
+     "start": 84.03,
+     "end": 93.97,
+     "text": "Degeneracy, below the Fermi energy: temperature over density to the two thirds below about thirteen hundred kelvin metres squared per kilogram to the minus two thirds."
+    },
+    {
+     "start": 93.97,
+     "end": 95.85,
+     "text": "Choose a temperature on the widget."
+    },
+    {
+     "start": 95.85,
+     "end": 98.53,
+     "text": "Sun's centre: ideal gas wins."
+    },
+    {
+     "start": 98.53,
+     "end": 103.29,
+     "text": "A hundred thousand times denser, degeneracy crosses: a white dwarf."
+    },
+    {
+     "start": 103.29,
+     "end": 113.55,
+     "text": "Sirius B behind the panel: solar mass, Earth volume, three tonnes per cubic centimetre, degenerate electrons only, cools billions of years without shrinking."
+    },
+    {
+     "start": 113.55,
+     "end": 120.79,
+     "text": "Near a millionth of a kilogram per cubic metre, at ten million kelvin, radiation wins: a supergiant envelope."
+    },
+    {
+     "start": 120.79,
+     "end": 126.53,
+     "text": "Fowler, nineteen twenty-six, after Dirac, after Eddington called the density absurd."
+    },
+    {
+     "start": 126.53,
+     "end": 132.79,
+     "text": "Chandrasekhar added relativity in nineteen thirty, on the ship from Madras to Cambridge, found the mass limit."
+    }
+   ],
+   "voicedHash": "6743f191e63b"
+  }
+ }
+}
