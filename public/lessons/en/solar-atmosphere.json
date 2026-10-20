@@ -1,0 +1,900 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "atmosphere-summary": {
+   "script": "Look at the planets slowly circling the Sun behind the panel. In short, I have taken you from a photosphere near six thousand four hundred kelvin to a corona of one to a few million kelvin, through a chromosphere reaching twenty-five thousand kelvin and a thin transition region. The gas grows hotter and thinner, and plasma beta falls through one, so the magnetic field, not gas pressure, takes charge. Waves or nanoflares may heat it, and Parker Solar Probe is testing that. That atmosphere is the wind. Parker's transonic solution, critical near four solar radii, slow out of streamers and fast out of coronal holes, bent into a spiral, reaching a heliopause beyond the planets. The equator turns in twenty-five days, the poles in thirty-six days. Omega equals fourteen point seven one minus two point three nine sine squared phi minus one point seven nine sine to the fourth of phi, degrees per day. Omega is the angular speed and phi is the latitude. It is an empirical fit. The sine terms slow the spin toward the poles. That pattern is printed through the convection zone to the tachocline, seven tenths of a solar radius. Beneath it the interior rotates rigidly. Every structure in it, from spicules to the wind, is magnetic. Next we ask where the magnetism comes from.",
+   "hash": "3d0e05cd9e75",
+   "duration": 82.23,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.96,
+     "text": "Look at the planets slowly circling the Sun behind the panel."
+    },
+    {
+     "start": 3.96,
+     "end": 17.8,
+     "text": "In short, I have taken you from a photosphere near six thousand four hundred kelvin to a corona of one to a few million kelvin, through a chromosphere reaching twenty-five thousand kelvin and a thin transition region."
+    },
+    {
+     "start": 17.8,
+     "end": 26.1,
+     "text": "The gas grows hotter and thinner, and plasma beta falls through one, so the magnetic field, not gas pressure, takes charge."
+    },
+    {
+     "start": 26.1,
+     "end": 30.98,
+     "text": "Waves or nanoflares may heat it, and Parker Solar Probe is testing that."
+    },
+    {
+     "start": 30.98,
+     "end": 32.98,
+     "text": "That atmosphere is the wind."
+    },
+    {
+     "start": 32.98,
+     "end": 44.71,
+     "text": "Parker's transonic solution, critical near four solar radii, slow out of streamers and fast out of coronal holes, bent into a spiral, reaching a heliopause beyond the planets."
+    },
+    {
+     "start": 44.71,
+     "end": 49.19,
+     "text": "The equator turns in twenty-five days, the poles in thirty-six days."
+    },
+    {
+     "start": 49.19,
+     "end": 59.61,
+     "text": "Omega equals fourteen point seven one minus two point three nine sine squared phi minus one point seven nine sine to the fourth of phi, degrees per day."
+    },
+    {
+     "start": 59.61,
+     "end": 63.09,
+     "text": "Omega is the angular speed and phi is the latitude."
+    },
+    {
+     "start": 63.09,
+     "end": 64.73,
+     "text": "It is an empirical fit."
+    },
+    {
+     "start": 64.73,
+     "end": 67.57,
+     "text": "The sine terms slow the spin toward the poles."
+    },
+    {
+     "start": 67.57,
+     "end": 73.39,
+     "text": "That pattern is printed through the convection zone to the tachocline, seven tenths of a solar radius."
+    },
+    {
+     "start": 73.39,
+     "end": 76.07,
+     "text": "Beneath it the interior rotates rigidly."
+    },
+    {
+     "start": 76.07,
+     "end": 79.93,
+     "text": "Every structure in it, from spicules to the wind, is magnetic."
+    },
+    {
+     "start": 79.93,
+     "end": 82.23,
+     "text": "Next we ask where the magnetism comes from."
+    }
+   ],
+   "voicedHash": "8ca4430ffcf2"
+  },
+  "chromosphere": {
+   "script": "Look with me at the Sun behind the panel. For a few seconds at each end of totality, the Moon has covered the photosphere but not the thin layer above it. The Fraunhofer lines, dark a moment before, flash bright. Charles Young photographed that spectrum in eighteen seventy. Hot thin gas against a dark sky, Kirchhoff's third case: the chromosphere. The red is H-alpha, about six hundred fifty-six nanometres. Calcium two H and K near three hundred ninety-three and three hundred ninety-seven nanometres, and helium D-three near five hundred eighty-eight nanometres. Janssen and Lockyer found helium there in eighteen sixty-eight.\n\nH-alpha and calcium K block the photosphere, so we see a forest of spicules. Jets about five hundred kilometres wide and ten thousand kilometres high rise at twenty to twenty-five kilometres per second along magnetic field lines at the supergranule edges, and last five to fifteen minutes. A hundred thousand are up at once. They lift a hundred times the solar-wind mass flux, and nearly all of it falls back. On the disc, the network, plages, beaches, in strong fields, and dark filaments, prominences in projection.\n\nPlasma beta is gas pressure over magnetic pressure. Gas pressure is n k T, magnetic pressure is B squared over two mu-nought, so beta equals two mu-nought n k T over B squared. n is the number density, T the temperature, B the field, k Boltzmann's constant, and mu-nought the permeability of free space. In the photosphere beta is much greater than one, so the gas wins. In the chromosphere beta is of order one, and in the corona much less than one. The gas thins faster than the field spreads, so the field draws spicules, loops and prominences.\n\nSet the launch speed and watch the height. A ballistic flight against solar gravity, two hundred seventy-four metres per second squared, predicts the top. They rise too fast for that, and many fade rather than fall. Hinode's type-two spicules, from two thousand seven, may feed the corona.",
+   "hash": "95ae92984e04",
+   "duration": 126.07,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.7,
+     "text": "Look with me at the Sun behind the panel."
+    },
+    {
+     "start": 2.7,
+     "end": 9.3,
+     "text": "For a few seconds at each end of totality, the Moon has covered the photosphere but not the thin layer above it."
+    },
+    {
+     "start": 9.3,
+     "end": 13.56,
+     "text": "The Fraunhofer lines, dark a moment before, flash bright."
+    },
+    {
+     "start": 13.56,
+     "end": 17.06,
+     "text": "Charles Young photographed that spectrum in eighteen seventy."
+    },
+    {
+     "start": 17.06,
+     "end": 22.78,
+     "text": "Hot thin gas against a dark sky, Kirchhoff's third case: the chromosphere."
+    },
+    {
+     "start": 22.78,
+     "end": 27.02,
+     "text": "The red is H-alpha, about six hundred fifty-six nanometres."
+    },
+    {
+     "start": 27.02,
+     "end": 36.64,
+     "text": "Calcium two H and K near three hundred ninety-three and three hundred ninety-seven nanometres, and helium D-three near five hundred eighty-eight nanometres."
+    },
+    {
+     "start": 36.64,
+     "end": 40.68,
+     "text": "Janssen and Lockyer found helium there in eighteen sixty-eight."
+    },
+    {
+     "start": 40.68,
+     "end": 45.88,
+     "text": "H-alpha and calcium K block the photosphere, so we see a forest of spicules."
+    },
+    {
+     "start": 45.88,
+     "end": 58.04,
+     "text": "Jets about five hundred kilometres wide and ten thousand kilometres high rise at twenty to twenty-five kilometres per second along magnetic field lines at the supergranule edges, and last five to fifteen minutes."
+    },
+    {
+     "start": 58.04,
+     "end": 60.12,
+     "text": "A hundred thousand are up at once."
+    },
+    {
+     "start": 60.12,
+     "end": 65.23,
+     "text": "They lift a hundred times the solar-wind mass flux, and nearly all of it falls back."
+    },
+    {
+     "start": 65.23,
+     "end": 72.45,
+     "text": "On the disc, the network, plages, beaches, in strong fields, and dark filaments, prominences in projection."
+    },
+    {
+     "start": 72.45,
+     "end": 75.87,
+     "text": "Plasma beta is gas pressure over magnetic pressure."
+    },
+    {
+     "start": 75.87,
+     "end": 85.23,
+     "text": "Gas pressure is n k T, magnetic pressure is B squared over two mu-nought, so beta equals two mu-nought n k T over B squared."
+    },
+    {
+     "start": 85.23,
+     "end": 93.73,
+     "text": "n is the number density, T the temperature, B the field, k Boltzmann's constant, and mu-nought the permeability of free space."
+    },
+    {
+     "start": 93.73,
+     "end": 98.01,
+     "text": "In the photosphere beta is much greater than one, so the gas wins."
+    },
+    {
+     "start": 98.01,
+     "end": 102.83,
+     "text": "In the chromosphere beta is of order one, and in the corona much less than one."
+    },
+    {
+     "start": 102.83,
+     "end": 108.89,
+     "text": "The gas thins faster than the field spreads, so the field draws spicules, loops and prominences."
+    },
+    {
+     "start": 108.89,
+     "end": 111.23,
+     "text": "Set the launch speed and watch the height."
+    },
+    {
+     "start": 111.23,
+     "end": 117.49,
+     "text": "A ballistic flight against solar gravity, two hundred seventy-four metres per second squared, predicts the top."
+    },
+    {
+     "start": 117.49,
+     "end": 121.37,
+     "text": "They rise too fast for that, and many fade rather than fall."
+    },
+    {
+     "start": 121.37,
+     "end": 126.07,
+     "text": "Hinode's type-two spicules, from two thousand seven, may feed the corona."
+    }
+   ],
+   "voicedHash": "0d772145a584"
+  },
+  "cmes-space-weather": {
+   "script": "Look at the Earth behind the panel. Several times a day near solar maximum, SOHO shows a Sun-sized bubble of coronal gas racing outward, a coronal mass ejection. A typical one carries about a billion tonnes, a small mountain, from hundreds to over three thousand kilometres per second, with flare-sized energy, not driven by heat. A stressed magnetic structure, often holding a prominence, loses equilibrium and is flung out. I picture a twisted rubber band snapping. Reconnection behind it lights the flare ribbons.\n\nTravel time, t-travel, equals one astronomical unit divided by v, the speed. One astronomical unit is about a hundred and fifty billion metres. At a million metres per second, a thousand kilometres per second, that is roughly forty-two hours. Fast ones slow and slow ones are swept along, so real times run from fifteen hours to four days.\n\nThe stand-off distance, r-mp, is R-E, Earth's radius, times the sixth root of B-nought squared over two mu-nought rho v squared. B-nought, thirty microteslas, is the equatorial field; mu-nought the permeability of free space; rho and v are the wind's density and speed. Dipole pressure falls as one over distance to the sixth, balancing ram pressure near ten Earth radii in quiet wind, five or six in a storm, inside geosynchronous orbit at six point six Earth radii.\n\nOn the widget, try two thousand kilometres per second and ten times the usual density. Watch arrival time, kinetic energy, and the magnetosphere pushed inside the satellites. A southward field reconnects, the ground field drops by hundreds of nanoteslas, and the aurora reaches mid-latitudes. Québec went dark for nine hours in March nineteen eighty-nine. Carrington saw the flare on the first of September eighteen fifty-nine; telegraphs burned seventeen hours later. A repeat would cost trillions. Kelvin assumed radiation, not a plasma cloud; OSO-7 imaged CMEs only in nineteen seventy-one. Mars has no global field; MAVEN sees a hundred grams a second lost. We watch the Sun around the clock from L1.",
+   "hash": "53badca74090",
+   "duration": 130.87,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.4,
+     "text": "Look at the Earth behind the panel."
+    },
+    {
+     "start": 2.4,
+     "end": 11.28,
+     "text": "Several times a day near solar maximum, SOHO shows a Sun-sized bubble of coronal gas racing outward, a coronal mass ejection."
+    },
+    {
+     "start": 11.28,
+     "end": 21.98,
+     "text": "A typical one carries about a billion tonnes, a small mountain, from hundreds to over three thousand kilometres per second, with flare-sized energy, not driven by heat."
+    },
+    {
+     "start": 21.98,
+     "end": 28.1,
+     "text": "A stressed magnetic structure, often holding a prominence, loses equilibrium and is flung out."
+    },
+    {
+     "start": 28.1,
+     "end": 30.7,
+     "text": "I picture a twisted rubber band snapping."
+    },
+    {
+     "start": 30.7,
+     "end": 33.5,
+     "text": "Reconnection behind it lights the flare ribbons."
+    },
+    {
+     "start": 33.5,
+     "end": 39.42,
+     "text": "Travel time, t-travel, equals one astronomical unit divided by v, the speed."
+    },
+    {
+     "start": 39.42,
+     "end": 43.42,
+     "text": "One astronomical unit is about a hundred and fifty billion metres."
+    },
+    {
+     "start": 43.42,
+     "end": 49.4,
+     "text": "At a million metres per second, a thousand kilometres per second, that is roughly forty-two hours."
+    },
+    {
+     "start": 49.4,
+     "end": 55.74,
+     "text": "Fast ones slow and slow ones are swept along, so real times run from fifteen hours to four days."
+    },
+    {
+     "start": 55.74,
+     "end": 65.3,
+     "text": "The stand-off distance, r-mp, is R-E, Earth's radius, times the sixth root of B-nought squared over two mu-nought rho v squared."
+    },
+    {
+     "start": 65.3,
+     "end": 74.71,
+     "text": "B-nought, thirty microteslas, is the equatorial field; mu-nought the permeability of free space; rho and v are the wind's density and speed."
+    },
+    {
+     "start": 74.71,
+     "end": 87.47,
+     "text": "Dipole pressure falls as one over distance to the sixth, balancing ram pressure near ten Earth radii in quiet wind, five or six in a storm, inside geosynchronous orbit at six point six Earth radii."
+    },
+    {
+     "start": 87.47,
+     "end": 92.65,
+     "text": "On the widget, try two thousand kilometres per second and ten times the usual density."
+    },
+    {
+     "start": 92.65,
+     "end": 97.93,
+     "text": "Watch arrival time, kinetic energy, and the magnetosphere pushed inside the satellites."
+    },
+    {
+     "start": 97.93,
+     "end": 105.11,
+     "text": "A southward field reconnects, the ground field drops by hundreds of nanoteslas, and the aurora reaches mid-latitudes."
+    },
+    {
+     "start": 105.11,
+     "end": 108.65,
+     "text": "Québec went dark for nine hours in March nineteen eighty-nine."
+    },
+    {
+     "start": 108.65,
+     "end": 115.01,
+     "text": "Carrington saw the flare on the first of September eighteen fifty-nine; telegraphs burned seventeen hours later."
+    },
+    {
+     "start": 115.01,
+     "end": 117.01,
+     "text": "A repeat would cost trillions."
+    },
+    {
+     "start": 117.01,
+     "end": 123.99,
+     "text": "Kelvin assumed radiation, not a plasma cloud; OSO-7 imaged CMEs only in nineteen seventy-one."
+    },
+    {
+     "start": 123.99,
+     "end": 128.57,
+     "text": "Mars has no global field; MAVEN sees a hundred grams a second lost."
+    },
+    {
+     "start": 128.57,
+     "end": 130.87,
+     "text": "We watch the Sun around the clock from L1."
+    }
+   ],
+   "voicedHash": "6769dca90114"
+  },
+  "differential-rotation": {
+   "script": "Look at the Sun behind the panel. It does not turn as one piece. Galileo tracked sunspots in sixteen twelve and found a period of about a month. Carrington measured twenty-five days at the equator, about twenty-six and a half at thirty degrees, and thirty-six days at the poles. The Sun is fluid, so latitudes need not share one spin. Convection maintains the shear by carrying angular momentum toward the equator.\n\nOmega of phi, the sidereal rate in degrees per day, equals fourteen point seven one minus two point three nine sine squared phi minus one point seven nine sine to the fourth phi. Phi is latitude. Sine terms slow the spin off the equator, giving twenty-four and a half days there and thirty-eight at the pole. Earth orbiting lengthens the period we time. P synodic equals P sidereal divided by one minus P sidereal over three hundred sixty-five point two five days, where P sidereal is the true period. Twenty-five point four sidereal days become twenty-seven point three synodic days, the Carrington rotation.\n\nHelioseismology surprised us. Through the convection zone the rate at fixed latitude stays nearly constant with depth, not in cylinders. The radiative interior rotates rigidly at twenty-seven days. At seven tenths of a solar radius the thin tachocline shears that rate, faster below at high latitudes, slower below at the equator. That shear is what a dynamo needs, so the tachocline seats the solar cycle.\n\nTry the widget. Watch meridians spiral as the equator pulls ahead, an extra turn every few months. The slider reports local sidereal and synodic periods. The interior view shows the rigid core, differential envelope and thin tachocline. A frozen field winds the same way. The axis tilts seven and a quarter degrees to the ecliptic, and Earth's motion adds about two days to each rotation. Speed falls as one over the square root of time, so magnetic braking over four point six billion years lets rotation age stars like the Sun.",
+   "hash": "9db90289a376",
+   "duration": 121.91,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.34,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 2.34,
+     "end": 4.74,
+     "text": "It does not turn as one piece."
+    },
+    {
+     "start": 4.74,
+     "end": 10.12,
+     "text": "Galileo tracked sunspots in sixteen twelve and found a period of about a month."
+    },
+    {
+     "start": 10.12,
+     "end": 18.02,
+     "text": "Carrington measured twenty-five days at the equator, about twenty-six and a half at thirty degrees, and thirty-six days at the poles."
+    },
+    {
+     "start": 18.02,
+     "end": 22.46,
+     "text": "The Sun is fluid, so latitudes need not share one spin."
+    },
+    {
+     "start": 22.46,
+     "end": 27.14,
+     "text": "Convection maintains the shear by carrying angular momentum toward the equator."
+    },
+    {
+     "start": 27.14,
+     "end": 39,
+     "text": "Omega of phi, the sidereal rate in degrees per day, equals fourteen point seven one minus two point three nine sine squared phi minus one point seven nine sine to the fourth phi."
+    },
+    {
+     "start": 39,
+     "end": 40.56,
+     "text": "Phi is latitude."
+    },
+    {
+     "start": 40.56,
+     "end": 46.7,
+     "text": "Sine terms slow the spin off the equator, giving twenty-four and a half days there and thirty-eight at the pole."
+    },
+    {
+     "start": 46.7,
+     "end": 49.5,
+     "text": "Earth orbiting lengthens the period we time."
+    },
+    {
+     "start": 49.5,
+     "end": 58.86,
+     "text": "P synodic equals P sidereal divided by one minus P sidereal over three hundred sixty-five point two five days, where P sidereal is the true period."
+    },
+    {
+     "start": 58.86,
+     "end": 65.19,
+     "text": "Twenty-five point four sidereal days become twenty-seven point three synodic days, the Carrington rotation."
+    },
+    {
+     "start": 65.19,
+     "end": 67.59,
+     "text": "Helioseismology surprised us."
+    },
+    {
+     "start": 67.59,
+     "end": 73.69,
+     "text": "Through the convection zone the rate at fixed latitude stays nearly constant with depth, not in cylinders."
+    },
+    {
+     "start": 73.69,
+     "end": 77.45,
+     "text": "The radiative interior rotates rigidly at twenty-seven days."
+    },
+    {
+     "start": 77.45,
+     "end": 85.65,
+     "text": "At seven tenths of a solar radius the thin tachocline shears that rate, faster below at high latitudes, slower below at the equator."
+    },
+    {
+     "start": 85.65,
+     "end": 90.39,
+     "text": "That shear is what a dynamo needs, so the tachocline seats the solar cycle."
+    },
+    {
+     "start": 90.39,
+     "end": 91.51,
+     "text": "Try the widget."
+    },
+    {
+     "start": 91.51,
+     "end": 96.53,
+     "text": "Watch meridians spiral as the equator pulls ahead, an extra turn every few months."
+    },
+    {
+     "start": 96.53,
+     "end": 99.99,
+     "text": "The slider reports local sidereal and synodic periods."
+    },
+    {
+     "start": 99.99,
+     "end": 105.11,
+     "text": "The interior view shows the rigid core, differential envelope and thin tachocline."
+    },
+    {
+     "start": 105.11,
+     "end": 107.47,
+     "text": "A frozen field winds the same way."
+    },
+    {
+     "start": 107.47,
+     "end": 114.15,
+     "text": "The axis tilts seven and a quarter degrees to the ecliptic, and Earth's motion adds about two days to each rotation."
+    },
+    {
+     "start": 114.15,
+     "end": 121.91,
+     "text": "Speed falls as one over the square root of time, so magnetic braking over four point six billion years lets rotation age stars like the Sun."
+    }
+   ],
+   "voicedHash": "e07faf597754"
+  },
+  "granulation": {
+   "script": "Look at the Sun behind the panel. On a steady morning a good telescope shows the photosphere mottled, like rice grains on a tablecloth. Those grains are granules, the tops of convection cells. Hot gas rises in the bright centres at about one kilometre per second, spreads, cools by radiation, and sinks in the dark lanes. A typical granule spans seven hundred to a thousand kilometres, about a scale height. Its centre is roughly a hundred kelvin hotter and thirty per cent brighter, and it lasts five to ten minutes. Four million cover the Sun at once. Centres are blueshifted, lanes redshifted, which gives the lines their C-shaped asymmetry.\n\nThe convective speed, v conv, is approximately the convective flux, F conv, divided by the density, rho, all raised to the power one third, since the flux scales as density times speed cubed. A flux of six times ten to the seven watts per square metre, divided by a density of three times ten to the minus four kilograms per cubic metre, gives the speed needed to carry that flux, about six kilometres per second. At the surface we see one to two kilometres per second, near a sound speed of seven kilometres per second. The flow is vigorous, and mixing-length theory is at its roughest.\n\nI want you to switch the widget to Doppler view and find blue centres against red lanes. After ten minutes almost every granule is gone, and the pattern never repeats. A pot on a stove settles. The Sun does not. Strong stratification makes each blob expand and overshoot.\n\nZoom out to supergranules, thirty thousand kilometres across, flowing at three to four tenths of a kilometre per second and living about a day. They sweep field into the chromospheric network. Whether they are true cells driven by helium ionisation, or only interacting granules, is still debated. Fields near a tenth of a tesla brighten the lanes as faculae. Herschel sketched this in eighteen oh one.",
+   "hash": "55fabf97d536",
+   "duration": 117.11,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.16,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 2.16,
+     "end": 8.4,
+     "text": "On a steady morning a good telescope shows the photosphere mottled, like rice grains on a tablecloth."
+    },
+    {
+     "start": 8.4,
+     "end": 12.3,
+     "text": "Those grains are granules, the tops of convection cells."
+    },
+    {
+     "start": 12.3,
+     "end": 20.94,
+     "text": "Hot gas rises in the bright centres at about one kilometre per second, spreads, cools by radiation, and sinks in the dark lanes."
+    },
+    {
+     "start": 20.94,
+     "end": 26.24,
+     "text": "A typical granule spans seven hundred to a thousand kilometres, about a scale height."
+    },
+    {
+     "start": 26.24,
+     "end": 32.76,
+     "text": "Its centre is roughly a hundred kelvin hotter and thirty per cent brighter, and it lasts five to ten minutes."
+    },
+    {
+     "start": 32.76,
+     "end": 35.06,
+     "text": "Four million cover the Sun at once."
+    },
+    {
+     "start": 35.06,
+     "end": 41.04,
+     "text": "Centres are blueshifted, lanes redshifted, which gives the lines their C-shaped asymmetry."
+    },
+    {
+     "start": 41.04,
+     "end": 54.26,
+     "text": "The convective speed, v conv, is approximately the convective flux, F conv, divided by the density, rho, all raised to the power one third, since the flux scales as density times speed cubed."
+    },
+    {
+     "start": 54.26,
+     "end": 67.21,
+     "text": "A flux of six times ten to the seven watts per square metre, divided by a density of three times ten to the minus four kilograms per cubic metre, gives the speed needed to carry that flux, about six kilometres per second."
+    },
+    {
+     "start": 67.21,
+     "end": 73.29,
+     "text": "At the surface we see one to two kilometres per second, near a sound speed of seven kilometres per second."
+    },
+    {
+     "start": 73.29,
+     "end": 77.35,
+     "text": "The flow is vigorous, and mixing-length theory is at its roughest."
+    },
+    {
+     "start": 77.35,
+     "end": 82.39,
+     "text": "I want you to switch the widget to Doppler view and find blue centres against red lanes."
+    },
+    {
+     "start": 82.39,
+     "end": 87.17,
+     "text": "After ten minutes almost every granule is gone, and the pattern never repeats."
+    },
+    {
+     "start": 87.17,
+     "end": 88.97,
+     "text": "A pot on a stove settles."
+    },
+    {
+     "start": 88.97,
+     "end": 90.39,
+     "text": "The Sun does not."
+    },
+    {
+     "start": 90.39,
+     "end": 94.27,
+     "text": "Strong stratification makes each blob expand and overshoot."
+    },
+    {
+     "start": 94.27,
+     "end": 102.55,
+     "text": "Zoom out to supergranules, thirty thousand kilometres across, flowing at three to four tenths of a kilometre per second and living about a day."
+    },
+    {
+     "start": 102.55,
+     "end": 105.33,
+     "text": "They sweep field into the chromospheric network."
+    },
+    {
+     "start": 105.33,
+     "end": 111.57,
+     "text": "Whether they are true cells driven by helium ionisation, or only interacting granules, is still debated."
+    },
+    {
+     "start": 111.57,
+     "end": 115.17,
+     "text": "Fields near a tenth of a tesla brighten the lanes as faculae."
+    },
+    {
+     "start": 115.17,
+     "end": 117.11,
+     "text": "Herschel sketched this in eighteen oh one."
+    }
+   ],
+   "voicedHash": "eabea6d5ecff"
+  },
+  "photosphere": {
+   "script": "Look at the Sun behind the panel. That sharp limb is not a solid surface. Opacity, chiefly the negative hydrogen ion, rises so steeply with depth that the gas turns from transparent to opaque in a few hundred kilometres, a thousandth of the radius, so the edge looks crisp.\n\nThe photosphere is this layer: optical depth one at five hundred nanometres, about sixty-four hundred kelvin, density a ten-thousandth of air, up to the temperature minimum five hundred kilometres higher at forty-four hundred kelvin. All the visible light comes from this shell. The effective temperature of fifty-seven seventy-seven kelvin corresponds to optical depth two-thirds, as the Eddington-Barbier relation requires.\n\nDrag the cursor on the widget through the labelled layers. Notice the smooth photospheric decline, the slow chromospheric rise with a plateau near seven thousand kelvin where hydrogen begins to ionise, and the near-vertical transition region. Density keeps falling the whole way. The curve is the average VAL model of Vernazza, Avrett and Loeser; the real atmosphere is seething and patchy.\n\nPressure at height h equals P zero times e to the minus h over H. P is pressure, h is height, and H is the scale height, equal to k T over mu m sub H g. That is Boltzmann's constant times temperature, divided by the mean molecular weight times the hydrogen mass times gravity — the distance over which pressure falls by a factor of e. Near fifty-eight hundred kelvin, H is only about one hundred thirty kilometres, so our photosphere spans a factor of about fifty in pressure, thinner than the distance from Ankara to Konya.\n\nAbove the minimum the temperature rises slowly through the chromosphere to about ten thousand kelvin, then jumps two orders of magnitude within a hundred kilometres to the million-degree corona while density falls a millionfold. Heat cannot flow uphill, so waves or magnetic fields from the convection zone must do the heating. That question is why the Parker Solar Probe was built.",
+   "hash": "ca68660d234c",
+   "duration": 123.19,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.36,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 2.36,
+     "end": 5.38,
+     "text": "That sharp limb is not a solid surface."
+    },
+    {
+     "start": 5.38,
+     "end": 18.86,
+     "text": "Opacity, chiefly the negative hydrogen ion, rises so steeply with depth that the gas turns from transparent to opaque in a few hundred kilometres, a thousandth of the radius, so the edge looks crisp."
+    },
+    {
+     "start": 18.86,
+     "end": 34.12,
+     "text": "The photosphere is this layer: optical depth one at five hundred nanometres, about sixty-four hundred kelvin, density a ten-thousandth of air, up to the temperature minimum five hundred kilometres higher at forty-four hundred kelvin."
+    },
+    {
+     "start": 34.12,
+     "end": 36.54,
+     "text": "All the visible light comes from this shell."
+    },
+    {
+     "start": 36.54,
+     "end": 46.18,
+     "text": "The effective temperature of fifty-seven seventy-seven kelvin corresponds to optical depth two-thirds, as the Eddington-Barbier relation requires."
+    },
+    {
+     "start": 46.18,
+     "end": 49.16,
+     "text": "Drag the cursor on the widget through the labelled layers."
+    },
+    {
+     "start": 49.16,
+     "end": 60.26,
+     "text": "Notice the smooth photospheric decline, the slow chromospheric rise with a plateau near seven thousand kelvin where hydrogen begins to ionise, and the near-vertical transition region."
+    },
+    {
+     "start": 60.26,
+     "end": 62.49,
+     "text": "Density keeps falling the whole way."
+    },
+    {
+     "start": 62.49,
+     "end": 69.33,
+     "text": "The curve is the average VAL model of Vernazza, Avrett and Loeser; the real atmosphere is seething and patchy."
+    },
+    {
+     "start": 69.33,
+     "end": 74.05,
+     "text": "Pressure at height h equals P zero times e to the minus h over H."
+    },
+    {
+     "start": 74.05,
+     "end": 81.03,
+     "text": "P is pressure, h is height, and H is the scale height, equal to k T over mu m sub H g."
+    },
+    {
+     "start": 81.03,
+     "end": 91.15,
+     "text": "That is Boltzmann's constant times temperature, divided by the mean molecular weight times the hydrogen mass times gravity — the distance over which pressure falls by a factor of e."
+    },
+    {
+     "start": 91.15,
+     "end": 102.29,
+     "text": "Near fifty-eight hundred kelvin, H is only about one hundred thirty kilometres, so our photosphere spans a factor of about fifty in pressure, thinner than the distance from Ankara to Konya."
+    },
+    {
+     "start": 102.29,
+     "end": 114.65,
+     "text": "Above the minimum the temperature rises slowly through the chromosphere to about ten thousand kelvin, then jumps two orders of magnitude within a hundred kilometres to the million-degree corona while density falls a millionfold."
+    },
+    {
+     "start": 114.65,
+     "end": 120.51,
+     "text": "Heat cannot flow uphill, so waves or magnetic fields from the convection zone must do the heating."
+    },
+    {
+     "start": 120.51,
+     "end": 123.19,
+     "text": "That question is why the Parker Solar Probe was built."
+    }
+   ],
+   "voicedHash": "2ec61efe8dd5"
+  },
+  "solar-wind": {
+   "script": "We've flown toward Parker, behind the panel. A million-kelvin corona cannot be held by solar gravity. In 1958 Parker showed no static pressure can fall to zero at infinity. Far out, the isothermal pressure exceeds interstellar space, so the corona must expand.\n\nThe square of v over c-s, minus the natural log of that square, equals four times the natural log of r over r-c, plus four r-c over r, minus three. v is wind speed, c-s sound speed, r distance from the Sun's centre, r-c the critical radius. c-s is the square root of two k T over m-p: k Boltzmann's constant, T temperature, m-p proton mass. r-c is G times the solar mass over two c-s squared. G is the gravitational constant, and there the wind speed equals the sound speed. At one and a half million kelvin, c-s is about a hundred and sixty kilometres per second, r-c about four solar radii, speed at Earth about five hundred kilometres per second. Referees rejected it; Chandrasekhar published it; Mariner 2 confirmed the wind in 1962.\n\nTry the widget with me. Heat the corona and the critical point moves in while speed at one astronomical unit rises. Cool it and density drops, travel time grows, and the angle shifts.\n\nSlow wind, three to five hundred kilometres per second, about seven protons per cubic centimetre, from streamer edges over closed field. Fast wind, seven to eight hundred kilometres per second, from coronal holes, open field, dark in X-rays. Alfvén waves drive it faster. The Sun loses about two billion kilograms per second, enough over four billion years to strip much of Mars's air.\n\nRotation bends the field into a spiral. The tangent of psi equals omega r over v. Psi is the field angle from radial, omega the Sun's spin, r distance, v wind speed. About forty-five degrees at Earth. About five nanotesla at Earth reaches the heliopause, near a hundred and twenty astronomical units. Voyager 1 crossed in 2012.",
+   "hash": "4f93aea918c5",
+   "duration": 128.31,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.12,
+     "text": "We've flown toward Parker, behind the panel."
+    },
+    {
+     "start": 3.12,
+     "end": 6.9,
+     "text": "A million-kelvin corona cannot be held by solar gravity."
+    },
+    {
+     "start": 6.9,
+     "end": 12.08,
+     "text": "In 1958 Parker showed no static pressure can fall to zero at infinity."
+    },
+    {
+     "start": 12.08,
+     "end": 18.1,
+     "text": "Far out, the isothermal pressure exceeds interstellar space, so the corona must expand."
+    },
+    {
+     "start": 18.1,
+     "end": 29.6,
+     "text": "The square of v over c-s, minus the natural log of that square, equals four times the natural log of r over r-c, plus four r-c over r, minus three."
+    },
+    {
+     "start": 29.6,
+     "end": 36.46,
+     "text": "v is wind speed, c-s sound speed, r distance from the Sun's centre, r-c the critical radius."
+    },
+    {
+     "start": 36.46,
+     "end": 44.82,
+     "text": "c-s is the square root of two k T over m-p: k Boltzmann's constant, T temperature, m-p proton mass."
+    },
+    {
+     "start": 44.82,
+     "end": 48.7,
+     "text": "r-c is G times the solar mass over two c-s squared."
+    },
+    {
+     "start": 48.7,
+     "end": 53.5,
+     "text": "G is the gravitational constant, and there the wind speed equals the sound speed."
+    },
+    {
+     "start": 53.5,
+     "end": 64.37,
+     "text": "At one and a half million kelvin, c-s is about a hundred and sixty kilometres per second, r-c about four solar radii, speed at Earth about five hundred kilometres per second."
+    },
+    {
+     "start": 64.37,
+     "end": 70.85,
+     "text": "Referees rejected it; Chandrasekhar published it; Mariner 2 confirmed the wind in 1962."
+    },
+    {
+     "start": 70.85,
+     "end": 72.33,
+     "text": "Try the widget with me."
+    },
+    {
+     "start": 72.33,
+     "end": 77.53,
+     "text": "Heat the corona and the critical point moves in while speed at one astronomical unit rises."
+    },
+    {
+     "start": 77.53,
+     "end": 81.99,
+     "text": "Cool it and density drops, travel time grows, and the angle shifts."
+    },
+    {
+     "start": 81.99,
+     "end": 90.35,
+     "text": "Slow wind, three to five hundred kilometres per second, about seven protons per cubic centimetre, from streamer edges over closed field."
+    },
+    {
+     "start": 90.35,
+     "end": 97.41,
+     "text": "Fast wind, seven to eight hundred kilometres per second, from coronal holes, open field, dark in X-rays."
+    },
+    {
+     "start": 97.41,
+     "end": 99.59,
+     "text": "Alfvén waves drive it faster."
+    },
+    {
+     "start": 99.59,
+     "end": 106.31,
+     "text": "The Sun loses about two billion kilograms per second, enough over four billion years to strip much of Mars's air."
+    },
+    {
+     "start": 106.31,
+     "end": 108.87,
+     "text": "Rotation bends the field into a spiral."
+    },
+    {
+     "start": 108.87,
+     "end": 111.37,
+     "text": "The tangent of psi equals omega r over v."
+    },
+    {
+     "start": 111.37,
+     "end": 118.23,
+     "text": "Psi is the field angle from radial, omega the Sun's spin, r distance, v wind speed."
+    },
+    {
+     "start": 118.23,
+     "end": 120.21,
+     "text": "About forty-five degrees at Earth."
+    },
+    {
+     "start": 120.21,
+     "end": 126.17,
+     "text": "About five nanotesla at Earth reaches the heliopause, near a hundred and twenty astronomical units."
+    },
+    {
+     "start": 126.17,
+     "end": 128.31,
+     "text": "Voyager 1 crossed in 2012."
+    }
+   ],
+   "voicedHash": "5916436a0116"
+  },
+  "transition-corona": {
+   "script": "At eclipse the pearly corona stretches several solar radii in magnetic streamers. It is about a millionth as bright as the photosphere, so daylight hides it. The K corona, German for continuous, is photospheric light scattered by free electrons so fast that the Fraunhofer lines are Doppler-smeared away. Its intensity gives the electron density, about ten to the fifteen per cubic metre at the base, a million times thinner than the photosphere. The F corona is sunlight scattered by interplanetary dust, lines intact. The E corona is emission: the green line near five hundred thirty nanometres, unidentified from eighteen sixty-nine until nineteen thirty-nine and once blamed on a new element, coronium.\n\nEdlén showed that line is iron stripped of thirteen electrons, iron fourteen, and the red line is iron ten. These ions exist only above a million kelvin, so quiet regions are one to two million kelvin and active regions at three to four million, two hundred times hotter than the surface. The plasma is fully ionised and almost collisionless. SOHO, SDO and Hinode isolate one ion per channel, as the table shows.\n\nIn the transition region the temperature climbs from twenty-five thousand kelvin to a million in under a hundred kilometres. Conduction back into the chromosphere is a major part of the energy balance, and Lyman alpha, carbon four and oxygen six diagnose it.\n\nI want you to drag the temperature from ten thousand kelvin to ten million. Watch iron step from iron nine through fourteen to twenty-four, and the disc tint with the AIA channel that would dominate. This is not the Saha equation. There is almost no radiation field, and the density is too low for three-body recombination, so collisional ionisation balances radiative and dielectronic recombination.\n\nLook behind the panel: Parker, since December twenty twenty-four, within six million kilometres of the surface, under nine solar radii, measuring waves, turbulence and reconnection. Wave heating and Parker's nanoflares both probably work. Switchbacks and Solar Orbiter's campfires are the newest evidence.",
+   "hash": "81123d017df5",
+   "duration": 128.31,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.3,
+     "text": "At eclipse the pearly corona stretches several solar radii in magnetic streamers."
+    },
+    {
+     "start": 5.3,
+     "end": 9.78,
+     "text": "It is about a millionth as bright as the photosphere, so daylight hides it."
+    },
+    {
+     "start": 9.78,
+     "end": 19.22,
+     "text": "The K corona, German for continuous, is photospheric light scattered by free electrons so fast that the Fraunhofer lines are Doppler-smeared away."
+    },
+    {
+     "start": 19.22,
+     "end": 27.56,
+     "text": "Its intensity gives the electron density, about ten to the fifteen per cubic metre at the base, a million times thinner than the photosphere."
+    },
+    {
+     "start": 27.56,
+     "end": 32.68,
+     "text": "The F corona is sunlight scattered by interplanetary dust, lines intact."
+    },
+    {
+     "start": 32.68,
+     "end": 44.44,
+     "text": "The E corona is emission: the green line near five hundred thirty nanometres, unidentified from eighteen sixty-nine until nineteen thirty-nine and once blamed on a new element, coronium."
+    },
+    {
+     "start": 44.44,
+     "end": 51.66,
+     "text": "Edlén showed that line is iron stripped of thirteen electrons, iron fourteen, and the red line is iron ten."
+    },
+    {
+     "start": 51.66,
+     "end": 62.32,
+     "text": "These ions exist only above a million kelvin, so quiet regions are one to two million kelvin and active regions at three to four million, two hundred times hotter than the surface."
+    },
+    {
+     "start": 62.32,
+     "end": 65.83,
+     "text": "The plasma is fully ionised and almost collisionless."
+    },
+    {
+     "start": 65.83,
+     "end": 71.79,
+     "text": "SOHO, SDO and Hinode isolate one ion per channel, as the table shows."
+    },
+    {
+     "start": 71.79,
+     "end": 78.41,
+     "text": "In the transition region the temperature climbs from twenty-five thousand kelvin to a million in under a hundred kilometres."
+    },
+    {
+     "start": 78.41,
+     "end": 86.65,
+     "text": "Conduction back into the chromosphere is a major part of the energy balance, and Lyman alpha, carbon four and oxygen six diagnose it."
+    },
+    {
+     "start": 86.65,
+     "end": 90.77,
+     "text": "I want you to drag the temperature from ten thousand kelvin to ten million."
+    },
+    {
+     "start": 90.77,
+     "end": 97.99,
+     "text": "Watch iron step from iron nine through fourteen to twenty-four, and the disc tint with the AIA channel that would dominate."
+    },
+    {
+     "start": 97.99,
+     "end": 100.05,
+     "text": "This is not the Saha equation."
+    },
+    {
+     "start": 100.05,
+     "end": 110.27,
+     "text": "There is almost no radiation field, and the density is too low for three-body recombination, so collisional ionisation balances radiative and dielectronic recombination."
+    },
+    {
+     "start": 110.27,
+     "end": 121.41,
+     "text": "Look behind the panel: Parker, since December twenty twenty-four, within six million kilometres of the surface, under nine solar radii, measuring waves, turbulence and reconnection."
+    },
+    {
+     "start": 121.41,
+     "end": 124.91,
+     "text": "Wave heating and Parker's nanoflares both probably work."
+    },
+    {
+     "start": 124.91,
+     "end": 128.31,
+     "text": "Switchbacks and Solar Orbiter's campfires are the newest evidence."
+    }
+   ],
+   "voicedHash": "42cb7ab81e86"
+  }
+ }
+}

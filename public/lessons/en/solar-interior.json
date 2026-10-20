@@ -1,0 +1,905 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "energy-generation": {
+   "script": "Look with me behind the panel, at the Sun. Ninety-nine per cent of the power comes from inside a quarter of the radius. Epsilon sub p p is about zero point two four times rho X squared, times T six to the minus two thirds, times e to the minus thirty-three point eight over T six to the one third, in watts per kilogram. Rho is density, X is the hydrogen fraction, and T six is temperature in millions of kelvin. That exponential is Coulomb tunnelling, so generation roughly tracks density times X squared times temperature to the fourth and dies outward. At the centre, about two thousandths of a watt per kilogram, two hundred and eighty watts per cubic metre. A compost heap, not an explosion.\n\nd L sub r over d r equals four pi r squared rho epsilon. L sub r is the luminosity inside radius r. The right side is power added per unit radius. Half the solar luminosity is in by a tenth of a radius, ninety-nine per cent by a quarter. Past that, the outer three quarters only carry energy out.\n\nDrag the cursor inward. Notice CNO is negligible until the centre, a few per cent, because it scales as temperature to the seventeenth. Proton-proton supplies ninety-eight point seven per cent; CNO, limited by fifteen point seven million kelvin, one point three per cent. Thirty per cent more mass and the core would convect under CNO.\n\nP P one does sixty-nine per cent of the helium, the second thirty-one per cent, boron-eight a tenth of one per cent. That rare branch made the neutrinos easiest to detect, and thirty years of trouble. Each chain frees twenty-six point seven mega-electronvolts; neutrinos take a little, up to seven mega-electronvolts, and two per cent never heats the gas.\n\nIf fusion stopped now, neutrinos would report it in two seconds, sunlight only after a hundred thousand years. What would the structure do meanwhile? Recall the Kelvin-Helmholtz time.",
+   "hash": "72d8f83b7e9d",
+   "duration": 119.67,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 3.12,
+     "text": "Look with me behind the panel, at the Sun."
+    },
+    {
+     "start": 3.12,
+     "end": 7.52,
+     "text": "Ninety-nine per cent of the power comes from inside a quarter of the radius."
+    },
+    {
+     "start": 7.52,
+     "end": 21.56,
+     "text": "Epsilon sub p p is about zero point two four times rho X squared, times T six to the minus two thirds, times e to the minus thirty-three point eight over T six to the one third, in watts per kilogram."
+    },
+    {
+     "start": 21.56,
+     "end": 27.94,
+     "text": "Rho is density, X is the hydrogen fraction, and T six is temperature in millions of kelvin."
+    },
+    {
+     "start": 27.94,
+     "end": 36.82,
+     "text": "That exponential is Coulomb tunnelling, so generation roughly tracks density times X squared times temperature to the fourth and dies outward."
+    },
+    {
+     "start": 36.82,
+     "end": 42.84,
+     "text": "At the centre, about two thousandths of a watt per kilogram, two hundred and eighty watts per cubic metre."
+    },
+    {
+     "start": 42.84,
+     "end": 45.52,
+     "text": "A compost heap, not an explosion."
+    },
+    {
+     "start": 45.52,
+     "end": 50.58,
+     "text": "d L sub r over d r equals four pi r squared rho epsilon."
+    },
+    {
+     "start": 50.58,
+     "end": 53.9,
+     "text": "L sub r is the luminosity inside radius r."
+    },
+    {
+     "start": 53.9,
+     "end": 56.98,
+     "text": "The right side is power added per unit radius."
+    },
+    {
+     "start": 56.98,
+     "end": 62.49,
+     "text": "Half the solar luminosity is in by a tenth of a radius, ninety-nine per cent by a quarter."
+    },
+    {
+     "start": 62.49,
+     "end": 66.15,
+     "text": "Past that, the outer three quarters only carry energy out."
+    },
+    {
+     "start": 66.15,
+     "end": 67.93,
+     "text": "Drag the cursor inward."
+    },
+    {
+     "start": 67.93,
+     "end": 74.69,
+     "text": "Notice CNO is negligible until the centre, a few per cent, because it scales as temperature to the seventeenth."
+    },
+    {
+     "start": 74.69,
+     "end": 83.69,
+     "text": "Proton-proton supplies ninety-eight point seven per cent; CNO, limited by fifteen point seven million kelvin, one point three per cent."
+    },
+    {
+     "start": 83.69,
+     "end": 87.51,
+     "text": "Thirty per cent more mass and the core would convect under CNO."
+    },
+    {
+     "start": 87.51,
+     "end": 94.71,
+     "text": "P P one does sixty-nine per cent of the helium, the second thirty-one per cent, boron-eight a tenth of one per cent."
+    },
+    {
+     "start": 94.71,
+     "end": 99.69,
+     "text": "That rare branch made the neutrinos easiest to detect, and thirty years of trouble."
+    },
+    {
+     "start": 99.69,
+     "end": 109.15,
+     "text": "Each chain frees twenty-six point seven mega-electronvolts; neutrinos take a little, up to seven mega-electronvolts, and two per cent never heats the gas."
+    },
+    {
+     "start": 109.15,
+     "end": 115.83,
+     "text": "If fusion stopped now, neutrinos would report it in two seconds, sunlight only after a hundred thousand years."
+    },
+    {
+     "start": 115.83,
+     "end": 117.83,
+     "text": "What would the structure do meanwhile?"
+    },
+    {
+     "start": 117.83,
+     "end": 119.67,
+     "text": "Recall the Kelvin-Helmholtz time."
+    }
+   ],
+   "voicedHash": "9fbf30c7de8a"
+  },
+  "energy-transport-sun": {
+   "script": "Look at the Sun behind the panel. We are close enough now to ask how the energy actually gets out. Last time we met the rule: radiation carries the flux where the temperature gradient it needs stays below the adiabatic gradient, and convection takes over where that radiative gradient would have to be steeper. The formula on the screen is that rule written out. Nabla sub rad equals three over sixteen pi a c G, times kappa-bar times P times L sub r, all over M sub r times T to the fourth. Nabla rad is the logarithmic gradient, d ln T over d ln P, that radiation would need. a is the radiation constant, c the speed of light, G the gravitational constant, kappa-bar the Rosseland mean opacity, P the pressure, L sub r the luminosity at that radius, M sub r the mass inside it, and T the temperature. Higher opacity or luminosity, or lower temperature, all demand a steeper gradient. Nabla sub ad is one minus one over gamma, equal to 0.4 for an ideal monatomic gas, where gamma is the ratio of specific heats. Convection wins wherever nabla rad exceeds nabla ad. In the core the gas is fully ionised, free-free and bound-free absorption fall as temperature to the minus 3.5, opacity stays low, and nabla rad sits near 0.25 to 0.35. Below about two million kelvin, outward of 0.714 solar radii, heavier elements recombine, the Rosseland mean rises by a factor of a hundred, and the radiative gradient shoots past adiabatic. The convection zone is the outer 28.6 percent of the radius but only about 2 percent of the mass. Drag the cursor on the widget and watch the two curves cross near 0.713 solar radii, with the convection zone shaded; the mean free path and diffusion time update as you move. A random walk of steps a millimetre long needs something like two and a half times ten to the twenty-three steps to cross the radiative zone, tens of thousands of years at light speed, and a careful estimate gives about a hundred and seventy thousand years to the base of the zone. Convection then covers the last two hundred thousand kilometres in weeks. Helioseismology measures that base at 0.713 plus or minus 0.001 solar radii, agreement to a tenth of a percent, once opacities and helium settling are done right. The granulation on the surface is simply the top of this zone.",
+   "hash": "f1785a621a67",
+   "duration": 153.59,
+   "sentences": [
+    {
+     "start": 0,
+     "end": 2.23,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 2.23,
+     "end": 6.554,
+     "text": "We are close enough now to ask how the energy actually gets out."
+    },
+    {
+     "start": 6.554,
+     "end": 20.812,
+     "text": "Last time we met the rule: radiation carries the flux where the temperature gradient it needs stays below the adiabatic gradient, and convection takes over where that radiative gradient would have to be steeper."
+    },
+    {
+     "start": 20.812,
+     "end": 24.258,
+     "text": "The formula on the screen is that rule written out."
+    },
+    {
+     "start": 24.258,
+     "end": 32.907,
+     "text": "Nabla sub rad equals three over sixteen pi a c G, times kappa-bar times P times L sub r, all over M sub r times T to the fourth."
+    },
+    {
+     "start": 32.907,
+     "end": 38.651,
+     "text": "Nabla rad is the logarithmic gradient, d ln T over d ln P, that radiation would need."
+    },
+    {
+     "start": 38.651,
+     "end": 53.787,
+     "text": "a is the radiation constant, c the speed of light, G the gravitational constant, kappa-bar the Rosseland mean opacity, P the pressure, L sub r the luminosity at that radius, M sub r the mass inside it, and T the temperature."
+    },
+    {
+     "start": 53.787,
+     "end": 59.328,
+     "text": "Higher opacity or luminosity, or lower temperature, all demand a steeper gradient."
+    },
+    {
+     "start": 59.328,
+     "end": 67.909,
+     "text": "Nabla sub ad is one minus one over gamma, equal to 0. 4 for an ideal monatomic gas, where gamma is the ratio of specific heats."
+    },
+    {
+     "start": 67.909,
+     "end": 71.423,
+     "text": "Convection wins wherever nabla rad exceeds nabla ad."
+    },
+    {
+     "start": 71.423,
+     "end": 82.978,
+     "text": "In the core the gas is fully ionised, free-free and bound-free absorption fall as temperature to the minus 3. 5, opacity stays low, and nabla rad sits near 0. 25 to 0. 35."
+    },
+    {
+     "start": 82.978,
+     "end": 95.884,
+     "text": "Below about two million kelvin, outward of 0. 714 solar radii, heavier elements recombine, the Rosseland mean rises by a factor of a hundred, and the radiative gradient shoots past adiabatic."
+    },
+    {
+     "start": 95.884,
+     "end": 102.506,
+     "text": "The convection zone is the outer 28. 6 percent of the radius but only about 2 percent of the mass."
+    },
+    {
+     "start": 102.506,
+     "end": 114.399,
+     "text": "Drag the cursor on the widget and watch the two curves cross near 0. 713 solar radii, with the convection zone shaded; the mean free path and diffusion time update as you move."
+    },
+    {
+     "start": 114.399,
+     "end": 133.386,
+     "text": "A random walk of steps a millimetre long needs something like two and a half times ten to the twenty-three steps to cross the radiative zone, tens of thousands of years at light speed, and a careful estimate gives about a hundred and seventy thousand years to the base of the zone."
+    },
+    {
+     "start": 133.386,
+     "end": 138.319,
+     "text": "Convection then covers the last two hundred thousand kilometres in weeks."
+    },
+    {
+     "start": 138.319,
+     "end": 149.401,
+     "text": "Helioseismology measures that base at 0. 713 plus or minus 0. 001 solar radii, agreement to a tenth of a percent, once opacities and helium settling are done right."
+    },
+    {
+     "start": 149.401,
+     "end": 153.59,
+     "text": "The granulation on the surface is simply the top of this zone."
+    }
+   ],
+   "voicedHash": "03062c1f5a8a"
+  },
+  "helioseismology": {
+   "script": "Look at the Sun behind the panel. I picture it ringing like a bell. In 1960 Leighton found five-minute oscillations. Ulrich, Leibacher and Stein showed convection stirs trapped sound waves, reflected at the surface and turned back upward. Low-degree modes reach the core; high-degree modes do not.\n\nNu sub n l is about delta nu times the whole sum n plus l over two plus epsilon. Nu sub n l is the frequency for n radial nodes and degree l, and epsilon is a phase offset. Delta nu equals the inverse of twice the integral from the centre to the radius of dr over c, about one hundred thirty-five microhertz, one over the two-hour sound crossing. This holds because successive modes differ by one acoustic round trip. The sound speed c is the square root of gamma k T over mu m sub H. Gamma is the adiabatic index, k Boltzmann's constant, T temperature, mu the mean molecular weight and m sub H the hydrogen mass, so c tracks temperature over composition. Core to surface, c falls from about five hundred kilometres per second to seven. Small departures encode the structure.\n\nThe model matches to a tenth of a percent between five and ninety-five percent of the radius, worst by three tenths under the convection zone near seventy-one percent of the radius. Surface helium is just under a quarter. Splitting in m gives differential rotation outside, rigid rotation every twenty-seven days inside, and the tachocline, where the magnetic field is generated.\n\nTry l of one and l of one hundred on the widget. One reaches the core, the other does not; both oscillate every five minutes. The plot shows sound speed and a residual of tenths of a percent. Depth depends only on l, where c over r equals the horizontal phase speed. Since 1995 GONG, MDI and HMI have fixed the core temperature to one percent, and CoRoT, Kepler and TESS now do this for thousands of stars.",
+   "hash": "7d07bf62e2b6",
+   "duration": 119.99,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.52,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 2.52,
+     "end": 4.74,
+     "text": "I picture it ringing like a bell."
+    },
+    {
+     "start": 4.74,
+     "end": 8.54,
+     "text": "In 1960 Leighton found five-minute oscillations."
+    },
+    {
+     "start": 8.54,
+     "end": 15.86,
+     "text": "Ulrich, Leibacher and Stein showed convection stirs trapped sound waves, reflected at the surface and turned back upward."
+    },
+    {
+     "start": 15.86,
+     "end": 19.94,
+     "text": "Low-degree modes reach the core; high-degree modes do not."
+    },
+    {
+     "start": 19.94,
+     "end": 26.36,
+     "text": "Nu sub n l is about delta nu times the whole sum n plus l over two plus epsilon."
+    },
+    {
+     "start": 26.36,
+     "end": 33,
+     "text": "Nu sub n l is the frequency for n radial nodes and degree l, and epsilon is a phase offset."
+    },
+    {
+     "start": 33,
+     "end": 43.44,
+     "text": "Delta nu equals the inverse of twice the integral from the centre to the radius of dr over c, about one hundred thirty-five microhertz, one over the two-hour sound crossing."
+    },
+    {
+     "start": 43.44,
+     "end": 47.54,
+     "text": "This holds because successive modes differ by one acoustic round trip."
+    },
+    {
+     "start": 47.54,
+     "end": 52.66,
+     "text": "The sound speed c is the square root of gamma k T over mu m sub H."
+    },
+    {
+     "start": 52.66,
+     "end": 64.57,
+     "text": "Gamma is the adiabatic index, k Boltzmann's constant, T temperature, mu the mean molecular weight and m sub H the hydrogen mass, so c tracks temperature over composition."
+    },
+    {
+     "start": 64.57,
+     "end": 69.57,
+     "text": "Core to surface, c falls from about five hundred kilometres per second to seven."
+    },
+    {
+     "start": 69.57,
+     "end": 71.91,
+     "text": "Small departures encode the structure."
+    },
+    {
+     "start": 71.91,
+     "end": 81.31,
+     "text": "The model matches to a tenth of a percent between five and ninety-five percent of the radius, worst by three tenths under the convection zone near seventy-one percent of the radius."
+    },
+    {
+     "start": 81.31,
+     "end": 83.73,
+     "text": "Surface helium is just under a quarter."
+    },
+    {
+     "start": 83.73,
+     "end": 93.21,
+     "text": "Splitting in m gives differential rotation outside, rigid rotation every twenty-seven days inside, and the tachocline, where the magnetic field is generated."
+    },
+    {
+     "start": 93.21,
+     "end": 96.41,
+     "text": "Try l of one and l of one hundred on the widget."
+    },
+    {
+     "start": 96.41,
+     "end": 101.03,
+     "text": "One reaches the core, the other does not; both oscillate every five minutes."
+    },
+    {
+     "start": 101.03,
+     "end": 104.99,
+     "text": "The plot shows sound speed and a residual of tenths of a percent."
+    },
+    {
+     "start": 104.99,
+     "end": 110.15,
+     "text": "Depth depends only on l, where c over r equals the horizontal phase speed."
+    },
+    {
+     "start": 110.15,
+     "end": 119.99,
+     "text": "Since 1995 GONG, MDI and HMI have fixed the core temperature to one percent, and CoRoT, Kepler and TESS now do this for thousands of stars."
+    }
+   ],
+   "voicedHash": "81119eed5f50"
+  },
+  "interior-composition": {
+   "script": "Look at the Sun filling the view behind the panel. From out here it seems the same all the way through, but fusion has been rewriting the interior for billions of years, and the standard model shows a star that is nothing like uniform.\n\nThe surface composition is probably close to the mix the Sun was born with. We start the zero-age model uniform: hydrogen mass fraction X of 0.71, helium Y of 0.27, metals Z of 0.02. Today the centre is different. Hydrogen has fallen to 0.34 and helium has risen to 0.64, the ashes of about four and a half billion years of proton-proton chain burning. They stay put because the core is radiative; nothing mixes them outward.\n\nFarther out, hydrogen climbs steeply through the burning region and is back at its original value beyond about three tenths of a solar radius. The convection zone, the outer twenty-nine per cent of the radius, stirs the surface composition all the way through. So the present Sun is a helium-rich core wrapped in an envelope of nearly unchanged gas. Picture a fireplace that has burned for ages in the middle of a room while the walls are still the original paint.\n\nThe central mean molecular weight is given by mu sub c equals one divided by two X sub c plus three quarters Y sub c plus one half Z sub c. Plugging in the numbers, that is one over 0.68 plus 0.48 plus 0.01, about 0.85. On the zero-age main sequence it was only 0.61. Mu is the average particle mass in units of the hydrogen mass. X, Y and Z are the central mass fractions of hydrogen, helium and metals. Ionised hydrogen gives two particles per nucleus, helium three particles for four mass units, and the metals term is a similar approximation, which is why those coefficients appear. A forty per cent rise in mu means fewer particles to supply the pressure, so the core has had to contract and heat, and that has driven the luminosity up by about forty-eight per cent.\n\nTwo subtler effects appear as well. Helium-3 is an intermediate of the chain: made early, destroyed only when two helium-3 nuclei fuse into helium-4, which needs higher temperature. In the hot centre it is consumed as fast as it forms, but near 0.28 solar radii it accumulates, a bump of a few per cent by mass, ashes of a reaction that only got halfway. And over billions of years gravity sorts the gas, so helium and metals settle downward and the surface is slightly depleted compared with the original mix. Including that diffusion proved essential for the model to match helioseismology.\n\nTry the widget. Slide the age from zero toward ten billion years and watch the central hydrogen drain away. It reaches zero at about ten billion years, leaving a pure helium core that can no longer burn, the end of the main sequence and the start of the story in chapter thirteen. Notice how little of the Sun is involved: the burning region is the inner tenth of the volume, and even there the hydrogen is only half gone. The Sun will leave the main sequence having used about a tenth of its total hydrogen. The table makes the contrast concrete: the centre is far hotter and denser than water, while the surface is a few thousand kelvin and almost empty.",
+   "hash": "b04731769787",
+   "duration": 200.31,
+   "sentences": [
+    {
+     "start": 0,
+     "end": 3.199,
+     "text": "Look at the Sun filling the view behind the panel."
+    },
+    {
+     "start": 3.199,
+     "end": 14.97,
+     "text": "From out here it seems the same all the way through, but fusion has been rewriting the interior for billions of years, and the standard model shows a star that is nothing like uniform."
+    },
+    {
+     "start": 14.97,
+     "end": 19.769,
+     "text": "The surface composition is probably close to the mix the Sun was born with."
+    },
+    {
+     "start": 19.769,
+     "end": 26.742,
+     "text": "We start the zero-age model uniform: hydrogen mass fraction X of 0. 71, helium Y of 0. 27, metals Z of 0. 02."
+    },
+    {
+     "start": 26.742,
+     "end": 28.661,
+     "text": "Today the centre is different."
+    },
+    {
+     "start": 28.661,
+     "end": 37.618,
+     "text": "Hydrogen has fallen to 0. 34 and helium has risen to 0. 64, the ashes of about four and a half billion years of proton-proton chain burning."
+    },
+    {
+     "start": 37.618,
+     "end": 42.224,
+     "text": "They stay put because the core is radiative; nothing mixes them outward."
+    },
+    {
+     "start": 42.224,
+     "end": 51.309,
+     "text": "Farther out, hydrogen climbs steeply through the burning region and is back at its original value beyond about three tenths of a solar radius."
+    },
+    {
+     "start": 51.309,
+     "end": 58.794,
+     "text": "The convection zone, the outer twenty-nine per cent of the radius, stirs the surface composition all the way through."
+    },
+    {
+     "start": 58.794,
+     "end": 64.424,
+     "text": "So the present Sun is a helium-rich core wrapped in an envelope of nearly unchanged gas."
+    },
+    {
+     "start": 64.424,
+     "end": 71.718,
+     "text": "Picture a fireplace that has burned for ages in the middle of a room while the walls are still the original paint."
+    },
+    {
+     "start": 71.718,
+     "end": 80.61,
+     "text": "The central mean molecular weight is given by mu sub c equals one divided by two X sub c plus three quarters Y sub c plus one half Z sub c."
+    },
+    {
+     "start": 80.61,
+     "end": 85.92,
+     "text": "Plugging in the numbers, that is one over 0. 68 plus 0. 48 plus 0. 01, about 0. 85."
+    },
+    {
+     "start": 85.92,
+     "end": 88.991,
+     "text": "On the zero-age main sequence it was only 0. 61."
+    },
+    {
+     "start": 88.991,
+     "end": 92.958,
+     "text": "Mu is the average particle mass in units of the hydrogen mass."
+    },
+    {
+     "start": 92.958,
+     "end": 97.628,
+     "text": "X, Y and Z are the central mass fractions of hydrogen, helium and metals."
+    },
+    {
+     "start": 97.628,
+     "end": 109.208,
+     "text": "Ionised hydrogen gives two particles per nucleus, helium three particles for four mass units, and the metals term is a similar approximation, which is why those coefficients appear."
+    },
+    {
+     "start": 109.208,
+     "end": 120.979,
+     "text": "A forty per cent rise in mu means fewer particles to supply the pressure, so the core has had to contract and heat, and that has driven the luminosity up by about forty-eight per cent."
+    },
+    {
+     "start": 120.979,
+     "end": 123.218,
+     "text": "Two subtler effects appear as well."
+    },
+    {
+     "start": 123.218,
+     "end": 132.495,
+     "text": "Helium-3 is an intermediate of the chain: made early, destroyed only when two helium-3 nuclei fuse into helium-4, which needs higher temperature."
+    },
+    {
+     "start": 132.495,
+     "end": 143.563,
+     "text": "In the hot centre it is consumed as fast as it forms, but near 0. 28 solar radii it accumulates, a bump of a few per cent by mass, ashes of a reaction that only got halfway."
+    },
+    {
+     "start": 143.563,
+     "end": 153.479,
+     "text": "And over billions of years gravity sorts the gas, so helium and metals settle downward and the surface is slightly depleted compared with the original mix."
+    },
+    {
+     "start": 153.479,
+     "end": 158.661,
+     "text": "Including that diffusion proved essential for the model to match helioseismology."
+    },
+    {
+     "start": 158.661,
+     "end": 159.621,
+     "text": "Try the widget."
+    },
+    {
+     "start": 159.621,
+     "end": 165.443,
+     "text": "Slide the age from zero toward ten billion years and watch the central hydrogen drain away."
+    },
+    {
+     "start": 165.443,
+     "end": 176.447,
+     "text": "It reaches zero at about ten billion years, leaving a pure helium core that can no longer burn, the end of the main sequence and the start of the story in chapter thirteen."
+    },
+    {
+     "start": 176.447,
+     "end": 185.467,
+     "text": "Notice how little of the Sun is involved: the burning region is the inner tenth of the volume, and even there the hydrogen is only half gone."
+    },
+    {
+     "start": 185.467,
+     "end": 190.905,
+     "text": "The Sun will leave the main sequence having used about a tenth of its total hydrogen."
+    },
+    {
+     "start": 190.905,
+     "end": 200.31,
+     "text": "The table makes the contrast concrete: the centre is far hotter and denser than water, while the surface is a few thousand kelvin and almost empty."
+    }
+   ],
+   "voicedHash": "7245856ade15"
+  },
+  "interior-summary": {
+   "script": "Look behind the panel — the whole planetary system is slowly circling the Sun, a G two five dwarf. Luminosity L equals 3.84 times ten to the twenty-six watts: L is the power it radiates. Effective temperature T-eff equals about 5800 kelvin, the black-body temperature for the Sun's size and power. Hydrogen burning raised the mean molecular weight mu from 0.61 to 0.85, so the Sun is 48 per cent brighter, 12 per cent larger and 160 kelvin hotter than at birth. Nearly all that power comes from the proton-proton chain. Radiation reaches 0.71 solar radii; convection above holds 2 per cent of the mass. Photons take 170 thousand years; neutrinos leave in two seconds. Five-minute pressure modes are spaced by delta-nu, about 135 microhertz, that spacing set by the sound-crossing time, matching the model to a tenth of a per cent. Homestake saw a third of the predicted electron neutrinos, Kamiokande a half, gallium 55 per cent. SNO saw the full flux in all flavours, so they oscillate, matter-enhanced. Delta-m-squared equals 7.5 times ten to the minus five electron-volts squared, the mass-state gap, and sine-squared theta, the mixing angle, equals 0.31, so neutrinos have mass. In short, only this star passed both inside tests, the second only after particle physics was revised, so we trust Chapter 10 for other stars.",
+   "hash": "aa07d2e17140",
+   "duration": 92.79,
+   "sentences": [
+    {
+     "start": 0,
+     "end": 6.889,
+     "text": "Look behind the panel — the whole planetary system is slowly circling the Sun, a G two five dwarf."
+    },
+    {
+     "start": 6.889,
+     "end": 13.075,
+     "text": "Luminosity L equals 3. 84 times ten to the twenty-six watts: L is the power it radiates."
+    },
+    {
+     "start": 13.075,
+     "end": 20.807,
+     "text": "Effective temperature T-eff equals about 5800 kelvin, the black-body temperature for the Sun's size and power."
+    },
+    {
+     "start": 20.807,
+     "end": 32.406,
+     "text": "Hydrogen burning raised the mean molecular weight mu from 0. 61 to 0. 85, so the Sun is 48 per cent brighter, 12 per cent larger and 160 kelvin hotter than at birth."
+    },
+    {
+     "start": 32.406,
+     "end": 36.413,
+     "text": "Nearly all that power comes from the proton-proton chain."
+    },
+    {
+     "start": 36.413,
+     "end": 42.248,
+     "text": "Radiation reaches 0. 71 solar radii; convection above holds 2 per cent of the mass."
+    },
+    {
+     "start": 42.248,
+     "end": 46.746,
+     "text": "Photons take 170 thousand years; neutrinos leave in two seconds."
+    },
+    {
+     "start": 46.746,
+     "end": 58.134,
+     "text": "Five-minute pressure modes are spaced by delta-nu, about 135 microhertz, that spacing set by the sound-crossing time, matching the model to a tenth of a per cent."
+    },
+    {
+     "start": 58.134,
+     "end": 65.023,
+     "text": "Homestake saw a third of the predicted electron neutrinos, Kamiokande a half, gallium 55 per cent."
+    },
+    {
+     "start": 65.023,
+     "end": 70.225,
+     "text": "SNO saw the full flux in all flavours, so they oscillate, matter-enhanced."
+    },
+    {
+     "start": 70.225,
+     "end": 82.808,
+     "text": "Delta-m-squared equals 7. 5 times ten to the minus five electron-volts squared, the mass-state gap, and sine-squared theta, the mixing angle, equals 0. 31, so neutrinos have mass."
+    },
+    {
+     "start": 82.808,
+     "end": 92.79,
+     "text": "In short, only this star passed both inside tests, the second only after particle physics was revised, so we trust Chapter 10 for other stars."
+    }
+   ],
+   "voicedHash": "320923f7013a"
+  },
+  "neutrino-oscillations": {
+   "script": "Look at the Sun behind the panel. Pontecorvo and Gribov argued in 1968 that if neutrinos have mass, electron, muon and tau flavours are mixtures of mass states at slightly different speeds. Like runners out of step, they slip out of phase, so an electron neutrino arrives unseen, as a muon or tau neutrino. In 1985 Mikheyev and Smirnov, building on Wolfenstein, showed that solar electrons can convert neutrinos almost completely as density falls, the MSW effect, strongest for boron-eight.\n\nSurvival probability P of nu-e to nu-e equals one minus sine squared of two theta, times sine squared of one point two seven times delta-m squared, in electron-volts squared, times L in kilometres, divided by E in giga-electron-volts. Theta is the mixing angle, delta-m squared the mass-squared splitting, L the path, E the energy. Solar values: delta-m squared two-one equals seven point five times ten to the minus five electron-volts squared, and sine squared of theta one-two equals zero point three one. Over a few hundred kilometres the phase wraps, so P averages to one minus one half sine squared of two theta, about zero point five seven. MSW lowers boron-eight survival to sine squared of theta, about zero point three one.\n\nSet those values on the widget, watch the wiggles and the MSW mark, and read fifty-seven per cent for proton-proton neutrinos and thirty-two per cent for boron-eight, the gallium and chlorine fractions.\n\nAt SNO, charged current on a deuteron saw only electron neutrinos, and neutral current saw all three flavours equally. Electron flux, thirty-five per cent of Bahcall; all flavours, one hundred and one plus or minus twelve per cent. The Sun was right; two-thirds had changed flavour. With Super-Kamiokande in 1998, neutrinos have mass, beyond the Standard Model. Borexino confirmed proton-proton, beryllium-seven, pep and the 2020 CNO flux. The same two parameters fit KamLAND. Still open: absolute masses, whether a neutrino is its own antiparticle, the sign of the larger splitting, and the abundance problem after 2005.",
+   "hash": "44fb769e9d82",
+   "duration": 139.19,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.08,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 2.08,
+     "end": 13.22,
+     "text": "Pontecorvo and Gribov argued in 1968 that if neutrinos have mass, electron, muon and tau flavours are mixtures of mass states at slightly different speeds."
+    },
+    {
+     "start": 13.22,
+     "end": 21.5,
+     "text": "Like runners out of step, they slip out of phase, so an electron neutrino arrives unseen, as a muon or tau neutrino."
+    },
+    {
+     "start": 21.5,
+     "end": 34.98,
+     "text": "In 1985 Mikheyev and Smirnov, building on Wolfenstein, showed that solar electrons can convert neutrinos almost completely as density falls, the MSW effect, strongest for boron-eight."
+    },
+    {
+     "start": 34.98,
+     "end": 51.26,
+     "text": "Survival probability P of nu-e to nu-e equals one minus sine squared of two theta, times sine squared of one point two seven times delta-m squared, in electron-volts squared, times L in kilometres, divided by E in giga-electron-volts."
+    },
+    {
+     "start": 51.26,
+     "end": 58.38,
+     "text": "Theta is the mixing angle, delta-m squared the mass-squared splitting, L the path, E the energy."
+    },
+    {
+     "start": 58.38,
+     "end": 69.5,
+     "text": "Solar values: delta-m squared two-one equals seven point five times ten to the minus five electron-volts squared, and sine squared of theta one-two equals zero point three one."
+    },
+    {
+     "start": 69.5,
+     "end": 78.43,
+     "text": "Over a few hundred kilometres the phase wraps, so P averages to one minus one half sine squared of two theta, about zero point five seven."
+    },
+    {
+     "start": 78.43,
+     "end": 84.41,
+     "text": "MSW lowers boron-eight survival to sine squared of theta, about zero point three one."
+    },
+    {
+     "start": 84.41,
+     "end": 96.65,
+     "text": "Set those values on the widget, watch the wiggles and the MSW mark, and read fifty-seven per cent for proton-proton neutrinos and thirty-two per cent for boron-eight, the gallium and chlorine fractions."
+    },
+    {
+     "start": 96.65,
+     "end": 104.27,
+     "text": "At SNO, charged current on a deuteron saw only electron neutrinos, and neutral current saw all three flavours equally."
+    },
+    {
+     "start": 104.27,
+     "end": 111.49,
+     "text": "Electron flux, thirty-five per cent of Bahcall; all flavours, one hundred and one plus or minus twelve per cent."
+    },
+    {
+     "start": 111.49,
+     "end": 114.73,
+     "text": "The Sun was right; two-thirds had changed flavour."
+    },
+    {
+     "start": 114.73,
+     "end": 120.83,
+     "text": "With Super-Kamiokande in 1998, neutrinos have mass, beyond the Standard Model."
+    },
+    {
+     "start": 120.83,
+     "end": 127.27,
+     "text": "Borexino confirmed proton-proton, beryllium-seven, pep and the 2020 CNO flux."
+    },
+    {
+     "start": 127.27,
+     "end": 129.81,
+     "text": "The same two parameters fit KamLAND."
+    },
+    {
+     "start": 129.81,
+     "end": 139.19,
+     "text": "Still open: absolute masses, whether a neutrino is its own antiparticle, the sign of the larger splitting, and the abundance problem after 2005."
+    }
+   ],
+   "voicedHash": "123b788bfb9d"
+  },
+  "solar-neutrino-problem": {
+   "script": "I want you to look behind the panel. We have flown out to Earth, the place these neutrinos actually reach. Light tells us the Sun's surface as it was eight minutes ago, and the core as it was a hundred thousand years ago. Neutrinos tell us the core now. They interact so weakly that they leave the centre in two seconds, and about sixty-five billion of them cross each square centimetre of the Earth every second.\n\nIn 1965 Raymond Davis, following John Bahcall, buried six hundred and fifteen tonnes of perchloroethylene one and a half kilometres underground at Homestake. A neutrino above zero point eight one four mega-electron-volts turns chlorine-thirty-seven into radioactive argon. He counted a few dozen argon atoms out of ten to the thirtieth chlorine atoms, and measured two point five six solar neutrino units. One solar neutrino unit equals ten to the minus thirty-six captures per target atom per second. Theory said seven point six. Only a third.\n\nChlorine mostly detects the rare boron-eight neutrinos. Their flux goes as tee sub c to the twenty-fifth — the core temperature to the twenty-fifth power — so the rate is extremely sensitive to temperature. Five per cent cooler would have removed the problem, but helioseismology forbade it. Kamiokande found forty-eight per cent of the boron-eight flux above seven mega-electron-volts. The gallium experiments, threshold zero point two three three mega-electron-volts, saw the proton-proton neutrinos fixed by the luminosity and still got only fifty-five per cent. Three deficits, and no solar model fits them all. Either the neutrinos were not produced, or they were not arriving as electron neutrinos.\n\nNow try the widget yourself. Look at the predicted spectrum: the proton-proton continuum below zero point four two mega-electron-volts, the beryllium lines, the boron-eight tail out to fifteen mega-electron-volts, thresholds marked. Toggle to observed and notice the electron-neutrino flux drops most at high energy — exactly what a matter-enhanced flavour change produces. Switch on the neutral-current view and the full flux returns. Davis and Bahcall were both right.",
+   "hash": "e79f8542e68b",
+   "duration": 127.67,
+   "sentences": [
+    {
+     "start": 0.12,
+     "end": 2.38,
+     "text": "I want you to look behind the panel."
+    },
+    {
+     "start": 2.38,
+     "end": 6.7,
+     "text": "We have flown out to Earth, the place these neutrinos actually reach."
+    },
+    {
+     "start": 6.7,
+     "end": 13.22,
+     "text": "Light tells us the Sun's surface as it was eight minutes ago, and the core as it was a hundred thousand years ago."
+    },
+    {
+     "start": 13.22,
+     "end": 15.44,
+     "text": "Neutrinos tell us the core now."
+    },
+    {
+     "start": 15.44,
+     "end": 24.06,
+     "text": "They interact so weakly that they leave the centre in two seconds, and about sixty-five billion of them cross each square centimetre of the Earth every second."
+    },
+    {
+     "start": 24.06,
+     "end": 34.66,
+     "text": "In 1965 Raymond Davis, following John Bahcall, buried six hundred and fifteen tonnes of perchloroethylene one and a half kilometres underground at Homestake."
+    },
+    {
+     "start": 34.66,
+     "end": 42.02,
+     "text": "A neutrino above zero point eight one four mega-electron-volts turns chlorine-thirty-seven into radioactive argon."
+    },
+    {
+     "start": 42.02,
+     "end": 49.84,
+     "text": "He counted a few dozen argon atoms out of ten to the thirtieth chlorine atoms, and measured two point five six solar neutrino units."
+    },
+    {
+     "start": 49.84,
+     "end": 55.5,
+     "text": "One solar neutrino unit equals ten to the minus thirty-six captures per target atom per second."
+    },
+    {
+     "start": 55.5,
+     "end": 57.58,
+     "text": "Theory said seven point six."
+    },
+    {
+     "start": 57.58,
+     "end": 58.76,
+     "text": "Only a third."
+    },
+    {
+     "start": 58.76,
+     "end": 62.14,
+     "text": "Chlorine mostly detects the rare boron-eight neutrinos."
+    },
+    {
+     "start": 62.14,
+     "end": 70.57,
+     "text": "Their flux goes as tee sub c to the twenty-fifth — the core temperature to the twenty-fifth power — so the rate is extremely sensitive to temperature."
+    },
+    {
+     "start": 70.57,
+     "end": 75.43,
+     "text": "Five per cent cooler would have removed the problem, but helioseismology forbade it."
+    },
+    {
+     "start": 75.43,
+     "end": 80.95,
+     "text": "Kamiokande found forty-eight per cent of the boron-eight flux above seven mega-electron-volts."
+    },
+    {
+     "start": 80.95,
+     "end": 91.67,
+     "text": "The gallium experiments, threshold zero point two three three mega-electron-volts, saw the proton-proton neutrinos fixed by the luminosity and still got only fifty-five per cent."
+    },
+    {
+     "start": 91.67,
+     "end": 94.87,
+     "text": "Three deficits, and no solar model fits them all."
+    },
+    {
+     "start": 94.87,
+     "end": 99.69,
+     "text": "Either the neutrinos were not produced, or they were not arriving as electron neutrinos."
+    },
+    {
+     "start": 99.69,
+     "end": 101.53,
+     "text": "Now try the widget yourself."
+    },
+    {
+     "start": 101.53,
+     "end": 114.11,
+     "text": "Look at the predicted spectrum: the proton-proton continuum below zero point four two mega-electron-volts, the beryllium lines, the boron-eight tail out to fifteen mega-electron-volts, thresholds marked."
+    },
+    {
+     "start": 114.11,
+     "end": 122.47,
+     "text": "Toggle to observed and notice the electron-neutrino flux drops most at high energy — exactly what a matter-enhanced flavour change produces."
+    },
+    {
+     "start": 122.47,
+     "end": 125.83,
+     "text": "Switch on the neutral-current view and the full flux returns."
+    },
+    {
+     "start": 125.83,
+     "end": 127.67,
+     "text": "Davis and Bahcall were both right."
+    }
+   ],
+   "voicedHash": "3986b44813dd"
+  },
+  "sun-through-time": {
+   "script": "Welcome. The view behind the panel has flown us out to the Sun, the one star we can check. Last chapter's equations were general. Here they meet numbers known to better than a tenth of a per cent. The Sun is a G two dwarf. Meteorites date its birth to four point five seven billion years ago. By mass, X, the hydrogen fraction, is about three quarters; Y, helium, about a quarter; Z, heavier elements, a trace. That precision makes the Sun the test case for stellar structure.\n\nFusion has already turned about half the central hydrogen into helium. Higher mean molecular weight forces the core to contract and heat. I picture fewer shoulders under the same load. Hotter gas fuses faster, so the star brightens. The standard model puts the zero-age Sun at sixty-eight per cent of today's luminosity, twelve per cent smaller. It is forty-eight per cent brighter than when the Earth formed, and still gaining about one per cent every hundred million years.\n\nGough's fit captures that. Luminosity at time t is approximately today's luminosity divided by one plus zero point four times the quantity one minus t over t solar, where t solar is four point five seven gigayears. L solar of t is brightness then, L solar brightness now, t the age, and t solar the present age. At birth the fit gives about seventy-one per cent of today's light; at twice the present age, about one point seven times. The curve steepens toward the end of the main sequence, near ten billion years.\n\nDrag the age slider to the beginning. The Sun behind the panel shrinks: thirty per cent less light, and a simple balance puts early Earth below freezing, yet water and life show up at three point eight billion years. Watch Earth's equilibrium temperature. A stronger greenhouse is the usual answer. Near the end, within a billion years, the oceans boil off, long before the red giant. We are roughly halfway.",
+   "hash": "f9adfed0ac3a",
+   "duration": 115.19,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 1.12,
+     "text": "Welcome."
+    },
+    {
+     "start": 1.12,
+     "end": 6.34,
+     "text": "The view behind the panel has flown us out to the Sun, the one star we can check."
+    },
+    {
+     "start": 6.34,
+     "end": 8.68,
+     "text": "Last chapter's equations were general."
+    },
+    {
+     "start": 8.68,
+     "end": 12.26,
+     "text": "Here they meet numbers known to better than a tenth of a per cent."
+    },
+    {
+     "start": 12.26,
+     "end": 14.5,
+     "text": "The Sun is a G two dwarf."
+    },
+    {
+     "start": 14.5,
+     "end": 18.64,
+     "text": "Meteorites date its birth to four point five seven billion years ago."
+    },
+    {
+     "start": 18.64,
+     "end": 27.92,
+     "text": "By mass, X, the hydrogen fraction, is about three quarters; Y, helium, about a quarter; Z, heavier elements, a trace."
+    },
+    {
+     "start": 27.92,
+     "end": 31.62,
+     "text": "That precision makes the Sun the test case for stellar structure."
+    },
+    {
+     "start": 31.62,
+     "end": 35.7,
+     "text": "Fusion has already turned about half the central hydrogen into helium."
+    },
+    {
+     "start": 35.7,
+     "end": 39.9,
+     "text": "Higher mean molecular weight forces the core to contract and heat."
+    },
+    {
+     "start": 39.9,
+     "end": 42.52,
+     "text": "I picture fewer shoulders under the same load."
+    },
+    {
+     "start": 42.52,
+     "end": 45.88,
+     "text": "Hotter gas fuses faster, so the star brightens."
+    },
+    {
+     "start": 45.88,
+     "end": 52.54,
+     "text": "The standard model puts the zero-age Sun at sixty-eight per cent of today's luminosity, twelve per cent smaller."
+    },
+    {
+     "start": 52.54,
+     "end": 59.03,
+     "text": "It is forty-eight per cent brighter than when the Earth formed, and still gaining about one per cent every hundred million years."
+    },
+    {
+     "start": 59.03,
+     "end": 60.91,
+     "text": "Gough's fit captures that."
+    },
+    {
+     "start": 60.91,
+     "end": 73.37,
+     "text": "Luminosity at time t is approximately today's luminosity divided by one plus zero point four times the quantity one minus t over t solar, where t solar is four point five seven gigayears."
+    },
+    {
+     "start": 73.37,
+     "end": 80.25,
+     "text": "L solar of t is brightness then, L solar brightness now, t the age, and t solar the present age."
+    },
+    {
+     "start": 80.25,
+     "end": 86.97,
+     "text": "At birth the fit gives about seventy-one per cent of today's light; at twice the present age, about one point seven times."
+    },
+    {
+     "start": 86.97,
+     "end": 91.45,
+     "text": "The curve steepens toward the end of the main sequence, near ten billion years."
+    },
+    {
+     "start": 91.45,
+     "end": 93.59,
+     "text": "Drag the age slider to the beginning."
+    },
+    {
+     "start": 93.59,
+     "end": 103.63,
+     "text": "The Sun behind the panel shrinks: thirty per cent less light, and a simple balance puts early Earth below freezing, yet water and life show up at three point eight billion years."
+    },
+    {
+     "start": 103.63,
+     "end": 105.77,
+     "text": "Watch Earth's equilibrium temperature."
+    },
+    {
+     "start": 105.77,
+     "end": 108.33,
+     "text": "A stronger greenhouse is the usual answer."
+    },
+    {
+     "start": 108.33,
+     "end": 113.73,
+     "text": "Near the end, within a billion years, the oceans boil off, long before the red giant."
+    },
+    {
+     "start": 113.73,
+     "end": 115.19,
+     "text": "We are roughly halfway."
+    }
+   ],
+   "voicedHash": "6ad35a50ea18"
+  }
+ }
+}

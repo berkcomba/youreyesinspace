@@ -1,0 +1,659 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "chapter-close": {
+   "script": "Look behind the panel: the planets slowly circling the Sun, our Rosetta stone and the standard every other star is calibrated against. It's a G two main-sequence star. T sub c, central temperature, is one point five seven times ten to the seven kelvin. P sub c, central pressure, is two point three four times ten to the sixteen pascals. X sub c, central hydrogen fraction, is zero point three four. For thirty years only a third to a half of the predicted electron neutrinos appeared, and we blamed the experiment or the model. Both were right; the particle physics was incomplete. Delta m squared is seven point five times ten to the minus five electron-volts squared, the mass-squared gap behind the oscillation, and sine squared theta is zero point three one, how strongly the flavours mix. Those parameters agree across solar, reactor, accelerator and atmospheric data, which earns acceptance. Still assumed are three light neutrinos, a complete matter effect, and abundances that clash with helioseismology. Ask what each paper measured, what it assumed, and what else would look the same. L sub X over L sub bol, the X-ray fraction of the bolometric luminosity, saturates at ten to the minus three; our old slow Sun sits near ten to the minus six. Corona and dynamo remain open. Thank you.",
+   "hash": "6ec5d4415ad9",
+   "duration": 82.87,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 8.12,
+     "text": "Look behind the panel: the planets slowly circling the Sun, our Rosetta stone and the standard every other star is calibrated against."
+    },
+    {
+     "start": 8.12,
+     "end": 10.6,
+     "text": "It's a G two main-sequence star."
+    },
+    {
+     "start": 10.6,
+     "end": 16.4,
+     "text": "T sub c, central temperature, is one point five seven times ten to the seven kelvin."
+    },
+    {
+     "start": 16.4,
+     "end": 22.4,
+     "text": "P sub c, central pressure, is two point three four times ten to the sixteen pascals."
+    },
+    {
+     "start": 22.4,
+     "end": 27.08,
+     "text": "X sub c, central hydrogen fraction, is zero point three four."
+    },
+    {
+     "start": 27.08,
+     "end": 34.16,
+     "text": "For thirty years only a third to a half of the predicted electron neutrinos appeared, and we blamed the experiment or the model."
+    },
+    {
+     "start": 34.16,
+     "end": 37.54,
+     "text": "Both were right; the particle physics was incomplete."
+    },
+    {
+     "start": 37.54,
+     "end": 50.35,
+     "text": "Delta m squared is seven point five times ten to the minus five electron-volts squared, the mass-squared gap behind the oscillation, and sine squared theta is zero point three one, how strongly the flavours mix."
+    },
+    {
+     "start": 50.35,
+     "end": 57.05,
+     "text": "Those parameters agree across solar, reactor, accelerator and atmospheric data, which earns acceptance."
+    },
+    {
+     "start": 57.05,
+     "end": 64.35,
+     "text": "Still assumed are three light neutrinos, a complete matter effect, and abundances that clash with helioseismology."
+    },
+    {
+     "start": 64.35,
+     "end": 69.19,
+     "text": "Ask what each paper measured, what it assumed, and what else would look the same."
+    },
+    {
+     "start": 69.19,
+     "end": 79.85,
+     "text": "L sub X over L sub bol, the X-ray fraction of the bolometric luminosity, saturates at ten to the minus three; our old slow Sun sits near ten to the minus six."
+    },
+    {
+     "start": 79.85,
+     "end": 82.87,
+     "text": "Corona and dynamo remain open. Thank you."
+    }
+   ],
+   "voicedHash": "f0e3c20b77e6"
+  },
+  "dynamo": {
+   "script": "Look at the Sun behind the panel. I still teach Horace Babcock's 1961 picture. At minimum the field is a weak poloidal bar magnet just under the surface. The gas conducts almost perfectly, so the field is frozen in and must follow the gas. Differential rotation wraps it over a few years, equator ahead of the poles, into east-west toroidal bands of opposite sign, stretched from a few gauss to thousands. Magnetic pressure replaces some gas pressure, so a strong tube rises as an omega-shaped loop. The footpoints are a bipolar group, with opposite leading spots north and south: Hale's law. It is strongest first at mid-latitudes, then nearer the equator: Spörer's law. Coriolis tilt gives Joy's law. Following flux, carried poleward by meridional flow and diffusion, cancels and replaces the polar field at maximum. Leading flux cancels across the equator. By the next minimum the poloidal field is reversed, and the next winding flips the spots. Twenty-two years.\n\nThe induction equation says the partial derivative of B with respect to time equals the curl of v cross B, plus eta times the Laplacian of B. B is the magnetic field, v the flow, L a length, eta the magnetic diffusivity. The first term stretches the field with the flow; the second diffuses it. Rm equals v L over eta, about one hundred million in the convection zone, so freezing-in wins except on tiny scales.\n\nDrag the slider across the twenty-two years. Notice the winding, the tilted groups, following flux heading poleward, and the butterfly filling in as the poles reverse.\n\nThe model is kinematic: the flows are given, not explained. Parker, Steenbeck, Krause and Rädler named the omega effect, winding by differential rotation, and the alpha effect, Coriolis-twisted turbulence rebuilding poloidal field. Flux-transport dynamos put the shear where helioseismology found it, in the tachocline. The eleven-year period, and grand minima, are still open. Bar magnets fade in ten thousand years. Why is Earth's reversal irregular, while the Sun's is clockwork?",
+   "hash": "185fbfcdb6ed",
+   "duration": 130.55,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.26,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 2.26,
+     "end": 5.92,
+     "text": "I still teach Horace Babcock's 1961 picture."
+    },
+    {
+     "start": 5.92,
+     "end": 10.36,
+     "text": "At minimum the field is a weak poloidal bar magnet just under the surface."
+    },
+    {
+     "start": 10.36,
+     "end": 15.82,
+     "text": "The gas conducts almost perfectly, so the field is frozen in and must follow the gas."
+    },
+    {
+     "start": 15.82,
+     "end": 26.02,
+     "text": "Differential rotation wraps it over a few years, equator ahead of the poles, into east-west toroidal bands of opposite sign, stretched from a few gauss to thousands."
+    },
+    {
+     "start": 26.02,
+     "end": 32.02,
+     "text": "Magnetic pressure replaces some gas pressure, so a strong tube rises as an omega-shaped loop."
+    },
+    {
+     "start": 32.02,
+     "end": 37.84,
+     "text": "The footpoints are a bipolar group, with opposite leading spots north and south: Hale's law."
+    },
+    {
+     "start": 37.84,
+     "end": 43.04,
+     "text": "It is strongest first at mid-latitudes, then nearer the equator: Spörer's law."
+    },
+    {
+     "start": 43.04,
+     "end": 45.56,
+     "text": "Coriolis tilt gives Joy's law."
+    },
+    {
+     "start": 45.56,
+     "end": 53.12,
+     "text": "Following flux, carried poleward by meridional flow and diffusion, cancels and replaces the polar field at maximum."
+    },
+    {
+     "start": 53.12,
+     "end": 55.74,
+     "text": "Leading flux cancels across the equator."
+    },
+    {
+     "start": 55.74,
+     "end": 60.96,
+     "text": "By the next minimum the poloidal field is reversed, and the next winding flips the spots."
+    },
+    {
+     "start": 60.96,
+     "end": 62.3,
+     "text": "Twenty-two years."
+    },
+    {
+     "start": 62.3,
+     "end": 71.61,
+     "text": "The induction equation says the partial derivative of B with respect to time equals the curl of v cross B, plus eta times the Laplacian of B."
+    },
+    {
+     "start": 71.61,
+     "end": 77.81,
+     "text": "B is the magnetic field, v the flow, L a length, eta the magnetic diffusivity."
+    },
+    {
+     "start": 77.81,
+     "end": 82.31,
+     "text": "The first term stretches the field with the flow; the second diffuses it."
+    },
+    {
+     "start": 82.31,
+     "end": 90.17,
+     "text": "Rm equals v L over eta, about one hundred million in the convection zone, so freezing-in wins except on tiny scales."
+    },
+    {
+     "start": 90.17,
+     "end": 92.83,
+     "text": "Drag the slider across the twenty-two years."
+    },
+    {
+     "start": 92.83,
+     "end": 100.01,
+     "text": "Notice the winding, the tilted groups, following flux heading poleward, and the butterfly filling in as the poles reverse."
+    },
+    {
+     "start": 100.01,
+     "end": 103.91,
+     "text": "The model is kinematic: the flows are given, not explained."
+    },
+    {
+     "start": 103.91,
+     "end": 114.93,
+     "text": "Parker, Steenbeck, Krause and Rädler named the omega effect, winding by differential rotation, and the alpha effect, Coriolis-twisted turbulence rebuilding poloidal field."
+    },
+    {
+     "start": 114.93,
+     "end": 120.63,
+     "text": "Flux-transport dynamos put the shear where helioseismology found it, in the tachocline."
+    },
+    {
+     "start": 120.63,
+     "end": 124.29,
+     "text": "The eleven-year period, and grand minima, are still open."
+    },
+    {
+     "start": 124.29,
+     "end": 126.89,
+     "text": "Bar magnets fade in ten thousand years."
+    },
+    {
+     "start": 126.89,
+     "end": 130.55,
+     "text": "Why is Earth's reversal irregular, while the Sun's is clockwork?"
+    }
+   ],
+   "voicedHash": "6912b2d1ce24"
+  },
+  "flares-prominences": {
+   "script": "Look with me at the Sun behind the panel. A flare releases magnetic energy stored above an active region in a few minutes, from ten to the seventeen joules up to ten to the twenty-five, a billion megatons or the Sun's output for a fifth of a second. We get gas at ten to thirty million kelvin, fast particles, and radiation from radio to gamma rays.\n\nOpposite lines, pressed by the photosphere, reconnect at a current sheet and snap like a rubber band. Electrons hit the chromosphere, lighting ribbons and hard X-ray footpoints. Hot gas rises and shines in soft X-rays.\n\nE mag equals B squared over two mu zero, times V. B is the field strength, mu zero the permeability of free space, V the volume: magnetic energy density times volume. Three hundred gauss, three hundredths of a tesla, in a cube thirty thousand kilometres on a side, holds about ten to the twenty-five joules. Only the part above the potential minimum is freed, so flares repeat.\n\nGOES class follows soft X-ray flux at one to eight angstroms: C a millionth of a watt per square metre, M ten times that, X a hundred times a number. An X10 stirs the ionosphere in minutes and fades daylit short-wave radio. N above E falls as E to the minus zero point eight.\n\nProminences are the opposite: ten-thousand-kelvin gas, a hundred times denser than the corona, hung for weeks in magnetic dips along a polarity-inversion line. Bright in hydrogen alpha at the limb, dark on the disc. Two hundred thousand kilometres long, ten to the twelve kilograms. Erupt, and it often becomes a mass ejection, flare below. One event, three views.\n\nTry the widget. Three hundred gauss over ten thousand kilometres: a C flare, ten to the twenty-three joules. A thousand gauss over thirty thousand kilometres: X class, above ten to the twenty-five. Watch the X-point pinch and the rising prominence. The size cubed dominates, so great flares need great regions.",
+   "hash": "1e6d6d73e170",
+   "duration": 125.11,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.7,
+     "text": "Look with me at the Sun behind the panel."
+    },
+    {
+     "start": 2.7,
+     "end": 15.32,
+     "text": "A flare releases magnetic energy stored above an active region in a few minutes, from ten to the seventeen joules up to ten to the twenty-five, a billion megatons or the Sun's output for a fifth of a second."
+    },
+    {
+     "start": 15.32,
+     "end": 22.02,
+     "text": "We get gas at ten to thirty million kelvin, fast particles, and radiation from radio to gamma rays."
+    },
+    {
+     "start": 22.02,
+     "end": 28.28,
+     "text": "Opposite lines, pressed by the photosphere, reconnect at a current sheet and snap like a rubber band."
+    },
+    {
+     "start": 28.28,
+     "end": 33.06,
+     "text": "Electrons hit the chromosphere, lighting ribbons and hard X-ray footpoints."
+    },
+    {
+     "start": 33.06,
+     "end": 36.46,
+     "text": "Hot gas rises and shines in soft X-rays."
+    },
+    {
+     "start": 36.46,
+     "end": 40.82,
+     "text": "E mag equals B squared over two mu zero, times V."
+    },
+    {
+     "start": 40.82,
+     "end": 49.08,
+     "text": "B is the field strength, mu zero the permeability of free space, V the volume: magnetic energy density times volume."
+    },
+    {
+     "start": 49.08,
+     "end": 57.54,
+     "text": "Three hundred gauss, three hundredths of a tesla, in a cube thirty thousand kilometres on a side, holds about ten to the twenty-five joules."
+    },
+    {
+     "start": 57.54,
+     "end": 61.88,
+     "text": "Only the part above the potential minimum is freed, so flares repeat."
+    },
+    {
+     "start": 61.88,
+     "end": 72.13,
+     "text": "GOES class follows soft X-ray flux at one to eight angstroms: C a millionth of a watt per square metre, M ten times that, X a hundred times a number."
+    },
+    {
+     "start": 72.13,
+     "end": 77.21,
+     "text": "An X10 stirs the ionosphere in minutes and fades daylit short-wave radio."
+    },
+    {
+     "start": 77.21,
+     "end": 80.71,
+     "text": "N above E falls as E to the minus zero point eight."
+    },
+    {
+     "start": 80.71,
+     "end": 90.71,
+     "text": "Prominences are the opposite: ten-thousand-kelvin gas, a hundred times denser than the corona, hung for weeks in magnetic dips along a polarity-inversion line."
+    },
+    {
+     "start": 90.71,
+     "end": 94.31,
+     "text": "Bright in hydrogen alpha at the limb, dark on the disc."
+    },
+    {
+     "start": 94.31,
+     "end": 98.79,
+     "text": "Two hundred thousand kilometres long, ten to the twelve kilograms."
+    },
+    {
+     "start": 98.79,
+     "end": 102.85,
+     "text": "Erupt, and it often becomes a mass ejection, flare below."
+    },
+    {
+     "start": 102.85,
+     "end": 104.69,
+     "text": "One event, three views."
+    },
+    {
+     "start": 104.69,
+     "end": 105.79,
+     "text": "Try the widget."
+    },
+    {
+     "start": 105.79,
+     "end": 111.97,
+     "text": "Three hundred gauss over ten thousand kilometres: a C flare, ten to the twenty-three joules."
+    },
+    {
+     "start": 111.97,
+     "end": 118.29,
+     "text": "A thousand gauss over thirty thousand kilometres: X class, above ten to the twenty-five."
+    },
+    {
+     "start": 118.29,
+     "end": 121.23,
+     "text": "Watch the X-point pinch and the rising prominence."
+    },
+    {
+     "start": 121.23,
+     "end": 125.11,
+     "text": "The size cubed dominates, so great flares need great regions."
+    }
+   ],
+   "voicedHash": "094e30abbbf4"
+  },
+  "stellar-activity": {
+   "script": "Look at Proxima Centauri behind the panel. Rotation and convection are enough for a dynamo, and the observations agree.\n\nOlin Wilson began in 1966, measuring calcium two H and K cores, plage glow, in a hundred Sun-like stars at Mount Wilson. By 1978 he found seven-to-fourteen-year cycles, some Maunder-like, and wild young rotators. Einstein and ROSAT found X-ray coronae on all cool stars, from a ten-millionth to a thousandth of the bolometric output. The Sun, near a millionth, is quiet.\n\nRo equals P-rot divided by tau-c. Ro is the Rossby number, P-rot the rotation period, tau-c the convective turnover time at the base of the convection zone. A small Ro means many turns in one cell's life. Above Ro of about a tenth, L-X over L-bol, X-ray luminosity over bolometric luminosity, equals a thousandth times the ratio of Ro to a tenth, to the power minus two. Below about a tenth the branch saturates, and the ratio locks near a thousandth.\n\nMagnetic braking: v-rot, rotation speed, is proportional to age t to the minus one half, Skumanich's law. M dwarfs have longer turnover times and spin down more slowly, staying active for billions of years. Proxima rotates once in eighty-three days yet has a ratio near ten to the minus four, a hundred times the Sun. In 2019 a flare released about ten to the twenty-six joules in seven seconds, a hundred Carrington events, toward a habitable-zone planet.\n\nMove the sliders for rotation period and spectral type. The test star travels L-X over L-bol against Ro, both branches, past the Sun, Proxima, EK Draconis and AB Doradus. Spin it up, or go later in type: Ro falls, and activity, flare energy and gyrochronological age rise. The Sun is unsaturated: twenty-five days, tau-c about fourteen days, Ro about one point eight, ratio a millionth.\n\nThe young Sun spun in a few days, a thousand times brighter in X-rays, wind perhaps a hundred times stronger, flares more frequent, shaping the early planets.",
+   "hash": "347c439e18c3",
+   "duration": 136.31,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3,
+     "text": "Look at Proxima Centauri behind the panel."
+    },
+    {
+     "start": 3,
+     "end": 7.94,
+     "text": "Rotation and convection are enough for a dynamo, and the observations agree."
+    },
+    {
+     "start": 7.94,
+     "end": 17.48,
+     "text": "Olin Wilson began in 1966, measuring calcium two H and K cores, plage glow, in a hundred Sun-like stars at Mount Wilson."
+    },
+    {
+     "start": 17.48,
+     "end": 24.52,
+     "text": "By 1978 he found seven-to-fourteen-year cycles, some Maunder-like, and wild young rotators."
+    },
+    {
+     "start": 24.52,
+     "end": 32.06,
+     "text": "Einstein and ROSAT found X-ray coronae on all cool stars, from a ten-millionth to a thousandth of the bolometric output."
+    },
+    {
+     "start": 32.06,
+     "end": 35.1,
+     "text": "The Sun, near a millionth, is quiet."
+    },
+    {
+     "start": 35.1,
+     "end": 38.2,
+     "text": "Ro equals P-rot divided by tau-c."
+    },
+    {
+     "start": 38.2,
+     "end": 46.32,
+     "text": "Ro is the Rossby number, P-rot the rotation period, tau-c the convective turnover time at the base of the convection zone."
+    },
+    {
+     "start": 46.32,
+     "end": 49.72,
+     "text": "A small Ro means many turns in one cell's life."
+    },
+    {
+     "start": 49.72,
+     "end": 61.88,
+     "text": "Above Ro of about a tenth, L-X over L-bol, X-ray luminosity over bolometric luminosity, equals a thousandth times the ratio of Ro to a tenth, to the power minus two."
+    },
+    {
+     "start": 61.88,
+     "end": 66.82,
+     "text": "Below about a tenth the branch saturates, and the ratio locks near a thousandth."
+    },
+    {
+     "start": 66.82,
+     "end": 75.11,
+     "text": "Magnetic braking: v-rot, rotation speed, is proportional to age t to the minus one half, Skumanich's law."
+    },
+    {
+     "start": 75.11,
+     "end": 81.41,
+     "text": "M dwarfs have longer turnover times and spin down more slowly, staying active for billions of years."
+    },
+    {
+     "start": 81.41,
+     "end": 88.95,
+     "text": "Proxima rotates once in eighty-three days yet has a ratio near ten to the minus four, a hundred times the Sun."
+    },
+    {
+     "start": 88.95,
+     "end": 98.25,
+     "text": "In 2019 a flare released about ten to the twenty-six joules in seven seconds, a hundred Carrington events, toward a habitable-zone planet."
+    },
+    {
+     "start": 98.25,
+     "end": 101.41,
+     "text": "Move the sliders for rotation period and spectral type."
+    },
+    {
+     "start": 101.41,
+     "end": 110.73,
+     "text": "The test star travels L-X over L-bol against Ro, both branches, past the Sun, Proxima, EK Draconis and AB Doradus."
+    },
+    {
+     "start": 110.73,
+     "end": 118.01,
+     "text": "Spin it up, or go later in type: Ro falls, and activity, flare energy and gyrochronological age rise."
+    },
+    {
+     "start": 118.01,
+     "end": 126.47,
+     "text": "The Sun is unsaturated: twenty-five days, tau-c about fourteen days, Ro about one point eight, ratio a millionth."
+    },
+    {
+     "start": 126.47,
+     "end": 136.31,
+     "text": "The young Sun spun in a few days, a thousand times brighter in X-rays, wind perhaps a hundred times stronger, flares more frequent, shaping the early planets."
+    }
+   ],
+   "voicedHash": "31ca0d933947"
+  },
+  "sunspot-cycle": {
+   "script": "Look at the Sun behind the panel. Quiet from here, and yet it keeps a clock. Heinrich Schwabe, a Dessau pharmacist hunting for a planet inside Mercury’s orbit by watching for its transits, counted sunspots every clear day from 1826 to 1843 and found their number rising and falling with a period of about ten years. Rudolf Wolf at Zürich rebuilt the record back to 1700 and defined the number we still use: R equals k times the quantity ten g plus f. R is the relative sunspot number, g is the number of groups, f is the count of individual spots, and k calibrates each observer and telescope so different eyes can be compared. The mean period, written as the average of P sunspot, is eleven point zero years, ranging from nine to fourteen. The rise is faster than the decline. Strong cycles peak above two hundred, cycle nineteen in 1958; weak ones near eighty, cycle twenty-four in 2014.\n\nFrom 1645 to 1715 almost no spots appeared, the Maunder minimum, coinciding with the coldest decades of the Little Ice Age, and a lesser Dalton minimum followed around 1800 to 1830. The link is suggestive, not simple. The change in the solar constant is only about a tenth of a percent over a cycle, and a prolonged minimum may have been three tenths of a percent fainter: a few tenths of a degree, with volcanoes doing much of the rest. Radiocarbon and beryllium-ten in tree rings and ice, made by cosmic rays the Sun’s field modulates, trace the cycle back ten thousand years. Grand minima recur every few centuries; the twentieth century was an unusually active grand maximum.\n\nThe spots migrate. Spörer’s law: a new cycle opens at thirty to forty degrees and new spots form ever closer to the equator, the last near five degrees, while the next cycle’s high-latitude spots are already appearing. Maunder’s 1904 latitude-against-time plot makes butterfly wings. Hale’s law: leading spots are one polarity in the north and the opposite in the south, and both reverse next cycle, so the magnetic period is twenty-two years. Polar fields reverse at each maximum. Joy’s law: bipolar groups tilt, the leading spot nearer the equator, more so at higher latitude.\n\nDrag the year cursor. Find the Maunder minimum and giant cycle nineteen, then step through one cycle and watch the wings close on the equator while the next pair opens near thirty-five degrees. Flares, coronal mass ejections, coronal shape, fast-wind holes, even Earth’s upper atmosphere follow this rhythm, which is why solar activity and the sunspot cycle are used almost interchangeably.",
+   "hash": "b2be49c6b816",
+   "duration": 171.19,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.38,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 2.38,
+     "end": 5.58,
+     "text": "Quiet from here, and yet it keeps a clock."
+    },
+    {
+     "start": 5.58,
+     "end": 22.78,
+     "text": "Heinrich Schwabe, a Dessau pharmacist hunting for a planet inside Mercury’s orbit by watching for its transits, counted sunspots every clear day from 1826 to 1843 and found their number rising and falling with a period of about ten years."
+    },
+    {
+     "start": 22.78,
+     "end": 33.58,
+     "text": "Rudolf Wolf at Zürich rebuilt the record back to 1700 and defined the number we still use: R equals k times the quantity ten g plus f."
+    },
+    {
+     "start": 33.58,
+     "end": 45.48,
+     "text": "R is the relative sunspot number, g is the number of groups, f is the count of individual spots, and k calibrates each observer and telescope so different eyes can be compared."
+    },
+    {
+     "start": 45.48,
+     "end": 53.38,
+     "text": "The mean period, written as the average of P sunspot, is eleven point zero years, ranging from nine to fourteen."
+    },
+    {
+     "start": 53.38,
+     "end": 55.76,
+     "text": "The rise is faster than the decline."
+    },
+    {
+     "start": 55.76,
+     "end": 65.98,
+     "text": "Strong cycles peak above two hundred, cycle nineteen in 1958; weak ones near eighty, cycle twenty-four in 2014."
+    },
+    {
+     "start": 65.98,
+     "end": 79.72,
+     "text": "From 1645 to 1715 almost no spots appeared, the Maunder minimum, coinciding with the coldest decades of the Little Ice Age, and a lesser Dalton minimum followed around 1800 to 1830."
+    },
+    {
+     "start": 79.72,
+     "end": 82.28,
+     "text": "The link is suggestive, not simple."
+    },
+    {
+     "start": 82.28,
+     "end": 94.69,
+     "text": "The change in the solar constant is only about a tenth of a percent over a cycle, and a prolonged minimum may have been three tenths of a percent fainter: a few tenths of a degree, with volcanoes doing much of the rest."
+    },
+    {
+     "start": 94.69,
+     "end": 103.83,
+     "text": "Radiocarbon and beryllium-ten in tree rings and ice, made by cosmic rays the Sun’s field modulates, trace the cycle back ten thousand years."
+    },
+    {
+     "start": 103.83,
+     "end": 110.15,
+     "text": "Grand minima recur every few centuries; the twentieth century was an unusually active grand maximum."
+    },
+    {
+     "start": 110.15,
+     "end": 111.61,
+     "text": "The spots migrate."
+    },
+    {
+     "start": 111.61,
+     "end": 123.77,
+     "text": "Spörer’s law: a new cycle opens at thirty to forty degrees and new spots form ever closer to the equator, the last near five degrees, while the next cycle’s high-latitude spots are already appearing."
+    },
+    {
+     "start": 123.77,
+     "end": 128.57,
+     "text": "Maunder’s 1904 latitude-against-time plot makes butterfly wings."
+    },
+    {
+     "start": 128.57,
+     "end": 138.25,
+     "text": "Hale’s law: leading spots are one polarity in the north and the opposite in the south, and both reverse next cycle, so the magnetic period is twenty-two years."
+    },
+    {
+     "start": 138.25,
+     "end": 140.85,
+     "text": "Polar fields reverse at each maximum."
+    },
+    {
+     "start": 140.85,
+     "end": 147.59,
+     "text": "Joy’s law: bipolar groups tilt, the leading spot nearer the equator, more so at higher latitude."
+    },
+    {
+     "start": 147.59,
+     "end": 149.25,
+     "text": "Drag the year cursor."
+    },
+    {
+     "start": 149.25,
+     "end": 159.03,
+     "text": "Find the Maunder minimum and giant cycle nineteen, then step through one cycle and watch the wings close on the equator while the next pair opens near thirty-five degrees."
+    },
+    {
+     "start": 159.03,
+     "end": 171.19,
+     "text": "Flares, coronal mass ejections, coronal shape, fast-wind holes, even Earth’s upper atmosphere follow this rhythm, which is why solar activity and the sunspot cycle are used almost interchangeably."
+    }
+   ],
+   "voicedHash": "bd1820a4a499"
+  },
+  "sunspots": {
+   "script": "Look at the Sun behind the panel. Sunspots, recorded in China two thousand years ago and by Galileo, Scheiner and Fabricius in 1611, made sense only in 1908, when Hale measured a magnetic field outside Earth for the first time. A sunspot is a bundle of flux, a tenth to four tenths of a tesla, ten thousand times Earth's field, breaking the photosphere. Umbra about four thousand kelvin, penumbra fifty-five hundred, photosphere fifty-eight hundred. Stefan-Boltzmann, fourth power of the temperature ratio: twenty-three per cent, black by contrast, yet alone outshining the full Moon. Horizontal balance: the magnetic pressure, B squared over two mu-nought, plus P-in, equals P-out. B is the field, mu-nought the permeability of free space, P-in and P-out the gas pressures inside and outside. At three tenths of a tesla, about thirty-six thousand pascals, above the outside ten thousand, so the inside gas is thinner. Convection stops, because hot gas cannot cross the field lines, like a comb blocking flow. The surface then cools until radiation matches the little heat that arrives. Energy stored in the convection zone leaks out over months, so at maximum the Sun is slightly brighter, with faculae outweighing spots. Delta lambda equals e g lambda squared B over four pi m-e c, about four point seven times ten to the minus eight, times g, times lambda in nanometres squared, times B in tesla, in nanometres. e and m-e are the electron charge and mass, c the speed of light, g the Landé factor, lambda wavelength, B the field. For iron near six hundred thirty nanometres, g two and a half, at three tenths of a tesla, the split is about fourteen thousandths of a nanometre, polarisation giving the direction. Raise the field on the widget: magnetic pressure overtakes gas pressure, the umbra darkens, and sigma and pi separate. Lower the temperature; brightness falls. Opposite-polarity groups span a few hundred to a hundred thousand kilometres. We see five hundred kilometres deeper: the Wilson depression.",
+   "hash": "98e9e0330104",
+   "duration": 131.83,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.4,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 2.4,
+     "end": 16.44,
+     "text": "Sunspots, recorded in China two thousand years ago and by Galileo, Scheiner and Fabricius in 1611, made sense only in 1908, when Hale measured a magnetic field outside Earth for the first time."
+    },
+    {
+     "start": 16.44,
+     "end": 24.82,
+     "text": "A sunspot is a bundle of flux, a tenth to four tenths of a tesla, ten thousand times Earth's field, breaking the photosphere."
+    },
+    {
+     "start": 24.82,
+     "end": 30.96,
+     "text": "Umbra about four thousand kelvin, penumbra fifty-five hundred, photosphere fifty-eight hundred."
+    },
+    {
+     "start": 30.96,
+     "end": 39.82,
+     "text": "Stefan-Boltzmann, fourth power of the temperature ratio: twenty-three per cent, black by contrast, yet alone outshining the full Moon."
+    },
+    {
+     "start": 39.82,
+     "end": 47.24,
+     "text": "Horizontal balance: the magnetic pressure, B squared over two mu-nought, plus P-in, equals P-out."
+    },
+    {
+     "start": 47.24,
+     "end": 54.88,
+     "text": "B is the field, mu-nought the permeability of free space, P-in and P-out the gas pressures inside and outside."
+    },
+    {
+     "start": 54.88,
+     "end": 62.96,
+     "text": "At three tenths of a tesla, about thirty-six thousand pascals, above the outside ten thousand, so the inside gas is thinner."
+    },
+    {
+     "start": 62.96,
+     "end": 68.87,
+     "text": "Convection stops, because hot gas cannot cross the field lines, like a comb blocking flow."
+    },
+    {
+     "start": 68.87,
+     "end": 73.09,
+     "text": "The surface then cools until radiation matches the little heat that arrives."
+    },
+    {
+     "start": 73.09,
+     "end": 81.05,
+     "text": "Energy stored in the convection zone leaks out over months, so at maximum the Sun is slightly brighter, with faculae outweighing spots."
+    },
+    {
+     "start": 81.05,
+     "end": 94.95,
+     "text": "Delta lambda equals e g lambda squared B over four pi m-e c, about four point seven times ten to the minus eight, times g, times lambda in nanometres squared, times B in tesla, in nanometres."
+    },
+    {
+     "start": 94.95,
+     "end": 103.47,
+     "text": "e and m-e are the electron charge and mass, c the speed of light, g the Landé factor, lambda wavelength, B the field."
+    },
+    {
+     "start": 103.47,
+     "end": 114.25,
+     "text": "For iron near six hundred thirty nanometres, g two and a half, at three tenths of a tesla, the split is about fourteen thousandths of a nanometre, polarisation giving the direction."
+    },
+    {
+     "start": 114.25,
+     "end": 121.69,
+     "text": "Raise the field on the widget: magnetic pressure overtakes gas pressure, the umbra darkens, and sigma and pi separate."
+    },
+    {
+     "start": 121.69,
+     "end": 124.29,
+     "text": "Lower the temperature; brightness falls."
+    },
+    {
+     "start": 124.29,
+     "end": 128.43,
+     "text": "Opposite-polarity groups span a few hundred to a hundred thousand kilometres."
+    },
+    {
+     "start": 128.43,
+     "end": 131.83,
+     "text": "We see five hundred kilometres deeper: the Wilson depression."
+    }
+   ],
+   "voicedHash": "e901e04d7741"
+  }
+ }
+}

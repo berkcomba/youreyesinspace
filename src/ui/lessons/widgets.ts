@@ -9174,6 +9174,1115 @@ class MsLifetimeWidget extends CanvasWidget {
   }
 }
 
+/* ==================================================== Chapter 11 widgets ==== */
+
+const MU0 = 4e-7 * Math.PI;
+const sub = (n: number) => String(n).replace(/\d/g, (d) => '₀₁₂₃₄₅₆₇₈₉'[+d]);
+const M_P = 1.67262e-27;
+const T_SUN_AGE = 4.57;   // Gyr
+const LSUN_SCALE = 3.84e26;
+/** luminosity (L☉) of the Sun at age t (Gyr) — Gough's fit, extended */
+const sunL = (t: number) => 1 / (1 + 0.4 * (1 - t / T_SUN_AGE));
+const sunR = (t: number) => 0.88 * (sunL(t) / sunL(0)) ** 0.35;
+const sunTeff = (t: number) => 5777 * (sunL(t) / sunR(t) ** 2) ** 0.25;
+/** central hydrogen fraction at age t (Gyr) and the depletion profile against r/R☉ */
+const sunXc = (t: number) => Math.max(0, 0.71 - 0.37 * (t / T_SUN_AGE) ** 0.85);
+const sunX = (r: number, t: number) => { const w = 0.13 * (0.8 + 0.2 * t / T_SUN_AGE); return 0.71 - (0.71 - sunXc(t)) * Math.exp(-((r / w) ** 2)); };
+const PLOT_MARGIN = 50;
+/** draw a polyline y(x) over [xa, xb] with n samples */
+function plotCurve(ctx: CanvasRenderingContext2D, xa: number, xb: number, n: number, X: (x: number) => number, Y: (x: number) => number | null, col: string, width = 2, dash?: number[]) {
+  ctx.beginPath(); let pen = false;
+  for (let i = 0; i <= n; i++) { const x = xa + (xb - xa) * i / n; const y = Y(x); if (y === null || !isFinite(y)) { pen = false; continue; } const px = X(x); pen ? ctx.lineTo(px, y) : ctx.moveTo(px, y); pen = true; }
+  ctx.strokeStyle = col; ctx.lineWidth = width; ctx.setLineDash(dash ?? []); ctx.stroke(); ctx.setLineDash([]);
+}
+
+/* ---------------------------------------------- 11.1a the Sun through time ---- */
+
+class SunHistoryWidget extends CanvasWidget {
+  private t = T_SUN_AGE;
+  constructor() {
+    super(1.8);
+    this.slider('Age of the Sun', 0, 10, 0.02, this.t, (v) => `${fmt(v, 2)} Gyr`, (v) => { this.t = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const t = this.t, L = sunL(t), R = sunR(t), T = sunTeff(t);
+    // left: the Sun to scale and colour
+    const cx = w * 0.2, cy = h * 0.47, R0 = Math.min(w * 0.13, h * 0.3);
+    this.glow(cx, cy, R0 * R * 1.5, rgba(tempRGB(T), 0.35));
+    const g = c.createRadialGradient(cx, cy, 0, cx, cy, R0 * R);
+    g.addColorStop(0, rgba(tempRGB(T + 600), 1)); g.addColorStop(0.85, rgba(tempRGB(T), 1)); g.addColorStop(1, rgba(tempRGB(T - 900), 1));
+    c.fillStyle = g; c.beginPath(); c.arc(cx, cy, R0 * R, 0, TAU); c.fill();
+    this.circle(cx, cy, R0, hexA('#fff', 0.3), undefined, 1, [3, 3]);
+    this.text('dashed: today', cx, cy + R0 * 1.4 + 12, C.dim, 8, 'center');
+    this.text(`${spectralClass(T)} V`, cx, cy - R0 * 1.4 - 12, C.text, 10, 'center');
+    // right: L, R, T against age
+    const x0 = w * 0.42, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (tt: number) => x0 + tt / 10 * (x1 - x0);
+    const Y = (v: number) => y1 - 6 - (v - 0.5) / 1.6 * (y1 - y0 - 12);
+    for (const v of [0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2]) { this.line(x0, Y(v), x1, Y(v), hexA(C.grid, 0.9)); this.text(fmt(v, 1), x0 - 4, Y(v), C.dim, 8, 'right'); }
+    for (const tt of [0, 2, 4, 6, 8, 10]) this.text(`${tt}`, X(tt), y1 + 10, C.dim, 8, 'center');
+    this.text('age (Gyr)', x1, y1 + 22, C.dim, 9, 'right');
+    this.text('relative to today', x0 + 6, y0 + 10, C.dim, 8);
+    plotCurve(c, 0, 10, 200, X, (tt) => Y(sunL(tt)), C.sun);
+    plotCurve(c, 0, 10, 200, X, (tt) => Y(sunR(tt)), C.green);
+    plotCurve(c, 0, 10, 200, X, (tt) => Y(sunTeff(tt) / 5777), C.blue);
+    this.text('L', x1 - 6, Y(sunL(9.6)) - 8, C.sun, 10, 'right'); this.text('R', x1 - 6, Y(sunR(9.8)) - 8, C.green, 10, 'right'); this.text('T_eff', x1 - 6, Y(sunTeff(9.8) / 5777) + 10, C.blue, 10, 'right');
+    this.line(X(T_SUN_AGE), y0, X(T_SUN_AGE), y1, hexA('#fff', 0.3), 1, [2, 3]); this.text('today', X(T_SUN_AGE) + 3, y0 + 22, C.dim, 8);
+    this.line(X(t), y0, X(t), y1, hexA('#fff', 0.6), 1);
+    for (const [v, col] of [[L, C.sun], [R, C.green], [T / 5777, C.blue]] as Array<[number, string]>) this.circle(X(t), Y(v), 4, '#fff', col);
+    // Earth
+    const Teq = 255 * L ** 0.25;
+    const epoch = t < 0.05 ? 'birth of the Sun' : t < 0.6 ? 'the Earth forms (t ≈ 0.05–0.1 Gyr)' : t < 1.1 ? 'faint young Sun: early oceans, first life' : t < 4.4 ? 'Precambrian Earth' : t < 4.7 ? 'the present' : t < 5.6 ? 'oceans begin to evaporate' : t < 9.5 ? 'Earth uninhabitable; Mars warms' : 'core hydrogen nearly exhausted';
+    this.setReadout([
+      ['L, R, T_eff', `${fmt(L, 2)} L☉, ${fmt(R, 2)} R☉, ${fmt(T, 0)} K`, C.sun],
+      ['Solar constant', `${fmt(1361 * L, 0)} W/m²`],
+      ['Earth T_eq (A = 0.3, no greenhouse)', `${fmt(Teq, 0)} K = ${fmt(Teq - 273.15, 0)} °C`, Teq < 273 ? C.blue : C.red],
+      ['Epoch', epoch, C.dim],
+    ]);
+  }
+}
+
+/* ------------------------------------------------ 11.1b interior composition ---- */
+
+class SolarCompositionWidget extends CanvasWidget {
+  private t = T_SUN_AGE;
+  constructor() {
+    super(1.8);
+    this.slider('Age', 0, 10, 0.02, this.t, (v) => `${fmt(v, 2)} Gyr`, (v) => { this.t = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const x0 = PLOT_MARGIN, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (r: number) => x0 + r * (x1 - x0);
+    const Y = (v: number) => y1 - 6 - v * (y1 - y0 - 12);
+    c.fillStyle = hexA(C.accent, 0.08); c.fillRect(X(SSM_RCZ), y0, x1 - X(SSM_RCZ), y1 - y0);
+    this.text('convection zone (mixed)', X(SSM_RCZ) + 4, y1 - 10, C.accent, 8);
+    for (const v of [0.2, 0.4, 0.6, 0.8]) { this.line(x0, Y(v), x1, Y(v), hexA(C.grid, 0.9)); this.text(fmt(v, 1), x0 - 4, Y(v), C.dim, 8, 'right'); }
+    for (const r of [0, 0.25, 0.5, 0.75, 1]) this.text(fmt(r, 2), X(r), y1 + 10, C.dim, 8, 'center');
+    this.text('r / R☉', x1, y1 + 22, C.dim, 9, 'right');
+    this.text('mass fraction', x0 + 6, y0 + 10, C.dim, 8);
+    const t = this.t;
+    const he3 = (r: number) => 0.03 * Math.min(1, t / 2) * Math.exp(-(((r - 0.28) / 0.08) ** 2)) + 0.0005;
+    plotCurve(c, 0, 1, 200, X, (r) => Y(0.71), hexA(C.blue, 0.4), 1, [3, 3]);
+    plotCurve(c, 0, 1, 200, X, (r) => Y(0.27), hexA(C.sun, 0.4), 1, [3, 3]);
+    plotCurve(c, 0, 1, 200, X, (r) => Y(sunX(r, t)), C.blue);
+    plotCurve(c, 0, 1, 200, X, (r) => Y(0.98 - sunX(r, t)), C.sun);
+    plotCurve(c, 0, 1, 200, X, (r) => Y(10 * he3(r)), C.green);
+    this.text('X (hydrogen)', x1 - 8, Y(0.74) - 10, C.blue, 9, 'right'); this.text('Y (helium)', x1 - 8, Y(0.24) + 10, C.sun, 9, 'right'); this.text('³He × 10', X(0.28), Y(10 * he3(0.28)) - 10, C.green, 9, 'center');
+    this.text('dashed: zero-age composition', x0 + 6, y0 + 22, C.dim, 8);
+    const Xc = sunXc(t), Yc = 0.98 - Xc;
+    const mu = 1 / (2 * Xc + 0.75 * Yc + 0.5 * 0.02);
+    // hydrogen consumed inside 0.3 R☉ (≈ 0.6 M☉ of gas) relative to the whole star
+    let burned = 0; for (let r = 0; r < 0.5; r += 0.005) { const m = ssmAt(r), m2 = ssmAt(r + 0.005); burned += (0.71 - sunX(r, t)) * (m2.M - m.M); }
+    this.setReadout([
+      ['Centre X, Y', `${fmt(Xc, 2)}, ${fmt(Yc, 2)}`, C.blue],
+      ['Central μ', fmt(mu, 2), C.sun],
+      ['Hydrogen burned so far', `${fmt(100 * burned / 0.71, 1)} % of the Sun\'s total`, C.green],
+      ['Core', Xc <= 0 ? 'exhausted: main sequence over' : Xc < 0.1 ? 'nearly exhausted' : 'burning', Xc <= 0 ? C.red : C.text],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 11.1c energy generation ---- */
+
+class SolarEnergyWidget extends CanvasWidget {
+  private x = 0.1;
+  private prof: Array<{ r: number; pp: number; cno: number; L: number }> = [];
+  private r50 = 0; private r99 = 0; private cnoShare = 0;
+  constructor() {
+    super(1.8);
+    this.slider('Cursor r / R☉', 0, 0.4, 0.002, this.x, (v) => fmt(v, 3), (v) => { this.x = v; });
+    // integrate once: W m⁻³ profiles, normalised so the total is L☉
+    let L = 0; const dr = 0.002;
+    for (let r = 0; r <= 0.5; r += dr) {
+      const m = ssmAt(r);
+      const pp = epsPP(m.rho, m.X, m.T) * m.rho, cno = epsCNO(m.rho, m.X, 0.7 * 0.02 * 0.5, m.T) * m.rho;
+      L += (pp + cno) * 4 * Math.PI * (r * RSUN) ** 2 * dr * RSUN;
+      this.prof.push({ r, pp, cno, L });
+    }
+    const k = LSUN_SCALE / L;
+    let cnoL = 0;
+    for (let i = 0; i < this.prof.length; i++) { const q = this.prof[i]; q.pp *= k; q.cno *= k; q.L *= k; cnoL += q.cno * 4 * Math.PI * (q.r * RSUN) ** 2 * dr * RSUN; }
+    this.cnoShare = cnoL / LSUN_SCALE;
+    this.r50 = this.prof.find((q) => q.L >= 0.5 * LSUN_SCALE)?.r ?? 0; this.r99 = this.prof.find((q) => q.L >= 0.99 * LSUN_SCALE)?.r ?? 0;
+  }
+  private at(r: number) { const i = Math.min(this.prof.length - 1, Math.max(0, Math.round(r / 0.002))); return this.prof[i]; }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const x0 = PLOT_MARGIN, x1 = w - 46, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (r: number) => x0 + r / 0.4 * (x1 - x0);
+    const YL = (e: number) => y1 - 6 - (Math.log10(Math.max(e, 1e-3)) + 3) / 6 * (y1 - y0 - 12);
+    const YR = (f: number) => y1 - 6 - f * (y1 - y0 - 12);
+    for (let le = -2; le <= 2; le++) { this.line(x0, YL(10 ** le), x1, YL(10 ** le), hexA(C.grid, 0.9)); this.text(`10${sup(le)}`, x0 - 4, YL(10 ** le), C.dim, 8, 'right'); }
+    for (const f of [0.25, 0.5, 0.75, 1]) this.text(fmt(f, 2), x1 + 4, YR(f), C.green, 8);
+    for (const r of [0, 0.1, 0.2, 0.3, 0.4]) this.text(fmt(r, 1), X(r), y1 + 10, C.dim, 8, 'center');
+    this.text('r / R☉', x1, y1 + 22, C.dim, 9, 'right');
+    this.text('ε (W/m³)', x0 + 6, y0 + 10, C.dim, 8); this.text('L_r / L☉', x1 - 4, y0 + 10, C.green, 8, 'right');
+    plotCurve(c, 0, 0.4, 200, X, (r) => YL(this.at(r).pp), C.sun);
+    plotCurve(c, 0, 0.4, 200, X, (r) => YL(this.at(r).cno), C.red);
+    plotCurve(c, 0, 0.4, 200, X, (r) => YR(this.at(r).L / LSUN_SCALE), C.green);
+    this.text('pp chain', X(0.06), YL(this.at(0.06).pp) - 10, C.sun, 9); this.text('CNO cycle', X(0.06), YL(this.at(0.06).cno) + 11, C.red, 9);
+    for (const [r, lab] of [[this.r50, '50 %'], [this.r99, '99 %']] as Array<[number, string]>) { this.line(X(r), y0, X(r), y1, hexA(C.green, 0.5), 1, [2, 3]); this.text(lab, X(r) + 3, y0 + 24, C.green, 8); }
+    const q = this.at(this.x), m = ssmAt(this.x);
+    this.line(X(this.x), y0, X(this.x), y1, hexA('#fff', 0.5), 1);
+    this.circle(X(this.x), YL(q.pp), 4, '#fff', C.sun); this.circle(X(this.x), YR(q.L / LSUN_SCALE), 4, '#fff', C.green);
+    const tot = q.pp + q.cno;
+    this.setReadout([
+      ['T, ρ at cursor', `${sci(m.T, 2)} K, ${sci(m.rho, 2)} kg/m³`],
+      ['ε (pp + CNO)', `${fmtSci(tot)} W/m³ = ${sci(tot / m.rho, 1)} W/kg`, C.sun],
+      ['CNO share here · overall', `${fmt(100 * q.cno / Math.max(tot, 1e-30), 1)} % · ${fmt(100 * this.cnoShare, 1)} %`, C.red],
+      ['L_r', `${fmt(100 * q.L / LSUN_SCALE, 1)} % of L☉ (50 % by ${fmt(this.r50, 2)}, 99 % by ${fmt(this.r99, 2)} R☉)`, C.green],
+    ]);
+  }
+}
+
+/* -------------------------------------------------- 11.1d energy transport ---- */
+
+class SolarGradientsWidget extends CanvasWidget {
+  private x = 0.5;
+  constructor() {
+    super(1.8);
+    this.slider('Cursor r / R☉', 0.01, 0.995, 0.005, this.x, (v) => fmt(v, 3), (v) => { this.x = v; });
+  }
+  private gradRad(r: number): number { const m = ssmAt(r); const Mr = Math.max(m.M, 1e-6) * MSUN; return 3 / (16 * Math.PI * A_RAD * C_LIGHT * GRAV) * m.kap * m.P * m.L * LSUN_SCALE / (Mr * m.T ** 4); }
+  private gradAd(r: number): number { return 0.4 - 0.25 * Math.exp(-(((r - 0.985) / 0.012) ** 2)); }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const x0 = PLOT_MARGIN, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (r: number) => x0 + r * (x1 - x0);
+    const Y = (g: number) => y1 - 6 - (Math.log10(Math.min(30, Math.max(0.03, g))) + 1.52) / 3 * (y1 - y0 - 12);
+    // convective where ∇_rad > ∇_ad
+    let rcz = 1; for (let r = 0.3; r < 1; r += 0.002) { if (this.gradRad(r) > this.gradAd(r)) { rcz = r; break; } }
+    c.fillStyle = hexA(C.accent, 0.1); c.fillRect(X(rcz), y0, x1 - X(rcz), y1 - y0);
+    this.text(`convective (base ${fmt(rcz, 3)} R☉)`, X(rcz) + 4, y1 - 10, C.accent, 8);
+    this.text('radiative', X(0.3), y1 - 10, C.dim, 8, 'center');
+    for (const g of [0.1, 0.3, 1, 3, 10]) { this.line(x0, Y(g), x1, Y(g), hexA(C.grid, 0.9)); this.text(fmt(g, 1), x0 - 4, Y(g), C.dim, 8, 'right'); }
+    for (const r of [0, 0.25, 0.5, 0.75, 1]) this.text(fmt(r, 2), X(r), y1 + 10, C.dim, 8, 'center');
+    this.text('r / R☉', x1, y1 + 22, C.dim, 9, 'right');
+    this.text('∇ = d ln T / d ln P', x0 + 6, y0 + 10, C.dim, 8);
+    plotCurve(c, 0.005, 0.995, 300, X, (r) => Y(this.gradRad(r)), C.red);
+    plotCurve(c, 0.005, 0.995, 300, X, (r) => Y(this.gradAd(r)), C.blue);
+    this.text('∇_rad (needed to carry L by radiation)', X(0.1), Y(this.gradRad(0.1)) - 12, C.red, 9);
+    this.text('∇_ad', X(0.5), Y(0.4) - 10, C.blue, 9);
+    const m = ssmAt(this.x);
+    const ell = 1 / (m.kap * m.rho);
+    // diffusion time from the centre to the cursor: ∫ 3 r κρ / c dr (random walk with local step)
+    let tdiff = 0; for (let r = 0.0025; r < Math.min(this.x, rcz); r += 0.005) { const q = ssmAt(r); tdiff += 3 * (r * RSUN) * q.kap * q.rho / C_LIGHT * 0.005 * RSUN; }
+    this.line(X(this.x), y0, X(this.x), y1, hexA('#fff', 0.5), 1);
+    this.circle(X(this.x), Y(this.gradRad(this.x)), 4, '#fff', C.red); this.circle(X(this.x), Y(this.gradAd(this.x)), 4, '#fff', C.blue);
+    this.setReadout([
+      ['∇_rad, ∇_ad at cursor', `${fmtSci(this.gradRad(this.x))}, ${fmt(this.gradAd(this.x), 2)}`, this.x > rcz ? C.accent : C.text],
+      ['κ̄, ρ', `${fmtSci(m.kap)} m²/kg, ${sci(m.rho, 2)} kg/m³`],
+      ['Photon mean free path 1/κ̄ρ', ell < 1e-3 ? `${fmt(ell * 1e6, 0)} μm` : ell < 1 ? `${fmt(ell * 1e3, 2)} mm` : `${fmt(ell, 1)} m`, C.sun],
+      ['Diffusion time, centre → cursor', this.x > rcz ? `${fmtYr(tdiff / 3.156e7)} to the CZ base, then weeks by convection` : fmtYr(tdiff / 3.156e7), C.sun],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 11.1e helioseismology ---- */
+
+/** associated Legendre P_l^m(x), unnormalised, m ≥ 0 */
+function legendreP(l: number, m: number, x: number): number {
+  let pmm = 1;
+  if (m > 0) { const somx2 = Math.sqrt((1 - x) * (1 + x)); let fact = 1; for (let i = 1; i <= m; i++) { pmm *= -fact * somx2; fact += 2; } }
+  if (l === m) return pmm;
+  let pmmp1 = x * (2 * m + 1) * pmm;
+  if (l === m + 1) return pmmp1;
+  let pll = 0;
+  for (let ll = m + 2; ll <= l; ll++) { pll = (x * (2 * ll - 1) * pmmp1 - (ll + m - 1) * pmm) / (ll - m); pmm = pmmp1; pmmp1 = pll; }
+  return pll;
+}
+class PmodesWidget extends CanvasWidget {
+  private l = 6; private m = 3; private t = 0;
+  private sM: ReturnType<CanvasWidget['slider']>;
+  constructor() {
+    super(1.8);
+    this.slider('Degree l', 0, 30, 1, this.l, (v) => `${v}`, (v) => { this.l = v; if (this.m > v) { this.m = v; this.sM.set(v); } this.sM.input.max = String(v); });
+    this.sM = this.slider('Order m', 0, this.l, 1, this.m, (v) => `${v}`, (v) => { this.m = Math.min(v, this.l); });
+    this.playButton();
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    this.t += dt;
+    const l = this.l, m = this.m;
+    const phase = Math.cos(TAU * this.t / 5);   // 5-minute period, 5 s on screen
+    // disc
+    const cx = w * 0.26, cy = h * 0.5, R = Math.min(w * 0.23, h * 0.44);
+    const N = 56; const cell = 2 * R / N;
+    let norm = 0; for (let i = 0; i <= 40; i++) norm = Math.max(norm, Math.abs(legendreP(l, m, -1 + 2 * i / 40)));
+    for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
+      const px = -R + (i + 0.5) * cell, py = -R + (j + 0.5) * cell;
+      const rr = Math.hypot(px, py) / R; if (rr > 1) continue;
+      const z = Math.sqrt(1 - rr * rr);               // toward viewer
+      const y = -py / R;                              // north up: cos θ (tilted axis 20°)
+      const tilt = 20 * DEG; const yy = y * Math.cos(tilt) + z * Math.sin(tilt); const zz = -y * Math.sin(tilt) + z * Math.cos(tilt);
+      const lon = Math.atan2(px / R, zz);
+      const v = (legendreP(l, m, Math.min(1, Math.max(-1, yy))) / (norm || 1)) * Math.cos(m * lon) * phase;
+      const base = tempRGB(5777);
+      const k = 0.55 + 0.45 * v;
+      c.fillStyle = `rgb(${base[0] * k | 0},${base[1] * k | 0},${(base[2] * k + 90 * Math.max(0, -v)) | 0})`;
+      c.fillRect(cx + px - cell / 2, cy + py - cell / 2, cell + 0.5, cell + 0.5);
+    }
+    this.circle(cx, cy, R, C.line);
+    this.text(`Y${sub(l)}${sup(m)} · l = ${l}, m = ${m}`, cx, cy + R + 14, C.text, 10, 'center');
+    this.text('blue: moving inward · bright: outward', cx, cy - R - 12, C.dim, 8, 'center');
+    // sound speed + turning point
+    const x0 = w * 0.6, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (r: number) => x0 + r * (x1 - x0);
+    const cs = (r: number) => { const q = ssmAt(r); return Math.sqrt(5 / 3 * K_B * q.T / (q.mu * M_H)); };
+    const Y = (v: number) => y1 - 6 - (Math.log10(v) - 3.7) / 2 * (y1 - y0 - 12);
+    for (const v of [1e4, 3e4, 1e5, 3e5]) { this.line(x0, Y(v), x1, Y(v), hexA(C.grid, 0.9)); this.text(`${fmt(v / 1e3, 0)}`, x0 - 4, Y(v), C.dim, 8, 'right'); }
+    this.text('sound speed (km/s)', x0 + 6, y0 + 10, C.dim, 8);
+    for (const r of [0, 0.5, 1]) this.text(fmt(r, 1), X(r), y1 + 10, C.dim, 8, 'center'); this.text('r / R☉', x1, y1 + 22, C.dim, 9, 'right');
+    plotCurve(c, 0.005, 0.995, 200, X, (r) => Y(cs(r)), C.sun);
+    this.line(X(SSM_RCZ), y0, X(SSM_RCZ), y1, hexA(C.accent, 0.5), 1, [2, 3]);
+    // inner turning point: c(r)/r = ω/√(l(l+1)) at ν = 3 mHz
+    let rt = 0;
+    if (l > 0) { const om = TAU * 3e-3, L2 = Math.sqrt(l * (l + 1)); for (let r = 0.01; r < 1; r += 0.005) { if (cs(r) / (r * RSUN) < om / L2) { rt = r; break; } } }
+    if (l > 0) { this.line(X(rt), y0, X(rt), y1, C.blue, 1.5, [4, 3]); this.text(`turning point ${fmt(rt, 2)} R☉`, X(rt) + 4, y0 + 24, C.blue, 8); }
+    else this.text('l = 0: radial mode, reaches the centre', x0 + 6, y0 + 24, C.blue, 8);
+    // model residual (schematic), ×0.1 % scale in a strip
+    const ry0 = y1 - 40;
+    this.line(x0, ry0, x1, ry0, hexA(C.text, 0.3));
+    plotCurve(c, 0.05, 0.95, 100, X, (r) => ry0 - 30 * (0.003 * Math.exp(-(((r - 0.65) / 0.05) ** 2)) - 0.001 * Math.exp(-(((r - 0.2) / 0.1) ** 2)) + 0.0005 * Math.sin(r * 20)) / 0.004, C.green, 1.5);
+    this.text('(c_Sun − c_model)/c, ±0.4 % strip', x0 + 6, ry0 - 36, C.green, 8);
+    this.setReadout([
+      ['Mode', `l = ${l}, m = ${m} · ν ≈ 3.0 mHz (P = 5.5 min)`],
+      ['Inner turning point', l > 0 ? `${fmt(rt, 2)} R☉` : 'centre', C.blue],
+      ['Surface nodal lines', `${l - m} in latitude, ${m} in longitude`],
+      ['Δν (large separation)', `135 μHz · sound crossing ~1 h`, C.sun],
+    ]);
+  }
+}
+
+/* ------------------------------------------------ 11.1f neutrino spectrum ---- */
+
+type NuMode = 'pred' | 'obs' | 'nc';
+const NU_LINES: Array<[string, number, number, string]> = [['⁷Be', 0.862, 4.3e9, C.green], ['⁷Be', 0.384, 4.8e8, C.green], ['pep', 1.442, 1.4e8, C.purple]];
+function nuContinuum(E: number): Array<[string, number, string]> {
+  const beta = (Emax: number, tot: number) => (E > 0 && E < Emax ? tot * 30 / Emax * (E / Emax) ** 2 * (1 - E / Emax) ** 2 : 0);
+  return [['pp', beta(0.42, 6.0e10), C.sun], ['⁸B', beta(15, 5.0e6), C.red], ['hep', beta(18.8, 8e3), C.dim], ['CNO', beta(1.73, 5e8), C.blue]];
+}
+const nuSurvival = (E: number) => 0.32 + 0.25 / (1 + (E / 1.8) ** 3);
+class NeutrinoSpectrumWidget extends CanvasWidget {
+  private mode: NuMode = 'pred';
+  constructor() {
+    super(1.8);
+    this.segmented<NuMode>([['pred', 'Predicted (SSM)'], ['obs', 'Observed ν_e'], ['nc', 'All flavours (SNO NC)']], this.mode, (v) => { this.mode = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const x0 = PLOT_MARGIN + 6, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (E: number) => x0 + (Math.log10(E) + 1) / Math.log10(200) * (x1 - x0);
+    const Y = (f: number) => y1 - 6 - (Math.log10(Math.max(f, 1)) - 1) / 11 * (y1 - y0 - 12);
+    for (let lf = 2; lf <= 12; lf += 2) { this.line(x0, Y(10 ** lf), x1, Y(10 ** lf), hexA(C.grid, 0.9)); this.text(`10${sup(lf)}`, x0 - 4, Y(10 ** lf), C.dim, 8, 'right'); }
+    for (const E of [0.1, 0.3, 1, 3, 10]) this.text(`${E}`, X(E), y1 + 10, C.dim, 8, 'center');
+    this.text('neutrino energy (MeV)', x1, y1 + 22, C.dim, 9, 'right');
+    this.text('flux (cm⁻² s⁻¹ MeV⁻¹; lines: cm⁻² s⁻¹)', x0 + 6, y0 + 10, C.dim, 8);
+    // detector thresholds
+    for (const [lab, E, col] of [['Ga 0.233', 0.233, C.green], ['Cl 0.814', 0.814, C.accent], ['SK/SNO 5', 5, C.blue], ['Kamiokande 7', 7, C.dim]] as Array<[string, number, string]>) { this.line(X(E), y0, X(E), y1, hexA(col, 0.6), 1, [3, 3]); this.text(lab, X(E) + 3, y0 + 22 + (E > 4 ? 10 : 0), col, 8); }
+    const fac = (E: number) => (this.mode === 'obs' ? nuSurvival(E) : 1);
+    const names = ['pp', '⁸B', 'hep', 'CNO'];
+    names.forEach((_, k) => { plotCurve(c, 0.1, 20, 400, X, (E) => { const f = nuContinuum(E)[k][1] * fac(E); return f > 1 ? Y(f) : null; }, nuContinuum(1)[k][2], 2); });
+    for (const [lab, E, f, col] of NU_LINES) { this.line(X(E), y1 - 6, X(E), Y(f * fac(E)), col, 3); this.text(lab, X(E), Y(f * fac(E)) - 8, col, 8, 'center'); }
+    this.text('pp', X(0.2), Y(nuContinuum(0.2)[0][1] * fac(0.2)) - 10, C.sun, 9, 'center');
+    this.text('⁸B', X(6), Y(nuContinuum(6)[1][1] * fac(6)) - 10, C.red, 9, 'center');
+    this.text('CNO', X(1.0), Y(nuContinuum(1.0)[3][1] * fac(1.0)) + 12, C.blue, 9, 'center');
+    this.text('hep', X(14), Y(nuContinuum(14)[2][1] * fac(14)) - 10, C.dim, 9, 'center');
+    if (this.mode === 'obs') { plotCurve(c, 0.1, 20, 200, X, (E) => y0 + 40 + 30 * (1 - nuSurvival(E)), hexA('#fff', 0.5), 1); this.text('ν_e survival probability (0.32–0.57)', x1 - 6, y0 + 36, hexA('#fff', 0.6), 8, 'right'); }
+    const rows: Array<[string, string, string?]> = this.mode === 'pred'
+      ? [['Total flux at Earth', '6.5 × 10¹⁰ cm⁻² s⁻¹ (91 % pp)'], ['Cl predicted', '7.6 ± 1.3 SNU', C.accent], ['Ga predicted', '129 SNU', C.green], ['⁸B flux', '5.05 × 10⁶ cm⁻² s⁻¹', C.red]]
+      : this.mode === 'obs'
+        ? [['Homestake (Cl)', '2.56 SNU = 0.34 of prediction', C.accent], ['GALLEX + SAGE (Ga)', '71 SNU = 0.55', C.green], ['Super-Kamiokande (⁸B)', '0.465 ± 0.015', C.blue], ['SNO charged current (⁸B ν_e)', '0.35 ± 0.03', C.red]]
+        : [['SNO neutral current (all flavours)', '5.09 × 10⁶ cm⁻² s⁻¹', C.red], ['SSM ⁸B prediction', '5.05 × 10⁶ cm⁻² s⁻¹ → ratio 1.01 ± 0.12', C.red], ['Conclusion', '2/3 of the ν_e arrive as ν_μ or ν_τ', C.text], ['Borexino (2014–20)', 'pp, ⁷Be, pep, CNO all at the oscillated values', C.green]];
+    this.setReadout(rows);
+  }
+}
+
+/* ---------------------------------------------- 11.1g neutrino oscillation ---- */
+
+class NuOscillationWidget extends CanvasWidget {
+  private lE = 0; private s2 = 0.31; private lDm = Math.log10(7.5e-5);
+  constructor() {
+    super(1.8);
+    this.slider('Energy', -1, 1.2, 0.02, this.lE, (v) => `${fmt(10 ** v, 2)} MeV`, (v) => { this.lE = v; });
+    this.slider('sin²θ', 0.02, 0.5, 0.01, this.s2, (v) => fmt(v, 2), (v) => { this.s2 = v; });
+    this.slider('Δm²', -5, -3.5, 0.02, this.lDm, (v) => `${sci(10 ** v, 1)} eV²`, (v) => { this.lDm = v; });
+  }
+  private msw(E: number): number {
+    const s2 = this.s2, c2t = 1 - 2 * s2, s2t = Math.sqrt(1 - c2t * c2t);
+    const beta = 1.52e-5 * E / 10 ** this.lDm;          // ρY_e ≈ 100 g cm⁻³ at production
+    const c2m = (c2t - beta) / Math.hypot(c2t - beta, s2t);
+    return 0.5 + 0.5 * c2m * c2t;
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const E = 10 ** this.lE, dm = 10 ** this.lDm, s2 = this.s2, sin22 = 4 * s2 * (1 - s2);
+    const Losc = 2.48e-3 * E / dm;   // km
+    // left: P_ee vs distance
+    const x0 = PLOT_MARGIN, x1 = w * 0.52, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const Lmax = 3 * Losc;
+    const X = (L: number) => x0 + L / Lmax * (x1 - x0);
+    const Y = (p: number) => y1 - 6 - p * (y1 - y0 - 12);
+    for (const p of [0.25, 0.5, 0.75, 1]) { this.line(x0, Y(p), x1, Y(p), hexA(C.grid, 0.9)); this.text(fmt(p, 2), x0 - 4, Y(p), C.dim, 8, 'right'); }
+    this.text('P(ν_e → ν_e) in vacuum', x0 + 6, y0 + 10, C.dim, 8);
+    this.text(`distance (0 – ${Lmax < 1e3 ? `${fmt(Lmax, 0)} km` : `${fmt(Lmax / 1e3, 1)} × 10³ km`})`, x1, y1 + 10, C.dim, 8, 'right');
+    plotCurve(c, 0, Lmax, 400, X, (L) => Y(1 - sin22 * Math.sin(1.27 * dm * L / (E * 1e-3)) ** 2), C.sun);
+    this.line(x0, Y(1 - sin22 / 2), x1, Y(1 - sin22 / 2), hexA(C.green, 0.7), 1, [4, 3]); this.text(`average 1 − ½ sin²2θ = ${fmt(1 - sin22 / 2, 2)}`, x1 - 6, Y(1 - sin22 / 2) - 8, C.green, 8, 'right');
+    // right: survival vs energy for solar neutrinos (MSW)
+    const rx0 = w * 0.62, rx1 = w - 12;
+    axesBox(c, rx0, y0, rx1, y1);
+    const RX = (e: number) => rx0 + (Math.log10(e) + 1) / 2.2 * (rx1 - rx0);
+    for (const p of [0.25, 0.5, 0.75, 1]) { this.line(rx0, Y(p), rx1, Y(p), hexA(C.grid, 0.9)); }
+    for (const e of [0.1, 1, 10]) this.text(`${e}`, RX(e), y1 + 10, C.dim, 8, 'center'); this.text('E (MeV)', rx1, y1 + 22, C.dim, 9, 'right');
+    this.text('P_ee for solar ν (MSW in the Sun)', rx0 + 6, y0 + 10, C.dim, 8);
+    plotCurve(c, 0.1, 15.8, 200, RX, (e) => Y(this.msw(e)), C.red);
+    const data: Array<[string, number, number, number]> = [['pp', 0.3, 0.57, 0.09], ['⁷Be', 0.862, 0.53, 0.05], ['pep', 1.44, 0.43, 0.11], ['⁸B', 8, 0.32, 0.03]];
+    for (const [lab, e, p, err] of data) { this.line(RX(e), Y(p - err), RX(e), Y(p + err), C.text, 1); this.circle(RX(e), Y(p), 3, '#000', C.star); this.text(lab, RX(e), Y(p + err) - 8, C.dim, 8, 'center'); }
+    this.text('points: Borexino + SNO/SK', rx1 - 6, y1 - 10, C.dim, 8, 'right');
+    this.line(RX(E), y0, RX(E), y1, hexA('#fff', 0.5), 1); this.circle(RX(E), Y(this.msw(E)), 4, '#fff', C.red);
+    this.setReadout([
+      ['Oscillation length 4πE/Δm²', Losc < 1e3 ? `${fmt(Losc, 1)} km` : `${fmt(Losc / 1e3, 1)} × 10³ km`, C.sun],
+      ['Sun–Earth / L_osc', `${sci(1.496e8 / Losc, 1)} oscillations → averaged`],
+      ['Vacuum average', fmt(1 - sin22 / 2, 2), C.green],
+      [`P_ee with MSW at ${fmt(E, 2)} MeV`, fmt(this.msw(E), 2), C.red],
+    ]);
+  }
+}
+
+/* ------------------------------------------------ 11.2a atmosphere profile ---- */
+
+/** VAL-type mean model: height (km), T (K), n_H (m⁻³) */
+const VAL: Array<[number, number, number]> = [
+  [-100, 7600, 3.0e23], [0, 6420, 1.2e23], [100, 5800, 4.0e22], [250, 5000, 8.0e21], [500, 4400, 1.5e21], [700, 4900, 4.0e20], [1000, 5900, 9.0e19], [1500, 6400, 1.0e19], [2000, 7000, 2.5e18], [2100, 9000, 1.0e18],
+  [2150, 20000, 3.0e17], [2200, 60000, 1.0e17], [2250, 200000, 3.0e16], [2300, 600000, 1.2e16], [2500, 1.0e6, 5.0e15], [5000, 1.4e6, 1.0e15], [10000, 1.6e6, 3.0e14],
+];
+function valAt(hKm: number): { T: number; n: number } {
+  hKm = Math.min(10000, Math.max(-100, hKm));
+  let i = 0; while (i < VAL.length - 2 && VAL[i + 1][0] <= hKm) i++;
+  const a = VAL[i], b = VAL[i + 1], f = (hKm - a[0]) / (b[0] - a[0]);
+  const lg = (k: number) => 10 ** (Math.log10(a[k]) + f * (Math.log10(b[k]) - Math.log10(a[k])));
+  return { T: lg(1), n: lg(2) };
+}
+class AtmProfileWidget extends CanvasWidget {
+  private hk = 300;
+  private drag = false;
+  private readonly hX = (hh: number) => (hh <= 2500 ? (hh + 100) / 2600 * 0.78 : 0.78 + 0.22 * Math.log10(hh / 2500) / Math.log10(4));
+  constructor() {
+    super(1.8);
+    this.slider('Cursor height', -100, 10000, 10, this.hk, (v) => `${fmt(v, 0)} km`, (v) => { this.hk = v; });
+    const move = (e: PointerEvent) => { const { x } = canvasPos(this.canvas, e, this.w, this.h); const x0 = PLOT_MARGIN + 6, x1 = this.w - 50; const u = Math.min(1, Math.max(0, (x - x0) / (x1 - x0))); this.hk = u <= 0.78 ? -100 + u / 0.78 * 2600 : 2500 * 4 ** ((u - 0.78) / 0.22); };
+    this.canvas.addEventListener('pointerdown', (e) => { this.drag = true; move(e); });
+    this.canvas.addEventListener('pointermove', (e) => { if (this.drag) move(e); });
+    window.addEventListener('pointerup', () => { this.drag = false; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const x0 = PLOT_MARGIN + 6, x1 = w - 50, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (hh: number) => x0 + this.hX(hh) * (x1 - x0);
+    const YT = (T: number) => y1 - 6 - (Math.log10(T) - 3.5) / 2.9 * (y1 - y0 - 12);
+    const YN = (n: number) => y1 - 6 - (Math.log10(n) - 14) / 10 * (y1 - y0 - 12);
+    // layers
+    const layers: Array<[number, number, string, string]> = [[-100, 500, 'photosphere', C.sun], [500, 2100, 'chromosphere', C.red], [2100, 2300, 'TR', C.purple], [2300, 10000, 'corona', C.blue]];
+    for (const [a, b, lab, col] of layers) { c.fillStyle = hexA(col, 0.07); c.fillRect(X(a), y0, X(b) - X(a), y1 - y0); this.text(lab, (X(a) + X(b)) / 2, y1 - 10, col, 8, 'center'); }
+    for (let lt = 4; lt <= 6; lt++) { this.line(x0, YT(10 ** lt), x1, YT(10 ** lt), hexA(C.grid, 0.9)); this.text(`10${sup(lt)}`, x0 - 4, YT(10 ** lt), C.sun, 8, 'right'); }
+    for (let ln = 15; ln <= 23; ln += 2) this.text(`10${sup(ln)}`, x1 + 4, YN(10 ** ln), C.green, 8);
+    for (const hh of [0, 500, 1000, 1500, 2000, 2500, 5000, 10000]) this.text(hh >= 1000 ? `${hh / 1000}k` : `${hh}`, X(hh), y1 + 10, C.dim, 8, 'center');
+    this.text('height above τ₅₀₀ = 1 (km)', x1, y1 + 22, C.dim, 9, 'right');
+    this.text('T (K)', x0 + 6, y0 + 10, C.sun, 9); this.text('n_H (m⁻³)', x1 - 4, y0 + 10, C.green, 9, 'right');
+    plotCurve(c, -100, 10000, 600, X, (hh) => YT(valAt(hh).T), C.sun);
+    plotCurve(c, -100, 10000, 600, X, (hh) => YN(valAt(hh).n), C.green);
+    this.text('T minimum 4400 K', X(500), YT(4400) + 12, C.sun, 8, 'center');
+    const v = valAt(this.hk);
+    this.line(X(this.hk), y0, X(this.hk), y1, hexA('#fff', 0.5), 1);
+    this.circle(X(this.hk), YT(v.T), 4, '#fff', C.sun); this.circle(X(this.hk), YN(v.n), 4, '#fff', C.green);
+    const P = v.n * 1.1 * K_B * v.T;   // ≈ (n_H + n_e + n_He) k T
+    const H = K_B * v.T / ((v.T > 20000 ? 0.6 : 1.3) * M_H * 274);
+    const layer = this.hk < 500 ? 'photosphere' : this.hk < 2100 ? 'chromosphere' : this.hk < 2300 ? 'transition region' : 'corona';
+    this.setReadout([
+      ['Height, layer', `${fmt(this.hk, 0)} km · ${layer}`],
+      ['T', `${fmtSci(v.T)} K`, C.sun],
+      ['n_H, P', `${sci(v.n, 1)} m⁻³, ${fmtSci(P)} Pa`, C.green],
+      ['Scale height kT/μm_H g', H < 1e6 ? `${fmt(H / 1e3, 0)} km` : `${fmt(H / 1e6, 2)} × 10³ km`],
+    ]);
+  }
+}
+
+/* ----------------------------------------------------- 11.2b granulation ---- */
+
+interface Granule { x: number; y: number; vx: number; vy: number; born: number; life: number }
+type GranMode = 'int' | 'dop';
+type GranScale = 'gran' | 'super';
+class GranulationWidget extends CanvasWidget {
+  private mode: GranMode = 'int';
+  private scale: GranScale = 'gran';
+  private seeds: Granule[] = [];
+  private t = 0;
+  constructor() {
+    super(1.8);
+    this.segmented<GranMode>([['int', 'Intensity'], ['dop', 'Doppler']], this.mode, (v) => { this.mode = v; });
+    this.segmented<GranScale>([['gran', 'Granules'], ['super', 'Supergranules']], this.scale, (v) => { this.scale = v; this.seeds = []; this.t = 0; });
+    this.playButton();
+    for (let i = 0; i < 70; i++) this.spawn(-Math.random() * 10);
+  }
+  private spawn(now: number) { this.seeds.push({ x: Math.random(), y: Math.random(), vx: (Math.random() - 0.5) * 0.01, vy: (Math.random() - 0.5) * 0.01, born: now, life: 6 + 6 * Math.random() }); }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    this.t += dt;   // 1 s on screen = 1 min (granules) or 1.5 h (supergranules)
+    for (const s of this.seeds) { s.x = (s.x + s.vx * dt + 1) % 1; s.y = (s.y + s.vy * dt + 1) % 1; }
+    this.seeds = this.seeds.filter((s) => this.t - s.born < s.life);
+    while (this.seeds.length < 70) this.spawn(this.t);
+    const pw = w * 0.66, ph = h; const nx = 96, ny = Math.round(nx * ph / pw);
+    const cw = pw / nx, ch = ph / ny;
+    const base = tempRGB(5777);
+    for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+      const px = (i + 0.5) / nx, py = (j + 0.5) / ny;
+      let d1 = 9, d2 = 9, a1 = 1;
+      for (const s of this.seeds) {
+        let dx = Math.abs(px - s.x), dy = Math.abs(py - s.y); if (dx > 0.5) dx = 1 - dx; if (dy > 0.5) dy = 1 - dy;
+        const age = (this.t - s.born) / s.life; const amp = Math.min(1, age * 5, (1 - age) * 4);
+        const d = Math.hypot(dx * pw / ph, dy) / (0.6 + 0.4 * amp);
+        if (d < d1) { d2 = d1; d1 = d; a1 = amp; } else if (d < d2) d2 = d;
+      }
+      const lane = Math.min(1, (d2 - d1) / 0.045);      // 0 in the lane, 1 at the centre
+      const v = lane * (0.6 + 0.4 * a1);
+      if (this.mode === 'int') { const k = 0.55 + 0.5 * v; c.fillStyle = `rgb(${base[0] * k | 0},${base[1] * k | 0},${base[2] * k | 0})`; }
+      else { const up = v - 0.45; c.fillStyle = up > 0 ? `rgb(${120 - 100 * up | 0},${140 - 80 * up | 0},255)` : `rgb(255,${140 + 150 * up | 0},${120 + 150 * up | 0})`; }
+      c.fillRect(i * cw, j * ch, cw + 0.5, ch + 0.5);
+    }
+    const sg = this.scale === 'super';
+    const field = sg ? 300000 : 10000, unit = sg ? 'h' : 'min', tScale = sg ? 1.5 : 1;
+    this.line(12, h - 14, 12 + pw * (sg ? 30000 : 1000) / field, h - 14, '#fff', 2); this.text(sg ? '30 000 km' : '1000 km', 14 + pw * (sg ? 30000 : 1000) / field, h - 14, '#fff', 8);
+    this.text(this.mode === 'dop' ? 'blue: toward you (rising) · red: away (sinking)' : 'bright: hot rising gas · dark lanes: cool sinking gas', pw / 2, 12, '#fff', 9, 'center');
+    // right panel: notes
+    const x0 = pw + 14;
+    this.text(sg ? 'Supergranulation' : 'Granulation', x0, 20, C.text, 11);
+    const notes = sg
+      ? ['cells ~30 000 km', 'lifetime ~1 day', 'horizontal flow 0.3–0.4 km/s', 'field swept to the lanes:', 'the magnetic network', '(bright in Ca II K)']
+      : ['cells 700–1000 km (~scale height)', 'lifetime 5–10 min', 'rise 1–2 km/s, ΔT ~100 K', 'centres 30 % brighter', '~4 million on the Sun', 'convective overshoot'];
+    notes.forEach((s, i) => this.text(s, x0, 40 + i * 14, C.dim, 9));
+    this.text(`t = ${fmt(this.t * tScale, 0)} ${unit}`, x0, h - 40, C.sun, 11);
+    this.text(`${this.seeds.length} cells in view`, x0, h - 24, C.dim, 9);
+  }
+}
+
+/* -------------------------------------------------------- 11.2c spicules ---- */
+
+interface Spicule { x: number; t0: number; v: number; life: number }
+type SpicMode = 'ball' | 'obs';
+const FLASH_LINES: Array<[string, number, number]> = [['Ca II K', 393.4, 1], ['Ca II H', 396.8, 0.9], ['Hδ', 410.2, 0.4], ['Hγ', 434.0, 0.5], ['Hβ', 486.1, 0.7], ['Mg I b', 517.5, 0.3], ['He I D₃', 587.6, 0.5], ['Na I D', 589.3, 0.25], ['Hα', 656.3, 1]];
+class SpiculesWidget extends CanvasWidget {
+  private v = 25; private mode: SpicMode = 'obs'; private t = 0;
+  private sp: Spicule[] = [];
+  constructor() {
+    super(1.8);
+    this.segmented<SpicMode>([['obs', 'As observed (rise to ~10 Mm, fade)'], ['ball', 'Ballistic flight']], this.mode, (v) => { this.mode = v; });
+    this.slider('Launch speed', 10, 80, 1, this.v, (v) => `${v} km/s`, (v) => { this.v = v; });
+    this.playButton();
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    this.t += dt * 30;   // 1 s = 30 s solar
+    const g = 0.274;     // km/s²
+    const hmax = this.v * this.v / (2 * g), tflight = 2 * this.v / g;
+    // spawn along network boundaries (clusters)
+    if (Math.random() < dt * 6) { const k = Math.floor(Math.random() * 6); this.sp.push({ x: (k + 0.5) / 6 + (Math.random() - 0.5) * 0.06, t0: this.t, v: this.v * (0.8 + 0.4 * Math.random()), life: this.mode === 'ball' ? 2 * this.v * (0.8 + 0.4 * Math.random()) / g : 600 + 300 * Math.random() }); }
+    this.sp = this.sp.filter((s) => this.t - s.t0 < s.life);
+    // limb view: solar edge at the bottom, height scale 12 000 km over the panel
+    const px0 = 10, px1 = w * 0.64, ground = h * 0.72, kmPx = (ground - 20) / 12000;
+    c.fillStyle = hexA(C.sun, 0.9); c.fillRect(px0, ground, px1 - px0, h - ground);
+    for (let i = 1; i <= 6; i++) { const y = ground - i * 2000 * kmPx; this.line(px0, y, px1, y, hexA(C.grid, 0.8), 1, [2, 4]); this.text(`${i * 2} Mm`, px1 - 4, y - 6, C.dim, 8, 'right'); }
+    for (const s of this.sp) {
+      const tau = this.t - s.t0;
+      let hk: number, alpha: number;
+      if (this.mode === 'ball') { hk = s.v * tau - 0.5 * g * tau * tau; alpha = 0.9; }
+      else { const up = Math.min(tau, 10000 / s.v); hk = s.v * up; alpha = tau < 10000 / s.v ? 0.9 : Math.max(0, 0.9 * (1 - (tau - 10000 / s.v) / (s.life - 10000 / s.v))); }
+      if (hk <= 0) continue;
+      const x = px0 + s.x * (px1 - px0);
+      const grad = c.createLinearGradient(0, ground, 0, ground - hk * kmPx);
+      grad.addColorStop(0, rgba([255, 110, 90], alpha)); grad.addColorStop(1, rgba([255, 60, 60], 0));
+      c.fillStyle = grad; c.fillRect(x - 1.5, ground - hk * kmPx, 3, hk * kmPx);
+    }
+    this.text(this.mode === 'ball' ? `ballistic: h_max = v²/2g = ${fmt(hmax, 0)} km, flight ${fmt(tflight / 60, 1)} min` : 'observed: ~10 000 km at 20–25 km/s, 5–15 min, most fade rather than fall', (px0 + px1) / 2, 12, C.text, 9, 'center');
+    this.text('spicules shoot up from the network boundaries (Hα at the limb)', (px0 + px1) / 2, ground + 14, '#000', 8, 'center');
+    // flash spectrum
+    const sx0 = 10, sx1 = w - 12, sy0 = h * 0.8, sy1 = h - 8;
+    c.fillStyle = '#000'; c.fillRect(sx0, sy0, sx1 - sx0, sy1 - sy0);
+    const SX = (nm: number) => sx0 + (nm - 380) / 320 * (sx1 - sx0);
+    for (const [lab, nm, s] of FLASH_LINES) { c.fillStyle = rgba(waveRGB(nm), 0.3 + 0.7 * s); c.fillRect(SX(nm) - 1, sy0, 2 + s, sy1 - sy0); this.text(lab, SX(nm), sy0 - 7, rgba(waveRGB(nm), 1), 7, 'center'); }
+    this.text('flash spectrum: the Fraunhofer lines in emission', sx0 + 4, sy0 + 9, C.dim, 8);
+    this.text('400', SX(400), sy1 - 6, C.dim, 7, 'center'); this.text('500', SX(500), sy1 - 6, C.dim, 7, 'center'); this.text('600 nm', SX(600), sy1 - 6, C.dim, 7, 'center');
+    // right notes
+    const nx = w * 0.67;
+    this.text('Chromosphere', nx, 20, C.text, 11);
+    ['4400 → 25 000 K', 'density falls 10⁴', 'emission lines (Kirchhoff 2)', 'Hα 656.3 nm: the red colour', 'He discovered here, 1868', `~10⁵ spicules at any time`, 'network · plages · filaments', 'β falls through 1'].forEach((s, i) => this.text(s, nx, 40 + i * 14, C.dim, 9));
+    this.text(`${this.sp.length} spicules · t = ${fmt(this.t / 60, 1)} min`, nx, h * 0.72, C.red, 9);
+  }
+}
+
+/* -------------------------------------------------- 11.2d coronal ionisation ---- */
+
+const FE_STAGES: Array<[string, number, string, string]> = [   // ion, log T peak, line(s), AIA colour
+  ['Fe I', 4.0, '', '#886655'], ['Fe II', 4.3, '', '#997766'], ['Fe III', 4.6, '', '#aa8877'], ['Fe VIII', 5.6, '13.1 nm (AIA 131)', '#4cc3b8'], ['Fe IX', 5.85, '17.1 nm (AIA 171)', '#e0b050'], ['Fe X', 6.0, '637.4 nm red line', '#d85a3a'], ['Fe XI', 6.1, '18.0 nm', '#d08040'], ['Fe XII', 6.2, '19.3 nm (AIA 193)', '#c9924e'], ['Fe XIII', 6.25, '20.2 nm', '#b49070'], ['Fe XIV', 6.3, '21.1 nm (AIA 211) · 530.3 nm green line', '#a874c8'], ['Fe XV', 6.35, '28.4 nm', '#8f82d0'], ['Fe XVI', 6.45, '33.5 nm (AIA 335)', '#4a7fd6'], ['Fe XVIII', 6.85, '9.4 nm (AIA 94)', '#6fbf8a'], ['Fe XX', 7.0, '13.3 nm', '#7fd07f'], ['Fe XXIV', 7.3, '19.2 nm (flares)', '#e0e0e0'],
+];
+function feFractions(lgT: number): number[] { const f = FE_STAGES.map(([, p]) => Math.exp(-(((lgT - p) / 0.13) ** 2))); const s = f.reduce((a, b) => a + b, 1e-9); return f.map((v) => v / s); }
+class CoronalIonsWidget extends CanvasWidget {
+  private lgT = 6.2;
+  constructor() {
+    super(1.8);
+    this.slider('Temperature', 4, 7.5, 0.01, this.lgT, (v) => `${sci(10 ** v, 1)} K`, (v) => { this.lgT = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const x0 = PLOT_MARGIN, x1 = w * 0.62, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (lg: number) => x0 + (lg - 4) / 3.5 * (x1 - x0);
+    const Y = (f: number) => y1 - 6 - f * (y1 - y0 - 12);
+    for (const f of [0.25, 0.5, 0.75, 1]) { this.line(x0, Y(f), x1, Y(f), hexA(C.grid, 0.9)); this.text(fmt(f, 2), x0 - 4, Y(f), C.dim, 8, 'right'); }
+    for (let lg = 4; lg <= 7; lg++) this.text(`10${sup(lg)}`, X(lg), y1 + 10, C.dim, 8, 'center');
+    this.text('T (K)', x1, y1 + 22, C.dim, 9, 'right'); this.text('fraction of iron in each ionisation stage', x0 + 6, y0 + 10, C.dim, 8);
+    // TR lines on the axis
+    for (const [lab, lg, col] of [['Lyα', 4.3, C.red], ['C IV', 5.0, C.purple], ['O VI', 5.5, C.blue]] as Array<[string, number, string]>) { this.line(X(lg), y1 - 14, X(lg), y1 - 6, col, 2); this.text(lab, X(lg), y1 - 20, col, 7, 'center'); }
+    FE_STAGES.forEach(([ion, , , col], k) => { plotCurve(c, 4, 7.5, 240, X, (lg) => Y(feFractions(lg)[k]), col, 1.5); if (k % 2 === 0 || k > 10) this.text(ion, X(FE_STAGES[k][1]), Y(1) + 18 + (k % 3) * 9, col, 7, 'center'); });
+    this.line(X(this.lgT), y0, X(this.lgT), y1, hexA('#fff', 0.5), 1);
+    const fr = feFractions(this.lgT);
+    let kd = 0; fr.forEach((v, k) => { if (v > fr[kd]) kd = k; });
+    // right: tinted disc + lit lines
+    const cx = w * 0.8, cy = h * 0.34, R = Math.min(w * 0.14, h * 0.26);
+    const col = FE_STAGES[kd][3];
+    this.glow(cx, cy, R * 1.6, hexA(col, 0.35));
+    const g = c.createRadialGradient(cx, cy, 0, cx, cy, R); g.addColorStop(0, hexA(col, 1)); g.addColorStop(0.8, hexA(col, 0.8)); g.addColorStop(1, hexA(col, 0.3));
+    c.fillStyle = g; c.beginPath(); c.arc(cx, cy, R, 0, TAU); c.fill();
+    this.text(`dominant: ${FE_STAGES[kd][0]}`, cx, cy + R + 14, col, 10, 'center');
+    const lit = FE_STAGES.map((s, k) => [s, fr[k]] as [typeof s, number]).filter(([s, f]) => f > 0.08 && s[2]).sort((a, b) => b[1] - a[1]).slice(0, 4);
+    this.text('lines lit at this T:', w * 0.65, h * 0.66, C.dim, 8);
+    lit.forEach(([s, f], i) => { this.text(`${s[0]}  ${s[2]}`, w * 0.65, h * 0.66 + 13 + i * 12, s[3], 8); c.fillStyle = hexA(s[3], 0.8); c.fillRect(w * 0.65, h * 0.66 + 19 + i * 12, (w * 0.33) * f, 2); });
+    if (!lit.length) this.text(this.lgT < 5.5 ? 'no coronal iron lines: chromosphere / TR (Lyα, C IV, O VI)' : '—', w * 0.65, h * 0.66 + 13, C.dim, 8);
+    const where = this.lgT < 4.5 ? 'photosphere / low chromosphere' : this.lgT < 5.7 ? 'transition region' : this.lgT < 6.15 ? 'quiet corona, coronal holes' : this.lgT < 6.6 ? 'active-region corona' : 'flare plasma';
+    this.setReadout([
+      ['T', `${sci(10 ** this.lgT, 2)} K · ${where}`],
+      ['Dominant ion', `${FE_STAGES[kd][0]} (${fmt(100 * fr[kd], 0)} %)`, col],
+      ['kT', `${fmt(K_B * 10 ** this.lgT / EV, this.lgT < 5 ? 1 : 0)} eV`],
+      ['Thermal emission peaks at', `${fmtSci(2.9e6 / 10 ** this.lgT)} nm (${this.lgT > 6.5 ? 'soft X-rays' : this.lgT > 5.6 ? 'EUV' : 'UV'})`, C.sun],
+    ]);
+  }
+}
+
+/* -------------------------------------------------------- 11.2e solar wind ---- */
+
+function parkerU(x: number): number {   // x = r/r_c → v/c_s on the transonic branch
+  const rhs = 4 * Math.log(x) + 4 / x - 3;
+  const f = (u: number) => u * u - Math.log(u * u) - rhs;
+  let lo: number, hi: number;
+  if (x < 1) { lo = 1e-4; hi = 1; } else { lo = 1; hi = 60; }
+  for (let i = 0; i < 60; i++) { const mid = (lo + hi) / 2; if (x < 1 ? f(mid) > 0 : f(mid) > 0) { if (x < 1) lo = mid; else hi = mid; } else { if (x < 1) hi = mid; else lo = mid; } }
+  return (lo + hi) / 2;
+}
+class SolarWindWidget extends CanvasWidget {
+  private T6 = 1.5;
+  constructor() {
+    super(1.8);
+    this.slider('Coronal temperature', 0.5, 3, 0.05, this.T6, (v) => `${fmt(v, 2)} × 10⁶ K`, (v) => { this.T6 = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const T = this.T6 * 1e6, cs = Math.sqrt(2 * K_B * T / M_P), rc = GRAV * MSUN / (2 * cs * cs);
+    const v = (r: number) => cs * parkerU(r / rc);
+    const x0 = PLOT_MARGIN, x1 = w * 0.6, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (r: number) => x0 + Math.log10(r / RSUN) / Math.log10(AU_M / RSUN) * (x1 - x0);
+    const Y = (vv: number) => y1 - 6 - vv / 1000e3 * (y1 - y0 - 12);
+    for (const vv of [200, 400, 600, 800, 1000]) { this.line(x0, Y(vv * 1e3), x1, Y(vv * 1e3), hexA(C.grid, 0.9)); this.text(`${vv}`, x0 - 4, Y(vv * 1e3), C.dim, 8, 'right'); }
+    for (const [r, lab] of [[1, '1 R☉'], [10, '10'], [100, '100'], [215, '1 AU']] as Array<[number, string]>) this.text(lab, X(r * RSUN), y1 + 10, C.dim, 8, 'center');
+    this.text('wind speed (km/s)', x0 + 6, y0 + 10, C.dim, 8);
+    plotCurve(c, 0, 1, 300, (u) => x0 + u * (x1 - x0), (u) => { const r = RSUN * (AU_M / RSUN) ** u; return r < rc * 0.02 ? null : Y(Math.min(1200e3, v(r))); }, C.sun);
+    this.line(X(rc), y0, X(rc), y1, hexA(C.red, 0.6), 1, [3, 3]); this.text(`critical point ${fmt(rc / RSUN, 1)} R☉`, X(rc) + 4, y0 + 24, C.red, 8);
+    this.line(x0, Y(cs), x1, Y(cs), hexA(C.red, 0.4), 1, [2, 3]); this.text(`c_s = ${fmt(cs / 1e3, 0)} km/s`, x1 - 6, Y(cs) - 8, C.red, 8, 'right');
+    this.circle(X(rc), Y(cs), 4, '#fff', C.red);
+    for (const [vv, lab] of [[400e3, 'slow wind'], [750e3, 'fast wind (holes)']] as Array<[number, string]>) { this.line(X(AU_M) - 30, Y(vv), x1, Y(vv), hexA(C.blue, 0.6), 1); this.text(lab, X(AU_M) - 34, Y(vv), C.blue, 7, 'right'); }
+    const v1 = v(AU_M);
+    this.circle(X(AU_M), Y(v1), 4, '#fff', C.sun);
+    // right: Parker spiral, top view, out to 1.2 AU
+    const cx = w * 0.8, cy = h * 0.5, Rp = Math.min(w * 0.17, h * 0.42);
+    const Om = TAU / (25.4 * 86400);
+    this.circle(cx, cy, Rp / 1.2, hexA(C.earth, 0.5), undefined, 1, [2, 3]);
+    for (let k = 0; k < 6; k++) {
+      c.beginPath();
+      for (let r = 0.05; r <= 1.2; r += 0.01) { const rr = r * AU_M; const phi = k * TAU / 6 - Om * (rr - 0.05 * AU_M) / Math.max(v(rr), 1e3); const px = cx + Rp * r / 1.2 * Math.cos(phi), py = cy - Rp * r / 1.2 * Math.sin(phi); r === 0.05 ? c.moveTo(px, py) : c.lineTo(px, py); }
+      c.strokeStyle = hexA(C.sun, 0.7); c.lineWidth = 1.2; c.stroke();
+    }
+    this.glow(cx, cy, 10, C.sun); this.circle(cx + Rp / 1.2, cy, 3, undefined, C.earth);
+    const psi = Math.atan(Om * AU_M / v1) / DEG;
+    this.text(`Parker spiral · ψ = ${fmt(psi, 0)}° at 1 AU`, cx, cy + Rp + 12, C.dim, 8, 'center');
+    // 1 AU numbers from a mass flux of 2 × 10⁹ kg/s
+    const n1 = 2e9 / (4 * Math.PI * AU_M * AU_M * M_P * v1);
+    let travel = 0; for (let u = 0; u < 1; u += 0.002) { const r = RSUN * (AU_M / RSUN) ** u, r2 = RSUN * (AU_M / RSUN) ** (u + 0.002); if (r > rc * 0.3) travel += (r2 - r) / v(r); }
+    this.setReadout([
+      ['c_s, r_c', `${fmt(cs / 1e3, 0)} km/s, ${fmt(rc / RSUN, 1)} R☉`, C.red],
+      ['v at 1 AU', `${fmt(v1 / 1e3, 0)} km/s`, C.sun],
+      ['n at 1 AU (Ṁ = 2 × 10⁹ kg/s)', `${fmt(n1 / 1e6, 1)} cm⁻³`],
+      ['Travel time to 1 AU', `${fmt(travel / 86400, 1)} days`],
+    ]);
+  }
+}
+
+/* --------------------------------------------------------------- 11.2f CME ---- */
+
+class CmeWidget extends CanvasWidget {
+  private v = 1000; private n = 20; private lM = 12.5; private t = 0;
+  constructor() {
+    super(1.8);
+    this.slider('CME speed', 300, 3000, 10, this.v, (v) => `${v} km/s`, (v) => { this.v = v; this.t = 0; });
+    this.slider('Density at 1 AU', 5, 200, 1, this.n, (v) => `${v} cm⁻³`, (v) => { this.n = v; });
+    this.slider('Mass', 11.5, 13.5, 0.05, this.lM, (v) => `${sci(10 ** v, 1)} kg`, (v) => { this.lM = v; });
+    this.playButton();
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    const travel = AU_M / (this.v * 1e3);     // s
+    this.t += dt * travel / 8;                 // 1 AU trip takes 8 s on screen
+    if (this.t > travel * 1.25) this.t = -travel * 0.1;
+    const frac = Math.max(0, this.t / travel);
+    // top: Sun → Earth track
+    const sx = 40, ex = w * 0.6, yy = h * 0.3;
+    this.glow(sx, yy, 26, C.sun); this.circle(sx, yy, 12, undefined, C.sun);
+    this.line(sx + 14, yy, ex - 10, yy, hexA(C.grid, 1), 1, [3, 3]);
+    this.circle(ex, yy, 5, undefined, C.earth);
+    for (const [f, lab] of [[0.39, 'Mercury'], [0.72, 'Venus']] as Array<[number, string]>) { this.circle(sx + f * (ex - sx), yy, 2, undefined, C.dim); this.text(lab, sx + f * (ex - sx), yy + 12, C.dim, 7, 'center'); }
+    if (frac > 0 && frac < 1.25) {
+      const px = sx + Math.min(frac, 1.2) * (ex - sx); const rr = 6 + 24 * frac;
+      const g = c.createRadialGradient(px, yy, 0, px, yy, rr); g.addColorStop(0, hexA(C.red, 0.5)); g.addColorStop(1, hexA(C.red, 0));
+      c.fillStyle = g; c.beginPath(); c.arc(px, yy, rr, 0, TAU); c.fill();
+      c.strokeStyle = hexA(C.red, 0.8); c.lineWidth = 1.5; c.beginPath(); c.arc(px, yy, rr, -1.2, 1.2); c.stroke();
+    }
+    this.text(`t = ${fmt(Math.max(0, this.t) / 3600, 1)} h`, (sx + ex) / 2, yy - 36, C.text, 10, 'center');
+    this.text(frac >= 1 ? 'arrived: geomagnetic storm' : frac > 0 ? 'CME in transit' : 'launch…', (sx + ex) / 2, yy - 22, frac >= 1 ? C.red : C.dim, 9, 'center');
+    // magnetosphere
+    const rho = this.n * 1e6 * M_P, ram = rho * (this.v * 1e3) ** 2;
+    const B0 = 3.1e-5, rmp = 1.3 * (B0 * B0 / (2 * MU0 * ram)) ** (1 / 6);        // in R_E
+    const quietR = 1.3 * (B0 * B0 / (2 * MU0 * 5e6 * M_P * (4e5) ** 2)) ** (1 / 6);
+    const r = frac >= 1 && frac < 1.25 ? rmp : quietR;
+    const cx = w * 0.8, cy = h * 0.6, s = Math.min(w * 0.16, h * 0.3) / 12;   // px per R_E
+    this.circle(cx, cy, 6.6 * s, hexA(C.dim, 0.6), undefined, 1, [2, 3]); this.text('GEO 6.6 R_E', cx, cy + 6.6 * s + 9, C.dim, 7, 'center');
+    c.beginPath(); c.moveTo(cx - r * s, cy); for (let a = -90; a <= 90; a += 5) { const y = Math.sin(a * DEG) * r * s * 1.4; const x = -r * s * Math.cos(a * DEG) + 0.4 * y * y / (r * s); c.lineTo(cx + x, cy + y); } c.strokeStyle = hexA(C.blue, 0.8); c.lineWidth = 1.5; c.stroke();
+    this.circle(cx, cy, s, undefined, C.earth);
+    for (let k = 0; k < 10; k++) this.line(cx - r * s - 8 - k * 4, cy - 40 + k * 9, cx - r * s - 2, cy - 40 + k * 9, hexA(C.red, frac >= 1 ? 0.8 : 0.3), 1);
+    this.text(`magnetopause ${fmt(r, 1)} R_E`, cx, cy - r * s * 1.4 - 10, C.blue, 8, 'center');
+    const Ek = 0.5 * 10 ** this.lM * (this.v * 1e3) ** 2;
+    this.setReadout([
+      ['Travel time to 1 AU', `${fmt(travel / 3600, 0)} h = ${fmt(travel / 86400, 1)} days`, C.sun],
+      ['Kinetic energy ½mv²', `${sci(Ek, 1)} J = ${sci(Ek / 4.184e15, 1)} Mt TNT`, C.red],
+      ['Ram pressure ρv² at 1 AU', `${sci(ram, 1)} Pa`],
+      ['Stand-off (quiet → storm)', `${fmt(quietR, 1)} → ${fmt(rmp, 1)} R_E${rmp < 6.6 ? ' — inside GEO!' : ''}`, rmp < 6.6 ? C.red : C.blue],
+    ]);
+  }
+}
+
+/* ------------------------------------------------ 11.2g differential rotation ---- */
+
+type RotMode = 'surf' | 'int';
+const omegaSurf = (phiDeg: number) => { const s = Math.sin(phiDeg * DEG); return 14.71 - 2.39 * s * s - 1.79 * s ** 4; };   // deg/day sidereal
+class DiffRotWidget extends CanvasWidget {
+  private mode: RotMode = 'surf'; private days = 0; private phi = 30;
+  constructor() {
+    super(1.8);
+    this.segmented<RotMode>([['surf', 'Surface: meridians'], ['int', 'Interior (helioseismology)']], this.mode, (v) => { this.mode = v; });
+    this.slider('Latitude', 0, 85, 1, this.phi, (v) => `${v}°`, (v) => { this.phi = v; });
+    this.playButton();
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    this.days += dt * 4;
+    const cx = w * 0.3, cy = h * 0.5, R = Math.min(w * 0.26, h * 0.44);
+    if (this.mode === 'surf') {
+      const g = c.createRadialGradient(cx - R * 0.3, cy - R * 0.3, 0, cx, cy, R); g.addColorStop(0, rgba(tempRGB(6300), 1)); g.addColorStop(1, rgba(tempRGB(5000), 1));
+      c.fillStyle = g; c.beginPath(); c.arc(cx, cy, R, 0, TAU); c.fill();
+      const om0 = omegaSurf(30);   // frame co-rotating with 30° latitude
+      for (let k = 0; k < 8; k++) {
+        c.beginPath(); let pen = false;
+        for (let lat = -85; lat <= 85; lat += 2) {
+          const lon = (k * 45 + (omegaSurf(lat) - om0) * this.days) * DEG;
+          const x = Math.cos(lat * DEG) * Math.sin(lon), z = Math.cos(lat * DEG) * Math.cos(lon), y = Math.sin(lat * DEG);
+          if (z <= 0) { pen = false; continue; }
+          const px = cx + R * x, py = cy - R * y; pen ? c.lineTo(px, py) : c.moveTo(px, py); pen = true;
+        }
+        c.strokeStyle = hexA(k % 2 ? '#fff' : C.earth, 0.8); c.lineWidth = 1.5; c.stroke();
+      }
+      for (const lat of [-60, -30, 0, 30, 60]) this.line(cx - R * Math.cos(lat * DEG), cy - R * Math.sin(lat * DEG), cx + R * Math.cos(lat * DEG), cy - R * Math.sin(lat * DEG), hexA('#000', 0.15), 1, [2, 4]);
+      const yl = cy - R * Math.sin(this.phi * DEG);
+      this.line(cx - R * Math.cos(this.phi * DEG), yl, cx + R * Math.cos(this.phi * DEG), yl, C.red, 1.5);
+      this.text(`day ${fmt(this.days, 0)}`, cx, cy + R + 14, C.text, 10, 'center');
+      this.text('frame rotating with latitude 30°: equator pulls ahead, poles fall behind', cx, cy - R - 12, C.dim, 8, 'center');
+    } else {
+      // meridional cut: Ω(r, θ) colour map
+      const N = 70;
+      for (let i = -N; i <= N; i++) for (let j = -N; j <= N; j++) {
+        const x = i / N, y = j / N, r = Math.hypot(x, y); if (r > 1) continue;
+        const lat = Math.asin(Math.min(1, Math.abs(y) / Math.max(r, 1e-6))) / DEG;
+        const surf = omegaSurf(lat) * 1e9 / (360 * 86400);   // nHz
+        const core = 432;
+        const f = 0.5 + 0.5 * Math.tanh((r - 0.705) / 0.015);
+        const om = core + (surf - core) * f;
+        const u = Math.min(1, Math.max(0, (om - 330) / 140));
+        c.fillStyle = `rgb(${255 * u | 0},${80 + 100 * (1 - Math.abs(u - 0.5) * 2) | 0},${255 * (1 - u) | 0})`;
+        c.fillRect(cx + x * R - R / N / 2, cy - y * R - R / N / 2, R / N + 0.6, R / N + 0.6);
+      }
+      this.circle(cx, cy, R, C.line); this.circle(cx, cy, R * 0.705, hexA('#fff', 0.7), undefined, 1, [3, 3]);
+      this.text('tachocline 0.70 R☉', cx + R * 0.5, cy + R * 0.5 + 10, '#fff', 8);
+      this.text('rigid core ~27 d', cx, cy, '#000', 9, 'center');
+      this.text('red: fast (25 d) · blue: slow (35 d)', cx, cy + R + 14, C.dim, 8, 'center');
+    }
+    // right: ω(φ)
+    const x0 = w * 0.62, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (lat: number) => x0 + lat / 90 * (x1 - x0);
+    const Y = (P: number) => y1 - 6 - (P - 24) / 16 * (y1 - y0 - 12);
+    for (const P of [26, 30, 34, 38]) { this.line(x0, Y(P), x1, Y(P), hexA(C.grid, 0.9)); this.text(`${P}`, x0 - 4, Y(P), C.dim, 8, 'right'); }
+    for (const lat of [0, 30, 60, 90]) this.text(`${lat}°`, X(lat), y1 + 10, C.dim, 8, 'center');
+    this.text('rotation period (days)', x0 + 6, y0 + 10, C.dim, 8);
+    plotCurve(c, 0, 90, 90, X, (lat) => Y(360 / omegaSurf(lat)), C.sun);
+    plotCurve(c, 0, 90, 90, X, (lat) => { const Ps = 360 / omegaSurf(lat); return Y(Ps / (1 - Ps / 365.25)); }, C.green, 1.5, [3, 3]);
+    this.text('sidereal', x0 + 8, Y(360 / omegaSurf(5)) - 10, C.sun, 8); this.text('synodic (from Earth)', x0 + 8, Y(360 / omegaSurf(5) / (1 - 360 / omegaSurf(5) / 365.25)) - 10, C.green, 8);
+    const Ps = 360 / omegaSurf(this.phi), Psyn = Ps / (1 - Ps / 365.25);
+    this.circle(X(this.phi), Y(Ps), 4, '#fff', C.red);
+    const Peq = 360 / omegaSurf(0);
+    this.setReadout([
+      [`ω at ${this.phi}°`, `${fmt(omegaSurf(this.phi), 2)} °/day`, C.sun],
+      ['Sidereal period', `${fmt(Ps, 1)} d (equator ${fmt(Peq, 1)} d)`, C.sun],
+      ['Synodic period', `${fmt(Psyn, 1)} d`, C.green],
+      ['Lap gained by the equator', this.phi < 1 ? '—' : `one every ${fmt(1 / (1 / Peq - 1 / Ps), 0)} days`, C.red],
+    ]);
+  }
+}
+
+/* ---------------------------------------------------------- 11.3a sunspot ---- */
+
+class SunspotWidget extends CanvasWidget {
+  private B = 0.3; private Tu = 4000;
+  constructor() {
+    super(1.8);
+    this.slider('Field strength B', 0, 0.4, 0.005, this.B, (v) => `${fmt(v, 3)} T = ${fmt(v * 1e4, 0)} G`, (v) => { this.B = v; });
+    this.slider('Umbral temperature', 3500, 5500, 10, this.Tu, (v) => `${v} K`, (v) => { this.Tu = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    // balance B²/2μ₀ + P_in = P_out at the depth where it works: the spot sinks (Wilson depression) until P_out(z) ≥ B²/2μ₀ / 0.7 (gas inside ~30 % of outside)
+    const Pmag = this.B * this.B / (2 * MU0), Pout = Math.max(1.0e4, Pmag / 0.7), Pin = Pout - Pmag;
+    const depth = 150 * Math.log(Pout / 1e4);   // km, with a 150 km pressure scale height
+    const bright = (this.Tu / 5777) ** 4, brightPen = (5500 / 5777) ** 4;
+    // left: the spot
+    const cx = w * 0.19, cy = h * 0.47, R = Math.min(w * 0.16, h * 0.36);
+    const base = tempRGB(5777);
+    c.fillStyle = rgba(base, 1); c.fillRect(cx - R * 1.15, cy - R * 1.15, R * 2.3, R * 2.3);
+    for (let i = 0; i < 400; i++) { const a = (i * 2.399) % TAU, rr = R * (0.6 + 0.55 * ((i * 0.618) % 1)); c.fillStyle = hexA('#000', 0.08); c.fillRect(cx + rr * Math.cos(a) - 1, cy + rr * Math.sin(a) - 1, 2, 2); }
+    const rU = R * (0.3 + 0.5 * this.B / 0.4);
+    c.fillStyle = rgba(tempRGB(5500).map((v) => v * brightPen) as [number, number, number], 1); c.beginPath(); c.arc(cx, cy, R, 0, TAU); c.fill();
+    for (let k = 0; k < 90; k++) { const a = k * TAU / 90; this.line(cx + rU * Math.cos(a), cy + rU * Math.sin(a), cx + R * Math.cos(a + 0.05), cy + R * Math.sin(a + 0.05), hexA('#000', 0.25 + 0.2 * (k % 2)), 1.5); }
+    c.fillStyle = rgba(tempRGB(this.Tu).map((v) => v * bright) as [number, number, number], 1); c.beginPath(); c.arc(cx, cy, rU, 0, TAU); c.fill();
+    this.text('umbra', cx, cy, bright > 0.4 ? '#000' : '#fff', 8, 'center'); this.text('penumbra', cx, cy + (rU + R) / 2, '#000', 7, 'center');
+    this.text('photosphere 5777 K', cx, cy - R * 1.15 - 8, C.dim, 8, 'center');
+    // middle: pressure balance bars
+    const bx = w * 0.4, by0 = h * 0.14, by1 = h * 0.8, bw = w * 0.07;
+    const Pmax = Pout * 1.15;
+    const Yp = (P: number) => by1 - P / Pmax * (by1 - by0);
+    this.text(`pressure (10⁴ Pa) at depth ${fmt(depth, 0)} km`, bx - 8, by0 - 22, C.dim, 8);
+    const stepP = Pout > 6e4 ? 2e4 : 1e4;
+    for (let P = stepP; P < Pmax; P += stepP) { this.line(bx - 4, Yp(P), bx + bw * 2.6, Yp(P), hexA(C.grid, 0.9)); this.text(`${P / 1e4}`, bx - 8, Yp(P), C.dim, 8, 'right'); }
+    c.fillStyle = hexA(C.sun, 0.8); c.fillRect(bx, Yp(Pout), bw, by1 - Yp(Pout)); this.text('outside', bx + bw / 2, by1 + 10, C.sun, 8, 'center'); this.text('P_gas', bx + bw / 2, Yp(Pout) - 8, C.sun, 8, 'center');
+    const bx2 = bx + bw * 1.4;
+    c.fillStyle = hexA(C.purple, 0.8); c.fillRect(bx2, Yp(Pmag), bw, by1 - Yp(Pmag));
+    c.fillStyle = hexA(C.green, 0.8); c.fillRect(bx2, Yp(Pmag + Pin), bw, Yp(Pmag) - Yp(Pmag + Pin));
+    this.text('inside', bx2 + bw / 2, by1 + 10, C.purple, 8, 'center');
+    if (Pmag / Pmax > 0.08) this.text('B²/2μ₀', bx2 + bw / 2, Yp(Pmag / 2), '#000', 8, 'center');
+    if (Pin / Pmax > 0.08) this.text('P_gas', bx2 + bw / 2, Yp(Pmag + Pin / 2), '#000', 8, 'center');
+    if (depth > 0) this.text(`Wilson depression ≈ ${fmt(depth, 0)} km`, bx + bw * 1.2, by1 + 22, C.accent, 8, 'center');
+    // right: Zeeman triplet of Fe I 630.25 nm
+    const x0 = w * 0.62, x1 = w - 12, y0 = h * 0.14, y1 = h * 0.8;
+    axesBox(c, x0, y0, x1, y1);
+    const dl = 4.67e-8 * 2.5 * 630.25 ** 2 * this.B;   // nm
+    const X = (d: number) => x0 + (d + 0.04) / 0.08 * (x1 - x0);
+    const prof = (d: number) => { const gw = 0.006; const g = (m: number) => Math.exp(-(((d - m) / gw) ** 2)); return 1 - 0.6 * (0.5 * g(0) + 0.25 * g(dl) + 0.25 * g(-dl)); };
+    plotCurve(c, -0.04, 0.04, 300, X, (d) => y1 - 6 - prof(d) * (y1 - y0 - 12), C.text);
+    for (const [m, lab, col] of [[0, 'π', C.text], [dl, 'σ+', C.blue], [-dl, 'σ−', C.red]] as Array<[number, string, string]>) { this.line(X(m), y0, X(m), y1, hexA(col, 0.5), 1, [2, 3]); this.text(lab, X(m), y0 + 10, col, 8, 'center'); }
+    this.text('Fe I 630.25 nm, g = 2.5', x0 + 6, y1 - 10, C.dim, 8); this.text('−0.04', X(-0.04), y1 + 10, C.dim, 7, 'center'); this.text('+0.04 nm', X(0.04), y1 + 10, C.dim, 7, 'center');
+    this.setReadout([
+      ['Magnetic pressure B²/2μ₀', `${fmtSci(Pmag)} Pa (photosphere ≈ 10⁴ Pa at τ = 1)`, C.purple],
+      ['Balance depth · gas inside', `${depth > 0 ? `${fmt(depth, 0)} km below (P_out ${fmtSci(Pout)} Pa)` : 'at the surface'} · ${fmtSci(Pin)} Pa = ${fmt(100 * Pin / Pout, 0)} %`, C.green],
+      ['Umbra brightness (T/5777)⁴', `${fmt(100 * bright, 0)} % · penumbra ${fmt(100 * brightPen, 0)} %`, C.sun],
+      ['Zeeman splitting Δλ', `${fmt(dl, 4)} nm = ${fmt(dl * 10, 3)} Å`, C.blue],
+    ]);
+  }
+}
+
+/* ------------------------------------------------------- 11.3b sunspot cycle ---- */
+
+/** cycle start year, peak year, peak sunspot number (v2 scale) */
+const CYCLES: Array<[number, number, number]> = [
+  [1698, 1705, 90], [1712, 1718, 100], [1723, 1727, 200], [1734, 1738, 175], [1745, 1750, 140], [1755, 1761, 144], [1766, 1769, 193], [1775, 1778, 264], [1784, 1788, 235], [1798, 1805, 82], [1810, 1816, 81], [1823, 1829, 119], [1833, 1837, 245], [1843, 1848, 219], [1855, 1860, 186], [1867, 1870, 234], [1878, 1883, 124], [1890, 1894, 147], [1902, 1906, 107], [1913, 1917, 175], [1923, 1928, 130], [1933, 1937, 199], [1944, 1947, 219], [1954, 1958, 285], [1964, 1968, 157], [1976, 1979, 233], [1986, 1989, 213], [1996, 2001, 180], [2008, 2014, 116], [2019, 2024, 160],
+];
+function sunspotNumber(year: number): number {
+  let R = 0;
+  for (const [t0, tp, A] of CYCLES) { const tau = year - t0; if (tau < 0) continue; const x = tau / (tp - t0); R += A * x ** 3 * Math.exp(3 * (1 - x)); }
+  return R;
+}
+class ButterflyWidget extends CanvasWidget {
+  private year = 1958.5;
+  private spots: Array<[number, number, number]> = [];   // year, latitude, cycle index
+  private drag = false;
+  constructor() {
+    super(1.8);
+    this.slider('Year', 1700, 2030, 0.1, this.year, (v) => fmt(v, 1), (v) => { this.year = v; });
+    let seed = 7; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+    CYCLES.forEach(([t0], k) => { for (let y = t0; y < t0 + 13; y += 0.05) { const n = sunspotNumber(y) / 30; const ph = Math.min(1, (y - t0) / 12); for (let i = 0; i < n; i++) { const lat = (34 - 29 * ph) + (rnd() - 0.5) * 12; this.spots.push([y, rnd() < 0.5 ? lat : -lat, k]); } } });
+    const move = (e: PointerEvent) => { const { x } = canvasPos(this.canvas, e, this.w, this.h); const x0 = PLOT_MARGIN, x1 = this.w * 0.7; this.year = Math.min(2030, Math.max(1700, 1700 + (x - x0) / (x1 - x0) * 330)); };
+    this.canvas.addEventListener('pointerdown', (e) => { this.drag = true; move(e); });
+    this.canvas.addEventListener('pointermove', (e) => { if (this.drag) move(e); });
+    window.addEventListener('pointerup', () => { this.drag = false; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const x0 = PLOT_MARGIN, x1 = w * 0.7;
+    const X = (y: number) => x0 + (y - 1700) / 330 * (x1 - x0);
+    // top: sunspot number
+    const y0 = 12, y1 = h * 0.46;
+    axesBox(c, x0, y0, x1, y1);
+    const Y = (R: number) => y1 - 4 - R / 300 * (y1 - y0 - 8);
+    for (const R of [100, 200, 300]) { this.line(x0, Y(R), x1, Y(R), hexA(C.grid, 0.9)); this.text(`${R}`, x0 - 4, Y(R), C.dim, 8, 'right'); }
+    c.fillStyle = hexA(C.blue, 0.1); c.fillRect(X(1700), y0, X(1715) - X(1700), y1 - y0); this.text('Maunder min. (1645–1715)', X(1716), y0 + 10, C.blue, 7);
+    c.fillStyle = hexA(C.blue, 0.1); c.fillRect(X(1790), y0, X(1830) - X(1790), y1 - y0); this.text('Dalton min.', X(1810), y0 + 10, C.blue, 7, 'center');
+    plotCurve(c, 1700, 2030, 660, X, (y) => Y(Math.min(300, sunspotNumber(y))), C.sun, 1.5);
+    this.text('sunspot number', x0 + 6, y0 + 10, C.dim, 8);
+    this.text('19', X(1958), Y(285) - 7, C.dim, 7, 'center'); this.text('24', X(2014), Y(116) - 7, C.dim, 7, 'center'); this.text('cycle 1', X(1761), Y(144) - 7, C.dim, 7, 'center');
+    // bottom: butterfly diagram
+    const b0 = h * 0.5, b1 = h - 30;
+    axesBox(c, x0, b0, x1, b1);
+    const YL = (lat: number) => (b0 + b1) / 2 - lat / 45 * (b1 - b0) / 2;
+    for (const lat of [-30, 0, 30]) { this.line(x0, YL(lat), x1, YL(lat), hexA(C.grid, 0.9)); this.text(`${lat}°`, x0 - 4, YL(lat), C.dim, 8, 'right'); }
+    for (const [y, lat, k] of this.spots) { if (y < 1700) continue; c.fillStyle = hexA(k % 2 ? C.red : C.blue, 0.55); c.fillRect(X(y), YL(lat), 1.2, 1.2); }
+    for (let y = 1700; y <= 2030; y += 50) this.text(`${y}`, X(y), b1 + 10, C.dim, 8, 'center');
+    this.text('spot latitude (colour: Hale polarity of the leading spots in the north)', x0 + 6, b0 + 10, C.dim, 8);
+    this.line(X(this.year), y0, X(this.year), b1, hexA('#fff', 0.6), 1);
+    // right: the disc at this date
+    const cx = w * 0.85, cy = h * 0.42, R = Math.min(w * 0.12, h * 0.3);
+    const g = c.createRadialGradient(cx - R * 0.3, cy - R * 0.3, 0, cx, cy, R); g.addColorStop(0, rgba(tempRGB(6200), 1)); g.addColorStop(1, rgba(tempRGB(5000), 1));
+    c.fillStyle = g; c.beginPath(); c.arc(cx, cy, R, 0, TAU); c.fill();
+    const Rn = sunspotNumber(this.year);
+    let ci = -1; CYCLES.forEach(([t0, tp], k) => { if (this.year >= t0 && this.year < t0 + 13 && sunspotNumber(this.year) > 2) { if (ci < 0 || Math.abs(this.year - tp) < Math.abs(this.year - CYCLES[ci][1])) ci = k; } });
+    const ph = ci >= 0 ? Math.min(1, (this.year - CYCLES[ci][0]) / 12) : 0;
+    const groups = Math.round(Rn / 12);
+    let s2 = Math.floor(this.year * 10); const r2 = () => { s2 = (s2 * 48271) % 2147483647; return s2 / 2147483647; };
+    for (let i = 0; i < groups; i++) {
+      const lat = ((34 - 29 * ph) + (r2() - 0.5) * 10) * (r2() < 0.5 ? 1 : -1) * DEG, lon = (r2() - 0.5) * 2.6;
+      const x = cx + R * Math.cos(lat) * Math.sin(lon), y = cy - R * Math.sin(lat); const fore = Math.cos(lat) * Math.cos(lon);
+      if (fore <= 0) continue;
+      const lead = (ci % 2 === 0) === (lat > 0) ? C.blue : C.red, foll = lead === C.blue ? C.red : C.blue;
+      this.circle(x + 4 * fore, y, 2.5, undefined, lead); this.circle(x - 4 * fore, y - 1.5, 2, undefined, foll);
+    }
+    this.text(`${fmt(this.year, 1)}`, cx, cy + R + 14, C.text, 10, 'center');
+    this.text(groups ? `R ≈ ${fmt(Rn, 0)} · ${groups} groups` : `R ≈ ${fmt(Rn, 0)}`, cx, cy + R + 27, C.dim, 8, 'center');
+    this.text(ci >= 0 ? `cycle ${ci - 4 > 0 ? ci - 4 : `−${5 - ci}`}, year ${fmt(this.year - CYCLES[ci][0], 1)}` : 'minimum', cx, cy - R - 12, C.dim, 8, 'center');
+    this.setReadout([
+      ['Sunspot number', fmt(Rn, 0), C.sun],
+      ['Mean spot latitude', ci >= 0 ? `±${fmt(34 - 29 * ph, 0)}° (Spörer\'s law)` : '—'],
+      ['Leading polarity, north', ci >= 0 ? (ci % 2 === 0 ? 'positive (blue)' : 'negative (red)') : '—', ci >= 0 ? (ci % 2 === 0 ? C.blue : C.red) : C.dim],
+      ['Period', '11.0 yr spots · 22 yr magnetic'],
+    ]);
+  }
+}
+
+/* ------------------------------------------------------ 11.3c flare energy ---- */
+
+class FlareEnergyWidget extends CanvasWidget {
+  private lB = Math.log10(0.03); private lL = Math.log10(1e7); private t = 0;
+  constructor() {
+    super(1.8);
+    this.slider('Field strength', -2.3, -0.7, 0.02, this.lB, (v) => `${fmt(10 ** v * 1e4, 0)} G`, (v) => { this.lB = v; });
+    this.slider('Loop size', 6, 8, 0.02, this.lL, (v) => `${fmt(10 ** v / 1e3, 0)} km`, (v) => { this.lL = v; });
+    this.playButton();
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    this.t = (this.t + dt / 6) % 1;
+    const B = 10 ** this.lB, L = 10 ** this.lL;
+    const Estored = B * B / (2 * MU0) * L ** 3, E = 0.3 * Estored;
+    const flux = 1e-4 * E / 3e24;
+    const cls = flux < 1e-7 ? 'A' : flux < 1e-6 ? 'B' : flux < 1e-5 ? 'C' : flux < 1e-4 ? 'M' : 'X';
+    const mult = flux / (cls === 'A' ? 1e-8 : cls === 'B' ? 1e-7 : cls === 'C' ? 1e-6 : cls === 'M' ? 1e-5 : 1e-4);
+    // left: reconnection cartoon
+    const cx = w * 0.27, gy = h * 0.82, S = Math.min(w * 0.24, h * 0.6);
+    c.fillStyle = hexA(C.sun, 0.9); c.fillRect(cx - S, gy, 2 * S, h - gy);
+    const ph = this.t;   // 0: stressed antiparallel loops; 0.5: X-point; 1: relaxed
+    const pinch = ph < 0.5 ? ph * 2 : 1, relax = ph < 0.5 ? 0 : (ph - 0.5) * 2;
+    for (let k = 1; k <= 4; k++) {
+      const a = k / 4;
+      // two arcades pressed together: left foot at −S·a, right foot at +S·a, with a cusp growing toward the centre
+      for (const side of [-1, 1]) {
+        c.beginPath();
+        for (let u = 0; u <= 1; u += 0.02) {
+          const x = side * (0.05 + 0.95 * a) * S * (1 - u) + side * 0.03 * S * u;
+          const yTop = S * (0.25 + 0.55 * a) * (1 - relax * 0.5);
+          const y = gy - yTop * Math.sin(u * Math.PI / 2) ** 0.8 - pinch * (1 - relax) * 0.2 * S * (1 - Math.abs(u - 1)) * u;
+          u === 0 ? c.moveTo(cx + x, y) : c.lineTo(cx + x, y);
+        }
+        c.strokeStyle = hexA(relax > 0 && k < 3 ? C.red : C.blue, 0.85); c.lineWidth = 1.5; c.stroke();
+      }
+    }
+    if (ph > 0.35 && ph < 0.75) { const a = 1 - Math.abs(ph - 0.55) / 0.2; this.glow(cx, gy - S * 0.42, S * 0.25 * a, hexA('#fff', 0.9 * a)); this.text('X-point: reconnection', cx, gy - S * 0.42 - 16 * a, '#fff', 8, 'center'); }
+    if (relax > 0) { const y = gy - S * (0.75 + 0.9 * relax); this.glow(cx, y, S * 0.12, hexA(C.red, 0.6)); c.strokeStyle = hexA(C.red, 0.7); c.lineWidth = 1.5; c.beginPath(); c.arc(cx, y + S * 0.1, S * 0.12, Math.PI, 0); c.stroke(); this.text('erupting prominence / CME core', cx, y - S * 0.16, C.red, 8, 'center'); }
+    if (relax > 0.2) for (const side of [-1, 1]) { c.fillStyle = hexA('#fff', 0.6 * Math.min(1, relax * 2)); c.fillRect(cx + side * 0.45 * S - 10, gy - 3, 20, 3); }
+    this.text(ph < 0.5 ? 'field stressed by photospheric motions' : 'relaxed loops + flare ribbons at the footpoints', cx, 14, C.dim, 8, 'center');
+    this.line(cx - S * 0.5, gy + 12, cx + S * 0.5, gy + 12, '#000', 1); this.text(`${fmt(L / 1e3, 0)} km`, cx, gy + 20, '#000', 8, 'center');
+    // right: energy ladder
+    const x0 = w * 0.6, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const Y = (lgE: number) => y1 - 6 - (lgE - 16) / 12 * (y1 - y0 - 12);
+    for (let lg = 17; lg <= 27; lg += 2) { this.line(x0, Y(lg), x1, Y(lg), hexA(C.grid, 0.9)); this.text(`10${sup(lg)}`, x0 - 4, Y(lg), C.dim, 8, 'right'); }
+    this.text('energy (J)', x0 + 6, y0 + 10, C.dim, 8);
+    const marks: Array<[number, string, string]> = [[6.3e13, 'Hiroshima', C.dim], [4.2e17, 'largest H-bomb (100 Mt)', C.dim], [6e20, "world's energy use / yr", C.dim], [3e22, 'C1 flare', C.green], [3e23, 'M1', C.accent], [3e24, 'X1', C.red], [5e25, 'Carrington 1859 (~X45)', C.red], [1e26, 'Proxima superflare 2019', C.purple], [3.84e26, 'Sun, per second', C.sun], [1e28, 'Kepler superflares', C.purple]];
+    for (const [e, lab, col] of marks) { if (Math.log10(e) < 16) continue; this.line(x0, Y(Math.log10(e)), x0 + 10, Y(Math.log10(e)), col, 1.5); this.text(lab, x0 + 14, Y(Math.log10(e)), col, 8); }
+    const lgE = Math.log10(E);
+    this.line(x0, Y(lgE), x1, Y(lgE), hexA('#fff', 0.8), 1.5); this.circle(x1 - 10, Y(lgE), 5, '#fff', cls === 'X' ? C.red : cls === 'M' ? C.accent : C.green);
+    this.text(`${cls}${fmt(mult, mult < 10 ? 1 : 0)}`, x1 - 10, Y(lgE) - 12, '#fff', 10, 'center');
+    this.setReadout([
+      ['Stored B²/2μ₀ · L³', `${sci(Estored, 1)} J (${fmtSci(B * B / (2 * MU0))} J/m³)`, C.blue],
+      ['Released (~30 % free energy)', `${sci(E, 1)} J = ${sci(E / 4.184e15, 1)} Mt TNT`, '#fff'],
+      ['GOES class (1–8 Å peak)', `${cls}${fmt(mult, mult < 10 ? 1 : 0)} · ${sci(flux, 1)} W/m²`, cls === 'X' ? C.red : cls === 'M' ? C.accent : C.green],
+      ['Flare temperature, duration', `${cls === 'X' ? '20–30' : cls === 'M' ? '10–20' : '5–10'} MK · minutes to hours`],
+    ]);
+  }
+}
+
+/* ------------------------------------------------------------- 11.3d dynamo ---- */
+
+class DynamoWidget extends CanvasWidget {
+  private yr = 3; private t = 0;
+  private sY: ReturnType<CanvasWidget['slider']>;
+  constructor() {
+    super(1.8);
+    this.sY = this.slider('Cycle phase', 0, 22, 0.05, this.yr, (v) => `${fmt(v, 1)} yr`, (v) => { this.yr = v; });
+    this.playButton();
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    if (this.playing) { this.yr = (this.yr + dt * 1.2) % 22; this.sY.set(Math.round(this.yr * 20) / 20); }
+    this.t += dt;
+    const yr = this.yr, half = yr % 11, pol = yr < 11 ? 1 : -1;   // pol: sign of the northern polar field at the start of the half-cycle
+    const cx = w * 0.3, cy = h * 0.5, R = Math.min(w * 0.26, h * 0.44);
+    const g = c.createRadialGradient(cx - R * 0.3, cy - R * 0.3, 0, cx, cy, R); g.addColorStop(0, rgba(tempRGB(6200), 1)); g.addColorStop(1, rgba(tempRGB(5000), 1));
+    c.fillStyle = g; c.beginPath(); c.arc(cx, cy, R, 0, TAU); c.fill();
+    // field lines beneath the surface: start as meridians, wound by Δω·t with a visual gain
+    const wind = Math.min(half, 6) * 0.5;      // winding years (saturates)
+    const om0 = omegaSurf(45);
+    for (let k = 0; k < 6; k++) {
+      c.beginPath(); let pen = false;
+      for (let lat = -80; lat <= 80; lat += 2) {
+        const lon = (k * 60 + 15 + (omegaSurf(lat) - om0) * wind * 20) * DEG;
+        const x = Math.cos(lat * DEG) * Math.sin(lon), z = Math.cos(lat * DEG) * Math.cos(lon), y = Math.sin(lat * DEG);
+        if (z <= 0) { pen = false; continue; }
+        const px = cx + R * 0.97 * x, py = cy - R * 0.97 * y; pen ? c.lineTo(px, py) : c.moveTo(px, py); pen = true;
+      }
+      c.strokeStyle = hexA(pol > 0 ? C.blue : C.red, 0.55); c.lineWidth = 1.2; c.stroke();
+    }
+    // polar caps: reverse at maximum (year ~5.5 of the half cycle)
+    const polNow = half < 5.5 ? pol : -pol;
+    const capA = Math.abs(half - 5.5) / 5.5;
+    for (const s of [1, -1]) { const col = (polNow * s > 0) ? C.blue : C.red; c.fillStyle = hexA(col, 0.25 + 0.5 * capA); c.beginPath(); c.arc(cx, cy, R, s > 0 ? -Math.PI * 0.72 : Math.PI * 0.28, s > 0 ? -Math.PI * 0.28 : Math.PI * 0.72); c.lineTo(cx, cy - s * R * 0.78); c.closePath(); c.fill(); }
+    // spots: emerge from year ~1.5, latitude 35 → 5, with Hale polarity and Joy tilt
+    const act = half < 1.5 ? 0 : Math.sin(Math.PI * Math.min(1, (half - 1.5) / 9.5));
+    const nGroups = Math.round(10 * act);
+    let s2 = 11 + Math.floor(yr * 7); const r2 = () => { s2 = (s2 * 48271) % 2147483647; return s2 / 2147483647; };
+    const latMean = 35 - 30 * Math.min(1, Math.max(0, (half - 1.5) / 9.5));
+    for (let i = 0; i < nGroups; i++) {
+      const hemi = r2() < 0.5 ? 1 : -1; const lat = hemi * (latMean + (r2() - 0.5) * 10) * DEG, lon = (r2() - 0.5) * 2.4;
+      const fore = Math.cos(lat) * Math.cos(lon); if (fore <= 0) continue;
+      const x = cx + R * Math.cos(lat) * Math.sin(lon), y = cy - R * Math.sin(lat);
+      const lead = (pol > 0) === (hemi > 0) ? C.blue : C.red, foll = lead === C.blue ? C.red : C.blue;   // Hale's law
+      const tilt = Math.abs(lat) * 0.5;   // Joy's law: following spot nearer the pole
+      this.circle(x + 5 * fore, y, 3, undefined, lead); this.circle(x - 5 * fore, y - hemi * 5 * Math.sin(tilt), 2.4, undefined, foll);
+    }
+    // poleward drift arrows of following flux after maximum
+    if (half > 5 && half < 10) for (const s of [1, -1]) { const y = cy - s * R * 0.55, y2 = cy - s * R * 0.72; this.line(cx + R * 0.1, y, cx + R * 0.1, y2, hexA('#fff', 0.7), 1.5); this.line(cx + R * 0.1, y2, cx + R * 0.1 - 3, y2 + s * 5, hexA('#fff', 0.7), 1.5); this.line(cx + R * 0.1, y2, cx + R * 0.1 + 3, y2 + s * 5, hexA('#fff', 0.7), 1.5); }
+    const stage = half < 1 ? 'minimum: weak poloidal field' : half < 3 ? 'Ω effect: differential rotation winds the field' : half < 5.5 ? 'buoyant flux tubes emerge: bipolar groups (Hale, Joy)' : half < 6.5 ? 'maximum: polar fields reverse' : half < 9.5 ? 'following flux drifts poleward, spots near the equator' : 'decay: poloidal field rebuilt, reversed';
+    this.text(stage, cx, cy - R - 12, C.text, 9, 'center');
+    this.text(`year ${fmt(yr, 1)} of 22 · ${yr < 11 ? 'first' : 'second'} half: leading spots ${pol > 0 ? 'blue' : 'red'} in the north`, cx, cy + R + 14, C.dim, 8, 'center');
+    // right: butterfly building
+    const x0 = w * 0.62, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (y: number) => x0 + y / 22 * (x1 - x0);
+    const YL = (lat: number) => (y0 + y1) / 2 - lat / 45 * (y1 - y0) / 2;
+    for (const lat of [-30, 0, 30]) { this.line(x0, YL(lat), x1, YL(lat), hexA(C.grid, 0.9)); this.text(`${lat}°`, x0 - 4, YL(lat), C.dim, 8, 'right'); }
+    let s3 = 5; const r3 = () => { s3 = (s3 * 48271) % 2147483647; return s3 / 2147483647; };
+    for (let y = 0; y < 22; y += 0.05) { if (y > yr) break; const hh = y % 11; if (hh < 1.5) continue; const a = Math.sin(Math.PI * Math.min(1, (hh - 1.5) / 9.5)); const lm = 35 - 30 * Math.min(1, (hh - 1.5) / 9.5); for (let i = 0; i < a * 4; i++) { const lat = (lm + (r3() - 0.5) * 12) * (r3() < 0.5 ? 1 : -1); c.fillStyle = hexA(y < 11 ? C.blue : C.red, 0.6); c.fillRect(X(y), YL(lat), 1.5, 1.5); } }
+    for (const y of [0, 5.5, 11, 16.5, 22]) this.text(y % 11 === 0 ? `min ${y}` : 'max', X(y), y1 + 10, C.dim, 8, 'center');
+    this.text('butterfly diagram (years)', x0 + 6, y0 + 10, C.dim, 8);
+    this.line(X(yr), y0, X(yr), y1, hexA('#fff', 0.5), 1);
+    this.setReadout([
+      ['Stage', stage, C.text],
+      ['Polar field (north)', polNow > 0 ? 'positive' : 'negative', polNow > 0 ? C.blue : C.red],
+      ['Spot latitude', act > 0 ? `±${fmt(latMean, 0)}°` : '—'],
+      ['Magnetic Reynolds number', '~10⁸: field frozen into the gas'],
+    ]);
+  }
+}
+
+/* ----------------------------------------------------- 11.3e stellar activity ---- */
+
+type ActType = 'F5' | 'G2' | 'K5' | 'M0' | 'M5';
+const ACT_TYPES: Record<ActType, { tau: number; L: number; T: number; P0: number }> = {   // turnover time (d), L_bol (L☉), T_eff, rotation period at the Sun's age (d)
+  F5: { tau: 7, L: 3.0, T: 6500, P0: 10 }, G2: { tau: 14, L: 1.0, T: 5777, P0: 25 }, K5: { tau: 25, L: 0.15, T: 4400, P0: 40 }, M0: { tau: 45, L: 0.07, T: 3800, P0: 60 }, M5: { tau: 90, L: 0.004, T: 3000, P0: 100 },
+};
+const actLxLbol = (Ro: number) => (Ro < 0.1 ? 1e-3 : 1e-3 * (Ro / 0.1) ** -2.3);
+class ActivityWidget extends CanvasWidget {
+  private type: ActType = 'G2'; private lP = Math.log10(25);
+  constructor() {
+    super(1.8);
+    this.segmented<ActType>([['F5', 'F5 V'], ['G2', 'G2 V (Sun)'], ['K5', 'K5 V'], ['M0', 'M0 V'], ['M5', 'M5 V']], this.type, (v) => { this.type = v; });
+    this.slider('Rotation period', -0.7, 2.1, 0.02, this.lP, (v) => `${fmt(10 ** v, 1)} d`, (v) => { this.lP = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const x0 = PLOT_MARGIN, x1 = w * 0.66, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (Ro: number) => x0 + (Math.log10(Ro) + 2) / 3 * (x1 - x0);
+    const Y = (f: number) => y1 - 6 - (Math.log10(f) + 8) / 6 * (y1 - y0 - 12);
+    for (let lg = -7; lg <= -3; lg++) { this.line(x0, Y(10 ** lg), x1, Y(10 ** lg), hexA(C.grid, 0.9)); this.text(`10${sup(lg)}`, x0 - 4, Y(10 ** lg), C.dim, 8, 'right'); }
+    for (const Ro of [0.01, 0.1, 1, 10]) this.text(`${Ro}`, X(Ro), y1 + 10, C.dim, 8, 'center');
+    this.text('Rossby number P_rot / τ_c', x1, y1 + 22, C.dim, 9, 'right'); this.text('L_X / L_bol', x0 + 6, y0 + 10, C.dim, 8);
+    c.fillStyle = hexA(C.red, 0.06); c.fillRect(x0, y0, X(0.1) - x0, y1 - y0); this.text('saturated', X(0.03), y0 + 24, C.red, 8, 'center'); this.text('unsaturated: ∝ Ro⁻²·³', X(1.5), y0 + 24, C.dim, 8, 'center');
+    plotCurve(c, 0.01, 10, 200, X, (Ro) => Y(actLxLbol(Ro)), C.sun, 2);
+    const stars: Array<[string, number, number, string]> = [['Sun', 1.8, 1e-6, C.sun], ['α Cen A', 1.9, 7e-7, C.dim], ['α Cen B', 1.7, 3e-6, C.dim], ['61 Cyg A', 1.4, 3e-6, C.dim], ['Proxima', 0.9, 1e-4, C.red], ['Sun at 100 Myr', 0.36, 3e-5, C.accent], ['EK Dra (G1.5, 50 Myr)', 0.2, 3e-4, C.green], ['AB Dor (K0, 0.5 d)', 0.025, 1e-3, C.blue], ['TRAPPIST-1', 0.03, 7e-4, C.purple]];
+    for (const [lab, Ro, f, col] of stars) { this.circle(X(Ro), Y(f), 3, '#000', col); this.text(lab, X(Ro) + 5, Y(f) - (lab.startsWith('α Cen A') ? 8 : -7), col, 7); }
+    const T = ACT_TYPES[this.type], P = 10 ** this.lP, Ro = P / T.tau, f = actLxLbol(Ro), LX = f * T.L * LSUN_SCALE;
+    const age = 4.57 * (P / T.P0) ** 2;   // Skumanich, scaled per type
+    this.circle(X(Ro), Y(f), 5, '#fff', C.star);
+    // right: the star and a summary
+    const cx = w * 0.84, cy = h * 0.34, R = Math.min(w * 0.1, h * 0.2);
+    this.glow(cx, cy, R * (1.3 + 2 * Math.min(1, f / 1e-3)), hexA(C.blue, 0.2 + 0.4 * Math.min(1, f / 1e-3)));
+    const g = c.createRadialGradient(cx, cy, 0, cx, cy, R); g.addColorStop(0, rgba(tempRGB(T.T + 500), 1)); g.addColorStop(1, rgba(tempRGB(T.T), 1));
+    c.fillStyle = g; c.beginPath(); c.arc(cx, cy, R, 0, TAU); c.fill();
+    const nsp = Math.round(12 * Math.min(1, f / 3e-4)); let s2 = 3; const r2 = () => { s2 = (s2 * 48271) % 2147483647; return s2 / 2147483647; };
+    for (let i = 0; i < nsp; i++) { const a = r2() * TAU, rr = R * Math.sqrt(r2()) * 0.9; this.circle(cx + rr * Math.cos(a), cy + rr * Math.sin(a), R * (0.05 + 0.1 * r2()), undefined, hexA('#000', 0.6)); }
+    this.text(`${this.type} V · P = ${fmt(P, 1)} d`, cx, cy + R + 14, C.text, 9, 'center');
+    this.text('corona glow ∝ L_X/L_bol · spots ∝ activity', cx, cy + R + 26, C.dim, 7, 'center');
+    const regime = Ro < 0.1 ? 'saturated: young / fast rotator, superflares likely' : Ro < 0.5 ? 'very active: large spots, frequent flares' : Ro < 1.5 ? 'moderately active' : 'quiet, Sun-like or older';
+    this.setReadout([
+      ['Rossby number', `${fmt(Ro, 2)} (τ_c = ${T.tau} d)`, C.sun],
+      ['L_X / L_bol', `${sci(f, 1)} = ${fmt(f / 1e-6, 0)} × Sun`, C.blue],
+      ['L_X', `${sci(LX, 1)} W`],
+      ['Gyrochronology age · regime', `${age < 0.01 ? '< 10 Myr' : fmtYr(age * 1e9)} · ${regime}`, Ro < 0.5 ? C.red : C.text],
+    ]);
+  }
+}
+
 export function createWidget(spec: WidgetSpec): Widget {
   switch (spec.type) {
     case 'ancientsky': return new AncientSkyWidget();
@@ -9310,5 +10419,24 @@ export function createWidget(spec: WidgetSpec): Widget {
     case 'msrange': return new MsRangeWidget();
     case 'msstructure': return new MsStructureWidget();
     case 'mslifetime': return new MsLifetimeWidget();
+    case 'sunhistory': return new SunHistoryWidget();
+    case 'solarcomposition': return new SolarCompositionWidget();
+    case 'solarenergy': return new SolarEnergyWidget();
+    case 'solargradients': return new SolarGradientsWidget();
+    case 'pmodes': return new PmodesWidget();
+    case 'neutrinospectrum': return new NeutrinoSpectrumWidget();
+    case 'nuoscillation': return new NuOscillationWidget();
+    case 'atmprofile': return new AtmProfileWidget();
+    case 'granulation': return new GranulationWidget();
+    case 'spicules': return new SpiculesWidget();
+    case 'coronalions': return new CoronalIonsWidget();
+    case 'solarwind': return new SolarWindWidget();
+    case 'cme': return new CmeWidget();
+    case 'diffrot': return new DiffRotWidget();
+    case 'sunspot': return new SunspotWidget();
+    case 'butterfly': return new ButterflyWidget();
+    case 'flareenergy': return new FlareEnergyWidget();
+    case 'dynamo': return new DynamoWidget();
+    case 'activity': return new ActivityWidget();
   }
 }

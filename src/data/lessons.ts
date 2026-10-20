@@ -292,7 +292,45 @@ export type WidgetSpec =
   /** Cross-section of a main-sequence star for a chosen mass: convective and radiative zones, burning core, surface colour, central T and ρ */
   | { type: 'msstructure' }
   /** Main-sequence lifetime against mass with the ages of the universe, Sun and Earth marked; mass slider reports lifetime, luminosity and spectral type */
-  | { type: 'mslifetime' };
+  | { type: 'mslifetime' }
+  /** The Sun through its main-sequence life: an age slider from birth to 10 Gyr drives luminosity, radius and effective temperature curves, the Sun drawn to scale and colour, and the Earth's equilibrium temperature */
+  | { type: 'sunhistory' }
+  /** Hydrogen and helium mass fractions against radius inside the Sun at a chosen age, with the ³He bump and the central mean molecular weight */
+  | { type: 'solarcomposition' }
+  /** Energy generation rate ε(r) of the pp chain and CNO cycle inside the Sun with the cumulative luminosity L_r, a draggable cursor and the radius enclosing 50 % and 99 % of the output */
+  | { type: 'solarenergy' }
+  /** Radiative and adiabatic temperature gradients against radius in the Sun, crossing at the base of the convection zone; photon mean free path and diffusion time readouts */
+  | { type: 'solargradients' }
+  /** Helioseismology: an animated spherical-harmonic p-mode pattern on the solar disc for chosen l and m, with the sound-speed profile and the model-minus-Sun residual */
+  | { type: 'pmodes' }
+  /** Solar neutrino spectrum (pp, pep, ⁷Be, ⁸B, hep, CNO) with the thresholds of the chlorine, gallium and water detectors; toggle predicted vs observed to see the deficit */
+  | { type: 'neutrinospectrum' }
+  /** Two-flavour neutrino oscillation: survival probability against distance for a chosen energy, mixing angle and Δm², with the Sun–Earth MSW regime marked */
+  | { type: 'nuoscillation' }
+  /** Temperature and density against height from the photosphere through the chromosphere and transition region into the corona (VAL-type model), with a draggable cursor */
+  | { type: 'atmprofile' }
+  /** Animated solar granulation: evolving convection cells in intensity or Doppler view, with granule and supergranule scales and lifetimes */
+  | { type: 'granulation' }
+  /** Spicules at the limb: animated jets rising and falling along supergranule boundaries, with the chromospheric flash spectrum (Hα, Ca II H and K, He I D₃) */
+  | { type: 'spicules' }
+  /** Coronal ionisation: the fraction of iron in each ionisation stage against temperature, the EUV lines each stage emits (the SDO/AIA channels) and the visible coronal lines */
+  | { type: 'coronalions' }
+  /** Parker's solar wind: the isothermal wind solution v(r) for a chosen coronal temperature, the critical point, and the speed, density and Parker-spiral angle at 1 AU */
+  | { type: 'solarwind' }
+  /** A coronal mass ejection launched toward the Earth: travel time, kinetic energy, and the compression of the magnetosphere as speed and density change */
+  | { type: 'cme' }
+  /** Differential rotation: meridians painted on the Sun wind up as the days pass; latitude slider reports the local rotation period; interior rotation map with the tachocline */
+  | { type: 'diffrot' }
+  /** A sunspot: umbra and penumbra temperatures and brightness, magnetic against gas pressure as the field strength changes, and the Zeeman splitting of a line */
+  | { type: 'sunspot' }
+  /** The sunspot cycle: 300 years of sunspot numbers with the Maunder and Dalton minima, and the butterfly diagram of spot latitudes; a year cursor shows the spots on the disc */
+  | { type: 'butterfly' }
+  /** Solar flare energy: magnetic reconnection in a loop of chosen field strength and size, the energy released, the GOES class and comparisons */
+  | { type: 'flareenergy' }
+  /** Babcock's dynamo in stages: poloidal field wound into toroidal by differential rotation, flux tubes rising into bipolar spot groups, and the polar field reversing over 22 years */
+  | { type: 'dynamo' }
+  /** Magnetic activity in other stars: X-ray-to-bolometric luminosity against Rossby number with the saturated and unsaturated branches, real stars placed and sliders for rotation period and spectral type */
+  | { type: 'activity' };
 
 export type SceneCue =
   | { action: 'goto'; ref: string; kind?: 'body' | 'blackhole' | 'star' | 'landmark' | 'galaxy' }
@@ -4910,6 +4948,413 @@ const S10_6: Section = {
   ],
 };
 
+/* ================================================================================ */
+/*  Chapter 11 — The Sun                                                             */
+/* ================================================================================ */
+
+const S11_1: Section = {
+  id: 'solar-interior',
+  number: '11.1',
+  title: 'The Solar Interior',
+  summary: 'The one star we can check from the inside: how the Sun has changed since it was born, what the standard solar model says about its centre, where its energy is made and how it gets out, the sound waves that let us see through it, and the neutrinos that for thirty years seemed to say the model was wrong.',
+  minutes: 30,
+  steps: [
+    {
+      id: 'sun-through-time',
+      kicker: 'Interactive · a star with a history',
+      title: 'The Sun as a star: a G2 dwarf halfway through its life',
+      widget: { type: 'sunhistory' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('Everything in Chapter 10 was general: equations that apply to any star. This chapter applies them to the one star whose answers we can check in detail. The Sun is a main-sequence G2 star of mass 1.989 × 10³⁰ kg, radius 6.955 × 10⁸ m, luminosity 3.84 × 10²⁶ W and effective temperature 5777 K, with a surface composition X = 0.74, Y = 0.24, Z = 0.02 by mass. Meteorites that condensed with it date its birth to 4.57 billion years ago. Those numbers are known to better than a tenth of a per cent — no other star comes within a factor of ten of that precision — and they make the Sun the test case for everything the theory of stellar structure claims.'),
+        p('The first thing the model says is that the Sun has not always looked like this. Four and a half billion years of fusion have turned about half the hydrogen at its centre into helium. As Section 10.2 explained, that raises the mean molecular weight, so the core must contract and heat slightly to keep holding up the layers above; the higher temperature speeds up the reactions, and the star grows brighter. The standard model puts the zero-age Sun at 0.68 of its present luminosity, with a radius 12 per cent smaller and an effective temperature of 5620 K instead of 5777 K. The Sun is 48 per cent brighter than when the Earth formed, and it is still brightening by about 1 per cent every hundred million years.'),
+        eq('L_\\odot(t) \\approx \\frac{L_\\odot}{1 + 0.4\\,(1 - t/t_\\odot)}, \\qquad t_\\odot = 4.57\\ {\\rm Gyr}', 'A convenient fit to the standard model\'s luminosity history over the main sequence (Gough 1981). At t = 0 it gives 0.71 L☉; at twice the present age, 1.7 L☉. The curve steepens toward the end of the main-sequence life near 10 Gyr.'),
+        p('The widget runs the Sun\'s main-sequence life from birth to 10 billion years: luminosity, radius and effective temperature from the model, the Sun drawn to scale and colour behind the panel, and the Earth\'s equilibrium temperature for the luminosity of the day. Drag to the beginning and you meet the <em>faint young Sun paradox</em>: with 30 per cent less sunlight, a simple energy balance puts the early Earth well below freezing, yet the geological record shows liquid water and life at 3.8 billion years — the resolution must lie in a stronger greenhouse atmosphere. Drag toward the end and you see the other side: within about a billion years the Sun will be bright enough to boil off the Earth\'s oceans, long before it leaves the main sequence to become a red giant (Chapter 13).'),
+        terms(
+          ['Solar constant', 'Flux at 1 AU: 1361 W m⁻², measured from satellites since 1978; it varies by 0.1 per cent over the sunspot cycle.'],
+          ['Zero-age main sequence (ZAMS)', 'The moment hydrogen burning first supplies the whole luminosity; for the Sun 4.57 Gyr ago, with L = 0.68 L☉, R = 0.88 R☉.'],
+          ['Faint young Sun', 'Sagan & Mullen 1972: the early Earth received 70 per cent of today\'s sunlight yet was not frozen; CO₂ and methane greenhouse warming is the usual answer.'],
+          ['Main-sequence lifetime', 'About 10 Gyr in total; the Sun is 4.57 Gyr in, so roughly halfway.'],
+        ),
+      ],
+    },
+    {
+      id: 'interior-composition',
+      kicker: 'Interactive · what fusion has done',
+      title: 'The inside of the Sun is not the same as the outside',
+      widget: { type: 'solarcomposition' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('The surface composition of the Sun is probably close to the composition it was born with, and the standard model takes a uniform X = 0.71, Y = 0.27, Z = 0.02 for the zero-age star. The interior today is anything but uniform. At the centre the hydrogen mass fraction has fallen to X = 0.34 and helium has risen to Y = 0.64 — the ashes of 4.57 billion years of pp-chain burning, which are not mixed away because the core is radiative. Moving outward, X rises steeply through the burning region and is back at its primordial value beyond about 0.3 R☉; the convection zone, which stirs the outer 29 per cent of the radius, has the surface composition throughout. The present-day Sun is a helium-rich core wrapped in an envelope of nearly unchanged gas.'),
+        p('Two subtler effects also appear in the model. Helium-3 is an intermediate product of the pp chain: it is made in the first steps and destroyed when two ³He nuclei fuse into ⁴He, a reaction that needs higher temperatures than the ones that make it. So in the hot centre ³He is consumed as fast as it forms, while a little further out, near 0.28 R☉, it accumulates — a bump in the ³He profile that reaches a few per cent by mass, the "ashes" of a chain that only got half-way. And over billions of years gravity slowly sorts the gas: helium and heavier elements settle downward relative to hydrogen, so the present surface is slightly depleted in helium and metals compared with the original mixture. Including this <em>diffusion</em> turned out to be essential to make the model agree with helioseismology.'),
+        eq('\\mu_c = \\frac{1}{2X_c + \\tfrac{3}{4}Y_c + \\tfrac{1}{2}Z_c} = \\frac{1}{0.68 + 0.48 + 0.01} \\approx 0.85 \\quad (\\text{ZAMS: } 0.61)', 'Central mean molecular weight of the present Sun. The 40 per cent increase in μ is what has required the core to contract and heat, and hence the 48 per cent rise in luminosity.'),
+        p('The widget plots X and Y against radius at any age from zero to 10 Gyr, with the ³He bump and the mean molecular weight at the centre. Watch the central hydrogen drain away: it reaches zero at about 10 Gyr, and the Sun then has a pure helium core that can no longer burn — the end of its main-sequence life, and the beginning of the story of Chapter 13. Notice also how little of the Sun is involved: the burning region is the inner tenth of the volume, and even there the hydrogen is only half gone. The Sun will leave the main sequence having used about a tenth of its total hydrogen.'),
+        table(
+          ['Quantity', 'Centre (today)', 'Centre (ZAMS)', 'Surface'],
+          [
+            ['Temperature T', '1.57 × 10⁷ K', '1.36 × 10⁷ K', '5777 K'],
+            ['Pressure P', '2.34 × 10¹⁶ Pa', '1.5 × 10¹⁶ Pa', '~10⁴ Pa (τ = 2/3)'],
+            ['Density ρ', '1.53 × 10⁵ kg m⁻³', '0.8 × 10⁵ kg m⁻³', '2 × 10⁻⁴ kg m⁻³'],
+            ['X (hydrogen)', '0.34', '0.71', '0.74'],
+            ['Y (helium)', '0.64', '0.27', '0.24'],
+            ['μ', '0.85', '0.61', '1.25 (mostly neutral)'],
+          ],
+          'The standard solar model (Bahcall, Pinsonneault & Basu 2001) at the centre and surface. The central density is a hundred and fifty times that of water; the central pressure, a quarter of a trillion atmospheres.',
+        ),
+      ],
+    },
+    {
+      id: 'energy-generation',
+      kicker: 'Interactive · where the light is made',
+      title: 'The core: 99 per cent of the Sun\'s power from the inner quarter',
+      widget: { type: 'solarenergy' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('The energy generation rate of the pp chain goes roughly as ρX²T⁴, so it is concentrated where the Sun is hottest and densest. The model has ε peaking at the centre at about 280 W m⁻³ — the power density of a compost heap, not an explosion; the Sun is luminous only because it is enormous — and falling to a tenth of that by 0.15 R☉. Integrated over shells, the luminosity L_r climbs from zero at the centre to half of L☉ by 0.1 R☉ and to 99 per cent by 0.24 R☉. Beyond a quarter of the radius nothing is being made: the outer three-quarters of the Sun simply pass the energy along. The pp chain supplies 98.7 per cent of the total; the CNO cycle, limited by the 15.7 million kelvin central temperature, the remaining 1.3 per cent.'),
+        p('Within the pp chain the branches share the work. At the Sun\'s centre PP I (³He + ³He) carries about 69 per cent of the ⁴He production; PP II, through ⁷Be and its electron capture, about 31 per cent; PP III, through ⁸B, only 0.1 per cent — yet, as the next steps will show, that rare branch produces the neutrinos that were easiest to detect and caused thirty years of trouble. Each completed chain converts 26.73 MeV of mass into energy, of which a little (0.26 MeV in PP I, up to 7 MeV for a ⁸B decay) leaves immediately with the neutrinos and never heats the gas. The Sun loses about 2 per cent of its energy this way, invisibly.'),
+        eq('\\epsilon_{pp} \\approx 0.24\\,\\rho X^2 T_6^{-2/3} e^{-33.8/T_6^{1/3}}\\ {\\rm W\\,kg^{-1}}, \\qquad \\frac{dL_r}{dr} = 4\\pi r^2 \\rho\\,\\epsilon', 'The pp-chain energy generation rate (T₆ = T/10⁶ K) and the luminosity equation of Section 10.3. At the solar centre ε ≈ 2 × 10⁻³ W kg⁻¹, i.e. about 280 W m⁻³ — roughly a thousandth of the metabolic rate of the human body per kilogram.'),
+        p('The widget plots ε for the pp chain and the CNO cycle against radius, with the cumulative L_r and a cursor you can drag; it reports the radii within which half and 99 per cent of the luminosity are produced, and the branch ratios at the cursor. Drag inward and notice how the CNO contribution, negligible at 0.2 R☉, becomes a few per cent at the very centre: the cycle\'s T¹⁷ sensitivity means it is confined to the innermost core. Had the Sun been 30 per cent more massive, the CNO cycle would dominate and the core would convect — a different kind of star, as Section 10.6 showed.'),
+        think('The energy made in the core today takes of order a hundred thousand years to diffuse to the surface (next step), but the neutrinos leave in two seconds. If the Sun\'s core stopped fusing this instant, how long before anyone on Earth could tell — by light, and by neutrinos? And what would happen to the Sun\'s structure in the meantime (recall the Kelvin–Helmholtz time scale)?'),
+      ],
+    },
+    {
+      id: 'energy-transport-sun',
+      kicker: 'Interactive · getting the energy out',
+      title: 'Radiation to 0.714 R☉, convection above',
+      widget: { type: 'solargradients' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('Section 10.4 gave the rule: energy travels by radiation where the radiative temperature gradient needed to carry the luminosity is smaller than the adiabatic gradient, and by convection where it would have to be larger. In the Sun the comparison comes out as follows. In the core and most of the envelope the opacity is low — the gas is fully ionised, and free–free and bound–free absorption fall as T^−3.5 — so radiation carries the flux easily and the gradient stays below adiabatic. But as the temperature drops below about two million kelvin, outward of 0.714 R☉, the opacity climbs steeply: heavier elements begin to recombine, and the Rosseland mean rises by a factor of a hundred from 0.5 R☉ to 0.9 R☉. The radiative gradient shoots past the adiabatic one and the gas convects. The <b>convection zone</b> occupies the outer 28.6 per cent of the radius but, because the density is so low there, only 2 per cent of the mass.'),
+        p('The photons themselves have a hard journey. The mean free path at the centre is a tenth of a millimetre; through the radiative zone it grows to a few millimetres. A random walk of N steps of length ℓ goes a distance ℓ√N, so to cover 0.7 R☉ ≈ 5 × 10⁸ m with ℓ ≈ 1 mm takes N ≈ (5 × 10¹¹)² = 2.5 × 10²³ steps — at the speed of light, about 30 000 years. The more careful estimate, weighting the mean free path by the local density, gives 170 000 years for the energy to reach the base of the convection zone; convection then carries it the last 200 000 km in a few weeks. The sunlight on your face left the core when our ancestors were first leaving Africa.'),
+        eq('\\nabla_{\\rm rad} = \\frac{3}{16\\pi a c G}\\,\\frac{\\bar\\kappa\\,P\\,L_r}{M_r\\,T^4}, \\qquad \\nabla_{\\rm ad} = 1 - \\frac{1}{\\gamma} = 0.4 \\ (\\text{ideal monatomic gas}), \\qquad \\text{convection where } \\nabla_{\\rm rad} > \\nabla_{\\rm ad}', 'The Schwarzschild criterion in terms of logarithmic gradients ∇ = d ln T/d ln P. In the Sun ∇_rad ≈ 0.25–0.35 through most of the radiative zone, crosses 0.4 at 0.714 R☉, and would need to be ≫ 1 near the surface; ∇_ad itself falls below 0.4 in the hydrogen and helium ionisation zones.'),
+        p('The widget draws ∇_rad and ∇_ad against radius from the model, shading the convection zone where the curves cross, and reports the photon mean free path and the diffusion time at the cursor. The crossing at 0.713 R☉ is a prediction of the opacity tables and the composition; helioseismology (next step) measures the base of the convection zone directly, from the change in sound speed where the temperature gradient switches, and finds 0.713 ± 0.001 R☉. That agreement, to a tenth of a per cent, is one of the most precise tests of any astrophysical model, and it failed in the 1990s until the opacities were recomputed and gravitational settling of helium was included.'),
+        note('The granulation seen on the photosphere (Section 11.2) is the top of this convection zone: rising hot gas in the bright centres of the cells, sinking cooler gas in the dark lanes. The cells are about 1000 km across, roughly the pressure scale height at the surface, as the mixing-length picture of Section 10.4 predicts.', 'Convection you can see'),
+      ],
+    },
+    {
+      id: 'helioseismology',
+      kicker: 'Interactive · seeing through the Sun',
+      title: 'Helioseismology: the Sun rings like a bell',
+      widget: { type: 'pmodes' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('In 1960 Robert Leighton, measuring Doppler shifts across the solar disc, found that patches of the surface rise and fall with a period of about five minutes. By 1970 Roger Ulrich and, independently, John Leibacher and Robert Stein had explained them: the Sun is filled with sound waves, excited by the turbulence of the convection zone and trapped between the surface, where the density drop reflects them, and an inner turning point where the rising sound speed refracts them back upward. Millions of standing-wave modes coexist, each a spherical harmonic Y_l^m on the surface with n nodes along the radius. Modes of low degree l dive almost to the centre; modes of high degree skim just below the surface. By measuring the frequencies of thousands of modes — to one part in 10⁵ — one can invert for the sound speed as a function of depth, exactly as seismologists use earthquakes to map the Earth\'s interior.'),
+        p('The results are the sharpest test the theory of stellar interiors has ever faced. The sound speed c = √(γP/ρ) = √(γkT/μm_H) depends on T/μ; the inferred profile agrees with the standard model to within 0.1 per cent at every depth from 0.05 to 0.95 R☉, with the largest deviation, 0.3 per cent, just below the convection zone. The base of the convection zone is at 0.713 R☉; the surface helium abundance is Y = 0.249; and the interior rotation, from the splitting of modes with different m, is unlike anything predicted: the convection zone rotates differentially like the surface, the radiative interior rotates rigidly at about the 27-day rate, and the two are joined by a thin shear layer at 0.7 R☉ called the <b>tachocline</b> — now thought to be where the Sun\'s magnetic field is generated.'),
+        eq('\\nu_{nl} \\approx \\Delta\\nu\\left(n + \\tfrac{l}{2} + \\epsilon\\right), \\qquad \\Delta\\nu = \\left(2\\int_0^R \\frac{dr}{c}\\right)^{-1} \\approx 135\\ \\mu{\\rm Hz}, \\qquad c = \\sqrt{\\frac{\\gamma k T}{\\mu m_H}}', 'The asymptotic frequency spacing of solar p modes: Δν is the inverse of the sound travel time across the Sun and back, 135 μHz, i.e. about two hours. The small departures from this pattern encode the structure; the sound speed at the centre is about 500 km s⁻¹, at the surface 7 km s⁻¹.'),
+        p('The widget animates a p-mode pattern on the disc: choose the degree l and order m and watch the Y_l^m pattern oscillate with the five-minute period; the plot beside it shows the sound-speed profile and the difference between the helioseismic Sun and the model, in tenths of a per cent. Try l = 1 (which reaches the core) and l = 100 (which does not); the depth each mode probes is set by l alone, through the inner turning point where c/r equals the mode\'s horizontal phase speed. The GONG network on the ground and the MDI and HMI instruments on the SOHO and SDO spacecraft have watched these oscillations continuously since 1995; the data also give the Sun\'s neutrino-producing core a temperature within 1 per cent of the model\'s — which mattered in the argument of the next step.'),
+        history('Leighton, Noyes and Simon reported the five-minute oscillation in 1962, unsure of its cause. The trapped-acoustic-wave explanation came in 1970–71; the first inversion for the sound speed in 1985 (Christensen-Dalsgaard, Duvall, Gough and others); the rotation profile and tachocline were mapped in the 1990s; and the method has since been exported to thousands of other stars by the CoRoT, Kepler and TESS photometers — <em>asteroseismology</em> — giving masses, radii and ages for stars we will never resolve.', 'From one star to thousands'),
+      ],
+    },
+    {
+      id: 'solar-neutrino-problem',
+      kicker: 'Interactive · the thirty-year anomaly',
+      title: 'The solar neutrino problem',
+      widget: { type: 'neutrinospectrum' },
+      scene: [goto('earth'), rate(1)],
+      body: [
+        p('Light tells us about the Sun\'s surface as it was eight minutes ago and about its core as it was a hundred thousand years ago. Neutrinos tell us about the core <em>now</em>: they interact so weakly that they leave the centre of the Sun in two seconds, and about 65 billion of them cross each square centimetre of the Earth every second. In 1965 Raymond Davis, following a suggestion of John Bahcall, built a tank of 615 tonnes of perchloroethylene (dry-cleaning fluid) 1.5 km underground in the Homestake gold mine. A neutrino of energy above 0.814 MeV can turn a ³⁷Cl nucleus into radioactive ³⁷Ar; every few months Davis flushed the tank and counted the argon atoms — a few dozen, out of 10³⁰ chlorine atoms. He found a capture rate of 2.56 ± 0.23 SNU (one SNU = 10⁻³⁶ captures per target atom per second). The standard solar model predicted 7.6 ± 1.3 SNU.'),
+        p('A third of the expected neutrinos. The chlorine experiment is mostly sensitive to the high-energy ⁸B neutrinos of the rare PP III branch, whose flux goes as T_c²⁵, so a 5 per cent cooler core would have fixed it — but helioseismology forbade that. The Kamiokande water detector in Japan (1987–95), seeing only ⁸B neutrinos above 7 MeV by the Cherenkov light of recoiling electrons, and able to point back to the Sun, found 48 per cent of the prediction. The gallium experiments GALLEX in Italy and SAGE in Russia (from 1990), with a 0.233 MeV threshold low enough to catch the fundamental pp neutrinos whose flux is fixed by the solar luminosity itself, found 55 per cent. Three detectors, three energy ranges, three different deficits; no adjustment of the solar model could fit all of them. Either the neutrinos were not being produced, or they were not arriving as electron neutrinos.'),
+        table(
+          ['Experiment', 'Target · threshold', 'Sensitive to', 'Observed / predicted'],
+          [
+            ['Homestake (1970–94)', '³⁷Cl · 0.814 MeV', '⁸B (76 %), ⁷Be (15 %), pep, CNO', '2.56 / 7.6 SNU = 0.34'],
+            ['Kamiokande II (1987–95)', 'H₂O · 7 MeV', '⁸B only; directional', '0.48 ± 0.08'],
+            ['GALLEX + SAGE (1990–)', '⁷¹Ga · 0.233 MeV', 'pp (54 %), ⁷Be (27 %), ⁸B (10 %)', '71 / 129 SNU = 0.55'],
+            ['Super-Kamiokande (1996–)', 'H₂O · 5 MeV', '⁸B; spectrum and day–night', '0.465 ± 0.015'],
+            ['SNO (1999–2006)', 'D₂O · 5 MeV', '⁸B: ν_e (CC) and all flavours (NC)', 'CC 0.35 · NC 1.01 ± 0.12'],
+          ],
+          'The solar neutrino experiments. Each saw fewer electron neutrinos than the standard solar model predicted, by different fractions in different energy ranges; SNO\'s neutral-current channel, which counts all three flavours, saw the full predicted flux.',
+        ),
+        p('The widget shows the predicted neutrino spectrum from each reaction — the broad pp continuum below 0.42 MeV carrying 91 per cent of the flux, the ⁷Be lines at 0.862 and 0.384 MeV, the pep line at 1.44 MeV, the faint ⁸B continuum to 15 MeV, the CNO neutrinos — with the thresholds of the detectors marked. Switch to "observed" and the electron-neutrino spectrum drops to the measured fractions: least at high energy, more at low energy, exactly the energy dependence that a matter-enhanced flavour change would produce. Then switch on the neutral-current view and the full flux returns.'),
+        history('Davis and Bahcall were told for years that one of them must simply be wrong — the chemistry of extracting a few atoms of argon from a tank the size of a swimming pool, or the solar model. Both were right. Davis shared the 2002 Nobel Prize in Physics (with Masatoshi Koshiba of Kamiokande); Bahcall, who had spent four decades refining the prediction, did not, and died in 2005. Arthur McDonald of SNO and Takaaki Kajita of Super-Kamiokande shared the 2015 prize for the discovery of neutrino oscillations.', 'Two stubborn men'),
+      ],
+    },
+    {
+      id: 'neutrino-oscillations',
+      kicker: 'Interactive · the resolution',
+      title: 'Neutrino oscillation: the Sun was right, the particle physics was incomplete',
+      widget: { type: 'nuoscillation' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('The solution had been proposed as early as 1968 by Bruno Pontecorvo and Vladimir Gribov. If neutrinos have mass, the three states produced in weak interactions — electron, muon and tau neutrinos — need not be the states of definite mass; each flavour state is a mixture of mass states that travel at slightly different speeds, and as the mass states slip out of phase the flavour content of the beam changes. An electron neutrino born in the solar core can arrive at the Earth as a muon or tau neutrino, invisible to a detector that only registers electron neutrinos. In 1985 Stanislav Mikheyev and Alexei Smirnov, building on work of Lincoln Wolfenstein, showed that the dense electron gas of the Sun amplifies the effect: electron neutrinos feel an extra potential from the electrons, and as a neutrino travels outward through the falling density it can be converted almost completely — the <b>MSW effect</b> — in an energy-dependent way that explained why the high-energy ⁸B neutrinos were the most suppressed.'),
+        eq('P(\\nu_e \\to \\nu_e) = 1 - \\sin^2 2\\theta\\,\\sin^2\\!\\left(\\frac{1.27\\,\\Delta m^2[{\\rm eV^2}]\\,L[{\\rm km}]}{E[{\\rm GeV}]}\\right), \\qquad \\Delta m^2_{21} = 7.5\\times10^{-5}\\ {\\rm eV^2}, \\quad \\sin^2\\theta_{12} = 0.31', 'Two-flavour vacuum oscillation: the probability that a neutrino born as ν_e is still a ν_e after distance L. For solar energies (MeV) the oscillation length 4πE/Δm² is a few hundred kilometres, so the Sun–Earth distance averages the vacuum term to 1 − ½ sin² 2θ ≈ 0.57; inside the Sun the MSW effect lowers the survival of ⁸B neutrinos further, to sin² θ ≈ 0.31.'),
+        p('The decisive experiment was the Sudbury Neutrino Observatory in Ontario: a thousand tonnes of heavy water, two kilometres underground, in which a neutrino can break a deuteron in two ways. Charged-current breakup is possible only for electron neutrinos; neutral-current breakup — a neutron set free, detected by its capture — happens equally for all three flavours. In 2001–02 SNO measured the ⁸B electron-neutrino flux at 35 per cent of the solar model\'s prediction and the all-flavour flux at 101 ± 12 per cent of it. The Sun was producing exactly the neutrinos Bahcall had computed; two-thirds of them had changed flavour on the way. Together with Super-Kamiokande\'s 1998 discovery of atmospheric muon-neutrino oscillation, this established that neutrinos have mass — the first firm evidence of physics beyond the Standard Model of particle physics, found by looking at the Sun.'),
+        p('The widget plots the survival probability against distance for a chosen energy, mixing angle and mass-squared difference; the oscillation length and the averaged solar value are reported, and the MSW regime for the Sun is marked on an energy axis. Set the parameters to the measured solar values and read off: pp neutrinos arrive 57 per cent electron-flavoured, ⁸B neutrinos 32 per cent — the gallium and chlorine fractions of the previous step, now explained. The Borexino detector in Italy has since measured the pp, ⁷Be, pep and, in 2020, the CNO neutrinos individually, confirming the whole energy dependence and, with the CNO flux, measuring the Sun\'s core metallicity directly.'),
+        think('The oscillation theory fits every solar measurement, every reactor measurement (KamLAND, 2002) and the atmospheric data, with the same two parameters — that is why it is accepted. But a good student should notice what is still open: the absolute masses of the neutrinos are unknown (only differences of squares are measured); whether neutrinos are their own antiparticles is unknown; the sign of the larger mass splitting is unknown; and the solar model\'s own inputs — the surface metallicity, revised downward in 2005, spoiled the helioseismic agreement of Section 11.1 and the "solar abundance problem" is still argued. Which future measurements — of neutrinos, of oscillation frequencies, of opacities — would most sharply test the present picture? Read the Super-Kamiokande and SNO collaboration papers, and Borexino\'s 2020 CNO result, with this in mind.', 'Critical thinking: what the resolution does and does not settle'),
+      ],
+    },
+    {
+      id: 'interior-summary',
+      kicker: 'Summary',
+      title: 'The solar interior in brief',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'The Sun: G2 V, 4.57 Gyr old, L = 3.84 × 10²⁶ W, T_eff = 5777 K; 48 per cent brighter, 12 per cent larger and 160 K hotter than at birth, because core hydrogen burning has raised μ from 0.61 to 0.85 (X_c = 0.34, Y_c = 0.64).',
+          'Centre: T = 1.57 × 10⁷ K, P = 2.34 × 10¹⁶ Pa, ρ = 1.53 × 10⁵ kg m⁻³; ε_c ≈ 280 W m⁻³; 99 per cent of L within 0.24 R☉; pp 98.7 per cent (PP I 69 %, PP II 31 %, PP III 0.1 %), CNO 1.3 per cent; ³He bump at 0.28 R☉.',
+          'Transport: radiative to 0.714 R☉, convective above (2 per cent of the mass); photon diffusion ~1.7 × 10⁵ yr; neutrinos out in 2 s.',
+          'Helioseismology: five-minute p modes, Δν ≈ 135 μHz; sound speed matches the model to 0.1 per cent; convection-zone base 0.713 R☉; rigid interior, differential envelope, tachocline at 0.7 R☉.',
+          'Solar neutrino problem: Homestake saw 1/3, Kamiokande 1/2, gallium 55 per cent of the predicted ν_e; SNO (2001–02) saw the full flux in all flavours → neutrino oscillation (MSW-enhanced), Δm² = 7.5 × 10⁻⁵ eV², sin²θ = 0.31; neutrinos have mass.',
+        ),
+        key('The Sun is the only star whose interior theory has been tested from the inside — by sound and by neutrinos — and it passed both tests, the second only after particle physics was revised. When the equations of Chapter 10 are applied to other stars, this is the reason to trust them.'),
+      ],
+    },
+  ],
+};
+
+const S11_2: Section = {
+  id: 'solar-atmosphere',
+  number: '11.2',
+  title: 'The Solar Atmosphere',
+  summary: 'The layers we can see: the 500-kilometre photosphere and its boiling granulation, the chromosphere with its spicules and red flash spectrum, the hundred-kilometre transition region, the million-degree corona and the wind it blows past the planets, the eruptions that disturb the Earth, and a rotation that is faster at the equator than at the poles.',
+  minutes: 34,
+  steps: [
+    {
+      id: 'photosphere',
+      kicker: 'Interactive · the visible surface',
+      title: 'The photosphere: five hundred kilometres of visible Sun',
+      widget: { type: 'atmprofile' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('The Sun has no surface in the solid sense, but it has a sharp edge in the sky, and Chapter 9 explained why: the opacity of the gas, chiefly the H⁻ ion in the visible, rises so steeply with depth that the transition from transparent to opaque takes only a few hundred kilometres — a thousandth of the radius, which is why the limb looks sharp from 1 AU. The <b>photosphere</b> is this layer: by convention from the depth where the optical depth at 500 nm is unity, where the temperature is about 6400 K and the density 2 × 10⁻⁴ kg m⁻³ (a ten-thousandth of air), up to the <em>temperature minimum</em> about 500 km higher, where T has fallen to 4400 K. Essentially all the visible light comes from this shell. The effective temperature of 5777 K corresponds to the τ = 2/3 level, as the Eddington–Barbier relation of Section 9.4 says it should.'),
+        p('Above the minimum something unexpected happens: the temperature starts to rise again. Through the <b>chromosphere</b> it climbs slowly to about 10 000 K over 1500 km, then in the <b>transition region</b> it shoots up by two orders of magnitude in a hundred kilometres or less, to the million-degree <b>corona</b>. The density, meanwhile, keeps falling, by a factor of a million from the photosphere to the corona. Thermodynamics forbids heat from flowing uphill in temperature, so the outer atmosphere is not heated by the photosphere below it radiatively; it must be heated mechanically or magnetically, by waves or by the dissipation of magnetic fields anchored in the convection zone. How, exactly, has been the central question of solar physics for seventy years, and it is the question the Parker Solar Probe was built to answer.'),
+        eq('P(h) = P_0\\,e^{-h/H}, \\qquad H = \\frac{kT}{\\mu m_H g} \\approx \\frac{1.38\\times10^{-23}\\times 5800}{1.3\\times1.67\\times10^{-27}\\times 274} \\approx 130\\ {\\rm km}', 'Pressure scale height of the photosphere. The gas thins by a factor of e every 130 km, so the few-hundred-kilometre photosphere spans a factor of ~50 in pressure; the entire visible layer is thinner than the distance from Ankara to Konya.'),
+        p('The widget plots temperature and density against height from 100 km below τ = 1 to 10 000 km above it, on a logarithmic height scale, with the layers labelled and a cursor you can drag. Note the three regimes: the smooth decline of the photosphere, the slow chromospheric rise with a plateau near 7000 K where hydrogen begins to ionise and absorbs the energy, and the near-vertical transition region. The model shown is an average, semi-empirical one (the VAL model of Vernazza, Avrett and Loeser, 1981, fitted to the spectrum from the ultraviolet to the radio); the real atmosphere is a seething, inhomogeneous thing in which hot and cool gas interleave, and "the height of the chromosphere" has no single value.'),
+        terms(
+          ['Photosphere', 'τ₅₀₀ = 1 to the temperature minimum: ~500 km, 6400 → 4400 K. Source of the visible continuum and the Fraunhofer absorption lines.'],
+          ['Temperature minimum', '~4400 K about 500 km above τ = 1. Seen in the far-infrared and the cores of the strongest lines; CO molecules form there.'],
+          ['Chromosphere', '~1500–2000 km, 4400 → 25 000 K; emission lines (Hα, Ca II H & K); spicules, plages, network. Named for its colour at eclipse.'],
+          ['Transition region', '~100 km, 25 000 → 10⁶ K; ultraviolet lines of C IV, O VI; the thermal interface with the corona.'],
+          ['Corona', '> 10⁶ K, density ~10¹⁵ m⁻³ at the base falling outward; visible only at eclipse or with a coronagraph; source of the solar wind.'],
+        ),
+      ],
+    },
+    {
+      id: 'granulation',
+      kicker: 'Interactive · the top of the convection zone',
+      title: 'Granulation: a surface that boils',
+      widget: { type: 'granulation' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('Through a good telescope on a steady morning the photosphere is not smooth but mottled, like rice grains on a tablecloth. The <b>granules</b> are the tops of convection cells: hot gas rising in the bright centres at about 1 km s⁻¹, spreading out, cooling by radiation, and sinking in the dark intergranular lanes. A typical granule is 700–1000 km across — roughly the scale height, as the mixing-length picture predicts — about 100 K hotter in the centre than in the lanes (which makes the centres 30 per cent brighter), and lives for 5 to 10 minutes before it is torn apart or dissolves. There are about four million of them on the Sun at any moment. Their spectral lines show the motion directly: a line formed in a granule centre is blueshifted, in a lane redshifted, and in the integrated light of the disc the two produce the characteristic "C-shaped" asymmetry of photospheric lines.'),
+        p('On a larger scale the Doppler maps reveal <b>supergranulation</b>: cells 30 000 km across, outlined by horizontal flows of 0.3–0.4 km s⁻¹ from centre to edge, living about a day. At their boundaries the flows sweep the magnetic field into a network of concentrated flux, the <em>chromospheric network</em>, which shows up bright in Ca II K images and from which the spicules of the next step shoot upward. Whether supergranules are true convection cells driven by helium ionisation at a depth of 10–30 Mm, or a pattern of interacting granules, is still debated. And at the smallest scale the Sun\'s surface is threaded with magnetic flux tubes a hundred kilometres across, concentrated in the lanes to fields of 0.1–0.15 T — enough to make the lanes locally bright ("faculae") where the field evacuates the gas and lets us see deeper.'),
+        eq('v_{\\rm conv} \\approx \\left(\\frac{F_{\\rm conv}}{\\rho}\\right)^{1/3} \\approx \\left(\\frac{6\\times10^7}{3\\times10^{-4}}\\right)^{1/3} \\approx 6\\ {\\rm km\\,s^{-1}} \\ (\\text{deep}), \\qquad \\sim 1\\text{–}2\\ {\\rm km\\,s^{-1}} \\ (\\text{observed at the surface})', 'Order-of-magnitude convective velocity needed to carry the solar flux of 6.3 × 10⁷ W m⁻² at photospheric density. Observed granule velocities of 1–2 km s⁻¹ are close to the sound speed (7 km s⁻¹) there: the surface convection is vigorous and the mixing-length treatment is at its most approximate.'),
+        p('The widget animates a granulation field: cells are born, grow, split and fade with granule lifetimes, and you can view them in intensity or colour-coded by line-of-sight velocity, and zoom out to the supergranular scale. Switch to the Doppler view and look for the pattern — blue centres and red lanes — then notice how the overall pattern never repeats: after ten minutes almost every granule you were watching is gone. Convection in a laboratory pot reaches a steady state; the Sun\'s does not, because the layer is so strongly stratified that every rising element expands enormously and overshoots.'),
+        history('Granulation was sketched by William Herschel in 1801 and photographed by Jules Janssen in 1877; its convective nature was argued by Unsöld in 1930 and settled when the Doppler correlation with brightness was measured in the 1950s. The first supergranulation maps came from Leighton\'s Doppler plates in 1960–62, the same data that revealed the five-minute oscillations. Today the Daniel K. Inouye Solar Telescope on Maui resolves features 30 km across, smaller than any previous telescope by a factor of two.', 'From rice grains to DKIST'),
+      ],
+    },
+    {
+      id: 'chromosphere',
+      kicker: 'Interactive · the red layer',
+      title: 'The chromosphere: spicules, plages and the flash spectrum',
+      widget: { type: 'spicules' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('For a few seconds at the beginning and end of a total eclipse, when the Moon has covered the photosphere but not yet the thin layer above it, the Sun\'s edge flashes a deep red, and a spectrograph pointed at it records something remarkable: the Fraunhofer lines, dark against the photospheric continuum a moment before, are now bright. This <b>flash spectrum</b>, first photographed by Charles Young in 1870, is the emission-line spectrum of the <b>chromosphere</b> — hot, thin gas seen against the dark sky, Kirchhoff\'s third case. The red colour is Hα at 656.3 nm; the Ca II H and K lines at 393 and 397 nm and the helium D₃ line at 587.6 nm are also strong. Helium, in fact, was discovered in this spectrum in 1868, by Janssen and Lockyer, twenty-seven years before it was found on Earth.'),
+        p('Images taken in the core of Hα or Ca II K, which are opaque enough to block the photosphere, show the chromosphere directly. It is not a smooth layer. At the limb it is a forest of <b>spicules</b>: jets of gas 500 km wide and up to 10 000 km high, shooting up at 20–25 km s⁻¹ along magnetic field lines at the boundaries of the supergranules, lasting 5–15 minutes before falling back or fading. Some 10⁵ are present at any time, and they carry upward about a hundred times the mass flux of the solar wind — nearly all of which falls back. In the disc the chromosphere shows the bright <em>network</em> on supergranule borders, bright <b>plages</b> ("beaches") around active regions where the magnetic field is strong, and dark <b>filaments</b>, which are prominences seen in projection. The chromosphere is, in short, the layer where the magnetic field takes over from gas pressure in shaping the gas.'),
+        eq('\\beta = \\frac{P_{\\rm gas}}{P_{\\rm mag}} = \\frac{2\\mu_0\\,n k T}{B^2}: \\qquad \\beta \\gg 1 \\ (\\text{photosphere}), \\qquad \\beta \\sim 1 \\ (\\text{chromosphere}), \\qquad \\beta \\ll 1 \\ (\\text{corona})', 'The plasma β. In the photosphere gas pressure dominates and the field is pushed around by convection; above it the gas thins faster than the field spreads, β falls below unity, and the field dictates the shape of everything — spicules, loops, prominences.'),
+        p('The widget animates spicules at the limb, launching along the network boundaries with the observed speeds, heights and lifetimes — set the launch speed and watch how the maximum height follows from the ballistic flight against solar gravity (274 m s⁻²) — and shows the flash spectrum beneath, with the strongest chromospheric emission lines. Look for the asymmetry: spicules rise faster than ballistics would allow for their height, and many fade rather than fall, which is one reason their driving — pressure pulses, magnetic reconnection, or Alfvén waves — remains uncertain. A class of faster, hotter "type II" spicules found by the Hinode satellite in 2007 may feed mass and energy to the corona.'),
+        think('Hα is an absorption line in the integrated solar spectrum (Section 9.5) yet an emission line in the flash spectrum, and Hα images of the disc show both bright plages and dark filaments. Using Kirchhoff\'s laws and the source function picture of Section 9.4, explain all three appearances of the same line.'),
+      ],
+    },
+    {
+      id: 'transition-corona',
+      kicker: 'Interactive · a million degrees',
+      title: 'The transition region and the corona',
+      widget: { type: 'coronalions' },
+      scene: [goto('parker'), rate(1)],
+      body: [
+        p('At a total eclipse the pearly <b>corona</b> stretches several solar radii from the hidden disc, structured into rays and streamers that trace the magnetic field. Its brightness is about a millionth of the photosphere\'s, which is why it is invisible against the daytime sky, and it has three components. The <b>K corona</b> (German <em>kontinuierlich</em>) is photospheric light scattered by free electrons moving so fast that the Fraunhofer lines are Doppler-smeared away — its intensity gives the electron density, about 10¹⁵ m⁻³ at the base, a million times thinner than the photosphere. The <b>F corona</b> (Fraunhofer) is sunlight scattered by interplanetary dust, lines intact, and merges into the zodiacal light. And the <b>E corona</b> is emission lines, the most famous the green line at 530.3 nm, unidentified from its discovery in 1869 until 1939 and once attributed to a new element, "coronium".'),
+        p('Bengt Edlén\'s identification of the green line as Fe XIV — iron stripped of thirteen electrons — and the red 637.4 nm line as Fe X settled the temperature: these ions exist only above a million kelvin. The corona is 1–2 × 10⁶ K in quiet regions and 3–4 × 10⁶ K above active regions, two hundred times hotter than the photosphere beneath it. Its gas is a fully ionised, almost collisionless plasma threaded by the magnetic field; its thermal emission peaks in the extreme ultraviolet and soft X-rays, which is how the SOHO, SDO and Hinode spacecraft image it — each EUV channel isolating a line of a particular ion and therefore a particular temperature. Below it, in the <b>transition region</b>, the temperature climbs from 25 000 K to a million in under a hundred kilometres, so steeply that heat conduction back down into the chromosphere is a major part of the energy balance; its lines — Lyman α, C IV, O VI — are the diagnostics of that thin interface.'),
+        table(
+          ['Ion', 'Wavelength', 'Formation T', 'Where'],
+          [
+            ['H I Lyα', '121.6 nm', '2 × 10⁴ K', 'upper chromosphere / TR'],
+            ['C IV', '154.8 nm', '1 × 10⁵ K', 'transition region'],
+            ['O VI', '103.2 nm', '3 × 10⁵ K', 'transition region'],
+            ['Fe IX', '17.1 nm (AIA 171)', '6 × 10⁵ K', 'quiet corona, loops'],
+            ['Fe XII', '19.3 nm (AIA 193)', '1.6 × 10⁶ K', 'corona, coronal holes dark'],
+            ['Fe XIV', '21.1 nm; 530.3 nm (green line)', '2 × 10⁶ K', 'active-region corona'],
+            ['Fe XVI', '33.5 nm', '2.5 × 10⁶ K', 'hot active regions'],
+            ['Fe XXIV', '19.2 nm', '2 × 10⁷ K', 'flares'],
+          ],
+          'Emission lines of the transition region and corona and the temperatures at which each ion is most abundant. The SDO/AIA imager\'s channels are chosen to isolate these lines, so a set of simultaneous images is a temperature map.',
+        ),
+        p('The widget plots the fraction of iron in each ionisation stage against temperature — the ionisation equilibrium of a hot, thin plasma, set by collisional ionisation against radiative and dielectronic recombination rather than by the Saha equation (there is no radiation field to speak of, and the density is too low for three-body recombination) — and shows which EUV and visible lines light up at each temperature. Drag the temperature from 10⁴ to 10⁷ K and watch iron step through its stages, Fe IX to Fe XIV to Fe XXIV; the disc beside it is tinted with the AIA channel that would dominate. The Parker Solar Probe, behind the panel, dives repeatedly through this corona — since December 2024 to within 6.1 million km (8.8 R☉) of the surface — to measure in place the waves, turbulence and reconnection that must be heating it.'),
+        history('The coronal heating problem is old. Grotrian suggested in 1939 that the corona was hot; Edlén proved it in 1941–42; and since then two broad families of explanation have competed: <em>wave heating</em>, in which Alfvén and acoustic waves launched by the convection zone travel up the field lines and dissipate, and <em>nanoflare heating</em>, Parker\'s 1988 proposal that the field is continually braided by photospheric motions and relaxes by countless tiny reconnection events. Both are probably at work; the Parker probe\'s detection of abundant magnetic "switchbacks" in the young solar wind, and the Solar Orbiter\'s "campfires" seen in 2020, are the newest evidence.', 'Why is the corona hot?'),
+      ],
+    },
+    {
+      id: 'solar-wind',
+      kicker: 'Interactive · the Sun\'s atmosphere does not end',
+      title: 'Coronal holes and the solar wind',
+      widget: { type: 'solarwind' },
+      scene: [goto('parker'), rate(1)],
+      body: [
+        p('A corona at a million kelvin cannot be held by the Sun\'s gravity. In 1958 Eugene Parker showed that a hot, extended corona has no static solution with a pressure that falls to zero at infinity: the isothermal pressure at large distance comes out orders of magnitude higher than the interstellar pressure, so the corona must expand. His solution is a <b>wind</b> that starts subsonically at the base, passes through a critical point where its speed equals the sound speed — at r_c = GM☉/2c_s², about 4 R☉ for 1.5 × 10⁶ K — and continues to accelerate to a supersonic terminal speed of several hundred kilometres per second. The paper was rejected by its referees and published only on the insistence of the editor, Subrahmanyan Chandrasekhar; the Mariner 2 spacecraft confirmed the wind on its way to Venus in 1962.'),
+        eq('\\left(\\frac{v}{c_s}\\right)^2 - \\ln\\left(\\frac{v}{c_s}\\right)^2 = 4\\ln\\frac{r}{r_c} + \\frac{4 r_c}{r} - 3, \\qquad c_s = \\sqrt{\\frac{2kT}{m_p}}, \\qquad r_c = \\frac{G M_\\odot}{2c_s^2}', 'Parker\'s isothermal wind solution for a fully ionised hydrogen corona: the unique transonic branch that is subsonic at the Sun and supersonic at infinity. For T = 1.5 × 10⁶ K: c_s = 157 km s⁻¹, r_c = 3.9 R☉, and v ≈ 500 km s⁻¹ at 1 AU. Real winds are not isothermal and are also driven by Alfvén waves, which is why the fast wind is faster than this predicts.'),
+        p('The wind at the Earth comes in two kinds. The <b>slow wind</b>, 300–500 km s⁻¹ with about 7 protons per cubic centimetre, flows from the edges of the streamers that overlie closed magnetic regions near the equator. The <b>fast wind</b>, 700–800 km s⁻¹ and thinner, pours out of <b>coronal holes</b>: regions, dark in X-ray and EUV images, where the magnetic field is open — a single polarity whose lines stretch out into the heliosphere instead of looping back. The holes sit at the poles for most of the cycle and extend to low latitudes near minimum; the Ulysses spacecraft, flying over the solar poles in 1994–95, found the fast wind filling the whole high-latitude heliosphere. The Sun loses about 2 × 10⁹ kg s⁻¹ in the wind — 3 × 10⁻¹⁴ M☉ per year, negligible for the Sun\'s evolution but enough, over four billion years, to have stripped Mars of much of its atmosphere.'),
+        p('The widget solves the Parker equation for a coronal temperature you choose, plotting the wind speed against distance with the critical point marked, and reports the speed, density and travel time at 1 AU, together with the angle of the magnetic field. That last comes from rotation: the field lines are rooted in the rotating Sun while the plasma carrying them moves radially, so they wind into an Archimedean spiral — the <b>Parker spiral</b> — inclined by tan ψ = Ωr/v, about 45° at the Earth\'s orbit. The wind carries the Sun\'s field, about 5 nT at 1 AU, out to the <b>heliopause</b>, 120 AU away, where its pressure finally balances the interstellar medium; Voyager 1 crossed it in 2012.'),
+        terms(
+          ['Coronal hole', 'Open-field region, dark in EUV/X-rays, source of the fast (750 km s⁻¹) wind. Polar for most of the cycle.'],
+          ['Streamer', 'Bright, pointed structure overlying closed field; its cusp is the source of the slow wind and the heliospheric current sheet.'],
+          ['Parker spiral', 'The interplanetary field wound by solar rotation: tan ψ = Ω r / v ≈ 1 at 1 AU; ψ → 90° far out.'],
+          ['Heliosphere', 'The bubble carved by the wind in the interstellar gas: termination shock near 90 AU, heliopause at 120 AU (Voyager 1, 2012; Voyager 2, 2018).'],
+        ),
+      ],
+    },
+    {
+      id: 'cmes-space-weather',
+      kicker: 'Interactive · eruptions',
+      title: 'Coronal mass ejections and space weather',
+      widget: { type: 'cme' },
+      scene: [goto('earth'), rate(1)],
+      body: [
+        p('Coronagraph movies from SOHO show, several times a day near solar maximum, a bubble of coronal gas the size of the Sun detaching and expanding outward: a <b>coronal mass ejection</b>. A typical CME carries 10¹² to 10¹³ kg of plasma — a billion tonnes, about as much as a small mountain — at speeds from 300 to over 3000 km s⁻¹, with a kinetic energy of 10²⁴ to 10²⁵ J, comparable to the largest flares and often accompanying them. They are not driven by thermal pressure but by magnetic energy: a stressed, twisted magnetic structure, often holding a prominence, loses equilibrium and is flung out, dragging the field with it. Behind it the closed field reconnects, producing the flare ribbons and post-flare loops seen in the EUV.'),
+        p('When a CME is aimed at the Earth it arrives one to four days later, driving a shock ahead of it and carrying a magnetic cloud. If the cloud\'s field points south, opposite to the Earth\'s, it reconnects with the magnetosphere and lets in energy and plasma: the magnetopause is pushed from its usual 10 Earth radii inward toward the geosynchronous orbits at 6.6 R_E, the ring current swells and depresses the ground-level field by hundreds of nanoteslas — a <b>geomagnetic storm</b> — the aurora descends to mid-latitudes, and induced currents flow in power grids and pipelines. The storm of March 1989 blacked out Québec for nine hours; the Carrington event of September 1859, the largest on record, set telegraph offices on fire and painted auroras over Cuba. A repeat today would cost trillions. Forecasting these events — <b>space weather</b> — is why the Sun is now monitored around the clock from L1.'),
+        eq('t_{\\rm travel} = \\frac{1\\ {\\rm AU}}{v} = \\frac{1.5\\times10^{11}\\ {\\rm m}}{10^6\\ {\\rm m\\,s^{-1}}} \\approx 42\\ {\\rm h}, \\qquad r_{\\rm mp} \\approx R_E\\left(\\frac{B_0^2}{2\\mu_0\\,\\rho v^2}\\right)^{1/6}', 'CME travel time to the Earth at 1000 km s⁻¹ (fast CMEs decelerate against the slower wind, slow ones are swept along; real transit times are 15 h to 4 days), and the stand-off distance of the magnetopause from the balance of the Earth\'s dipole pressure (B₀ = 3.1 × 10⁻⁵ T at the equator) against the wind\'s ram pressure: ~10 R_E for the quiet wind, 5–6 R_E in a severe storm.'),
+        p('The widget launches a CME of chosen speed and density toward the Earth, shows its progress across the inner solar system against the clock, and computes the arrival time, the kinetic energy and the compressed stand-off distance of the magnetopause; the Earth is drawn with its magnetosphere shrinking as the ram pressure rises, and the geosynchronous orbit marked. Try a Carrington-class event — 2000 km s⁻¹ and ten times the usual density — and see the magnetopause driven inside the satellites. The Earth behind the panel is protected from the ordinary wind by its field; Mars, without a global field, was not, and the MAVEN spacecraft has measured its atmosphere being stripped at about 100 grams per second, far more during CMEs.'),
+        history('Richard Carrington was sketching sunspots on 1 September 1859 when two brilliant white patches appeared in a spot group — the first flare ever seen, and still one of the most powerful. Seventeen hours later the geomagnetic storm began. The connection was doubted for decades; Lord Kelvin computed that the Sun could not possibly transmit enough energy to disturb the Earth\'s field, having assumed it did so by radiation rather than by a cloud of magnetised plasma. CMEs themselves were discovered only in 1971, by the OSO-7 coronagraph.', '1 September 1859'),
+      ],
+    },
+    {
+      id: 'differential-rotation',
+      kicker: 'Interactive · a Sun that does not turn as one',
+      title: 'Differential rotation',
+      widget: { type: 'diffrot' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('Galileo tracked sunspots across the disc in 1612 and found a rotation period of about a month. Richard Carrington, two and a half centuries later, found that the period depends on latitude: spots near the equator go round in 25 days, spots at 30° latitude in about 26.5, and Doppler measurements of the surface gas, which reach the poles, give about 36 days there. The Sun is a fluid and nothing obliges its parts to rotate together; the <b>differential rotation</b> is maintained by the convection zone, in which rotating, rising and sinking gas transports angular momentum toward the equator. The standard fit to the surface rotation is ω = 14.71 − 2.39 sin²φ − 1.79 sin⁴φ degrees per day (sidereal), where φ is latitude — a period of 24.5 days at the equator and 38 days at the pole.'),
+        eq('\\omega(\\phi) = 14.71 - 2.39\\sin^2\\phi - 1.79\\sin^4\\phi \\quad {\\rm deg\\,day^{-1}}, \\qquad P_{\\rm synodic} = \\frac{P_{\\rm sid}}{1 - P_{\\rm sid}/365.25\\ {\\rm d}}', 'The surface differential rotation (Snodgrass & Ulrich 1990) and the conversion from the sidereal period to the synodic one seen from the orbiting Earth: 25.4 d sidereal at the equator becomes 27.3 d synodic, the "Carrington rotation" used to number solar rotations since 1853.'),
+        p('Helioseismology (Section 11.1) extended this map inward, and the result was a surprise. Through the whole convection zone the rotation rate at a given latitude is nearly constant with depth — the surface pattern printed straight down, not the cylinders that theory expected. Below the convection zone the radiative interior rotates rigidly at a rate close to the surface rate at mid-latitudes, about 27 days. Between them, at 0.7 R☉, lies the <b>tachocline</b>: a layer only a few per cent of the radius thick across which the rotation rate changes abruptly — faster below than above at high latitudes, slower below at the equator. A strong shear in a conducting fluid is exactly what a dynamo needs to stretch a weak poloidal field into a strong toroidal one, and the tachocline is now the leading candidate for the seat of the solar cycle (Section 11.3).'),
+        p('The widget paints meridians on the Sun and lets the days run: watch the lines at the equator pull ahead of those at high latitude and wind into a spiral, completing an extra turn every few months; a latitude slider reports the local sidereal and synodic periods. Switch to the interior view for the helioseismic rotation map — the colour-coded rotation rate in a meridional cut, the rigid core, the differentially rotating envelope and the thin tachocline between them. A magnetic field line frozen into the gas would be wound up just as the meridians are, which is the heart of the dynamo picture of the next section.'),
+        note('The Sun\'s rotation axis is tilted 7.25° to the ecliptic, and the Earth\'s orbital motion adds about two days to every apparent rotation. The Sun also rotates slowly for a star of its type — once in 25 days, against hours for young solar-type stars — because its magnetised wind has carried away angular momentum for 4.6 billion years; this <em>magnetic braking</em> (Skumanich 1972: v ∝ t^−1/2) is why rotation is an age indicator for stars like the Sun.', 'Slow, and tilted'),
+      ],
+    },
+    {
+      id: 'atmosphere-summary',
+      kicker: 'Summary',
+      title: 'The solar atmosphere in brief',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Photosphere: ~500 km from τ₅₀₀ = 1 (6400 K, 2 × 10⁻⁴ kg m⁻³) to the temperature minimum (4400 K); scale height 130 km; granules ~1000 km, 1 km s⁻¹, 5–10 min; supergranules 30 000 km, ~1 day, outline the magnetic network.',
+          'Chromosphere: 4400 → 25 000 K over ~2000 km; flash spectrum of emission lines (Hα, Ca II H & K, He I D₃ — helium discovered here, 1868); spicules 10 000 km high at 20–25 km s⁻¹; plages, filaments; β falls through 1.',
+          'Transition region (~100 km, to 10⁶ K; Lyα, C IV, O VI) and corona (1–2 × 10⁶ K quiet, 3–4 × 10⁶ active; K, F, E components; Fe XIV 530.3 nm "coronium"; EUV channels are temperature maps). Heating by waves and/or nanoflares — the open problem Parker Solar Probe addresses.',
+          'Solar wind: Parker\'s transonic solution, critical point at ~4 R☉, 400 km s⁻¹ slow wind from streamers and 750 km s⁻¹ fast wind from coronal holes; 2 × 10⁹ kg s⁻¹; Parker spiral 45° at 1 AU; heliopause at 120 AU.',
+          'CMEs: 10¹²–10¹³ kg at 300–3000 km s⁻¹, 10²⁴–10²⁵ J, magnetically driven; 1–4 days to Earth; geomagnetic storms compress the magnetopause from 10 to ~6 R_E (Carrington 1859, Québec 1989).',
+          'Differential rotation: 25 d equator to 36 d poles (ω = 14.71 − 2.39 sin²φ − 1.79 sin⁴φ °/d); printed down through the convection zone; rigid interior; tachocline shear layer at 0.7 R☉.',
+        ),
+        key('Above the photosphere the Sun\'s atmosphere gets hotter, thinner and more magnetic with height, until the magnetic field, not gas pressure, decides where everything goes — and the atmosphere, unable to be held, flows out past the planets. Every structure in it, from spicules to the solar wind, is a magnetic structure, and the next section asks where the magnetism comes from.'),
+      ],
+    },
+  ],
+};
+
+const S11_3: Section = {
+  id: 'solar-cycle',
+  number: '11.3',
+  title: 'The Solar Cycle',
+  summary: 'Sunspots — cool because they are magnetic — and their eleven-year rhythm; the butterfly diagram and the laws of Spörer, Hale and Joy; flares and prominences as magnetic energy let loose; Babcock\'s dynamo, which turns differential rotation and convection into a field that reverses every eleven years; and the same activity, often far stronger, on other stars.',
+  minutes: 30,
+  steps: [
+    {
+      id: 'sunspots',
+      kicker: 'Interactive · dark because magnetic',
+      title: 'Sunspots',
+      widget: { type: 'sunspot' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('Sunspots were recorded by Chinese astronomers two thousand years ago and by Galileo, Scheiner and Fabricius in 1611; what they are became clear only in 1908, when George Ellery Hale found their spectral lines split into the Zeeman components of Section 5.4 and so measured, for the first time, a magnetic field outside the Earth. A sunspot is a region where a bundle of magnetic flux of 0.1 to 0.4 tesla — a few thousand gauss, ten thousand times the Earth\'s field — breaks through the photosphere. Its dark <b>umbra</b> is at about 4000 K, its filamentary <b>penumbra</b> at 5500 K, against the 5777 K photosphere; by the Stefan–Boltzmann law the umbra radiates (4000/5777)⁴ = 23 per cent as much per unit area, which is why it looks black by contrast, though a sunspot alone in the sky would outshine the full Moon.'),
+        p('The spot is cool because the field is strong. The pressure of a magnetic field is B²/2μ₀, and at 0.3 T that is 3.6 × 10⁴ Pa — more than the gas pressure of the surrounding photosphere, about 10⁴ Pa. For the spot to be in horizontal pressure balance its own gas pressure must be lower, so the gas inside is thinner, and, more importantly, the strong vertical field suppresses the convective motions that bring heat up from below: the overturning gas cannot cross the field lines. Starved of its energy supply from beneath, the surface cools until the radiation it emits matches the little energy that does arrive. The missing energy is not lost; it is stored in the convection zone and leaks out over the following months as a slight brightening of the whole Sun, which is why the Sun is in fact very slightly <em>brighter</em> at sunspot maximum, when the bright faculae around active regions outweigh the dark spots.'),
+        eq('\\frac{B^2}{2\\mu_0} + P_{\\rm in} = P_{\\rm out}, \\qquad \\Delta\\lambda_{\\rm Zeeman} = \\frac{e\\,g\\,\\lambda^2 B}{4\\pi m_e c} = 4.67\\times10^{-8}\\,g\\,\\lambda_{\\rm nm}^2\\,B_{\\rm T}\\ {\\rm nm}', 'Horizontal pressure balance across a sunspot\'s flux tube, and the Zeeman splitting of a line with Landé factor g. For the Fe I 630.25 nm line (g = 2.5) in a 0.3 T spot, Δλ = 0.014 nm — easily resolved, and with the polarisation of the components giving the field\'s direction as well as its strength.'),
+        p('The widget draws a sunspot in cross-section and in intensity, with sliders for the field strength and the umbral temperature; it balances magnetic against gas pressure, computes the brightness ratio and shows the Zeeman splitting of the 630.25 nm line, with the σ and π components. Spots come in groups: a typical active region is bipolar, with a <em>leading</em> spot (in the direction of rotation) and a <em>following</em> spot of opposite polarity, joined by loops of field arching through the corona. Sizes range from pores a few hundred kilometres across to groups spanning 100 000 km; lifetimes from hours to months. The <em>Wilson depression</em>, the fact that the umbra is seen ~500 km below the photosphere, follows from the lower gas density inside — one sees deeper into thinner gas.'),
+        terms(
+          ['Umbra', 'Central dark core, ~4000 K, field 0.2–0.4 T vertical; 23 per cent of photospheric brightness.'],
+          ['Penumbra', 'Filamentary surround, ~5500 K, field inclined 60–80°; shows the Evershed outflow at ~2 km s⁻¹.'],
+          ['Active region', 'Bipolar group of spots with its plages, loops and flares; numbered by NOAA since 1972 (AR 13664 produced the May 2024 storms).'],
+          ['Zeeman effect', 'Splitting of a line into components in a magnetic field; Hale 1908 for sunspots; the standard way to map stellar fields.'],
+        ),
+      ],
+    },
+    {
+      id: 'sunspot-cycle',
+      kicker: 'Interactive · an eleven-year rhythm',
+      title: 'The sunspot cycle and the butterfly diagram',
+      widget: { type: 'butterfly' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('Heinrich Schwabe, a Dessau pharmacist hunting for a planet inside Mercury\'s orbit by watching for its transits, counted sunspots every clear day from 1826 to 1843 and found instead that their number rose and fell with a period of about ten years. Rudolf Wolf at Zürich reconstructed the record back to 1700 and defined the <b>sunspot number</b> R = k(10g + f), with g groups and f individual spots, still used today. The cycle averages 11 years, ranging from 9 to 14; the rise to maximum is faster than the decline; strong cycles peak at relative numbers above 200 (cycle 19, in 1958) and weak ones near 80 (cycle 24, in 2014). From 1645 to 1715 almost no spots were seen at all — the <b>Maunder minimum</b>, coinciding with the coldest decades of the Little Ice Age — and a lesser <b>Dalton minimum</b> followed around 1800–1830.'),
+        p('The spots also move. Gustav Spörer noticed in the 1860s that the first spots of a new cycle appear at latitudes of 30–40°, and that as the cycle proceeds new spots form ever closer to the equator, the last ones at about 5°, while the first high-latitude spots of the next cycle are already appearing: <b>Spörer\'s law</b>. Plotted as latitude against time, Edward Maunder\'s 1904 diagram of the spots makes a row of butterfly wings, and the <b>butterfly diagram</b> has been the icon of solar activity ever since. Hale added the magnetic rules in 1919: in a given cycle the leading spots of all groups in the northern hemisphere have one polarity and those in the south the opposite; in the next cycle both reverse (<b>Hale\'s law</b>), so the full magnetic cycle is 22 years; and the Sun\'s polar fields reverse at each maximum. Joy\'s law adds that bipolar groups are tilted, the leading spot nearer the equator, by an angle that grows with latitude.'),
+        eq('R = k\\,(10g + f), \\qquad \\langle P_{\\rm sunspot}\\rangle = 11.0\\ {\\rm yr}, \\qquad P_{\\rm magnetic} = 22\\ {\\rm yr}, \\qquad \\Delta(\\text{solar constant}) \\approx 0.1\\%', 'Wolf\'s sunspot number (k calibrates each observer and telescope), the mean period of the spot cycle, the full magnetic period, and the amplitude of the Sun\'s brightness variation over a cycle — tiny, because the dark spots are nearly compensated by the bright faculae.'),
+        p('The widget shows the sunspot number from 1700 to the present with the named minima and the numbered cycles, and beneath it the butterfly diagram since 1874; drag the year cursor and the disc shows spots at the latitudes and in the numbers of that moment, with the Hale polarities marked. Find the Maunder minimum and the giant cycle 19; then step through a single cycle and watch the wings close on the equator while the next pair opens near 35°. Everything in Section 11.2 — flares, CMEs, coronal shape, the fast-wind coronal holes, even the Earth\'s upper atmosphere — follows this rhythm, which is why "solar activity" and "the sunspot cycle" are used almost interchangeably.'),
+        history('The link between the Maunder minimum and the Little Ice Age is suggestive but not simple: the solar constant changes by only 0.1 per cent over a cycle, and a prolonged minimum may have been 0.3 per cent fainter — enough for a few tenths of a degree, with volcanic eruptions doing much of the rest. Radiocarbon and beryllium-10 in tree rings and ice cores, produced by cosmic rays that the Sun\'s field modulates, let the cycle be traced back 10 000 years: grand minima recur every few centuries, and the twentieth century was an unusually active "grand maximum".', 'A frozen Thames?'),
+      ],
+    },
+    {
+      id: 'flares-prominences',
+      kicker: 'Interactive · magnetic energy released',
+      title: 'Solar flares and prominences',
+      widget: { type: 'flareenergy' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('A <b>solar flare</b> is a sudden release of energy stored in the coronal magnetic field above an active region: in a few minutes, from 10¹⁷ J for the smallest to 10²⁵ J for the greatest — the latter equal to a billion megatons of TNT, or the Sun\'s entire output for a fifth of a second — as gas heated to 10 to 30 million kelvin, as accelerated electrons and protons, and as radiation from radio waves through Hα and the ultraviolet to hard X-rays and gamma rays. The standard picture is <b>magnetic reconnection</b>: field lines of opposite direction, pressed together by the slow motions of the photosphere, break and reconnect at a current sheet, converting magnetic energy into heat and particle energy and releasing the tension of the field like a snapped rubber band. Electrons accelerated at the reconnection site stream down the loops and slam into the chromosphere, producing the two bright <em>flare ribbons</em> and hard X-ray footpoints; the heated gas then evaporates up into the loops and shines in soft X-rays.'),
+        eq('E_{\\rm mag} = \\frac{B^2}{2\\mu_0}\\,V \\approx \\frac{(0.03\\ {\\rm T})^2}{2\\times 1.26\\times10^{-6}}\\times(3\\times10^7\\ {\\rm m})^3 \\approx 10^{25}\\ {\\rm J}', 'Magnetic energy stored in a coronal volume: a 300-gauss field in a cube 30 000 km on a side holds 10²⁵ J. A large flare releases a fraction of this (the part above the potential-field minimum); the rest of the active region\'s field survives, which is why one region can flare repeatedly.'),
+        p('Flares are classified by their peak soft X-ray flux at 1–8 Å measured by the GOES satellites: class C is 10⁻⁶ W m⁻², M is 10⁻⁵, X is 10⁻⁴, with a number for the multiple — an X10 flare delivers 10⁻³ W m⁻² at the Earth, a millionth of the solar constant, but all of it in X-rays that the upper atmosphere absorbs, so that the ionosphere is disturbed within minutes and short-wave radio fades on the daylit side. The largest recorded, in November 2003, saturated the detectors at about X28–X45. Flares occur at every scale, with the number falling as a power law, N(>E) ∝ E^−0.8, and if the law continues down to <em>nanoflares</em> of 10¹⁷ J their total power could heat the corona.'),
+        p('<b>Prominences</b> are the opposite kind of structure: not explosive but suspended. Seen at the limb in Hα as bright arches and curtains, and on the disc as dark filaments, they are clouds of chromospheric gas — 10⁴ K, a hundred times denser than the corona — held up for weeks or months in the million-degree corona by the dips of a magnetic field running along the polarity-inversion line of an active region or between two regions. A <em>quiescent</em> prominence can be 200 000 km long and 50 000 km high; its mass, 10¹² kg, is a few per cent of the whole corona\'s. When the supporting field loses equilibrium the prominence <em>erupts</em>, rising at hundreds of kilometres per second, and often becomes the core of a coronal mass ejection, with a flare where the field reconnects beneath it: flare, filament eruption and CME are three views of one magnetic event.'),
+        p('The widget stores magnetic energy in a loop of adjustable field strength and size, animates the reconnection — field lines pinching at an X-point and snapping into relaxed loops while a prominence rises above — and reports the energy released, the GOES class it corresponds to and comparisons with earthly quantities. Set a 300-gauss field in a 10 000 km loop and you get a C flare of about 10²³ J; 1000 gauss over 30 000 km, an X-class event above 10²⁵ J. Notice how the volume dominates — the energy scales with the cube of the size — which is why the great flares come from the great active regions.'),
+      ],
+    },
+    {
+      id: 'dynamo',
+      kicker: 'Interactive · the engine',
+      title: 'The magnetic dynamo: Babcock\'s model',
+      widget: { type: 'dynamo' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('Every piece of the puzzle — differential rotation, the 22-year magnetic cycle, Spörer\'s drift toward the equator, Hale\'s polarities, Joy\'s tilt, the polar reversal at maximum — was put together by Horace Babcock in 1961 into a picture that remains the frame for all later theory. Begin at solar minimum with a weak <em>poloidal</em> field like a bar magnet\'s, its lines running from pole to pole just beneath the surface. The gas is a nearly perfect conductor, so the field is <b>frozen in</b> to it and must go where the gas goes. Differential rotation then carries the field lines at the equator ahead of those at the poles, wrapping them around the Sun: after a few years the field is wound into a strong <em>toroidal</em> band in each hemisphere, running east–west, antiparallel in the two hemispheres, and amplified by the stretching from a few gauss to thousands.'),
+        p('The wound-up field is buoyant — magnetic pressure replaces some gas pressure, so a flux tube is lighter than its surroundings — and where it is strongest it rises and breaks through the photosphere as an Ω-shaped loop whose two footpoints are a bipolar sunspot group: the leading spot carries the polarity of the toroidal field, which is opposite in the two hemispheres, exactly Hale\'s law. Because the toroidal field is strongest first at mid-latitudes and then, as the winding proceeds, closer to the equator, the spots follow Spörer\'s law. The Coriolis force on the rising loop tilts it, giving Joy\'s law. Then the decay: as the active regions disperse, the following-polarity flux, which lies nearer the pole, is carried poleward by the meridional circulation and by diffusion and cancels the old polar field, then replaces it with the opposite polarity — the polar reversal at maximum. Leading-polarity flux from the two hemispheres cancels across the equator. By the next minimum the Sun has a poloidal field again, reversed, and the next winding produces spots of the opposite polarity: the 22-year cycle.'),
+        eq('\\frac{\\partial \\mathbf{B}}{\\partial t} = \\nabla\\times(\\mathbf{v}\\times\\mathbf{B}) + \\eta\\nabla^2\\mathbf{B}, \\qquad R_m = \\frac{vL}{\\eta} \\sim 10^8 \\ \\text{in the convection zone}', 'The induction equation of magnetohydrodynamics: the field is advected and stretched by the flow (first term) and diffuses away (second). The magnetic Reynolds number R_m compares them; at 10⁸ the field is frozen into the gas on all but the smallest scales, which is why differential rotation can wind it up.'),
+        p('The widget runs the cycle in stages, from the poloidal field at minimum through the winding, the emergence of tilted bipolar groups obeying Hale\'s and Joy\'s laws, the poleward drift of following flux and the reversal, with a slider over the 22 years and the butterfly diagram building below. Babcock\'s model is kinematic — it describes what the flows do to the field without explaining the flows — and later <em>mean-field</em> dynamo theory (Parker, Steenbeck, Krause and Rädler) made its two steps precise: the <b>Ω effect</b>, winding by differential rotation, and the <b>α effect</b>, the regeneration of poloidal from toroidal field by helical convective turbulence twisted by the Coriolis force. Modern "flux-transport" dynamos place the Ω effect in the tachocline, where helioseismology found the shear, and use the observed meridional flow as the conveyor belt; they reproduce the butterfly diagram and have some skill at predicting the strength of the next cycle. Why the period is 11 years rather than 5 or 50, and what sets grand minima, are still open.'),
+        think('A planet-sized bar magnet would lose its field by ohmic decay in ~10⁴ years; the Earth\'s field is ~3 billion years old and the Sun\'s reverses every 11. Both are maintained by dynamos in rotating, convecting conductors — liquid iron in one, ionised gas in the other. Which ingredients are common, and why does the Earth\'s field reverse irregularly, at intervals of 10⁵–10⁶ years, while the Sun\'s does so like clockwork?'),
+      ],
+    },
+    {
+      id: 'stellar-activity',
+      kicker: 'Interactive · the Sun among stars',
+      title: 'Magnetic activity in other stars',
+      widget: { type: 'activity' },
+      scene: [goto('Proxima Centauri', 'star'), rate(1)],
+      body: [
+        p('If the solar dynamo is a consequence of rotation and convection, every star with a convective envelope and some spin should have one, and the observations say so. In 1966 Olin Wilson began measuring the emission in the cores of the Ca II H and K lines — the chromospheric signature that lights up plages on the Sun — in a hundred Sun-like stars at Mount Wilson, and by 1978 he had found that many showed cycles of 7 to 14 years like the Sun\'s, some were flat (perhaps in Maunder-like minima), and the young, rapidly rotating stars were far more active and irregular. X-ray surveys with the Einstein and ROSAT satellites then found coronae on essentially all cool stars, with luminosities from 10⁻⁷ to 10⁻³ of the bolometric output. The Sun, at L_X/L_bol ≈ 10⁻⁶, is a quiet star.'),
+        p('The controlling variable is rotation, or more precisely the <b>Rossby number</b> Ro = P_rot/τ_c, the rotation period divided by the convective turnover time at the base of the convection zone. Across all masses from F to M, activity rises steeply as Ro falls — L_X/L_bol ∝ Ro^−2 — until Ro ≈ 0.1, where it <em>saturates</em> at L_X/L_bol ≈ 10⁻³ and stays there for the fastest rotators. Because stars spin down with age by magnetic braking, activity is also an age indicator, and because M dwarfs have longer turnover times and spin down more slowly, they stay active for billions of years. Proxima Centauri, behind the panel, rotates once in 83 days yet has L_X/L_bol ≈ 10⁻⁴, a hundred times the Sun\'s ratio, and flares that raise its brightness by magnitudes — in 2019 a flare released 10²⁶ J in seven seconds, a hundred times the Carrington event, in the direction of a planet in its habitable zone.'),
+        eq('{\\rm Ro} = \\frac{P_{\\rm rot}}{\\tau_c}, \\qquad \\frac{L_X}{L_{\\rm bol}} \\approx \\begin{cases} 10^{-3} & {\\rm Ro} \\lesssim 0.1\\ (\\text{saturated}) \\\\ 10^{-3}\\,({\\rm Ro}/0.1)^{-2} & {\\rm Ro} \\gtrsim 0.1 \\end{cases}, \\qquad v_{\\rm rot} \\propto t^{-1/2}', 'The rotation–activity relation (Pizzolato et al. 2003; Wright et al. 2011) and Skumanich\'s spin-down law. The Sun: P_rot = 25 d, τ_c ≈ 14 d, Ro ≈ 1.8, L_X/L_bol ≈ 10⁻⁶ — on the unsaturated branch, two orders of magnitude below the saturation level young Suns sit at.'),
+        p('The widget plots L_X/L_bol against Rossby number with the two branches and real stars placed — the Sun, Proxima, the young solar twin EK Draconis, the active binary AB Doradus, old slow rotators — and sliders for the rotation period and spectral type that move a test star along the relation and report its activity, flare energies and age by gyrochronology. Starspots covering 10–30 per cent of a surface are mapped on active stars by Doppler imaging; superflares of 10²⁶–10²⁹ J have been seen on Sun-like stars by the Kepler photometer, raising the question of whether our own Sun is capable of one; and cycles have been detected in X-rays, in Ca II and in the magnetic field itself (Zeeman-Doppler imaging) on dozens of stars. The Sun is the only star whose dynamo we can watch in detail, but it is one of a family, and the family tells us how it has aged and what it once was.'),
+        history('The young Sun, spinning once in a few days, had an X-ray luminosity a thousand times the present one, a wind perhaps a hundred times stronger and flares far more frequent — conditions that shaped the atmospheres of the early planets and, through the erosion of Mars\'s air and the escape of the Earth\'s hydrogen, their habitability. Reconstructing that "Sun in time" from solar analogues of different ages (Güdel, Ribas and others) is where solar physics, stellar astrophysics and planetary science meet.', 'The Sun in time'),
+      ],
+    },
+    {
+      id: 'chapter-close',
+      kicker: 'Chapter close',
+      title: 'The Sun in one page',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Interior: G2 V, 4.57 Gyr, 48 per cent brighter than at birth; T_c = 1.57 × 10⁷ K, P_c = 2.34 × 10¹⁶ Pa, X_c = 0.34; 99 per cent of L inside 0.24 R☉; radiative to 0.714 R☉, convective above; photons out in ~10⁵ yr; helioseismology confirms the sound speed to 0.1 per cent and maps the tachocline.',
+          'Neutrinos: one-third to one-half of the predicted ν_e seen for thirty years; SNO (2001–02) saw the full flux in all flavours → neutrino oscillation and mass, Δm² = 7.5 × 10⁻⁵ eV², sin²θ = 0.31; the solar model was right.',
+          'Atmosphere: photosphere (500 km, 6400 → 4400 K, granulation), chromosphere (→ 25 000 K, flash spectrum, spicules, plages), transition region (100 km), corona (1–4 × 10⁶ K, Fe XIV, heated by waves/nanoflares), Parker wind (400/750 km s⁻¹, 2 × 10⁹ kg s⁻¹, spiral 45° at 1 AU), CMEs (10¹² kg, 10²⁵ J, geomagnetic storms), differential rotation 25–36 d.',
+          'Cycle: sunspots 0.1–0.4 T, 4000 K, suppressed convection, Zeeman-measured; 11-yr spot and 22-yr magnetic cycle, Spörer, Hale and Joy\'s laws, butterfly diagram, Maunder minimum; flares 10¹⁷–10²⁵ J by reconnection, GOES classes; prominences held in magnetic dips; Babcock dynamo (Ω and α effects, flux transport, tachocline).',
+          'Other stars: Ca II and X-ray activity set by Rossby number, saturating at L_X/L_bol = 10⁻³; the Sun is quiet (10⁻⁶) and slow (25 d) because it is old; young Suns and M dwarfs flare far harder.',
+        ),
+        key('The Sun is the Rosetta stone of stellar astrophysics: the only star whose interior, atmosphere and magnetism we can study in detail, and the standard against which the physics of every other star is calibrated. Its interior behaved exactly as the equations of Chapter 10 said, down to the neutrinos once the neutrinos were understood; its atmosphere and cycle are where the remaining puzzles lie — the heating of the corona and the clockwork of the dynamo — and the Parker Solar Probe, Solar Orbiter and DKIST are, as you read this, inside the problem.'),
+        { kind: 'callout', tone: 'think', title: 'Critical thinking: the neutrino problem and its implications', html: 'The solar neutrino problem is a model of how science is supposed to work and a warning about how it feels while it is happening. For thirty years an experiment disagreed with a theory by a factor of three, and the overwhelming majority of physicists assumed the experiment or the solar model was at fault; both turned out to be right, and the "settled" particle physics was incomplete. The oscillation explanation is now supported by solar, reactor, accelerator and atmospheric data with a consistent set of parameters — that is what earns it acceptance, not the fact that it resolves the anomaly. But scrutinise what remains assumed: that there are exactly three light neutrinos (sterile neutrinos have been proposed and sought); that the MSW treatment of the solar interior is complete; that the solar model\'s inputs, in particular the surface abundances revised downward in 2005 and the opacities, are right — the resulting "solar abundance problem" with helioseismology is unresolved. Read the Super-Kamiokande and SNO collaboration papers (Physical Review Letters 1998, 2001, 2002) and Borexino\'s 2020 CNO detection (Nature 587, 577) and ask of each: what did it measure directly, what did it assume, and what alternative would have given the same result?' },
+        { kind: 'callout', tone: 'history', title: 'Suggested reading', html: 'Carroll & Ostlie, <em>An Introduction to Modern Astrophysics</em>, Chapter 11, which this chapter follows; M. Stix, <em>The Sun: An Introduction</em> (2nd ed., 2002), the standard graduate text; K. J. H. Phillips, <em>Guide to the Sun</em> (1992) for an accessible survey; E. Priest, <em>Magnetohydrodynamics of the Sun</em> (2014) for the magnetic physics; J. N. Bahcall, <em>Neutrino Astrophysics</em> (1989) and Bahcall, Pinsonneault & Basu, <em>ApJ</em> 555, 990 (2001) for the standard solar model; J. Christensen-Dalsgaard, "Helioseismology", <em>Rev. Mod. Phys.</em> 74, 1073 (2002); E. N. Parker, "Dynamics of the interplanetary gas and magnetic fields", <em>ApJ</em> 128, 664 (1958); H. W. Babcock, "The topology of the Sun\'s magnetic field and the 22-year cycle", <em>ApJ</em> 133, 572 (1961); D. H. Hathaway, "The solar cycle", <em>Living Reviews in Solar Physics</em> 12, 4 (2015); N. J. Wright et al., "The stellar-activity–rotation relationship", <em>ApJ</em> 743, 48 (2011).' },
+        { kind: 'callout', tone: 'think', title: 'Problems to try', html: '(1) Using L(t) = L☉/[1 + 0.4(1 − t/t☉)], find the Sun\'s luminosity at the formation of the Earth and when the oldest fossils formed (3.5 Gyr ago); with an albedo of 0.3 and no greenhouse, compute the Earth\'s equilibrium temperature at each epoch. (2) The pp chain releases 26.73 MeV per ⁴He nucleus formed, of which 0.26 MeV (PP I) escapes as neutrinos; compute the number of ⁴He nuclei made per second in the Sun and the pp-neutrino flux at the Earth; compare with 6 × 10¹⁰ cm⁻² s⁻¹. (3) Show that the photon diffusion time across the radiative zone is roughly (R/ℓ)² ℓ/c and evaluate it for ℓ = 1 cm, R = 0.7 R☉; why is the better estimate 1.7 × 10⁵ yr? (4) Compute the sound speed at the Sun\'s centre (T = 1.57 × 10⁷ K, μ = 0.85, γ = 5/3) and estimate the sound travel time from centre to surface using a mean of 300 km s⁻¹; compare with 1/(2Δν) for Δν = 135 μHz. (5) The chlorine experiment\'s threshold is 0.814 MeV; which solar neutrino sources can it detect? Which can gallium (0.233 MeV)? (6) For Δm² = 7.5 × 10⁻⁵ eV² and E = 1 MeV, compute the vacuum oscillation length and the number of oscillations between the Sun and the Earth; explain why the vacuum term averages. (7) Compute the pressure scale height at the base of the photosphere (T = 6400 K, μ = 1.3) and in the corona (T = 1.5 × 10⁶ K, μ = 0.6); over what height does the coronal pressure fall by a factor of e? (8) A spicule leaves the surface at 25 km s⁻¹; find its ballistic maximum height and flight time with g = 274 m s⁻², and compare with the observed 10 000 km and 15 min. (9) Solve the Parker equation numerically for T = 1 × 10⁶ and 2 × 10⁶ K and find v at 1 AU; compare with the slow and fast winds. (10) A CME of 10¹³ kg at 1500 km s⁻¹: compute its kinetic energy, its travel time to 1 AU, and the magnetopause stand-off distance for n = 50 cm⁻³. (11) Compute the magnetic pressure of a 0.25 T sunspot field and compare with the photospheric gas pressure; what gas pressure must the umbra have? Compute the Zeeman splitting of Fe I 630.25 nm (g = 2.5) and of Fe I 1564.8 nm (g = 3) in this field. (12) Using ω(φ) = 14.71 − 2.39 sin²φ − 1.79 sin⁴φ °/day, find how many rotations the equator completes while latitude 60° completes ten, and the time for a meridian to be wound once around the Sun between those latitudes. (13) Estimate the Rossby number of a 0.3 M☉ star with P_rot = 2 d and τ_c = 70 d and its L_X/L_bol; compare with a Sun rotating in 5 d (τ_c = 14 d).' },
+      ],
+    },
+  ],
+};
+
 export const COURSE: Course = {
   id: 'astrophysics',
   title: 'Introduction to Astrophysics',
@@ -4982,6 +5427,12 @@ export const COURSE: Course = {
       title: 'The Interiors of Stars',
       summary: 'What holds a star up and what makes it shine: hydrostatic equilibrium, the gas laws of hot and of degenerate matter, gravitational and nuclear energy, the Gamow peak, radiative and convective transport, the equations of stellar structure and the standard solar model, and the main sequence from brown dwarfs to the Eddington limit — with Jupiter, Saturn and the Earth as working examples.',
       sections: [S10_1, S10_2, S10_3, S10_4, S10_5, S10_6],
+    },
+    {
+      id: 'ch11', number: 11,
+      title: 'The Sun',
+      summary: 'The one star we know from the inside: its history and interior, the sound waves and neutrinos that test the model, the photosphere, chromosphere and million-degree corona, the solar wind and the eruptions that reach the Earth, sunspots and the eleven-year cycle, the dynamo that drives it, and the same magnetism on other stars.',
+      sections: [S11_1, S11_2, S11_3],
     },
   ],
 };
