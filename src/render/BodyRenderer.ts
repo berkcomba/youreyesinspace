@@ -162,18 +162,26 @@ export class BodyView {
       this.surfaceMat = new ShaderMaterial({
         vertexShader: Shaders.surfaceVert,
         fragmentShader: Shaders.starFrag,
-        uniforms: { ...baseUniforms, uTemperature: { value: T }, uIntensity: { value: a.kind === 'pulsar' ? 1.8 : 0.75 } },
+        uniforms: { ...baseUniforms, uRealTime: { value: 0 }, uTemperature: { value: T }, uIntensity: { value: a.kind === 'pulsar' ? 1.8 : 0.75 } },
       });
       // Corona billboard, tinted by the photosphere temperature
       const [cr, cg, cb] = temperatureToRgb(T);
-      const warm = new Color(cr, cg, cb).lerp(new Color(1.0, 0.85, 0.6), T > 5000 && T < 6500 ? 0.6 : 0.15);
+      // corona tint: golden-orange around Sun-like and cooler stars, the photosphere colour for hot ones
+      const warm = new Color(cr, cg, cb).lerp(new Color(1.0, 0.56, 0.16), T < 7500 ? 0.85 : 0.15);
       if (a.kind === 'pulsar') warm.lerp(new Color(a.beamColor[0], a.beamColor[1], a.beamColor[2]), 0.5);
+      // chromosphere: Hα pink for cool/solar stars, fading to the photosphere colour for hot ones
+      const hotness = Math.min(1, Math.max(0, (T - 7000) / 5000));
+      const rim = new Color(1.0, 0.36, 0.3).lerp(new Color(cr, cg, cb), hotness);
       this.coronaMat = new ShaderMaterial({
         vertexShader: Shaders.billboardVert,
         fragmentShader: Shaders.coronaFrag,
         uniforms: {
           uTime: { value: 0 },
+          uRealTime: { value: 0 },
+          uSeed: { value: a.seed },
           uColor: { value: warm },
+          uRimColor: { value: rim },
+          uProminence: { value: a.kind === 'pulsar' ? 0 : 1 - 0.8 * hotness },
           uIntensity: { value: 1.0 },
           uCoreRadius: { value: 1 / 7 },
         },
@@ -510,7 +518,14 @@ export class BodyView {
         lit.uRing.value.set(0, 0, 0, 0);
       }
     }
-    if (this.surfaceMat) this.surfaceMat.uniforms.uTime.value = time;
+    // wall-clock seconds: granulation, spicules and prominences keep moving while the
+    // simulation clock is paused, and do not strobe when it runs a million times faster
+    const realTime = (performance.now() * 1e-3) % 86400;
+    if (this.surfaceMat) {
+      this.surfaceMat.uniforms.uTime.value = time;
+      if (this.surfaceMat.uniforms.uRealTime) this.surfaceMat.uniforms.uRealTime.value = realTime;
+    }
+    if (this.coronaMat) this.coronaMat.uniforms.uRealTime.value = realTime;
     if (this.cloudsMat && b.data.clouds) {
       this.cloudsMat.uniforms.uTime.value = time;
       // smoothstep on the fade so the deck thins gently at both ends of the transition
@@ -606,7 +621,7 @@ export class BodyView {
       this.coronaMat.uniforms.uCoreRadius.value = Math.min(0.5, (b.radius / size) * 0.98);
       // Near the star the disc dominates; far away the glow reads as a bright star
       const far = Math.min(1, Math.max(0, (dist / b.radius - 20) / 400));
-      this.coronaMat.uniforms.uIntensity.value = (0.35 + 1.4 * far) * Math.pow(1 - t, 1.5) * (1 + 1.5 * pulse);
+      this.coronaMat.uniforms.uIntensity.value = (0.55 + 1.2 * far) * Math.pow(1 - t, 1.5) * (1 + 1.5 * pulse);
     }
   }
 }
