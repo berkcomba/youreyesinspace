@@ -54,12 +54,13 @@ void main() {
   float r01 = (r - uInner) / (uOuter - uInner);
   float dens = ringDensity(r01, uSeed, uGaps) * uOpacity;
   // thin the population in translucent regions; nothing in the gaps
-  float keep = step(h2.x, dens * dens * 1.4);
+  float keep = step(h2.x, dens * 1.25);
 
   // vertical distribution: triangular, so the mid-plane is denser
   float y = (h.z - 0.5 + h2.y - 0.5) * uHeight;
-  // size: steep power law, few large boulders
-  float sz = uSizeMin * pow(uSizeMax / uSizeMin, pow(h2.z, 2.8));
+  // size: truncated power law N(>s) ∝ s⁻² (inverse CDF), as in the real rings — many pebbles, few giants
+  float qmin = uSizeMin / uSizeMax;
+  float sz = uSizeMin * inversesqrt(max(1.0 - h2.z * (1.0 - qmin * qmin), 1e-6));
 
   // shape: a deformed sphere, tumbling slowly
   vec3 axis = normalize(h3 - 0.5 + 1e-3);
@@ -80,7 +81,8 @@ void main() {
     vAlpha = 0.0; vNormal = vec3(0.0, 1.0, 0.0); vWorldPos = vec3(0.0); vTint = vec3(1.0);
     return;
   }
-  vAlpha = uVis * smoothstep(0.6, 2.2, px);
+  // boulders fade in gently as they grow on screen instead of popping at the pixel threshold
+  vAlpha = uVis * smoothstep(0.6, 3.0, px);
   vNormal = normalize(mat3(modelMatrix) * n);
   vWorldPos = wp.xyz;
   // icy boulders, some dirtier

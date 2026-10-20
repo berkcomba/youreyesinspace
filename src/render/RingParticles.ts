@@ -10,13 +10,20 @@ const N_ANN = 32;
 /** Azimuth slots in the window. */
 const N_AZ = 32;
 /** Particles per cell. */
-const PER_CELL = 96;
+const PER_CELL = 128;
+/** Range (km) around the camera in which boulders exist; also the altitude at which the layer fades in. */
+const RANGE_KM = 600;
 /** Cell size (km): annulus width and arc length. The window is N_ANN × N_AZ cells. */
-const CELL_KM = 90;
-/** Vertical half-thickness of the boulder layer (km). Hugely exaggerated, like the boulder sizes. */
-const HEIGHT_KM = 30;
-const SIZE_MIN_KM = 0.12;
-const SIZE_MAX_KM = 2.2;
+const CELL_KM = (2 * RANGE_KM) / N_ANN;
+/** Vertical half-thickness of the boulder layer (km). Exaggerated (the real rings are ~10 m thick). */
+const HEIGHT_KM = 80;
+/**
+ * Boulder radii (km). Real ring particles run from dust to ~10 m; at any feasible instance count
+ * those would be invisible, so the range is scaled up while keeping the real shape of the
+ * distribution — a power law with N(>s) ∝ s⁻² (many pebbles, very few giants).
+ */
+const SIZE_MIN_KM = 0.1;
+const SIZE_MAX_KM = 3.0;
 
 const _y = new Vector3(0, 1, 0);
 const _q = new Quaternion();
@@ -111,9 +118,9 @@ export class RingParticles {
     const camR = Math.hypot(_v.x, _v.z);
     const camTheta = Math.atan2(_v.z, _v.x);
     this.altitude = Math.abs(_v.y);
-    const halfWindow = CELL_KM * N_ANN * 0.5;
-    // visible when close to the plane and roughly over the rings
-    const altFade = 1 - smooth01((this.altitude - halfWindow * 0.45) / (halfWindow * 0.55));
+    const halfWindow = RANGE_KM;
+    // fade the layer in as the camera descends through RANGE_KM toward the plane, and only over the rings
+    const altFade = 1 - smooth01((this.altitude - RANGE_KM * 0.35) / (RANGE_KM * 0.65));
     const radialFade = smooth01((camR - (r.inner - halfWindow)) / halfWindow) * (1 - smooth01((camR - (r.outer)) / halfWindow));
     this.visibility = enabled ? altFade * radialFade : 0;
     this.group.visible = this.visibility > 0.002;
