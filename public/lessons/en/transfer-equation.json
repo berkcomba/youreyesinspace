@@ -1,0 +1,551 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "eddington-barbier": {
+   "script": "Look at the Sun behind the panel. What depth are we looking at? I find the Eddington–Barbier relation answers that cleanly. Emergent intensity is a weighted average of the source function. The weight e to the minus slant optical depth peaks at the surface and falls with scale one, so we see mainly the first optical depth. Rather like fog, the near gas hides the rest. If S is linear we get exactly S at slant depth one, or tau sub v of mu. I sub lambda of zero, mu equals the integral from zero to infinity of S sub lambda of tau sub v times e to the minus tau sub v over mu, times d tau sub v over mu, approximately S sub lambda at tau sub v equals mu. The flux F sub lambda is about pi times S sub lambda at tau sub v of two thirds. I is the emergent intensity, mu the cosine of the angle from the normal, S the source function, and tau sub v the vertical optical depth. It is exact for linear S and a good approximation otherwise, because the weight is sharply peaked. Eddington in nineteen twenty-six, Barbier in nineteen forty-three. Try the widget. Shape S of tau into a gradient, a hump, or a step. Pick a mu and compare the escape weighting, the exact integral, and the estimate at tau equals mu. They stay close when S is smooth and pull apart for a spike. Disc centre shows depth one, the limb the surface layers, and the flux about two thirds. Limb darkening thus gives us S of tau and the temperature structure. In spectral lines high opacity forms that layer higher up in cooler gas, so the flux falls and we see absorption; temperature rising outward produces emission. A puzzle: the H alpha core puts tau of two thirds in the chromosphere where temperature rises, yet absorption remains. Is S equal to the Planck function there?",
+   "hash": "fbd6d47ad865",
+   "duration": 111.35,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.38,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 2.38,
+     "end": 4.3,
+     "text": "What depth are we looking at?"
+    },
+    {
+     "start": 4.3,
+     "end": 7.98,
+     "text": "I find the Eddington–Barbier relation answers that cleanly."
+    },
+    {
+     "start": 7.98,
+     "end": 11.58,
+     "text": "Emergent intensity is a weighted average of the source function."
+    },
+    {
+     "start": 11.58,
+     "end": 19.5,
+     "text": "The weight e to the minus slant optical depth peaks at the surface and falls with scale one, so we see mainly the first optical depth."
+    },
+    {
+     "start": 19.5,
+     "end": 22.84,
+     "text": "Rather like fog, the near gas hides the rest."
+    },
+    {
+     "start": 22.84,
+     "end": 28.54,
+     "text": "If S is linear we get exactly S at slant depth one, or tau sub v of mu."
+    },
+    {
+     "start": 28.54,
+     "end": 44.1,
+     "text": "I sub lambda of zero, mu equals the integral from zero to infinity of S sub lambda of tau sub v times e to the minus tau sub v over mu, times d tau sub v over mu, approximately S sub lambda at tau sub v equals mu."
+    },
+    {
+     "start": 44.1,
+     "end": 49.88,
+     "text": "The flux F sub lambda is about pi times S sub lambda at tau sub v of two thirds."
+    },
+    {
+     "start": 49.88,
+     "end": 58.51,
+     "text": "I is the emergent intensity, mu the cosine of the angle from the normal, S the source function, and tau sub v the vertical optical depth."
+    },
+    {
+     "start": 58.51,
+     "end": 64.23,
+     "text": "It is exact for linear S and a good approximation otherwise, because the weight is sharply peaked."
+    },
+    {
+     "start": 64.23,
+     "end": 68.39,
+     "text": "Eddington in nineteen twenty-six, Barbier in nineteen forty-three."
+    },
+    {
+     "start": 68.39,
+     "end": 69.55,
+     "text": "Try the widget."
+    },
+    {
+     "start": 69.55,
+     "end": 73.15,
+     "text": "Shape S of tau into a gradient, a hump, or a step."
+    },
+    {
+     "start": 73.15,
+     "end": 79.13,
+     "text": "Pick a mu and compare the escape weighting, the exact integral, and the estimate at tau equals mu."
+    },
+    {
+     "start": 79.13,
+     "end": 82.79,
+     "text": "They stay close when S is smooth and pull apart for a spike."
+    },
+    {
+     "start": 82.79,
+     "end": 88.51,
+     "text": "Disc centre shows depth one, the limb the surface layers, and the flux about two thirds."
+    },
+    {
+     "start": 88.51,
+     "end": 92.45,
+     "text": "Limb darkening thus gives us S of tau and the temperature structure."
+    },
+    {
+     "start": 92.45,
+     "end": 102.03,
+     "text": "In spectral lines high opacity forms that layer higher up in cooler gas, so the flux falls and we see absorption; temperature rising outward produces emission."
+    },
+    {
+     "start": 102.03,
+     "end": 109.21,
+     "text": "A puzzle: the H alpha core puts tau of two thirds in the chromosphere where temperature rises, yet absorption remains."
+    },
+    {
+     "start": 109.21,
+     "end": 111.35,
+     "text": "Is S equal to the Planck function there?"
+    }
+   ],
+   "voicedHash": "3e262ae82eae"
+  },
+  "gray-atmosphere": {
+   "script": "Procyon, behind the panel, is an F five subgiant about eight hundred kelvin hotter than the Sun. Same gray curve, scaled by its effective temperature.\n\nTake moments of the plane-parallel equation: multiply by one and by mu, integrate over all directions. In radiative equilibrium, mean intensity equals the source function: angle bracket I equals S. And d P-rad over d tau equals F over c, so the pressure of light at depth tau is the surface pressure plus the flux over the speed of light, times tau.\n\nEddington closes the system: the field is isotropic enough that P-rad equals four pi over three c times the mean intensity, as it is deep inside. No light comes in from above.\n\nT to the fourth equals three quarters times T-effective to the fourth, times tau plus two thirds. T is the gas temperature, tau the optical depth, T-effective the effective temperature set by the flux. The three quarters and the two thirds come from that closure and the dark boundary. At tau of zero, T is about zero point eight four T-effective. At tau of two thirds, T is exactly T-effective. Deeper, T rises as tau to the one quarter.\n\nOn the widget, sweep tau and compare with the empirical solar model. Agreement is within a few percent through the photosphere. The surface is cooler than T-effective: heated from one side only, so the mean intensity is under half the Planck value at T-effective. Tau of two thirds, not one, labels the photosphere, because that is where T equals T-effective. Between tau of a tenth and two, temperature climbs from about forty-eight hundred to seven thousand kelvin in a few hundred kilometres. The gray model is poorest at the top, near forty-four hundred kelvin. Hopf in nineteen thirty-four only replaces two thirds by q of tau, from zero point five eight to zero point seven one. Full models of Procyon add a shallower ultraviolet gradient and convection below tau about one.",
+   "hash": "a6c324ff1345",
+   "duration": 120.95,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 6.96,
+     "text": "Procyon, behind the panel, is an F five subgiant about eight hundred kelvin hotter than the Sun."
+    },
+    {
+     "start": 6.96,
+     "end": 10.42,
+     "text": "Same gray curve, scaled by its effective temperature."
+    },
+    {
+     "start": 10.42,
+     "end": 17.54,
+     "text": "Take moments of the plane-parallel equation: multiply by one and by mu, integrate over all directions."
+    },
+    {
+     "start": 17.54,
+     "end": 24.22,
+     "text": "In radiative equilibrium, mean intensity equals the source function: angle bracket I equals S."
+    },
+    {
+     "start": 24.22,
+     "end": 34.74,
+     "text": "And d P-rad over d tau equals F over c, so the pressure of light at depth tau is the surface pressure plus the flux over the speed of light, times tau."
+    },
+    {
+     "start": 34.74,
+     "end": 44.6,
+     "text": "Eddington closes the system: the field is isotropic enough that P-rad equals four pi over three c times the mean intensity, as it is deep inside."
+    },
+    {
+     "start": 44.6,
+     "end": 46.54,
+     "text": "No light comes in from above."
+    },
+    {
+     "start": 46.54,
+     "end": 52.62,
+     "text": "T to the fourth equals three quarters times T-effective to the fourth, times tau plus two thirds."
+    },
+    {
+     "start": 52.62,
+     "end": 59.22,
+     "text": "T is the gas temperature, tau the optical depth, T-effective the effective temperature set by the flux."
+    },
+    {
+     "start": 59.22,
+     "end": 63.59,
+     "text": "The three quarters and the two thirds come from that closure and the dark boundary."
+    },
+    {
+     "start": 63.59,
+     "end": 67.95,
+     "text": "At tau of zero, T is about zero point eight four T-effective."
+    },
+    {
+     "start": 67.95,
+     "end": 71.61,
+     "text": "At tau of two thirds, T is exactly T-effective."
+    },
+    {
+     "start": 71.61,
+     "end": 75.03,
+     "text": "Deeper, T rises as tau to the one quarter."
+    },
+    {
+     "start": 75.03,
+     "end": 79.17,
+     "text": "On the widget, sweep tau and compare with the empirical solar model."
+    },
+    {
+     "start": 79.17,
+     "end": 82.13,
+     "text": "Agreement is within a few percent through the photosphere."
+    },
+    {
+     "start": 82.13,
+     "end": 90.11,
+     "text": "The surface is cooler than T-effective: heated from one side only, so the mean intensity is under half the Planck value at T-effective."
+    },
+    {
+     "start": 90.11,
+     "end": 96.51,
+     "text": "Tau of two thirds, not one, labels the photosphere, because that is where T equals T-effective."
+    },
+    {
+     "start": 96.51,
+     "end": 103.99,
+     "text": "Between tau of a tenth and two, temperature climbs from about forty-eight hundred to seven thousand kelvin in a few hundred kilometres."
+    },
+    {
+     "start": 103.99,
+     "end": 108.23,
+     "text": "The gray model is poorest at the top, near forty-four hundred kelvin."
+    },
+    {
+     "start": 108.23,
+     "end": 115.53,
+     "text": "Hopf in nineteen thirty-four only replaces two thirds by q of tau, from zero point five eight to zero point seven one."
+    },
+    {
+     "start": 115.53,
+     "end": 120.95,
+     "text": "Full models of Procyon add a shallower ultraviolet gradient and convection below tau about one."
+    }
+   ],
+   "voicedHash": "5d1d266e1182"
+  },
+  "limb-darkening-derived": {
+   "script": "Look at the Sun behind the panel, brighter at the centre than the limb. The gray atmosphere predicts that fade with no free parameter.\n\nIntensity in any direction is the formal solution of the transfer equation. Integrate the source function along the ray, weighting each depth by the chance that light escapes, e to the minus tau over mu. Mu is cosine of the angle from the normal, so a slanted ray never reaches the warm depths. S equals three F over four pi, times the quantity tau plus two thirds, that is sigma T to the fourth over pi. The integral is elementary, and direction enters only through mu.\n\nI of theta equals three F over four pi, times the quantity cosine theta plus two thirds. I is the specific intensity, theta the angle from the normal, F the flux. Dividing cancels F, so I of theta over I of zero equals three fifths cosine theta plus two fifths. Face on, the ratio is one. At the extreme limb, ninety degrees, it falls to two fifths, forty percent, of the centre. At sixty degrees, two thirds of the way out in projected radius, seventy percent.\n\nDrag the cursor across the disc. Watch the tau equals two thirds surface climb. A grazing ray sees higher, cooler gas. In Eddington mode the prediction sits on the measured profiles. At five hundred and fifty nanometres the real limb is about forty-two percent of the centre, against forty predicted. The residuals run that way, more darkening in the blue, less in the infrared, because lower opacity lets us see deeper.\n\nFlat layers, one opacity, and isotropy match a century of solar photometry to a few percent. Eddington, around nineteen sixteen, used Schwarzschild's nineteen oh six models to argue these layers are radiative, not convective. An adiabatic atmosphere would darken too little, the radiative one comes out about right. The convection zone just below the photosphere, found later, does not overturn that.",
+   "hash": "7ca442e404ea",
+   "duration": 122.23,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 4.54,
+     "text": "Look at the Sun behind the panel, brighter at the centre than the limb."
+    },
+    {
+     "start": 4.54,
+     "end": 8.54,
+     "text": "The gray atmosphere predicts that fade with no free parameter."
+    },
+    {
+     "start": 8.54,
+     "end": 13.24,
+     "text": "Intensity in any direction is the formal solution of the transfer equation."
+    },
+    {
+     "start": 13.24,
+     "end": 21.46,
+     "text": "Integrate the source function along the ray, weighting each depth by the chance that light escapes, e to the minus tau over mu."
+    },
+    {
+     "start": 21.46,
+     "end": 27.48,
+     "text": "Mu is cosine of the angle from the normal, so a slanted ray never reaches the warm depths."
+    },
+    {
+     "start": 27.48,
+     "end": 35.52,
+     "text": "S equals three F over four pi, times the quantity tau plus two thirds, that is sigma T to the fourth over pi."
+    },
+    {
+     "start": 35.52,
+     "end": 40.06,
+     "text": "The integral is elementary, and direction enters only through mu."
+    },
+    {
+     "start": 40.06,
+     "end": 46.46,
+     "text": "I of theta equals three F over four pi, times the quantity cosine theta plus two thirds."
+    },
+    {
+     "start": 46.46,
+     "end": 51.7,
+     "text": "I is the specific intensity, theta the angle from the normal, F the flux."
+    },
+    {
+     "start": 51.7,
+     "end": 58.68,
+     "text": "Dividing cancels F, so I of theta over I of zero equals three fifths cosine theta plus two fifths."
+    },
+    {
+     "start": 58.68,
+     "end": 61.02,
+     "text": "Face on, the ratio is one."
+    },
+    {
+     "start": 61.02,
+     "end": 66.91,
+     "text": "At the extreme limb, ninety degrees, it falls to two fifths, forty percent, of the centre."
+    },
+    {
+     "start": 66.91,
+     "end": 72.17,
+     "text": "At sixty degrees, two thirds of the way out in projected radius, seventy percent."
+    },
+    {
+     "start": 72.17,
+     "end": 74.33,
+     "text": "Drag the cursor across the disc."
+    },
+    {
+     "start": 74.33,
+     "end": 77.33,
+     "text": "Watch the tau equals two thirds surface climb."
+    },
+    {
+     "start": 77.33,
+     "end": 80.13,
+     "text": "A grazing ray sees higher, cooler gas."
+    },
+    {
+     "start": 80.13,
+     "end": 83.55,
+     "text": "In Eddington mode the prediction sits on the measured profiles."
+    },
+    {
+     "start": 83.55,
+     "end": 89.95,
+     "text": "At five hundred and fifty nanometres the real limb is about forty-two percent of the centre, against forty predicted."
+    },
+    {
+     "start": 89.95,
+     "end": 97.49,
+     "text": "The residuals run that way, more darkening in the blue, less in the infrared, because lower opacity lets us see deeper."
+    },
+    {
+     "start": 97.49,
+     "end": 103.83,
+     "text": "Flat layers, one opacity, and isotropy match a century of solar photometry to a few percent."
+    },
+    {
+     "start": 103.83,
+     "end": 111.99,
+     "text": "Eddington, around nineteen sixteen, used Schwarzschild's nineteen oh six models to argue these layers are radiative, not convective."
+    },
+    {
+     "start": 111.99,
+     "end": 117.23,
+     "text": "An adiabatic atmosphere would darken too little, the radiative one comes out about right."
+    },
+    {
+     "start": 117.23,
+     "end": 122.23,
+     "text": "The convection zone just below the photosphere, found later, does not overturn that."
+    }
+   ],
+   "voicedHash": "1e80d7987c9a"
+  },
+  "plane-parallel": {
+   "script": "Look at the Sun behind the panel. That disc is what we are about to flatten, on purpose. The photosphere is only about five hundred kilometres thick, on a sphere whose radius is roughly seven hundred thousand kilometres. Over any distance a photon travels before it is absorbed, the curvature simply does not matter. So we treat the atmosphere as a stack of flat horizontal layers, with temperature, density and opacity depending only on depth.\n\nWe measure vertical optical depth, tau sub v, inward from the top. A ray leaving the surface at an angle theta to the vertical cuts a slant path through each layer: the path element is dz divided by cosine theta, so the optical depth along the ray is tau sub v over cosine theta. That factor is the same air-mass effect that reddens a sunset.\n\nThe transfer equation then becomes cosine theta times d I sub lambda over d tau sub lambda, v equals I sub lambda minus S sub lambda. I sub lambda is the specific intensity at wavelength lambda, S sub lambda is the source function, and tau sub lambda, v is the vertical optical depth at that wavelength. Because we now measure tau downward, the sign has flipped from the form in the last section. Writing mu for cosine theta, each fixed mu is an ordinary differential equation along one family of parallel rays, and the full field is the set of those solutions. Mu equals one is straight up, the disc centre; mu near zero is a grazing ray, the limb.\n\nTry the widget. Tilt the ray toward the horizon and watch the marker where the slant optical depth reaches two thirds. At mu equals one that point sits at vertical optical depth two thirds; at mu equals zero point three it has climbed to zero point two. The limb shows us gas about three times higher than the centre does.\n\nTwo further simplifications make this tractable by hand. A gray atmosphere means the opacity does not depend on wavelength, so one tau serves for every lambda. Radiative equilibrium means radiation carries all the energy, so the flux, sigma T effective to the fourth, is the same at every depth. Neither is exactly true of any star, but both are good enough to give us, next, a temperature structure within a few per cent of the modern solar model.",
+   "hash": "26b95f8fa5fa",
+   "duration": 135.35,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.38,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 2.38,
+     "end": 6.06,
+     "text": "That disc is what we are about to flatten, on purpose."
+    },
+    {
+     "start": 6.06,
+     "end": 13.54,
+     "text": "The photosphere is only about five hundred kilometres thick, on a sphere whose radius is roughly seven hundred thousand kilometres."
+    },
+    {
+     "start": 13.54,
+     "end": 19.42,
+     "text": "Over any distance a photon travels before it is absorbed, the curvature simply does not matter."
+    },
+    {
+     "start": 19.42,
+     "end": 27.28,
+     "text": "So we treat the atmosphere as a stack of flat horizontal layers, with temperature, density and opacity depending only on depth."
+    },
+    {
+     "start": 27.28,
+     "end": 32.16,
+     "text": "We measure vertical optical depth, tau sub v, inward from the top."
+    },
+    {
+     "start": 32.16,
+     "end": 45.52,
+     "text": "A ray leaving the surface at an angle theta to the vertical cuts a slant path through each layer: the path element is dz divided by cosine theta, so the optical depth along the ray is tau sub v over cosine theta."
+    },
+    {
+     "start": 45.52,
+     "end": 49.34,
+     "text": "That factor is the same air-mass effect that reddens a sunset."
+    },
+    {
+     "start": 49.34,
+     "end": 58.94,
+     "text": "The transfer equation then becomes cosine theta times d I sub lambda over d tau sub lambda, v equals I sub lambda minus S sub lambda."
+    },
+    {
+     "start": 58.94,
+     "end": 69.03,
+     "text": "I sub lambda is the specific intensity at wavelength lambda, S sub lambda is the source function, and tau sub lambda, v is the vertical optical depth at that wavelength."
+    },
+    {
+     "start": 69.03,
+     "end": 74.15,
+     "text": "Because we now measure tau downward, the sign has flipped from the form in the last section."
+    },
+    {
+     "start": 74.15,
+     "end": 84.09,
+     "text": "Writing mu for cosine theta, each fixed mu is an ordinary differential equation along one family of parallel rays, and the full field is the set of those solutions."
+    },
+    {
+     "start": 84.09,
+     "end": 90.47,
+     "text": "Mu equals one is straight up, the disc centre; mu near zero is a grazing ray, the limb."
+    },
+    {
+     "start": 90.47,
+     "end": 91.65,
+     "text": "Try the widget."
+    },
+    {
+     "start": 91.65,
+     "end": 97.11,
+     "text": "Tilt the ray toward the horizon and watch the marker where the slant optical depth reaches two thirds."
+    },
+    {
+     "start": 97.11,
+     "end": 105.37,
+     "text": "At mu equals one that point sits at vertical optical depth two thirds; at mu equals zero point three it has climbed to zero point two."
+    },
+    {
+     "start": 105.37,
+     "end": 109.27,
+     "text": "The limb shows us gas about three times higher than the centre does."
+    },
+    {
+     "start": 109.27,
+     "end": 112.73,
+     "text": "Two further simplifications make this tractable by hand."
+    },
+    {
+     "start": 112.73,
+     "end": 119.07,
+     "text": "A gray atmosphere means the opacity does not depend on wavelength, so one tau serves for every lambda."
+    },
+    {
+     "start": 119.07,
+     "end": 127.55,
+     "text": "Radiative equilibrium means radiation carries all the energy, so the flux, sigma T effective to the fourth, is the same at every depth."
+    },
+    {
+     "start": 127.55,
+     "end": 135.35,
+     "text": "Neither is exactly true of any star, but both are good enough to give us, next, a temperature structure within a few per cent of the modern solar model."
+    }
+   ],
+   "voicedHash": "068be5f1afef"
+  },
+  "transfer-eq-summary": {
+   "script": "Glance behind the panel: planets slowly circling the Sun. One integral, the formal solution, and one isotropy approximation.\n\nPlane-parallel means flat layers. Tau-v is vertical optical depth; mu is cosine theta. Mu d I over d tau-v equals I minus S: intensity drawn toward the source function. Slant depth is tau-v over mu.\n\nGray opacity and radiative equilibrium, constant flux, let us integrate over wavelength. Moments give mean intensity equal to S, and d P-rad over d tau equals F over c, radiation pressure, flux, and the speed of light.\n\nEddington: P-rad equals four pi, over three c, times the mean intensity, and T to the fourth equals three quarters T-eff to the fourth times tau plus two thirds together. T equals T-eff at tau two thirds; the surface, eighty-four hundredths of T-eff, matches the Sun to a few per cent.\n\nLimb darkening, I of theta over I of zero equals three cosine theta plus two over five, is forty per cent at the limb, as the Sun shows. Residuals are non-gray opacity.\n\nEddington–Barbier: I of mu approximates S at tau-v equals mu, and F approximates pi S at tau-v of two thirds. We see S one slant depth in: lines form where tau-lambda of two thirds is cooler, so the limb is a thermometer. That is the quantitative photosphere.",
+   "hash": "a6794ce7b0c0",
+   "duration": 88.63,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.16,
+     "text": "Glance behind the panel: planets slowly circling the Sun."
+    },
+    {
+     "start": 4.16,
+     "end": 9.18,
+     "text": "One integral, the formal solution, and one isotropy approximation."
+    },
+    {
+     "start": 9.18,
+     "end": 11.74,
+     "text": "Plane-parallel means flat layers."
+    },
+    {
+     "start": 11.74,
+     "end": 16.2,
+     "text": "Tau-v is vertical optical depth; mu is cosine theta."
+    },
+    {
+     "start": 16.2,
+     "end": 22.58,
+     "text": "Mu d I over d tau-v equals I minus S: intensity drawn toward the source function."
+    },
+    {
+     "start": 22.58,
+     "end": 25.14,
+     "text": "Slant depth is tau-v over mu."
+    },
+    {
+     "start": 25.14,
+     "end": 31.14,
+     "text": "Gray opacity and radiative equilibrium, constant flux, let us integrate over wavelength."
+    },
+    {
+     "start": 31.14,
+     "end": 40.74,
+     "text": "Moments give mean intensity equal to S, and d P-rad over d tau equals F over c, radiation pressure, flux, and the speed of light."
+    },
+    {
+     "start": 40.74,
+     "end": 51.89,
+     "text": "Eddington: P-rad equals four pi, over three c, times the mean intensity, and T to the fourth equals three quarters T-eff to the fourth times tau plus two thirds together."
+    },
+    {
+     "start": 51.89,
+     "end": 59.33,
+     "text": "T equals T-eff at tau two thirds; the surface, eighty-four hundredths of T-eff, matches the Sun to a few per cent."
+    },
+    {
+     "start": 59.33,
+     "end": 68.55,
+     "text": "Limb darkening, I of theta over I of zero equals three cosine theta plus two over five, is forty per cent at the limb, as the Sun shows."
+    },
+    {
+     "start": 68.55,
+     "end": 70.99,
+     "text": "Residuals are non-gray opacity."
+    },
+    {
+     "start": 70.99,
+     "end": 79.41,
+     "text": "Eddington–Barbier: I of mu approximates S at tau-v equals mu, and F approximates pi S at tau-v of two thirds."
+    },
+    {
+     "start": 79.41,
+     "end": 86.81,
+     "text": "We see S one slant depth in: lines form where tau-lambda of two thirds is cooler, so the limb is a thermometer."
+    },
+    {
+     "start": 86.81,
+     "end": 88.63,
+     "text": "That is the quantitative photosphere."
+    }
+   ],
+   "voicedHash": "26019abba116"
+  }
+ }
+}

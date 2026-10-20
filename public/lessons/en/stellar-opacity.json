@@ -1,0 +1,679 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "opacity-sources": {
+   "script": "Look at the Sun behind the panel — that is the star whose light we are trying to read. Opacity is just the sum of every process that can take a photon out of a beam, and there are four of them, plus one surprise that dominates the Sun. Bound-bound transitions only lift an electron between two levels, so they absorb solely at the line wavelengths; those are the spectral lines themselves. Bound-free absorption, photoionisation, strips the electron off entirely. It operates at every wavelength shorter than the ionisation edge, so the opacity is continuous but stepped. For hydrogen the Lyman, Balmer and Paschen edges sit near ninety-one, three hundred and sixty-five, and eight hundred and twenty nanometres. Recombination, the inverse, emits continuously. Free-free absorption occurs when a free electron passing an ion absorbs a photon and speeds up; it works at all wavelengths and grows toward the infrared, roughly as lambda cubed. Electron scattering merely deflects the photon without changing its energy. It is grey, and the Thomson cross-section per electron is tiny — about six point seven times ten to the minus twenty-nine square metres — yet it is all that remains in a fully ionised gas.\n\nNeutral hydrogen cannot explain the Sun’s visible continuum. At about six thousand kelvin nearly every hydrogen atom is in the ground state, whose edge lies in the far ultraviolet. In nineteen thirty-nine Wildt proposed, and Chandrasekhar calculated, that the culprit is the negative hydrogen ion: a proton with two electrons, bound by only about three-quarters of an electron volt. Any photon shorter than roughly one point six micrometres can detach that extra electron, giving smooth bound-free opacity across the visible and near infrared; free-free absorption by the same ion takes over beyond. Only about one hydrogen atom in a hundred million carries the extra electron, yet that is enough. It is why the Sun’s visible light is so nearly a blackbody, and why we see to the depth we do.\n\nTry the widget. It plots kappa sub lambda, the opacity at each wavelength, and separates bound-free hydrogen, H-minus, free-free and electron scattering as you vary temperature and density. At solar temperature H-minus is the broad hump with its edge near one point six micrometres. Raise the temperature to ten thousand kelvin and neutral hydrogen takes over, with the Balmer and Paschen jumps that give A stars their ultraviolet deficit. Higher still, the gas ionises, the edges fade, and electron scattering sets a flat floor. The absorbers change with spectral type for the same reason the lines do: Saha and Boltzmann decide what is actually there.",
+   "hash": "882963268588",
+   "duration": 162.55,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.24,
+     "text": "Look at the Sun behind the panel — that is the star whose light we are trying to read."
+    },
+    {
+     "start": 5.24,
+     "end": 14.56,
+     "text": "Opacity is just the sum of every process that can take a photon out of a beam, and there are four of them, plus one surprise that dominates the Sun."
+    },
+    {
+     "start": 14.56,
+     "end": 24.1,
+     "text": "Bound-bound transitions only lift an electron between two levels, so they absorb solely at the line wavelengths; those are the spectral lines themselves."
+    },
+    {
+     "start": 24.1,
+     "end": 29.6,
+     "text": "Bound-free absorption, photoionisation, strips the electron off entirely."
+    },
+    {
+     "start": 29.6,
+     "end": 35.98,
+     "text": "It operates at every wavelength shorter than the ionisation edge, so the opacity is continuous but stepped."
+    },
+    {
+     "start": 35.98,
+     "end": 44.32,
+     "text": "For hydrogen the Lyman, Balmer and Paschen edges sit near ninety-one, three hundred and sixty-five, and eight hundred and twenty nanometres."
+    },
+    {
+     "start": 44.32,
+     "end": 48.12,
+     "text": "Recombination, the inverse, emits continuously."
+    },
+    {
+     "start": 48.12,
+     "end": 59.08,
+     "text": "Free-free absorption occurs when a free electron passing an ion absorbs a photon and speeds up; it works at all wavelengths and grows toward the infrared, roughly as lambda cubed."
+    },
+    {
+     "start": 59.08,
+     "end": 63.34,
+     "text": "Electron scattering merely deflects the photon without changing its energy."
+    },
+    {
+     "start": 63.34,
+     "end": 75.02,
+     "text": "It is grey, and the Thomson cross-section per electron is tiny — about six point seven times ten to the minus twenty-nine square metres — yet it is all that remains in a fully ionised gas."
+    },
+    {
+     "start": 75.02,
+     "end": 78.82,
+     "text": "Neutral hydrogen cannot explain the Sun’s visible continuum."
+    },
+    {
+     "start": 78.82,
+     "end": 85.87,
+     "text": "At about six thousand kelvin nearly every hydrogen atom is in the ground state, whose edge lies in the far ultraviolet."
+    },
+    {
+     "start": 85.87,
+     "end": 98.15,
+     "text": "In nineteen thirty-nine Wildt proposed, and Chandrasekhar calculated, that the culprit is the negative hydrogen ion: a proton with two electrons, bound by only about three-quarters of an electron volt."
+    },
+    {
+     "start": 98.15,
+     "end": 111.55,
+     "text": "Any photon shorter than roughly one point six micrometres can detach that extra electron, giving smooth bound-free opacity across the visible and near infrared; free-free absorption by the same ion takes over beyond."
+    },
+    {
+     "start": 111.55,
+     "end": 117.33,
+     "text": "Only about one hydrogen atom in a hundred million carries the extra electron, yet that is enough."
+    },
+    {
+     "start": 117.33,
+     "end": 123.01,
+     "text": "It is why the Sun’s visible light is so nearly a blackbody, and why we see to the depth we do."
+    },
+    {
+     "start": 123.01,
+     "end": 124.07,
+     "text": "Try the widget."
+    },
+    {
+     "start": 124.07,
+     "end": 135.47,
+     "text": "It plots kappa sub lambda, the opacity at each wavelength, and separates bound-free hydrogen, H-minus, free-free and electron scattering as you vary temperature and density."
+    },
+    {
+     "start": 135.47,
+     "end": 140.99,
+     "text": "At solar temperature H-minus is the broad hump with its edge near one point six micrometres."
+    },
+    {
+     "start": 140.99,
+     "end": 149.57,
+     "text": "Raise the temperature to ten thousand kelvin and neutral hydrogen takes over, with the Balmer and Paschen jumps that give A stars their ultraviolet deficit."
+    },
+    {
+     "start": 149.57,
+     "end": 155.73,
+     "text": "Higher still, the gas ionises, the edges fade, and electron scattering sets a flat floor."
+    },
+    {
+     "start": 155.73,
+     "end": 162.55,
+     "text": "The absorbers change with spectral type for the same reason the lines do: Saha and Boltzmann decide what is actually there."
+    }
+   ],
+   "voicedHash": "3919946aded3"
+  },
+  "opacity-summary": {
+   "script": "Behind the panel the planets slowly circle the Sun. A star is not a blackbody. Effective, colour, excitation, ionisation and kinetic temperatures differ, each probing a different layer. Effective temperature satisfies sigma T-eff to the fourth equals F-surf. Sigma is the Stefan-Boltzmann constant, F-surf the surface flux, T-eff the matching blackbody temperature. Kappa-lambda is opacity in square metres per kilogram. Optical depth tau-lambda integrates kappa-lambda times density along the path. A pure absorber fades as e to the minus tau. Titan's haze, Earth's sunset and the solar photosphere are all tau about one, thin below and thick above. Rayleigh tau scales as wavelength to the minus four, reddening sunset and fixing nightly extinction. Mars's grey forward-scattering dust does the opposite. Four sources: bound-bound lines, bound-free edges, free-free growth into the infrared, and grey electron scattering. H-minus, bound by three quarters of an electron-volt, makes the Sun's visible continuum. Rosseland kappa-bar of density and temperature is a harmonic Planck-weighted average, so clear windows dominate. Bound-free and free-free follow Kramers, density times temperature to the minus three point five. Scattering is two hundredths times one plus X, the hydrogen fraction. H-minus rises at low temperature. The mean peaks near ten thousand to a hundred thousand kelvin, where hydrogen and helium are partly ionised. Opacity couples radiation to the gas. Radiative transfer comes next.",
+   "hash": "0a32550682b5",
+   "duration": 96.95,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 3.46,
+     "text": "Behind the panel the planets slowly circle the Sun."
+    },
+    {
+     "start": 3.46,
+     "end": 5.54,
+     "text": "A star is not a blackbody."
+    },
+    {
+     "start": 5.54,
+     "end": 12.7,
+     "text": "Effective, colour, excitation, ionisation and kinetic temperatures differ, each probing a different layer."
+    },
+    {
+     "start": 12.7,
+     "end": 17.52,
+     "text": "Effective temperature satisfies sigma T-eff to the fourth equals F-surf."
+    },
+    {
+     "start": 17.52,
+     "end": 24.52,
+     "text": "Sigma is the Stefan-Boltzmann constant, F-surf the surface flux, T-eff the matching blackbody temperature."
+    },
+    {
+     "start": 24.52,
+     "end": 28.38,
+     "text": "Kappa-lambda is opacity in square metres per kilogram."
+    },
+    {
+     "start": 28.38,
+     "end": 33.44,
+     "text": "Optical depth tau-lambda integrates kappa-lambda times density along the path."
+    },
+    {
+     "start": 33.44,
+     "end": 36.68,
+     "text": "A pure absorber fades as e to the minus tau."
+    },
+    {
+     "start": 36.68,
+     "end": 43.64,
+     "text": "Titan's haze, Earth's sunset and the solar photosphere are all tau about one, thin below and thick above."
+    },
+    {
+     "start": 43.64,
+     "end": 49.85,
+     "text": "Rayleigh tau scales as wavelength to the minus four, reddening sunset and fixing nightly extinction."
+    },
+    {
+     "start": 49.85,
+     "end": 53.05,
+     "text": "Mars's grey forward-scattering dust does the opposite."
+    },
+    {
+     "start": 53.05,
+     "end": 61.33,
+     "text": "Four sources: bound-bound lines, bound-free edges, free-free growth into the infrared, and grey electron scattering."
+    },
+    {
+     "start": 61.33,
+     "end": 66.65,
+     "text": "H-minus, bound by three quarters of an electron-volt, makes the Sun's visible continuum."
+    },
+    {
+     "start": 66.65,
+     "end": 73.29,
+     "text": "Rosseland kappa-bar of density and temperature is a harmonic Planck-weighted average, so clear windows dominate."
+    },
+    {
+     "start": 73.29,
+     "end": 79.13,
+     "text": "Bound-free and free-free follow Kramers, density times temperature to the minus three point five."
+    },
+    {
+     "start": 79.13,
+     "end": 83.83,
+     "text": "Scattering is two hundredths times one plus X, the hydrogen fraction."
+    },
+    {
+     "start": 83.83,
+     "end": 86.09,
+     "text": "H-minus rises at low temperature."
+    },
+    {
+     "start": 86.09,
+     "end": 92.33,
+     "text": "The mean peaks near ten thousand to a hundred thousand kelvin, where hydrogen and helium are partly ionised."
+    },
+    {
+     "start": 92.33,
+     "end": 94.97,
+     "text": "Opacity couples radiation to the gas."
+    },
+    {
+     "start": 94.97,
+     "end": 96.95,
+     "text": "Radiative transfer comes next."
+    }
+   ],
+   "voicedHash": "050e45e233ff"
+  },
+  "optical-depth": {
+   "script": "Look at Titan behind the panel.\n\nSend a beam of intensity I lambda through gas of density rho and thickness d s. Absorption and scattering remove photons in proportion to the mass traversed, so d I lambda equals minus kappa lambda rho I lambda d s. Kappa lambda is the opacity, square metres per kilogram of absorption cross-section, depending on wavelength, temperature, density and composition. Kappa lambda times rho is the absorption per metre; one over that product is the photon's mean free path.\n\nTau lambda, the optical depth, equals the integral from zero to s of kappa lambda rho d s prime. I lambda equals I lambda zero, the input, times e to the minus tau lambda. No emission. Tau counts mean free paths. At tau of one, one over e survives, thirty-seven percent. Much below one is optically thin, transparent; much above, optically thick.\n\nOn the widget, vary density, opacity and thickness. Only their product matters, and the transmitted fraction tracks e to the minus tau. Watch tau pass one, and a haze becomes a wall.\n\nIn a star we count tau inward from zero at the outside, and the surface we see is near tau lambda of about one along our line of sight. Section nine point four moves that to two thirds. The limb is sharp even though the gas thins, and the radius changes with wavelength.\n\nPer unit area, Titan is only ten Earth atmospheres, yet hydrocarbon haze drives visible tau to several and hides the surface. At nine hundred and thirty-eight nanometres, between methane bands, tau drops below one and Cassini mapped the lakes and dunes. Huygens saw the ground only in the last tens of kilometres. Same atmosphere, different tau lambda.\n\nSquare metres per kilogram times kilograms per cubic metre is an inverse length, so tau is dimensionless. Same tau of one for a sunset, Titan, a photosphere, and the early universe. Kappa per volume or per atom changes only bookkeeping.",
+   "hash": "2a00e0114f78",
+   "duration": 124.15,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.36,
+     "text": "Look at Titan behind the panel."
+    },
+    {
+     "start": 2.36,
+     "end": 8.2,
+     "text": "Send a beam of intensity I lambda through gas of density rho and thickness d s."
+    },
+    {
+     "start": 8.2,
+     "end": 17.44,
+     "text": "Absorption and scattering remove photons in proportion to the mass traversed, so d I lambda equals minus kappa lambda rho I lambda d s."
+    },
+    {
+     "start": 17.44,
+     "end": 26.72,
+     "text": "Kappa lambda is the opacity, square metres per kilogram of absorption cross-section, depending on wavelength, temperature, density and composition."
+    },
+    {
+     "start": 26.72,
+     "end": 33.56,
+     "text": "Kappa lambda times rho is the absorption per metre; one over that product is the photon's mean free path."
+    },
+    {
+     "start": 33.56,
+     "end": 40.68,
+     "text": "Tau lambda, the optical depth, equals the integral from zero to s of kappa lambda rho d s prime."
+    },
+    {
+     "start": 40.68,
+     "end": 45.96,
+     "text": "I lambda equals I lambda zero, the input, times e to the minus tau lambda."
+    },
+    {
+     "start": 45.96,
+     "end": 47.18,
+     "text": "No emission."
+    },
+    {
+     "start": 47.18,
+     "end": 49.36,
+     "text": "Tau counts mean free paths."
+    },
+    {
+     "start": 49.36,
+     "end": 53.76,
+     "text": "At tau of one, one over e survives, thirty-seven percent."
+    },
+    {
+     "start": 53.76,
+     "end": 59.16,
+     "text": "Much below one is optically thin, transparent; much above, optically thick."
+    },
+    {
+     "start": 59.16,
+     "end": 62.79,
+     "text": "On the widget, vary density, opacity and thickness."
+    },
+    {
+     "start": 62.79,
+     "end": 67.77,
+     "text": "Only their product matters, and the transmitted fraction tracks e to the minus tau."
+    },
+    {
+     "start": 67.77,
+     "end": 71.25,
+     "text": "Watch tau pass one, and a haze becomes a wall."
+    },
+    {
+     "start": 71.25,
+     "end": 79.21,
+     "text": "In a star we count tau inward from zero at the outside, and the surface we see is near tau lambda of about one along our line of sight."
+    },
+    {
+     "start": 79.21,
+     "end": 82.07,
+     "text": "Section nine point four moves that to two thirds."
+    },
+    {
+     "start": 82.07,
+     "end": 86.87,
+     "text": "The limb is sharp even though the gas thins, and the radius changes with wavelength."
+    },
+    {
+     "start": 86.87,
+     "end": 95.05,
+     "text": "Per unit area, Titan is only ten Earth atmospheres, yet hydrocarbon haze drives visible tau to several and hides the surface."
+    },
+    {
+     "start": 95.05,
+     "end": 102.61,
+     "text": "At nine hundred and thirty-eight nanometres, between methane bands, tau drops below one and Cassini mapped the lakes and dunes."
+    },
+    {
+     "start": 102.61,
+     "end": 106.09,
+     "text": "Huygens saw the ground only in the last tens of kilometres."
+    },
+    {
+     "start": 106.09,
+     "end": 108.85,
+     "text": "Same atmosphere, different tau lambda."
+    },
+    {
+     "start": 108.85,
+     "end": 115.41,
+     "text": "Square metres per kilogram times kilograms per cubic metre is an inverse length, so tau is dimensionless."
+    },
+    {
+     "start": 115.41,
+     "end": 120.85,
+     "text": "Same tau of one for a sunset, Titan, a photosphere, and the early universe."
+    },
+    {
+     "start": 120.85,
+     "end": 124.15,
+     "text": "Kappa per volume or per atom changes only bookkeeping."
+    }
+   ],
+   "voicedHash": "457ec1e9361f"
+  },
+  "rosseland-mean": {
+   "script": "Wavelength-by-wavelength opacity is more than we can afford, and more than we need. Deep down the radiation is nearly a blackbody, so one average sets the energy flow: the Rosseland mean, kappa-bar, a harmonic mean of kappa-lambda, the opacity at each wavelength, weighted by the temperature derivative of the Planck function. Harmonic, because energy escapes through transparent windows, which count more than opaque walls. Kappa-bar of density and temperature replaces three variables. OPAL and Opacity Project tables, millions of transitions since the nineteen-nineties, are among the most-used numbers in astrophysics.\n\nHere are Kramers' approximations, in SI units. Bound-free opacity is about four times ten to the twenty-one, times g-bf over t, times Z times one plus X, times density over temperature to the three and a half. Free-free opacity is about four times ten to the eighteen, times g-ff, times one minus Z, times one plus X, times density over temperature to the same power. X is hydrogen's mass fraction, Z the metals, g the Gaunt factors near one, t a factor near one. Both rise with density and fall steeply with temperature, because the cross-sections drop. Electron scattering, kappa-es, equals zero point zero two times one plus X, about three hundredths of a square metre per kilogram for the Sun. It is Thomson scattering, fixed by composition alone. Cool outer layers switch to an H-minus term, proportional to density to the half, temperature to the ninth, and Z.\n\nTry the widget. Shift density and notice four regimes: the H-minus rise, the ionisation peak near ten thousand to a hundred thousand kelvin, driving cool-star convection and Cepheid pulsation, the Kramers fall, and the scattering floor. Rigel behind the panel is a B supergiant on that floor, scattering competing with absorption, weak lines on a smooth continuum. Kramers derived the temperature law in nineteen twenty-three. Rosseland proposed the mean in nineteen twenty-four, when Eddington's Internal Constitution of the Stars appeared, and the mass-luminosity relation was predicted before it was fully measured.",
+   "hash": "55e717ce4593",
+   "duration": 136.31,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 5.6,
+     "text": "Wavelength-by-wavelength opacity is more than we can afford, and more than we need."
+    },
+    {
+     "start": 5.6,
+     "end": 21.12,
+     "text": "Deep down the radiation is nearly a blackbody, so one average sets the energy flow: the Rosseland mean, kappa-bar, a harmonic mean of kappa-lambda, the opacity at each wavelength, weighted by the temperature derivative of the Planck function."
+    },
+    {
+     "start": 21.12,
+     "end": 26.92,
+     "text": "Harmonic, because energy escapes through transparent windows, which count more than opaque walls."
+    },
+    {
+     "start": 26.92,
+     "end": 30.9,
+     "text": "Kappa-bar of density and temperature replaces three variables."
+    },
+    {
+     "start": 30.9,
+     "end": 39.04,
+     "text": "OPAL and Opacity Project tables, millions of transitions since the nineteen-nineties, are among the most-used numbers in astrophysics."
+    },
+    {
+     "start": 39.04,
+     "end": 42.7,
+     "text": "Here are Kramers' approximations, in SI units."
+    },
+    {
+     "start": 42.7,
+     "end": 54.2,
+     "text": "Bound-free opacity is about four times ten to the twenty-one, times g-bf over t, times Z times one plus X, times density over temperature to the three and a half."
+    },
+    {
+     "start": 54.2,
+     "end": 65.9,
+     "text": "Free-free opacity is about four times ten to the eighteen, times g-ff, times one minus Z, times one plus X, times density over temperature to the same power."
+    },
+    {
+     "start": 65.9,
+     "end": 73.21,
+     "text": "X is hydrogen's mass fraction, Z the metals, g the Gaunt factors near one, t a factor near one."
+    },
+    {
+     "start": 73.21,
+     "end": 78.57,
+     "text": "Both rise with density and fall steeply with temperature, because the cross-sections drop."
+    },
+    {
+     "start": 78.57,
+     "end": 88.23,
+     "text": "Electron scattering, kappa-es, equals zero point zero two times one plus X, about three hundredths of a square metre per kilogram for the Sun."
+    },
+    {
+     "start": 88.23,
+     "end": 91.95,
+     "text": "It is Thomson scattering, fixed by composition alone."
+    },
+    {
+     "start": 91.95,
+     "end": 99.53,
+     "text": "Cool outer layers switch to an H-minus term, proportional to density to the half, temperature to the ninth, and Z."
+    },
+    {
+     "start": 99.53,
+     "end": 100.67,
+     "text": "Try the widget."
+    },
+    {
+     "start": 100.67,
+     "end": 114.87,
+     "text": "Shift density and notice four regimes: the H-minus rise, the ionisation peak near ten thousand to a hundred thousand kelvin, driving cool-star convection and Cepheid pulsation, the Kramers fall, and the scattering floor."
+    },
+    {
+     "start": 114.87,
+     "end": 122.97,
+     "text": "Rigel behind the panel is a B supergiant on that floor, scattering competing with absorption, weak lines on a smooth continuum."
+    },
+    {
+     "start": 122.97,
+     "end": 126.33,
+     "text": "Kramers derived the temperature law in nineteen twenty-three."
+    },
+    {
+     "start": 126.33,
+     "end": 136.31,
+     "text": "Rosseland proposed the mean in nineteen twenty-four, when Eddington's Internal Constitution of the Stars appeared, and the mass-luminosity relation was predicted before it was fully measured."
+    }
+   ],
+   "voicedHash": "f83b27a05a04"
+  },
+  "sunset": {
+   "script": "You can measure optical depth by waiting for sunset. On the simulator, drag the zenith angle from overhead to the horizon for Earth, then Mars, and watch the spectrum and the disc. Notice how the blue dies first. Overhead, tau is about a tenth in the green, so ninety percent comes through. The air mass, one over the cosine of zenith angle z, reaches about forty times the vertical column near the horizon. Molecules much smaller than the wavelength give Rayleigh scattering, so tau is proportional to lambda to the minus four, and the blue optical depth is about five times the red. Blue vanishes long before red, and the disc reddens and dims as e to the minus tau-lambda times X. Tau-lambda is the vertical optical depth, X is the air mass, and the exponential is the fraction transmitted. Every night we observe standard stars at several air masses and fit m-observed equals m-zero plus k-lambda times X. m-observed is the measured magnitude, m-zero is the magnitude above the atmosphere, and k-lambda is the extinction per air mass, about half a magnitude in the ultraviolet, two tenths in the blue, a tenth in the red. Ozone cuts off light below about three hundred fifty nanometres, and the oxygen A-band returns near seven hundred sixty nanometres. Every published magnitude is already corrected above the atmosphere. Look at Mars behind the panel. Grains about a wavelength across scatter red light widely and blue light forward, so the sky is butterscotch with a blue sunset halo, as the rovers showed. Same transfer equation, different scattering law. On Earth the opacity kappa-lambda goes as lambda to the minus four. Blue sky, red sunset, tau about a tenth, extinction a tenth to half a magnitude per air mass. On Mars, kappa-lambda is nearly grey and strongly forward-peaked, with tau usually a few tenths to one and above five in a global dust storm. Sky colour is the wavelength dependence of the opacity, kappa-lambda.",
+   "hash": "616e09d6bbe3",
+   "duration": 122.87,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.44,
+     "text": "You can measure optical depth by waiting for sunset."
+    },
+    {
+     "start": 3.44,
+     "end": 11.66,
+     "text": "On the simulator, drag the zenith angle from overhead to the horizon for Earth, then Mars, and watch the spectrum and the disc."
+    },
+    {
+     "start": 11.66,
+     "end": 13.9,
+     "text": "Notice how the blue dies first."
+    },
+    {
+     "start": 13.9,
+     "end": 19.16,
+     "text": "Overhead, tau is about a tenth in the green, so ninety percent comes through."
+    },
+    {
+     "start": 19.16,
+     "end": 26.56,
+     "text": "The air mass, one over the cosine of zenith angle z, reaches about forty times the vertical column near the horizon."
+    },
+    {
+     "start": 26.56,
+     "end": 37.22,
+     "text": "Molecules much smaller than the wavelength give Rayleigh scattering, so tau is proportional to lambda to the minus four, and the blue optical depth is about five times the red."
+    },
+    {
+     "start": 37.22,
+     "end": 44.06,
+     "text": "Blue vanishes long before red, and the disc reddens and dims as e to the minus tau-lambda times X."
+    },
+    {
+     "start": 44.06,
+     "end": 51,
+     "text": "Tau-lambda is the vertical optical depth, X is the air mass, and the exponential is the fraction transmitted."
+    },
+    {
+     "start": 51,
+     "end": 58.86,
+     "text": "Every night we observe standard stars at several air masses and fit m-observed equals m-zero plus k-lambda times X."
+    },
+    {
+     "start": 58.86,
+     "end": 72.41,
+     "text": "m-observed is the measured magnitude, m-zero is the magnitude above the atmosphere, and k-lambda is the extinction per air mass, about half a magnitude in the ultraviolet, two tenths in the blue, a tenth in the red."
+    },
+    {
+     "start": 72.41,
+     "end": 80.17,
+     "text": "Ozone cuts off light below about three hundred fifty nanometres, and the oxygen A-band returns near seven hundred sixty nanometres."
+    },
+    {
+     "start": 80.17,
+     "end": 83.95,
+     "text": "Every published magnitude is already corrected above the atmosphere."
+    },
+    {
+     "start": 83.95,
+     "end": 85.87,
+     "text": "Look at Mars behind the panel."
+    },
+    {
+     "start": 85.87,
+     "end": 95.29,
+     "text": "Grains about a wavelength across scatter red light widely and blue light forward, so the sky is butterscotch with a blue sunset halo, as the rovers showed."
+    },
+    {
+     "start": 95.29,
+     "end": 98.49,
+     "text": "Same transfer equation, different scattering law."
+    },
+    {
+     "start": 98.49,
+     "end": 102.73,
+     "text": "On Earth the opacity kappa-lambda goes as lambda to the minus four."
+    },
+    {
+     "start": 102.73,
+     "end": 109.57,
+     "text": "Blue sky, red sunset, tau about a tenth, extinction a tenth to half a magnitude per air mass."
+    },
+    {
+     "start": 109.57,
+     "end": 118.55,
+     "text": "On Mars, kappa-lambda is nearly grey and strongly forward-peaked, with tau usually a few tenths to one and above five in a global dust storm."
+    },
+    {
+     "start": 118.55,
+     "end": 122.87,
+     "text": "Sky colour is the wavelength dependence of the opacity, kappa-lambda."
+    }
+   ],
+   "voicedHash": "e9e499c6fbd7"
+  },
+  "which-temperature": {
+   "script": "Look at Vega behind the panel. Chapter eight spoke freely of a star's temperature. Energy flows through a star and leaves, so it is not in thermodynamic equilibrium, its light is not a Planck curve, and measurements that agree for a blackbody disagree.\n\nIn the widget, switch the fit from total power, to a colour slope, to the Balmer jump. Notice the temperatures disagree. Match the total power and you get the effective temperature: L equals four pi R squared sigma T-eff to the fourth. L is the luminosity, the total power. R is the radius. Sigma is the Stefan-Boltzmann constant. T-eff is that temperature, fixed by matching a blackbody of the same size to the star's output. Locally, sigma T-eff to the fourth equals F-surf, the surface flux: a global property, exact by definition.\n\nFitting the colour slope gives a colour temperature, and it shifts when you change the pair. A fit at the Balmer jump, about three hundred and sixty-five nanometres, where hydrogen in n equals two starts absorbing everything bluer, gives yet another value.\n\nIn the gas, excitation temperature is the T that matches level populations through Boltzmann, and ionisation temperature matches ion ratios through Saha. They probe the layer where those lines form. Kinetic temperature is the T of the Maxwell-Boltzmann speeds, a thermometer in the gas. They coincide in local thermodynamic equilibrium. In an atmosphere, temperature changes with depth and the radiation is not the local Planck function, so they differ by a few per cent for the Sun, and by much more in extended, tenuous atmospheres.\n\nVega's effective temperature is about nine thousand six hundred kelvin. A visible colour temperature is about ten thousand five hundred kelvin, and the Balmer-jump temperature is lower. Seen pole-on, this rapid rotator shows a pole some two thousand kelvin hotter than the equator we barely see. Knowing which layer and which process, and fitting them all, is the goal of the rest of this chapter.",
+   "hash": "cfde453711e0",
+   "duration": 119.35,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.28,
+     "text": "Look at Vega behind the panel."
+    },
+    {
+     "start": 2.28,
+     "end": 5.62,
+     "text": "Chapter eight spoke freely of a star's temperature."
+    },
+    {
+     "start": 5.62,
+     "end": 15.98,
+     "text": "Energy flows through a star and leaves, so it is not in thermodynamic equilibrium, its light is not a Planck curve, and measurements that agree for a blackbody disagree."
+    },
+    {
+     "start": 15.98,
+     "end": 21.38,
+     "text": "In the widget, switch the fit from total power, to a colour slope, to the Balmer jump."
+    },
+    {
+     "start": 21.38,
+     "end": 23.42,
+     "text": "Notice the temperatures disagree."
+    },
+    {
+     "start": 23.42,
+     "end": 30.76,
+     "text": "Match the total power and you get the effective temperature: L equals four pi R squared sigma T-eff to the fourth."
+    },
+    {
+     "start": 30.76,
+     "end": 33.6,
+     "text": "L is the luminosity, the total power."
+    },
+    {
+     "start": 33.6,
+     "end": 34.96,
+     "text": "R is the radius."
+    },
+    {
+     "start": 34.96,
+     "end": 37.52,
+     "text": "Sigma is the Stefan-Boltzmann constant."
+    },
+    {
+     "start": 37.52,
+     "end": 43.52,
+     "text": "T-eff is that temperature, fixed by matching a blackbody of the same size to the star's output."
+    },
+    {
+     "start": 43.52,
+     "end": 51.7,
+     "text": "Locally, sigma T-eff to the fourth equals F-surf, the surface flux: a global property, exact by definition."
+    },
+    {
+     "start": 51.7,
+     "end": 56.38,
+     "text": "Fitting the colour slope gives a colour temperature, and it shifts when you change the pair."
+    },
+    {
+     "start": 56.38,
+     "end": 66.01,
+     "text": "A fit at the Balmer jump, about three hundred and sixty-five nanometres, where hydrogen in n equals two starts absorbing everything bluer, gives yet another value."
+    },
+    {
+     "start": 66.01,
+     "end": 75.13,
+     "text": "In the gas, excitation temperature is the T that matches level populations through Boltzmann, and ionisation temperature matches ion ratios through Saha."
+    },
+    {
+     "start": 75.13,
+     "end": 77.61,
+     "text": "They probe the layer where those lines form."
+    },
+    {
+     "start": 77.61,
+     "end": 82.93,
+     "text": "Kinetic temperature is the T of the Maxwell-Boltzmann speeds, a thermometer in the gas."
+    },
+    {
+     "start": 82.93,
+     "end": 86.25,
+     "text": "They coincide in local thermodynamic equilibrium."
+    },
+    {
+     "start": 86.25,
+     "end": 97.75,
+     "text": "In an atmosphere, temperature changes with depth and the radiation is not the local Planck function, so they differ by a few per cent for the Sun, and by much more in extended, tenuous atmospheres."
+    },
+    {
+     "start": 97.75,
+     "end": 101.69,
+     "text": "Vega's effective temperature is about nine thousand six hundred kelvin."
+    },
+    {
+     "start": 101.69,
+     "end": 107.87,
+     "text": "A visible colour temperature is about ten thousand five hundred kelvin, and the Balmer-jump temperature is lower."
+    },
+    {
+     "start": 107.87,
+     "end": 114.57,
+     "text": "Seen pole-on, this rapid rotator shows a pole some two thousand kelvin hotter than the equator we barely see."
+    },
+    {
+     "start": 114.57,
+     "end": 119.35,
+     "text": "Knowing which layer and which process, and fitting them all, is the goal of the rest of this chapter."
+    }
+   ],
+   "voicedHash": "e30e91022d02"
+  }
+ }
+}

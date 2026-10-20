@@ -1,0 +1,596 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "limb-darkening": {
+   "script": "Look at the Sun behind the panel. The disc is brightest at the centre and fades toward the edge. That is limb darkening, visible through a filter and measured since Secchi in the eighteen sixties. The random-walk picture explains it. Along any line of sight we see to about one optical depth. At disc centre the path goes straight down, into hot gas. Near the limb the path is slanted, nearly horizontal. It is the same path length through the gas, but it ends higher up, where the gas is cooler and shines less. The limb is darker because it shows us a higher, cooler layer. I want you to drag the cursor from centre to limb. On the right the line of sight tilts, and the depth where tau reaches two thirds rises toward the surface. The effect is strong in the blue and weak in the infrared, because the temperature gradient matters more where the Planck function is steeper. I of theta over I of zero is approximately one minus u times the quantity one minus cosine theta. I of theta is the brightness at angle theta, I of zero the brightness at disc centre, theta the angle between the line of sight and the local vertical, and u the limb-darkening coefficient. For the Sun at five hundred and fifty nanometres, u is about zero point six. At the limb cosine theta is near zero, so the edge is only about forty percent as bright as the centre. Section nine point four derives from the gray atmosphere I of theta over I of zero equals two plus three cosine theta, all over five. Limb darkening is a thermometer. Limb brightness in the red and centre brightness in the blue sample different depths, the first map of the Sun's stratification, decades before model atmospheres. Section nine point four's Eddington-Barbier relation makes that quantitative. A transit's rounded dip is a planet crossing that darkened disc, now routine for other stars.",
+   "hash": "d181bf6f3d47",
+   "duration": 110.39,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.4,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 2.4,
+     "end": 6.14,
+     "text": "The disc is brightest at the centre and fades toward the edge."
+    },
+    {
+     "start": 6.14,
+     "end": 11.86,
+     "text": "That is limb darkening, visible through a filter and measured since Secchi in the eighteen sixties."
+    },
+    {
+     "start": 11.86,
+     "end": 14.22,
+     "text": "The random-walk picture explains it."
+    },
+    {
+     "start": 14.22,
+     "end": 18.02,
+     "text": "Along any line of sight we see to about one optical depth."
+    },
+    {
+     "start": 18.02,
+     "end": 22.1,
+     "text": "At disc centre the path goes straight down, into hot gas."
+    },
+    {
+     "start": 22.1,
+     "end": 25.8,
+     "text": "Near the limb the path is slanted, nearly horizontal."
+    },
+    {
+     "start": 25.8,
+     "end": 32.38,
+     "text": "It is the same path length through the gas, but it ends higher up, where the gas is cooler and shines less."
+    },
+    {
+     "start": 32.38,
+     "end": 36.06,
+     "text": "The limb is darker because it shows us a higher, cooler layer."
+    },
+    {
+     "start": 36.06,
+     "end": 38.9,
+     "text": "I want you to drag the cursor from centre to limb."
+    },
+    {
+     "start": 38.9,
+     "end": 44.92,
+     "text": "On the right the line of sight tilts, and the depth where tau reaches two thirds rises toward the surface."
+    },
+    {
+     "start": 44.92,
+     "end": 52.5,
+     "text": "The effect is strong in the blue and weak in the infrared, because the temperature gradient matters more where the Planck function is steeper."
+    },
+    {
+     "start": 52.5,
+     "end": 59.15,
+     "text": "I of theta over I of zero is approximately one minus u times the quantity one minus cosine theta."
+    },
+    {
+     "start": 59.15,
+     "end": 70.11,
+     "text": "I of theta is the brightness at angle theta, I of zero the brightness at disc centre, theta the angle between the line of sight and the local vertical, and u the limb-darkening coefficient."
+    },
+    {
+     "start": 70.11,
+     "end": 75.03,
+     "text": "For the Sun at five hundred and fifty nanometres, u is about zero point six."
+    },
+    {
+     "start": 75.03,
+     "end": 81.19,
+     "text": "At the limb cosine theta is near zero, so the edge is only about forty percent as bright as the centre."
+    },
+    {
+     "start": 81.19,
+     "end": 89.69,
+     "text": "Section nine point four derives from the gray atmosphere I of theta over I of zero equals two plus three cosine theta, all over five."
+    },
+    {
+     "start": 89.69,
+     "end": 91.67,
+     "text": "Limb darkening is a thermometer."
+    },
+    {
+     "start": 91.67,
+     "end": 100.65,
+     "text": "Limb brightness in the red and centre brightness in the blue sample different depths, the first map of the Sun's stratification, decades before model atmospheres."
+    },
+    {
+     "start": 100.65,
+     "end": 105.05,
+     "text": "Section nine point four's Eddington-Barbier relation makes that quantitative."
+    },
+    {
+     "start": 105.05,
+     "end": 110.39,
+     "text": "A transit's rounded dip is a planet crossing that darkened disc, now routine for other stars."
+    }
+   ],
+   "voicedHash": "c520f9207e5e"
+  },
+  "lte": {
+   "script": "So what fixes the source function when the gas itself glows like a blackbody? If collisions excite and de-excite the atoms far more often than the radiation does, the level populations follow Boltzmann’s law at the local kinetic temperature. Kirchhoff’s law then locks the ratio of emission to absorption to the Planck function, so the source function S sub lambda equals B sub lambda of T. That is local thermodynamic equilibrium. Local, because the temperature changes from place to place. Equilibrium, because at each place the matter looks just as it would inside a blackbody cavity at that temperature. LTE is a property of the gas. It says nothing about the light, which may still sit far from B.\n\nTry the widget. Start with pure absorption, source function equal to B of T, and follow the mean intensity inward from the surface. Near the top you mix bright light from below with darkness from above, so the angle-bracket mean intensity lies well below B. By an optical depth of about two the field has thermalised, and the curves agree to a few per cent. Deeper still they are indistinguishable.\n\nNow switch to scattering. Photons are redirected rather than destroyed, so each scattering keeps a memory of where the photon came from, and the source function follows the mean intensity instead of B. The radiation can stay out of equilibrium for tens or hundreds of optical depths. The formula captures that. S sub lambda equals open parenthesis one minus epsilon close parenthesis times the mean intensity, plus epsilon times B sub lambda of T. Epsilon is the chance an interaction destroys the photon and re-emits it thermally; one minus epsilon is pure scattering. When epsilon goes to one you recover LTE. The thermalisation depth, tau sub th, is about one over the square root of epsilon. That is why the cores of strong lines, formed high up where collisions are rare, fail first. In the solar photosphere epsilon is near one for the continuum, because H minus absorbs rather than scatters, but much less than one in the cores of the calcium two H and K lines.\n\nFor most of the atmosphere of most stars, LTE is excellent, and classical models match the continuum and the weak lines to about a per cent. It fails where densities are low and the radiation intense. Look at Antares behind the panel: in a supergiant envelope like that, collisions are too rare to enforce Boltzmann populations. The same holds in O-star winds, and in the solar chromosphere and corona, where lines come from gas at a million kelvin that no local Planck function describes. Non-LTE modelling, solving the rate equations together with the transfer equation, has been the standard tool for those regimes since the nineteen seventies.",
+   "hash": "443f533ed089",
+   "duration": 160.95,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 4.94,
+     "text": "So what fixes the source function when the gas itself glows like a blackbody?"
+    },
+    {
+     "start": 4.94,
+     "end": 14.3,
+     "text": "If collisions excite and de-excite the atoms far more often than the radiation does, the level populations follow Boltzmann’s law at the local kinetic temperature."
+    },
+    {
+     "start": 14.3,
+     "end": 23.34,
+     "text": "Kirchhoff’s law then locks the ratio of emission to absorption to the Planck function, so the source function S sub lambda equals B sub lambda of T."
+    },
+    {
+     "start": 23.34,
+     "end": 26.08,
+     "text": "That is local thermodynamic equilibrium."
+    },
+    {
+     "start": 26.08,
+     "end": 29.46,
+     "text": "Local, because the temperature changes from place to place."
+    },
+    {
+     "start": 29.46,
+     "end": 36.04,
+     "text": "Equilibrium, because at each place the matter looks just as it would inside a blackbody cavity at that temperature."
+    },
+    {
+     "start": 36.04,
+     "end": 38.28,
+     "text": "LTE is a property of the gas."
+    },
+    {
+     "start": 38.28,
+     "end": 42.04,
+     "text": "It says nothing about the light, which may still sit far from B."
+    },
+    {
+     "start": 42.04,
+     "end": 43.18,
+     "text": "Try the widget."
+    },
+    {
+     "start": 43.18,
+     "end": 50.22,
+     "text": "Start with pure absorption, source function equal to B of T, and follow the mean intensity inward from the surface."
+    },
+    {
+     "start": 50.22,
+     "end": 57.5,
+     "text": "Near the top you mix bright light from below with darkness from above, so the angle-bracket mean intensity lies well below B."
+    },
+    {
+     "start": 57.5,
+     "end": 63.24,
+     "text": "By an optical depth of about two the field has thermalised, and the curves agree to a few per cent."
+    },
+    {
+     "start": 63.24,
+     "end": 65.58,
+     "text": "Deeper still they are indistinguishable."
+    },
+    {
+     "start": 65.58,
+     "end": 67.26,
+     "text": "Now switch to scattering."
+    },
+    {
+     "start": 67.26,
+     "end": 76.9,
+     "text": "Photons are redirected rather than destroyed, so each scattering keeps a memory of where the photon came from, and the source function follows the mean intensity instead of B."
+    },
+    {
+     "start": 76.9,
+     "end": 81.45,
+     "text": "The radiation can stay out of equilibrium for tens or hundreds of optical depths."
+    },
+    {
+     "start": 81.45,
+     "end": 83.33,
+     "text": "The formula captures that."
+    },
+    {
+     "start": 83.33,
+     "end": 92.39,
+     "text": "S sub lambda equals open parenthesis one minus epsilon close parenthesis times the mean intensity, plus epsilon times B sub lambda of T."
+    },
+    {
+     "start": 92.39,
+     "end": 99.61,
+     "text": "Epsilon is the chance an interaction destroys the photon and re-emits it thermally; one minus epsilon is pure scattering."
+    },
+    {
+     "start": 99.61,
+     "end": 102.63,
+     "text": "When epsilon goes to one you recover LTE."
+    },
+    {
+     "start": 102.63,
+     "end": 108.15,
+     "text": "The thermalisation depth, tau sub th, is about one over the square root of epsilon."
+    },
+    {
+     "start": 108.15,
+     "end": 113.73,
+     "text": "That is why the cores of strong lines, formed high up where collisions are rare, fail first."
+    },
+    {
+     "start": 113.73,
+     "end": 124.29,
+     "text": "In the solar photosphere epsilon is near one for the continuum, because H minus absorbs rather than scatters, but much less than one in the cores of the calcium two H and K lines."
+    },
+    {
+     "start": 124.29,
+     "end": 132.49,
+     "text": "For most of the atmosphere of most stars, LTE is excellent, and classical models match the continuum and the weak lines to about a per cent."
+    },
+    {
+     "start": 132.49,
+     "end": 135.95,
+     "text": "It fails where densities are low and the radiation intense."
+    },
+    {
+     "start": 135.95,
+     "end": 143.45,
+     "text": "Look at Antares behind the panel: in a supergiant envelope like that, collisions are too rare to enforce Boltzmann populations."
+    },
+    {
+     "start": 143.45,
+     "end": 152.75,
+     "text": "The same holds in O-star winds, and in the solar chromosphere and corona, where lines come from gas at a million kelvin that no local Planck function describes."
+    },
+    {
+     "start": 152.75,
+     "end": 160.95,
+     "text": "Non-LTE modelling, solving the rate equations together with the transfer equation, has been the standard tool for those regimes since the nineteen seventies."
+    }
+   ],
+   "voicedHash": "da2c938a9c29"
+  },
+  "random-walk": {
+   "script": "Welcome. Look at the Sun behind the panel. A photon in there is a drunkard. It travels one mean free path, ell, then absorption or scattering sends it off in a random new direction. Ell equals one over kappa-bar rho: kappa-bar is the mean opacity, rho the density. Averaged over the interior, ell is about a millimetre. Random steps mostly cancel, so the displacement is about ell times the square root of N. The formula: d equals ell times the square root of N, so N equals d over ell, squared, which equals tau squared. d is the distance, N the number of steps, tau the optical depth, just d over ell. Escape takes tau squared steps. At tau about one, one last step, meaning we see down to tau of about one. The time t is approximately d squared over ell times c, c the speed of light. For the Sun, of order a hundred thousand years, against two point three seconds straight. Try the widget. Set the steps, watch the path tangle, then over many trials compare the net displacement with ell times the square root of N, and the escape time through the Sun. Endings hug that square root. The photon that leaves is not the one made in the core. Energy is absorbed and re-emitted billions of times, each time by gas at the local temperature, and all memory of fusion is gone. We receive the temperature of that last gas, the atmosphere, so this chapter is about that thin layer, not the interior. Sunlight left eight minutes ago; the energy is from the Middle Ages or earlier. Think about it. Switch the core off today and the surface shines unchanged for tens of thousands of years, while neutrinos leave in two seconds, unimpeded. In nineteen sixty-eight only a third of the expected flux was found. List what an astrophysicist that year might have offered, including one based on this step, and which was right.",
+   "hash": "669c18fc12e9",
+   "duration": 112.95,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 1.1,
+     "text": "Welcome."
+    },
+    {
+     "start": 1.1,
+     "end": 3.08,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 3.08,
+     "end": 5.22,
+     "text": "A photon in there is a drunkard."
+    },
+    {
+     "start": 5.22,
+     "end": 11.94,
+     "text": "It travels one mean free path, ell, then absorption or scattering sends it off in a random new direction."
+    },
+    {
+     "start": 11.94,
+     "end": 18.26,
+     "text": "Ell equals one over kappa-bar rho: kappa-bar is the mean opacity, rho the density."
+    },
+    {
+     "start": 18.26,
+     "end": 21.52,
+     "text": "Averaged over the interior, ell is about a millimetre."
+    },
+    {
+     "start": 21.52,
+     "end": 26.8,
+     "text": "Random steps mostly cancel, so the displacement is about ell times the square root of N."
+    },
+    {
+     "start": 26.8,
+     "end": 35.2,
+     "text": "The formula: d equals ell times the square root of N, so N equals d over ell, squared, which equals tau squared."
+    },
+    {
+     "start": 35.2,
+     "end": 41.14,
+     "text": "d is the distance, N the number of steps, tau the optical depth, just d over ell."
+    },
+    {
+     "start": 41.14,
+     "end": 43.38,
+     "text": "Escape takes tau squared steps."
+    },
+    {
+     "start": 43.38,
+     "end": 48.72,
+     "text": "At tau about one, one last step, meaning we see down to tau of about one."
+    },
+    {
+     "start": 48.72,
+     "end": 54.04,
+     "text": "The time t is approximately d squared over ell times c, c the speed of light."
+    },
+    {
+     "start": 54.04,
+     "end": 59.27,
+     "text": "For the Sun, of order a hundred thousand years, against two point three seconds straight."
+    },
+    {
+     "start": 59.27,
+     "end": 60.39,
+     "text": "Try the widget."
+    },
+    {
+     "start": 60.39,
+     "end": 69.67,
+     "text": "Set the steps, watch the path tangle, then over many trials compare the net displacement with ell times the square root of N, and the escape time through the Sun."
+    },
+    {
+     "start": 69.67,
+     "end": 71.53,
+     "text": "Endings hug that square root."
+    },
+    {
+     "start": 71.53,
+     "end": 74.59,
+     "text": "The photon that leaves is not the one made in the core."
+    },
+    {
+     "start": 74.59,
+     "end": 82.45,
+     "text": "Energy is absorbed and re-emitted billions of times, each time by gas at the local temperature, and all memory of fusion is gone."
+    },
+    {
+     "start": 82.45,
+     "end": 89.77,
+     "text": "We receive the temperature of that last gas, the atmosphere, so this chapter is about that thin layer, not the interior."
+    },
+    {
+     "start": 89.77,
+     "end": 94.17,
+     "text": "Sunlight left eight minutes ago; the energy is from the Middle Ages or earlier."
+    },
+    {
+     "start": 94.17,
+     "end": 95.15,
+     "text": "Think about it."
+    },
+    {
+     "start": 95.15,
+     "end": 103.17,
+     "text": "Switch the core off today and the surface shines unchanged for tens of thousands of years, while neutrinos leave in two seconds, unimpeded."
+    },
+    {
+     "start": 103.17,
+     "end": 107.17,
+     "text": "In nineteen sixty-eight only a third of the expected flux was found."
+    },
+    {
+     "start": 107.17,
+     "end": 112.95,
+     "text": "List what an astrophysicist that year might have offered, including one based on this step, and which was right."
+    }
+   ],
+   "voicedHash": "64073287ef05"
+  },
+  "source-function": {
+   "script": "Last time we followed a beam that was only absorbed. A real gas also emits. The same atoms that remove photons add them back, by spontaneous emission, by recombination, by bremsstrahlung, and by scattering light in from other directions. j-lambda is the emission coefficient: energy added to the beam per unit volume, time, wavelength and solid angle.\n\nThe transfer equation is dee I-lambda over dee tau-lambda equals I-lambda minus S-lambda, with S-lambda defined as j-lambda over kappa-lambda rho. I-lambda is specific intensity, tau-lambda is optical depth along the ray in the direction the light travels, and that sign reverses next section. Kappa-lambda is the mass absorption coefficient and rho is the mass density, so S-lambda, the source function, is emission over absorption. Intensity relaxes toward S, and one optical depth is the relaxation length.\n\nAbove S the beam loses more than it gains and the intensity falls; below S it rises. To me that is the whole of radiative transfer.\n\nTry the sliders. Set S above I-nought and raise tau: emission brightens in the opaque gas. Drop S below I-nought and you get absorption dips. The solution is intensity equals I-nought times e to the minus tau, plus S times one minus e to the minus tau. At large tau the background is forgotten and intensity settles on S. Bright or dark depends only on whether S in the gas is above or below the intensity behind it.\n\nLook at Jupiter behind the panel. Its clouds are a thick slab near 130 kelvin. Where they part, five-micrometre cameras on Galileo and Juno see gas at 250 to 300 kelvin, hot spots, holes to a higher source function. Near 890 nanometres methane is so opaque that only the highest hazes show, and the Great Red Spot, towering above the deck, stands out bright against a dark planet. Each wavelength chooses a surface where tau is one; each surface has its own S-lambda; the image is the map of the two.",
+   "hash": "8be8fe610efe",
+   "duration": 129.59,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.34,
+     "text": "Last time we followed a beam that was only absorbed."
+    },
+    {
+     "start": 3.34,
+     "end": 5.56,
+     "text": "A real gas also emits."
+    },
+    {
+     "start": 5.56,
+     "end": 16.46,
+     "text": "The same atoms that remove photons add them back, by spontaneous emission, by recombination, by bremsstrahlung, and by scattering light in from other directions."
+    },
+    {
+     "start": 16.46,
+     "end": 24.64,
+     "text": "j-lambda is the emission coefficient: energy added to the beam per unit volume, time, wavelength and solid angle."
+    },
+    {
+     "start": 24.64,
+     "end": 36.54,
+     "text": "The transfer equation is dee I-lambda over dee tau-lambda equals I-lambda minus S-lambda, with S-lambda defined as j-lambda over kappa-lambda rho."
+    },
+    {
+     "start": 36.54,
+     "end": 45.82,
+     "text": "I-lambda is specific intensity, tau-lambda is optical depth along the ray in the direction the light travels, and that sign reverses next section."
+    },
+    {
+     "start": 45.82,
+     "end": 55.2,
+     "text": "Kappa-lambda is the mass absorption coefficient and rho is the mass density, so S-lambda, the source function, is emission over absorption."
+    },
+    {
+     "start": 55.2,
+     "end": 60.4,
+     "text": "Intensity relaxes toward S, and one optical depth is the relaxation length."
+    },
+    {
+     "start": 60.4,
+     "end": 66.25,
+     "text": "Above S the beam loses more than it gains and the intensity falls; below S it rises."
+    },
+    {
+     "start": 66.25,
+     "end": 68.93,
+     "text": "To me that is the whole of radiative transfer."
+    },
+    {
+     "start": 68.93,
+     "end": 70.31,
+     "text": "Try the sliders."
+    },
+    {
+     "start": 70.31,
+     "end": 75.45,
+     "text": "Set S above I-nought and raise tau: emission brightens in the opaque gas."
+    },
+    {
+     "start": 75.45,
+     "end": 78.69,
+     "text": "Drop S below I-nought and you get absorption dips."
+    },
+    {
+     "start": 78.69,
+     "end": 86.19,
+     "text": "The solution is intensity equals I-nought times e to the minus tau, plus S times one minus e to the minus tau."
+    },
+    {
+     "start": 86.19,
+     "end": 90.61,
+     "text": "At large tau the background is forgotten and intensity settles on S."
+    },
+    {
+     "start": 90.61,
+     "end": 96.15,
+     "text": "Bright or dark depends only on whether S in the gas is above or below the intensity behind it."
+    },
+    {
+     "start": 96.15,
+     "end": 98.15,
+     "text": "Look at Jupiter behind the panel."
+    },
+    {
+     "start": 98.15,
+     "end": 101.63,
+     "text": "Its clouds are a thick slab near 130 kelvin."
+    },
+    {
+     "start": 101.63,
+     "end": 111.53,
+     "text": "Where they part, five-micrometre cameras on Galileo and Juno see gas at 250 to 300 kelvin, hot spots, holes to a higher source function."
+    },
+    {
+     "start": 111.53,
+     "end": 122.25,
+     "text": "Near 890 nanometres methane is so opaque that only the highest hazes show, and the Great Red Spot, towering above the deck, stands out bright against a dark planet."
+    },
+    {
+     "start": 122.25,
+     "end": 129.59,
+     "text": "Each wavelength chooses a surface where tau is one; each surface has its own S-lambda; the image is the map of the two."
+    }
+   ],
+   "voicedHash": "613bcd795125"
+  },
+  "transfer-summary": {
+   "script": "Behind the panel the planets circle the Sun. Energy took about a hundred thousand years to cross the Sun, though sunlight left minutes ago. Displacement after N steps is ell times the square root of N, ell the mean free path, so optical depth tau needs about tau squared steps. We see only the last gas, the atmosphere. Limb darkening: slanted rays hit tau of one higher up, in cooler gas, stronger in the blue. Transits measure that on other stars. Source function S-lambda equals j-lambda over kappa-lambda times rho: emission coefficient over opacity times density. The transfer equation, dI by d-tau equals I minus S, drives intensity toward S in one optical depth. Slab solution: I equals I-nought e to the minus tau, plus S times one minus e to the minus tau. S larger than the incoming I-nought gives emission lines; S smaller gives absorption lines. Kirchhoff's laws. In local thermodynamic equilibrium, collisions keep Boltzmann-Saha populations locally, so S-lambda equals B-lambda of T, the Planck function. Absorption thermalises within a few tau; scattering within one over the square root of epsilon, the absorption probability. LTE fails in line cores, tenuous envelopes, chromospheres and winds. In short, intensity is driven toward the source function. Every feature is how S-lambda varies along the ray, and how far in we see.",
+   "hash": "5fbbbabcbdd8",
+   "duration": 94.07,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 3.06,
+     "text": "Behind the panel the planets circle the Sun."
+    },
+    {
+     "start": 3.06,
+     "end": 8.8,
+     "text": "Energy took about a hundred thousand years to cross the Sun, though sunlight left minutes ago."
+    },
+    {
+     "start": 8.8,
+     "end": 18.84,
+     "text": "Displacement after N steps is ell times the square root of N, ell the mean free path, so optical depth tau needs about tau squared steps."
+    },
+    {
+     "start": 18.84,
+     "end": 21.98,
+     "text": "We see only the last gas, the atmosphere."
+    },
+    {
+     "start": 21.98,
+     "end": 28.72,
+     "text": "Limb darkening: slanted rays hit tau of one higher up, in cooler gas, stronger in the blue."
+    },
+    {
+     "start": 28.72,
+     "end": 31.16,
+     "text": "Transits measure that on other stars."
+    },
+    {
+     "start": 31.16,
+     "end": 39.34,
+     "text": "Source function S-lambda equals j-lambda over kappa-lambda times rho: emission coefficient over opacity times density."
+    },
+    {
+     "start": 39.34,
+     "end": 47.69,
+     "text": "The transfer equation, dI by d-tau equals I minus S, drives intensity toward S in one optical depth."
+    },
+    {
+     "start": 47.69,
+     "end": 55.43,
+     "text": "Slab solution: I equals I-nought e to the minus tau, plus S times one minus e to the minus tau."
+    },
+    {
+     "start": 55.43,
+     "end": 61.27,
+     "text": "S larger than the incoming I-nought gives emission lines; S smaller gives absorption lines."
+    },
+    {
+     "start": 61.27,
+     "end": 62.75,
+     "text": "Kirchhoff's laws."
+    },
+    {
+     "start": 62.75,
+     "end": 72.71,
+     "text": "In local thermodynamic equilibrium, collisions keep Boltzmann-Saha populations locally, so S-lambda equals B-lambda of T, the Planck function."
+    },
+    {
+     "start": 72.71,
+     "end": 80.49,
+     "text": "Absorption thermalises within a few tau; scattering within one over the square root of epsilon, the absorption probability."
+    },
+    {
+     "start": 80.49,
+     "end": 85.77,
+     "text": "LTE fails in line cores, tenuous envelopes, chromospheres and winds."
+    },
+    {
+     "start": 85.77,
+     "end": 89.25,
+     "text": "In short, intensity is driven toward the source function."
+    },
+    {
+     "start": 89.25,
+     "end": 94.07,
+     "text": "Every feature is how S-lambda varies along the ray, and how far in we see."
+    }
+   ],
+   "voicedHash": "8ff8f3f714f0"
+  }
+ }
+}

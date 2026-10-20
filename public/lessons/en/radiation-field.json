@@ -1,0 +1,576 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "energy-density-flux": {
+   "script": "Now we turn to how much energy the radiation field stores, and how much of it is actually moving. Look at the Earth behind the panel — we will come back to what the Sun delivers there.\n\nThe specific energy density, u sub lambda, is the energy of radiation stored in each cubic metre, per unit wavelength. It is light in transit, counted while it is passing through. A photon moving at the speed of light spends only a brief time crossing any little length, so the energy present in a volume is the energy flow divided by c, summed over directions. That relation is u sub lambda equals four pi over c, times the average of I sub lambda. Here c is the speed of light, and the angle brackets mean we average the intensity over all directions. For a blackbody the total energy density is u equals a T to the fourth, with a equal to four sigma over c, about 7.6 times ten to the minus sixteen joules per cubic metre per kelvin to the fourth. At the centre of the Sun, fifteen million kelvin, that density is about four times ten to the thirteen joules per cubic metre — roughly the energy of a litre of petrol packed into every cubic centimetre, all stored as light.\n\nThe specific radiative flux, F sub lambda, is the net energy per second crossing a unit area, rays one way positive and the other way negative. The cosine of theta is essential: a grazing ray carries little energy through the surface, and a ray heading back subtracts. So F sub lambda equals the integral of I sub lambda cosine theta d omega. Try the widget. Shape the field yourself. Make it isotropic and the up and down halves cancel exactly — the flux is zero however intense the light. Make it bright below and dark above and the net flow is upward. For a stellar surface, intensity equal to B below and zero above, the flux is pi B sub lambda.\n\nIntegrate over wavelength and the surface flux is pi times the integral of B sub lambda d lambda, which equals sigma T to the fourth. That is where the Stefan–Boltzmann law comes from. Luminosity is just this flux times the surface area: four pi R squared sigma T to the fourth.\n\nFlux is what an unresolved star delivers. The Earth behind the panel intercepts the Sun’s flux at one astronomical unit — thirteen hundred and sixty-one watts per square metre, the solar constant. That number times the area of a sphere of radius one astronomical unit is the Sun’s luminosity. Spread over the Sun’s own surface the flux is about sixty-three million watts per square metre, giving an effective temperature of about five thousand eight hundred kelvin.\n\nIntensity does not change with distance; flux falls as the inverse square. For a star of angular radius alpha they meet in F equals pi I sine squared alpha.\n\nSit with this. Inside a star the radiation is almost isotropic: the outward intensity exceeds the inward by only about one part in ten billion. Yet the net flux must carry the whole luminosity, four times ten to the twenty-six watts. How can so tiny an anisotropy move that power? Compare sigma T to the fourth at ten million kelvin with the Sun’s surface flux, and you see why the deep interior can be treated as a blackbody to high precision and still have an energy current flowing through it.",
+   "hash": "8e2bec6fd70e",
+   "duration": 193.59,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 6.28,
+     "text": "Now we turn to how much energy the radiation field stores, and how much of it is actually moving."
+    },
+    {
+     "start": 6.28,
+     "end": 11.02,
+     "text": "Look at the Earth behind the panel — we will come back to what the Sun delivers there."
+    },
+    {
+     "start": 11.02,
+     "end": 19.38,
+     "text": "The specific energy density, u sub lambda, is the energy of radiation stored in each cubic metre, per unit wavelength."
+    },
+    {
+     "start": 19.38,
+     "end": 23.16,
+     "text": "It is light in transit, counted while it is passing through."
+    },
+    {
+     "start": 23.16,
+     "end": 34.08,
+     "text": "A photon moving at the speed of light spends only a brief time crossing any little length, so the energy present in a volume is the energy flow divided by c, summed over directions."
+    },
+    {
+     "start": 34.08,
+     "end": 40.24,
+     "text": "That relation is u sub lambda equals four pi over c, times the average of I sub lambda."
+    },
+    {
+     "start": 40.24,
+     "end": 46.02,
+     "text": "Here c is the speed of light, and the angle brackets mean we average the intensity over all directions."
+    },
+    {
+     "start": 46.02,
+     "end": 58.86,
+     "text": "For a blackbody the total energy density is u equals a T to the fourth, with a equal to four sigma over c, about 7. 6 times ten to the minus sixteen joules per cubic metre per kelvin to the fourth."
+    },
+    {
+     "start": 58.86,
+     "end": 71.58,
+     "text": "At the centre of the Sun, fifteen million kelvin, that density is about four times ten to the thirteen joules per cubic metre — roughly the energy of a litre of petrol packed into every cubic centimetre, all stored as light."
+    },
+    {
+     "start": 71.58,
+     "end": 80.78,
+     "text": "The specific radiative flux, F sub lambda, is the net energy per second crossing a unit area, rays one way positive and the other way negative."
+    },
+    {
+     "start": 80.78,
+     "end": 88.1,
+     "text": "The cosine of theta is essential: a grazing ray carries little energy through the surface, and a ray heading back subtracts."
+    },
+    {
+     "start": 88.1,
+     "end": 93.02,
+     "text": "So F sub lambda equals the integral of I sub lambda cosine theta d omega."
+    },
+    {
+     "start": 93.02,
+     "end": 94.14,
+     "text": "Try the widget."
+    },
+    {
+     "start": 94.14,
+     "end": 95.72,
+     "text": "Shape the field yourself."
+    },
+    {
+     "start": 95.72,
+     "end": 102.01,
+     "text": "Make it isotropic and the up and down halves cancel exactly — the flux is zero however intense the light."
+    },
+    {
+     "start": 102.01,
+     "end": 105.67,
+     "text": "Make it bright below and dark above and the net flow is upward."
+    },
+    {
+     "start": 105.67,
+     "end": 112.35,
+     "text": "For a stellar surface, intensity equal to B below and zero above, the flux is pi B sub lambda."
+    },
+    {
+     "start": 112.35,
+     "end": 120.03,
+     "text": "Integrate over wavelength and the surface flux is pi times the integral of B sub lambda d lambda, which equals sigma T to the fourth."
+    },
+    {
+     "start": 120.03,
+     "end": 122.79,
+     "text": "That is where the Stefan–Boltzmann law comes from."
+    },
+    {
+     "start": 122.79,
+     "end": 128.77,
+     "text": "Luminosity is just this flux times the surface area: four pi R squared sigma T to the fourth."
+    },
+    {
+     "start": 128.77,
+     "end": 131.37,
+     "text": "Flux is what an unresolved star delivers."
+    },
+    {
+     "start": 131.37,
+     "end": 140.13,
+     "text": "The Earth behind the panel intercepts the Sun’s flux at one astronomical unit — thirteen hundred and sixty-one watts per square metre, the solar constant."
+    },
+    {
+     "start": 140.13,
+     "end": 145.97,
+     "text": "That number times the area of a sphere of radius one astronomical unit is the Sun’s luminosity."
+    },
+    {
+     "start": 145.97,
+     "end": 154.79,
+     "text": "Spread over the Sun’s own surface the flux is about sixty-three million watts per square metre, giving an effective temperature of about five thousand eight hundred kelvin."
+    },
+    {
+     "start": 154.79,
+     "end": 159.37,
+     "text": "Intensity does not change with distance; flux falls as the inverse square."
+    },
+    {
+     "start": 159.37,
+     "end": 165.01,
+     "text": "For a star of angular radius alpha they meet in F equals pi I sine squared alpha."
+    },
+    {
+     "start": 165.01,
+     "end": 166.09,
+     "text": "Sit with this."
+    },
+    {
+     "start": 166.09,
+     "end": 173.85,
+     "text": "Inside a star the radiation is almost isotropic: the outward intensity exceeds the inward by only about one part in ten billion."
+    },
+    {
+     "start": 173.85,
+     "end": 179.15,
+     "text": "Yet the net flux must carry the whole luminosity, four times ten to the twenty-six watts."
+    },
+    {
+     "start": 179.15,
+     "end": 182.29,
+     "text": "How can so tiny an anisotropy move that power?"
+    },
+    {
+     "start": 182.29,
+     "end": 193.59,
+     "text": "Compare sigma T to the fourth at ten million kelvin with the Sun’s surface flux, and you see why the deep interior can be treated as a blackbody to high precision and still have an energy current flowing through it."
+    }
+   ],
+   "voicedHash": "3b0610f639ce"
+  },
+  "field-summary": {
+   "script": "Behind the panel the whole planetary system slowly circles the Sun. Photons escaped a thin atmosphere, and we describe light at a point in a gas. Specific intensity I lambda is energy per time, area, wavelength and solid angle in one direction. It is constant along a ray in vacuum, so resolved sources keep surface brightness at any distance. A blackbody has I lambda equal to B lambda of T. The mean intensity equals one over four pi times the integral of I lambda d omega, which heats and excites the gas: isotropic deep inside a star, well below Planck at effective temperature on the surface. Energy density u lambda is four pi over c times the mean intensity; blackbody u is a times T to the fourth. Flux F lambda is the integral of I lambda cosine theta d omega, zero if isotropic, pi B lambda at a stellar surface, and sigma T to the fourth integrated. Radiation pressure equals one over c times the integral of I cosine squared theta d omega, hence u over three, or a T to the fourth over three, for isotropic light. It blows comet dust tails, drives solar sails, and competes with gravity in the most massive stars. Five moments of one function, I lambda of direction. The gas acts on it.",
+   "hash": "99c752b4abc4",
+   "duration": 82.23,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 4.62,
+     "text": "Behind the panel the whole planetary system slowly circles the Sun."
+    },
+    {
+     "start": 4.62,
+     "end": 9.84,
+     "text": "Photons escaped a thin atmosphere, and we describe light at a point in a gas."
+    },
+    {
+     "start": 9.84,
+     "end": 17.16,
+     "text": "Specific intensity I lambda is energy per time, area, wavelength and solid angle in one direction."
+    },
+    {
+     "start": 17.16,
+     "end": 23.34,
+     "text": "It is constant along a ray in vacuum, so resolved sources keep surface brightness at any distance."
+    },
+    {
+     "start": 23.34,
+     "end": 27.26,
+     "text": "A blackbody has I lambda equal to B lambda of T."
+    },
+    {
+     "start": 27.26,
+     "end": 40.2,
+     "text": "The mean intensity equals one over four pi times the integral of I lambda d omega, which heats and excites the gas: isotropic deep inside a star, well below Planck at effective temperature on the surface."
+    },
+    {
+     "start": 40.2,
+     "end": 48.19,
+     "text": "Energy density u lambda is four pi over c times the mean intensity; blackbody u is a times T to the fourth."
+    },
+    {
+     "start": 48.19,
+     "end": 59.59,
+     "text": "Flux F lambda is the integral of I lambda cosine theta d omega, zero if isotropic, pi B lambda at a stellar surface, and sigma T to the fourth integrated."
+    },
+    {
+     "start": 59.59,
+     "end": 70.75,
+     "text": "Radiation pressure equals one over c times the integral of I cosine squared theta d omega, hence u over three, or a T to the fourth over three, for isotropic light."
+    },
+    {
+     "start": 70.75,
+     "end": 77.25,
+     "text": "It blows comet dust tails, drives solar sails, and competes with gravity in the most massive stars."
+    },
+    {
+     "start": 77.25,
+     "end": 80.97,
+     "text": "Five moments of one function, I lambda of direction."
+    },
+    {
+     "start": 80.97,
+     "end": 82.23,
+     "text": "The gas acts on it."
+    }
+   ],
+   "voicedHash": "917c4c9e5ffd"
+  },
+  "mean-intensity": {
+   "script": "Look at Arcturus behind the panel, a K giant whose extended, tenuous atmosphere makes this anisotropic surface layer a substantial fraction of its radius. Deep inside a star, radiation is isotropic: every direction sees gas at nearly the same temperature. Near the surface, look down at hot bright gas and look up into cold empty space. The mean intensity averages the specific intensity over all four pi steradians.\n\nSo angle brackets I sub lambda equals one over four pi times the integral of I sub lambda d omega, which equals one over four pi times the integral, phi from zero to two pi and theta from zero to pi, of I sub lambda sine theta d theta d phi. I sub lambda is specific intensity at wavelength lambda. d omega is solid angle. Theta is the polar angle from the outward normal, phi the azimuth. Sine theta weights the solid-angle element, and one over four pi steradians averages over the sky. Literature calls this J sub lambda. An atom ignores direction, so this average sets heating and excitation. If isotropic, the average is just I sub lambda. A blackbody cavity gives the Planck function B sub lambda of T.\n\nI want you to change the depth on the widget. On the polar diagram, spoke length is intensity in that direction. Deep down, a circle. As you rise, the upper half shrinks: fewer photons from above. At the top: a half-sphere of light from below, darkness above, mean intensity less than half the Planck function at the effective temperature. Section 9.4 will derive that. For the Sun the layer is a few hundred kilometres thick, a thousandth of a percent of the radius.\n\nAverage over wavelength too, and the total mean intensity, angle brackets I, equals sigma T to the fourth over pi for a blackbody. Sigma is the Stefan-Boltzmann constant, T the temperature. Every specific quantity has a total from integrating over wavelength, and each blackbody value is a simple power of T.",
+   "hash": "f937feefa21c",
+   "duration": 122.87,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 10.66,
+     "text": "Look at Arcturus behind the panel, a K giant whose extended, tenuous atmosphere makes this anisotropic surface layer a substantial fraction of its radius."
+    },
+    {
+     "start": 10.66,
+     "end": 17.68,
+     "text": "Deep inside a star, radiation is isotropic: every direction sees gas at nearly the same temperature."
+    },
+    {
+     "start": 17.68,
+     "end": 23.18,
+     "text": "Near the surface, look down at hot bright gas and look up into cold empty space."
+    },
+    {
+     "start": 23.18,
+     "end": 28.28,
+     "text": "The mean intensity averages the specific intensity over all four pi steradians."
+    },
+    {
+     "start": 28.28,
+     "end": 45.08,
+     "text": "So angle brackets I sub lambda equals one over four pi times the integral of I sub lambda d omega, which equals one over four pi times the integral, phi from zero to two pi and theta from zero to pi, of I sub lambda sine theta d theta d phi."
+    },
+    {
+     "start": 45.08,
+     "end": 48.58,
+     "text": "I sub lambda is specific intensity at wavelength lambda."
+    },
+    {
+     "start": 48.58,
+     "end": 50.58,
+     "text": "d omega is solid angle."
+    },
+    {
+     "start": 50.58,
+     "end": 54.8,
+     "text": "Theta is the polar angle from the outward normal, phi the azimuth."
+    },
+    {
+     "start": 54.8,
+     "end": 60.92,
+     "text": "Sine theta weights the solid-angle element, and one over four pi steradians averages over the sky."
+    },
+    {
+     "start": 60.92,
+     "end": 63.35,
+     "text": "Literature calls this J sub lambda."
+    },
+    {
+     "start": 63.35,
+     "end": 67.91,
+     "text": "An atom ignores direction, so this average sets heating and excitation."
+    },
+    {
+     "start": 67.91,
+     "end": 71.45,
+     "text": "If isotropic, the average is just I sub lambda."
+    },
+    {
+     "start": 71.45,
+     "end": 75.69,
+     "text": "A blackbody cavity gives the Planck function B sub lambda of T."
+    },
+    {
+     "start": 75.69,
+     "end": 77.99,
+     "text": "I want you to change the depth on the widget."
+    },
+    {
+     "start": 77.99,
+     "end": 82.17,
+     "text": "On the polar diagram, spoke length is intensity in that direction."
+    },
+    {
+     "start": 82.17,
+     "end": 83.85,
+     "text": "Deep down, a circle."
+    },
+    {
+     "start": 83.85,
+     "end": 87.95,
+     "text": "As you rise, the upper half shrinks: fewer photons from above."
+    },
+    {
+     "start": 87.95,
+     "end": 98.59,
+     "text": "At the top: a half-sphere of light from below, darkness above, mean intensity less than half the Planck function at the effective temperature. Section 9. 4 will derive that."
+    },
+    {
+     "start": 98.59,
+     "end": 103.99,
+     "text": "For the Sun the layer is a few hundred kilometres thick, a thousandth of a percent of the radius."
+    },
+    {
+     "start": 103.99,
+     "end": 112.33,
+     "text": "Average over wavelength too, and the total mean intensity, angle brackets I, equals sigma T to the fourth over pi for a blackbody."
+    },
+    {
+     "start": 112.33,
+     "end": 116.11,
+     "text": "Sigma is the Stefan-Boltzmann constant, T the temperature."
+    },
+    {
+     "start": 116.11,
+     "end": 122.87,
+     "text": "Every specific quantity has a total from integrating over wavelength, and each blackbody value is a simple power of T."
+    }
+   ],
+   "voicedHash": "0596fa7d873a"
+  },
+  "radiation-pressure": {
+   "script": "Look at Halley behind the panel. That yellow plume is the dust tail. A photon of energy E carries momentum E over c, so light exerts a pressure. The pressure is the rate at which photon momentum crosses a unit area, with cosine squared theta: one cosine for the projected area, one for the momentum normal to the surface.\n\nRadiation pressure, P-rad, equals one over c times the integral of I cosine squared theta d omega. I is the specific intensity, theta the angle from the normal, d omega the solid angle, and c the speed of light. For an isotropic field, cosine squared averages to one third, so this equals four pi over three c times the mean intensity, one third of the energy density u, and one third a T to the fourth for blackbody radiation. a is the radiation constant and T the temperature. At the solar centre, about thirteen trillion pascals, it is negligible beside the gas pressure. In a sixty solar mass star the two are comparable.\n\nTry the widget. The radiation force is L over four pi r squared c times pi s squared: L the luminosity, s the radius, r the distance. Gravity is G M m over r squared, with m four thirds pi s cubed rho, rho the density, G Newton's constant and M the mass. The ratio, three L over sixteen pi G M c rho s, is independent of distance because both forces fall as one over r squared. At two thousand kilograms per cubic metre they balance near six tenths of a micrometre. Shrink the grain and watch radiation win. Move up in mass and watch radiation take over.\n\nRadiation to gas pressure grows roughly as mass squared. Near a hundred solar masses they are equal, and above that a star cannot hold together. The Eddington limit caps the main sequence and drives the winds of O stars. In the biggest stars, light is a structural force.",
+   "hash": "858fde0053e0",
+   "duration": 118.71,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.36,
+     "text": "Look at Halley behind the panel."
+    },
+    {
+     "start": 2.36,
+     "end": 4.94,
+     "text": "That yellow plume is the dust tail."
+    },
+    {
+     "start": 4.94,
+     "end": 10.96,
+     "text": "A photon of energy E carries momentum E over c, so light exerts a pressure."
+    },
+    {
+     "start": 10.96,
+     "end": 22.08,
+     "text": "The pressure is the rate at which photon momentum crosses a unit area, with cosine squared theta: one cosine for the projected area, one for the momentum normal to the surface."
+    },
+    {
+     "start": 22.08,
+     "end": 29.64,
+     "text": "Radiation pressure, P-rad, equals one over c times the integral of I cosine squared theta d omega."
+    },
+    {
+     "start": 29.64,
+     "end": 37,
+     "text": "I is the specific intensity, theta the angle from the normal, d omega the solid angle, and c the speed of light."
+    },
+    {
+     "start": 37,
+     "end": 51.22,
+     "text": "For an isotropic field, cosine squared averages to one third, so this equals four pi over three c times the mean intensity, one third of the energy density u, and one third a T to the fourth for blackbody radiation."
+    },
+    {
+     "start": 51.22,
+     "end": 54.32,
+     "text": "a is the radiation constant and T the temperature."
+    },
+    {
+     "start": 54.32,
+     "end": 60.49,
+     "text": "At the solar centre, about thirteen trillion pascals, it is negligible beside the gas pressure."
+    },
+    {
+     "start": 60.49,
+     "end": 63.77,
+     "text": "In a sixty solar mass star the two are comparable."
+    },
+    {
+     "start": 63.77,
+     "end": 64.89,
+     "text": "Try the widget."
+    },
+    {
+     "start": 64.89,
+     "end": 73.85,
+     "text": "The radiation force is L over four pi r squared c times pi s squared: L the luminosity, s the radius, r the distance."
+    },
+    {
+     "start": 73.85,
+     "end": 83.35,
+     "text": "Gravity is G M m over r squared, with m four thirds pi s cubed rho, rho the density, G Newton's constant and M the mass."
+    },
+    {
+     "start": 83.35,
+     "end": 92.39,
+     "text": "The ratio, three L over sixteen pi G M c rho s, is independent of distance because both forces fall as one over r squared."
+    },
+    {
+     "start": 92.39,
+     "end": 97.51,
+     "text": "At two thousand kilograms per cubic metre they balance near six tenths of a micrometre."
+    },
+    {
+     "start": 97.51,
+     "end": 100.03,
+     "text": "Shrink the grain and watch radiation win."
+    },
+    {
+     "start": 100.03,
+     "end": 102.87,
+     "text": "Move up in mass and watch radiation take over."
+    },
+    {
+     "start": 102.87,
+     "end": 106.35,
+     "text": "Radiation to gas pressure grows roughly as mass squared."
+    },
+    {
+     "start": 106.35,
+     "end": 111.39,
+     "text": "Near a hundred solar masses they are equal, and above that a star cannot hold together."
+    },
+    {
+     "start": 111.39,
+     "end": 115.73,
+     "text": "The Eddington limit caps the main sequence and drives the winds of O stars."
+    },
+    {
+     "start": 115.73,
+     "end": 118.71,
+     "text": "In the biggest stars, light is a structural force."
+    }
+   ],
+   "voicedHash": "75c31c11a1e9"
+  },
+  "specific-intensity": {
+   "script": "Let's begin by learning the right language for the light a star sends us. \nEnergy is generated deep inside by fusion, yet the photons we receive left the thin outer atmosphere, the layers from which radiation escapes to space. Now we ask how temperature, density and composition shape the outgoing spectrum, starting with a precise description of brightness. \nBrightness is not one number. Light comes from every direction and wavelength. Specific intensity I lambda is the energy per second per unit wavelength interval crossing a unit area perpendicular to a chosen direction inside a small solid angle. Units are watts per square metre per metre per steradian: simply the brightness of the sky in one direction at one colour. Look at the Sun behind the panel. A telescope pointed at the centre of the disc measures I lambda per pixel. \nThe defining relation reads: energy E lambda d lambda equals I lambda d lambda d t d A cosine theta d Omega. E lambda d lambda therefore collects the intensity over the wavelength slice, the time, the area corrected by cosine theta for foreshortening, and the solid angle d Omega. For a blackbody I lambda is the Planck function B lambda of T. \nIn vacuum intensity is constant along a ray. Back away and the disc shrinks so total light falls, yet each square arcsecond stays equally bright. Use the widget and back the observer away. Flux drops as one over r squared while disc intensity stays fixed until unresolved. Resolved sources are given by intensity, point sources by flux. \nPicture sighting a lit billboard through a straw. Walk back and the billboard covers less of the sky, but the glow down the straw never changes until the whole sign slips inside. That constancy is why surface brightness ignores distance, the Sun looks the same per unit area from Mercury or Neptune, and the transfer equation needs only emission and absorption.",
+   "hash": "57f909035724",
+   "duration": 119.67,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 4.5,
+     "text": "Let's begin by learning the right language for the light a star sends us."
+    },
+    {
+     "start": 4.5,
+     "end": 14.54,
+     "text": "Energy is generated deep inside by fusion, yet the photons we receive left the thin outer atmosphere, the layers from which radiation escapes to space."
+    },
+    {
+     "start": 14.54,
+     "end": 22.54,
+     "text": "Now we ask how temperature, density and composition shape the outgoing spectrum, starting with a precise description of brightness."
+    },
+    {
+     "start": 22.54,
+     "end": 24.58,
+     "text": "Brightness is not one number."
+    },
+    {
+     "start": 24.58,
+     "end": 27.34,
+     "text": "Light comes from every direction and wavelength."
+    },
+    {
+     "start": 27.34,
+     "end": 38.38,
+     "text": "Specific intensity I lambda is the energy per second per unit wavelength interval crossing a unit area perpendicular to a chosen direction inside a small solid angle."
+    },
+    {
+     "start": 38.38,
+     "end": 45.88,
+     "text": "Units are watts per square metre per metre per steradian: simply the brightness of the sky in one direction at one colour."
+    },
+    {
+     "start": 45.88,
+     "end": 47.82,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 47.82,
+     "end": 52.22,
+     "text": "A telescope pointed at the centre of the disc measures I lambda per pixel."
+    },
+    {
+     "start": 52.22,
+     "end": 61.63,
+     "text": "The defining relation reads: energy E lambda d lambda equals I lambda d lambda d t d A cosine theta d Omega."
+    },
+    {
+     "start": 61.63,
+     "end": 72.67,
+     "text": "E lambda d lambda therefore collects the intensity over the wavelength slice, the time, the area corrected by cosine theta for foreshortening, and the solid angle d Omega."
+    },
+    {
+     "start": 72.67,
+     "end": 77.25,
+     "text": "For a blackbody I lambda is the Planck function B lambda of T."
+    },
+    {
+     "start": 77.25,
+     "end": 80.31,
+     "text": "In vacuum intensity is constant along a ray."
+    },
+    {
+     "start": 80.31,
+     "end": 86.73,
+     "text": "Back away and the disc shrinks so total light falls, yet each square arcsecond stays equally bright."
+    },
+    {
+     "start": 86.73,
+     "end": 89.23,
+     "text": "Use the widget and back the observer away."
+    },
+    {
+     "start": 89.23,
+     "end": 95.03,
+     "text": "Flux drops as one over r squared while disc intensity stays fixed until unresolved."
+    },
+    {
+     "start": 95.03,
+     "end": 99.43,
+     "text": "Resolved sources are given by intensity, point sources by flux."
+    },
+    {
+     "start": 99.43,
+     "end": 102.23,
+     "text": "Picture sighting a lit billboard through a straw."
+    },
+    {
+     "start": 102.23,
+     "end": 109.53,
+     "text": "Walk back and the billboard covers less of the sky, but the glow down the straw never changes until the whole sign slips inside."
+    },
+    {
+     "start": 109.53,
+     "end": 119.67,
+     "text": "That constancy is why surface brightness ignores distance, the Sun looks the same per unit area from Mercury or Neptune, and the transfer equation needs only emission and absorption."
+    }
+   ],
+   "voicedHash": "c26fdf7fca7a"
+  }
+ }
+}

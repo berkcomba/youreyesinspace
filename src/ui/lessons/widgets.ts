@@ -6466,6 +6466,1607 @@ class SpecParallaxWidget extends CanvasWidget {
 }
 const classFracToLogg = (cf: number) => [0.3, 1.0, 1.8, 2.6, 3.6, 4.4][Math.round(cf)];
 
+/* ===================================================== Chapter 9 widgets ==== */
+
+const M_H = 1.6735575e-27;
+const SIGMA_T = 6.6524587e-29;
+/** pseudo-Voigt profile with unit peak; v in Doppler widths, a = damping parameter (Lorentz HWHM / Doppler width) */
+function voigtH(a: number, v: number): number {
+  const fG = 2 * Math.sqrt(Math.LN2), fL = 2 * a;
+  const f = (fG ** 5 + 2.69269 * fG ** 4 * fL + 2.42843 * fG ** 3 * fL ** 2 + 4.47163 * fG ** 2 * fL ** 3 + 0.07842 * fG * fL ** 4 + fL ** 5) ** 0.2;
+  const r = fL / f;
+  const eta = 1.36603 * r - 0.47719 * r * r + 0.11116 * r ** 3;
+  const g = Math.exp(-4 * Math.LN2 * v * v / (f * f));
+  const l = 1 / (1 + 4 * v * v / (f * f));
+  return eta * l + (1 - eta) * g;
+}
+/** perceived colour of a spectrum F(nm) over 380–780 nm, normalised so the brightest channel is 255·scale */
+let SPEC_WHITE: [number, number, number] | null = null;
+function specColor(F: (nm: number) => number, scale = 1): [number, number, number] {
+  const integ = (G: (nm: number) => number): [number, number, number] => { let r = 0, g = 0, b = 0; for (let nm = 385; nm < 780; nm += 5) { const c = waveRGB(nm); const f = G(nm); r += c[0] * f; g += c[1] * f; b += c[2] * f; } return [r, g, b]; };
+  if (!SPEC_WHITE) SPEC_WHITE = integ((nm) => planck(nm * 1e-9, 5772));   // white balance: unattenuated sunlight → white
+  const [r0, g0, b0] = SPEC_WHITE;
+  let [r, g, b] = integ(F);
+  r /= r0; g /= g0; b /= b0;
+  const m = Math.max(r, g, b, 1e-30);
+  const s = 255 * Math.min(1, scale) / m;
+  return [r * s, g * s, b * s];
+}
+/** Eddington gray atmosphere intensities (units of 3F/4π) at vertical depth τ: upward μ>0, downward μ<0 */
+function grayI(tau: number, mu: number): number {
+  const a = 2 / 3;
+  if (mu > 0) return tau + a + mu;
+  const m = -mu; if (m < 1e-6) return 0;
+  const e = Math.exp(-tau / m);
+  return (tau + a - m) * (1 - e) + tau * e;
+}
+function axesBox(ctx: CanvasRenderingContext2D, x0: number, y0: number, x1: number, y1: number) {
+  ctx.strokeStyle = C.line; ctx.lineWidth = 1; ctx.strokeRect(x0, y0, x1 - x0, y1 - y0);
+}
+
+/* ------------------------------------------- 9.1a specific intensity ---- */
+
+class IntensityWidget extends CanvasWidget {
+  private r = 8;
+  private t = 0;
+  constructor() {
+    super(1.8);
+    this.slider('Distance (R★)', 2, 60, 0.5, this.r, (v) => `${fmt(v, 1)} R★`, (v) => { this.r = v; });
+    this.playButton();
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    this.t += dt;
+    const r = this.r;
+    const pix = 3.5 * DEG;                       // pixel angular size
+    const alpha = Math.asin(Math.min(1, 1 / r));  // angular radius of star
+    const resolved = alpha > pix / 2;
+    const F = 1 / (r * r);
+    const I = 1;
+    const pixFrac = resolved ? 1 : (alpha / (pix / 2)) ** 2;
+    const pixBright = I * pixFrac;
+    // ---- left: geometry
+    const gx0 = 10, gx1 = w * 0.52, gy = h * 0.42;
+    const sx = gx0 + 30, sr = 10;
+    this.glow(sx, gy, sr * 2.2, hexA(C.sun, 0.5));
+    this.circle(sx, gy, sr, undefined, C.sun);
+    const ox = sx + 40 + (gx1 - sx - 60) * (Math.log(r) - Math.log(2)) / (Math.log(60) - Math.log(2));
+    // photons streaming
+    for (let i = 0; i < 24; i++) {
+      const ph = ((this.t * 0.35 + i / 24) % 1);
+      const ang = (i / 24 - 0.5) * 1.2;
+      const d = sr + ph * (gx1 - sx);
+      const px = sx + d * Math.cos(ang), py = gy + d * Math.sin(ang);
+      if (px < gx1) { c.fillStyle = hexA(C.sun, 0.25 + 0.4 * (1 - ph)); c.fillRect(px - 1, py - 1, 2, 2); }
+    }
+    // observer + cone
+    {
+      c.fillStyle = C.text; c.fillRect(ox - 2, gy - 7, 4, 14);
+      this.line(ox, gy, sx, gy - sr, hexA(C.accent, 0.6), 1, [3, 3]);
+      this.line(ox, gy, sx, gy + sr, hexA(C.accent, 0.6), 1, [3, 3]);
+      const pl = Math.min(70, ox - sx - 14), pa = Math.max(pix / 2, Math.atan(sr / (ox - sx)) * (resolved ? 0.4 : 1.3));
+      this.line(ox, gy, ox - pl * Math.cos(pa), gy - pl * Math.sin(pa), C.blue, 1);
+      this.line(ox, gy, ox - pl * Math.cos(pa), gy + pl * Math.sin(pa), C.blue, 1);
+      this.text('one pixel', ox, gy - 16, C.blue, 9, 'center');
+      this.text(`disc 2α = ${fmt(2 * alpha / DEG, 1)}°`, ox, gy + 20, C.accent, 9, 'center');
+      this.text(`r = ${fmt(r, 1)} R★`, ox, gy + 32, C.dim, 9, 'center');
+    }
+    this.text('star', sx, gy + sr + 14, C.dim, 10, 'center');
+    // ---- right: camera view, 5x5 pixel grid
+    const vx = w * 0.56, vy = 12, vs = Math.min(w * 0.42, h * 0.56);
+    const n = 7, ps = vs / n;
+    c.fillStyle = '#05070b'; c.fillRect(vx, vy, vs, vs);
+    const cx = vx + vs / 2, cy = vy + vs / 2;
+    const discR = (alpha / (pix * n / 2)) * (vs / 2);
+    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+      const px0 = vx + i * ps, py0 = vy + j * ps;
+      // coverage of this pixel by the disc (sampled)
+      let cov = 0; const S = 6;
+      for (let a = 0; a < S; a++) for (let b = 0; b < S; b++) {
+        const xx = px0 + (a + 0.5) * ps / S - cx, yy = py0 + (b + 0.5) * ps / S - cy;
+        if (xx * xx + yy * yy < discR * discR) cov++;
+      }
+      cov /= S * S;
+      if (discR < ps / 2 && Math.hypot(px0 + ps / 2 - cx, py0 + ps / 2 - cy) < ps / 2) cov = Math.min(1, Math.PI * discR * discR / (ps * ps));
+      c.fillStyle = rgba(tempRGB(5800), Math.min(1, cov));
+      c.fillRect(px0 + 0.5, py0 + 0.5, ps - 1, ps - 1);
+      c.strokeStyle = hexA(C.grid, 0.9); c.strokeRect(px0 + 0.5, py0 + 0.5, ps - 1, ps - 1);
+    }
+    this.text(resolved ? 'resolved: each pixel sees the same I' : 'unresolved: pixel brightness ∝ flux', vx + vs / 2, vy + vs + 12, resolved ? C.green : C.accent, 10, 'center');
+    // ---- bottom: bars F and I vs r curve
+    const bx0 = 14, bx1 = w * 0.52, by0 = h * 0.66, by1 = h - 16;
+    axesBox(c, bx0, by0, bx1, by1);
+    const X = (rr: number) => bx0 + (rr - 2) / 58 * (bx1 - bx0);
+    const Y = (v: number) => by1 - v * (by1 - by0) * 0.92;
+    c.beginPath();
+    for (let rr = 2; rr <= 60; rr += 0.5) { const yv = Math.min(1, (4 / (rr * rr)) * 1); const px = X(rr), py = Y(yv); rr === 2 ? c.moveTo(px, py) : c.lineTo(px, py); }
+    c.strokeStyle = C.accent; c.lineWidth = 1.5; c.stroke();
+    c.beginPath();
+    for (let rr = 2; rr <= 60; rr += 0.5) { const al = Math.asin(1 / rr); const pf = al > pix / 2 ? 1 : (al / (pix / 2)) ** 2; const px = X(rr), py = Y(pf); rr === 2 ? c.moveTo(px, py) : c.lineTo(px, py); }
+    c.strokeStyle = C.green; c.lineWidth = 1.5; c.stroke();
+    this.line(X(r), by0, X(r), by1, hexA(C.text, 0.4), 1, [2, 3]);
+    this.text('flux F ∝ 1/r²', bx1 - 6, by0 + 10, C.accent, 10, 'right');
+    this.text('surface brightness I (per pixel)', bx1 - 6, by0 + 22, C.green, 10, 'right');
+    this.text('distance →', bx0 + 4, by1 - 8, C.dim, 9);
+    this.setReadout([
+      ['Angular radius α', `${fmt(alpha / DEG, 2)}°`],
+      ['Flux (r = 2 → 1)', fmt(F * 4, 3), C.accent],
+      ['Intensity of disc', resolved ? '1.000 (constant)' : '— (unresolved)', C.green],
+      ['Pixel brightness', fmt(pixBright, 3), resolved ? C.green : C.accent],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 9.1b mean intensity ---- */
+
+class MeanIntensityWidget extends CanvasWidget {
+  private tau = 0.5;
+  constructor() {
+    super(1.7);
+    this.slider('Optical depth τ', 0, 6, 0.05, this.tau, (v) => fmt(v, 2), (v) => { this.tau = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const tau = this.tau;
+    const S = tau + 2 / 3;
+    // numeric J and anisotropy
+    let J = 0; const N = 200;
+    for (let i = 0; i < N; i++) { const mu = -1 + (i + 0.5) * 2 / N; J += grayI(tau, mu) * (2 / N); }
+    J /= 2;
+    // ---- left: polar diagram
+    const px = w * 0.3, py = h * 0.5, R = Math.min(w * 0.26, h * 0.42);
+    const norm = grayI(tau, 1);
+    for (const k of [0.25, 0.5, 0.75, 1]) this.circle(px, py, R * k, hexA(C.grid, 0.9), undefined, 1, [2, 3]);
+    this.line(px - R - 6, py, px + R + 6, py, C.line, 1);
+    this.line(px, py - R - 6, px, py + R + 6, C.line, 1);
+    c.beginPath();
+    for (let i = 0; i <= 180; i++) {
+      const th = i * DEG;                      // angle from vertical (up)
+      const mu = Math.cos(th);
+      const I = grayI(tau, mu) / norm;
+      const x = px + R * I * Math.sin(th), y = py - R * I * Math.cos(th);
+      i === 0 ? c.moveTo(x, y) : c.lineTo(x, y);
+    }
+    for (let i = 180; i >= 0; i--) {
+      const th = i * DEG; const mu = Math.cos(th);
+      const I = grayI(tau, mu) / norm;
+      c.lineTo(px - R * I * Math.sin(th), py - R * I * Math.cos(th));
+    }
+    c.closePath();
+    c.fillStyle = hexA(C.sun, 0.18); c.fill();
+    c.strokeStyle = C.sun; c.lineWidth = 1.6; c.stroke();
+    this.circle(px, py, R * (J / norm), C.green, undefined, 1.2, [4, 3]);
+    this.text('up (to surface)', px, py - R - 16, C.dim, 10, 'center');
+    this.text('down (into star)', px, py + R + 16, C.dim, 10, 'center');
+    this.text('I(θ)', px + R * 0.72, py - R * 0.75, C.sun, 11, 'left');
+    this.text('⟨I⟩', px - R * (J / norm) - 4, py - 8, C.green, 11, 'right');
+    // ---- right: atmosphere column with marker
+    const ax = w * 0.68, ay0 = 14, ay1 = h - 14, aw = w * 0.14;
+    const g = c.createLinearGradient(0, ay0, 0, ay1);
+    g.addColorStop(0, '#0a0c12'); g.addColorStop(0.15, hexA(C.sun, 0.25)); g.addColorStop(1, hexA('#ffffff', 0.9));
+    c.fillStyle = g; c.fillRect(ax, ay0, aw, ay1 - ay0);
+    const Yt = (t: number) => ay0 + (ay1 - ay0) * (0.1 + 0.85 * t / 6);
+    for (const t of [0, 1, 2, 4, 6]) { this.line(ax - 4, Yt(t), ax, Yt(t), C.dim); this.text(`τ=${t}`, ax - 7, Yt(t), C.dim, 9, 'right'); }
+    this.line(ax, Yt(tau), ax + aw, Yt(tau), C.green, 2);
+    this.circle(ax + aw / 2, Yt(tau), 4, undefined, C.green);
+    this.text('space', ax + aw + 6, ay0 + 8, C.dim, 10);
+    this.text('hotter gas ↓', ax + aw + 6, ay1 - 8, C.dim, 10);
+    const T_over = (0.75 * (tau + 2 / 3)) ** 0.25;
+    this.setReadout([
+      ['Depth τ', fmt(tau, 2)],
+      ['T / T_eff (gray)', fmt(T_over, 3)],
+      ['⟨I⟩ / B(T local)', fmt(J / S, 3), C.green],
+      ['⟨I⟩ / B(T_eff)', fmt(J / (4 / 3), 3), C.sun],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 9.1c flux integral ---- */
+
+type FluxField = 'iso' | 'surface' | 'gradient' | 'beam';
+class FluxCosWidget extends CanvasWidget {
+  private field: FluxField = 'surface';
+  private a = 0.5;
+  private t = 0;
+  constructor() {
+    super(1.7);
+    this.segmented<FluxField>([['iso', 'Isotropic'], ['surface', 'Stellar surface'], ['gradient', 'I = 1 + a·cos θ'], ['beam', 'Narrow beam']], this.field, (v) => { this.field = v; });
+    this.slider('Anisotropy a', -1, 1, 0.05, this.a, (v) => fmt(v, 2), (v) => { this.a = v; });
+    this.playButton();
+  }
+  private I(mu: number): number {
+    switch (this.field) {
+      case 'iso': return 1;
+      case 'surface': return mu > 0 ? 1 : 0;
+      case 'gradient': return Math.max(0, 1 + this.a * mu);
+      case 'beam': return mu > 0.94 ? 1 : 0;
+    }
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    this.t += dt;
+    const N = 400; let J = 0, F = 0, P = 0;
+    for (let i = 0; i < N; i++) { const mu = -1 + (i + 0.5) * 2 / N; const I = this.I(mu); const dO = TAU * (2 / N); J += I * dO; F += I * mu * dO; P += I * mu * mu * dO; }
+    J /= 4 * Math.PI;
+    // polar diagram
+    const px = w * 0.28, py = h * 0.5, R = Math.min(w * 0.24, h * 0.4);
+    this.line(px - R - 8, py, px + R + 8, py, C.line);
+    this.line(px, py - R - 8, px, py + R + 8, C.line);
+    this.text('↑ outward', px + 6, py - R - 4, C.dim, 9);
+    c.beginPath();
+    for (let i = 0; i <= 360; i++) { const th = i * DEG; const I = this.I(Math.cos(th)); const x = px + R * I * Math.sin(th), y = py - R * I * Math.cos(th); i === 0 ? c.moveTo(x, y) : c.lineTo(x, y); }
+    c.closePath(); c.fillStyle = hexA(C.sun, 0.18); c.fill(); c.strokeStyle = C.sun; c.lineWidth = 1.5; c.stroke();
+    // animated arrows with cos weighting through a horizontal surface element
+    for (let k = 0; k < 16; k++) {
+      const th = (k + 0.5) / 16 * TAU;
+      const mu = Math.cos(th); const I = this.I(mu);
+      if (I <= 0) continue;
+      const ph = (this.t * 0.4 + k / 16) % 1;
+      const d = R * 0.15 + ph * R * I * 0.8;
+      const x = px + d * Math.sin(th), y = py - d * Math.cos(th);
+      c.fillStyle = mu > 0 ? hexA(C.green, 0.9 - ph * 0.6) : hexA(C.red, 0.9 - ph * 0.6);
+      c.fillRect(x - 1.5, y - 1.5, 3, 3);
+    }
+    c.fillStyle = C.text; c.fillRect(px - 18, py - 1.5, 36, 3);
+    this.text('dA', px + 22, py + 8, C.text, 9);
+    // bars
+    const bx = w * 0.6, bw = w * 0.34, by1 = h - 30, by0 = 24;
+    const items: Array<[string, number, string, string]> = [
+      ['⟨I⟩ = (1/4π)∫I dΩ', J, C.sun, 'mean intensity'],
+      ['F = ∫I cos θ dΩ', F / Math.PI, C.green, 'flux (units of π)'],
+      ['P·c = ∫I cos²θ dΩ', P / (4 * Math.PI / 3), C.purple, 'pressure (units of 4π/3c)'],
+    ];
+    const bh = (by1 - by0) / items.length;
+    items.forEach(([lab, v, col, sub], i) => {
+      const y = by0 + i * bh + 10;
+      this.text(lab, bx, y, C.text, 11);
+      this.text(sub, bx, y + 13, C.dim, 9);
+      const zero = bx + bw * 0.5;
+      c.fillStyle = hexA(C.grid, 1); c.fillRect(bx, y + 24, bw, 12);
+      const len = Math.max(-1, Math.min(1, v)) * bw * 0.5;
+      c.fillStyle = col; c.fillRect(Math.min(zero, zero + len), y + 24, Math.abs(len), 12);
+      this.line(zero, y + 22, zero, y + 38, C.text, 1);
+      this.text(fmt(v, 3), zero + (len >= 0 ? len + 6 : len - 6), y + 30, col, 10, len >= 0 ? 'left' : 'right');
+    });
+    this.setReadout([
+      ['⟨I⟩ (units of I_max)', fmt(J, 3), C.sun],
+      ['F / π', fmt(F / Math.PI, 3), C.green],
+      ['P_rad / (u/3)', fmt(P / Math.max(1e-9, 4 * Math.PI * J / 3), 3), C.purple],
+      ['Net flow', F > 1e-3 ? 'outward' : F < -1e-3 ? 'inward' : 'none (cancels)'],
+    ]);
+  }
+}
+
+/* --------------------------------------------- 9.1d radiation pressure ---- */
+
+type RpMode = 'grain' | 'star';
+class RadPressureWidget extends CanvasWidget {
+  private mode: RpMode = 'grain';
+  private logS = Math.log10(1);     // grain radius µm
+  private rho = 2000;
+  private dist = 1;                 // AU
+  private mass = 10;                // M☉
+  private t = 0;
+  private sl: Array<ReturnType<CanvasWidget['slider']>> = [];
+  constructor() {
+    super(1.7);
+    this.segmented<RpMode>([['grain', 'Dust grain near the Sun'], ['star', 'Inside a star']], this.mode, (v) => { this.mode = v; this.toggle(); });
+    this.sl.push(this.slider('Grain radius', -1.5, 1.5, 0.05, this.logS, (v) => `${fmt(10 ** v, 2)} µm`, (v) => { this.logS = v; }));
+    this.sl.push(this.slider('Grain density', 500, 5000, 100, this.rho, (v) => `${v} kg/m³`, (v) => { this.rho = v; }));
+    this.sl.push(this.slider('Distance', 0.3, 30, 0.1, this.dist, (v) => `${fmt(v, 1)} AU`, (v) => { this.dist = v; }));
+    this.sl.push(this.slider('Stellar mass', 0.5, 150, 0.5, this.mass, (v) => `${fmt(v, 1)} M☉`, (v) => { this.mass = v; }));
+    this.playButton();
+    this.toggle();
+  }
+  private toggle() {
+    const g = this.mode === 'grain';
+    this.sl.forEach((s, i) => { (s.input.parentElement as HTMLElement).style.display = (i < 3) === g ? '' : 'none'; });
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    this.t += dt;
+    if (this.mode === 'grain') {
+      const s = 10 ** this.logS * 1e-6, r = this.dist * AU_M;
+      const Lsun = LSUN_W;
+      const Frad = Lsun / (4 * Math.PI * r * r * C_LIGHT) * Math.PI * s * s;
+      const m = 4 / 3 * Math.PI * s ** 3 * this.rho;
+      const Fg = GRAV * MSUN * m / (r * r);
+      const beta = Frad / Fg;
+      const Prad = Lsun / (4 * Math.PI * r * r * C_LIGHT);
+      // scene
+      const sx = 50, sy = h * 0.46;
+      this.glow(sx, sy, 60, hexA(C.sun, 0.6)); this.circle(sx, sy, 22, undefined, C.sun);
+      const gx = w * 0.55, gy = sy;
+      const gr = 6 + 2 * this.logS;
+      this.circle(gx, gy, Math.max(3, gr), C.text, '#8a8f99');
+      const scale = 70;
+      const lr = Math.min(w * 0.4, scale * Math.log10(1 + beta * 9) );
+      const lg = Math.min(w * 0.4, scale * Math.log10(1 + 9 / Math.max(1e-9, beta)) );
+      const arrow = (x0: number, y0: number, x1: number, col: string, lab: string, dy: number) => {
+        this.line(x0, y0 + dy, x1, y0 + dy, col, 2);
+        const d = Math.sign(x1 - x0);
+        this.line(x1, y0 + dy, x1 - d * 7, y0 + dy - 4, col, 2); this.line(x1, y0 + dy, x1 - d * 7, y0 + dy + 4, col, 2);
+        this.text(lab, (x0 + x1) / 2, y0 + dy + (dy < 0 ? -10 : 12), col, 10, 'center');
+      };
+      arrow(gx, gy, gx + 8 + lr, C.sun, 'radiation', -14);
+      arrow(gx, gy, gx - 8 - lg, C.blue, 'gravity', 14);
+      // sunlight streaks
+      for (let i = 0; i < 10; i++) { const ph = (this.t * 0.5 + i / 10) % 1; const x = sx + 30 + ph * (gx - sx - 50); this.line(x, sy - 40 + i * 8, x + 10, sy - 40 + i * 8, hexA(C.sun, 0.5 * (1 - ph) + 0.1), 1); }
+      // verdict
+      const verdict = beta > 1 ? 'light wins → grain blown out' : beta > 0.5 ? 'nearly balanced → unbound orbit' : 'gravity wins → bound orbit';
+      this.text(verdict, w / 2, h * 0.8, beta > 1 ? C.sun : C.blue, 12, 'center');
+      this.text(`critical radius at this density: ${fmt(3 * Lsun / (16 * Math.PI * GRAV * MSUN * C_LIGHT * this.rho) * 1e6, 2)} µm (independent of distance)`, w / 2, h * 0.8 + 16, C.dim, 9, 'center');
+      this.setReadout([
+        ['P_rad at this distance', `${sci(Prad * 1e6, 2)} µPa`],
+        ['F_rad / F_grav = β', fmt(beta, 3), beta > 1 ? C.sun : C.blue],
+        ['Radiation force', `${sci(Frad, 2)} N`, C.sun],
+        ['Gravity', `${sci(Fg, 2)} N`, C.blue],
+      ]);
+    } else {
+      const M = this.mass;
+      // Eddington quartic: 1 - β = 0.003 μ⁴ β⁴ M², μ = 0.62
+      const mu = 0.62; let b = 0.9;
+      for (let i = 0; i < 60; i++) b = 1 - 0.003 * mu ** 4 * b ** 4 * M * M;
+      const ratio = (1 - b) / b;
+      const ms = mainSequence(M);
+      const Ledd = 3.2e4 * M;                 // L☉ for κ_es, X = 0.7
+      const gamma = ms.L / Ledd;
+      // bar
+      const bx = w * 0.12, bw = w * 0.76, by = h * 0.3, bh = 36;
+      c.fillStyle = hexA(C.grid, 1); c.fillRect(bx, by, bw, bh);
+      const fr = (1 - b);
+      c.fillStyle = C.blue; c.fillRect(bx, by, bw * b, bh);
+      c.fillStyle = C.sun; c.fillRect(bx + bw * b, by, bw * fr, bh);
+      this.text(`gas pressure ${fmt(100 * b, 1)} %`, bx + 8, by + bh / 2, '#fff', 11);
+      if (fr > 0.08) this.text(`radiation ${fmt(100 * fr, 1)} %`, bx + bw - 8, by + bh / 2, '#000', 11, 'right');
+      this.text('share of the central pressure (Eddington standard model)', w / 2, by - 12, C.dim, 10, 'center');
+      // L/L_Edd gauge
+      const gy = h * 0.6;
+      c.fillStyle = hexA(C.grid, 1); c.fillRect(bx, gy, bw, 14);
+      const gl = Math.min(1, Math.log10(1 + 9 * Math.min(1, gamma)) );
+      c.fillStyle = gamma > 0.5 ? C.red : C.accent; c.fillRect(bx, gy, bw * gl, 14);
+      this.text(`L / L_Edd = ${gamma < 0.01 ? sci(gamma, 1) : fmt(gamma, 3)}  (L_Edd = 4πGMc/κ_es ≈ ${sci(Ledd, 1)} L☉)`, w / 2, gy + 28, C.text, 10, 'center');
+      this.text(gamma > 0.5 ? 'radiation pressure dominates the outer layers → strong wind, Eddington limit near' : 'gravity comfortably holds the atmosphere', w / 2, gy + 44, gamma > 0.5 ? C.red : C.dim, 10, 'center');
+      this.setReadout([
+        ['Mass', `${fmt(M, 1)} M☉`],
+        ['P_rad / P_gas (centre)', ratio < 0.01 ? sci(ratio, 2) : fmt(ratio, 3), C.sun],
+        ['Luminosity', `${sci(ms.L, 2)} L☉`],
+        ['Γ = L / L_Edd', gamma < 0.01 ? sci(gamma, 2) : fmt(gamma, 3), gamma > 0.5 ? C.red : C.text],
+      ]);
+    }
+  }
+}
+
+/* ----------------------------------------------- 9.2a which temperature ---- */
+
+type CtFit = 'total' | 'bv' | 'ub' | 'jump';
+class ColorTempWidget extends CanvasWidget {
+  private T = 9500;
+  private fit: CtFit = 'bv';
+  constructor() {
+    super(1.7);
+    this.slider('T_eff', 4000, 20000, 100, this.T, (v) => `${v} K`, (v) => { this.T = v; });
+    this.segmented<CtFit>([['total', 'Fit total flux'], ['bv', 'Fit B−V slope'], ['ub', 'Fit U−B slope'], ['jump', 'Show Balmer jump']], this.fit, (v) => { this.fit = v; });
+  }
+  /** synthetic SED: Planck × Balmer jump × UV line blanketing, in W m⁻³ (scaled so the total equals σT⁴/π) */
+  private sed(nm: number, T: number): number {
+    const D = 0.55 * Math.exp(-(((Math.log10(T) - Math.log10(9700)) / 0.13) ** 2));   // Balmer jump in mag (peaks at A0)
+    const jump = nm < 364.6 ? 10 ** (-0.4 * D) : 1;
+    const bl = T < 7500 ? Math.max(0, (7500 - T) / 3500) : 0;
+    const blank = nm < 520 ? 1 - bl * 0.55 * Math.exp(-((nm - 380) / 70)) : 1;
+    const Tc = T * (1 + 0.1 * Math.exp(-(((Math.log10(T) - Math.log10(9700)) / 0.14) ** 2)));   // Paschen continuum looks hotter where the Balmer jump redistributes flux
+    return planck(nm * 1e-9, Tc) * jump * blank;
+  }
+  private bbTempForRatio(l1: number, l2: number, ratio: number): number {
+    let lo = 2000, hi = 60000;
+    for (let i = 0; i < 50; i++) { const mid = Math.sqrt(lo * hi); const r = planck(l1 * 1e-9, mid) / planck(l2 * 1e-9, mid); if (r > ratio) hi = mid; else lo = mid; }
+    return Math.sqrt(lo * hi);
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const T = this.T;
+    // renormalise SED so that ∫ = ∫B (energy conserved → redistribution)
+    let sI = 0, sB = 0;
+    for (let nm = 100; nm < 5000; nm += 5) { sI += this.sed(nm, T); sB += planck(nm * 1e-9, T); }
+    const kN = sB / sI;
+    const F = (nm: number) => this.sed(nm, T) * kN;
+    const Tbv = this.bbTempForRatio(440, 550, F(440) / F(550));
+    const bandU = (G: (nm: number) => number) => { let s = 0; for (let nm = 340; nm <= 400; nm += 5) s += G(nm); return s / 13; };
+    const Tub = (() => { const target = bandU(F) / F(440); let lo = 2000, hi = 60000; for (let i = 0; i < 50; i++) { const mid = Math.sqrt(lo * hi); const r = bandU((nm) => planck(nm * 1e-9, mid)) / planck(440e-9, mid); if (r > target) hi = mid; else lo = mid; } return Math.sqrt(lo * hi); })();
+    const Dj = -2.5 * Math.log10(F(364) / F(366));
+    const Tfit = this.fit === 'total' ? T : this.fit === 'bv' ? Tbv : this.fit === 'ub' ? Tub : T;
+    // axes: log F vs λ 300–1000
+    const x0 = 44, x1 = w - 12, y0 = 12, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (nm: number) => x0 + (nm - 300) / 700 * (x1 - x0);
+    const Bmax = Math.max(planck(300e-9, T), planck(1000e-9, T), planck(2.898e-3 / T, T));
+    const lmin = Math.log10(Bmax) - 1.6, lmax = Math.log10(Bmax) + 0.15;
+    const Y = (v: number) => y1 - (Math.log10(Math.max(v, 1e-300)) - lmin) / (lmax - lmin) * (y1 - y0);
+    rainbow(c, X, y1 - 6, 6, 0.6);
+    for (const nm of [300, 400, 500, 600, 700, 800, 900, 1000]) { this.text(`${nm}`, X(nm), y1 + 12, C.dim, 9, 'center'); }
+    this.text('nm', x1 - 2, y1 + 22, C.dim, 9, 'right');
+    this.text('log F_λ', x0 + 4, y0 + 10, C.dim, 9);
+    // fitted blackbody, scaled to match at the fit point
+    const bbScale = this.fit === 'total' ? 1 : this.fit === 'bv' ? F(550) / planck(550e-9, Tfit) : this.fit === 'ub' ? F(440) / planck(440e-9, Tfit) : 1;
+    c.beginPath();
+    for (let nm = 300; nm <= 1000; nm += 4) { const v = planck(nm * 1e-9, Tfit) * bbScale; const px = X(nm), py = Y(v); nm === 300 ? c.moveTo(px, py) : c.lineTo(px, py); }
+    c.strokeStyle = this.fit === 'jump' ? hexA(C.dim, 0.6) : C.accent; c.lineWidth = 1.5; c.setLineDash([5, 4]); c.stroke(); c.setLineDash([]);
+    // SED
+    c.beginPath();
+    for (let nm = 300; nm <= 1000; nm += 2) { const px = X(nm), py = Y(F(nm)); nm === 300 ? c.moveTo(px, py) : c.lineTo(px, py); }
+    c.strokeStyle = C.star; c.lineWidth = 2; c.stroke();
+    // fit markers
+    const mark = (nm: number, col: string, lab: string) => { this.line(X(nm), y0, X(nm), y1, hexA(col, 0.45), 1, [2, 3]); this.text(lab, X(nm) + 3, y0 + 10, col, 9); };
+    if (this.fit === 'bv') { mark(440, C.blue, 'B'); mark(550, C.green, 'V'); }
+    if (this.fit === 'ub') { mark(370, C.purple, 'U (340–400)'); mark(440, C.blue, 'B'); }
+    if (this.fit === 'jump') { mark(364.6, C.purple, 'Balmer limit 364.6 nm'); this.text(`jump D = ${fmt(Dj, 2)} mag`, X(364.6) + 6, Y(F(366)) - 12, C.purple, 10); }
+    this.text('star (synthetic SED)', x1 - 8, y0 + 12, C.star, 10, 'right');
+    this.text(this.fit === 'jump' ? 'blackbody at T_eff' : `fitted blackbody ${fmt(Tfit, 0)} K`, x1 - 8, y0 + 24, this.fit === 'jump' ? C.dim : C.accent, 10, 'right');
+    this.setReadout([
+      ['Effective T (total flux)', `${T} K`, C.text],
+      ['Colour T from B−V', `${fmt(Tbv, 0)} K`, this.fit === 'bv' ? C.accent : C.dim],
+      ['Colour T from U−B', `${fmt(Tub, 0)} K`, this.fit === 'ub' ? C.accent : C.dim],
+      ['Balmer jump', `${fmt(Dj, 2)} mag`, this.fit === 'jump' ? C.purple : C.dim],
+    ]);
+  }
+}
+
+/* ----------------------------------------------- 9.2b optical depth slab ---- */
+
+class OpticalDepthWidget extends CanvasWidget {
+  private lr = 0; private lk = 0; private ls = 0;
+  private t = 0;
+  private photons: Array<{ x: number; y: number; alive: boolean; fate: number }> = [];
+  private rnd = mulberry(7);
+  constructor() {
+    super(1.8);
+    this.slider('Density ρ', -1, 1, 0.05, this.lr, (v) => `${fmt(10 ** v, 2)} (rel.)`, (v) => { this.lr = v; });
+    this.slider('Opacity κ', -1, 1, 0.05, this.lk, (v) => `${fmt(10 ** v, 2)} (rel.)`, (v) => { this.lk = v; });
+    this.slider('Thickness s', -1, 1, 0.05, this.ls, (v) => `${fmt(10 ** v, 2)} (rel.)`, (v) => { this.ls = v; });
+    this.playButton();
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    this.t += dt;
+    const rho = 10 ** this.lr, kap = 10 ** this.lk, s = 10 ** this.ls;
+    const tau = rho * kap * s;
+    const trans = Math.exp(-tau);
+    // slab geometry
+    const sx0 = w * 0.3, slabW = Math.max(10, w * 0.085 * Math.sqrt(s)), sx1 = sx0 + Math.min(w * 0.3, slabW);
+    const sy0 = 12, sy1 = h * 0.5;
+    c.fillStyle = `rgba(190,160,110,${Math.min(0.85, 0.08 + 0.09 * rho * kap)})`;
+    c.fillRect(sx0, sy0, sx1 - sx0, sy1 - sy0);
+    c.strokeStyle = C.line; c.strokeRect(sx0, sy0, sx1 - sx0, sy1 - sy0);
+    this.text('slab', (sx0 + sx1) / 2, sy1 + 10, C.dim, 9, 'center');
+    // photons
+    if (dt > 0 && this.photons.length < 90 && this.rnd() < 0.6) {
+      const y = sy0 + 6 + this.rnd() * (sy1 - sy0 - 12);
+      this.photons.push({ x: 10, y, alive: true, fate: -Math.log(this.rnd() + 1e-9) });  // fate: optical depth it survives
+    }
+    const speed = 120 * dt;
+    for (const p of this.photons) {
+      if (!p.alive) continue;
+      p.x += speed;
+      if (p.x > sx0 && p.x < sx1) {
+        const tauHere = tau * (p.x - sx0) / (sx1 - sx0);
+        if (tauHere > p.fate) { p.alive = false; this.circle(p.x, p.y, 3, undefined, hexA(C.red, 0.7)); continue; }
+      }
+      c.fillStyle = p.x < sx0 ? C.sun : hexA(C.sun, 1);
+      c.fillRect(p.x - 2, p.y - 1, 4, 2);
+      if (p.x > w) p.alive = false;
+    }
+    this.photons = this.photons.filter((p) => p.alive || p.x > sx0);
+    this.photons = this.photons.filter((p) => p.alive);
+    // intensity bars
+    const barY = sy1 + 20;
+    c.fillStyle = C.sun; c.fillRect(10, barY, sx0 - 20, 8);
+    this.text('I₀', 10, barY + 18, C.dim, 9);
+    c.fillStyle = hexA(C.sun, 0.25); c.fillRect(sx1 + 10, barY, w - sx1 - 20, 8);
+    c.fillStyle = C.sun; c.fillRect(sx1 + 10, barY, (w - sx1 - 20) * trans, 8);
+    this.text(`I = I₀ e^−τ = ${fmt(100 * trans, trans < 0.01 ? 2 : 1)} % of I₀`, sx1 + 10, barY + 18, C.sun, 9);
+    // curve e^-τ
+    const gx0 = 44, gx1 = w - 12, gy0 = h * 0.72, gy1 = h - 14;
+    axesBox(c, gx0, gy0, gx1, gy1);
+    const X = (lt: number) => gx0 + (lt + 3) / 6 * (gx1 - gx0);
+    const Y = (v: number) => gy1 - v * (gy1 - gy0) * 0.9 - 2;
+    c.beginPath();
+    for (let lt = -3; lt <= 3; lt += 0.05) { const px = X(lt), py = Y(Math.exp(-(10 ** lt))); lt === -3 ? c.moveTo(px, py) : c.lineTo(px, py); }
+    c.strokeStyle = C.accent; c.lineWidth = 1.5; c.stroke();
+    this.line(X(0), gy0, X(0), gy1, hexA(C.text, 0.3), 1, [2, 3]);
+    this.circle(X(Math.log10(tau)), Y(trans), 4, undefined, C.sun);
+    for (const lt of [-3, -2, -1, 0, 1, 2, 3]) this.text(lt === 0 ? 'τ = 1' : `10${sup(lt)}`, X(lt), gy1 - 7, C.dim, 8, 'center');
+    this.text('transmitted fraction vs optical depth', gx0 + 6, gy0 + 9, C.dim, 9);
+    this.text('thin', X(-2.5), gy0 + 9, C.green, 9, 'center');
+    this.text('thick', X(2.5), gy0 + 9, C.red, 9, 'center');
+    this.setReadout([
+      ['Optical depth τ = κρs', tau < 0.01 ? sci(tau, 2) : fmt(tau, 2), tau > 1 ? C.red : C.green],
+      ['Transmitted', trans < 1e-4 ? sci(trans, 1) : `${fmt(100 * trans, 1)} %`, C.sun],
+      ['Mean free path / s', fmt(1 / tau, tau > 10 ? 3 : 2)],
+      ['Regime', tau < 0.1 ? 'optically thin' : tau < 3 ? 'τ ≈ 1 — the "surface"' : 'optically thick'],
+    ]);
+  }
+}
+
+/* ------------------------------------------------------------- 9.2c sunset ---- */
+
+type SunsetWorld = 'earth' | 'mars';
+class SunsetWidget extends CanvasWidget {
+  private world: SunsetWorld = 'earth';
+  private z = 60;
+  constructor() {
+    super(1.8);
+    this.segmented<SunsetWorld>([['earth', 'Earth (Rayleigh)'], ['mars', 'Mars (dust)']], this.world, (v) => { this.world = v; });
+    this.slider('Zenith angle', 0, 89.5, 0.5, this.z, (v) => `${fmt(v, 1)}°`, (v) => { this.z = v; });
+  }
+  private tauV(nm: number): number {
+    if (this.world === 'earth') {
+      const ray = 0.097 * (550 / nm) ** 4.05;
+      const aer = 0.04 * (550 / nm) ** 1.3;
+      const oz = nm < 340 ? 1.5 * (340 - nm) / 40 : 0.03 * Math.exp(-(((nm - 600) / 60) ** 2));
+      return ray + aer + oz;
+    }
+    return 0.6 * (550 / nm) ** 0.25;
+  }
+  private albedo(nm: number): number { return this.world === 'earth' ? 1 : 0.55 + 0.4 * sigm((nm - 560) / 40); }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const zr = this.z * DEG;
+    const X = 1 / (Math.cos(zr) + 0.50572 * (96.07995 - this.z) ** -1.6364);   // Kasten–Young air mass
+    const Tsun = 5772;
+    const trans = (nm: number) => Math.exp(-this.tauV(nm) * X);
+    const direct = (nm: number) => planck(nm * 1e-9, Tsun) * trans(nm);
+    const sky = (nm: number) => planck(nm * 1e-9, Tsun) * (1 - Math.exp(-this.tauV(nm) * 1.2)) * this.albedo(nm) * (this.world === 'earth' ? 1 : (nm / 550) ** 1.0);
+    const halo = (nm: number) => planck(nm * 1e-9, Tsun) * (this.world === 'earth' ? 0.04 * (550 / nm) ** 1.3 : this.tauV(nm) * (550 / nm) ** 2.2) * Math.exp(-this.tauV(nm) * X * 0.6);
+    const discCol = specColor(direct, 1);
+    const skyCol = specColor(sky, 1);
+    const haloCol = specColor(halo, 1);
+    const dimV = trans(550);
+    // ---- left: spectrum plot
+    const x0 = 40, x1 = w * 0.6, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const Xn = (nm: number) => x0 + (nm - 380) / 400 * (x1 - x0);
+    const B0 = planck(500e-9, Tsun);
+    const Y = (v: number) => y1 - (v / B0) * (y1 - y0) * 0.92;
+    rainbow(c, Xn, y1 - 6, 6, 0.55);
+    c.beginPath();
+    for (let nm = 380; nm <= 780; nm += 2) { const px = Xn(nm), py = Y(planck(nm * 1e-9, Tsun)); nm === 380 ? c.moveTo(px, py) : c.lineTo(px, py); }
+    c.strokeStyle = hexA(C.text, 0.4); c.lineWidth = 1; c.setLineDash([4, 3]); c.stroke(); c.setLineDash([]);
+    c.beginPath();
+    for (let nm = 380; nm <= 780; nm += 2) { const px = Xn(nm), py = Y(direct(nm)); nm === 380 ? c.moveTo(px, py) : c.lineTo(px, py); }
+    c.lineTo(Xn(780), y1 - 6); c.lineTo(Xn(380), y1 - 6); c.closePath();
+    c.fillStyle = rgba(discCol, 0.3); c.fill();
+    c.beginPath();
+    for (let nm = 380; nm <= 780; nm += 2) { const px = Xn(nm), py = Y(direct(nm)); nm === 380 ? c.moveTo(px, py) : c.lineTo(px, py); }
+    c.strokeStyle = rgba(discCol, 1); c.lineWidth = 2; c.stroke();
+    this.text('above the atmosphere', x1 - 6, y0 + 10, C.dim, 9, 'right');
+    this.text('transmitted direct sunlight', x1 - 6, y0 + 22, rgba(discCol, 1), 9, 'right');
+    for (const nm of [400, 500, 600, 700]) this.text(`${nm}`, Xn(nm), y1 + 12, C.dim, 9, 'center');
+    this.text('nm', x1, y1 + 22, C.dim, 9, 'right');
+    // ---- right: sky scene
+    const sx0 = w * 0.64, sx1 = w - 10, sy0 = 14, sy1 = h - 30;
+    const g = c.createLinearGradient(0, sy0, 0, sy1);
+    g.addColorStop(0, rgba(skyCol, 1)); g.addColorStop(1, rgba(haloCol, 0.9));
+    c.fillStyle = g; c.fillRect(sx0, sy0, sx1 - sx0, sy1 - sy0);
+    // sun position: altitude → y
+    const alt = 90 - this.z;
+    const suy = sy1 - (alt / 90) * (sy1 - sy0) * 0.9 - 6;
+    const sux = (sx0 + sx1) / 2;
+    this.glow(sux, suy, 36, rgba(haloCol, 0.9));
+    this.circle(sux, suy, 11, undefined, rgba(discCol, Math.max(0.35, dimV ** 0.3)));
+    c.fillStyle = this.world === 'earth' ? '#1a2a1a' : '#5a3a28'; c.fillRect(sx0, sy1 - 10, sx1 - sx0, 10);
+    this.text(this.world === 'earth' ? 'sky · disc · glow' : 'sky · disc · glow', (sx0 + sx1) / 2, sy1 + 12, C.dim, 9, 'center');
+    // swatches
+    const swy = sy0 + 8;
+    const sw = (x: number, col: [number, number, number], lab: string) => { c.fillStyle = rgba(col, 1); c.fillRect(x, swy, 22, 14); c.strokeStyle = C.line; c.strokeRect(x, swy, 22, 14); this.text(lab, x + 11, swy + 24, C.text, 8, 'center'); };
+    sw(sx0 + 6, skyCol, 'sky'); sw(sx0 + 40, discCol, 'disc'); sw(sx0 + 74, haloCol, 'glow');
+    this.setReadout([
+      ['Air mass X', fmt(X, 2)],
+      ['τ (450 nm) · X', fmt(this.tauV(450) * X, 2), C.blue],
+      ['τ (650 nm) · X', fmt(this.tauV(650) * X, 2), C.red],
+      ['Dimming in V', `${fmt(-2.5 * Math.log10(dimV), 2)} mag`, C.sun],
+    ]);
+  }
+}
+
+
+/* ------------------------------------------------- 9.2d opacity sources ---- */
+
+/** hydrogen ionisation fraction for pure-H gas at T, number density nH (m⁻³), with a 1e-4 metal-electron floor */
+function hIonFrac(T: number, nH: number): number {
+  const K = 2.4147e21 * T ** 1.5 * Math.exp(-13.598 / (K_EV * T));   // n_e n_p / n_H0 (m⁻³), partition 2·1/2
+  const q = K / nH;
+  const x = (-q + Math.sqrt(q * q + 4 * q)) / 2;
+  return Math.min(1, Math.max(0, x));
+}
+interface OpacParts { bf: number; hm: number; ff: number; es: number }
+/** monochromatic opacity (m² kg⁻¹) of a hydrogen gas at T, ρ, split by process; λ in nm */
+function opacityParts(nm: number, T: number, rho: number): OpacParts {
+  const nH = rho / M_H;
+  const x = hIonFrac(T, nH);
+  const ne = nH * Math.max(x, 1e-4);
+  const Pe = ne * K_B * T;                     // Pa
+  const kT = K_EV * T;
+  const n0 = nH * (1 - x);
+  // bound-free H I: levels n = 1..6, σ_n = 7.9e-22 n (λ/λ_n)^3 m²; Boltzmann populations
+  let bf = 0, Z = 0;
+  const pops: number[] = [];
+  for (let n = 1; n <= 6; n++) { const p = 2 * n * n * Math.exp(-13.598 * (1 - 1 / (n * n)) / kT); pops.push(p); Z += p; }
+  for (let n = 1; n <= 6; n++) {
+    const ln = 91.18 * n * n;
+    if (nm < ln) bf += (pops[n - 1] / Z) * 7.9e-22 * n * (nm / ln) ** 3;
+  }
+  const stim = 1 - Math.exp(-1239.84 / (nm * kT));
+  bf *= n0 * stim / rho;
+  // H⁻: N(H⁻)/N(H I) = 4.158e-10 Pe(cgs) θ^2.5 10^(0.754 θ)
+  const th = 5040 / T;
+  const ratio = 4.158e-10 * (Pe * 10) * th ** 2.5 * 10 ** (0.754 * th);
+  const xq = nm / 1644;
+  const sigHm = xq < 1 ? 4.0e-21 * Math.pow(xq, 1.1) * (1 - xq) / 0.233 : 0;
+  const hmbf = ratio * n0 * sigHm * stim;
+  const hmff = n0 * (Pe * 10) * 1.0e-30 * (nm / 1000) ** 2 * th ** 1.5;   // rough H⁻ free–free per neutral H
+  const hm = (hmbf + hmff) / rho;
+  // free-free H: α = 3.7e8 T^-1/2 n_e n_p ν^-3 (1-e^-hν/kT) cm⁻¹ (cgs)
+  const nu = C_LIGHT / (nm * 1e-9);
+  const neC = ne * 1e-6, npC = nH * x * 1e-6;
+  const aff = 3.7e8 * T ** -0.5 * neC * npC / nu ** 3 * stim;  // cm⁻¹
+  const ff = aff * 100 / rho;                                     // m⁻¹ → m²/kg
+  const es = ne * SIGMA_T / rho;
+  return { bf, hm, ff, es };
+}
+
+class OpacitySourcesWidget extends CanvasWidget {
+  private lT = Math.log10(5800);
+  private lRho = -3.5;
+  constructor() {
+    super(1.8);
+    this.slider('Temperature', 3.5, 4.7, 0.01, this.lT, (v) => `${fmt(10 ** v, 0)} K`, (v) => { this.lT = v; });
+    this.slider('Density', -6, -1, 0.1, this.lRho, (v) => `${sci(10 ** v, 1)} kg/m³`, (v) => { this.lRho = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const T = 10 ** this.lT, rho = 10 ** this.lRho;
+    const x0 = 46, x1 = w - 12, y0 = 12, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const lnm0 = Math.log10(100), lnm1 = Math.log10(3000);
+    const X = (nm: number) => x0 + (Math.log10(nm) - lnm0) / (lnm1 - lnm0) * (x1 - x0);
+    const lk0 = -4, lk1 = 4;
+    const Y = (k: number) => y1 - (Math.min(lk1, Math.max(lk0, Math.log10(Math.max(k, 1e-30)))) - lk0) / (lk1 - lk0) * (y1 - y0);
+    for (let lk = lk0; lk <= lk1; lk += 2) { this.line(x0, Y(10 ** lk), x1, Y(10 ** lk), hexA(C.grid, 0.9)); this.text(`10${sup(lk)}`, x0 - 4, Y(10 ** lk), C.dim, 9, 'right'); }
+    for (const nm of [100, 200, 300, 500, 1000, 2000, 3000]) { this.line(X(nm), y1, X(nm), y1 + 3, C.dim); this.text(`${nm}`, X(nm), y1 + 11, C.dim, 9, 'center'); }
+    this.text('nm', x1, y1 + 22, C.dim, 9, 'right');
+    this.text('κ_λ (m² kg⁻¹)', x0 + 4, y0 + 10, C.dim, 9);
+    rainbow(c, X, y1 - 5, 5, 0.5);
+    const series: Array<[keyof OpacParts, string, string]> = [['bf', C.blue, 'H I bound–free'], ['hm', C.accent, 'H⁻ (bf + ff)'], ['ff', C.green, 'H free–free'], ['es', C.purple, 'electron scattering']];
+    const pts: Array<{ nm: number; p: OpacParts }> = [];
+    for (let l = lnm0; l <= lnm1 + 1e-9; l += 0.006) { const nm = 10 ** l; pts.push({ nm, p: opacityParts(nm, T, rho) }); }
+    for (const [k, col] of series) {
+      c.beginPath(); let started = false;
+      for (const { nm, p } of pts) { const v = p[k]; if (v <= 1e-30) { started = false; continue; } const px = X(nm), py = Y(v); started ? c.lineTo(px, py) : c.moveTo(px, py); started = true; }
+      c.strokeStyle = col; c.lineWidth = 1.3; c.stroke();
+    }
+    c.beginPath();
+    pts.forEach(({ nm, p }, i) => { const tot = p.bf + p.hm + p.ff + p.es; const px = X(nm), py = Y(tot); i === 0 ? c.moveTo(px, py) : c.lineTo(px, py); });
+    c.strokeStyle = C.star; c.lineWidth = 2.2; c.stroke();
+    series.forEach(([, col, lab], i) => this.text(lab, x1 - 8, y0 + 12 + i * 12, col, 9, 'right'));
+    this.text('total', x1 - 8, y0 + 12 + 4 * 12, C.star, 9, 'right');
+    for (const [nm, lab] of [[91.2, 'Lyman'], [364.6, 'Balmer'], [820.4, 'Paschen'], [1644, 'H⁻ edge']] as Array<[number, string]>) {
+      this.line(X(nm), y0, X(nm), y1, hexA(C.text, 0.2), 1, [2, 4]); this.text(lab, X(nm) + 3, y1 - 10, C.dim, 8);
+    }
+    const p5 = opacityParts(500, T, rho);
+    const tot5 = p5.bf + p5.hm + p5.ff + p5.es;
+    const dom = (Object.entries(p5) as Array<[keyof OpacParts, number]>).sort((a, b) => b[1] - a[1])[0][0];
+    const names: Record<keyof OpacParts, string> = { bf: 'H I bound–free', hm: 'H⁻', ff: 'free–free', es: 'e⁻ scattering' };
+    const xion = hIonFrac(T, rho / M_H);
+    this.setReadout([
+      ['T, ρ', `${fmt(T, 0)} K, ${sci(rho, 1)}`],
+      ['H ionised fraction', xion < 1e-3 ? sci(xion, 1) : fmt(xion, 3)],
+      ['κ at 500 nm', `${sci(tot5, 2)} m²/kg`, C.star],
+      ['Dominant at 500 nm', names[dom], dom === 'bf' ? C.blue : dom === 'hm' ? C.accent : dom === 'ff' ? C.green : C.purple],
+    ]);
+  }
+}
+
+/* ---------------------------------------------------- 9.2e Rosseland mean ---- */
+
+/** crude Rosseland mean (m² kg⁻¹): Kramers bf+ff scaled by ionisation, H⁻ at low T, electron-scattering floor */
+function rosselandParts(T: number, rho: number, X = 0.7, Z = 0.02): { es: number; kram: number; hm: number; mol: number } {
+  const nH = rho * X / M_H;
+  const x = hIonFrac(T, nH);
+  const es = 0.02 * (1 + X) * x;
+  const kram = (4.34e21 * 0.1 * Z * (1 + X) + 3.68e18 * (1 - Z) * (1 + X)) * rho / T ** 3.5 * x;
+  const hm = Math.min(1e3, 7.9e-34 * (Z / 0.02) * Math.sqrt(rho) * T ** 9 * (1 - x) * Math.exp(-((T / 9000) ** 4)));   // H⁻ destroyed above ~9000 K
+  const mol = T < 3000 ? 1e-3 * (3000 / T) ** 2 : 0;   // molecular / grain floor at the cool end
+  return { es, kram, hm, mol };
+}
+function rosselandKappa(T: number, rho: number, X = 0.7, Z = 0.02): number {
+  const p = rosselandParts(T, rho, X, Z);
+  return p.es + p.kram + p.hm + p.mol;
+}
+
+class RosselandWidget extends CanvasWidget {
+  private lRho = -3;
+  private lT = 4.0;
+  private Z = 0.02;
+  constructor() {
+    super(1.7);
+    this.slider('Probe T', 3.4, 7.4, 0.02, this.lT, (v) => `${sci(10 ** v, 1)} K`, (v) => { this.lT = v; });
+    this.slider('Probe ρ', -8, 2, 0.5, this.lRho, (v) => `${sci(10 ** v, 0)} kg/m³`, (v) => { this.lRho = v; });
+    this.slider('Metals Z', 0.0002, 0.04, 0.0002, this.Z, (v) => fmt(v, 4), (v) => { this.Z = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const x0 = 46, x1 = w - 12, y0 = 12, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (lT: number) => x0 + (lT - 3.4) / 4 * (x1 - x0);
+    const lk0 = -2.5, lk1 = 3.5;
+    const Y = (k: number) => y1 - (Math.min(lk1, Math.max(lk0, Math.log10(k))) - lk0) / (lk1 - lk0) * (y1 - y0);
+    for (let lk = -2; lk <= 3; lk++) { this.line(x0, Y(10 ** lk), x1, Y(10 ** lk), hexA(C.grid, 0.9)); this.text(`10${sup(lk)}`, x0 - 4, Y(10 ** lk), C.dim, 9, 'right'); }
+    for (let lT = 4; lT <= 7; lT++) { this.line(X(lT), y1, X(lT), y1 + 3, C.dim); this.text(`10${sup(lT)} K`, X(lT), y1 + 11, C.dim, 9, 'center'); }
+    this.text('κ̄_Ross (m² kg⁻¹)', x0 + 4, y0 + 10, C.dim, 9);
+    const rhos: Array<[number, string]> = [[-8, '#6fa3d6'], [-6, '#7fbf8a'], [-4, '#f2c45a'], [-2, '#d4694a'], [0, '#a58ad6'], [2, '#efe9d8']];
+    for (const [lr, col] of rhos) {
+      c.beginPath();
+      for (let lT = 3.4; lT <= 7.4; lT += 0.02) { const k = rosselandKappa(10 ** lT, 10 ** lr, 0.7, this.Z); const px = X(lT), py = Y(k); lT === 3.4 ? c.moveTo(px, py) : c.lineTo(px, py); }
+      c.strokeStyle = Math.abs(lr - this.lRho) < 0.26 ? col : hexA(col, 0.35); c.lineWidth = Math.abs(lr - this.lRho) < 0.26 ? 2.2 : 1.2; c.stroke();
+    }
+    rhos.forEach(([lr, col], i) => this.text(`ρ = 10${sup(lr)} kg/m³`, x1 - 8, y0 + 12 + i * 11, col, 9, 'right'));
+    // probe curve (interpolated density) and point
+    c.beginPath();
+    for (let lT = 3.4; lT <= 7.4; lT += 0.02) { const k = rosselandKappa(10 ** lT, 10 ** this.lRho, 0.7, this.Z); const px = X(lT), py = Y(k); lT === 3.4 ? c.moveTo(px, py) : c.lineTo(px, py); }
+    c.strokeStyle = hexA(C.text, 0.5); c.lineWidth = 1; c.setLineDash([3, 3]); c.stroke(); c.setLineDash([]);
+    const kp = rosselandKappa(10 ** this.lT, 10 ** this.lRho, 0.7, this.Z);
+    this.circle(X(this.lT), Y(kp), 4.5, '#fff', C.sun);
+    // landmarks
+    const marks: Array<[number, number, string]> = [[Math.log10(5772), -3.6, 'Sun photosphere'], [7.2, 5.2, 'Sun centre'], [Math.log10(12100), -4.5, 'Rigel photosphere'], [4.5, -5, 'H/He ionisation peak']];
+    for (const [lT, lr, lab] of marks) { const k = rosselandKappa(10 ** lT, 10 ** lr, 0.7, this.Z); this.circle(X(lT), Y(k), 3, C.dim); this.text(lab, X(lT) + 6, Y(k) - 8, C.dim, 8); }
+    this.line(x0, Y(0.02 * 1.7), x1, Y(0.02 * 1.7), hexA(C.purple, 0.6), 1, [4, 4]);
+    this.text('electron scattering 0.02(1+X)', x0 + 6, Y(0.02 * 1.7) - 7, C.purple, 8);
+    this.text('Kramers ∝ ρ T^−3.5', X(5.6), Y(rosselandKappa(10 ** 5.6, 10 ** -2, 0.7, this.Z)) - 12, C.dim, 9, 'center');
+    this.text('H⁻ ∝ ρ^½ T⁹', X(3.65), Y(rosselandKappa(10 ** 3.65, 10 ** -4, 0.7, this.Z)) - 12, C.dim, 9, 'center');
+    const T = 10 ** this.lT, rho = 10 ** this.lRho;
+    const parts = rosselandParts(T, rho, 0.7, this.Z);
+    const dom = parts.hm >= parts.kram && parts.hm >= parts.es ? 'H⁻' : parts.es >= parts.kram ? 'e⁻ scattering' : 'Kramers (bf + ff)';
+    this.setReadout([
+      ['T, ρ', `${sci(T, 1)} K, ${sci(rho, 0)}`],
+      ['κ̄ (Rosseland)', `${kp < 0.01 || kp > 1e3 ? sci(kp, 2) : fmt(kp, kp < 1 ? 3 : 1)} m²/kg`, C.sun],
+      ['Dominant', dom],
+      ['Mean free path 1/κ̄ρ', `${sci(1 / (kp * rho), 2)} m`],
+    ]);
+  }
+}
+
+/* ------------------------------------------------------- 9.3a random walk ---- */
+
+class RandomWalkWidget extends CanvasWidget {
+  private Rl = 12;            // star radius in mean free paths
+  private ellMm = 1;          // mean free path for the Sun estimate, mm
+  private speed = 40;         // steps per second
+  private rnd = mulberry(11);
+  private path: Array<[number, number]> = [[0, 0]];
+  private acc = 0;
+  private trials: number[] = [];
+  private steps = 0;
+  constructor() {
+    super(1.6);
+    this.slider('Star radius R / ℓ', 4, 30, 1, this.Rl, (v) => `${v} steps`, (v) => { this.Rl = v; this.reset(); this.trials = []; });
+    this.slider('Speed', 5, 400, 5, this.speed, (v) => `${v} steps/s`, (v) => { this.speed = v; });
+    this.slider('Solar ℓ (for the estimate)', 0.1, 10, 0.1, this.ellMm, (v) => `${fmt(v, 1)} mm`, (v) => { this.ellMm = v; });
+    this.playButton();
+  }
+  private reset() { this.path = [[0, 0]]; this.steps = 0; }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    this.acc += dt * this.speed;
+    while (this.acc >= 1) {
+      this.acc -= 1;
+      const [x, y] = this.path[this.path.length - 1];
+      const a = this.rnd() * TAU;
+      const nx = x + Math.cos(a), ny = y + Math.sin(a);
+      this.path.push([nx, ny]); this.steps++;
+      if (Math.hypot(nx, ny) >= this.Rl) { this.trials.push(this.steps); if (this.trials.length > 400) this.trials.shift(); this.reset(); break; }
+      if (this.path.length > 4000) this.path.splice(0, 1000);
+    }
+    const cx = w * 0.32, cy = h * 0.5, R = Math.min(w * 0.28, h * 0.44);
+    const s = R / this.Rl;
+    this.glow(cx, cy, R * 1.1, hexA(C.sun, 0.25));
+    this.circle(cx, cy, R, C.sun, hexA(C.sun, 0.08), 1.5);
+    this.text('star (edge = escape)', cx, cy + R + 14, C.dim, 9, 'center');
+    c.beginPath();
+    this.path.forEach(([x, y], i) => { const px = cx + x * s, py = cy + y * s; i === 0 ? c.moveTo(px, py) : c.lineTo(px, py); });
+    c.strokeStyle = hexA(C.star, 0.5); c.lineWidth = 1; c.stroke();
+    const [lx, ly] = this.path[this.path.length - 1];
+    this.circle(cx + lx * s, cy + ly * s, 3, undefined, C.sun);
+    this.line(cx, cy, cx + lx * s, cy + ly * s, C.green, 1.2, [3, 3]);
+    this.circle(cx, cy, 2.5, undefined, C.green);
+    // histogram of trials on the right
+    const hx0 = w * 0.64, hx1 = w - 12, hy0 = 16, hy1 = h * 0.62;
+    axesBox(c, hx0, hy0, hx1, hy1);
+    const pred = this.Rl * this.Rl;
+    const maxN = pred * 4;
+    const bins = 20, counts = new Array(bins).fill(0);
+    for (const n of this.trials) { const b = Math.min(bins - 1, Math.floor(n / maxN * bins)); counts[b]++; }
+    const cmax = Math.max(1, ...counts);
+    counts.forEach((n: number, i: number) => { const bw = (hx1 - hx0) / bins; c.fillStyle = hexA(C.accent, 0.7); c.fillRect(hx0 + i * bw + 1, hy1 - (n / cmax) * (hy1 - hy0 - 14), bw - 2, (n / cmax) * (hy1 - hy0 - 14)); });
+    const mean = this.trials.length ? this.trials.reduce((a, b) => a + b, 0) / this.trials.length : 0;
+    const Xn = (n: number) => hx0 + Math.min(1, n / maxN) * (hx1 - hx0);
+    this.line(Xn(pred), hy0, Xn(pred), hy1, C.green, 1.5, [4, 3]);
+    this.text(`(R/ℓ)² = ${pred}`, Xn(pred) + 4, hy0 + 10, C.green, 9);
+    if (mean) { this.line(Xn(mean), hy0, Xn(mean), hy1, C.sun, 1.5); this.text(`mean ${fmt(mean, 0)}`, Xn(mean) + 4, hy0 + 22, C.sun, 9); }
+    this.text('steps to escape (histogram of trials)', hx0 + 4, hy1 - 8, C.dim, 8);
+    // sun estimate
+    const ell = this.ellMm * 1e-3;
+    const Nsun = (RSUN / ell) ** 2;
+    const tsun = Nsun * ell / C_LIGHT;
+    this.text('Sun, from the same rule:', hx0, hy1 + 18, C.text, 10);
+    this.text(`N = (R☉/ℓ)² ≈ ${sci(Nsun, 1)} steps`, hx0, hy1 + 32, C.dim, 10);
+    this.text(`t ≈ Nℓ/c ≈ ${fmtDur(tsun)}`, hx0, hy1 + 46, C.sun, 10);
+    this.text(`(straight line: ${fmt(RSUN / C_LIGHT, 1)} s)`, hx0, hy1 + 60, C.dim, 9);
+    this.setReadout([
+      ['Current steps', `${this.steps}`],
+      ['Net distance / ℓ', fmt(Math.hypot(lx, ly), 1), C.green],
+      ['Trials, mean N', this.trials.length ? `${this.trials.length}, ${fmt(mean, 0)}` : '—', C.sun],
+      ['Predicted (R/ℓ)²', `${pred}`],
+    ]);
+  }
+}
+
+/* --------------------------------------------------- 9.3b/9.4c limb darkening ---- */
+
+const LIMB_DATA: Array<[number, number[]]> = [   // [nm, I(μ)/I(1) at μ = 1, 0.8, 0.6, 0.4, 0.2, 0.1]
+  [400, [1, 0.86, 0.71, 0.55, 0.37, 0.27]],
+  [550, [1, 0.89, 0.77, 0.64, 0.49, 0.40]],
+  [800, [1, 0.92, 0.84, 0.74, 0.62, 0.55]],
+  [1600, [1, 0.95, 0.90, 0.84, 0.76, 0.71]],
+];
+const LIMB_MU = [1, 0.8, 0.6, 0.4, 0.2, 0.1];
+function limbU(nm: number): number { return Math.min(0.95, Math.max(0.15, 0.6 * (550 / nm) ** 0.9)); }
+function limbI(mu: number, nm: number): number {
+  const u = limbU(nm); const v = 0.15 * (550 / nm) ** 0.5;
+  return Math.max(0, 1 - u * (1 - mu) - v * (1 - mu) ** 2 + v * (1 - mu));
+}
+
+class LimbDarkWidget extends CanvasWidget {
+  private nm = 550;
+  private mu = 0.7;
+  private drag = false;
+  constructor(private mode: 'observe' | 'eddington') {
+    super(1.8);
+    if (mode === 'observe') this.slider('Wavelength', 400, 1600, 10, this.nm, (v) => `${v} nm`, (v) => { this.nm = v; });
+    this.slider('μ = cos θ (disc position)', 0.05, 1, 0.01, this.mu, (v) => fmt(v, 2), (v) => { this.mu = v; });
+    const move = (e: PointerEvent) => { const { x, y } = canvasPos(this.canvas, e, this.w, this.h); const cx = this.w * 0.26, cy = this.h * 0.5, R = Math.min(this.w * 0.22, this.h * 0.42); const d = Math.hypot(x - cx, y - cy) / R; if (d <= 1.02) { this.mu = Math.max(0.05, Math.sqrt(Math.max(0, 1 - Math.min(1, d) ** 2))); } };
+    this.canvas.addEventListener('pointerdown', (e) => { this.drag = true; move(e); });
+    this.canvas.addEventListener('pointermove', (e) => { if (this.drag) move(e); });
+    window.addEventListener('pointerup', () => { this.drag = false; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const mu = this.mu, nm = this.nm;
+    const theta = Math.acos(mu);
+    // ---- left: disc
+    const cx = w * 0.26, cy = h * 0.5, R = Math.min(w * 0.22, h * 0.42);
+    const sunc = tempRGB(5800);
+    const filt = nm > 780 ? [235, 160, 130] as [number, number, number] : lineRGB(nm);
+    const base: [number, number, number] = this.mode === 'observe' ? [0.8 * sunc[0] + 0.2 * filt[0], 0.8 * sunc[1] + 0.2 * filt[1], 0.8 * sunc[2] + 0.2 * filt[2]] : sunc;
+    const g = c.createRadialGradient(cx, cy, 0, cx, cy, R);
+    for (let k = 0; k <= 10; k++) { const r = k / 10; const m = Math.sqrt(Math.max(0, 1 - r * r)); const I = this.mode === 'observe' ? limbI(m, nm) : (3 * m + 2) / 5; g.addColorStop(r, rgba(base, 0.15 + 0.85 * I)); }
+    c.fillStyle = g; c.beginPath(); c.arc(cx, cy, R, 0, TAU); c.fill();
+    const rr = Math.sqrt(1 - mu * mu) * R;
+    this.circle(cx + rr, cy, 5, '#fff', undefined, 1.5);
+    this.line(cx, cy, cx + rr, cy, hexA('#fff', 0.4), 1, [2, 3]);
+    this.text(this.mode === 'observe' ? 'drag the marker' : 'gray-atmosphere disc', cx, cy + R + 14, C.dim, 9, 'center');
+    // ---- right
+    const x0 = w * 0.55, x1 = w - 12, y0 = 14, y1 = h - 30;
+    if (this.mode === 'observe') {
+      // cross-section: slanted line of sight to τ_v = 2μ/3
+      const ay0 = y0, ay1 = y0 + (y1 - y0) * 0.5;
+      const layers = 6;
+      for (let i = 0; i < layers; i++) {
+        const t = (0.75 * ((i + 0.5) / layers * 2.5 + 2 / 3)) ** 0.25 * 5772;
+        const br = 0.08 + 0.9 * ((t - 4700) / 2600) ** 2;
+        c.fillStyle = rgba([255 * br, 200 * br * (0.6 + 0.4 * br), 110 * br * br], 1);
+        c.fillRect(x0, ay0 + 14 + i * (ay1 - ay0 - 14) / layers, x1 - x0, (ay1 - ay0 - 14) / layers);
+      }
+      this.text('surface (τ = 0)', x0 + 4, ay0 + 8, C.dim, 9);
+      const Yt = (tv: number) => ay0 + 14 + (tv / 2.5) * (ay1 - ay0 - 14);
+      const tv = 2 * mu / 3;
+      const ex = x0 + (x1 - x0) * 0.75, ey = ay0 + 14;
+      const L = (Yt(tv) - ey) / Math.max(0.05, mu);
+      const dx = L * Math.sin(theta);
+      this.line(ex + dx, ey - 10, ex + dx - (L + 10) * Math.sin(theta), ey - 10 + (L + 10) * mu, '#fff', 1.5);
+      this.circle(ex + dx - L * Math.sin(theta) , Yt(tv), 4, '#fff', C.sun);
+      this.text(`to observer, θ = ${fmt(theta / DEG, 0)}°`, ex + dx + 4, ey - 4, C.text, 9, 'left');
+      this.text(`τ_v = 2μ/3 = ${fmt(tv, 2)}`, x0 + 4, Yt(tv), C.sun, 9);
+      this.line(x0, Yt(2 / 3), x1, Yt(2 / 3), hexA(C.text, 0.3), 1, [2, 3]);
+      this.text('τ_v = 2/3 (disc centre)', x1 - 4, Yt(2 / 3) + 8, C.dim, 8, 'right');
+      // brightness curve
+      const gy0 = ay1 + 16, gy1 = y1;
+      axesBox(c, x0, gy0, x1, gy1);
+      const X = (m: number) => x0 + (1 - m) * (x1 - x0);
+      const Y = (v: number) => gy1 - v * (gy1 - gy0) * 0.9;
+      for (const [lnm, , colr] of [[400, 0, C.blue], [800, 0, C.red]] as Array<[number, number, string]>) {
+        c.beginPath(); for (let m = 1; m >= 0; m -= 0.02) { const px = X(m), py = Y(limbI(m, lnm)); m === 1 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = hexA(colr, 0.5); c.lineWidth = 1; c.stroke();
+      }
+      c.beginPath(); for (let m = 1; m >= 0; m -= 0.02) { const px = X(m), py = Y(limbI(m, nm)); m === 1 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = C.star; c.lineWidth = 2; c.stroke();
+      this.circle(X(mu), Y(limbI(mu, nm)), 4, '#fff', C.sun);
+      this.text('centre', x0 + 4, gy1 - 8, C.dim, 8); this.text('limb', x1 - 4, gy1 - 8, C.dim, 8, 'right');
+      this.text('I(μ)/I(1)', x0 + 4, gy0 + 9, C.dim, 8);
+      this.text('400', x1 - 30, Y(limbI(0.1, 400)) - 6, C.blue, 8); this.text('800', x1 - 30, Y(limbI(0.1, 800)) - 6, C.red, 8);
+      const Tgray = (0.75 * (tv + 2 / 3)) ** 0.25 * 5772;
+      this.setReadout([
+        ['Position μ, θ', `${fmt(mu, 2)}, ${fmt(theta / DEG, 0)}°`],
+        ['I(μ)/I(centre)', fmt(limbI(mu, nm), 3), C.star],
+        ['τ_v seen (2μ/3)', fmt(tv, 2), C.sun],
+        ['T there (gray model)', `${fmt(Tgray, 0)} K`],
+      ]);
+    } else {
+      axesBox(c, x0, y0, x1, y1);
+      const X = (m: number) => x0 + 8 + m * (x1 - x0 - 16);
+      const Y = (v: number) => y1 - 8 - v * (y1 - y0 - 16);
+      for (const v of [0.2, 0.4, 0.6, 0.8, 1]) { this.line(x0, Y(v), x1, Y(v), hexA(C.grid, 0.9)); this.text(fmt(v, 1), x0 + 3, Y(v) - 6, C.dim, 8); }
+      for (const m of [0, 0.2, 0.4, 0.6, 0.8, 1]) this.text(fmt(m, 1), X(m), y1 + 10, C.dim, 8, 'center');
+      this.text('μ = cos θ  (limb ← → centre)', (x0 + x1) / 2, y1 + 22, C.dim, 9, 'center');
+      c.beginPath(); for (let m = 0; m <= 1; m += 0.02) { const px = X(m), py = Y((3 * m + 2) / 5); m === 0 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = C.accent; c.lineWidth = 2.2; c.stroke();
+      this.text('gray atmosphere: (3μ + 2)/5', X(0.5), Y(0.26), C.accent, 9);
+      const cols = [C.blue, C.green, C.red, C.purple];
+      LIMB_DATA.forEach(([lnm, vals], i) => {
+        vals.forEach((v, j) => this.circle(X(LIMB_MU[j]), Y(v), 3, undefined, cols[i]));
+        c.beginPath(); vals.forEach((v, j) => { const px = X(LIMB_MU[j]), py = Y(v); j === 0 ? c.moveTo(px, py) : c.lineTo(px, py); }); c.strokeStyle = hexA(cols[i], 0.5); c.lineWidth = 1; c.stroke();
+        this.text(`${lnm} nm`, X(0.1) + 6, Y(vals[5]) + (i === 0 ? 8 : -6), cols[i], 8);
+      });
+      this.line(X(mu), y0, X(mu), y1, hexA('#fff', 0.35), 1, [2, 3]);
+      const pred = (3 * mu + 2) / 5;
+      const interp = (vals: number[]) => { for (let j = 0; j < LIMB_MU.length - 1; j++) { if (mu <= LIMB_MU[j] && mu >= LIMB_MU[j + 1]) { const f = (LIMB_MU[j] - mu) / (LIMB_MU[j] - LIMB_MU[j + 1]); return vals[j] + f * (vals[j + 1] - vals[j]); } } return vals[5]; };
+      this.setReadout([
+        ['μ', fmt(mu, 2)],
+        ['Gray prediction', fmt(pred, 3), C.accent],
+        ['Observed 550 nm', fmt(interp(LIMB_DATA[1][1]), 3), C.green],
+        ['Observed 400 / 800 nm', `${fmt(interp(LIMB_DATA[0][1]), 2)} / ${fmt(interp(LIMB_DATA[2][1]), 2)}`],
+      ]);
+    }
+  }
+}
+
+/* ------------------------------------------------- 9.3c transfer in a slab ---- */
+
+class TransferWidget extends CanvasWidget {
+  private I0 = 1;
+  private S = 0.5;
+  private tauL = 2;
+  private tauC = 0.05;
+  constructor() {
+    super(1.8);
+    this.slider('Background I₀', 0, 2, 0.05, this.I0, (v) => fmt(v, 2), (v) => { this.I0 = v; });
+    this.slider('Source function S', 0, 2, 0.05, this.S, (v) => fmt(v, 2), (v) => { this.S = v; });
+    this.slider('Line-centre τ', 0, 12, 0.1, this.tauL, (v) => fmt(v, 1), (v) => { this.tauL = v; });
+    this.slider('Continuum τ', 0, 3, 0.05, this.tauC, (v) => fmt(v, 2), (v) => { this.tauC = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const tau = (x: number) => this.tauC + this.tauL * Math.exp(-x * x * 8);
+    const I = (x: number) => this.I0 * Math.exp(-tau(x)) + this.S * (1 - Math.exp(-tau(x)));
+    // ---- left: slab cartoon
+    const lx0 = 10, lx1 = w * 0.36, ly = h * 0.42;
+    const sx0 = lx0 + (lx1 - lx0) * 0.38, sx1 = lx0 + (lx1 - lx0) * 0.66;
+    c.fillStyle = hexA(C.accent, 0.1 + 0.5 * Math.min(1, this.tauL / 6)); c.fillRect(sx0, 20, sx1 - sx0, h * 0.6);
+    c.strokeStyle = C.line; c.strokeRect(sx0, 20, sx1 - sx0, h * 0.6);
+    this.text('gas, S', (sx0 + sx1) / 2, h * 0.6 + 32, C.accent, 10, 'center');
+    c.fillStyle = hexA(C.star, Math.min(1, 0.15 + this.I0 / 2)); c.fillRect(lx0 + 4, ly - 20, sx0 - lx0 - 10, 40);
+    this.text('I₀', lx0 + 8, ly - 28, C.star, 10);
+    const Iout = I(0), Ic = I(1.5);
+    c.fillStyle = hexA(C.star, Math.min(1, 0.15 + Ic / 2)); c.fillRect(sx1 + 6, ly - 20, lx1 - sx1 - 10, 40);
+    c.fillStyle = hexA(C.star, Math.min(1, 0.15 + Iout / 2)); c.fillRect(sx1 + 6, ly - 6, lx1 - sx1 - 10, 12);
+    this.text('out', sx1 + 10, ly - 28, C.star, 10);
+    this.text('I = I₀e^−τ + S(1 − e^−τ)', (lx0 + lx1) / 2, h - 16, C.dim, 9, 'center');
+    // ---- right: spectrum
+    const x0 = w * 0.44, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (x: number) => x0 + (x + 2) / 4 * (x1 - x0);
+    const Y = (v: number) => y1 - 6 - (v / 2.1) * (y1 - y0 - 12);
+    this.line(x0, Y(this.I0), x1, Y(this.I0), hexA(C.star, 0.4), 1, [3, 3]); this.text('I₀', x1 - 4, Y(this.I0) - 7, C.star, 9, 'right');
+    this.line(x0, Y(this.S), x1, Y(this.S), hexA(C.accent, 0.6), 1, [3, 3]); this.text('S', x1 - 4, Y(this.S) - 7, C.accent, 9, 'right');
+    c.beginPath();
+    for (let x = -2; x <= 2; x += 0.02) { const px = X(x), py = Y(I(x)); x === -2 ? c.moveTo(px, py) : c.lineTo(px, py); }
+    c.strokeStyle = C.sun; c.lineWidth = 2.2; c.stroke();
+    this.text('λ →', x1 - 4, y1 + 12, C.dim, 9, 'right');
+    this.text('emergent I_λ', x0 + 4, y0 + 10, C.sun, 9);
+    const kind = Math.abs(Iout - Ic) < 0.01 ? 'no line (I₀ = S or τ = 0)' : Iout > Ic ? 'emission line' : 'absorption line';
+    const thick = this.tauL + this.tauC > 5 ? ' · core saturated at S' : '';
+    this.text(kind + thick, (x0 + x1) / 2, y1 - 10, Iout > Ic ? C.green : C.red, 10, 'center');
+    this.setReadout([
+      ['I at line centre', fmt(Iout, 3), C.sun],
+      ['I in continuum', fmt(Ic, 3)],
+      ['Line type', kind, Iout > Ic + 0.01 ? C.green : Iout < Ic - 0.01 ? C.red : C.dim],
+      ['Depth / height vs continuum', fmt(Iout - Ic, 3)],
+    ]);
+  }
+}
+
+/* ------------------------------------------------------ 9.3d thermalisation ---- */
+
+class ThermalizeWidget extends CanvasWidget {
+  private lEps = -2;
+  private t = 0;
+  constructor() {
+    super(1.7);
+    this.slider('Destruction probability ε', -4, 0, 0.1, this.lEps, (v) => sci(10 ** v, 1), (v) => { this.lEps = v; });
+    this.playButton();
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    this.t += dt;
+    const eps = 10 ** this.lEps, se = Math.sqrt(eps);
+    const J = (tau: number) => 1 - Math.exp(-Math.sqrt(3 * eps) * tau) / (1 + se);
+    const S = (tau: number) => (1 - eps) * J(tau) + eps;
+    const tth = 1 / Math.sqrt(3 * eps);
+    // plot vs log τ
+    const x0 = 44, x1 = w * 0.66, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const lt0 = -2, lt1 = 3;
+    const X = (tau: number) => x0 + (Math.log10(tau) - lt0) / (lt1 - lt0) * (x1 - x0);
+    const Y = (v: number) => y1 - 8 - v * (y1 - y0 - 16);
+    for (let lt = lt0; lt <= lt1; lt++) { this.line(X(10 ** lt), y1, X(10 ** lt), y1 + 3, C.dim); this.text(`10${sup(lt)}`, X(10 ** lt), y1 + 11, C.dim, 9, 'center'); }
+    this.text('τ', x1, y1 + 22, C.dim, 9, 'right');
+    for (const v of [0.5, 1]) { this.line(x0, Y(v), x1, Y(v), hexA(C.grid, 0.9)); this.text(fmt(v, 1), x0 - 4, Y(v), C.dim, 9, 'right'); }
+    this.line(x0, Y(1), x1, Y(1), hexA(C.sun, 0.6), 1.5, [5, 4]); this.text('B(T) (Planck, isothermal gas)', x1 - 6, Y(1) + 10, C.sun, 9, 'right');
+    const curve = (f: (t: number) => number, col: string, wd: number) => { c.beginPath(); for (let lt = lt0; lt <= lt1; lt += 0.02) { const t = 10 ** lt; const px = X(t), py = Y(f(t)); lt === lt0 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = col; c.lineWidth = wd; c.stroke(); };
+    // pure absorption reference
+    curve((t) => 1 - Math.exp(-Math.sqrt(3) * t) / 2, hexA(C.dim, 0.6), 1);
+    this.text('ε = 1 (pure absorption)', X(0.02), Y(0.56), C.dim, 8);
+    curve(J, C.green, 2); curve(S, C.accent, 2);
+    this.text('⟨I⟩ / B', X(0.015), Y(J(0.015)) - 10, C.green, 10);
+    this.text('S / B', X(0.015), Y(S(0.015)) + 10, C.accent, 10);
+    if (tth > 10 ** lt0 && tth < 10 ** lt1) { this.line(X(tth), y0, X(tth), y1, hexA(C.purple, 0.6), 1, [3, 3]); this.text(`τ_th ≈ 1/√3ε = ${fmt(tth, 1)}`, X(tth) + 4, y0 + 10, C.purple, 9); }
+    // ---- right: cartoon of scattering vs destruction
+    const rx0 = w * 0.72, rx1 = w - 10, ry0 = 14, ry1 = h - 30;
+    c.fillStyle = hexA(C.accent, 0.08); c.fillRect(rx0, ry0, rx1 - rx0, ry1 - ry0);
+    const n = 9;
+    for (let i = 0; i < n; i++) {
+      const ph = (this.t * 0.25 + i / n) % 1;
+      const yy = ry0 + 10 + ph * (ry1 - ry0 - 20);
+      const xx = rx0 + 10 + ((i * 37) % Math.max(1, rx1 - rx0 - 20));
+      const destroyed = ((i * 7919) % 1000) / 1000 < eps * 4;
+      if (destroyed && ph > 0.5) { this.circle(xx, yy, 2.5, undefined, hexA(C.red, 0.8)); this.circle(xx, yy, 6, hexA(C.sun, 0.5)); }
+      else { c.fillStyle = hexA(C.star, 0.8); c.fillRect(xx - 1.5, yy - 1.5, 3, 3); this.line(xx, yy, xx + 6 * Math.cos(i), yy + 6 * Math.sin(i * 1.3), hexA(C.star, 0.4)); }
+    }
+    this.text('scatter: keeps memory', rx0 + 4, ry1 - 22, C.star, 8);
+    this.text('absorb + re-emit: thermal', rx0 + 4, ry1 - 10, C.red, 8);
+    this.setReadout([
+      ['ε', sci(eps, 1)],
+      ['⟨I⟩(0) / B = √ε/(1+√ε)', fmt(J(0), 3), C.green],
+      ['S(0) / B', fmt(S(0), 3), C.accent],
+      ['Thermalisation depth', fmt(tth, 1), C.purple],
+    ]);
+  }
+}
+
+/* ----------------------------------------------------- 9.4a plane-parallel ---- */
+
+class PlaneParallelWidget extends CanvasWidget {
+  private theta = 50;
+  constructor() {
+    super(1.8);
+    this.slider('Ray angle θ from vertical', 0, 85, 1, this.theta, (v) => `${v}°`, (v) => { this.theta = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const th = this.theta * DEG, mu = Math.cos(th);
+    const x0 = 10, x1 = w * 0.62, y0 = 16, y1 = h - 24;
+    const tauMax = 3;
+    const Yt = (tv: number) => y0 + 20 + (tv / tauMax) * (y1 - y0 - 20);
+    // layers
+    const nL = 12;
+    for (let i = 0; i < nL; i++) {
+      const tv = (i + 0.5) / nL * tauMax;
+      const T = (0.75 * (tv + 2 / 3)) ** 0.25 * 5772;
+      c.fillStyle = rgba(tempRGB(T), 0.2 + 0.6 * i / nL);
+      c.fillRect(x0, Yt(i / nL * tauMax), x1 - x0, Yt((i + 1) / nL * tauMax) - Yt(i / nL * tauMax) + 0.5);
+    }
+    for (const tv of [0, 0.5, 1, 1.5, 2, 2.5, 3]) { this.line(x0, Yt(tv), x1, Yt(tv), hexA('#000', 0.25)); this.text(`τ_v = ${fmt(tv, 1)}`, x0 + 4, Yt(tv) + 7, hexA('#fff', 0.6), 8); }
+    this.text('space', x0 + 4, y0 + 8, C.dim, 9);
+    // ray: emerges at top at point ex; travels down-left at angle θ
+    const ex = x0 + (x1 - x0) * 0.72, ey = Yt(0);
+    const marks: Array<[number, string, string]> = [[2 / 3, '2/3', C.sun], [1, '1', C.accent], [2, '2', C.red]];
+    const pxOf = (tv: number) => { const L = (Yt(tv) - ey) / mu; return [ex - L * Math.sin(th), Yt(tv)] as [number, number]; };
+    const far = Math.min(tauMax * mu, tauMax);
+    const [fx, fy] = pxOf(far);
+    this.line(ex + 30 * Math.sin(th), ey - 30 * mu, fx, fy, '#fff', 1.8);
+    this.line(ex, ey, ex, Yt(Math.min(tauMax, 2.2)), hexA('#fff', 0.5), 1, [3, 3]);
+    this.text('vertical', ex + 4, Yt(1.9), hexA('#fff', 0.6), 8);
+    // angle arc
+    c.beginPath(); c.arc(ex, ey, 26, Math.PI / 2, Math.PI / 2 + th); c.strokeStyle = C.blue; c.lineWidth = 1; c.stroke();
+    this.text(`θ = ${this.theta}°`, ex - 36 * Math.sin(th / 2) - 10, ey + 36 * Math.cos(th / 2), C.blue, 9, 'right');
+    for (const [ts, lab, col] of marks) {
+      const tv = ts * mu;
+      if (tv > tauMax) continue;
+      const [mx, my] = pxOf(tv);
+      this.circle(mx, my, 4.5, '#000', col, 1);
+      this.text(`slant τ = ${lab} → τ_v = ${fmt(tv, 2)}`, mx + 9, my + 9, col, 9, 'left');
+    }
+    this.text('to observer ↗', ex + 30 * Math.sin(th) + 4, ey - 30 * mu - 2, C.text, 9);
+    // ---- right: τ_v(μ) curve for slant 2/3
+    const gx0 = w * 0.68, gx1 = w - 12, gy0 = 20, gy1 = h - 30;
+    axesBox(c, gx0, gy0, gx1, gy1);
+    const X = (m: number) => gx0 + 6 + m * (gx1 - gx0 - 12);
+    const Y = (tv: number) => gy1 - 6 - (tv / 0.8) * (gy1 - gy0 - 12);
+    c.beginPath(); for (let m = 0; m <= 1; m += 0.02) { const px = X(m), py = Y(2 * m / 3); m === 0 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = C.sun; c.lineWidth = 2; c.stroke();
+    this.circle(X(mu), Y(2 * mu / 3), 4, '#fff', C.sun);
+    this.text('depth seen τ_v = 2μ/3', gx0 + 4, gy0 + 10, C.sun, 9);
+    this.text('limb', gx0 + 4, gy1 - 8, C.dim, 8); this.text('centre', gx1 - 4, gy1 - 8, C.dim, 8, 'right');
+    this.text('μ', (gx0 + gx1) / 2, gy1 + 12, C.dim, 9, 'center');
+    const tv = 2 * mu / 3;
+    const T = (0.75 * (tv + 2 / 3)) ** 0.25 * 5772;
+    const zkm = -120 * Math.log(Math.max(1e-3, tv));   // height above τ_v = 1, 120 km scale height
+    this.setReadout([
+      ['μ = cos θ', fmt(mu, 3)],
+      ['Slant path factor 1/μ', fmt(1 / mu, 2)],
+      ['τ_v where slant τ = 2/3', fmt(tv, 3), C.sun],
+      ['T there (Sun, gray)', `${fmt(T, 0)} K, +${fmt(zkm, 0)} km`],
+    ]);
+  }
+}
+
+
+/* ------------------------------------------------- 9.4b gray atmosphere T(τ) ---- */
+
+const SOLAR_EMP: Array<[number, number]> = [   // [log τ_500, T] — smoothed empirical quiet-Sun photosphere
+  [-3, 4420], [-2.5, 4480], [-2, 4600], [-1.5, 4780], [-1, 5000], [-0.5, 5330], [-0.18, 5780], [0, 6150], [0.3, 7000], [0.7, 8200], [1, 9500], [1.3, 10800],
+];
+function solarEmpT(lt: number): number {
+  if (lt <= SOLAR_EMP[0][0]) return SOLAR_EMP[0][1];
+  for (let i = 0; i < SOLAR_EMP.length - 1; i++) { const [a, Ta] = SOLAR_EMP[i], [b, Tb] = SOLAR_EMP[i + 1]; if (lt >= a && lt <= b) return Ta + (Tb - Ta) * (lt - a) / (b - a); }
+  return SOLAR_EMP[SOLAR_EMP.length - 1][1];
+}
+const hopfQ = (tau: number) => 0.7104 - 0.1331 * Math.exp(-3.4488 * tau);
+
+class GrayAtmWidget extends CanvasWidget {
+  private Teff = 5772;
+  private probe = Math.log10(2 / 3);
+  constructor() {
+    super(1.7);
+    this.slider('T_eff', 3000, 30000, 100, this.Teff, (v) => `${v} K`, (v) => { this.Teff = v; });
+    this.slider('Probe log τ', -3, 1.3, 0.05, this.probe, (v) => fmt(v, 2), (v) => { this.probe = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const Te = this.Teff;
+    const Tg = (tau: number) => Te * (0.75 * (tau + 2 / 3)) ** 0.25;
+    const Th = (tau: number) => Te * (0.75 * (tau + hopfQ(tau))) ** 0.25;
+    const x0 = 50, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const lt0 = -3, lt1 = 1.3;
+    const X = (lt: number) => x0 + (lt - lt0) / (lt1 - lt0) * (x1 - x0);
+    const T0 = Te * 0.7, T1 = Te * 1.9;
+    const Y = (T: number) => y1 - 6 - (T - T0) / (T1 - T0) * (y1 - y0 - 12);
+    for (let lt = -3; lt <= 1; lt++) { this.line(X(lt), y1, X(lt), y1 + 3, C.dim); this.text(`10${sup(lt)}`, X(lt), y1 + 11, C.dim, 9, 'center'); }
+    this.text('optical depth τ', x1, y1 + 22, C.dim, 9, 'right');
+    for (const f of [0.8, 1, 1.2, 1.4, 1.6, 1.8]) { this.line(x0, Y(Te * f), x1, Y(Te * f), hexA(C.grid, 0.9)); this.text(`${fmt(f, 1)} T_eff`, x0 - 4, Y(Te * f), C.dim, 8, 'right'); }
+    // temperature-coloured band under the curve
+    for (let lt = lt0; lt < lt1; lt += 0.04) { const T = Tg(10 ** lt); c.fillStyle = rgba(tempRGB(T), 0.12); c.fillRect(X(lt), Y(T), X(lt + 0.04) - X(lt) + 0.5, y1 - Y(T)); }
+    const curve = (f: (t: number) => number, col: string, wd: number, dash?: number[]) => { c.beginPath(); for (let lt = lt0; lt <= lt1; lt += 0.02) { const px = X(lt), py = Y(f(10 ** lt)); lt === lt0 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = col; c.lineWidth = wd; c.setLineDash(dash ?? []); c.stroke(); c.setLineDash([]); };
+    curve(Th, hexA(C.purple, 0.8), 1.2, [4, 3]);
+    curve(Tg, C.accent, 2.2);
+    // empirical Sun, scaled by Te/5772
+    c.beginPath(); SOLAR_EMP.forEach(([lt, T], i) => { const px = X(lt), py = Y(T * Te / 5772); i === 0 ? c.moveTo(px, py) : c.lineTo(px, py); }); c.strokeStyle = C.green; c.lineWidth = 1.6; c.stroke();
+    SOLAR_EMP.forEach(([lt, T]) => this.circle(X(lt), Y(T * Te / 5772), 2.5, undefined, C.green));
+    this.text('Eddington gray: T⁴ = ¾T_eff⁴(τ + ⅔)', x0 + 8, y0 + 12, C.accent, 10);
+    this.text('exact gray (Hopf q(τ))', x0 + 8, y0 + 25, C.purple, 9);
+    this.text(Te === 5772 ? 'empirical quiet Sun' : 'empirical Sun scaled to T_eff', x0 + 8, y0 + 38, C.green, 9);
+    this.line(X(Math.log10(2 / 3)), y0, X(Math.log10(2 / 3)), y1, hexA(C.text, 0.3), 1, [2, 4]);
+    this.text('τ = 2/3', X(Math.log10(2 / 3)) + 3, y1 - 10, C.dim, 8);
+    const pt = 10 ** this.probe;
+    this.circle(X(this.probe), Y(Tg(pt)), 4.5, '#fff', C.accent);
+    this.circle(X(this.probe), Y(solarEmpT(this.probe) * Te / 5772), 4.5, '#fff', C.green);
+    this.setReadout([
+      ['τ (probe)', fmt(pt, pt < 0.1 ? 3 : 2)],
+      ['T gray (Eddington)', `${fmt(Tg(pt), 0)} K`, C.accent],
+      ['T empirical (scaled)', `${fmt(solarEmpT(this.probe) * Te / 5772, 0)} K`, C.green],
+      ['T(0), T(2/3)', `${fmt(Tg(0), 0)} K, ${fmt(Tg(2 / 3), 0)} K`],
+    ]);
+  }
+}
+
+/* ------------------------------------------------ 9.4d Eddington–Barbier ---- */
+
+type BarbShape = 'linear' | 'hump' | 'step' | 'spike';
+class BarbierWidget extends CanvasWidget {
+  private shape: BarbShape = 'linear';
+  private mu = 0.6;
+  private par = 0.5;
+  constructor() {
+    super(1.8);
+    this.segmented<BarbShape>([['linear', 'Linear S'], ['hump', 'Hump'], ['step', 'Step'], ['spike', 'Spike']], this.shape, (v) => { this.shape = v; });
+    this.slider('μ = cos θ', 0.1, 1, 0.01, this.mu, (v) => fmt(v, 2), (v) => { this.mu = v; });
+    this.slider('Shape parameter', 0, 1, 0.01, this.par, (v) => fmt(v, 2), (v) => { this.par = v; });
+  }
+  private S(tau: number): number {
+    const p = this.par;
+    switch (this.shape) {
+      case 'linear': return 0.4 + 1.2 * p * tau;
+      case 'hump': return 0.5 + Math.exp(-(((tau - 0.3 - 2.2 * p) / 0.35) ** 2));
+      case 'step': return tau < 0.2 + 2 * p ? 0.4 : 1.4;
+      case 'spike': return 0.5 + 1.5 * Math.exp(-(((tau - 0.2 - 2.2 * p) / 0.08) ** 2));
+    }
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const mu = this.mu;
+    const tmax = 4;
+    let I = 0; const N = 2000;
+    for (let i = 0; i < N; i++) { const t = (i + 0.5) / N * 12; I += this.S(t) * Math.exp(-t / mu) / mu * (12 / N); }
+    const est = this.S(mu);
+    const x0 = 44, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (t: number) => x0 + t / tmax * (x1 - x0);
+    const Y = (v: number) => y1 - 6 - v / 2.2 * (y1 - y0 - 12);
+    for (let t = 0; t <= tmax; t++) { this.line(X(t), y1, X(t), y1 + 3, C.dim); this.text(`${t}`, X(t), y1 + 11, C.dim, 9, 'center'); }
+    this.text('vertical optical depth τ_v', x1, y1 + 22, C.dim, 9, 'right');
+    // weight function shaded
+    c.beginPath(); c.moveTo(X(0), y1 - 6);
+    for (let t = 0; t <= tmax; t += 0.02) c.lineTo(X(t), Y(2 * Math.exp(-t / mu)));
+    c.lineTo(X(tmax), y1 - 6); c.closePath(); c.fillStyle = hexA(C.blue, 0.15); c.fill();
+    c.beginPath(); for (let t = 0; t <= tmax; t += 0.02) { const px = X(t), py = Y(2 * Math.exp(-t / mu)); t === 0 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = hexA(C.blue, 0.8); c.lineWidth = 1.2; c.stroke();
+    this.text('escape weight e^(−τ/μ)', X(mu) + 6, Y(2 * Math.exp(-1)) - 8, C.blue, 9);
+    // S(τ)
+    c.beginPath(); for (let t = 0; t <= tmax; t += 0.01) { const px = X(t), py = Y(this.S(t)); t === 0 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = C.accent; c.lineWidth = 2.2; c.stroke();
+    this.text('source function S(τ)', x0 + 8, y0 + 12, C.accent, 10);
+    // marker at τ = μ
+    this.line(X(mu), y0, X(mu), y1, hexA(C.sun, 0.6), 1, [3, 3]);
+    this.circle(X(mu), Y(est), 5, '#fff', C.sun);
+    this.text(`τ = μ = ${fmt(mu, 2)}`, X(mu) + 4, y1 - 10, C.sun, 9);
+    // exact I as horizontal line
+    this.line(x0, Y(I), x1, Y(I), C.green, 1.5, [6, 3]);
+    if (Math.abs(est - I) < 0.04) this.text(`exact I = ${fmt(I, 3)} ≈ S(τ = μ) = ${fmt(est, 3)}`, x1 - 6, Y(I) - 8, C.green, 9, 'right');
+    else { this.text(`exact emergent I = ${fmt(I, 3)}`, x1 - 6, Y(I) - 8, C.green, 9, 'right'); this.text(`S(τ = μ) = ${fmt(est, 3)}`, x1 - 6, Y(est) + (est > I ? -8 : 10), C.sun, 9, 'right'); }
+    const err = 100 * (est - I) / I;
+    this.setReadout([
+      ['μ', fmt(mu, 2)],
+      ['Exact I(0, μ) = ∫S e^(−τ/μ) dτ/μ', fmt(I, 3), C.green],
+      ['Eddington–Barbier S(τ = μ)', fmt(est, 3), C.sun],
+      ['Error', `${err >= 0 ? '+' : ''}${fmt(err, 1)} %`, Math.abs(err) < 3 ? C.green : Math.abs(err) < 10 ? C.accent : C.red],
+    ]);
+  }
+}
+
+/* ------------------------------------------------------- 9.5a line anatomy ---- */
+
+class LineProfileWidget extends CanvasWidget {
+  private depth = 0.7;
+  private fwhm = 0.08;   // nm
+  private wing = 0.3;    // Lorentz fraction
+  private blur = 0;      // instrument FWHM nm
+  constructor() {
+    super(1.8);
+    this.slider('Core depth', 0.05, 1, 0.01, this.depth, (v) => fmt(v, 2), (v) => { this.depth = v; });
+    this.slider('Intrinsic FWHM', 0.01, 0.4, 0.005, this.fwhm, (v) => `${fmt(v, 3)} nm`, (v) => { this.fwhm = v; });
+    this.slider('Damping wings', 0, 1, 0.01, this.wing, (v) => fmt(v, 2), (v) => { this.wing = v; });
+    this.slider('Instrument blur', 0, 0.3, 0.005, this.blur, (v) => `${fmt(v, 3)} nm`, (v) => { this.blur = v; });
+  }
+  private prof(dl: number): number {   // absorption depth profile (0..depth)
+    const s = this.fwhm / 2;
+    const g = Math.exp(-Math.LN2 * (dl / s) ** 2);
+    const l = 1 / (1 + (dl / s) ** 2);
+    return this.depth * ((1 - this.wing) * g + this.wing * l);
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const range = 1.0; // ±nm
+    const N = 400;
+    const dls: number[] = [], raw: number[] = [];
+    for (let i = 0; i <= N; i++) { const dl = -range + 2 * range * i / N; dls.push(dl); raw.push(this.prof(dl)); }
+    // blur (gaussian convolution)
+    let obs = raw;
+    if (this.blur > 0.001) {
+      const sg = this.blur / 2.3548, dx = 2 * range / N, half = Math.ceil(3 * sg / dx);
+      const k: number[] = []; let ks = 0;
+      for (let j = -half; j <= half; j++) { const v = Math.exp(-0.5 * ((j * dx) / sg) ** 2); k.push(v); ks += v; }
+      obs = raw.map((_, i) => { let s = 0; for (let j = -half; j <= half; j++) { const ii = Math.min(N, Math.max(0, i + j)); s += raw[ii] * k[j + half]; } return s / ks; });
+    }
+    const dx = 2 * range / N;
+    const W = obs.reduce((a, b) => a + b, 0) * dx;
+    const Wraw = raw.reduce((a, b) => a + b, 0) * dx;
+    const dmax = Math.max(...obs);
+    let fw = 0; { const halfd = dmax / 2; let lo = 0, hi = N; while (lo < N && obs[lo] < halfd) lo++; while (hi > 0 && obs[hi] < halfd) hi--; fw = (hi - lo) * dx; }
+    const x0 = 40, x1 = w - 12, y0 = 14, y1 = h * 0.74;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (dl: number) => x0 + (dl + range) / (2 * range) * (x1 - x0);
+    const Y = (f: number) => y0 + 8 + (1 - f) * (y1 - y0 - 16);
+    this.line(x0, Y(1), x1, Y(1), hexA(C.text, 0.5), 1, [4, 3]); this.text('continuum F_c', x0 + 6, Y(1) - 8, C.dim, 9);
+    // equivalent-width rectangle
+    c.fillStyle = hexA(C.sun, 0.25); c.fillRect(X(-W / 2), Y(1), X(W / 2) - X(-W / 2), Y(0) - Y(1));
+    this.text(`W = ${fmt(W * 1000, 1)} pm`, X(0), Y(0) - 8, C.sun, 9, 'center');
+    // profile
+    c.beginPath(); dls.forEach((dl, i) => { const px = X(dl), py = Y(1 - obs[i]); i === 0 ? c.moveTo(px, py) : c.lineTo(px, py); }); c.strokeStyle = C.star; c.lineWidth = 2; c.stroke();
+    if (this.blur > 0.001) { c.beginPath(); dls.forEach((dl, i) => { const px = X(dl), py = Y(1 - raw[i]); i === 0 ? c.moveTo(px, py) : c.lineTo(px, py); }); c.strokeStyle = hexA(C.dim, 0.6); c.lineWidth = 1; c.setLineDash([3, 3]); c.stroke(); c.setLineDash([]); }
+    // FWHM markers
+    this.line(X(-fw / 2), Y(1 - dmax / 2), X(fw / 2), Y(1 - dmax / 2), C.green, 1.2);
+    this.text(`FWHM ${fmt(fw * 1000, 1)} pm`, X(fw / 2) + 4, Y(1 - dmax / 2), C.green, 9);
+    this.text('core', X(0), Y(1 - dmax) + 10, C.red, 9, 'center');
+    this.text('wing', X(-0.6), Y(1 - this.prof(-0.6)) - 10, C.accent, 9, 'center');
+    this.text('wing', X(0.6), Y(1 - this.prof(0.6)) - 10, C.accent, 9, 'center');
+    for (const d of [-1, -0.5, 0, 0.5, 1]) this.text(d === 0 ? 'λ₀' : `${d > 0 ? '+' : ''}${fmt(d, 1)} nm`, X(d), y1 + 10, C.dim, 9, 'center');
+    // formation depth strip
+    const sy = y1 + 22, sh = h - sy - 6;
+    this.text('formation height across the profile (bright = high, cool):', x0, sy - 2, C.dim, 8);
+    for (let i = 0; i < N; i += 2) { const tl = raw[i] / Math.max(1e-6, 1 - raw[i]); const hgt = Math.min(1, Math.log10(1 + 20 * tl) / 2.3); c.fillStyle = rgba(tempRGB(6500 - 2200 * hgt), 0.2 + 0.8 * hgt); c.fillRect(X(dls[i]), sy + 6, X(dls[i + 2]) - X(dls[i]) + 0.5, Math.max(2, sh - 6)); }
+    this.setReadout([
+      ['Equivalent width', `${fmt(W * 1000, 1)} pm`, C.sun],
+      ['W before blur', `${fmt(Wraw * 1000, 1)} pm (unchanged)`],
+      ['FWHM (observed)', `${fmt(fw * 1000, 1)} pm`, C.green],
+      ['Core depth (observed)', fmt(dmax, 3), C.red],
+    ]);
+  }
+}
+
+/* ------------------------------------------------------- 9.5b broadening ---- */
+
+type BrLine = 'ha' | 'nad' | 'fe';
+const BR_LINES: Record<BrLine, { nm: number; m: number; name: string; nat: number; press: number; stark: boolean }> = {
+  ha: { nm: 656.3, m: 1.008, name: 'Hα', nat: 4.6e-5, press: 0.02, stark: true },
+  nad: { nm: 589.0, m: 22.99, name: 'Na D₁', nat: 1.2e-5, press: 0.004, stark: false },
+  fe: { nm: 525.0, m: 55.85, name: 'Fe I 525.0', nat: 1.0e-5, press: 0.002, stark: false },
+};
+class BroadeningWidget extends CanvasWidget {
+  private line_: BrLine = 'nad';
+  private T = 5800;
+  private lP = 0;        // log pressure relative to solar photosphere
+  private vt = 1;        // km/s
+  constructor() {
+    super(1.8);
+    this.segmented<BrLine>([['ha', 'Hα'], ['nad', 'Na D'], ['fe', 'Fe I']], this.line_, (v) => { this.line_ = v; });
+    this.slider('Temperature', 3000, 30000, 100, this.T, (v) => `${v} K`, (v) => { this.T = v; });
+    this.slider('Pressure (rel. to Sun)', -3, 2, 0.1, this.lP, (v) => `×${sci(10 ** v, 1)}`, (v) => { this.lP = v; });
+    this.slider('Turbulence', 0, 15, 0.5, this.vt, (v) => `${fmt(v, 1)} km/s`, (v) => { this.vt = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const L = BR_LINES[this.line_];
+    const lam = L.nm;
+    const vth = Math.sqrt(2 * K_B * this.T / (L.m * 1.6605e-27));                 // m/s
+    const vD = Math.sqrt(vth * vth + (this.vt * 1e3) ** 2);
+    const dlD = lam * vD / C_LIGHT;                       // Doppler width (1/e half-width), nm
+    const fwD = 2 * Math.sqrt(Math.LN2) * dlD;
+    const fwN = L.nat;
+    const P = 10 ** this.lP;
+    const fwP = L.press * (L.stark ? P ** (2 / 3) : P) * Math.sqrt(this.T / 5800);
+    const fwL = fwN + fwP;
+    const a = (fwL / 2) / dlD;
+    const fwV = 0.5346 * fwL + Math.sqrt(0.2166 * fwL * fwL + fwD * fwD);
+    const range = Math.max(fwV * 3.5, fwD * 4, 0.02);
+    const x0 = 40, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (dl: number) => x0 + (dl + range) / (2 * range) * (x1 - x0);
+    const Y = (v: number) => y1 - 8 - v * (y1 - y0 - 16);
+    const curve = (f: (dl: number) => number, col: string, wd: number, dash?: number[]) => { c.beginPath(); for (let i = 0; i <= 400; i++) { const dl = -range + 2 * range * i / 400; const px = X(dl), py = Y(f(dl)); i === 0 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = col; c.lineWidth = wd; c.setLineDash(dash ?? []); c.stroke(); c.setLineDash([]); };
+    curve((dl) => Math.exp(-((dl / dlD) ** 2)), C.blue, 1.2, [4, 3]);
+    curve((dl) => 1 / (1 + (2 * dl / fwL) ** 2), C.red, 1.2, [4, 3]);
+    curve((dl) => voigtH(a, dl / dlD), C.star, 2.2);
+    this.text('Gaussian (Doppler + turbulence)', x1 - 8, y0 + 12, C.blue, 9, 'right');
+    this.text('Lorentzian (natural + pressure)', x1 - 8, y0 + 24, C.red, 9, 'right');
+    this.text('Voigt (combined)', x1 - 8, y0 + 36, C.star, 9, 'right');
+    this.text(`${L.name} ${lam} nm`, x0 + 8, y0 + 12, C.text, 11);
+    this.text('normalised absorption profile', x0 + 8, y0 + 25, C.dim, 9);
+    const tick = range > 0.5 ? 0.5 : range > 0.1 ? 0.1 : range > 0.05 ? 0.02 : 0.01;
+    for (let d = -Math.floor(range / tick) * tick; d <= range; d += tick) { this.line(X(d), y1, X(d), y1 + 3, C.dim); this.text(d === 0 ? 'λ₀' : `${d > 0 ? '+' : ''}${fmt(d, tick < 0.05 ? 2 : 1)}`, X(d), y1 + 11, C.dim, 8, 'center'); }
+    this.text('nm', x1, y1 + 22, C.dim, 9, 'right');
+    const f3 = (v: number) => (v < 1e-3 ? sci(v, 1) : fmt(v, 4)) + ' nm';
+    this.setReadout([
+      ['Natural width', f3(fwN)],
+      ['Doppler FWHM', f3(fwD), C.blue],
+      ['Pressure width', f3(fwP), C.red],
+      ['Voigt FWHM', f3(fwV), C.star],
+    ]);
+  }
+}
+
+/* --------------------------------------------------------- 9.5c rotation ---- */
+
+class RotationWidget extends CanvasWidget {
+  private vsini = 100;
+  private vint = 6;    // km/s intrinsic FWHM
+  private u = 0.6;
+  constructor() {
+    super(1.8);
+    this.slider('v sin i', 0, 300, 2, this.vsini, (v) => `${v} km/s`, (v) => { this.vsini = v; });
+    this.slider('Intrinsic FWHM', 2, 30, 0.5, this.vint, (v) => `${fmt(v, 1)} km/s`, (v) => { this.vint = v; });
+    this.slider('Limb darkening u', 0, 1, 0.05, this.u, (v) => fmt(v, 2), (v) => { this.u = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const vs = this.vsini, u = this.u;
+    // ---- disc
+    const cx = w * 0.24, cy = h * 0.48, R = Math.min(w * 0.2, h * 0.4);
+    const img = c.createImageData(Math.ceil(2 * R), Math.ceil(2 * R));
+    const n = Math.ceil(2 * R);
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
+      const x = (i - R) / R, y = (j - R) / R; const r2 = x * x + y * y;
+      const k = (j * n + i) * 4;
+      if (r2 > 1) { img.data[k + 3] = 0; continue; }
+      const mu = Math.sqrt(1 - r2);
+      const I = 1 - u * (1 - mu);
+      const v = x;   // -1 .. 1 → blue to red
+      const t = Math.abs(v) ** 0.8;
+      const [tr, tg, tb] = v < 0 ? [70, 120, 255] : [255, 80, 50];
+      const rr = 215 + (tr - 215) * t, gg = 215 + (tg - 215) * t, bb = 215 + (tb - 215) * t;
+      img.data[k] = rr * I; img.data[k + 1] = gg * I; img.data[k + 2] = bb * I; img.data[k + 3] = 255;
+    }
+    c.putImageData(img, Math.round(cx - R), Math.round(cy - R));
+    this.text(`−${vs}`, cx - R, cy + R + 14, C.blue, 9, 'center'); this.text(`+${vs} km/s`, cx + R, cy + R + 14, C.red, 9, 'center');
+    this.text('line-of-sight velocity', cx, cy - R - 10, C.dim, 9, 'center');
+    this.line(cx, cy - R, cx, cy + R, hexA('#fff', 0.3), 1, [3, 3]);
+    // ---- profile: convolve gaussian with rotation kernel
+    const range = Math.max(60, vs * 1.4 + 20);
+    const N = 300;
+    const sg = this.vint / 2.3548;
+    const G = (v: number) => { if (vs < 1) return 0; const x = v / vs; if (Math.abs(x) >= 1) return 0; return (2 * (1 - u) * Math.sqrt(1 - x * x) + Math.PI * u / 2 * (1 - x * x)) / (Math.PI * (1 - u / 3)) / vs; };
+    const prof: number[] = [];
+    const dv = 2 * range / N;
+    for (let i = 0; i <= N; i++) {
+      const v = -range + i * dv;
+      let s = 0;
+      if (vs < 1) s = Math.exp(-0.5 * (v / sg) ** 2);
+      else { for (let j = -N; j <= N; j++) { const vv = j * dv; if (Math.abs(vv) > vs) continue; s += G(vv) * Math.exp(-0.5 * ((v - vv) / sg) ** 2) * dv; } }
+      prof.push(s);
+    }
+    // normalise to same equivalent width (depth 0.8 for vs=0 gaussian)
+    const area0 = 0.8 * sg * Math.sqrt(TAU);
+    const area = prof.reduce((a, b) => a + b, 0) * dv;
+    const scale = area0 / Math.max(1e-9, area);
+    const depth = Math.max(...prof) * scale;
+    const zoom = depth < 0.3 ? 0.6 / depth : 1;
+    const x0 = w * 0.5, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (v: number) => x0 + (v + range) / (2 * range) * (x1 - x0);
+    const Y = (f: number) => y0 + 8 + (1 - f) * (y1 - y0 - 16);
+    this.line(x0, Y(1), x1, Y(1), hexA(C.text, 0.4), 1, [4, 3]);
+    c.beginPath(); prof.forEach((p, i) => { const v = -range + i * dv; const px = X(v), py = Y(1 - Math.min(1, p * scale * zoom)); i === 0 ? c.moveTo(px, py) : c.lineTo(px, py); }); c.strokeStyle = C.star; c.lineWidth = 2.2; c.stroke();
+    if (zoom > 1) this.text(`(rotating profile drawn ×${fmt(zoom, 1)} deeper for visibility)`, (x0 + x1) / 2, y1 - 10, C.dim, 8, 'center');
+    c.beginPath(); for (let i = 0; i <= N; i++) { const v = -range + i * dv; const px = X(v), py = Y(1 - 0.8 * Math.exp(-0.5 * (v / sg) ** 2)); i === 0 ? c.moveTo(px, py) : c.lineTo(px, py); } c.strokeStyle = hexA(C.dim, 0.6); c.lineWidth = 1; c.setLineDash([3, 3]); c.stroke(); c.setLineDash([]);
+    this.text('non-rotating', x1 - 8, y0 + 12, C.dim, 9, 'right');
+    this.text('rotationally broadened (same W)', x1 - 8, y0 + 24, C.star, 9, 'right');
+    for (const v of [-range, -range / 2, 0, range / 2, range]) this.text(`${fmt(v, 0)}`, X(v), y1 + 10, C.dim, 8, 'center');
+    this.text('km/s', x1, y1 + 22, C.dim, 9, 'right');
+    // FWHM
+    let lo = 0, hi = N; const hd = depth / 2; while (lo < N && prof[lo] * scale < hd) lo++; while (hi > 0 && prof[hi] * scale < hd) hi--;
+    const fw = (hi - lo) * dv;
+    const lam = 500;
+    this.setReadout([
+      ['v sin i', `${vs} km/s`],
+      ['Profile FWHM', `${fmt(fw, 1)} km/s`, C.star],
+      ['FWHM at 500 nm', `${fmt(lam * fw * 1e3 / C_LIGHT, 3)} nm`],
+      ['Core depth (W conserved)', fmt(Math.min(1, depth), 3), C.red],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 9.5d curve of growth ---- */
+
+class CurveOfGrowthWidget extends CanvasWidget {
+  private lt0 = 0;        // log τ₀ (line-centre optical depth)
+  private la = -3;        // log damping parameter a
+  private cache: Array<[number, number]> | null = null;
+  private cacheA = NaN;
+  constructor() {
+    super(1.8);
+    this.slider('log (N f λ) → log τ₀', -3, 5, 0.05, this.lt0, (v) => fmt(v, 2), (v) => { this.lt0 = v; });
+    this.slider('Damping a', -4, -1, 0.1, this.la, (v) => sci(10 ** v, 1), (v) => { this.la = v; });
+  }
+  private W(tau0: number, a: number): number {   // in Doppler widths
+    const vmax = Math.max(6, 3 * Math.sqrt(Math.max(1, tau0 * a)) + 6, 2 * Math.sqrt(Math.log(tau0 + 1) + 1) + 4);
+    const N = 600; let s = 0;
+    for (let i = 0; i < N; i++) { const v = -vmax + (i + 0.5) * 2 * vmax / N; s += (1 - Math.exp(-tau0 * voigtH(a, v))) * (2 * vmax / N); }
+    return s;
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const a = 10 ** this.la, tau0 = 10 ** this.lt0;
+    if (this.cacheA !== a || !this.cache) { this.cache = []; for (let l = -3; l <= 5.001; l += 0.1) this.cache.push([l, Math.log10(this.W(10 ** l, a))]); this.cacheA = a; }
+    const Wnow = this.W(tau0, a);
+    // ---- left: profile
+    const px0 = 36, px1 = w * 0.46, py0 = 14, py1 = h - 30;
+    axesBox(c, px0, py0, px1, py1);
+    const vr = 8;
+    const X = (v: number) => px0 + (v + vr) / (2 * vr) * (px1 - px0);
+    const Y = (f: number) => py0 + 8 + (1 - f) * (py1 - py0 - 16);
+    this.line(px0, Y(1), px1, Y(1), hexA(C.text, 0.4), 1, [4, 3]);
+    c.beginPath(); for (let i = 0; i <= 300; i++) { const v = -vr + 2 * vr * i / 300; const f = Math.exp(-tau0 * voigtH(a, v)); const px = X(v), py = Y(f); i === 0 ? c.moveTo(px, py) : c.lineTo(px, py); } c.lineTo(X(vr), Y(1)); c.lineTo(X(-vr), Y(1)); c.closePath(); c.fillStyle = hexA(C.sun, 0.2); c.fill(); c.strokeStyle = C.star; c.lineWidth = 2; c.stroke();
+    this.text('profile e^(−τ_λ)', px0 + 6, py0 + 12, C.star, 9);
+    this.text('Δλ / Δλ_D', px1 - 4, py1 + 12, C.dim, 9, 'right');
+    for (const v of [-6, -3, 0, 3, 6]) this.text(`${v}`, X(v), py1 + 10, C.dim, 8, 'center');
+    // ---- right: curve of growth
+    const gx0 = w * 0.54, gx1 = w - 12, gy0 = 14, gy1 = h - 30;
+    axesBox(c, gx0, gy0, gx1, gy1);
+    const GX = (l: number) => gx0 + (l + 3) / 8 * (gx1 - gx0);
+    const GY = (lw: number) => gy1 - 8 - (lw + 3) / 5.5 * (gy1 - gy0 - 16);
+    for (let l = -3; l <= 5; l++) { this.line(GX(l), gy1, GX(l), gy1 + 3, C.dim); this.text(`${l}`, GX(l), gy1 + 10, C.dim, 8, 'center'); }
+    for (let lw = -3; lw <= 2; lw++) { this.line(gx0, GY(lw), gx1, GY(lw), hexA(C.grid, 0.9)); this.text(`${lw}`, gx0 - 3, GY(lw), C.dim, 8, 'right'); }
+    this.text('log τ₀ ∝ log N f λ', gx1, gy1 + 22, C.dim, 9, 'right');
+    this.text('log W / Δλ_D', gx0 + 4, gy0 + 10, C.dim, 9);
+    // regime shading
+    const r1 = GX(0.3), r2 = GX(Math.max(1.5, Math.log10(1 / a) - 0.3));
+    c.fillStyle = hexA(C.green, 0.06); c.fillRect(gx0, gy0, r1 - gx0, gy1 - gy0);
+    c.fillStyle = hexA(C.accent, 0.06); c.fillRect(r1, gy0, r2 - r1, gy1 - gy0);
+    c.fillStyle = hexA(C.red, 0.06); c.fillRect(r2, gy0, gx1 - r2, gy1 - gy0);
+    this.text('linear', (gx0 + r1) / 2, gy0 + 24, C.green, 8, 'center'); this.text('W ∝ N', (gx0 + r1) / 2, gy0 + 34, C.green, 8, 'center');
+    this.text('flat', (r1 + r2) / 2, gy0 + 24, C.accent, 8, 'center'); this.text('W ∝ √ln N', (r1 + r2) / 2, gy0 + 34, C.accent, 8, 'center');
+    this.text('damping', (r2 + gx1) / 2, gy0 + 24, C.red, 8, 'center'); this.text('W ∝ √N', (r2 + gx1) / 2, gy0 + 34, C.red, 8, 'center');
+    c.beginPath(); this.cache.forEach(([l, lw], i) => { const px = GX(l), py = GY(lw); i === 0 ? c.moveTo(px, py) : c.lineTo(px, py); }); c.strokeStyle = C.star; c.lineWidth = 2.2; c.stroke();
+    this.circle(GX(this.lt0), GY(Math.log10(Wnow)), 5, '#fff', C.sun);
+    const regime = this.lt0 < 0.3 ? 'linear (weak line)' : this.lt0 < Math.log10(1 / a) - 0.3 ? 'saturated (flat part)' : 'damping (square-root part)';
+    this.setReadout([
+      ['Line-centre τ₀', tau0 < 0.01 || tau0 > 1e4 ? sci(tau0, 1) : fmt(tau0, 2)],
+      ['W / Δλ_D', fmt(Wnow, 3), C.sun],
+      ['Central depth', fmt(1 - Math.exp(-tau0), 3)],
+      ['Regime', regime, this.lt0 < 0.3 ? C.green : this.lt0 < Math.log10(1 / a) - 0.3 ? C.accent : C.red],
+    ]);
+  }
+}
+
+/* --------------------------------------------------------- 9.5e abundances ---- */
+
+const ABUND: Array<[string, number, number, number | null]> = [   // symbol, mass (u), log ε photosphere, log ε CI meteorites
+  ['H', 1.008, 12.00, null], ['He', 4.003, 10.93, null], ['Li', 6.94, 1.05, 3.26], ['Be', 9.012, 1.38, 1.30], ['B', 10.81, 2.70, 2.79],
+  ['C', 12.011, 8.43, 7.39], ['N', 14.007, 7.83, 6.26], ['O', 15.999, 8.69, 8.40], ['F', 18.998, 4.56, 4.42], ['Ne', 20.18, 7.93, null],
+  ['Na', 22.99, 6.24, 6.27], ['Mg', 24.305, 7.60, 7.53], ['Al', 26.982, 6.45, 6.43], ['Si', 28.085, 7.51, 7.51], ['P', 30.974, 5.41, 5.43],
+  ['S', 32.06, 7.12, 7.15], ['Cl', 35.45, 5.50, 5.23], ['Ar', 39.948, 6.40, null], ['K', 39.098, 5.03, 5.08], ['Ca', 40.078, 6.34, 6.29],
+  ['Sc', 44.956, 3.15, 3.05], ['Ti', 47.867, 4.95, 4.91], ['V', 50.942, 3.93, 3.96], ['Cr', 51.996, 5.64, 5.64], ['Mn', 54.938, 5.43, 5.48],
+  ['Fe', 55.845, 7.50, 7.45], ['Co', 58.933, 4.99, 4.87], ['Ni', 58.693, 6.22, 6.20], ['Cu', 63.546, 4.19, 4.25], ['Zn', 65.38, 4.56, 4.63],
+  ['Sr', 87.62, 2.87, 2.88], ['Zr', 91.224, 2.58, 2.58], ['Ba', 137.33, 2.18, 2.18], ['Eu', 151.96, 0.52, 0.51], ['Pb', 207.2, 1.75, 2.04],
+];
+type AbView = 'sun' | 'both' | 'diff';
+class AbundancesWidget extends CanvasWidget {
+  private view: AbView = 'both';
+  private hover = -1;
+  constructor() {
+    super(1.9);
+    this.segmented<AbView>([['sun', 'Photosphere'], ['both', 'Sun + meteorites'], ['diff', 'Difference']], this.view, (v) => { this.view = v; });
+    this.canvas.addEventListener('pointermove', (e) => { const { x } = canvasPos(this.canvas, e, this.w, this.h); const x0 = 40, x1 = this.w - 10; const i = Math.floor((x - x0) / (x1 - x0) * ABUND.length); this.hover = i >= 0 && i < ABUND.length ? i : -1; });
+    this.canvas.addEventListener('pointerleave', () => { this.hover = -1; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const x0 = 40, x1 = w - 10, y0 = 14, y1 = h - 26;
+    axesBox(c, x0, y0, x1, y1);
+    const n = ABUND.length, bw = (x1 - x0) / n;
+    if (this.view === 'diff') {
+      const Y = (d: number) => (y0 + y1) / 2 - d / 2.6 * (y1 - y0) / 2;
+      this.line(x0, Y(0), x1, Y(0), C.text, 1);
+      for (const d of [-2, -1, 1, 2]) { this.line(x0, Y(d), x1, Y(d), hexA(C.grid, 0.9)); this.text(`${d > 0 ? '+' : ''}${d}`, x0 - 4, Y(d), C.dim, 8, 'right'); }
+      this.text('log ε(Sun) − log ε(CI)', x0 + 6, y0 + 10, C.dim, 9);
+      ABUND.forEach(([sym, , s, m], i) => {
+        const x = x0 + i * bw;
+        if (m === null) { this.text('gas', x + bw / 2, Y(0) - 8, C.faint, 7, 'center'); }
+        else { const d = s - m; c.fillStyle = Math.abs(d) < 0.15 ? C.green : d > 0 ? C.accent : C.red; c.fillRect(x + 1.5, Math.min(Y(0), Y(d)), bw - 3, Math.abs(Y(d) - Y(0))); }
+        this.text(sym, x + bw / 2, y1 + 9, i === this.hover ? '#fff' : C.dim, 7, 'center');
+      });
+      this.text('volatiles (C, N, O…) deficient in meteorites · Li deficient in the Sun · refractories agree to ±0.1', (x0 + x1) / 2, y1 - 8, C.dim, 8, 'center');
+    } else {
+      const Y = (le: number) => y1 - 6 - (le + 0.5) / 13 * (y1 - y0 - 12);
+      for (let le = 0; le <= 12; le += 2) { this.line(x0, Y(le), x1, Y(le), hexA(C.grid, 0.9)); this.text(`${le}`, x0 - 4, Y(le), C.dim, 8, 'right'); }
+      this.text('log ε = log(N/N_H) + 12', x0 + 6, y0 + 10, C.dim, 9);
+      ABUND.forEach(([sym, , s, m], i) => {
+        const x = x0 + i * bw;
+        const col = sym === 'H' || sym === 'He' ? C.sun : s > 7 ? C.accent : C.blue;
+        c.fillStyle = i === this.hover ? '#fff' : hexA(col, 0.85); c.fillRect(x + 1.5, Y(s), bw * (this.view === 'both' ? 0.5 : 1) - 2, y1 - 6 - Y(s));
+        if (this.view === 'both' && m !== null) { c.fillStyle = hexA(C.green, 0.85); c.fillRect(x + bw * 0.5, Y(m), bw * 0.5 - 1.5, y1 - 6 - Y(m)); }
+        this.text(sym, x + bw / 2, y1 + 9, i === this.hover ? '#fff' : C.dim, 7, 'center');
+      });
+      this.text('photosphere', x1 - 8, y0 + 12, C.accent, 9, 'right');
+      if (this.view === 'both') this.text('CI chondrites', x1 - 8, y0 + 24, C.green, 9, 'right');
+    }
+    // mass fractions
+    let mH = 0, mHe = 0, mZ = 0;
+    for (const [sym, A, le] of ABUND) { const mass = A * 10 ** (le - 12); if (sym === 'H') mH += mass; else if (sym === 'He') mHe += mass; else mZ += mass; }
+    const tot = mH + mHe + mZ;
+    const hv = this.hover >= 0 ? ABUND[this.hover] : null;
+    this.setReadout([
+      ['X, Y (mass)', `${fmt(mH / tot, 3)}, ${fmt(mHe / tot, 3)}`, C.sun],
+      ['Z (metals)', fmt(mZ / tot, 4), C.accent],
+      ['Selected', hv ? `${hv[0]}: Sun ${fmt(hv[2], 2)}` + (hv[3] !== null ? `, CI ${fmt(hv[3], 2)}` : ', CI —') : '—', hv ? '#fff' : C.dim],
+      ['Atoms per 10⁶ H', hv ? sci(10 ** (hv[2] - 12) * 1e6, 2) : '—'],
+    ]);
+  }
+}
+
 export function createWidget(spec: WidgetSpec): Widget {
   switch (spec.type) {
     case 'ancientsky': return new AncientSkyWidget();
@@ -6562,5 +8163,26 @@ export function createWidget(spec: WidgetSpec): Widget {
     case 'hrextended': return new HrExtendedWidget();
     case 'luminosityclass': return new LuminosityClassWidget();
     case 'specparallax': return new SpecParallaxWidget();
+    case 'intensity': return new IntensityWidget();
+    case 'meanintensity': return new MeanIntensityWidget();
+    case 'fluxcos': return new FluxCosWidget();
+    case 'radpressure': return new RadPressureWidget();
+    case 'colortemp': return new ColorTempWidget();
+    case 'opticaldepth': return new OpticalDepthWidget();
+    case 'sunset': return new SunsetWidget();
+    case 'opacitysources': return new OpacitySourcesWidget();
+    case 'rosseland': return new RosselandWidget();
+    case 'randomwalk': return new RandomWalkWidget();
+    case 'limbdark': return new LimbDarkWidget(spec.mode);
+    case 'transfer': return new TransferWidget();
+    case 'thermalize': return new ThermalizeWidget();
+    case 'planeparallel': return new PlaneParallelWidget();
+    case 'grayatm': return new GrayAtmWidget();
+    case 'barbier': return new BarbierWidget();
+    case 'lineprofile': return new LineProfileWidget();
+    case 'broadening': return new BroadeningWidget();
+    case 'rotation': return new RotationWidget();
+    case 'curveofgrowth': return new CurveOfGrowthWidget();
+    case 'abundances': return new AbundancesWidget();
   }
 }

@@ -1,0 +1,679 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "abundances": {
+   "script": "Look at Vesta behind the panel — differentiated, not the source of the CI meteorites. The widget is the solar abundance table, a century of curve-of-growth analysis refined with non local thermodynamic equilibrium and three-dimensional atmospheres.\n\nThe scale is log epsilon equals the logarithm of N over N sub H, plus twelve. Epsilon is the abundance. N is the number of atoms of the element, N sub H the number of hydrogen atoms, and the plus twelve is a convention that sets hydrogen to twelve by definition. Helium is ten point nine three, oxygen eight point six nine, carbon eight point four three, iron seven point five — one iron for every thirty thousand hydrogens.\n\nI want you to turn the CI overlay on. For elements that are not gases or highly volatile, Sun and meteorite agree to about ten percent across ten orders of magnitude — lab numbers, far more precise than any line. They are leftovers from the same cloud, never melted. A pebble from the asteroid belt calibrates the stars. Dawn's spectra, matched to the HED meteorites, tie Vesta to a different class of rocks in the same spirit.\n\nOn the readout, X equals zero point seven four, the hydrogen mass fraction. Y equals zero point two five, helium. Z equals zero point zero one three, everything heavier — the metals, to a chemist's dismay. Cecilia Payne's nineteen twenty-five conclusion, that stars are overwhelmingly hydrogen and helium, is the most important fact.\n\nTry lithium. It is forty times rarer in the Sun than in the meteorites, destroyed at two and a half million kelvin after convection carried it down and back — a mixing diagnostic for every solar-type star. The noble gases never condensed into the stones, and are known only from the Sun. The sawtooth — even elements richer than odd, an iron peak, a fall to the heavy end — is nucleosynthesis Chapter thirteen will decode. The elements in the widget were made in stars, and the solar lines are their census.",
+   "hash": "218cdfd764e2",
+   "duration": 125.75,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6,
+     "text": "Look at Vesta behind the panel — differentiated, not the source of the CI meteorites."
+    },
+    {
+     "start": 6,
+     "end": 16.08,
+     "text": "The widget is the solar abundance table, a century of curve-of-growth analysis refined with non local thermodynamic equilibrium and three-dimensional atmospheres."
+    },
+    {
+     "start": 16.08,
+     "end": 22.3,
+     "text": "The scale is log epsilon equals the logarithm of N over N sub H, plus twelve."
+    },
+    {
+     "start": 22.3,
+     "end": 24.34,
+     "text": "Epsilon is the abundance."
+    },
+    {
+     "start": 24.34,
+     "end": 33.98,
+     "text": "N is the number of atoms of the element, N sub H the number of hydrogen atoms, and the plus twelve is a convention that sets hydrogen to twelve by definition."
+    },
+    {
+     "start": 33.98,
+     "end": 45.44,
+     "text": "Helium is ten point nine three, oxygen eight point six nine, carbon eight point four three, iron seven point five — one iron for every thirty thousand hydrogens."
+    },
+    {
+     "start": 45.44,
+     "end": 47.96,
+     "text": "I want you to turn the CI overlay on."
+    },
+    {
+     "start": 47.96,
+     "end": 59.2,
+     "text": "For elements that are not gases or highly volatile, Sun and meteorite agree to about ten percent across ten orders of magnitude — lab numbers, far more precise than any line."
+    },
+    {
+     "start": 59.2,
+     "end": 62.64,
+     "text": "They are leftovers from the same cloud, never melted."
+    },
+    {
+     "start": 62.64,
+     "end": 65.97,
+     "text": "A pebble from the asteroid belt calibrates the stars."
+    },
+    {
+     "start": 65.97,
+     "end": 72.91,
+     "text": "Dawn's spectra, matched to the HED meteorites, tie Vesta to a different class of rocks in the same spirit."
+    },
+    {
+     "start": 72.91,
+     "end": 78.33,
+     "text": "On the readout, X equals zero point seven four, the hydrogen mass fraction."
+    },
+    {
+     "start": 78.33,
+     "end": 81.15,
+     "text": "Y equals zero point two five, helium."
+    },
+    {
+     "start": 81.15,
+     "end": 87.21,
+     "text": "Z equals zero point zero one three, everything heavier — the metals, to a chemist's dismay."
+    },
+    {
+     "start": 87.21,
+     "end": 94.95,
+     "text": "Cecilia Payne's nineteen twenty-five conclusion, that stars are overwhelmingly hydrogen and helium, is the most important fact."
+    },
+    {
+     "start": 94.95,
+     "end": 96.13,
+     "text": "Try lithium."
+    },
+    {
+     "start": 96.13,
+     "end": 107.31,
+     "text": "It is forty times rarer in the Sun than in the meteorites, destroyed at two and a half million kelvin after convection carried it down and back — a mixing diagnostic for every solar-type star."
+    },
+    {
+     "start": 107.31,
+     "end": 112.15,
+     "text": "The noble gases never condensed into the stones, and are known only from the Sun."
+    },
+    {
+     "start": 112.15,
+     "end": 121.19,
+     "text": "The sawtooth — even elements richer than odd, an iron peak, a fall to the heavy end — is nucleosynthesis Chapter thirteen will decode."
+    },
+    {
+     "start": 121.19,
+     "end": 125.75,
+     "text": "The elements in the widget were made in stars, and the solar lines are their census."
+    }
+   ],
+   "voicedHash": "b83047360be8"
+  },
+  "broadening": {
+   "script": "Look at Capella behind the panel, a pair of G giants. Levels are not infinitely sharp. An excited level lasts about a hundred-millionth of a second. Uncertainty, delta-E times delta-t at least h-bar, smears its energy. So delta-lambda natural is about lambda squared over two pi c times delta-t zero. Lambda is the wavelength, c the speed of light, delta-t zero the lifetime. At H-alpha that is two hundred-thousandths of a nanometre. Lorentzian wings fall as one over delta-lambda squared.\n\nDoppler: each atom shifts by delta-lambda equals lambda times v-r over c, v-r the line-of-sight speed, and Maxwell–Boltzmann speeds sum to a Gaussian. The full width at half maximum is two lambda over c times the square root of two k T times the natural log of two, all over m, with v-turb squared inside the square root. k is Boltzmann's constant, T temperature, m mass. Hydrogen at fifty-eight hundred kelvin is four hundredths of a nanometre at H-alpha, two thousand times the natural width; iron, fifty-six times heavier, seven times less. Gaussian wings die as e to the minus delta-lambda squared.\n\nPressure, or collisional, broadening: neighbours perturb the levels and shorten lifetimes, widening the Lorentzian. Delta-lambda pressure is about lambda squared over c, times n sigma over pi, times the square root of two k T over m. n is perturber density, sigma the collision cross-section. The solar photosphere widens lines a thousandfold. Hydrogen's linear Stark effect scales with electron density, so Balmer wings span tens of nanometres in an A dwarf and almost nothing in a supergiant. Section eight point two, luminosity class, is this read backwards.\n\nTry the widget. Raise temperature and the Gaussian core widens; raise pressure and the Lorentzian wings spread while the core barely moves. Convolution gives the Voigt profile: Doppler decides the core, damping decides the wings. Capella's lines are narrower than the Sun's of equal strength — lower gravity and density, weaker damping — with macroturbulence of several kilometres per second. Every term is measurable.",
+   "hash": "048d2618ace3",
+   "duration": 136.31,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.92,
+     "text": "Look at Capella behind the panel, a pair of G giants."
+    },
+    {
+     "start": 3.92,
+     "end": 6,
+     "text": "Levels are not infinitely sharp."
+    },
+    {
+     "start": 6,
+     "end": 9.5,
+     "text": "An excited level lasts about a hundred-millionth of a second."
+    },
+    {
+     "start": 9.5,
+     "end": 15.5,
+     "text": "Uncertainty, delta-E times delta-t at least h-bar, smears its energy."
+    },
+    {
+     "start": 15.5,
+     "end": 21.76,
+     "text": "So delta-lambda natural is about lambda squared over two pi c times delta-t zero."
+    },
+    {
+     "start": 21.76,
+     "end": 26.88,
+     "text": "Lambda is the wavelength, c the speed of light, delta-t zero the lifetime."
+    },
+    {
+     "start": 26.88,
+     "end": 30.56,
+     "text": "At H-alpha that is two hundred-thousandths of a nanometre."
+    },
+    {
+     "start": 30.56,
+     "end": 34.4,
+     "text": "Lorentzian wings fall as one over delta-lambda squared."
+    },
+    {
+     "start": 34.4,
+     "end": 45.48,
+     "text": "Doppler: each atom shifts by delta-lambda equals lambda times v-r over c, v-r the line-of-sight speed, and Maxwell–Boltzmann speeds sum to a Gaussian."
+    },
+    {
+     "start": 45.48,
+     "end": 56.72,
+     "text": "The full width at half maximum is two lambda over c times the square root of two k T times the natural log of two, all over m, with v-turb squared inside the square root."
+    },
+    {
+     "start": 56.72,
+     "end": 60.7,
+     "text": "k is Boltzmann's constant, T temperature, m mass."
+    },
+    {
+     "start": 60.7,
+     "end": 71.83,
+     "text": "Hydrogen at fifty-eight hundred kelvin is four hundredths of a nanometre at H-alpha, two thousand times the natural width; iron, fifty-six times heavier, seven times less."
+    },
+    {
+     "start": 71.83,
+     "end": 75.67,
+     "text": "Gaussian wings die as e to the minus delta-lambda squared."
+    },
+    {
+     "start": 75.67,
+     "end": 82.51,
+     "text": "Pressure, or collisional, broadening: neighbours perturb the levels and shorten lifetimes, widening the Lorentzian."
+    },
+    {
+     "start": 82.51,
+     "end": 90.83,
+     "text": "Delta-lambda pressure is about lambda squared over c, times n sigma over pi, times the square root of two k T over m."
+    },
+    {
+     "start": 90.83,
+     "end": 94.53,
+     "text": "n is perturber density, sigma the collision cross-section."
+    },
+    {
+     "start": 94.53,
+     "end": 97.71,
+     "text": "The solar photosphere widens lines a thousandfold."
+    },
+    {
+     "start": 97.71,
+     "end": 107.05,
+     "text": "Hydrogen's linear Stark effect scales with electron density, so Balmer wings span tens of nanometres in an A dwarf and almost nothing in a supergiant."
+    },
+    {
+     "start": 107.05,
+     "end": 111.59,
+     "text": "Section eight point two, luminosity class, is this read backwards."
+    },
+    {
+     "start": 111.59,
+     "end": 112.75,
+     "text": "Try the widget."
+    },
+    {
+     "start": 112.75,
+     "end": 119.61,
+     "text": "Raise temperature and the Gaussian core widens; raise pressure and the Lorentzian wings spread while the core barely moves."
+    },
+    {
+     "start": 119.61,
+     "end": 125.47,
+     "text": "Convolution gives the Voigt profile: Doppler decides the core, damping decides the wings."
+    },
+    {
+     "start": 125.47,
+     "end": 134.89,
+     "text": "Capella's lines are narrower than the Sun's of equal strength — lower gravity and density, weaker damping — with macroturbulence of several kilometres per second."
+    },
+    {
+     "start": 134.89,
+     "end": 136.31,
+     "text": "Every term is measurable."
+    }
+   ],
+   "voicedHash": "77e5208f4913"
+  },
+  "chapter-close": {
+   "script": "Look behind the panel — the planetary system slowly circling the Sun.\n\nI lambda, specific intensity, is constant along a ray; its average is the mean intensity. Energy density u equals a T to the fourth, a, the radiation constant. Flux, the integral of I cosine theta d omega, is sigma T to the fourth at the surface. Radiation pressure, a T to the fourth over three, pushes comet dust and massive stars.\n\nLight falls as e to the minus tau. Tau about two thirds is the surface we see. Kramers scales as density over T to the three point five. Random-walking ell root N, a hundred thousand years through the Sun. d I over d tau equals I minus S; S equals j over kappa rho. In LTE, S equals Planck B of T. Thermalises in a few tau; one over root epsilon if scattering.\n\nT to the fourth equals three quarters T effective to the fourth, times tau plus two thirds. Limb darkening, three cosine theta plus two, over five, matches the Sun. I of mu about S at tau equals mu, which is why lines are dark. Curve of growth: X seventy-four percent, Y twenty-five percent, Z one point three percent, CI meteorites confirm.\n\nChapter nine closes chapter three's loop; the model atmosphere reads depth, composition, and motion.",
+   "hash": "4a7e75c4ba4d",
+   "duration": 87.03,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.1,
+     "text": "Look behind the panel — the planetary system slowly circling the Sun."
+    },
+    {
+     "start": 5.1,
+     "end": 11.66,
+     "text": "I lambda, specific intensity, is constant along a ray; its average is the mean intensity."
+    },
+    {
+     "start": 11.66,
+     "end": 17.16,
+     "text": "Energy density u equals a T to the fourth, a, the radiation constant."
+    },
+    {
+     "start": 17.16,
+     "end": 23.66,
+     "text": "Flux, the integral of I cosine theta d omega, is sigma T to the fourth at the surface."
+    },
+    {
+     "start": 23.66,
+     "end": 29.84,
+     "text": "Radiation pressure, a T to the fourth over three, pushes comet dust and massive stars."
+    },
+    {
+     "start": 29.84,
+     "end": 32.44,
+     "text": "Light falls as e to the minus tau."
+    },
+    {
+     "start": 32.44,
+     "end": 35.3,
+     "text": "Tau about two thirds is the surface we see."
+    },
+    {
+     "start": 35.3,
+     "end": 39.12,
+     "text": "Kramers scales as density over T to the three point five."
+    },
+    {
+     "start": 39.12,
+     "end": 43.36,
+     "text": "Random-walking ell root N, a hundred thousand years through the Sun."
+    },
+    {
+     "start": 43.36,
+     "end": 49.03,
+     "text": "d I over d tau equals I minus S; S equals j over kappa rho."
+    },
+    {
+     "start": 49.03,
+     "end": 52.35,
+     "text": "In LTE, S equals Planck B of T."
+    },
+    {
+     "start": 52.35,
+     "end": 56.73,
+     "text": "Thermalises in a few tau; one over root epsilon if scattering."
+    },
+    {
+     "start": 56.73,
+     "end": 62.31,
+     "text": "T to the fourth equals three quarters T effective to the fourth, times tau plus two thirds."
+    },
+    {
+     "start": 62.31,
+     "end": 67.77,
+     "text": "Limb darkening, three cosine theta plus two, over five, matches the Sun."
+    },
+    {
+     "start": 67.77,
+     "end": 72.39,
+     "text": "I of mu about S at tau equals mu, which is why lines are dark."
+    },
+    {
+     "start": 72.39,
+     "end": 80.89,
+     "text": "Curve of growth: X seventy-four percent, Y twenty-five percent, Z one point three percent, CI meteorites confirm."
+    },
+    {
+     "start": 80.89,
+     "end": 87.03,
+     "text": "Chapter nine closes chapter three's loop; the model atmosphere reads depth, composition, and motion."
+    }
+   ],
+   "voicedHash": "221bcfe72834"
+  },
+  "curve-of-growth": {
+   "script": "Look at the Sun behind the panel. We are counting atoms. Equivalent width depends on N sub a, absorbers per unit area along the line of sight. Plot log W against log N sub a: that is the curve of growth, and once scaled every line shares the shape. Slide the column density up on the widget and watch the profile and equivalent width.\n\nIn the weak, linear part the line is optically thin everywhere. Each atom removes the same light, so W, the equivalent width, is proportional to N sub a, the column density. The line deepens without changing shape.\n\nOn the flat, saturated part the Doppler core is black, so extra atoms cannot deepen the centre. W then grows only as the core widens into the steep Gaussian flanks, roughly as the square root of the natural log of N sub a. Ten times more atoms barely changes W, so these lines are almost useless for abundances.\n\nHigher still, the Lorentzian wings, weak but slow to fall off, become optically thick, and W is proportional to the square root of N sub a. The Balmer lines, and calcium two H and K in the Sun, sit in this damping regime.\n\nThe scaled axis is N sub a times f times lambda. f is the oscillator strength, the quantum-mechanical probability of the transition measured in the laboratory, and lambda is the wavelength. Lines of one element with different f therefore fall on one curve.\n\nMeasure W for several such lines, shift them onto the theoretical curve, and read off N sub a for the level each line starts from. Boltzmann and Saha turn that population into the total number of atoms of the element, and as a check give the excitation temperature and electron pressure that make all the lines agree. Sodium in the Sun gives D-line column densities of order ten to the twenty-three per square metre. Every measurable element then gives the solar photosphere's composition.",
+   "hash": "c9aa3c711a75",
+   "duration": 115.19,
+   "sentences": [
+    {
+     "start": 0.12,
+     "end": 2.38,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 2.38,
+     "end": 4.16,
+     "text": "We are counting atoms."
+    },
+    {
+     "start": 4.16,
+     "end": 10.18,
+     "text": "Equivalent width depends on N sub a, absorbers per unit area along the line of sight."
+    },
+    {
+     "start": 10.18,
+     "end": 17.9,
+     "text": "Plot log W against log N sub a: that is the curve of growth, and once scaled every line shares the shape."
+    },
+    {
+     "start": 17.9,
+     "end": 22.56,
+     "text": "Slide the column density up on the widget and watch the profile and equivalent width."
+    },
+    {
+     "start": 22.56,
+     "end": 26.46,
+     "text": "In the weak, linear part the line is optically thin everywhere."
+    },
+    {
+     "start": 26.46,
+     "end": 33.9,
+     "text": "Each atom removes the same light, so W, the equivalent width, is proportional to N sub a, the column density."
+    },
+    {
+     "start": 33.9,
+     "end": 36.34,
+     "text": "The line deepens without changing shape."
+    },
+    {
+     "start": 36.34,
+     "end": 42.74,
+     "text": "On the flat, saturated part the Doppler core is black, so extra atoms cannot deepen the centre."
+    },
+    {
+     "start": 42.74,
+     "end": 50.66,
+     "text": "W then grows only as the core widens into the steep Gaussian flanks, roughly as the square root of the natural log of N sub a."
+    },
+    {
+     "start": 50.66,
+     "end": 56.46,
+     "text": "Ten times more atoms barely changes W, so these lines are almost useless for abundances."
+    },
+    {
+     "start": 56.46,
+     "end": 66.01,
+     "text": "Higher still, the Lorentzian wings, weak but slow to fall off, become optically thick, and W is proportional to the square root of N sub a."
+    },
+    {
+     "start": 66.01,
+     "end": 71.51,
+     "text": "The Balmer lines, and calcium two H and K in the Sun, sit in this damping regime."
+    },
+    {
+     "start": 71.51,
+     "end": 75.53,
+     "text": "The scaled axis is N sub a times f times lambda."
+    },
+    {
+     "start": 75.53,
+     "end": 83.33,
+     "text": "f is the oscillator strength, the quantum-mechanical probability of the transition measured in the laboratory, and lambda is the wavelength."
+    },
+    {
+     "start": 83.33,
+     "end": 87.37,
+     "text": "Lines of one element with different f therefore fall on one curve."
+    },
+    {
+     "start": 87.37,
+     "end": 95.55,
+     "text": "Measure W for several such lines, shift them onto the theoretical curve, and read off N sub a for the level each line starts from."
+    },
+    {
+     "start": 95.55,
+     "end": 105.85,
+     "text": "Boltzmann and Saha turn that population into the total number of atoms of the element, and as a check give the excitation temperature and electron pressure that make all the lines agree."
+    },
+    {
+     "start": 105.85,
+     "end": 111.47,
+     "text": "Sodium in the Sun gives D-line column densities of order ten to the twenty-three per square metre."
+    },
+    {
+     "start": 111.47,
+     "end": 115.19,
+     "text": "Every measurable element then gives the solar photosphere's composition."
+    }
+   ],
+   "voicedHash": "0944ecf43443"
+  },
+  "line-anatomy": {
+   "script": "Look at Sirius behind the panel. At the resolution of a classification spectrum a line is a dark stroke. At high resolution it is a shape: a deep core at lambda nought, the central wavelength, with wings that merge into the continuum. Core depth, the width at half that depth, the full width at half maximum, and the reach of the wings each encode different physics. We call that shape the line profile.\n\nIn the widget, adjust depth and width independently. Watch the core, the wings, the half-maximum width, the rectangle, and the formation depth. That rectangle removes the same total light as the line and has the full depth of the continuum. Its width is the equivalent width W.\n\nW equals the integral of F-c minus F-lambda, all over F-c, d-lambda. F-c is the continuum flux, interpolated across the line. F-lambda is the flux at each wavelength. The fraction is light removed from the continuum, and the integral totals that loss over wavelength. Because W is an integral, blurring that makes the line wider and shallower leaves W unchanged. We quote it in picometres or milli-angstroms. Through the curve of growth it connects to how many atoms are absorbing.\n\nCalcium two H and K in the Sun have W of about two nanometres; a weak iron line, a thousandth of a nanometre. Sirius's Balmer lines have W of several nanometres and wings spanning tens: pressure broadening at its most extreme in an A dwarf.\n\nBy Eddington–Barbier, each wavelength is seen to a different depth. In the far wings the extra opacity is small, so the layer where optical depth tau equals two-thirds lies almost as deep as in the continuum, and the intensity drops slightly. Toward the core the line opacity grows, that layer rises through cooler gas, and the intensity falls. The core forms highest. Wings report the deep photosphere; the core the top, or for the strongest lines the chromosphere. Profiles, not just strengths, build model atmospheres.",
+   "hash": "250d0e8bb7b6",
+   "duration": 127.35,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.38,
+     "text": "Look at Sirius behind the panel."
+    },
+    {
+     "start": 2.38,
+     "end": 7.3,
+     "text": "At the resolution of a classification spectrum a line is a dark stroke."
+    },
+    {
+     "start": 7.3,
+     "end": 16,
+     "text": "At high resolution it is a shape: a deep core at lambda nought, the central wavelength, with wings that merge into the continuum."
+    },
+    {
+     "start": 16,
+     "end": 24.18,
+     "text": "Core depth, the width at half that depth, the full width at half maximum, and the reach of the wings each encode different physics."
+    },
+    {
+     "start": 24.18,
+     "end": 26.78,
+     "text": "We call that shape the line profile."
+    },
+    {
+     "start": 26.78,
+     "end": 29.98,
+     "text": "In the widget, adjust depth and width independently."
+    },
+    {
+     "start": 29.98,
+     "end": 36.38,
+     "text": "Watch the core, the wings, the half-maximum width, the rectangle, and the formation depth."
+    },
+    {
+     "start": 36.38,
+     "end": 41.9,
+     "text": "That rectangle removes the same total light as the line and has the full depth of the continuum."
+    },
+    {
+     "start": 41.9,
+     "end": 44.82,
+     "text": "Its width is the equivalent width W."
+    },
+    {
+     "start": 44.82,
+     "end": 52.7,
+     "text": "W equals the integral of F-c minus F-lambda, all over F-c, d-lambda."
+    },
+    {
+     "start": 52.7,
+     "end": 57.32,
+     "text": "F-c is the continuum flux, interpolated across the line."
+    },
+    {
+     "start": 57.32,
+     "end": 60.2,
+     "text": "F-lambda is the flux at each wavelength."
+    },
+    {
+     "start": 60.2,
+     "end": 65.83,
+     "text": "The fraction is light removed from the continuum, and the integral totals that loss over wavelength."
+    },
+    {
+     "start": 65.83,
+     "end": 72.29,
+     "text": "Because W is an integral, blurring that makes the line wider and shallower leaves W unchanged."
+    },
+    {
+     "start": 72.29,
+     "end": 75.29,
+     "text": "We quote it in picometres or milli-angstroms."
+    },
+    {
+     "start": 75.29,
+     "end": 78.95,
+     "text": "Through the curve of growth it connects to how many atoms are absorbing."
+    },
+    {
+     "start": 78.95,
+     "end": 86.67,
+     "text": "Calcium two H and K in the Sun have W of about two nanometres; a weak iron line, a thousandth of a nanometre."
+    },
+    {
+     "start": 86.67,
+     "end": 94.91,
+     "text": "Sirius's Balmer lines have W of several nanometres and wings spanning tens: pressure broadening at its most extreme in an A dwarf."
+    },
+    {
+     "start": 94.91,
+     "end": 99.17,
+     "text": "By Eddington–Barbier, each wavelength is seen to a different depth."
+    },
+    {
+     "start": 99.17,
+     "end": 109.77,
+     "text": "In the far wings the extra opacity is small, so the layer where optical depth tau equals two-thirds lies almost as deep as in the continuum, and the intensity drops slightly."
+    },
+    {
+     "start": 109.77,
+     "end": 115.95,
+     "text": "Toward the core the line opacity grows, that layer rises through cooler gas, and the intensity falls."
+    },
+    {
+     "start": 115.95,
+     "end": 117.69,
+     "text": "The core forms highest."
+    },
+    {
+     "start": 117.69,
+     "end": 123.67,
+     "text": "Wings report the deep photosphere; the core the top, or for the strongest lines the chromosphere."
+    },
+    {
+     "start": 123.67,
+     "end": 127.35,
+     "text": "Profiles, not just strengths, build model atmospheres."
+    }
+   ],
+   "voicedHash": "919f2b30a335"
+  },
+  "rotation": {
+   "script": "Look at Altair behind the panel. Spin has flattened it by twenty per cent, darkened the equator, and turned the lines into shallow bowls. This broadening is rotational, not atomic. One limb approaches and the other recedes. Each point on the disc contributes a narrow line at its own projected speed, and the sum is a kernel nearly a half-ellipse of half-width lambda times v sub eq times sine i over c. Lambda is the line’s wavelength, v sub eq the equatorial speed, i the inclination, and c the speed of light. The greatest line-of-sight speed is v sub eq sine i, so the Doppler shift lambda v over c is precisely that half-width. We can measure only v sine i, since pole-on, where sine i is zero, there is no shift. Altair has v sine i of about two hundred and forty kilometres per second and a true equatorial speed near two hundred and ninety. Move the v sine i slider on the widget. Watch the velocity-coloured disc build the profile strip by strip, and notice the flat bottom and sharp edges. No atomic mechanism makes that shape, so form, not merely width, identifies rotation. Equivalent width is conserved while depth drops, and early classifiers therefore sometimes assigned too late a type. O, B and A stars typically spin at one to three hundred kilometres per second. Near F5 the average falls to a few kilometres per second and stays low, because a deep convective envelope drives a magnetised wind that removes angular momentum. The Sun, four point six billion years old, thus rotates once a month, not once a day. Rotation is a nuisance and a clock. Macroturbulence adds a few kilometres per second in dwarfs and ten or more in supergiants. Pulsation moves lines in time. The Zeeman effect splits lines by a hundredth of a nanometre per tesla near five hundred nanometres, and circular polarisation reveals fields too weak to split a line visibly.",
+   "hash": "4fab7854e366",
+   "duration": 117.75,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.2,
+     "text": "Look at Altair behind the panel."
+    },
+    {
+     "start": 2.2,
+     "end": 8.6,
+     "text": "Spin has flattened it by twenty per cent, darkened the equator, and turned the lines into shallow bowls."
+    },
+    {
+     "start": 8.6,
+     "end": 11.7,
+     "text": "This broadening is rotational, not atomic."
+    },
+    {
+     "start": 11.7,
+     "end": 14.34,
+     "text": "One limb approaches and the other recedes."
+    },
+    {
+     "start": 14.34,
+     "end": 26.06,
+     "text": "Each point on the disc contributes a narrow line at its own projected speed, and the sum is a kernel nearly a half-ellipse of half-width lambda times v sub eq times sine i over c."
+    },
+    {
+     "start": 26.06,
+     "end": 33.74,
+     "text": "Lambda is the line’s wavelength, v sub eq the equatorial speed, i the inclination, and c the speed of light."
+    },
+    {
+     "start": 33.74,
+     "end": 41.9,
+     "text": "The greatest line-of-sight speed is v sub eq sine i, so the Doppler shift lambda v over c is precisely that half-width."
+    },
+    {
+     "start": 41.9,
+     "end": 48.26,
+     "text": "We can measure only v sine i, since pole-on, where sine i is zero, there is no shift."
+    },
+    {
+     "start": 48.26,
+     "end": 55.86,
+     "text": "Altair has v sine i of about two hundred and forty kilometres per second and a true equatorial speed near two hundred and ninety."
+    },
+    {
+     "start": 55.86,
+     "end": 58.42,
+     "text": "Move the v sine i slider on the widget."
+    },
+    {
+     "start": 58.42,
+     "end": 64.71,
+     "text": "Watch the velocity-coloured disc build the profile strip by strip, and notice the flat bottom and sharp edges."
+    },
+    {
+     "start": 64.71,
+     "end": 70.85,
+     "text": "No atomic mechanism makes that shape, so form, not merely width, identifies rotation."
+    },
+    {
+     "start": 70.85,
+     "end": 77.65,
+     "text": "Equivalent width is conserved while depth drops, and early classifiers therefore sometimes assigned too late a type."
+    },
+    {
+     "start": 77.65,
+     "end": 82.31,
+     "text": "O, B and A stars typically spin at one to three hundred kilometres per second."
+    },
+    {
+     "start": 82.31,
+     "end": 92.47,
+     "text": "Near F5 the average falls to a few kilometres per second and stays low, because a deep convective envelope drives a magnetised wind that removes angular momentum."
+    },
+    {
+     "start": 92.47,
+     "end": 98.17,
+     "text": "The Sun, four point six billion years old, thus rotates once a month, not once a day."
+    },
+    {
+     "start": 98.17,
+     "end": 100.47,
+     "text": "Rotation is a nuisance and a clock."
+    },
+    {
+     "start": 100.47,
+     "end": 105.79,
+     "text": "Macroturbulence adds a few kilometres per second in dwarfs and ten or more in supergiants."
+    },
+    {
+     "start": 105.79,
+     "end": 107.95,
+     "text": "Pulsation moves lines in time."
+    },
+    {
+     "start": 107.95,
+     "end": 117.75,
+     "text": "The Zeeman effect splits lines by a hundredth of a nanometre per tesla near five hundred nanometres, and circular polarisation reveals fields too weak to split a line visibly."
+    }
+   ],
+   "voicedHash": "34a66619afa5"
+  }
+ }
+}

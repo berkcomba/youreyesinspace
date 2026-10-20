@@ -212,7 +212,49 @@ export type WidgetSpec =
   /** MK luminosity classes: a Balmer line's width against surface gravity, with the star's place on an inset diagram */
   | { type: 'luminosityclass' }
   /** spectroscopic parallax: classify a star's spectrum, choose the luminosity class, get a distance, compare with Gaia */
-  | { type: 'specparallax' };
+  | { type: 'specparallax' }
+  /** Specific intensity vs flux: an observer backing away from a resolved star; surface brightness stays constant while flux falls as 1/r² */
+  | { type: 'intensity' }
+  /** Polar diagram of the intensity I(θ) at a chosen optical depth in an atmosphere, with the mean intensity ⟨I⟩ compared with the local Planck value */
+  | { type: 'meanintensity' }
+  /** Integrates I cos θ over the sphere for a user-shaped radiation field: isotropic gives zero flux, surface field gives πB */
+  | { type: 'fluxcos' }
+  /** Radiation pressure vs gravity on a dust grain near the Sun, and P_rad/P_gas in a star of chosen mass */
+  | { type: 'radpressure' }
+  /** Fits blackbodies to a stellar energy distribution in different ways: effective, colour and Balmer-jump temperatures disagree */
+  | { type: 'colortemp' }
+  /** A beam through a slab with adjustable density, opacity and thickness; transmitted fraction follows e^(−τ) */
+  | { type: 'opticaldepth' }
+  /** Sunset simulator: transmitted solar spectrum and disc colour vs zenith angle for Earth (Rayleigh λ⁻⁴) and Mars (dust) */
+  | { type: 'sunset' }
+  /** Opacity κ_λ against wavelength split into bound–free hydrogen, H⁻, free–free and electron scattering as T and ρ vary */
+  | { type: 'opacitysources' }
+  /** Rosseland mean opacity vs temperature for several densities: H⁻ rise, ionisation peak, Kramers T^−3.5 fall, scattering floor */
+  | { type: 'rosseland' }
+  /** Animated photon random walk; net displacement compared with ℓ√N over many trials and the escape time through the Sun */
+  | { type: 'randomwalk' }
+  /** Solar limb darkening: drag a cursor across the disc, see the slanted τ = 2/3 depth; 'eddington' mode overlays the gray-atmosphere prediction on measured profiles */
+  | { type: 'limbdark'; mode: 'observe' | 'eddington' }
+  /** Slab transfer solution I = I₀e^(−τ) + S(1 − e^(−τ)) with sliders for I₀, S and τ; shows emission vs absorption lines */
+  | { type: 'transfer' }
+  /** Thermalisation: mean intensity vs Planck function against depth for pure absorption and for scattering with destruction probability ε */
+  | { type: 'thermalize' }
+  /** Plane-parallel geometry: layers, a ray at angle θ, slant optical depth τ_v/μ and the depth where it reaches 2/3 */
+  | { type: 'planeparallel' }
+  /** Eddington gray-atmosphere T(τ) = T_eff(3/4(τ + 2/3))^(1/4) compared with an empirical solar model */
+  | { type: 'grayatm' }
+  /** Eddington–Barbier relation: user-shaped S(τ), escape-probability weighting for chosen μ, exact integral vs S(τ = μ) */
+  | { type: 'barbier' }
+  /** Anatomy of a line profile: core, wings, FWHM, equivalent width rectangle, formation depth across the profile */
+  | { type: 'lineprofile' }
+  /** Natural, Doppler and pressure broadening combined into a Voigt profile as temperature, pressure and turbulence change */
+  | { type: 'broadening' }
+  /** Rotational broadening: a disc colour-coded by line-of-sight velocity builds a flat-bottomed line profile; v sin i slider */
+  | { type: 'rotation' }
+  /** Curve of growth: equivalent width vs column density through the linear, saturated and damping regimes */
+  | { type: 'curveofgrowth' }
+  /** Solar photospheric abundances as a bar chart with the CI-chondrite values overlaid; X, Y, Z readout */
+  | { type: 'abundances' };
 
 export type SceneCue =
   | { action: 'goto'; ref: string; kind?: 'body' | 'blackhole' | 'star' | 'landmark' | 'galaxy' }
@@ -3869,6 +3911,482 @@ const S8_2: Section = {
   ],
 };
 
+/* =============================================================== chapter 9 ===== */
+
+const S9_1: Section = {
+  id: 'radiation-field',
+  number: '9.1',
+  title: 'The Description of the Radiation Field',
+  summary: 'Everything we know about a star arrives as light from its outermost layers. Before that light can be read, it has to be described: the specific intensity of a pencil of rays, its average over directions, the energy it stores in a cubic metre of gas, the net flow through a surface, and the push it exerts on matter.',
+  minutes: 24,
+  steps: [
+    {
+      id: 'specific-intensity',
+      kicker: 'Interactive · the basic quantity',
+      title: 'Specific intensity: light described one ray at a time',
+      widget: { type: 'intensity' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('A star\'s energy is made deep inside — by fusion, by slow contraction, by the cooling of a dead core — but none of that light reaches us directly. Every photon we receive was emitted, for the last time, by gas in the thin outer skin we call the <b>atmosphere</b>: the layers from which radiation can escape to space. Chapters 3, 5 and 8 drew conclusions from that light. This chapter asks how the light and the gas are coupled — how the atmosphere\'s temperature, density and composition shape the spectrum that leaves it — and the first step is simply to find the right words for "how much light".'),
+        p('Brightness is not one number. Light at a point in a gas arrives from every direction, at every wavelength, and the quantity that captures all of it is the <b>specific intensity</b> I_λ: the energy per second, per unit wavelength interval, crossing a unit area perpendicular to a chosen direction, within a small cone of solid angle dΩ around that direction. The units — W m⁻² m⁻¹ sr⁻¹ — look forbidding, but the idea is just "the brightness of the sky in one direction at one colour". Point a telescope at the centre of the Sun\'s disc, behind the panel, and what you measure per pixel is I_λ.'),
+        eq('E_\\lambda\\,d\\lambda = I_\\lambda\\,d\\lambda\\,dt\\,dA\\cos\\theta\\,d\\Omega', 'The defining relation. θ is the angle between the ray and the normal to dA; cos θ corrects for the foreshortened area the ray actually crosses. For a blackbody I_λ = B_λ(T), the Planck function of Section 3.4.'),
+        p('Intensity has a property that makes it the natural currency of astrophysics: in empty space it does not change along a ray. Move away from the Sun and the disc shrinks, so you collect less total energy — but each square arcsecond of the disc is exactly as bright as before, because the number of photons per steradian and the solid angle per pixel fall together. The widget shows an observer backing away from a star: the <em>flux</em> drops as 1/r² while the <em>intensity</em> of the resolved disc stays fixed, until the disc becomes smaller than a pixel and the two notions merge. This is why a resolved object — the Sun, a planet, a nebula — is described by its intensity, and an unresolved star by its flux.'),
+        key('Specific intensity is constant along a ray in vacuum. That is the reason surface brightness does not depend on distance, the reason the Sun looks the same brightness per unit area from Mercury and from Neptune, and the reason the transfer equation of Section 9.4 only has terms for emission and absorption — never for geometry.'),
+      ],
+    },
+    {
+      id: 'mean-intensity',
+      kicker: 'Interactive · averaging over directions',
+      title: 'Mean intensity and the shape of the radiation field',
+      widget: { type: 'meanintensity' },
+      scene: [goto('Arcturus', 'star'), rate(1)],
+      body: [
+        p('Deep inside a star the radiation is the same in every direction — <em>isotropic</em> — because every direction looks into gas of nearly the same temperature. Near the surface it is not: looking down you see hot, bright gas, looking up you see cold, empty space. The simplest summary of the field at a point is the <b>mean intensity</b>, the average of I_λ over all 4π steradians. For an isotropic field the average is just I_λ; for a blackbody cavity it is B_λ(T).'),
+        eq('\\langle I_\\lambda\\rangle = \\frac{1}{4\\pi}\\int I_\\lambda\\,d\\Omega = \\frac{1}{4\\pi}\\int_0^{2\\pi}\\!\\!\\int_0^{\\pi} I_\\lambda \\sin\\theta\\,d\\theta\\,d\\phi', 'The mean intensity, written J_λ in much of the literature. It is the quantity that matters for heating a gas or exciting its atoms, because an atom does not care which direction a photon came from.'),
+        p('The widget draws the intensity as a polar diagram — the length of each spoke is I in that direction — at a point whose depth you choose. Deep down the figure is a circle. Rise toward the surface and the upper half shrinks: fewer photons arrive from above. At the very top the field is a half-sphere of light from below and darkness above, and the mean intensity has fallen to less than half the Planck function at the effective temperature — a result Section 9.4 will derive. Arcturus, behind the panel, is a K giant whose atmosphere is so extended and tenuous that this anisotropic surface layer is a substantial fraction of its radius; for the Sun it is a few hundred kilometres thick, a thousandth of a per cent.'),
+        note('Averaging I_λ over wavelength as well as direction gives the total mean intensity ⟨I⟩; for a blackbody ⟨I⟩ = σT⁴/π. Every "specific" quantity in this section (I_λ, ⟨I_λ⟩, u_λ, F_λ, P_rad,λ) has a total counterpart obtained by integrating over λ, and the blackbody value of each is a simple power of T.', 'Specific and total'),
+      ],
+    },
+    {
+      id: 'energy-density-flux',
+      kicker: 'Interactive · storing and moving energy',
+      title: 'Energy density and radiative flux',
+      widget: { type: 'fluxcos' },
+      scene: [goto('earth'), rate(1)],
+      body: [
+        p('Two further quantities follow from the intensity by integration. The <b>specific energy density</b> u_λ is the energy of radiation stored per cubic metre per unit wavelength — light in transit, counted while it is passing through. A photon moving at c spends a time dL/c crossing a length dL, so the energy present in a volume is the energy flow divided by c, summed over directions: u_λ = (4π/c)⟨I_λ⟩. For a blackbody the total energy density is u = aT⁴ with a = 4σ/c = 7.566 × 10⁻¹⁶ J m⁻³ K⁻⁴. At the centre of the Sun, 1.5 × 10⁷ K, that is 4 × 10¹³ J m⁻³ — about the energy of a litre of petrol in every cubic centimetre, stored as light.'),
+        p('The <b>specific radiative flux</b> F_λ is the <em>net</em> energy per second crossing a unit area, counting rays going one way as positive and the other way as negative. Here the cos θ factor is essential: a ray at a grazing angle carries little energy through the surface, and a ray going back down subtracts. The widget integrates I cos θ over the sphere for a field you shape: for an isotropic field the up and down halves cancel exactly and the flux is zero however intense the light; for a field that is bright below and dark above, the net flow is upward; for the surface of a star, where I = B below and 0 above, the flux is πB_λ.'),
+        eq('F_\\lambda = \\int I_\\lambda \\cos\\theta\\,d\\Omega \\qquad u_\\lambda = \\frac{4\\pi}{c}\\langle I_\\lambda\\rangle \\qquad F_{\\rm surf} = \\pi\\int B_\\lambda\\,d\\lambda = \\sigma T^4', 'Flux, energy density, and the surface flux of a blackbody — which is where the Stefan–Boltzmann law comes from. L = 4πR²σT⁴ is just this flux times the surface area.'),
+        p('Flux is what an unresolved star delivers. The Earth, behind the panel, intercepts the Sun\'s flux at 1 AU — 1 361 W m⁻², the solar constant — and that single number times the area of a sphere of radius 1 AU is the Sun\'s luminosity. The Sun\'s surface flux is the same luminosity spread over the Sun\'s own area, 6.3 × 10⁷ W m⁻², from which T_eff = 5 772 K. Intensity does not change with distance; flux falls as the inverse square; the two are related, for a star of angular radius α, by F = π I sin²α — the geometric fact that unites Section 3.2\'s magnitudes with this section\'s intensities.'),
+        think('Inside a star at radius r the radiation is <em>almost</em> isotropic: the outward intensity exceeds the inward by one part in 10¹⁰ or so. Yet the net flux through a sphere at r must carry the whole luminosity. How can a tiny anisotropy move 4 × 10²⁶ W? (Hint: compare σT⁴ at 10⁷ K with the Sun\'s surface flux.) This is why the deep interior can be treated as a blackbody to high precision and still have an energy current flowing through it.'),
+      ],
+    },
+    {
+      id: 'radiation-pressure',
+      kicker: 'Interactive · light pushes',
+      title: 'Radiation pressure: from comet tails to supergiants',
+      widget: { type: 'radpressure' },
+      scene: [goto('halley'), rate(1)],
+      body: [
+        p('A photon of energy E carries momentum E/c (Section 5.2). A gas bathed in radiation therefore feels a pressure, exactly as it feels the pressure of its own atoms\' momenta: the rate at which photon momentum is transported across a unit area, per unit solid angle, integrated with a factor cos²θ — one cosine for the projected area, one for the component of momentum normal to the surface. For an isotropic field the result is one third of the energy density, just as for an ideal gas of particles moving at c.'),
+        eq('P_{\\rm rad} = \\frac{1}{c}\\int I\\cos^2\\theta\\,d\\Omega = \\frac{4\\pi}{3c}\\langle I\\rangle = \\frac{1}{3}u = \\frac{1}{3}aT^4', 'Radiation pressure of an isotropic field. At the solar centre it is 1.3 × 10¹³ Pa — enormous, yet only 0.06 % of the gas pressure there. At the centre of a 60 M☉ star the two are comparable.'),
+        p('In the solar system radiation pressure is small but never negligible. At 1 AU the Sun\'s light exerts 4.6 µPa on a perfectly absorbing surface, twice that on a mirror; on a square kilometre of sail that is ten newtons, enough to drive the <em>IKAROS</em> and <em>LightSail</em> spacecraft. On a dust grain a micrometre across the force rivals the Sun\'s gravity on it, because both fall as 1/r² while one scales with the grain\'s area and the other with its volume: dust released by a comet is swept straight out into the curved <em>dust tail</em>, the broad yellow plume of Halley behind the panel, while the ion tail is blown by the solar wind. The widget balances the two forces: change the grain size and watch which wins, then move the "star" up the main sequence and watch radiation take over in the atmosphere of the star itself.'),
+        p('That last regime is where this chapter is heading. In a hot, luminous star the outward flux is so large that the pressure of light on the gas competes with gravity. The ratio of radiation to gas pressure in a star\'s interior grows roughly as its mass squared; by 100 M☉ the two are equal, and above that the star cannot hold itself together — the <em>Eddington limit</em>, which sets the upper end of the main sequence and powers the winds of O stars and the outbursts of luminous blue variables. Radiation is not only the messenger from the atmosphere; in the biggest stars it is a structural force.'),
+        example('Force of sunlight on a black sphere of radius s at distance r: F_rad = (L/4πr²c) πs². Gravity: F_g = GM m/r² with m = (4/3)πs³ρ. The ratio F_rad/F_g = 3L/(16πGMc ρ s) is independent of r. For ρ = 2 000 kg m⁻³ the two are equal at s = 0.6 µm: smaller grains are expelled from the solar system outright, whatever their orbit. This is why the zodiacal dust must be continually resupplied by comets and asteroid collisions.', 'The critical grain'),
+      ],
+    },
+    {
+      id: 'field-summary',
+      kicker: 'Summary',
+      title: 'The radiation field in brief',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Starlight comes from the atmosphere, the thin outer layers from which photons can escape; reading it requires describing light at a point in a gas.',
+          'Specific intensity I_λ: energy per time, area, wavelength and solid angle in a direction; constant along a ray in vacuum, so resolved sources keep their surface brightness at any distance. Blackbody: I_λ = B_λ(T).',
+          'Mean intensity ⟨I_λ⟩ = (1/4π)∫I_λ dΩ: the directional average, which governs heating and excitation. Isotropic deep inside a star; well below the Planck value at T_eff at the surface.',
+          'Energy density u_λ = (4π/c)⟨I_λ⟩; blackbody u = aT⁴. Flux F_λ = ∫I_λ cos θ dΩ: the net flow, zero for an isotropic field, πB_λ at a stellar surface; F = σT⁴ integrated.',
+          'Radiation pressure P_rad = (1/c)∫I cos²θ dΩ = u/3 = aT⁴/3 for isotropic light: blows comet dust tails, drives solar sails, and competes with gravity in the most massive stars.',
+        ),
+        key('Intensity, mean intensity, energy density, flux and pressure are five moments of one function, I_λ(direction). The rest of the chapter is about what the gas does to that function as light passes through it.'),
+      ],
+    },
+  ],
+};
+
+const S9_2: Section = {
+  id: 'stellar-opacity',
+  number: '9.2',
+  title: 'Stellar Opacity',
+  summary: 'Why no star is quite a blackbody and no single temperature describes one; how absorption and scattering are measured by opacity and optical depth; the sunset as an optical-depth experiment; the four ways a gas takes photons out of a beam, the H⁻ ion that makes the Sun opaque, and the Rosseland mean that stellar-structure calculations actually use.',
+  minutes: 30,
+  steps: [
+    {
+      id: 'which-temperature',
+      kicker: 'Interactive · a star is not a blackbody',
+      title: 'Effective, colour, excitation, ionisation: which temperature?',
+      widget: { type: 'colortemp' },
+      scene: [goto('Vega', 'star'), rate(1)],
+      body: [
+        p('Chapter 8 spoke freely of a star\'s "temperature". The atmosphere forces more care. A star is not in thermodynamic equilibrium — energy flows through it and leaves — so its radiation is not a Planck curve, and different measurements that would agree for a blackbody give different answers for a star. The widget lays a real stellar energy distribution over a blackbody and lets you fit the blackbody in different ways. Fit the total power and you get the <b>effective temperature</b>, defined by L = 4πR²σT_eff⁴. Fit the slope between two colours and you get a <b>colour temperature</b>, which depends on which two colours. Fit the shape near the Balmer jump at 364.6 nm — the step where hydrogen in n = 2 begins to absorb everything bluer — and you get something else again.'),
+        p('Inside the gas there are still more. The <b>excitation temperature</b> is the T that reproduces the observed ratio of level populations through the Boltzmann equation; the <b>ionisation temperature</b>, the T that reproduces the ionisation ratios through Saha; the <b>kinetic temperature</b>, the T of the Maxwell–Boltzmann distribution of the atoms\' speeds. In a gas in thermal equilibrium all of these coincide. In a stellar atmosphere, where the temperature changes with depth and the radiation field is not the local Planck function, they differ by a few per cent for a star like the Sun and by much more in extended, tenuous atmospheres.'),
+        terms(
+          ['Effective temperature', 'The blackbody temperature with the star\'s total surface flux: σT_eff⁴ = F_surf. A global property, exact by definition.'],
+          ['Colour temperature', 'Blackbody temperature matching the spectrum\'s slope in a chosen wavelength range; depends on the range.'],
+          ['Excitation / ionisation temperature', 'T that reproduces measured level or ionisation ratios via Boltzmann / Saha; probes the layer where those lines form.'],
+          ['Kinetic temperature', 'T of the particles\' velocity distribution; the "temperature" of a thermometer in the gas. Equal to the others in local thermodynamic equilibrium (Section 9.3).'],
+        ),
+        p('Vega, behind the panel, illustrates the cost of carelessness. Its effective temperature is 9 600 K; a colour temperature from the visible slope gives about 10 500 K; its Balmer-jump temperature is lower; and because the star is a rapid rotator seen pole-on, the pole we look at is some 2 000 K hotter than the equator we barely see. Every one of these numbers is a true measurement of something. The art of stellar atmospheres is knowing which layer, and which process, each one describes — and a model that reproduces them all at once is the goal of the rest of this chapter.'),
+      ],
+    },
+    {
+      id: 'optical-depth',
+      kicker: 'Interactive · opacity and optical depth',
+      title: 'How far can a photon see?',
+      widget: { type: 'opticaldepth' },
+      scene: [goto('titan'), rate(1)],
+      body: [
+        p('Send a beam of intensity I_λ through a slab of gas of density ρ and thickness ds. A fraction of the photons is absorbed or scattered out of the beam, and that fraction is proportional to the mass of gas traversed: dI_λ = −κ_λ ρ I_λ ds. The constant κ_λ is the <b>opacity</b> — the absorption cross-section per kilogram of gas, in m² kg⁻¹ — and it depends on wavelength, on temperature, on density, and on what the gas is made of. The product κ_λ ρ is the absorption coefficient per metre; its reciprocal is the <em>mean free path</em> of a photon of that wavelength.'),
+        eq('\\tau_\\lambda = \\int_0^s \\kappa_\\lambda\\,\\rho\\,ds\' \\qquad\\Longrightarrow\\qquad I_\\lambda = I_{\\lambda,0}\\,e^{-\\tau_\\lambda}', 'Optical depth and the exponential attenuation of a beam that is only absorbed (no emission). τ counts the number of mean free paths along the path: τ = 1 means the beam is reduced to e⁻¹ = 37 %. A medium with τ ≪ 1 is optically thin — transparent — and one with τ ≫ 1 optically thick.'),
+        p('The widget sends a beam through a slab and lets you set density, opacity and thickness independently; only their product matters, and the transmitted fraction tracks e^{−τ} whatever combination you choose. Watch τ pass 1: the slab goes from a haze to a wall. In a stellar atmosphere optical depth is measured <em>inward</em> from the top, τ = 0 at the outside, and the surface we "see" is roughly where τ_λ ≈ 1 along our line of sight — Section 9.4 refines this to 2/3 — which is why the star has a sharp edge even though its gas thins out gradually, and why a star has a different radius at every wavelength.'),
+        p('Titan, behind the panel, is the solar system\'s demonstration of optical thickness. Its atmosphere is only ten times the mass of the Earth\'s per unit area, but a photochemical haze of hydrocarbons gives it an optical depth of several at visible wavelengths: from orbit the surface is invisible and the moon is a featureless orange ball. At 938 nm, in a window between methane bands, τ drops below 1 and Cassini could map the lakes and dunes; the <em>Huygens</em> probe, descending through the haze, watched the sky brighten from murky orange to a view of the ground only in the last tens of kilometres. Same atmosphere, different τ_λ, different surface.'),
+        note('Opacity in m² kg⁻¹ times density in kg m⁻³ gives an inverse length, so τ is dimensionless; that is why the same τ = 1 criterion applies to a sunset, to Titan\'s haze, to a stellar photosphere and to the early universe. In some books κ is defined per unit volume or per atom; the physics is unchanged, only the bookkeeping.', 'Units'),
+      ],
+    },
+    {
+      id: 'sunset',
+      kicker: 'Interactive · an experiment you can do at home',
+      title: 'The sunset as an optical-depth measurement',
+      widget: { type: 'sunset' },
+      scene: [goto('mars'), rate(1)],
+      body: [
+        p('The Earth\'s atmosphere is a slab whose optical depth we can vary just by waiting. Overhead, a clear sky has τ ≈ 0.1 in the green: 90 per cent of the sunlight comes through. The path length through the air grows as 1/cos z with the zenith angle z — the <em>air mass</em> — until near the horizon it is forty times the vertical column. Because the molecular scattering that dominates the optical depth is Rayleigh scattering, τ ∝ λ⁻⁴: the blue optical depth is five times the red. At sunset the blue is extinguished long before the red, and the disc reddens and dims exactly as e^{−τ_λ X} prescribes. The widget plots the transmitted solar spectrum as the Sun sinks; the swatch beside it is the disc\'s colour.'),
+        p('Astronomers correct for this every night. The <em>extinction coefficient</em> k_λ is measured by observing standard stars at several air masses and fitting m_obs = m_0 + k_λ X; typical values at a good site are 0.5 mag per air mass in the ultraviolet, 0.2 in blue, 0.1 in red. Below about 350 nm ozone adds a wall, and at 760 nm the oxygen A-band of Section 8.1 reappears. The ground-based magnitude system of Section 3.2 is defined <em>above</em> the atmosphere, and every published magnitude has had this correction applied.'),
+        p('Mars, behind the panel, inverts the colours. Its thin CO₂ atmosphere scatters little by itself, but it carries fine dust whose grains are comparable in size to the wavelength of light. Such grains scatter red light broadly in all directions and blue light preferentially forward, into a narrow cone around the Sun. The daytime sky is therefore butterscotch — red light scattered everywhere — while the disc of the setting Sun is surrounded by a <em>blue</em> glow, as the rovers\' cameras have shown. Same transfer equation, different scattering law: the wavelength dependence of κ_λ is written in the colour of the sky.'),
+        compare(
+          { title: 'Earth: Rayleigh scattering', items: ['Molecules ≪ λ: κ_λ ∝ λ⁻⁴', 'Blue scattered out of the beam, in all directions', 'Blue sky, red sunset, τ_V ≈ 0.1 overhead', 'Extinction ≈ 0.1–0.5 mag per air mass'] },
+          { title: 'Mars: dust (Mie) scattering', items: ['Grains ≈ λ: κ_λ nearly grey, strongly forward-peaked', 'Red scattered to large angles, blue kept near the Sun', 'Butterscotch sky, blue halo around the setting Sun', 'τ ≈ 0.3–1 normally; > 5 in a global dust storm'] },
+        ),
+      ],
+    },
+    {
+      id: 'opacity-sources',
+      kicker: 'Interactive · four ways to remove a photon',
+      title: 'The sources of opacity and the H⁻ ion',
+      widget: { type: 'opacitysources' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('Opacity is the sum of every process by which a photon can be taken out of a beam. There are four. <b>Bound–bound</b> transitions lift an electron between two levels: they absorb only at the line wavelengths, and they are the spectral lines themselves. <b>Bound–free</b> absorption (photoionisation) strips an electron off altogether: it operates at every wavelength shorter than the ionisation edge, so it produces a continuous opacity with sharp steps — the Lyman, Balmer and Paschen edges at 91.2, 364.6 and 820.4 nm — and the inverse process, recombination, emits continuously. <b>Free–free</b> absorption occurs when a free electron passing an ion absorbs a photon and speeds up; it works at all wavelengths and grows toward the infrared. <b>Electron scattering</b> deflects a photon without changing its energy; it is wavelength-independent and, per electron, tiny — the Thomson cross-section is 6.65 × 10⁻²⁹ m² — but it is the only opacity left in a fully ionised gas.'),
+        p('For the Sun a fifth entry dominates the visible continuum, and its identity was a puzzle until 1939. Neutral hydrogen cannot do it: at 5 800 K almost every H atom is in the ground state, whose bound–free edge is in the far ultraviolet. Rupert Wildt proposed, and Subrahmanyan Chandrasekhar then calculated, that the culprit is the <b>negative hydrogen ion</b> H⁻ — a proton with two electrons, bound by only 0.754 eV. Any photon with λ < 1 640 nm can detach the extra electron, giving a smooth bound–free opacity across the visible and near infrared, and free–free H⁻ absorption takes over beyond. Only one hydrogen atom in a hundred million carries the extra electron, but that is enough: H⁻ is the reason the Sun\'s visible continuum is so nearly a blackbody, and the reason we see down to the depth we do.'),
+        p('The widget plots κ_λ against wavelength for a gas at the temperature and density you choose and separates the contributions. At solar temperature H⁻ is the broad hump with its edge at 1.64 µm; raise T to 10 000 K and neutral hydrogen takes over with its Balmer and Paschen edges, the jumps that give A stars their characteristic ultraviolet deficit; raise it further and the gas ionises, the edges fade and electron scattering sets a flat floor. The sources of opacity change with spectral type as surely as the lines do, and for the same reason: Saha and Boltzmann decide what is there to absorb.'),
+        table(
+          ['Process', 'Wavelength dependence', 'Dominates in', 'Signature'],
+          [
+            ['Bound–bound', 'only at line wavelengths', 'all photospheres', 'the spectral lines; "line blanketing" in cool stars'],
+            ['Bound–free (H, He, metals)', 'λ³ below each edge, zero above', 'A and B stars (H); O stars (He)', 'Balmer jump at 364.6 nm, Lyman at 91.2 nm'],
+            ['H⁻ bound–free and free–free', 'smooth, edge at 1.64 µm', 'F, G, K stars', 'near-blackbody visible continuum'],
+            ['Free–free', '∝ λ³ (grows to the IR)', 'hot stars in the IR, radio', 'radio continuum of H II regions'],
+            ['Electron scattering', 'grey (none)', 'O stars, stellar interiors', 'polarised, line-free continuum'],
+          ],
+          'The main sources of continuous and line opacity in stellar atmospheres. Each one is the inverse of an emission process, which is what will let us write a source function in Section 9.3.',
+        ),
+      ],
+    },
+    {
+      id: 'rosseland-mean',
+      kicker: 'Interactive · one number for all wavelengths',
+      title: 'Kramers\' law and the Rosseland mean opacity',
+      widget: { type: 'rosseland' },
+      scene: [goto('Rigel', 'star'), rate(1)],
+      body: [
+        p('Inside a star the detailed wavelength dependence of κ_λ is more than a structure calculation can afford, and more than it needs: the radiation deep down is nearly a blackbody, and what governs the energy flow is an appropriately averaged opacity. The right average is the <b>Rosseland mean</b> κ̄, a harmonic mean of κ_λ weighted by the temperature derivative of the Planck function — harmonic because energy escapes preferentially through the wavelengths where the gas is most transparent, so transparent windows count for more than opaque walls. One κ̄(ρ, T) replaces a function of three variables, and tables of it, computed from millions of atomic transitions by the OPAL and Opacity Project groups since the 1990s, are among the most-used numbers in astrophysics.'),
+        eq('\\bar\\kappa_{\\rm bf} \\approx 4.3\\times10^{21}\\,\\frac{g_{\\rm bf}}{t}\\,Z(1+X)\\,\\frac{\\rho}{T^{3.5}} \\qquad \\bar\\kappa_{\\rm ff} \\approx 3.7\\times10^{18}\\,g_{\\rm ff}(1-Z)(1+X)\\,\\frac{\\rho}{T^{3.5}} \\qquad \\bar\\kappa_{\\rm es} = 0.02\\,(1+X)', 'Kramers\' approximations (SI units; X, Z the hydrogen and metal mass fractions, g the Gaunt factors near 1) and the electron-scattering floor. Bound–free and free–free opacity rise with density and fall steeply with temperature; scattering is independent of both. In the cool outer layers an H⁻ term ∝ ρ^{1/2} T⁹ Z takes over.'),
+        p('The widget draws κ̄ against temperature for several densities. The curve has a shape worth memorising. At low temperature the opacity climbs steeply as H⁻ forms and then as hydrogen begins to ionise; it peaks near 10⁴–10⁵ K, where partially ionised hydrogen and helium absorb ferociously — the region responsible for the convection zones of cool stars and for the pulsation of Cepheids; it then falls as T⁻³·⁵ along Kramers\' law; and in a hot, fully ionised gas it bottoms out at the electron-scattering value, 0.02(1+X) ≈ 0.034 m² kg⁻¹ for solar composition. Rigel, behind the panel, is a B supergiant whose atmosphere is already in that last regime: hot enough that scattering competes with absorption, which is one reason its spectrum shows weak lines on a smooth continuum.'),
+        history('Svein Rosseland proposed his mean in 1924, the same year Eddington published <em>The Internal Constitution of the Stars</em>; Hendrik Kramers had derived the T⁻³·⁵ form of the free–free and bound–free opacities semi-classically in 1923. Between them they turned opacity from a catalogue of atomic data into two numbers in an equation of stellar structure — and Eddington immediately noticed that the resulting models predicted the mass–luminosity relation of Section 7.2 before it had been fully measured.', 'Two numbers from 1923–24'),
+      ],
+    },
+    {
+      id: 'opacity-summary',
+      kicker: 'Summary',
+      title: 'Opacity in brief',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'A star is not a blackbody; effective, colour, excitation, ionisation and kinetic temperatures all differ, and each probes a different layer or process. T_eff, defined by σT_eff⁴ = F_surf, is the one global number.',
+          'Opacity κ_λ (m² kg⁻¹) and optical depth τ_λ = ∫κ_λρ ds: a pure absorber attenuates a beam as e^{−τ}. τ ≈ 1 marks the visible surface; optically thin ≪ 1, thick ≫ 1. Titan\'s haze, Earth\'s sunset and the solar photosphere are all τ ≈ 1 surfaces.',
+          'Rayleigh τ ∝ λ⁻⁴ reddens the setting Sun and sets the extinction coefficient astronomers subtract every night; Mars\'s dust, grey and forward-scattering, makes the opposite colours.',
+          'Four sources of opacity: bound–bound (lines), bound–free (continuum with edges), free–free (grows to the infrared), electron scattering (grey floor). H⁻, bound by 0.754 eV, is the Sun\'s visible continuum opacity.',
+          'The Rosseland mean κ̄(ρ, T) is a harmonic, Planck-weighted average: Kramers κ̄ ∝ ρT⁻³·⁵ for bf and ff, 0.02(1+X) for scattering, an H⁻ rise at low T; a peak near 10⁴–10⁵ K where H and He are partly ionised.',
+        ),
+        key('Opacity is what couples the radiation field of Section 9.1 to the gas. With it we can now follow a beam through an atmosphere that absorbs <em>and emits</em> — radiative transfer.'),
+      ],
+    },
+  ],
+};
+
+const S9_3: Section = {
+  id: 'radiative-transfer',
+  number: '9.3',
+  title: 'Radiative Transfer',
+  summary: 'A photon leaving the Sun\'s core takes a hundred thousand years to reach the surface, not two seconds; why, and what that random walk implies. Then the heart of the chapter: a gas that both absorbs and emits, the source function, why the deep gas radiates like a blackbody and the surface does not, and how absorption and emission lines fall out of one equation.',
+  minutes: 26,
+  steps: [
+    {
+      id: 'random-walk',
+      kicker: 'Interactive · the drunkard\'s photon',
+      title: 'A random walk to the surface',
+      widget: { type: 'randomwalk' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('In a star\'s interior a photon travels, on average, one mean free path ℓ = 1/κ̄ρ before it is absorbed or scattered and re-emitted in a random new direction. Averaged over the solar interior ℓ is about a millimetre. The photon\'s path is therefore a <em>random walk</em>: N steps of length ℓ in random directions. The displacement after N steps is not Nℓ — the steps mostly cancel — but, by the elementary statistics of adding random vectors, about ℓ√N. To cross a distance d thus takes N = (d/ℓ)² steps, and the photon covers a total path Nℓ = d²/ℓ.'),
+        eq('d = \\ell\\sqrt{N} \\qquad\\Longrightarrow\\qquad N = \\left(\\frac{d}{\\ell}\\right)^2 = \\tau^2, \\quad t \\approx \\frac{d^2}{\\ell c}', 'Random-walk displacement. The number of steps to escape from optical depth τ is τ²: a photon at τ = 1 needs about one more step, which is the real meaning of "we see down to τ ≈ 1". The transit time of energy through the Sun, with d = R☉ and ℓ ≈ 1 mm, is of order 10⁵ years — against 2.3 seconds in a straight line.'),
+        p('The widget runs the walk: set the number of steps and watch the path tangle, then compare the net displacement with ℓ√N over many trials. Two lessons. First, the photon that finally leaves a star is not the photon that was made in its core; the energy has been absorbed and re-emitted billions of times, each time by gas at the local temperature, and all memory of the fusion reaction is gone. The light we receive carries the temperature of the <em>last</em> gas it touched — the atmosphere — which is why this chapter concerns itself with that thin layer and not with the interior. Second, the sunlight on your face left the solar surface eight minutes ago but was generated, as energy, in the Middle Ages or earlier.'),
+        think('The Sun\'s luminosity could switch off at the core today and the surface would shine unchanged for tens of thousands of years. The solar neutrinos of Chapter 11, by contrast, leave the core at the speed of light in two seconds, unimpeded. In 1968 the first neutrino experiment found only a third of the expected flux. List the possible explanations an astrophysicist of that year could have offered, including one based on this step — and which of them turned out to be right.'),
+      ],
+    },
+    {
+      id: 'limb-darkening',
+      kicker: 'Interactive · seeing to τ ≈ 1',
+      title: 'Limb darkening: the Sun\'s edge is cooler because it is higher',
+      widget: { type: 'limbdark', mode: 'observe' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('Any photograph of the Sun in white light shows the disc brightest at the centre and fading toward the edge — <b>limb darkening</b>, visible to the eye through a filter and measured by every solar telescope since Secchi in the 1860s. The explanation follows at once from the random-walk picture. Along any line of sight we see to about one optical depth. Looking at the disc centre that line goes straight down, and τ = 1 lies at a certain geometric depth where the gas is hot. Looking near the limb the line enters at a slant: it reaches τ = 1 after the same path length through gas, but that path is nearly horizontal, so it ends at a <em>shallower</em> geometric depth, where the gas is cooler and shines less brightly. The limb is darker because it shows us a higher, cooler layer.'),
+        p('The widget\'s left panel is the solar disc with a cursor you can drag from centre to limb; the right panel shows the slanted line of sight and the depth at which it reaches τ = 1. The brightness profile depends on wavelength — the darkening is strong in the blue and weak in the infrared, because the temperature gradient matters more where the Planck function is steeper — and on the star: in a planet-transit light curve (Section 7.4) the rounded bottom of the dip is the planet crossing a limb-darkened disc, and such light curves are now a routine way to measure limb darkening for stars other than the Sun.'),
+        eq('\\frac{I(\\theta)}{I(0)} \\approx 1 - u\\,(1 - \\cos\\theta), \\qquad u_{\\rm Sun}(550\\,{\\rm nm}) \\approx 0.6', 'The linear limb-darkening law, θ the angle between the line of sight and the local vertical. Section 9.4 derives I(θ)/I(0) = (2 + 3 cos θ)/5 from the gray-atmosphere model and compares it with the measurements.'),
+        note('Measuring the temperature at several depths from limb darkening at several wavelengths was the first way the Sun\'s temperature stratification was mapped, decades before model atmospheres: the brightness at the limb in the red gives the temperature at one depth, the brightness at the centre in the blue another. Section 9.4\'s Eddington–Barbier relation makes this quantitative.', 'Limb darkening as a thermometer'),
+      ],
+    },
+    {
+      id: 'source-function',
+      kicker: 'Interactive · emission joins absorption',
+      title: 'Emission, absorption and the source function',
+      widget: { type: 'transfer' },
+      scene: [goto('jupiter'), rate(1)],
+      body: [
+        p('Section 9.2 followed a beam that was only absorbed. A real gas also emits: the same atoms that remove photons add them back, by spontaneous emission, by recombination, by bremsstrahlung, and by scattering light in from other directions. Define the <b>emission coefficient</b> j_λ as the energy added to the beam per unit volume, time, wavelength and solid angle. Then along a path element ds the intensity changes by the emission minus the absorption, dI_λ = j_λ ds − κ_λ ρ I_λ ds, and dividing by the absorption term turns this into the <b>transfer equation</b>, with the ratio of the two coefficients given its own name: the <b>source function</b> S_λ = j_λ/κ_λρ.'),
+        eq('\\frac{dI_\\lambda}{d\\tau_\\lambda} = I_\\lambda - S_\\lambda \\qquad\\text{with}\\qquad S_\\lambda \\equiv \\frac{j_\\lambda}{\\kappa_\\lambda\\rho}', 'The equation of radiative transfer, with τ measured along the ray in the direction the light travels (the sign is reversed in the convention of Section 9.4). Read it as: the intensity relaxes toward the source function, with one optical depth as the relaxation length.'),
+        p('That last sentence is the whole of radiative transfer. If I > S the beam loses more than it gains and I falls; if I < S it rises; after a few optical depths I has forgotten where it started and equals S. For a slab of uniform source function the equation integrates to I = I₀e^{−τ} + S(1 − e^{−τ}), and the widget lets you set I₀, S and τ and watch the two terms trade places. Kirchhoff\'s three laws of Section 5.1 fall out as special cases: a thick slab (τ ≫ 1) shows I = S, a continuous spectrum; a thin slab with nothing behind it (I₀ = 0) shows I ≈ Sτ_λ, bright where τ_λ is large — emission lines; a thin slab in front of a brighter source (I₀ > S) shows dips where τ_λ is large — absorption lines. Whether a line appears bright or dark depends only on whether the source function in the gas is above or below the intensity behind it.'),
+        p('Jupiter, behind the panel, is a textbook of source functions. Its visible clouds are a thick slab at about 130 K; where they part, the 5-µm cameras of Galileo and Juno see down to gas at 250–300 K glowing brightly — "hot spots" that are simply holes to a higher source function. In the methane bands at 890 nm the overlying gas is so opaque that only the highest hazes are visible, and the Great Red Spot, which towers above the cloud deck, stands out bright against a dark planet. Each wavelength chooses its own τ = 1 surface; each surface has its own S_λ; the image is the map of the two.'),
+      ],
+    },
+    {
+      id: 'lte',
+      kicker: 'Interactive · when the gas glows like a blackbody',
+      title: 'Local thermodynamic equilibrium and the approach to the Planck function',
+      widget: { type: 'thermalize' },
+      scene: [goto('Antares', 'star'), rate(1)],
+      body: [
+        p('What is the source function? In a gas whose atoms are excited and de-excited mainly by collisions, the level populations follow Boltzmann\'s law at the local kinetic temperature, and the ratio of emission to absorption is then fixed by Kirchhoff\'s law to be the Planck function: S_λ = B_λ(T). This is <b>local thermodynamic equilibrium</b> (LTE) — "local" because T varies from place to place, "equilibrium" because at each place the matter is as it would be in a blackbody cavity at that T. LTE is a property of the <em>gas</em>; it says nothing about the radiation, which may still be far from B_λ.'),
+        p('How far, and where, is the point of the widget. Start a beam at the surface of a slab with S = B(T) and follow the mean intensity inward. Near the top the radiation is a mixture of light from below and darkness from above, and ⟨I⟩ is well below B; by τ ≈ 2 the field has thermalised and ⟨I⟩ ≈ B to a few per cent; deep down the two are indistinguishable. Now switch the gas to a scattering atmosphere, in which photons are redirected rather than destroyed: each scattering keeps the photon\'s "memory" of where it came from, S follows ⟨I⟩ rather than B, and the radiation can stay out of equilibrium with the gas for tens or hundreds of optical depths. The thermalisation length is 1/√ε for a destruction probability ε per scattering — the reason the cores of strong lines, formed high up where collisions are rare, are the first place LTE fails.'),
+        eq('S_\\lambda = (1-\\epsilon)\\,\\langle I_\\lambda\\rangle + \\epsilon\\,B_\\lambda(T), \\qquad \\text{thermalisation depth } \\tau_{\\rm th} \\approx 1/\\sqrt{\\epsilon}', 'The source function with scattering: a fraction ε of absorptions destroys the photon and re-emits thermally; the rest scatter. ε → 1 is LTE. In the solar photosphere ε is near 1 for the continuum (H⁻ absorbs, it does not scatter) and ≪ 1 in the cores of the Ca II H and K lines.'),
+        p('For most of the atmosphere of most stars LTE is an excellent approximation, and the classical model atmospheres built on it reproduce the continuum and the weak lines to a per cent. It fails where densities are low and radiation fields intense: in the extended envelopes of supergiants like Antares, behind the panel, where collisions are too rare to enforce Boltzmann populations; in the winds of O stars; in the chromosphere and corona of the Sun, whose emission lines come from gas at a million kelvin that no local Planck function describes. "Non-LTE" modelling — solving the rate equations for the level populations together with the transfer equation — is the standard tool for those regimes and has been since the 1970s.'),
+      ],
+    },
+    {
+      id: 'transfer-summary',
+      kicker: 'Summary',
+      title: 'Radiative transfer in brief',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Photons random-walk through a star: displacement ℓ√N, escape from optical depth τ takes τ² steps; energy takes ~10⁵ yr to cross the Sun. The light we see remembers only the last gas it touched — the atmosphere.',
+          'Limb darkening: along a slanted line of sight τ = 1 is reached at a shallower, cooler depth; stronger in the blue; measured for other stars by planetary transits.',
+          'Emission coefficient j_λ, source function S_λ = j_λ/κ_λρ; the transfer equation dI/dτ = I − S says intensity relaxes toward S over one optical depth. Slab solution I = I₀e^{−τ} + S(1 − e^{−τ}) yields Kirchhoff\'s laws: emission lines when S > I₀, absorption lines when S < I₀.',
+          'Local thermodynamic equilibrium: collisions keep the gas Boltzmann/Saha at the local T, so S_λ = B_λ(T). The radiation thermalises to B within a few τ for pure absorption, within 1/√ε for scattering; LTE fails in line cores, tenuous envelopes, chromospheres and winds.',
+        ),
+        key('The transfer equation is a single statement: the intensity along a ray is driven toward the source function. Every spectral feature — continuum, absorption line, emission line, limb darkening — is a question of how S_λ varies along the line of sight and how far in we can see.'),
+      ],
+    },
+  ],
+};
+
+const S9_4: Section = {
+  id: 'transfer-equation',
+  number: '9.4',
+  title: 'The Transfer Equation',
+  summary: 'Solving the transfer equation in the one geometry that matters for a star: flat layers, a temperature that rises inward, and rays leaving at every angle. The plane-parallel and gray approximations, Eddington\'s solution for the temperature against depth, the derived limb darkening tested against the Sun, and the Eddington–Barbier relation that tells us what depth we are looking at.',
+  minutes: 26,
+  steps: [
+    {
+      id: 'plane-parallel',
+      kicker: 'Interactive · flattening the star',
+      title: 'The plane-parallel atmosphere',
+      widget: { type: 'planeparallel' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('The Sun\'s photosphere is about 500 km thick on a sphere of radius 696 000 km: curvature is irrelevant over any distance a photon travels before it is absorbed. We may therefore treat the atmosphere as a stack of flat, horizontal layers in which temperature, density and opacity depend only on depth. Measure <em>vertical</em> optical depth τ_v inward from the top. A ray leaving the surface at angle θ to the vertical traverses a slant path ds = dz/cos θ through each layer, so the optical depth along it is τ_v/cos θ — larger by the air-mass factor of the sunset. The transfer equation becomes a one-dimensional problem with θ as a parameter.'),
+        eq('\\cos\\theta\\,\\frac{dI_\\lambda}{d\\tau_{\\lambda,v}} = I_\\lambda - S_\\lambda', 'The plane-parallel transfer equation, with τ_v measured downward (hence the sign change from Section 9.3). Writing μ = cos θ, each value of μ gives an ordinary differential equation along one family of parallel rays; the full field is the set of solutions for all μ.'),
+        p('The widget shows the geometry: layers of increasing optical depth, rays emerging at the angle you choose, and the point along each ray at which the <em>slant</em> optical depth reaches 2/3 — the depth whose source function, as the last step of this section shows, the emergent intensity most nearly reports. Tilt the ray toward the horizon and that point climbs: at μ = 1 it sits at τ_v = 2/3, at μ = 0.3 at τ_v = 0.2. The limb of the Sun shows us gas three times higher than the centre does.'),
+        p('Two further simplifications make the problem tractable by hand. Assume the opacity is independent of wavelength — a <b>gray atmosphere</b> — so that a single τ serves for all λ and the equation can be integrated over wavelength; and assume radiative equilibrium — all the energy is carried by radiation, none by convection — so that the total flux F = σT_eff⁴ is the same at every depth. Neither is exactly true of any star. Both are good enough to produce, in the next step, a temperature structure within a few per cent of the modern solar model.'),
+        terms(
+          ['Plane-parallel', 'Flat layers, properties depending on depth only. Valid when the atmosphere is thin compared with the radius; fails for extended supergiant envelopes and winds.'],
+          ['Gray atmosphere', 'Opacity independent of wavelength. Permits integration over λ; the Rosseland mean of Section 9.2 is the physically motivated gray opacity.'],
+          ['Radiative equilibrium', 'No net energy absorbed or emitted by the gas at any depth: the integrated flux is constant with depth and equals σT_eff⁴.'],
+          ['μ = cos θ', 'Direction cosine of a ray relative to the vertical. μ = 1 straight up (disc centre), μ → 0 grazing (limb).'],
+        ),
+      ],
+    },
+    {
+      id: 'gray-atmosphere',
+      kicker: 'Interactive · temperature against depth',
+      title: 'Eddington\'s gray atmosphere: T(τ)',
+      widget: { type: 'grayatm' },
+      scene: [goto('Procyon', 'star'), rate(1)],
+      body: [
+        p('Take moments of the plane-parallel equation — multiply by 1 and by μ and integrate over all directions — and two exact relations appear: in radiative equilibrium the mean intensity equals the source function, ⟨I⟩ = S, and the radiation pressure rises linearly with depth, dP_rad/dτ = F/c. The second says that the pressure of light at depth τ is just the pressure at the surface plus (F/c)τ. To close the system one needs a relation between P_rad and ⟨I⟩, and Eddington\'s approximation supplies it: take the field to be isotropic enough that P_rad = (4π/3c)⟨I⟩, as it would be exactly deep inside. With the boundary condition that no light comes in from above, the result is a closed formula.'),
+        eq('T^4 = \\tfrac{3}{4}\\,T_{\\rm eff}^4\\left(\\tau + \\tfrac{2}{3}\\right)', 'The gray-atmosphere temperature structure in the Eddington approximation. At τ = 0 the gas is at T = 0.841 T_eff; at τ = 2/3 the gas has exactly the effective temperature; deep down T rises as τ^{1/4}. The exact gray solution (Hopf, 1934) replaces 2/3 by a function q(τ) running from 0.577 to 0.710.'),
+        p('The widget plots the curve and compares it with an empirical solar model: the agreement is within a few per cent through the photosphere. Three features deserve emphasis. The surface is not at T_eff but cooler, because the outer gas is heated by radiation from one side only — ⟨I⟩ there is less than half the Planck value at T_eff, as Section 9.1 anticipated. The effective temperature is reached at τ = 2/3, which is why that number, rather than 1, labels "the" photosphere. And the slope is steep: between τ = 0.1 and τ = 2 the solar temperature rises from 4 800 K to 7 000 K across a few hundred kilometres. Procyon, behind the panel, is an F5 subgiant hotter than the Sun by 800 K; its gray structure is the same curve scaled by its T_eff, and the departures from it — a shallower gradient in the ultraviolet, a convection zone that becomes important below τ ≈ 1 — are what full model atmospheres add.'),
+        table(
+          ['τ (vertical)', 'T_gray / T_eff', 'T_gray (Sun)', 'Empirical solar model', 'Depth below τ = 1 (km)'],
+          [
+            ['0', '0.841', '4 850 K', '≈ 4 400 K (temperature minimum region)', '≈ +500'],
+            ['0.1', '0.880', '5 080 K', '5 000 K', '≈ +250'],
+            ['2/3', '1.000', '5 772 K', '5 780 K', '≈ +40'],
+            ['1', '1.057', '6 100 K', '6 150 K', '0'],
+            ['2', '1.188', '6 860 K', '7 000 K', '≈ −70'],
+            ['10', '1.683', '9 710 K', '≈ 9 500 K (below the visible layers)', '≈ −250'],
+          ],
+          'Eddington\'s gray atmosphere against a modern empirical model of the quiet Sun. The gray model is poorest at the very top, where the real temperature keeps falling to a minimum near 4 400 K before the chromosphere reverses the trend.',
+        ),
+      ],
+    },
+    {
+      id: 'limb-darkening-derived',
+      kicker: 'Interactive · a prediction tested',
+      title: 'Limb darkening from the gray atmosphere',
+      widget: { type: 'limbdark', mode: 'eddington' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('With T(τ) in hand, the emergent intensity in any direction follows from the formal solution of the transfer equation: integrate the source function along the slanted ray, weighting each depth by the probability e^{−τ/μ} that light from there escapes. For the gray atmosphere S = σT⁴/π = (3F/4π)(τ + 2/3), a linear function of τ, and the integral is elementary. The result depends on direction only through μ and predicts the whole limb-darkening curve with no free parameter.'),
+        eq('I(\\theta) = \\frac{3F}{4\\pi}\\left(\\cos\\theta + \\frac{2}{3}\\right) \\qquad\\Longrightarrow\\qquad \\frac{I(\\theta)}{I(0)} = \\frac{3}{5}\\cos\\theta + \\frac{2}{5}', 'Limb darkening of a gray atmosphere in the Eddington approximation. At the extreme limb (θ = 90°) the intensity falls to 40 % of the central value; at θ = 60° (two thirds of the way out in projected radius) to 70 %.'),
+        p('The widget overlays this prediction on the measured solar profile at several wavelengths. In the visible the match is close — the solar limb at 550 nm is about 0.42 of the centre, against 0.40 predicted — and the residuals have the sign the gray assumption dictates: the real Sun darkens more in the blue, where the opacity is lower and we see deeper into a steeper part of the temperature gradient, and less in the infrared. A one-line model built from flat layers, a single opacity and an isotropy assumption reproduces a century of solar photometry to a few per cent. That is why Eddington\'s approximation is still the first thing a student is taught to do with the transfer equation.'),
+        history('Arthur Eddington worked out the gray atmosphere around 1916–17 and used it, with Karl Schwarzschild\'s earlier radiative-equilibrium models of 1906, to argue that the Sun\'s outer layers are in radiative rather than convective equilibrium; the later discovery of the solar convection zone just below the photosphere did not overturn the result for the layers we see. Schwarzschild, in 1906, had already used limb darkening to decide between the two: he showed that an adiabatic (convective) atmosphere would darken too little and the radiative one about right.', 'Schwarzschild and Eddington'),
+      ],
+    },
+    {
+      id: 'eddington-barbier',
+      kicker: 'Interactive · what depth are we looking at?',
+      title: 'The Eddington–Barbier relation',
+      widget: { type: 'barbier' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('The formal solution contains a result of great practical value. The emergent intensity along a ray is a weighted average of the source function, with weight e^{−τ_s}dτ_s over slant optical depth τ_s. That weight is largest at τ_s = 0 and falls off with scale 1, so the average "sees" chiefly the first optical depth; and if S is linear in τ the average is exactly S evaluated at τ_s = 1 — that is, at vertical optical depth τ_v = μ. In words: <em>the intensity we observe in a given direction is the source function at slant optical depth unity</em>. Looking at the disc centre we see S at τ_v = 1; at the limb, at τ_v → 0; and the flux, which averages over the disc, comes from τ_v ≈ 2/3.'),
+        eq('I_\\lambda(0,\\mu) = \\int_0^\\infty S_\\lambda(\\tau_v)\\,e^{-\\tau_v/\\mu}\\,\\frac{d\\tau_v}{\\mu} \\;\\approx\\; S_\\lambda(\\tau_v = \\mu), \\qquad F_\\lambda \\approx \\pi S_\\lambda(\\tau_v = 2/3)', 'The formal solution and the Eddington–Barbier relation (Eddington 1926, Daniel Barbier 1943). Exact for a source function linear in τ; a good approximation otherwise, because the weighting function is sharply peaked.'),
+        p('The widget lets you shape S(τ) — a gradient, a hump, a step — and shows the escape-probability weighting for the μ you choose, the exact integral, and the Eddington–Barbier estimate. For a smooth S the two agree closely; for a step or a spike the estimate degrades, which tells you where the relation can be trusted. Its uses are everywhere. It converts limb-darkening measurements directly into S(τ), hence T(τ) (Section 9.3). It explains spectral lines in one sentence: at a line wavelength κ_λ is large, so τ_λ = 2/3 is reached high up where T is low and B_λ(T) is small — the flux is reduced, and we see an absorption line; in an emission-line star the temperature rises outward and the same argument gives a bright line. And it tells the observer, for any wavelength, the depth whose conditions a measurement reports.'),
+        think('In the core of the Hα line the solar opacity is so high that τ = 2/3 lies in the chromosphere, where the temperature is <em>rising</em> outward again — yet Hα is still seen in absorption against the disc. Use the Eddington–Barbier relation together with the LTE discussion of Section 9.3 to say why. (Hint: is S_λ = B_λ(T) in the Hα core?)'),
+      ],
+    },
+    {
+      id: 'transfer-eq-summary',
+      kicker: 'Summary',
+      title: 'The transfer equation in brief',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Plane-parallel atmosphere: flat layers, vertical optical depth τ_v, μ = cos θ; μ dI/dτ_v = I − S. Slant depth = τ_v/μ.',
+          'Gray (λ-independent opacity) and radiative equilibrium (constant flux) let the equation be integrated over wavelength. Moments give ⟨I⟩ = S and dP_rad/dτ = F/c.',
+          'Eddington approximation P_rad = (4π/3c)⟨I⟩ closes the system: T⁴ = (3/4)T_eff⁴(τ + 2/3). T = T_eff at τ = 2/3; the surface is at 0.84 T_eff; matches the empirical Sun to a few per cent.',
+          'Predicted limb darkening I(θ)/I(0) = (3cos θ + 2)/5 — 40 % at the limb — agrees with the Sun at visible wavelengths; residuals reflect the non-gray opacity.',
+          'Eddington–Barbier: I(μ) ≈ S(τ_v = μ), F ≈ πS(τ_v = 2/3). The observed intensity reports the source function one slant optical depth in; this explains absorption lines (τ_λ = 2/3 reached where T is lower) and makes limb darkening a thermometer.',
+        ),
+        key('Everything in this section rests on one integral — the formal solution — and one approximation about isotropy. The reward is a quantitative photosphere: temperatures, depths and a limb-darkening law from first principles, with the real Sun following to within a few per cent.'),
+      ],
+    },
+  ],
+};
+
+const S9_5: Section = {
+  id: 'line-profiles',
+  number: '9.5',
+  title: 'The Profiles of Spectral Lines',
+  summary: 'What a spectral line looks like up close and why: the natural width set by the uncertainty principle, the Doppler core from thermal motion, the pressure-broadened wings, rotation and turbulence; the Voigt profile that combines them; the curve of growth that turns a line\'s strength into a number of atoms; and the composition of the Sun — which the meteorites confirm.',
+  minutes: 30,
+  steps: [
+    {
+      id: 'line-anatomy',
+      kicker: 'Interactive · reading a profile',
+      title: 'The anatomy of a spectral line',
+      widget: { type: 'lineprofile' },
+      scene: [goto('Sirius', 'star'), rate(1)],
+      body: [
+        p('At the resolution of a classification spectrum a line is a dark stroke. At high resolution it is a shape: a deep <b>core</b> at the central wavelength λ₀ flanked by <b>wings</b> that merge gradually into the continuum. The depth of the core, the width at half depth (the <em>full width at half maximum</em>), and the extent of the wings each encode different physics, and the whole shape is called the <b>line profile</b>. The widget draws one and lets you adjust its depth and width independently; the readouts below are the measurements a spectroscopist would make.'),
+        p('The single most useful measurement collapses the shape to one number. Replace the line by a rectangle that removes the same total amount of light from the continuum and has the full depth of the continuum; the rectangle\'s width is the <b>equivalent width</b> W. Being an integral, it is immune to the instrument\'s blurring — a spectrograph that smears the profile wider and shallower leaves W unchanged — and it is the quantity that connects, through the curve of growth of Step 4, to the number of absorbing atoms. The strongest lines in the solar spectrum, Ca II H and K, have W ≈ 2 nm; a typical weak iron line, 0.001 nm.'),
+        eq('W = \\int \\frac{F_c - F_\\lambda}{F_c}\\,d\\lambda', 'Equivalent width, usually quoted in picometres or milliångströms. F_c is the continuum flux interpolated across the line. Sirius\'s Balmer lines, behind the panel, have W of several nanometres and wings spanning tens: pressure broadening at its most extreme in an A dwarf.'),
+        p('Where in the atmosphere does a line form? By the Eddington–Barbier argument, each wavelength across the profile is seen to a different depth. In the far wings the extra opacity is small, τ = 2/3 lies almost as deep as in the continuum, and the intensity is only slightly reduced. Toward the core the line opacity grows, the τ = 2/3 surface rises through cooler layers, and the intensity falls. The core itself forms highest of all. A strong line is therefore a stratified probe: its wings report the deep photosphere, its core the top of it or, for the strongest lines, the chromosphere above. That is why line profiles, not just line strengths, are the data from which model atmospheres are built.'),
+      ],
+    },
+    {
+      id: 'broadening',
+      kicker: 'Interactive · why lines have width',
+      title: 'Natural, Doppler and pressure broadening: the Voigt profile',
+      widget: { type: 'broadening' },
+      scene: [goto('Capella', 'star'), rate(1)],
+      body: [
+        p('An atom\'s energy levels are not infinitely sharp, so no line can be. Three mechanisms set the width. The first is <b>natural broadening</b>: an excited level lives only a time Δt ≈ 10⁻⁸ s before decaying, and the uncertainty principle ΔE Δt ≳ ħ smears its energy by ΔE, hence the photon\'s wavelength by Δλ ≈ λ²/(2πcΔt) — about 2 × 10⁻⁵ nm for Hα, tiny. Its profile is Lorentzian: a narrow core with wings that fall only as 1/(Δλ)², very slowly.'),
+        p('The second is <b>Doppler broadening</b>. The atoms move with the Maxwell–Boltzmann distribution of speeds, each shifting its absorption by Δλ = λ v_r/c, and the line is the sum: a Gaussian whose full width at half maximum is Δλ = (2λ/c)√(2kT ln 2/m). For hydrogen at 5 800 K that is 0.04 nm at Hα, two thousand times the natural width; for iron, 56 times heavier, seven times less. Turbulent motions of the gas add in quadrature as an extra velocity. The Gaussian core is narrow in velocity but its wings die off as e^{−(Δλ)²}, extremely fast.'),
+        p('The third is <b>pressure broadening</b>, also called collisional: the electric fields of passing ions and electrons, or collisions with neutral atoms, perturb the levels and shorten their effective lifetimes, so the natural Lorentzian is widened by a factor that grows with the density of perturbers — in the solar photosphere, by about a thousand. For hydrogen the linear Stark effect makes the broadening enormous and proportional to the electron density, which is why the Balmer wings in an A dwarf span tens of nanometres and in a supergiant almost nothing: the luminosity classification of Section 8.2 is pressure broadening read backwards.'),
+        eq('\\Delta\\lambda_{\\rm nat} \\approx \\frac{\\lambda^2}{2\\pi c\\,\\Delta t_0}, \\qquad (\\Delta\\lambda)_{1/2,\\,{\\rm Doppler}} = \\frac{2\\lambda}{c}\\sqrt{\\frac{2kT\\ln 2}{m}\\,}\\ \\Big(+\\,v_{\\rm turb}^2\\Big)^{1/2}, \\qquad \\Delta\\lambda_{\\rm press} \\approx \\frac{\\lambda^2}{c}\\,\\frac{n\\sigma}{\\pi}\\sqrt{\\frac{2kT}{m}}', 'Widths of the three mechanisms: natural (Lorentzian), Doppler (Gaussian), pressure (Lorentzian, n the perturber density, σ the collision cross-section). The convolution of a Gaussian core with Lorentzian wings is the Voigt profile: Doppler decides the core, damping decides the wings.'),
+        p('The widget convolves the pieces. Raise the temperature and the Gaussian core widens; raise the pressure and the Lorentzian wings spread while the core hardly moves; the composite is the <b>Voigt profile</b> that real lines follow. Capella, behind the panel, is a pair of G giants whose lines are narrower than the Sun\'s of the same strength — lower gravity, lower density, weaker damping wings — and whose Doppler cores are broadened by macroturbulence of several km/s in their convective envelopes. Every term in the formula is a measurable property of the star.'),
+      ],
+    },
+    {
+      id: 'rotation',
+      kicker: 'Interactive · the star as a spinning disc',
+      title: 'Rotational broadening and the shape of a line',
+      widget: { type: 'rotation' },
+      scene: [goto('Altair', 'star'), rate(1)],
+      body: [
+        p('One more broadening is not atomic at all. A rotating star presents one limb approaching and the other receding; every point on the disc contributes a narrow line shifted by its own projected velocity, and the sum is the intrinsic profile smeared by a characteristic kernel — nearly a half-ellipse — of half-width λ v_eq sin i / c. The quantity measured is <b>v sin i</b>: the equatorial speed times the sine of the inclination of the rotation axis, because a star seen pole-on shows no rotational shift at all. Altair, behind the panel, has v sin i ≈ 240 km/s and a true equatorial speed near 290 — fast enough to flatten it by 20 per cent and darken its equator — and its lines are shallow, broad bowls rather than sharp dips.'),
+        p('The widget draws the disc colour-coded by line-of-sight velocity and builds the profile strip by strip. Two things to notice. The rotational kernel has a shape that no atomic mechanism produces — flat-bottomed and sharp-edged rather than peaked — so rotation can be separated from thermal and pressure broadening by the profile\'s form, not just its width. And because every point on the disc is affected equally, rotation conserves the equivalent width while reducing the depth: a rapidly rotating star of a given spectral type has weaker-looking lines, which misled early classifiers into assigning it a later type.'),
+        p('Statistics of v sin i across the H–R diagram carry a story of their own. O, B and A stars spin fast, typically 100–300 km/s; at about spectral type F5 the average speed drops abruptly to a few km/s and stays low through G, K and M. The break coincides with the appearance of a deep convective envelope, which drives a magnetised wind that carries away angular momentum over the star\'s life — the reason the Sun, 4.6 billion years old, rotates once a month rather than once a day. Rotation is thus both a nuisance to the spectroscopist and a clock.'),
+        note('Other velocity fields leave their own marks. <em>Macroturbulence</em> — convective cells larger than a photon\'s mean free path — broadens lines with a Gaussian-like kernel of a few km/s in dwarfs and ten or more in supergiants. <em>Pulsation</em> moves whole lines back and forth in time (Cepheids, RR Lyrae). The <em>Zeeman effect</em> splits lines in a magnetic field, by 0.01 nm per tesla at 500 nm; it is how sunspot fields of 0.3 T and the kilogauss fields of Ap stars are measured, and in circular polarisation it reveals fields far too weak to split a line visibly.', 'Beyond rotation'),
+      ],
+    },
+    {
+      id: 'curve-of-growth',
+      kicker: 'Interactive · from a line to a number of atoms',
+      title: 'The curve of growth',
+      widget: { type: 'curveofgrowth' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('The purpose of all this is to count atoms. The equivalent width of a line depends on the number of absorbers per unit area along the line of sight, N_a, in a way that goes through three regimes, and the plot of log W against log N_a — the <b>curve of growth</b> — has a shape that is the same for every line, once the axes are scaled. The widget builds it: slide the column density upward and watch the profile and its equivalent width respond.'),
+        list(
+          '<b>Linear part.</b> For a weak line the profile is optically thin everywhere, each atom removes the same amount of light, and W ∝ N_a. The line deepens without changing shape.',
+          '<b>Flat (saturated) part.</b> Once the Doppler core has absorbed all the light at its centre — the core is "black" — adding atoms cannot deepen it further; W grows only as the core widens into the steep Gaussian flanks, roughly as √(ln N_a). Lines here are almost useless for abundances: a factor of ten more atoms barely changes W.',
+            '<b>Damping (square-root) part.</b> At still higher N_a the Lorentzian wings, weak but slow to fall off, become optically thick and the line grows outward again as W ∝ √N_a. The Balmer lines and Ca II H and K in the Sun are here.',
+        ),
+        eq('W \\propto N_a \\;\\;(\\text{weak}), \\qquad W \\propto \\sqrt{\\ln N_a}\\;\\;(\\text{saturated}), \\qquad W \\propto \\sqrt{N_a}\\;\\;(\\text{damped})', 'The three regimes of the curve of growth. The scaled abscissa is N_a f λ, with f the oscillator strength (the quantum-mechanical probability of the transition, measured in the laboratory) — so lines of the same element with different f fall on one curve, and that is how the curve is traced empirically.'),
+        p('To use it, measure W for several lines of one element with different f, shift their points horizontally until they lie on the theoretical curve, and read off N_a for the level each line starts from. Boltzmann and Saha (Section 8.1) then convert the population of one level of one ionisation stage into the total number of atoms of the element — which also, as a check, yields the excitation temperature and electron pressure that make all the lines agree. Done for sodium in the Sun, this gives N(Na) column densities of order 10²³ m⁻² for the D lines; done for every element with measurable lines, it gives the composition of the solar photosphere, the subject of the next step.'),
+      ],
+    },
+    {
+      id: 'abundances',
+      kicker: 'Interactive · the composition of the Sun',
+      title: 'Abundances: the Sun, the meteorites and the three letters X, Y, Z',
+      widget: { type: 'abundances' },
+      scene: [goto('vesta'), rate(1)],
+      body: [
+        p('A century of curve-of-growth analysis, refined by non-LTE and three-dimensional model atmospheres, has produced the solar abundance table: the number of atoms of each element relative to hydrogen, conventionally written as log ε = log(N/N_H) + 12. Hydrogen is 12 by definition; helium is 10.93; oxygen, the third most abundant element, 8.69; carbon 8.43; iron 7.50 — one iron atom for every thirty thousand hydrogens. By mass, hydrogen is X = 0.74, helium Y = 0.25, and everything heavier together — which astronomers, to the dismay of chemists, call the <em>metals</em> — Z = 0.013. Cecilia Payne\'s 1925 conclusion that stars are made overwhelmingly of hydrogen and helium is the single most important fact in this table.'),
+        p('The widget shows the table as a bar chart, element by element, and lets you overlay a second set of numbers: the composition of the <em>CI carbonaceous chondrites</em>, the most primitive meteorites, measured in the laboratory to far better precision than any spectral line. For every element that is not a gas or highly volatile, the two agree to within about ten per cent across ten orders of magnitude in abundance. That is as it should be — the meteorites are leftover material from the same cloud that made the Sun, never melted or differentiated — and the agreement is both the best check on stellar spectroscopy and the reason a pebble from the asteroid belt can calibrate the composition of the stars. Vesta, behind the panel, is a differentiated body and not a CI source; the Dawn mission\'s spectra of its surface, matched to the HED meteorites in our collections, tie a specific class of rocks to a specific parent in the same spirit.'),
+        p('The agreement also exposes the exceptions. Lithium is forty times rarer in the Sun than in the meteorites: it is destroyed by nuclear reactions at 2.5 million kelvin, and the Sun\'s convection has carried its surface lithium down to that depth and back over billions of years — a diagnostic of mixing used for every solar-type star. The noble gases and the most volatile elements never condensed into the meteorites and are known only from the Sun. And the pattern itself, with its sawtooth of even elements more abundant than odd, its iron peak and its steady fall toward the heavy end, is a record of nucleosynthesis that Chapter 13 and its successors will decode: the elements in the widget were made in stars, and the lines in the solar spectrum are their census.'),
+        table(
+          ['Element', 'log ε (photosphere)', 'log ε (CI meteorites)', 'Mass fraction', 'Note'],
+          [
+            ['H', '12.00', '—', '0.738', 'by definition'],
+            ['He', '10.93', '—', '0.249', 'from helioseismology; no usable photospheric lines'],
+            ['O', '8.69', '8.40', '5.7 × 10⁻³', 'partly volatile in meteorites'],
+            ['C', '8.43', '7.39', '2.4 × 10⁻³', 'mostly lost from meteorites as gas'],
+            ['Ne', '7.93', '—', '1.3 × 10⁻³', 'noble gas; solar wind and corona'],
+            ['Fe', '7.50', '7.45', '1.3 × 10⁻³', 'hundreds of measurable lines'],
+            ['Si', '7.51', '7.51', '7.0 × 10⁻⁴', 'the meteoritic normalisation element'],
+            ['Li', '1.05', '3.26', '1 × 10⁻⁸', 'depleted in the Sun by burning at the base of the convection zone'],
+          ],
+          'Solar photospheric and CI-chondrite abundances (Asplund et al. 2009 scale). Refractory elements agree; volatiles are deficient in the meteorites; lithium is deficient in the Sun.',
+        ),
+      ],
+    },
+    {
+      id: 'chapter-close',
+      kicker: 'Chapter close',
+      title: 'Stellar atmospheres in one page',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Radiation field: specific intensity I_λ (constant along a ray), mean intensity ⟨I_λ⟩, energy density u = aT⁴, flux F = ∫I cos θ dΩ (σT⁴ at the surface), radiation pressure aT⁴/3 — the force on comet dust and the structural force in the most massive stars.',
+          'Opacity κ_λ and optical depth τ_λ; e^{−τ} attenuation; τ ≈ 2/3 is the surface we see. Sources: bound–bound, bound–free, free–free, electron scattering; H⁻ for the Sun; the Rosseland mean and Kramers\' ρT⁻³·⁵.',
+          'Transfer: photons random-walk (ℓ√N; 10⁵ yr through the Sun); dI/dτ = I − S with S = j/κρ; LTE gives S = B(T); slab solution reproduces Kirchhoff\'s laws; thermalisation within a few τ for absorption, 1/√ε for scattering.',
+          'Plane-parallel gray atmosphere: T⁴ = (3/4)T_eff⁴(τ + 2/3); limb darkening (3cos θ + 2)/5 matches the Sun; Eddington–Barbier I(μ) ≈ S(τ = μ) tells which depth a measurement reports and why lines are dark.',
+          'Line profiles: natural (Lorentz), Doppler (Gauss), pressure (Lorentz) → Voigt; rotation (v sin i), turbulence, Zeeman; equivalent width; curve of growth (linear, flat, √N) → column densities → abundances: X = 0.74, Y = 0.25, Z = 0.013, confirmed by the CI meteorites.',
+        ),
+        key('Chapter 9 closes the loop opened in Chapter 3. There, light told us a star\'s temperature; here, the physics of how that light escapes tells us where in the star the temperature was measured, what the gas is made of and how it moves. A model atmosphere — opacity, transfer equation, line formation, solved together — is the instrument through which every stellar spectrum in this program is read.'),
+        { kind: 'callout', tone: 'history', title: 'Suggested reading', html: 'Carroll & Ostlie, <em>An Introduction to Modern Astrophysics</em>, Chapter 9, which this chapter follows; D. Mihalas, <em>Stellar Atmospheres</em> (2nd ed., 1978) and Hubeny & Mihalas (3rd ed., 2014), the standard treatise; D. F. Gray, <em>The Observation and Analysis of Stellar Photospheres</em> (3rd ed., 2005) for line profiles and the curve of growth in practice; G. B. Rybicki & A. P. Lightman, <em>Radiative Processes in Astrophysics</em> (1979) for the radiation field and opacities; A. S. Eddington, <em>The Internal Constitution of the Stars</em> (1926), Chapter XII, for the gray atmosphere in its author\'s words; M. Asplund et al., <em>Astronomy & Astrophysics</em> 653, A141 (2021) for the solar abundances; K. Lodders on the meteoritic table.' },
+        { kind: 'callout', tone: 'think', title: 'Problems to try', html: '(1) Show that for a blackbody u = aT⁴ and P_rad = aT⁴/3, and evaluate both at the solar centre (1.57 × 10⁷ K) and at the photosphere. (2) Compute the radiation pressure of sunlight at Mercury, Earth and Neptune for an absorbing and a reflecting surface; find the force on a 20 m × 20 m sail at 1 AU and its acceleration if the sail masses 10 kg. (3) For a grain of density 3 000 kg m⁻³, find the radius at which solar radiation pressure equals solar gravity; show the ratio is independent of distance. (4) The solar photosphere has ρ ≈ 2 × 10⁻⁴ kg m⁻³ and κ₅₀₀ ≈ 0.03 m² kg⁻¹; find the photon mean free path and compare with the 500-km photosphere. (5) On a night with k_V = 0.15 mag per air mass, by how much is a star dimmed at zenith angles 0°, 60° and 80°? Explain why τ_V ≈ 0.14 corresponds to k_V = 0.15. (6) Using N = τ² and ℓ = 1 mm, estimate the time for energy to random-walk from the Sun\'s centre to its surface; repeat for a red giant with R = 100 R☉ and ℓ = 1 m. (7) From T⁴ = (3/4)T_eff⁴(τ + 2/3) find τ where T = T_eff, T = 0.9 T_eff and T = 1.2 T_eff for the Sun. (8) Compute I(θ)/I(0) for θ = 30°, 60°, 80°, 89° from the gray formula and compare with the linear law with u = 0.6. (9) Evaluate the Doppler width of Hα and of the Na D lines at 5 800 K and at 3 000 K; add 2 km/s of turbulence and comment. (10) Two sodium D lines have equivalent widths 0.075 and 0.056 nm with f-values 0.645 and 0.325. Decide from the ratio which part of the curve of growth they occupy and estimate the relative column density implied. (11) The lithium 670.8 nm line is undetectable in the Sun (log ε = 1.05) but strong in young solar-type stars (log ε ≈ 3.3). By what factor does the number of lithium atoms differ, and what does the Sun\'s value tell you about the depth of its convection zone?' },
+      ],
+    },
+  ],
+};
+
 export const COURSE: Course = {
   id: 'astrophysics',
   title: 'Introduction to Astrophysics',
@@ -3929,6 +4447,12 @@ export const COURSE: Course = {
       title: 'The Classification of Stellar Spectra',
       summary: 'How the Harvard sequence was found and why it is a thermometer; Boltzmann and Saha; the spectra of the planets; the Hertzsprung–Russell diagram, its main sequence, giants, white dwarfs and planets; luminosity classes and distances from a spectrum.',
       sections: [S8_1, S8_2],
+    },
+    {
+      id: 'ch9', number: 9,
+      title: 'Stellar Atmospheres',
+      summary: 'How light escapes a star and what it carries: the radiation field, opacity and optical depth, the random walk of photons, the transfer equation and its gray solution, limb darkening, and the profiles of spectral lines that reveal temperature, pressure, rotation and the composition of the Sun.',
+      sections: [S9_1, S9_2, S9_3, S9_4, S9_5],
     },
   ],
 };
