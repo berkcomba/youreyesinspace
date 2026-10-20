@@ -33,11 +33,9 @@ const SIZE_MAX_KM = 3.0;
 const FAR_N_AZ = 64;
 const FAR_PER_CELL = 2;
 const FAR_HEIGHT_KM = 120;
-/** altitude (km) where the far specks start to fade / vanish */
-const FAR_FADE_START_KM = 60000;
-const FAR_FADE_END_KM = 220000;
-/** distance beyond the outer edge (km) over which the specks fade when the camera is in-plane but far */
-const FAR_RADIAL_KM = 160000;
+/** camera distance from the body (km) where the far specks start to fade / vanish */
+const FAR_FADE_START_KM = 320000;
+const FAR_FADE_END_KM = 400000;
 
 const _y = new Vector3(0, 1, 0);
 const _q = new Quaternion();
@@ -179,10 +177,8 @@ export class RingParticles {
     const radialFade = smooth01((camR - (r.inner - halfWindow)) / halfWindow) * (1 - smooth01((camR - (r.outer)) / halfWindow));
     this.visibility = enabled ? altFade * radialFade : 0;
 
-    // far specks: visible from well outside, fading out as the camera leaves the ring region
-    const farAlt = 1 - smooth01((this.altitude - FAR_FADE_START_KM) / (FAR_FADE_END_KM - FAR_FADE_START_KM));
-    const farRadial = 1 - smooth01((camR - r.outer - FAR_RADIAL_KM * 0.5) / FAR_RADIAL_KM);
-    const farVis = enabled ? farAlt * farRadial : 0;
+    // far specks: visible whenever the camera is within FAR_FADE_END_KM of the body
+    const farVis = enabled ? 1 - smooth01((relPos.length() - FAR_FADE_START_KM) / (FAR_FADE_END_KM - FAR_FADE_START_KM)) : 0;
 
     this.mesh.visible = this.visibility > 0.002;
     this.far.visible = farVis > 0.002;
