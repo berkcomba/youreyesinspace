@@ -35,9 +35,13 @@ void main() {
   float NdotL = dot(uNormal, L);
   float NdotV = dot(uNormal, V);
   bool sameSide = (NdotL * NdotV) > 0.0;
-  // Lit face: diffuse; unlit face: light transmitted through the (thin) ring
-  float lit = abs(NdotL);
-  float direct = sameSide ? lit : lit * 0.35 * (1.0 - dens * 0.6);
+  // The sheet stands in for a layer many particles thick: multiple scattering keeps it from
+  // going black at grazing illumination (Saturn near equinox has the Sun only a few degrees
+  // above the plane), so the diffuse term has a floor instead of following cos(i) to zero.
+  float lit = mix(0.5, 1.0, abs(NdotL));
+  // Lit face: diffuse. Unlit face: light scattered through — the sparse regions (C ring,
+  // Cassini division) transmit more than the dense B ring.
+  float direct = sameSide ? lit : lit * mix(0.85, 0.5, dens);
   // Opposition surge / backscatter
   float back = pow(max(dot(-L, -V), 0.0), 3.0) * 0.15;
   // colour variation with radius (icy vs dusty)
