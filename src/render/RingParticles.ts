@@ -1,5 +1,6 @@
 import {
-  Group, IcosahedronGeometry, InstancedBufferAttribute, InstancedBufferGeometry, Mesh, Quaternion, ShaderMaterial, Vector3, Vector4,
+  BufferAttribute, BufferGeometry, Group, IcosahedronGeometry, InstancedBufferAttribute, InstancedBufferGeometry, Mesh, Points,
+  Quaternion, ShaderMaterial, Vector3, Vector4,
 } from 'three';
 import type { IUniform } from 'three';
 import { Shaders } from './shaders';
@@ -25,6 +26,19 @@ const HEIGHT_KM = 80;
 const SIZE_MIN_KM = 0.1;
 const SIZE_MAX_KM = 3.0;
 
+/**
+ * Far layer: a sparse, fixed cloud of unresolved specks (GL points, 4k of them) over the whole
+ * ring, so the rings read as granular from outside too — a few drifting dots, nothing more.
+ */
+const FAR_N_AZ = 64;
+const FAR_PER_CELL = 2;
+const FAR_HEIGHT_KM = 120;
+/** altitude (km) where the far specks start to fade / vanish */
+const FAR_FADE_START_KM = 60000;
+const FAR_FADE_END_KM = 220000;
+/** distance beyond the outer edge (km) over which the specks fade when the camera is in-plane but far */
+const FAR_RADIAL_KM = 160000;
+
 const _y = new Vector3(0, 1, 0);
 const _q = new Quaternion();
 const _v = new Vector3();
@@ -46,9 +60,13 @@ export class RingParticles {
   /** camera distance from the ring plane this frame (km) */
   altitude = Infinity;
 
+  readonly far: Points;
+  readonly farMat: ShaderMaterial;
+
   private readonly body: CelestialBody;
   private readonly phase = new Array<number>(N_ANN).fill(0);
   private readonly camCell = new Array<number>(N_ANN).fill(0);
+  private readonly farPhase = new Array<number>(N_ANN).fill(0);
 
   constructor(body: CelestialBody, lit: Uniforms, gaps: Vector4[]) {
     this.body = body;
@@ -98,6 +116,43 @@ export class RingParticles {
     this.mesh.frustumCulled = false;
     this.mesh.renderOrder = 2;
     this.group.add(this.mesh);
+
+    // far specks
+    const nFar = N_ANN * FAR_N_AZ * FAR_PER_CELL;
+    const farCell = new Float32Array(nFar * 3);
+    k = 0;
+    for (let a = 0; a < N_ANN; a++) for (let t = 0; t < FAR_N_AZ; t++) for (let j = 0; j < FAR_PER_CELL; j++) {
+      farCell[k++] = a; farCell[k++] = t; farCell[k++] = j;
+    }
+    const farGeo = new BufferGeometry();
+    farGeo.setAttribute('aCell', new BufferAttribute(farCell, 3));
+    // Points needs a position attribute to count vertices; the real position comes from aCell
+    farGeo.setAttribute('position', new BufferAttribute(new Float32Array(nFar * 3), 3));
+    this.farMat = new ShaderMaterial({
+      vertexShader: Shaders.ringDustVert,
+      fragmentShader: Shaders.ringDustFrag,
+      uniforms: {
+        ...lit,
+        uPhase: { value: this.farPhase },
+        uSlotsB: { value: FAR_N_AZ },
+        uInner: { value: r.inner },
+        uOuter: { value: r.outer },
+        uHeight: { value: FAR_HEIGHT_KM },
+        uSeed: { value: r.seed },
+        uOpacity: { value: r.opacity },
+        uGaps: { value: gaps },
+        uVis: { value: 0 },
+        uPointPx: { value: 1.6 },
+        uNearKm: { value: RANGE_KM },
+        uColor: { value: new Vector3(r.color[0], r.color[1], r.color[2]) },
+      },
+      transparent: true,
+      depthWrite: false,
+    });
+    this.far = new Points(farGeo, this.farMat);
+    this.far.frustumCulled = false;
+    this.far.renderOrder = 2;
+    this.group.add(this.far);
     this.group.visible = false;
   }
 
@@ -123,32 +178,57 @@ export class RingParticles {
     const altFade = 1 - smooth01((this.altitude - RANGE_KM * 0.35) / (RANGE_KM * 0.65));
     const radialFade = smooth01((camR - (r.inner - halfWindow)) / halfWindow) * (1 - smooth01((camR - (r.outer)) / halfWindow));
     this.visibility = enabled ? altFade * radialFade : 0;
-    this.group.visible = this.visibility > 0.002;
+
+    // far specks: visible from well outside, fading out as the camera leaves the ring region
+    const farAlt = 1 - smooth01((this.altitude - FAR_FADE_START_KM) / (FAR_FADE_END_KM - FAR_FADE_START_KM));
+    const farRadial = 1 - smooth01((camR - r.outer - FAR_RADIAL_KM * 0.5) / FAR_RADIAL_KM);
+    const farVis = enabled ? farAlt * farRadial : 0;
+
+    this.mesh.visible = this.visibility > 0.002;
+    this.far.visible = farVis > 0.002;
+    this.group.visible = this.mesh.visible || this.far.visible;
     if (!this.group.visible) return;
 
-    const camAnnulus = Math.floor((camR - r.inner) / CELL_KM);
     const gm = b.gm; // km³/s²
+    const twoPi = 2 * Math.PI;
+    const camAnnulus = Math.floor((camR - r.inner) / CELL_KM);
+    const farDr = (r.outer - r.inner) / N_ANN;
     for (let s = 0; s < N_ANN; s++) {
-      const a = camAnnulus + s - N_ANN / 2;
-      const rA = r.inner + (a + 0.5) * CELL_KM;
-      const omega = Math.sqrt(gm / Math.max(rA, 1) ** 3);
-      // phase in double precision, wrapped to [0, 2π) before it reaches the GPU
-      const ph = (omega * simSeconds) % (2 * Math.PI);
-      this.phase[s] = ph < 0 ? ph + 2 * Math.PI : ph;
-      const dth = CELL_KM / Math.max(rA, 1);
-      this.camCell[s] = Math.floor((camTheta - this.phase[s]) / dth);
+      if (this.mesh.visible) {
+        const a = camAnnulus + s - N_ANN / 2;
+        const rA = r.inner + (a + 0.5) * CELL_KM;
+        const omega = Math.sqrt(gm / Math.max(rA, 1) ** 3);
+        // phase in double precision, wrapped to [0, 2π) before it reaches the GPU
+        const ph = (omega * simSeconds) % twoPi;
+        this.phase[s] = ph < 0 ? ph + twoPi : ph;
+        this.camCell[s] = Math.floor((camTheta - this.phase[s]) / (CELL_KM / Math.max(rA, 1)));
+      }
+      if (this.far.visible) {
+        const rA = r.inner + (s + 0.5) * farDr;
+        const ph = (Math.sqrt(gm / rA ** 3) * simSeconds) % twoPi;
+        this.farPhase[s] = ph < 0 ? ph + twoPi : ph;
+      }
     }
-    const u = this.mat.uniforms;
-    u.uCamAnnulus.value = camAnnulus;
-    u.uPxPerRad.value = pxPerRad;
-    u.uVis.value = this.visibility;
-    u.uRealTime.value = (performance.now() * 1e-3) % 86400;
-    u.uPlaneNormal.value.copy(b.pole);
+    if (this.mesh.visible) {
+      const u = this.mat.uniforms;
+      u.uCamAnnulus.value = camAnnulus;
+      u.uPxPerRad.value = pxPerRad;
+      u.uVis.value = this.visibility;
+      u.uRealTime.value = (performance.now() * 1e-3) % 86400;
+      u.uPlaneNormal.value.copy(b.pole);
+    }
+    if (this.far.visible) {
+      const f = this.farMat.uniforms;
+      f.uVis.value = farVis;
+      f.uPointPx.value = 1.6 * Math.min(window.devicePixelRatio || 1, 2);
+    }
   }
 
   dispose(): void {
     this.mesh.geometry.dispose();
     this.mat.dispose();
+    this.far.geometry.dispose();
+    this.farMat.dispose();
   }
 }
 

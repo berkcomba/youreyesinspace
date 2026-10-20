@@ -11,6 +11,8 @@ import ringsVert from './rings.vert?raw';
 import ringsFrag from './rings.frag?raw';
 import ringRockVert from './ringrock.vert?raw';
 import ringRockFrag from './ringrock.frag?raw';
+import ringDustVert from './ringdust.vert?raw';
+import ringDustFrag from './ringdust.frag?raw';
 import coronaFrag from './corona.frag?raw';
 import billboardVert from './billboard.vert?raw';
 import pointsVert from './points.vert?raw';
@@ -50,6 +52,8 @@ export const Shaders = {
   ringsFrag: common + '\n' + lighting + '\n' + ringsFrag,
   ringRockVert: common + '\n' + ringRockVert,
   ringRockFrag: common + '\n' + lighting + '\n' + ringRockFrag,
+  ringDustVert: common + '\n' + ringDustVert,
+  ringDustFrag: common + '\n' + lighting + '\n' + ringDustFrag,
   coronaFrag: common + '\n' + coronaFrag,
   billboardVert,
   pointsVert,
