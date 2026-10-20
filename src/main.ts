@@ -1169,7 +1169,7 @@ class App implements UIHost {
     this.updateFill(dt);
     const g = this.ghost;
     this.bodies.update(camPos, this.camera.quaternion, eng.camera, eng.height, fovRad, star.position, star.radius, this.sunColor, this.time.t / 3600, {
-      atmospheres: s.atmospheres, clouds: ov.clouds ?? s.clouds, rings: s.rings, shadows: s.shadows, imagery: s.imagery,
+      atmospheres: s.atmospheres, clouds: ov.clouds ?? s.clouds, rings: s.rings, ringParticles: s.ringParticles, shadows: s.shadows, imagery: s.imagery,
       fill: this.fillOut.size ? this.fillOut : null,
       ghost: g ? { id: g.body.id, alpha: g.alpha * g.alpha * (3 - 2 * g.alpha) } : null,
     });

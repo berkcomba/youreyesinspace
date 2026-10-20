@@ -7,6 +7,7 @@ uniform float uInner;
 uniform float uOuter;
 uniform vec4 uGaps[4];
 uniform vec3 uNormal;   // ring plane normal (world)
+uniform vec2 uLocalFade; // x = strength 0..1, y = radius (km): thin the sheet around a camera inside the ring, where boulders take over
 
 varying vec3 vWorldPos;
 varying float vRadius;
@@ -22,6 +23,10 @@ void main() {
   if (alpha < 0.003) discard;
 
   vec3 P = vWorldPos;
+  if (uLocalFade.x > 0.0) {
+    float q = length(P) / uLocalFade.y;
+    alpha *= 1.0 - uLocalFade.x * exp(-q * q);
+  }
   vec3 L = normalize(uSunPos - P);
   vec3 V = normalize(-P);
   float sunAng = uSunRadius / max(length(uSunPos - P), 1.0);

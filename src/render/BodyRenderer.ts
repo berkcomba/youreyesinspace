@@ -1,6 +1,6 @@
 import {
   AdditiveBlending, AmbientLight, BackSide, Box3, CircleGeometry, Color, CylinderGeometry, DirectionalLight, DoubleSide, FrontSide, Group, Mesh,
-  MeshStandardMaterial, NormalBlending, PlaneGeometry, RingGeometry, Scene, ShaderMaterial, Sphere, SphereGeometry, Vector3, Vector4,
+  MeshStandardMaterial, NormalBlending, PlaneGeometry, RingGeometry, Scene, ShaderMaterial, Sphere, SphereGeometry, Vector2, Vector3, Vector4,
   type Camera, type IUniform, type Quaternion,
 } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -9,6 +9,7 @@ import type { CelestialBody } from '../core/CelestialBody';
 import type { StarSystem } from '../core/StarSystem';
 import { DEG, PARSEC_KM } from '../core/constants';
 import { temperatureToRgb } from '../astro/stellar';
+import { RingParticles } from './RingParticles';
 import { IMAGERY } from '../data/imagery';
 import { Shaders } from './shaders';
 import { TileGlobe } from './TileGlobe';
@@ -18,6 +19,8 @@ export interface RenderSettings {
   atmospheres: boolean;
   clouds: boolean;
   rings: boolean;
+  /** boulder layer when flying through a ring system */
+  ringParticles: boolean;
   shadows: boolean;
   /** real imagery tiles (NASA GIBS / Solar System Treks) on bodies listed in IMAGERY */
   imagery: boolean;
@@ -104,6 +107,8 @@ export class BodyView {
   atmosphereMat?: ShaderMaterial;
   rings?: Mesh;
   ringsMat?: ShaderMaterial;
+  /** boulder layer, populated only when the camera is close to the ring plane */
+  ringParticles?: RingParticles;
   corona?: Mesh;
   coronaMat?: ShaderMaterial;
   /** procedural (primitive-built) model whose GPU resources belong to this view */
@@ -327,6 +332,7 @@ export class BodyView {
           uOuter: { value: d.rings.outer },
           uGaps: { value: ringGapUniforms(body) },
           uNormal: { value: new Vector3(0, 1, 0) },
+          uLocalFade: { value: new Vector2(0, 2000) },
         },
         transparent: true,
         side: DoubleSide,
@@ -337,11 +343,14 @@ export class BodyView {
       this.rings.renderOrder = 4;
       this.rings.frustumCulled = false;
       this.group.add(this.rings);
+      // boulders share the lighting uniforms (sun, shadows) with the sheet
+      this.ringParticles = new RingParticles(body, lit, this.ringsMat.uniforms.uGaps.value as Vector4[]);
     }
   }
 
   addTo(scene: Scene): void {
     scene.add(this.group);
+    if (this.ringParticles) scene.add(this.ringParticles.group);
     if (this.atmosphere) scene.add(this.atmosphere);
     if (this.corona) scene.add(this.corona);
   }
@@ -389,9 +398,11 @@ export class BodyView {
 
   dispose(scene: Scene): void {
     scene.remove(this.group);
+    if (this.ringParticles) scene.remove(this.ringParticles.group);
     if (this.atmosphere) scene.remove(this.atmosphere);
     if (this.corona) { scene.remove(this.corona); this.corona.geometry.dispose(); }
     if (this.rings) this.rings.geometry.dispose();
+    this.ringParticles?.dispose();
     for (const m of [this.surfaceMat, this.cloudsMat, this.atmosphereMat, this.ringsMat, this.coronaMat, this.beamMat]) m?.dispose();
     if (this.beams) for (const m of this.beams.children) (m as Mesh).geometry.dispose();
     if (this.ground) { this.ground.geometry.dispose(); (this.ground.material as MeshStandardMaterial).dispose(); }
@@ -555,6 +566,11 @@ export class BodyView {
     if (this.ringsMat) {
       _n.copy(b.pole);
       this.ringsMat.uniforms.uNormal.value.copy(_n);
+      if (this.ringParticles) {
+        this.ringParticles.update(this.relPos, time * 3600, pxPerRad, ringsOn && settings.ringParticles);
+        // where the boulders are, thin the sheet so they do not look pasted on an opaque plane
+        (this.ringsMat.uniforms.uLocalFade.value as Vector2).set(0.6 * this.ringParticles.visibility, 2200);
+      }
     }
 
     if (this.atmosphere && this.atmosphereMat) {

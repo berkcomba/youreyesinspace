@@ -165,15 +165,15 @@ input[type=range] { width: 120px; accent-color: var(--accent); }
   gap: 16px;
   padding: 0 16px;
 }
-.brand { display: flex; align-items: baseline; gap: 12px; }
-.brand-mark { height: 26px; width: auto; align-self: center; user-select: none; -webkit-user-drag: none; opacity: 0.92; }
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand-mark { height: 26px; width: auto; display: block; user-select: none; -webkit-user-drag: none; opacity: 0.92; }
 .brand-name { font-size: 11px; font-weight: 500; letter-spacing: 0.2em; white-space: nowrap; line-height: 1; color: var(--text); }
 .brand-version {
   margin-left: -4px; padding: 1px 5px; border: 1px solid var(--border-strong); border-radius: 3px;
   color: var(--text-3); font-size: 9px; font-weight: 500; letter-spacing: 0.08em; line-height: 1; white-space: nowrap;
   font-variant-numeric: tabular-nums; user-select: none;
 }
-.brand-sub { color: var(--text-3); font-size: 11px; letter-spacing: 0.04em; white-space: nowrap; }
+.brand-sub { color: var(--text-3); font-size: 11px; letter-spacing: 0.04em; white-space: nowrap; line-height: 1; }
 .brand-sub::before { content: '·'; margin-right: 12px; color: var(--border-strong); }
 #btn-places .short { display: none; }
 @media (max-width: 1180px) {

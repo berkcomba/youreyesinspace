@@ -9,6 +9,8 @@ import atmosphereFrag from './atmosphere.frag?raw';
 import cloudsFrag from './clouds.frag?raw';
 import ringsVert from './rings.vert?raw';
 import ringsFrag from './rings.frag?raw';
+import ringRockVert from './ringrock.vert?raw';
+import ringRockFrag from './ringrock.frag?raw';
 import coronaFrag from './corona.frag?raw';
 import billboardVert from './billboard.vert?raw';
 import pointsVert from './points.vert?raw';
@@ -46,6 +48,8 @@ export const Shaders = {
   cloudsFrag: common + '\n' + lighting + '\n' + cloudsFrag,
   ringsVert,
   ringsFrag: common + '\n' + lighting + '\n' + ringsFrag,
+  ringRockVert: common + '\n' + ringRockVert,
+  ringRockFrag: common + '\n' + lighting + '\n' + ringRockFrag,
   coronaFrag: common + '\n' + coronaFrag,
   billboardVert,
   pointsVert,

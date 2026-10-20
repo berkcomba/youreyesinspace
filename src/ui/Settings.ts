@@ -15,6 +15,8 @@ export interface Settings {
   atmospheres: boolean;
   clouds: boolean;
   rings: boolean;
+  /** boulder layer when flying through a ring system */
+  ringParticles: boolean;
   shadows: boolean;
   /** NASA satellite imagery on Earth / Moon / Mars (streamed) */
   imagery: boolean;
@@ -50,6 +52,7 @@ export const DEFAULT_SETTINGS: Settings = {
   atmospheres: true,
   clouds: true,
   rings: true,
+  ringParticles: true,
   shadows: true,
   imagery: true,
   belts: true,
