@@ -1,0 +1,694 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "fragmentation": {
+   "script": "Look at Messier forty-two behind the panel. Orion's giant molecular cloud is far above its Jeans mass, so why not one star of a million solar masses? While isothermal, temperature stays near ten kelvin and density rises many orders of magnitude. The Jeans mass scales as density to the minus one half, so it falls. Denser regions collapse alone, so fragments fragment into groups and clusters where stars are born. Literally, far too many. Only a few percent of the mass ends up in them.\n\nOpaque gas collapses adiabatically. Temperature equals K double prime, a constant, times density to the power gamma minus one, gamma the adiabatic index. Jeans mass then scales as density to the power three gamma minus four over two. At five thirds that power is one half, so Jeans mass rises and fragmentation ceases.\n\nEquate free-fall luminosity to radiation. Free-fall luminosity is G to the three halves times Jeans mass over Jeans radius, to the five halves, G the gravitational constant. Radiation is four pi times Jeans radius squared times e times sigma T to the fourth, e the efficiency, one for a black body, sigma the Stefan-Boltzmann constant, T temperature. Drop the radius: minimum Jeans mass is about zero point zero three times T to the one quarter, over e to the one half times mu to the nine quarters, solar masses, mu the mean particle mass in hydrogen units.\n\nOn the widget, vary efficiency. Watch Jeans mass fall, then rise. At a thousand kelvin and mu near one, e of a tenth gives half a solar mass, e of one, a fifth, and it hardly moves. The cartoon cuts the cascade. Radiative transfer, grain vaporisation, dissociation and ionisation lower it tenfold, to a hundredth of a solar mass, the deuterium-burning limit between brown dwarfs and planets.\n\nWe reused a static cloud criterion and ignored infall. Which way does that bias fragment mass? Densest fragments go adiabatic first. Does fragmentation stop everywhere at once?",
+   "hash": "c64bdc885f14",
+   "duration": 129.27,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 3.12,
+     "text": "Look at Messier forty-two behind the panel."
+    },
+    {
+     "start": 3.12,
+     "end": 10.6,
+     "text": "Orion's giant molecular cloud is far above its Jeans mass, so why not one star of a million solar masses?"
+    },
+    {
+     "start": 10.6,
+     "end": 16.98,
+     "text": "While isothermal, temperature stays near ten kelvin and density rises many orders of magnitude."
+    },
+    {
+     "start": 16.98,
+     "end": 21.92,
+     "text": "The Jeans mass scales as density to the minus one half, so it falls."
+    },
+    {
+     "start": 21.92,
+     "end": 27.98,
+     "text": "Denser regions collapse alone, so fragments fragment into groups and clusters where stars are born."
+    },
+    {
+     "start": 27.98,
+     "end": 30.06,
+     "text": "Literally, far too many."
+    },
+    {
+     "start": 30.06,
+     "end": 32.78,
+     "text": "Only a few percent of the mass ends up in them."
+    },
+    {
+     "start": 32.78,
+     "end": 35.54,
+     "text": "Opaque gas collapses adiabatically."
+    },
+    {
+     "start": 35.54,
+     "end": 43.96,
+     "text": "Temperature equals K double prime, a constant, times density to the power gamma minus one, gamma the adiabatic index."
+    },
+    {
+     "start": 43.96,
+     "end": 49.08,
+     "text": "Jeans mass then scales as density to the power three gamma minus four over two."
+    },
+    {
+     "start": 49.08,
+     "end": 55.16,
+     "text": "At five thirds that power is one half, so Jeans mass rises and fragmentation ceases."
+    },
+    {
+     "start": 55.16,
+     "end": 58.1,
+     "text": "Equate free-fall luminosity to radiation."
+    },
+    {
+     "start": 58.1,
+     "end": 66.63,
+     "text": "Free-fall luminosity is G to the three halves times Jeans mass over Jeans radius, to the five halves, G the gravitational constant."
+    },
+    {
+     "start": 66.63,
+     "end": 78.63,
+     "text": "Radiation is four pi times Jeans radius squared times e times sigma T to the fourth, e the efficiency, one for a black body, sigma the Stefan-Boltzmann constant, T temperature."
+    },
+    {
+     "start": 78.63,
+     "end": 91.99,
+     "text": "Drop the radius: minimum Jeans mass is about zero point zero three times T to the one quarter, over e to the one half times mu to the nine quarters, solar masses, mu the mean particle mass in hydrogen units."
+    },
+    {
+     "start": 91.99,
+     "end": 94.33,
+     "text": "On the widget, vary efficiency."
+    },
+    {
+     "start": 94.33,
+     "end": 96.93,
+     "text": "Watch Jeans mass fall, then rise."
+    },
+    {
+     "start": 96.93,
+     "end": 104.85,
+     "text": "At a thousand kelvin and mu near one, e of a tenth gives half a solar mass, e of one, a fifth, and it hardly moves."
+    },
+    {
+     "start": 104.85,
+     "end": 106.95,
+     "text": "The cartoon cuts the cascade."
+    },
+    {
+     "start": 106.95,
+     "end": 118.45,
+     "text": "Radiative transfer, grain vaporisation, dissociation and ionisation lower it tenfold, to a hundredth of a solar mass, the deuterium-burning limit between brown dwarfs and planets."
+    },
+    {
+     "start": 118.45,
+     "end": 122.07,
+     "text": "We reused a static cloud criterion and ignored infall."
+    },
+    {
+     "start": 122.07,
+     "end": 124.41,
+     "text": "Which way does that bias fragment mass?"
+    },
+    {
+     "start": 124.41,
+     "end": 126.97,
+     "text": "Densest fragments go adiabatic first."
+    },
+    {
+     "start": 126.97,
+     "end": 129.27,
+     "text": "Does fragmentation stop everywhere at once?"
+    }
+   ],
+   "voicedHash": "dd3ad006be07"
+  },
+  "free-fall-collapse": {
+   "script": "Once the collapse criterion is met and pressure gradients are too weak to resist, the cloud falls freely under its own gravity. While it remains optically thin and radiates the released energy away, the collapse stays isothermal. Look at the Orion Nebula, M forty-two, behind the panel — a real cloud complex where this process is under way.\n\nEach shell of initial radius r-zero, enclosing fixed mass M-r, obeys this: the second derivative of r with respect to t equals minus G M-r over r squared. That is simply Newton’s law. The inward acceleration equals the gravity of the mass inside the shell. G is the gravitational constant and r is the shell’s current radius.\n\nMultiply by dr dt and integrate once for the infall speed. Then the substitutions r over r-zero equals cosine squared of xi, and chi equals the square root of eight pi G rho-zero over three, turn the second integration into a cycloid — the same curve traced by a point on a rolling wheel. The solution is: xi plus one-half sine of two xi equals chi t, and r over r-zero equals cosine squared of xi. The shell reaches the centre when xi is pi over two, at the free-fall time t free-fall equals pi over two chi, which is the square root of three pi over thirty-two times one over G rho-zero.\n\nXi is a parameter running from zero to pi over two as the shell falls in. Chi sets the timescale and depends only on the initial density rho-zero. So the free-fall time depends only on that starting density. In a uniform cloud every shell arrives together and the density rises everywhere at the same rate — a homologous collapse, the cloud shrinking as a scaled copy of itself. If it begins centrally condensed, the inner shells fall first: an inside-out collapse.\n\nFor the dense core of the last step, density about three times ten to the minus seventeen kilograms per cubic metre, the free-fall time is roughly three hundred and eighty thousand years. It starts slowly: after half the time, r over r-zero is still about zero point nine. The density climbs a million-fold only in the last few percent.\n\nTry the widget. Pick a density and watch the shells. In the homologous case they fall together; r over r-zero lingers near one, then plunges, while the log density stays flat and then shoots up. Switch to the centrally condensed comparison and see the inside race ahead. A few hundred thousand years is short on stellar timescales — and that shortness is itself a puzzle.",
+   "hash": "59edca228ff7",
+   "duration": 154.87,
+   "sentences": [
+    {
+     "start": 0.14,
+     "end": 7.72,
+     "text": "Once the collapse criterion is met and pressure gradients are too weak to resist, the cloud falls freely under its own gravity."
+    },
+    {
+     "start": 7.72,
+     "end": 14.02,
+     "text": "While it remains optically thin and radiates the released energy away, the collapse stays isothermal."
+    },
+    {
+     "start": 14.02,
+     "end": 21.64,
+     "text": "Look at the Orion Nebula, M forty-two, behind the panel — a real cloud complex where this process is under way."
+    },
+    {
+     "start": 21.64,
+     "end": 33.46,
+     "text": "Each shell of initial radius r-zero, enclosing fixed mass M-r, obeys this: the second derivative of r with respect to t equals minus G M-r over r squared."
+    },
+    {
+     "start": 33.46,
+     "end": 35.3,
+     "text": "That is simply Newton’s law."
+    },
+    {
+     "start": 35.3,
+     "end": 39.5,
+     "text": "The inward acceleration equals the gravity of the mass inside the shell."
+    },
+    {
+     "start": 39.5,
+     "end": 43.84,
+     "text": "G is the gravitational constant and r is the shell’s current radius."
+    },
+    {
+     "start": 43.84,
+     "end": 48.14,
+     "text": "Multiply by dr dt and integrate once for the infall speed."
+    },
+    {
+     "start": 48.14,
+     "end": 62.78,
+     "text": "Then the substitutions r over r-zero equals cosine squared of xi, and chi equals the square root of eight pi G rho-zero over three, turn the second integration into a cycloid — the same curve traced by a point on a rolling wheel."
+    },
+    {
+     "start": 62.78,
+     "end": 72.76,
+     "text": "The solution is: xi plus one-half sine of two xi equals chi t, and r over r-zero equals cosine squared of xi."
+    },
+    {
+     "start": 72.76,
+     "end": 84.97,
+     "text": "The shell reaches the centre when xi is pi over two, at the free-fall time t free-fall equals pi over two chi, which is the square root of three pi over thirty-two times one over G rho-zero."
+    },
+    {
+     "start": 84.97,
+     "end": 89.73,
+     "text": "Xi is a parameter running from zero to pi over two as the shell falls in."
+    },
+    {
+     "start": 89.73,
+     "end": 94.11,
+     "text": "Chi sets the timescale and depends only on the initial density rho-zero."
+    },
+    {
+     "start": 94.11,
+     "end": 97.45,
+     "text": "So the free-fall time depends only on that starting density."
+    },
+    {
+     "start": 97.45,
+     "end": 107.25,
+     "text": "In a uniform cloud every shell arrives together and the density rises everywhere at the same rate — a homologous collapse, the cloud shrinking as a scaled copy of itself."
+    },
+    {
+     "start": 107.25,
+     "end": 112.83,
+     "text": "If it begins centrally condensed, the inner shells fall first: an inside-out collapse."
+    },
+    {
+     "start": 112.83,
+     "end": 123.65,
+     "text": "For the dense core of the last step, density about three times ten to the minus seventeen kilograms per cubic metre, the free-fall time is roughly three hundred and eighty thousand years."
+    },
+    {
+     "start": 123.65,
+     "end": 129.27,
+     "text": "It starts slowly: after half the time, r over r-zero is still about zero point nine."
+    },
+    {
+     "start": 129.27,
+     "end": 133.01,
+     "text": "The density climbs a million-fold only in the last few percent."
+    },
+    {
+     "start": 133.01,
+     "end": 134.17,
+     "text": "Try the widget."
+    },
+    {
+     "start": 134.17,
+     "end": 136.25,
+     "text": "Pick a density and watch the shells."
+    },
+    {
+     "start": 136.25,
+     "end": 145.33,
+     "text": "In the homologous case they fall together; r over r-zero lingers near one, then plunges, while the log density stays flat and then shoots up."
+    },
+    {
+     "start": 145.33,
+     "end": 149.55,
+     "text": "Switch to the centrally condensed comparison and see the inside race ahead."
+    },
+    {
+     "start": 149.55,
+     "end": 154.87,
+     "text": "A few hundred thousand years is short on stellar timescales — and that shortness is itself a puzzle."
+    }
+   ],
+   "voicedHash": "a19791367e48"
+  },
+  "jeans-criterion": {
+   "script": "Look with me at Messier 42 behind the panel. In 1902 Jeans asked what a nudge off hydrostatic equilibrium does, neglecting rotation, turbulence and magnetic fields.\n\nBalance is the virial theorem: two K plus U equals zero. K is thermal kinetic energy, U gravitational energy. Twice K above the size of U expands the cloud. Below it, the cloud collapses.\n\nFor a uniform sphere, U is about minus three G M squared over five R, and K is three N k T over two, and N is M over mu m-H. G is the gravitational constant, k Boltzmann's constant, m-H the hydrogen mass.\n\nM-J is about five k T over G mu m-H, to the three-halves, times the square root of three over four pi rho-zero. R-J is the square root of fifteen k T over four pi G mu m-H rho-zero. T is temperature, mu the mean molecular weight, rho-zero the density. Collapse needs mass above the Jeans mass M-J, or radius above the Jeans length R-J.\n\nOutside pressure P-zero gives the Bonnor–Ebert mass: c-BE times v-T to the fourth, all divided by P-zero to the half times G to the three-halves. v-T is the isothermal sound speed, the square root of k T over mu m-H. c-BE is about 1.18. The Jeans constant is about 5.46, so outside pressure helps the collapse.\n\nTry the widget: raise the density at a chosen temperature and composition. Watch M-J, R-J and the lower Bonnor–Ebert mass, and which clouds are marked collapsing. Diffuse clouds at fifty kelvin are stable, Jeans mass about fifteen hundred solar masses against one to a hundred. Dense cores at ten kelvin are not: about eight solar masses, near the ten they hold, or about two with Bonnor–Ebert, so stars form.\n\nM-J scales as temperature to the three-halves and density to the minus one-half, so cold and dense is unstable. As density rises and the cloud radiates, the Jeans mass keeps falling, the seed of fragmentation.",
+   "hash": "0702f49772c2",
+   "duration": 130.55,
+   "sentences": [
+    {
+     "start": 0,
+     "end": 3.182,
+     "text": "Look with me at Messier 42 behind the panel."
+    },
+    {
+     "start": 3.182,
+     "end": 11.789,
+     "text": "In 1902 Jeans asked what a nudge off hydrostatic equilibrium does, neglecting rotation, turbulence and magnetic fields."
+    },
+    {
+     "start": 11.789,
+     "end": 15.84,
+     "text": "Balance is the virial theorem: two K plus U equals zero."
+    },
+    {
+     "start": 15.84,
+     "end": 19.601,
+     "text": "K is thermal kinetic energy, U gravitational energy."
+    },
+    {
+     "start": 19.601,
+     "end": 22.928,
+     "text": "Twice K above the size of U expands the cloud."
+    },
+    {
+     "start": 22.928,
+     "end": 25.097,
+     "text": "Below it, the cloud collapses."
+    },
+    {
+     "start": 25.097,
+     "end": 34.066,
+     "text": "For a uniform sphere, U is about minus three G M squared over five R, and K is three N k T over two, and N is M over mu m-H."
+    },
+    {
+     "start": 34.066,
+     "end": 39.78,
+     "text": "G is the gravitational constant, k Boltzmann's constant, m-H the hydrogen mass."
+    },
+    {
+     "start": 39.78,
+     "end": 47.808,
+     "text": "M-J is about five k T over G mu m-H, to the three-halves, times the square root of three over four pi rho-zero."
+    },
+    {
+     "start": 47.808,
+     "end": 52.799,
+     "text": "R-J is the square root of fifteen k T over four pi G mu m-H rho-zero."
+    },
+    {
+     "start": 52.799,
+     "end": 57.789,
+     "text": "T is temperature, mu the mean molecular weight, rho-zero the density."
+    },
+    {
+     "start": 57.789,
+     "end": 63.792,
+     "text": "Collapse needs mass above the Jeans mass M-J, or radius above the Jeans length R-J."
+    },
+    {
+     "start": 63.792,
+     "end": 74.28,
+     "text": "Outside pressure P-zero gives the Bonnor–Ebert mass: c-BE times v-T to the fourth, all divided by P-zero to the half times G to the three-halves."
+    },
+    {
+     "start": 74.28,
+     "end": 79.343,
+     "text": "v-T is the isothermal sound speed, the square root of k T over mu m-H."
+    },
+    {
+     "start": 79.343,
+     "end": 80.789,
+     "text": "c-BE is about 1. 18."
+    },
+    {
+     "start": 80.789,
+     "end": 86.141,
+     "text": "The Jeans constant is about 5. 46, so outside pressure helps the collapse."
+    },
+    {
+     "start": 86.141,
+     "end": 91.493,
+     "text": "Try the widget: raise the density at a chosen temperature and composition."
+    },
+    {
+     "start": 91.493,
+     "end": 97.786,
+     "text": "Watch M-J, R-J and the lower Bonnor–Ebert mass, and which clouds are marked collapsing."
+    },
+    {
+     "start": 97.786,
+     "end": 106.031,
+     "text": "Diffuse clouds at fifty kelvin are stable, Jeans mass about fifteen hundred solar masses against one to a hundred."
+    },
+    {
+     "start": 106.031,
+     "end": 115.506,
+     "text": "Dense cores at ten kelvin are not: about eight solar masses, near the ten they hold, or about two with Bonnor–Ebert, so stars form."
+    },
+    {
+     "start": 115.506,
+     "end": 123.534,
+     "text": "M-J scales as temperature to the three-halves and density to the minus one-half, so cold and dense is unstable."
+    },
+    {
+     "start": 123.534,
+     "end": 130.55,
+     "text": "As density rises and the cloud radiates, the Jeans mass keeps falling, the seed of fragmentation."
+    }
+   ],
+   "voicedHash": "14e31cb21e0b"
+  },
+  "magnetic-support": {
+   "script": "Look at Messier 42, the Orion Nebula, behind the panel. Free-fall, about a hundred thousand years, would make cores rare, yet our Galaxy is full of them. Thermal pressure is not enough. Zeeman measurements find fields of one to a hundred nanotesla.\n\nThe field is frozen into the conducting gas, like elastic threads. Compress the cloud, compress the field, and the magnetic pressure, B squared over two mu-zero, pushes back. In the virial balance I get a critical mass. M-sub-B equals c-sub-B times pi R squared times B, divided by the square root of G. R is the radius, B the field, G the gravitational constant, and c-sub-B a factor near three hundred and eighty. Pi R squared B is the flux, and the flux sets the supported mass. Numerically, about seventy solar masses times B over one nanotesla, times R over one parsec, squared. Subcritical below it, stable while the field lasts; supercritical above, and gravity wins.\n\nOn the widget, vary field, radius and density. Notice subcritical or supercritical, and diffusion time versus free-fall. Try a tenth of a parsec and ten solar masses. A hundred nanotesla gives about seventy solar masses, subcritical, held up. One nanotesla gives about seven tenths of a solar mass: it collapses.\n\nOnly ions feel the field; the neutrals, nearly all the gas, collide with them and drift inward — ambipolar diffusion. That time, t-sub-A-D, is two R over v-drift, their inward speed: about ten billion years times the molecular hydrogen density over ten billion per cubic metre, times B over one nanotesla to the minus two, times R over one parsec squared. A stronger field shortens the wait. At one nanotesla and a tenth of a parsec, about a hundred million years, several hundred free-fall times. Mass seeps in until the core turns supercritical, and collapse begins. Reconnection, as in solar flares, sheds flux. Merging can tip a core, but the slow leak dominates, so many cores persist and few stars form at once.",
+   "hash": "69ff96a0c083",
+   "duration": 132.79,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 4.94,
+     "text": "Look at Messier 42, the Orion Nebula, behind the panel."
+    },
+    {
+     "start": 4.94,
+     "end": 11.36,
+     "text": "Free-fall, about a hundred thousand years, would make cores rare, yet our Galaxy is full of them."
+    },
+    {
+     "start": 11.36,
+     "end": 13.44,
+     "text": "Thermal pressure is not enough."
+    },
+    {
+     "start": 13.44,
+     "end": 17.38,
+     "text": "Zeeman measurements find fields of one to a hundred nanotesla."
+    },
+    {
+     "start": 17.38,
+     "end": 21.72,
+     "text": "The field is frozen into the conducting gas, like elastic threads."
+    },
+    {
+     "start": 21.72,
+     "end": 29.38,
+     "text": "Compress the cloud, compress the field, and the magnetic pressure, B squared over two mu-zero, pushes back."
+    },
+    {
+     "start": 29.38,
+     "end": 32.2,
+     "text": "In the virial balance I get a critical mass."
+    },
+    {
+     "start": 32.2,
+     "end": 39.06,
+     "text": "M-sub-B equals c-sub-B times pi R squared times B, divided by the square root of G."
+    },
+    {
+     "start": 39.06,
+     "end": 46.58,
+     "text": "R is the radius, B the field, G the gravitational constant, and c-sub-B a factor near three hundred and eighty."
+    },
+    {
+     "start": 46.58,
+     "end": 51.18,
+     "text": "Pi R squared B is the flux, and the flux sets the supported mass."
+    },
+    {
+     "start": 51.18,
+     "end": 58.72,
+     "text": "Numerically, about seventy solar masses times B over one nanotesla, times R over one parsec, squared."
+    },
+    {
+     "start": 58.72,
+     "end": 64.88,
+     "text": "Subcritical below it, stable while the field lasts; supercritical above, and gravity wins."
+    },
+    {
+     "start": 64.88,
+     "end": 68.33,
+     "text": "On the widget, vary field, radius and density."
+    },
+    {
+     "start": 68.33,
+     "end": 72.83,
+     "text": "Notice subcritical or supercritical, and diffusion time versus free-fall."
+    },
+    {
+     "start": 72.83,
+     "end": 75.95,
+     "text": "Try a tenth of a parsec and ten solar masses."
+    },
+    {
+     "start": 75.95,
+     "end": 81.21,
+     "text": "A hundred nanotesla gives about seventy solar masses, subcritical, held up."
+    },
+    {
+     "start": 81.21,
+     "end": 85.69,
+     "text": "One nanotesla gives about seven tenths of a solar mass: it collapses."
+    },
+    {
+     "start": 85.69,
+     "end": 93.61,
+     "text": "Only ions feel the field; the neutrals, nearly all the gas, collide with them and drift inward — ambipolar diffusion."
+    },
+    {
+     "start": 93.61,
+     "end": 110.13,
+     "text": "That time, t-sub-A-D, is two R over v-drift, their inward speed: about ten billion years times the molecular hydrogen density over ten billion per cubic metre, times B over one nanotesla to the minus two, times R over one parsec squared."
+    },
+    {
+     "start": 110.13,
+     "end": 112.25,
+     "text": "A stronger field shortens the wait."
+    },
+    {
+     "start": 112.25,
+     "end": 118.71,
+     "text": "At one nanotesla and a tenth of a parsec, about a hundred million years, several hundred free-fall times."
+    },
+    {
+     "start": 118.71,
+     "end": 123.11,
+     "text": "Mass seeps in until the core turns supercritical, and collapse begins."
+    },
+    {
+     "start": 123.11,
+     "end": 126.55,
+     "text": "Reconnection, as in solar flares, sheds flux."
+    },
+    {
+     "start": 126.55,
+     "end": 132.79,
+     "text": "Merging can tip a core, but the slow leak dominates, so many cores persist and few stars form at once."
+    }
+   ],
+   "voicedHash": "e7abd2d60837"
+  },
+  "protostar-collapse": {
+   "script": "Look with me at M42 behind the panel. Magnetohydrodynamics, radiative transfer, dust and chemistry can only be solved numerically. Richard Larson’s 1969 calculation already found the sequence modern codes refine. We follow a supercritical cloud of one solar mass and solar composition. The early collapse is isothermal and inside-out, the centre slightly denser. At about ten to the minus ten kilograms per cubic metre the dust makes the core opaque, collapse turns adiabatic, pressure rises, and a nearly hydrostatic first core of about five astronomical units forms the protostar.\n\nThe photosphere is where the optical depth tau equals two thirds. L equals four pi times the square of R, the radius where tau equals two thirds, times sigma, times T e to the fourth. L is luminosity, sigma the Stefan-Boltzmann constant, and T e the effective temperature. We place it on the Hertzsprung-Russell diagram. Infall stops in an accretion shock, kinetic energy becoming heat, and that shock, not nuclear burning, drives L and T e up together.\n\nMove the stage slider. Near a thousand kelvin the dust vaporises, opacity collapses, the photosphere shrinks and T e jumps. Near two thousand kelvin, H two becomes two H, absorbing about four point five electronvolts, and the unsupported core collapses to about one point three solar radii behind a second shock. The track flattens in the quasi-steady main accretion phase. Deuterium plus hydrogen gives helium three and a gamma ray, near a million kelvin. A large low-temperature cross-section favours it over the proton-proton chain and can supply up to sixty percent of the luminosity. When deuterium and envelope are gone, L drops and the track bends down into the pre-main-sequence phase.\n\nSweep from a twentieth of a solar mass to ten, and watch the infall profile. Same stages, brighter if heavier. B335, L1527 and sources in Orion show only in the infrared and at millimetre wavelengths. A central dip, blue wing toward us, red wing away. Blue brighter than red is collapse.",
+   "hash": "8692f5e22636",
+   "duration": 135.99,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 3.84,
+     "text": "Look with me at M42 behind the panel."
+    },
+    {
+     "start": 3.84,
+     "end": 10.98,
+     "text": "Magnetohydrodynamics, radiative transfer, dust and chemistry can only be solved numerically."
+    },
+    {
+     "start": 10.98,
+     "end": 17.04,
+     "text": "Richard Larson’s 1969 calculation already found the sequence modern codes refine."
+    },
+    {
+     "start": 17.04,
+     "end": 21.8,
+     "text": "We follow a supercritical cloud of one solar mass and solar composition."
+    },
+    {
+     "start": 21.8,
+     "end": 27.04,
+     "text": "The early collapse is isothermal and inside-out, the centre slightly denser."
+    },
+    {
+     "start": 27.04,
+     "end": 41.42,
+     "text": "At about ten to the minus ten kilograms per cubic metre the dust makes the core opaque, collapse turns adiabatic, pressure rises, and a nearly hydrostatic first core of about five astronomical units forms the protostar."
+    },
+    {
+     "start": 41.42,
+     "end": 45.48,
+     "text": "The photosphere is where the optical depth tau equals two thirds."
+    },
+    {
+     "start": 45.48,
+     "end": 54.08,
+     "text": "L equals four pi times the square of R, the radius where tau equals two thirds, times sigma, times T e to the fourth."
+    },
+    {
+     "start": 54.08,
+     "end": 59.96,
+     "text": "L is luminosity, sigma the Stefan-Boltzmann constant, and T e the effective temperature."
+    },
+    {
+     "start": 59.96,
+     "end": 62.82,
+     "text": "We place it on the Hertzsprung-Russell diagram."
+    },
+    {
+     "start": 62.82,
+     "end": 71.85,
+     "text": "Infall stops in an accretion shock, kinetic energy becoming heat, and that shock, not nuclear burning, drives L and T e up together."
+    },
+    {
+     "start": 71.85,
+     "end": 73.45,
+     "text": "Move the stage slider."
+    },
+    {
+     "start": 73.45,
+     "end": 80.35,
+     "text": "Near a thousand kelvin the dust vaporises, opacity collapses, the photosphere shrinks and T e jumps."
+    },
+    {
+     "start": 80.35,
+     "end": 92.29,
+     "text": "Near two thousand kelvin, H two becomes two H, absorbing about four point five electronvolts, and the unsupported core collapses to about one point three solar radii behind a second shock."
+    },
+    {
+     "start": 92.29,
+     "end": 95.79,
+     "text": "The track flattens in the quasi-steady main accretion phase."
+    },
+    {
+     "start": 95.79,
+     "end": 100.95,
+     "text": "Deuterium plus hydrogen gives helium three and a gamma ray, near a million kelvin."
+    },
+    {
+     "start": 100.95,
+     "end": 108.57,
+     "text": "A large low-temperature cross-section favours it over the proton-proton chain and can supply up to sixty percent of the luminosity."
+    },
+    {
+     "start": 108.57,
+     "end": 115.01,
+     "text": "When deuterium and envelope are gone, L drops and the track bends down into the pre-main-sequence phase."
+    },
+    {
+     "start": 115.01,
+     "end": 119.85,
+     "text": "Sweep from a twentieth of a solar mass to ten, and watch the infall profile."
+    },
+    {
+     "start": 119.85,
+     "end": 122.27,
+     "text": "Same stages, brighter if heavier."
+    },
+    {
+     "start": 122.27,
+     "end": 130.01,
+     "text": "B335, L1527 and sources in Orion show only in the infrared and at millimetre wavelengths."
+    },
+    {
+     "start": 130.01,
+     "end": 133.93,
+     "text": "A central dip, blue wing toward us, red wing away."
+    },
+    {
+     "start": 133.93,
+     "end": 135.99,
+     "text": "Blue brighter than red is collapse."
+    }
+   ],
+   "voicedHash": "45c737ac9394"
+  },
+  "protostar-summary": {
+   "script": "See the planetary system slowly circling the Sun behind the panel. The Jeans criterion requires two K less than the magnitude of U, K kinetic energy, U potential, so the mass scales as T to the three-halves times rho to the minus one-half. Fifteen-hundred-solar-mass clouds are stable; eight-solar-mass and two-solar-mass Bonnor-Ebert cores are not. Free fall satisfies xi plus half the sine of two xi equals chi t, xi a progress parameter, chi t scaled time. Its time is the square root of three pi over thirty-two G rho zero, four hundred thousand years, G Newton's constant, rho zero initial density, homologous if uniform, inside-out if condensed. Isothermal gas fragments as Jeans mass falls with rho to the minus half; adiabatic gas stops fragmenting as mass rises with rho to the half. The minimum mass, zero point zero three T to the quarter over e to the half times mu to the nine quarters solar masses, is a few tenths refined to a hundredth, mu the mean weight. Magnetic support is seventy solar masses times B in nanotesla times R in parsecs squared. Ambipolar diffusion, a hundred million years and much longer than free fall, regulates the cores. This produces deuterium-burning infrared protostars. Gravity needs cold dense magnetically weakened gas, then wins fast in a free-fall time.",
+   "hash": "4e01cde72ddf",
+   "duration": 86.39,
+   "sentences": [
+    {
+     "start": 0.12,
+     "end": 4.52,
+     "text": "See the planetary system slowly circling the Sun behind the panel."
+    },
+    {
+     "start": 4.52,
+     "end": 16.44,
+     "text": "The Jeans criterion requires two K less than the magnitude of U, K kinetic energy, U potential, so the mass scales as T to the three-halves times rho to the minus one-half."
+    },
+    {
+     "start": 16.44,
+     "end": 23.48,
+     "text": "Fifteen-hundred-solar-mass clouds are stable; eight-solar-mass and two-solar-mass Bonnor-Ebert cores are not."
+    },
+    {
+     "start": 23.48,
+     "end": 32.04,
+     "text": "Free fall satisfies xi plus half the sine of two xi equals chi t, xi a progress parameter, chi t scaled time."
+    },
+    {
+     "start": 32.04,
+     "end": 45.37,
+     "text": "Its time is the square root of three pi over thirty-two G rho zero, four hundred thousand years, G Newton's constant, rho zero initial density, homologous if uniform, inside-out if condensed."
+    },
+    {
+     "start": 45.37,
+     "end": 54.51,
+     "text": "Isothermal gas fragments as Jeans mass falls with rho to the minus half; adiabatic gas stops fragmenting as mass rises with rho to the half."
+    },
+    {
+     "start": 54.51,
+     "end": 65.43,
+     "text": "The minimum mass, zero point zero three T to the quarter over e to the half times mu to the nine quarters solar masses, is a few tenths refined to a hundredth, mu the mean weight."
+    },
+    {
+     "start": 65.43,
+     "end": 71.57,
+     "text": "Magnetic support is seventy solar masses times B in nanotesla times R in parsecs squared."
+    },
+    {
+     "start": 71.57,
+     "end": 77.57,
+     "text": "Ambipolar diffusion, a hundred million years and much longer than free fall, regulates the cores."
+    },
+    {
+     "start": 77.57,
+     "end": 81.03,
+     "text": "This produces deuterium-burning infrared protostars."
+    },
+    {
+     "start": 81.03,
+     "end": 86.39,
+     "text": "Gravity needs cold dense magnetically weakened gas, then wins fast in a free-fall time."
+    }
+   ],
+   "voicedHash": "d0ec66286e5d"
+  }
+ }
+}

@@ -1,0 +1,619 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "chemistry-heating-cooling": {
+   "script": "Look at M forty two behind the panel. I want you to picture the cold gas around it. Radio astronomy has found well over two hundred molecules, including sugars and long chains. H two, carbon monoxide and water form on grain surfaces, then freeze out as icy mantles.\n\nAt ten kelvin a neutral reaction has no energy to start. Reactions between ions and molecules have no activation barrier, so they run. A cosmic ray ionises H two, and short chains build hydroxyl and water.\n\nHeating is p plus, a cosmic ray proton, colliding with H two, molecular hydrogen, to give H two plus, the ion, plus e minus, a free electron, plus the proton again. The proton barely slows. It is the electron that dumps energy into the gas by collisions. Those protons carry from about a thousand to a hundred million mega electron volts. Cooling is atomic oxygen, O, plus atomic hydrogen, H, leaving excited oxygen, O star, which decays to O and an infrared photon, gamma I R. The wavelength greatly exceeds the grain size, so the photon escapes. Carbon ions, carbon monoxide and warm dust cool the same way.\n\nDiffuse clouds are warmer because starlight penetrates, ionises carbon and ejects electrons from dust, the photoelectric effect. Deep in a dense core only cosmic rays arrive. Gas and dust share heat by collisions, and the dust radiates near ten kelvin. Hot cores are heated from inside by massive stars.\n\nTry the widget. Slide the density upward and watch the equilibrium temperature fall as line and dust cooling win. Then increase the radiation field and see photoelectric heating push the temperature back up. I call that balance the thermostat for star formation.\n\nSupernova cosmic rays ionise each H two once every few hundred million to a few billion years, as measured from H three plus. From ten mega electron volts up to the energy of a tennis ball at a hundred kilometres per hour, in one proton.",
+   "hash": "348665c414cc",
+   "duration": 124.79,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.86,
+     "text": "Look at M forty two behind the panel."
+    },
+    {
+     "start": 2.86,
+     "end": 5.58,
+     "text": "I want you to picture the cold gas around it."
+    },
+    {
+     "start": 5.58,
+     "end": 11.82,
+     "text": "Radio astronomy has found well over two hundred molecules, including sugars and long chains."
+    },
+    {
+     "start": 11.82,
+     "end": 18.54,
+     "text": "H two, carbon monoxide and water form on grain surfaces, then freeze out as icy mantles."
+    },
+    {
+     "start": 18.54,
+     "end": 22.3,
+     "text": "At ten kelvin a neutral reaction has no energy to start."
+    },
+    {
+     "start": 22.3,
+     "end": 27.42,
+     "text": "Reactions between ions and molecules have no activation barrier, so they run."
+    },
+    {
+     "start": 27.42,
+     "end": 32.74,
+     "text": "A cosmic ray ionises H two, and short chains build hydroxyl and water."
+    },
+    {
+     "start": 32.74,
+     "end": 45.32,
+     "text": "Heating is p plus, a cosmic ray proton, colliding with H two, molecular hydrogen, to give H two plus, the ion, plus e minus, a free electron, plus the proton again."
+    },
+    {
+     "start": 45.32,
+     "end": 47.12,
+     "text": "The proton barely slows."
+    },
+    {
+     "start": 47.12,
+     "end": 50.82,
+     "text": "It is the electron that dumps energy into the gas by collisions."
+    },
+    {
+     "start": 50.82,
+     "end": 56.04,
+     "text": "Those protons carry from about a thousand to a hundred million mega electron volts."
+    },
+    {
+     "start": 56.04,
+     "end": 67.29,
+     "text": "Cooling is atomic oxygen, O, plus atomic hydrogen, H, leaving excited oxygen, O star, which decays to O and an infrared photon, gamma I R."
+    },
+    {
+     "start": 67.29,
+     "end": 71.73,
+     "text": "The wavelength greatly exceeds the grain size, so the photon escapes."
+    },
+    {
+     "start": 71.73,
+     "end": 76.21,
+     "text": "Carbon ions, carbon monoxide and warm dust cool the same way."
+    },
+    {
+     "start": 76.21,
+     "end": 84.33,
+     "text": "Diffuse clouds are warmer because starlight penetrates, ionises carbon and ejects electrons from dust, the photoelectric effect."
+    },
+    {
+     "start": 84.33,
+     "end": 87.33,
+     "text": "Deep in a dense core only cosmic rays arrive."
+    },
+    {
+     "start": 87.33,
+     "end": 92.19,
+     "text": "Gas and dust share heat by collisions, and the dust radiates near ten kelvin."
+    },
+    {
+     "start": 92.19,
+     "end": 95.49,
+     "text": "Hot cores are heated from inside by massive stars."
+    },
+    {
+     "start": 95.49,
+     "end": 96.61,
+     "text": "Try the widget."
+    },
+    {
+     "start": 96.61,
+     "end": 102.23,
+     "text": "Slide the density upward and watch the equilibrium temperature fall as line and dust cooling win."
+    },
+    {
+     "start": 102.23,
+     "end": 107.21,
+     "text": "Then increase the radiation field and see photoelectric heating push the temperature back up."
+    },
+    {
+     "start": 107.21,
+     "end": 110.45,
+     "text": "I call that balance the thermostat for star formation."
+    },
+    {
+     "start": 110.45,
+     "end": 118.33,
+     "text": "Supernova cosmic rays ionise each H two once every few hundred million to a few billion years, as measured from H three plus."
+    },
+    {
+     "start": 118.33,
+     "end": 124.79,
+     "text": "From ten mega electron volts up to the energy of a tennis ball at a hundred kilometres per hour, in one proton."
+    }
+   ],
+   "voicedHash": "ad3eba8aca06"
+  },
+  "hydrogen-21cm": {
+   "script": "Hydrogen is the interstellar medium: about seventy per cent by mass, helium nearly all the rest, metals a few per cent, as H I, H II, H two. Cold H I sits in the ground state, so no optical lines, only ultraviolet Lyman absorption, nearly invisible.\n\nElectron and proton each have spin, hence a magnetic moment. Parallel spins lie slightly above antiparallel ones. The flip emits at twenty-one point one centimetres, fourteen twenty megahertz. Van de Hulst predicted it in nineteen forty-four; Ewen and Purcell detected it in nineteen fifty-one.\n\nPhoton energy h nu twenty-one equals five point nine micro electron volts, Planck's constant times the frequency. The rate A twenty-one is two point nine times ten to the minus fifteen per second, once in eleven million years. Collisions every few hundred years hold the three-to-one ratio, so we see it glow.\n\nOptical depth at line centre, tau sub H, equals five point two times ten to the minus nineteen times N sub H per square centimetre over T times delta v, or five point two times ten to the minus twenty-three per square metre. More atoms absorb more. N sub H is atoms on the sightline. T, in kelvin, sets those populations. Delta v, typically ten kilometres per second, spreads the line. A typical cloud, ten to the twenty-five per square metre, eighty kelvin, width ten, has tau about zero point six five. Thin over kiloparsecs, strength, Doppler shift and Zeeman splitting give column, velocity and magnetic field.\n\nOn the widget, play the spin flip, then change column, temperature and width. More column deepens it; higher temperature or width shallows it. Notice tau and the brightness temperature.\n\nDiffuse clouds: thirty to eighty kelvin, about ten to the eight per cubic metre, one to a hundred solar masses. Dust shields H two and grains build it, molecular gas inside an H I shell. No dipole, so carbon monoxide at two point six millimetres traces it. Look behind the panel: planets circling the Sun.",
+   "hash": "dc995f99a05d",
+   "duration": 129.59,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 11.38,
+     "text": "Hydrogen is the interstellar medium: about seventy per cent by mass, helium nearly all the rest, metals a few per cent, as H I, H II, H two."
+    },
+    {
+     "start": 11.38,
+     "end": 19.52,
+     "text": "Cold H I sits in the ground state, so no optical lines, only ultraviolet Lyman absorption, nearly invisible."
+    },
+    {
+     "start": 19.52,
+     "end": 23.76,
+     "text": "Electron and proton each have spin, hence a magnetic moment."
+    },
+    {
+     "start": 23.76,
+     "end": 27.28,
+     "text": "Parallel spins lie slightly above antiparallel ones."
+    },
+    {
+     "start": 27.28,
+     "end": 32.12,
+     "text": "The flip emits at twenty-one point one centimetres, fourteen twenty megahertz."
+    },
+    {
+     "start": 32.12,
+     "end": 38.18,
+     "text": "Van de Hulst predicted it in nineteen forty-four; Ewen and Purcell detected it in nineteen fifty-one."
+    },
+    {
+     "start": 38.18,
+     "end": 45.52,
+     "text": "Photon energy h nu twenty-one equals five point nine micro electron volts, Planck's constant times the frequency."
+    },
+    {
+     "start": 45.52,
+     "end": 52.36,
+     "text": "The rate A twenty-one is two point nine times ten to the minus fifteen per second, once in eleven million years."
+    },
+    {
+     "start": 52.36,
+     "end": 57.28,
+     "text": "Collisions every few hundred years hold the three-to-one ratio, so we see it glow."
+    },
+    {
+     "start": 57.28,
+     "end": 71.35,
+     "text": "Optical depth at line centre, tau sub H, equals five point two times ten to the minus nineteen times N sub H per square centimetre over T times delta v, or five point two times ten to the minus twenty-three per square metre."
+    },
+    {
+     "start": 71.35,
+     "end": 73.29,
+     "text": "More atoms absorb more."
+    },
+    {
+     "start": 73.29,
+     "end": 75.69,
+     "text": "N sub H is atoms on the sightline."
+    },
+    {
+     "start": 75.69,
+     "end": 78.53,
+     "text": "T, in kelvin, sets those populations."
+    },
+    {
+     "start": 78.53,
+     "end": 82.69,
+     "text": "Delta v, typically ten kilometres per second, spreads the line."
+    },
+    {
+     "start": 82.69,
+     "end": 90.71,
+     "text": "A typical cloud, ten to the twenty-five per square metre, eighty kelvin, width ten, has tau about zero point six five."
+    },
+    {
+     "start": 90.71,
+     "end": 98.07,
+     "text": "Thin over kiloparsecs, strength, Doppler shift and Zeeman splitting give column, velocity and magnetic field."
+    },
+    {
+     "start": 98.07,
+     "end": 103.03,
+     "text": "On the widget, play the spin flip, then change column, temperature and width."
+    },
+    {
+     "start": 103.03,
+     "end": 106.89,
+     "text": "More column deepens it; higher temperature or width shallows it."
+    },
+    {
+     "start": 106.89,
+     "end": 109.27,
+     "text": "Notice tau and the brightness temperature."
+    },
+    {
+     "start": 109.27,
+     "end": 116.73,
+     "text": "Diffuse clouds: thirty to eighty kelvin, about ten to the eight per cubic metre, one to a hundred solar masses."
+    },
+    {
+     "start": 116.73,
+     "end": 121.99,
+     "text": "Dust shields H two and grains build it, molecular gas inside an H I shell."
+    },
+    {
+     "start": 121.99,
+     "end": 126.73,
+     "text": "No dipole, so carbon monoxide at two point six millimetres traces it."
+    },
+    {
+     "start": 126.73,
+     "end": 129.59,
+     "text": "Look behind the panel: planets circling the Sun."
+    }
+   ],
+   "voicedHash": "2475ebc4e2e6"
+  },
+  "interstellar-extinction": {
+   "script": "I like to remind you that stars are born from the gas and dust of the interstellar medium and return much of that material through winds and explosions, so later generations form from processed gas. The medium also blocks our view. Dark lanes along the Milky Way are dust clouds hiding stars, not gaps. This interstellar extinction from scattering and absorption adds a term to the distance modulus.\n\nThe formula I want you to remember is m lambda equals M lambda plus five log base ten of d minus five plus A lambda. m lambda is the apparent magnitude, M lambda the absolute magnitude, d the distance in parsecs, and A lambda the extinction in magnitudes. A lambda equals minus two point five log base ten of e to the minus tau lambda, or about one point zero eight six times tau lambda. Tau lambda is the optical depth, the integral of dust density n sub d times cross section sigma lambda, equal to sigma lambda times column density N sub d. The intensity ratio is e to the minus tau, so extinction in magnitudes nearly matches the optical depth.\n\nGrains scatter short wavelengths more, so a star through a cloud looks redder than its temperature implies, while side-scattered light makes a blue reflection nebula like the one on the Pleiades behind the panel. Colour excess E of B minus V is observed minus intrinsic colour from the spectral type. R sub V equals A sub V over that excess and is about three point one, meaning one magnitude of reddening gives three of dimming. Ignore it and distances are too large.\n\nTry the widget: set higher A sub V to watch the spectrum redden and note the distance error if extinction is ignored, and vary R sub V. Even a grain every two hundred cubic metres, as in the example with optical depth near one over less than a kiloparsec, dims stars by a magnitude per kiloparsec. It is like thin fog: almost empty space, yet over galactic paths the starlight fades and reddens.",
+   "hash": "22b556789760",
+   "duration": 121.27,
+   "sentences": [
+    {
+     "start": 0.14,
+     "end": 12.06,
+     "text": "I like to remind you that stars are born from the gas and dust of the interstellar medium and return much of that material through winds and explosions, so later generations form from processed gas."
+    },
+    {
+     "start": 12.06,
+     "end": 14.5,
+     "text": "The medium also blocks our view."
+    },
+    {
+     "start": 14.5,
+     "end": 19.52,
+     "text": "Dark lanes along the Milky Way are dust clouds hiding stars, not gaps."
+    },
+    {
+     "start": 19.52,
+     "end": 24.9,
+     "text": "This interstellar extinction from scattering and absorption adds a term to the distance modulus."
+    },
+    {
+     "start": 24.9,
+     "end": 33.62,
+     "text": "The formula I want you to remember is m lambda equals M lambda plus five log base ten of d minus five plus A lambda."
+    },
+    {
+     "start": 33.62,
+     "end": 43.42,
+     "text": "m lambda is the apparent magnitude, M lambda the absolute magnitude, d the distance in parsecs, and A lambda the extinction in magnitudes."
+    },
+    {
+     "start": 43.42,
+     "end": 52.04,
+     "text": "A lambda equals minus two point five log base ten of e to the minus tau lambda, or about one point zero eight six times tau lambda."
+    },
+    {
+     "start": 52.04,
+     "end": 62.53,
+     "text": "Tau lambda is the optical depth, the integral of dust density n sub d times cross section sigma lambda, equal to sigma lambda times column density N sub d."
+    },
+    {
+     "start": 62.53,
+     "end": 69.11,
+     "text": "The intensity ratio is e to the minus tau, so extinction in magnitudes nearly matches the optical depth."
+    },
+    {
+     "start": 69.11,
+     "end": 80.47,
+     "text": "Grains scatter short wavelengths more, so a star through a cloud looks redder than its temperature implies, while side-scattered light makes a blue reflection nebula like the one on the Pleiades behind the panel."
+    },
+    {
+     "start": 80.47,
+     "end": 86.29,
+     "text": "Colour excess E of B minus V is observed minus intrinsic colour from the spectral type."
+    },
+    {
+     "start": 86.29,
+     "end": 94.25,
+     "text": "R sub V equals A sub V over that excess and is about three point one, meaning one magnitude of reddening gives three of dimming."
+    },
+    {
+     "start": 94.25,
+     "end": 96.73,
+     "text": "Ignore it and distances are too large."
+    },
+    {
+     "start": 96.73,
+     "end": 105.39,
+     "text": "Try the widget: set higher A sub V to watch the spectrum redden and note the distance error if extinction is ignored, and vary R sub V."
+    },
+    {
+     "start": 105.39,
+     "end": 114.99,
+     "text": "Even a grain every two hundred cubic metres, as in the example with optical depth near one over less than a kiloparsec, dims stars by a magnitude per kiloparsec."
+    },
+    {
+     "start": 114.99,
+     "end": 121.27,
+     "text": "It is like thin fog: almost empty space, yet over galactic paths the starlight fades and reddens."
+    }
+   ],
+   "voicedHash": "84676243741c"
+  },
+  "ism-summary": {
+   "script": "We've covered a lot of ground on the interstellar medium, so let's pull the main threads together. Extinction changes how bright a star appears at different wavelengths, and we write that as the apparent magnitude m lambda equals the absolute magnitude M lambda plus five times the log of distance minus five, plus the extinction term A lambda. That A lambda is one point zero eight six times the optical depth tau lambda, which itself equals one point zero eight six times the cross section sigma lambda times the column density of dust grains. Dust both reddens starlight, with the standard ratio R sub V around three point one, and scatters blue light to create reflection nebulae. Mie theory tells us the scattering cross section scales as particle radius cubed over wavelength when the wavelength is larger than the grain, and simply as radius squared when the wavelength is much smaller. The extinction curve shows a prominent bump at two hundred seventeen point five nanometres from graphite and PAHs, plus silicate features at nine point seven and eighteen microns. Grains are aligned enough to produce polarisation, yet they make up only one percent of the mass. Hydrogen dominates, seventy percent by mass. We detect atomic hydrogen through the twenty one centimetre spin flip line, whose optical depth tau H equals five point two times ten to the minus twenty three times column density N H divided by temperature times velocity width. Molecular hydrogen hides in CO and other tracers, and dust both shields it and helps it form. The gas ranges from diffuse atomic clouds at fifty kelvin and ten to the eight particles per cubic metre, through giant molecular clouds of a hundred thousand solar masses spanning fifty parsecs at fifteen kelvin, down to dense cores of ten solar masses in a tenth of a parsec at ten kelvin and ten to the ten particles per cubic metre. Chemistry runs on grain surfaces and through ion molecule reactions, cosmic rays and ultraviolet light heat the gas, and infrared lines from oxygen, ionised carbon, and CO plus the dust itself carry the heat away. In short, the interstellar medium is cold and sparse, mostly hydrogen, yet that one percent of dust shapes everything we observe, every molecule that forms, and how the gas cools, setting the stage for the dense cores where stars are born.",
+   "hash": "6cb90832ef09",
+   "duration": 139.51,
+   "sentences": [
+    {
+     "start": 0.12,
+     "end": 5.38,
+     "text": "We've covered a lot of ground on the interstellar medium, so let's pull the main threads together."
+    },
+    {
+     "start": 5.38,
+     "end": 20.58,
+     "text": "Extinction changes how bright a star appears at different wavelengths, and we write that as the apparent magnitude m lambda equals the absolute magnitude M lambda plus five times the log of distance minus five, plus the extinction term A lambda."
+    },
+    {
+     "start": 20.58,
+     "end": 33.14,
+     "text": "That A lambda is one point zero eight six times the optical depth tau lambda, which itself equals one point zero eight six times the cross section sigma lambda times the column density of dust grains."
+    },
+    {
+     "start": 33.14,
+     "end": 42.22,
+     "text": "Dust both reddens starlight, with the standard ratio R sub V around three point one, and scatters blue light to create reflection nebulae."
+    },
+    {
+     "start": 42.22,
+     "end": 53.74,
+     "text": "Mie theory tells us the scattering cross section scales as particle radius cubed over wavelength when the wavelength is larger than the grain, and simply as radius squared when the wavelength is much smaller."
+    },
+    {
+     "start": 53.74,
+     "end": 64.18,
+     "text": "The extinction curve shows a prominent bump at two hundred seventeen point five nanometres from graphite and PAHs, plus silicate features at nine point seven and eighteen microns."
+    },
+    {
+     "start": 64.18,
+     "end": 69.66,
+     "text": "Grains are aligned enough to produce polarisation, yet they make up only one percent of the mass."
+    },
+    {
+     "start": 69.66,
+     "end": 72.75,
+     "text": "Hydrogen dominates, seventy percent by mass."
+    },
+    {
+     "start": 72.75,
+     "end": 86.71,
+     "text": "We detect atomic hydrogen through the twenty one centimetre spin flip line, whose optical depth tau H equals five point two times ten to the minus twenty three times column density N H divided by temperature times velocity width."
+    },
+    {
+     "start": 86.71,
+     "end": 92.71,
+     "text": "Molecular hydrogen hides in CO and other tracers, and dust both shields it and helps it form."
+    },
+    {
+     "start": 92.71,
+     "end": 111.75,
+     "text": "The gas ranges from diffuse atomic clouds at fifty kelvin and ten to the eight particles per cubic metre, through giant molecular clouds of a hundred thousand solar masses spanning fifty parsecs at fifteen kelvin, down to dense cores of ten solar masses in a tenth of a parsec at ten kelvin and ten to the ten particles per cubic metre."
+    },
+    {
+     "start": 111.75,
+     "end": 125.53,
+     "text": "Chemistry runs on grain surfaces and through ion molecule reactions, cosmic rays and ultraviolet light heat the gas, and infrared lines from oxygen, ionised carbon, and CO plus the dust itself carry the heat away."
+    },
+    {
+     "start": 125.53,
+     "end": 139.51,
+     "text": "In short, the interstellar medium is cold and sparse, mostly hydrogen, yet that one percent of dust shapes everything we observe, every molecule that forms, and how the gas cools, setting the stage for the dense cores where stars are born."
+    }
+   ],
+   "voicedHash": "ad88b0203c7a"
+  },
+  "mie-and-dust": {
+   "script": "Look at the Pleiades behind the panel. That blue light comes from dust scattering starlight. In 1908 Gustav Mie solved how a dielectric sphere of radius a scatters light. Q lambda is defined as sigma lambda divided by pi a squared. Q lambda is the extinction efficiency, sigma lambda is the cross-section, and pi a squared is the geometric area. When the wavelength is comparable to a, Q lambda scales as a over lambda, so sigma lambda is proportional to a cubed over lambda. When the wavelength is much longer than a, Q goes to zero and the grain is invisible, like a sand grain under an ocean swell. When the wavelength is much shorter than a, Q is constant and sigma lambda is proportional to a squared, like an island blocking the waves. This one over lambda dependence reddens the starlight. For much smaller particles the Rayleigh cross-section is proportional to lambda to the minus four, which makes the sky blue. Grains a tenth to three tenths of a micrometre across redden visible light, while ten nanometre grains affect the ultraviolet.\n\nThe observed A lambda over A V against one over lambda follows that pattern until a bump at 217.5 nanometres and a far ultraviolet rise. Graphite and polycyclic aromatic hydrocarbons cause the bump. The PAHs are fused benzene rings that also emit from 3.3 to 12 micrometres. Silicates absorb at 9.7 and 18 micrometres. A few per cent polarisation shows elongated grains aligned perpendicular to the Galactic magnetic field.\n\nLet’s try the widget. Change grain size to see Q versus a over lambda. Change R V to see the curve. R V is A V over E of B minus V, near 3.1 in diffuse gas and up to 5.3 in dense gas toward Herschel 36, where larger grains flatten it. Dust forms in red-giant winds and supernova ejecta, then grows by coagulation and gains icy mantles in clouds, making up one per cent of the interstellar mass.",
+   "hash": "8001524d1386",
+   "duration": 123.19,
+   "sentences": [
+    {
+     "start": 0,
+     "end": 2.528,
+     "text": "Look at the Pleiades behind the panel."
+    },
+    {
+     "start": 2.528,
+     "end": 6.053,
+     "text": "That blue light comes from dust scattering starlight."
+    },
+    {
+     "start": 6.053,
+     "end": 11.175,
+     "text": "In 1908 Gustav Mie solved how a dielectric sphere of radius a scatters light."
+    },
+    {
+     "start": 11.175,
+     "end": 15.166,
+     "text": "Q lambda is defined as sigma lambda divided by pi a squared."
+    },
+    {
+     "start": 15.166,
+     "end": 22.682,
+     "text": "Q lambda is the extinction efficiency, sigma lambda is the cross-section, and pi a squared is the geometric area."
+    },
+    {
+     "start": 22.682,
+     "end": 31.263,
+     "text": "When the wavelength is comparable to a, Q lambda scales as a over lambda, so sigma lambda is proportional to a cubed over lambda."
+    },
+    {
+     "start": 31.263,
+     "end": 39.578,
+     "text": "When the wavelength is much longer than a, Q goes to zero and the grain is invisible, like a sand grain under an ocean swell."
+    },
+    {
+     "start": 39.578,
+     "end": 48.824,
+     "text": "When the wavelength is much shorter than a, Q is constant and sigma lambda is proportional to a squared, like an island blocking the waves."
+    },
+    {
+     "start": 48.824,
+     "end": 52.416,
+     "text": "This one over lambda dependence reddens the starlight."
+    },
+    {
+     "start": 52.416,
+     "end": 60.664,
+     "text": "For much smaller particles the Rayleigh cross-section is proportional to lambda to the minus four, which makes the sky blue."
+    },
+    {
+     "start": 60.664,
+     "end": 69.045,
+     "text": "Grains a tenth to three tenths of a micrometre across redden visible light, while ten nanometre grains affect the ultraviolet."
+    },
+    {
+     "start": 69.045,
+     "end": 78.158,
+     "text": "The observed A lambda over A V against one over lambda follows that pattern until a bump at 217. 5 nanometres and a far ultraviolet rise."
+    },
+    {
+     "start": 78.158,
+     "end": 82.215,
+     "text": "Graphite and polycyclic aromatic hydrocarbons cause the bump."
+    },
+    {
+     "start": 82.215,
+     "end": 87.271,
+     "text": "The PAHs are fused benzene rings that also emit from 3. 3 to 12 micrometres."
+    },
+    {
+     "start": 87.271,
+     "end": 90.197,
+     "text": "Silicates absorb at 9. 7 and 18 micrometres."
+    },
+    {
+     "start": 90.197,
+     "end": 97.115,
+     "text": "A few per cent polarisation shows elongated grains aligned perpendicular to the Galactic magnetic field."
+    },
+    {
+     "start": 97.115,
+     "end": 98.512,
+     "text": "Let’s try the widget."
+    },
+    {
+     "start": 98.512,
+     "end": 101.705,
+     "text": "Change grain size to see Q versus a over lambda."
+    },
+    {
+     "start": 101.705,
+     "end": 103.567,
+     "text": "Change R V to see the curve."
+    },
+    {
+     "start": 103.567,
+     "end": 112.614,
+     "text": "R V is A V over E of B minus V, near 3. 1 in diffuse gas and up to 5. 3 in dense gas toward Herschel 36, where larger grains flatten it."
+    },
+    {
+     "start": 112.614,
+     "end": 123.19,
+     "text": "Dust forms in red-giant winds and supernova ejecta, then grows by coagulation and gains icy mantles in clouds, making up one per cent of the interstellar mass."
+    }
+   ],
+   "voicedHash": "2d59c4de75a7"
+  },
+  "molecular-clouds": {
+   "script": "Look at Orion behind the panel, Messier 42, the Horsehead silhouetted against a bright H II region. That is the nearest giant molecular cloud. Conditions vary so widely that any classification blurs at the edges, but a broad scheme is still useful.\n\nWhere the gas is mostly atomic and warm, we have diffuse H one clouds: thirty to eighty kelvin, around ten to the eight particles per cubic metre, one to a hundred solar masses, a few parsecs across, extinction below one magnitude. Cool and thicken that gas and it becomes a diffuse or translucent molecular cloud, with a few magnitudes of extinction.\n\nGiant molecular clouds are the heavyweights: a hundred thousand to a million solar masses, about fifty parsecs across, near fifteen kelvin, thousands of them in the spiral arms. Inside these clumpy clouds sit dark cloud complexes of about ten thousand solar masses, clumps of about thirty solar masses, and dense cores of about ten solar masses and a tenth of a parsec, at ten kelvin and ten to the ten particles per cubic metre. Those cores are the immediate sites of star formation, and among the coldest places in the Galaxy. Hot cores, heated from within by young O and B stars, reach a hundred to three hundred kelvin and ten to the thirteen up to ten to the fifteen per cubic metre, among the warmest molecular gas.\n\nBok globules lie outside the big complexes. Nearly spherical, one to a thousand solar masses and under a parsec, they are dense cores stripped of their surroundings by nearby hot stars. Infrared surveys find young low-luminosity stars in most of them.\n\nClick each type on the widget. Sizes and masses are drawn to scale on the density-temperature diagram, so the giants dwarf the cores. Keep the Jeans mass in mind for the next section: only the dense cores sit above the critical value. And ten to the ten particles per cubic metre is still a hundred thousand times emptier than the best laboratory vacuum.",
+   "hash": "abb58c7ae82b",
+   "duration": 119.67,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 7.12,
+     "text": "Look at Orion behind the panel, Messier 42, the Horsehead silhouetted against a bright H II region."
+    },
+    {
+     "start": 7.12,
+     "end": 9.8,
+     "text": "That is the nearest giant molecular cloud."
+    },
+    {
+     "start": 9.8,
+     "end": 16.68,
+     "text": "Conditions vary so widely that any classification blurs at the edges, but a broad scheme is still useful."
+    },
+    {
+     "start": 16.68,
+     "end": 32.38,
+     "text": "Where the gas is mostly atomic and warm, we have diffuse H one clouds: thirty to eighty kelvin, around ten to the eight particles per cubic metre, one to a hundred solar masses, a few parsecs across, extinction below one magnitude."
+    },
+    {
+     "start": 32.38,
+     "end": 39.6,
+     "text": "Cool and thicken that gas and it becomes a diffuse or translucent molecular cloud, with a few magnitudes of extinction."
+    },
+    {
+     "start": 39.6,
+     "end": 50.76,
+     "text": "Giant molecular clouds are the heavyweights: a hundred thousand to a million solar masses, about fifty parsecs across, near fifteen kelvin, thousands of them in the spiral arms."
+    },
+    {
+     "start": 50.76,
+     "end": 66.29,
+     "text": "Inside these clumpy clouds sit dark cloud complexes of about ten thousand solar masses, clumps of about thirty solar masses, and dense cores of about ten solar masses and a tenth of a parsec, at ten kelvin and ten to the ten particles per cubic metre."
+    },
+    {
+     "start": 66.29,
+     "end": 71.99,
+     "text": "Those cores are the immediate sites of star formation, and among the coldest places in the Galaxy."
+    },
+    {
+     "start": 71.99,
+     "end": 83.87,
+     "text": "Hot cores, heated from within by young O and B stars, reach a hundred to three hundred kelvin and ten to the thirteen up to ten to the fifteen per cubic metre, among the warmest molecular gas."
+    },
+    {
+     "start": 83.87,
+     "end": 87.03,
+     "text": "Bok globules lie outside the big complexes."
+    },
+    {
+     "start": 87.03,
+     "end": 95.59,
+     "text": "Nearly spherical, one to a thousand solar masses and under a parsec, they are dense cores stripped of their surroundings by nearby hot stars."
+    },
+    {
+     "start": 95.59,
+     "end": 99.77,
+     "text": "Infrared surveys find young low-luminosity stars in most of them."
+    },
+    {
+     "start": 99.77,
+     "end": 101.65,
+     "text": "Click each type on the widget."
+    },
+    {
+     "start": 101.65,
+     "end": 107.77,
+     "text": "Sizes and masses are drawn to scale on the density-temperature diagram, so the giants dwarf the cores."
+    },
+    {
+     "start": 107.77,
+     "end": 113.47,
+     "text": "Keep the Jeans mass in mind for the next section: only the dense cores sit above the critical value."
+    },
+    {
+     "start": 113.47,
+     "end": 119.67,
+     "text": "And ten to the ten particles per cubic metre is still a hundred thousand times emptier than the best laboratory vacuum."
+    }
+   ],
+   "voicedHash": "910642b92776"
+  }
+ }
+}

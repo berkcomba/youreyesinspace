@@ -1,0 +1,639 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "brown-dwarfs-imf": {
+   "script": "Look at the Pleiades behind the panel. Below about seven hundredths of a solar mass, the core never gets hot enough for hydrogen burning to halt the contraction. Degeneracy pressure does, and the object cools forever as a brown dwarf, spectral type L, T or Y. Above about six hundredths of a solar mass lithium is destroyed, and above about thirteen thousandths of a solar mass, thirteen Jupiter masses, where fragmentation stops, deuterium burns for a few million years. Gliese two twenty-nine B, announced in nineteen ninety-five, was the first confirmed brown dwarf. Infrared surveys have since found thousands, probably as many as stars.\n\nFragmentation sets a characteristic spread of birth masses, the initial mass function, like gravel from a shattered rock. Xi of log m times d log m is proportional to m to the minus one point three five times d log m above half a solar mass, Salpeter's nineteen fifty-five law. Xi counts the stars in each logarithmic mass interval, m is the mass, and d log m is the bin width. Below half a solar mass the curve flattens and turns over near two or three tenths of a solar mass. Kroupa has xi proportional to m to the minus zero point three from eight hundredths to half a solar mass, and to m to the plus zero point seven below eight hundredths. Chabrier's form is a log-normal. Below a tenth of a solar mass it is still uncertain and may be rather flat.\n\nA thousand-solar-mass cluster holds about two thousand stars, one or two above twenty solar masses and half below half a solar mass, yet those few luminous, short-lived stars emit nearly all the light.\n\nOn the widget, pick a cluster mass and switch among Salpeter, Kroupa and Chabrier. Watch the deuterium-burning and hydrogen-burning limits, and notice the counts pile up at low mass while the mass and the light do not. Whether the initial mass function is universal, or depends on metallicity, pressure and the first stars, remains open.",
+   "hash": "7533e13bf0b2",
+   "duration": 119.99,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.44,
+     "text": "Look at the Pleiades behind the panel."
+    },
+    {
+     "start": 2.44,
+     "end": 9.46,
+     "text": "Below about seven hundredths of a solar mass, the core never gets hot enough for hydrogen burning to halt the contraction."
+    },
+    {
+     "start": 9.46,
+     "end": 17.06,
+     "text": "Degeneracy pressure does, and the object cools forever as a brown dwarf, spectral type L, T or Y."
+    },
+    {
+     "start": 17.06,
+     "end": 29.96,
+     "text": "Above about six hundredths of a solar mass lithium is destroyed, and above about thirteen thousandths of a solar mass, thirteen Jupiter masses, where fragmentation stops, deuterium burns for a few million years."
+    },
+    {
+     "start": 29.96,
+     "end": 36.32,
+     "text": "Gliese two twenty-nine B, announced in nineteen ninety-five, was the first confirmed brown dwarf."
+    },
+    {
+     "start": 36.32,
+     "end": 41.04,
+     "text": "Infrared surveys have since found thousands, probably as many as stars."
+    },
+    {
+     "start": 41.04,
+     "end": 48.52,
+     "text": "Fragmentation sets a characteristic spread of birth masses, the initial mass function, like gravel from a shattered rock."
+    },
+    {
+     "start": 48.52,
+     "end": 59.8,
+     "text": "Xi of log m times d log m is proportional to m to the minus one point three five times d log m above half a solar mass, Salpeter's nineteen fifty-five law."
+    },
+    {
+     "start": 59.8,
+     "end": 66.73,
+     "text": "Xi counts the stars in each logarithmic mass interval, m is the mass, and d log m is the bin width."
+    },
+    {
+     "start": 66.73,
+     "end": 72.35,
+     "text": "Below half a solar mass the curve flattens and turns over near two or three tenths of a solar mass."
+    },
+    {
+     "start": 72.35,
+     "end": 81.77,
+     "text": "Kroupa has xi proportional to m to the minus zero point three from eight hundredths to half a solar mass, and to m to the plus zero point seven below eight hundredths."
+    },
+    {
+     "start": 81.77,
+     "end": 84.01,
+     "text": "Chabrier's form is a log-normal."
+    },
+    {
+     "start": 84.01,
+     "end": 88.61,
+     "text": "Below a tenth of a solar mass it is still uncertain and may be rather flat."
+    },
+    {
+     "start": 88.61,
+     "end": 100.91,
+     "text": "A thousand-solar-mass cluster holds about two thousand stars, one or two above twenty solar masses and half below half a solar mass, yet those few luminous, short-lived stars emit nearly all the light."
+    },
+    {
+     "start": 100.91,
+     "end": 106.25,
+     "text": "On the widget, pick a cluster mass and switch among Salpeter, Kroupa and Chabrier."
+    },
+    {
+     "start": 106.25,
+     "end": 113.55,
+     "text": "Watch the deuterium-burning and hydrogen-burning limits, and notice the counts pile up at low mass while the mass and the light do not."
+    },
+    {
+     "start": 113.55,
+     "end": 119.99,
+     "text": "Whether the initial mass function is universal, or depends on metallicity, pressure and the first stars, remains open."
+    }
+   ],
+   "voicedHash": "030981eaedc6"
+  },
+  "chapter-close": {
+   "script": "Behind the panel, planets slowly circle the Sun. Gravity fights heat, fields, spin and light from stars already made. Extinction A lambda equals about one point one times tau lambda, magnitudes from optical depth, and R sub V near three sets the reddening. The Mie cross-section sigma scales as radius a cubed over lambda, removing blue light. Tau sub H equals about five times ten to the minus twenty-three times N sub H over T delta v, N per square metre, T the temperature and delta v the width. The Jeans mass scales as temperature to the three-halves over the square root of density. Free-fall time is the square root of three pi over thirty-two G rho nought, four hundred thousand years. Magnetism supports seventy solar masses times B in nanotesla times R in parsecs squared. Spin stops the plane at r sub f equals omega nought squared r nought to the fourth over G M, the disk. Strömgren r sub S scales as N to the one-third over n to the two-thirds, and the cloud disperses. The mass function falls as m to the minus one point three five above half a solar mass. That decides what galaxy the gas becomes. Estimates hold within a factor of a few. One per cent efficiency remains open. That closes the chapter.",
+   "hash": "19e895c180da",
+   "duration": 80.63,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 3.5,
+     "text": "Behind the panel, planets slowly circle the Sun."
+    },
+    {
+     "start": 3.5,
+     "end": 8.5,
+     "text": "Gravity fights heat, fields, spin and light from stars already made."
+    },
+    {
+     "start": 8.5,
+     "end": 18.12,
+     "text": "Extinction A lambda equals about one point one times tau lambda, magnitudes from optical depth, and R sub V near three sets the reddening."
+    },
+    {
+     "start": 18.12,
+     "end": 23.92,
+     "text": "The Mie cross-section sigma scales as radius a cubed over lambda, removing blue light."
+    },
+    {
+     "start": 23.92,
+     "end": 35.02,
+     "text": "Tau sub H equals about five times ten to the minus twenty-three times N sub H over T delta v, N per square metre, T the temperature and delta v the width."
+    },
+    {
+     "start": 35.02,
+     "end": 39.84,
+     "text": "The Jeans mass scales as temperature to the three-halves over the square root of density."
+    },
+    {
+     "start": 39.84,
+     "end": 46.23,
+     "text": "Free-fall time is the square root of three pi over thirty-two G rho nought, four hundred thousand years."
+    },
+    {
+     "start": 46.23,
+     "end": 52.77,
+     "text": "Magnetism supports seventy solar masses times B in nanotesla times R in parsecs squared."
+    },
+    {
+     "start": 52.77,
+     "end": 59.63,
+     "text": "Spin stops the plane at r sub f equals omega nought squared r nought to the fourth over G M, the disk."
+    },
+    {
+     "start": 59.63,
+     "end": 66.17,
+     "text": "Strömgren r sub S scales as N to the one-third over n to the two-thirds, and the cloud disperses."
+    },
+    {
+     "start": 66.17,
+     "end": 71.51,
+     "text": "The mass function falls as m to the minus one point three five above half a solar mass."
+    },
+    {
+     "start": 71.51,
+     "end": 74.37,
+     "text": "That decides what galaxy the gas becomes."
+    },
+    {
+     "start": 74.37,
+     "end": 76.87,
+     "text": "Estimates hold within a factor of a few."
+    },
+    {
+     "start": 76.87,
+     "end": 79.11,
+     "text": "One per cent efficiency remains open."
+    },
+    {
+     "start": 79.11,
+     "end": 80.63,
+     "text": "That closes the chapter."
+    }
+   ],
+   "voicedHash": "a05c7ceca7e7"
+  },
+  "hayashi-track": {
+   "script": "Welcome. Behind the panel the view has flown to the Pleiades.\n\nOnce the protostar is quasi-static, free fall no longer sets the clock. The pace is how fast gravitational energy is radiated away — the Kelvin–Helmholtz timescale, about ten million years for the Sun, not a hundred thousand. Like a kettle that cools only as fast as heat leaks out.\n\nOpacity comes from H minus, the negative hydrogen ion, fed by electrons from metals with low ionisation potentials, so the envelope, often the whole star, is convective. Chushiro Hayashi showed in 1961 that a fully convective star, in hydrostatic equilibrium, must lie on a nearly vertical line in the Hertzsprung–Russell diagram — the Hayashi track — at a few thousand kelvin, weakly dependent on mass. To the right is forbidden: no equilibrium star can carry its luminosity out at so low an effective temperature. The protostar descends, shrinking at nearly constant temperature as luminosity falls.\n\nThe table gives time to the zero-age main sequence: about three hundredths of a million years at sixty solar masses, about forty million at one solar mass, nearly seventy million years at zero point eight solar masses.\n\nI'd like you to set the slider to one solar mass. For about the first million years it is fully convective and burns deuterium, those squares. A radiative core then grows, luminosity turns up, and effective temperature rises along the Henyey track. Proton-proton burning begins, and carbon-twelve to nitrogen-fourteen, steep in temperature, drives a convective core. At the peak the core expands, the gravitational term in epsilon — energy release per unit mass — turns negative, and luminosity and temperature dip slightly. The star reaches the zero-age main sequence in about forty million years.\n\nBelow half a solar mass the upward branch is missing and the star stays fully convective. At high mass the star crosses almost horizontally and ignites the full carbon-nitrogen-oxygen cycle. Classical tracks start too large. Realistic sizes set a birth line, and massive stars may clear the cloud first.",
+   "hash": "d0d6cc1b7d3a",
+   "duration": 130.55,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 1.04,
+     "text": "Welcome."
+    },
+    {
+     "start": 1.04,
+     "end": 4.4,
+     "text": "Behind the panel the view has flown to the Pleiades."
+    },
+    {
+     "start": 4.4,
+     "end": 9.32,
+     "text": "Once the protostar is quasi-static, free fall no longer sets the clock."
+    },
+    {
+     "start": 9.32,
+     "end": 19.18,
+     "text": "The pace is how fast gravitational energy is radiated away — the Kelvin–Helmholtz timescale, about ten million years for the Sun, not a hundred thousand."
+    },
+    {
+     "start": 19.18,
+     "end": 22.74,
+     "text": "Like a kettle that cools only as fast as heat leaks out."
+    },
+    {
+     "start": 22.74,
+     "end": 34.42,
+     "text": "Opacity comes from H minus, the negative hydrogen ion, fed by electrons from metals with low ionisation potentials, so the envelope, often the whole star, is convective."
+    },
+    {
+     "start": 34.42,
+     "end": 50.18,
+     "text": "Chushiro Hayashi showed in 1961 that a fully convective star, in hydrostatic equilibrium, must lie on a nearly vertical line in the Hertzsprung–Russell diagram — the Hayashi track — at a few thousand kelvin, weakly dependent on mass."
+    },
+    {
+     "start": 50.18,
+     "end": 56.86,
+     "text": "To the right is forbidden: no equilibrium star can carry its luminosity out at so low an effective temperature."
+    },
+    {
+     "start": 56.86,
+     "end": 62.1,
+     "text": "The protostar descends, shrinking at nearly constant temperature as luminosity falls."
+    },
+    {
+     "start": 62.1,
+     "end": 75.15,
+     "text": "The table gives time to the zero-age main sequence: about three hundredths of a million years at sixty solar masses, about forty million at one solar mass, nearly seventy million years at zero point eight solar masses."
+    },
+    {
+     "start": 75.15,
+     "end": 77.91,
+     "text": "I'd like you to set the slider to one solar mass."
+    },
+    {
+     "start": 77.91,
+     "end": 83.37,
+     "text": "For about the first million years it is fully convective and burns deuterium, those squares."
+    },
+    {
+     "start": 83.37,
+     "end": 90.11,
+     "text": "A radiative core then grows, luminosity turns up, and effective temperature rises along the Henyey track."
+    },
+    {
+     "start": 90.11,
+     "end": 97.91,
+     "text": "Proton-proton burning begins, and carbon-twelve to nitrogen-fourteen, steep in temperature, drives a convective core."
+    },
+    {
+     "start": 97.91,
+     "end": 107.63,
+     "text": "At the peak the core expands, the gravitational term in epsilon — energy release per unit mass — turns negative, and luminosity and temperature dip slightly."
+    },
+    {
+     "start": 107.63,
+     "end": 111.95,
+     "text": "The star reaches the zero-age main sequence in about forty million years."
+    },
+    {
+     "start": 111.95,
+     "end": 117.29,
+     "text": "Below half a solar mass the upward branch is missing and the star stays fully convective."
+    },
+    {
+     "start": 117.29,
+     "end": 123.67,
+     "text": "At high mass the star crosses almost horizontally and ignites the full carbon-nitrogen-oxygen cycle."
+    },
+    {
+     "start": 123.67,
+     "end": 125.89,
+     "text": "Classical tracks start too large."
+    },
+    {
+     "start": 125.89,
+     "end": 130.55,
+     "text": "Realistic sizes set a birth line, and massive stars may clear the cloud first."
+    }
+   ],
+   "voicedHash": "447c0827cae7"
+  },
+  "hii-regions": {
+   "script": "We've reached M42 behind the panel, four hundred and fifty parsecs away, lit by the Trapezium in front of OMC-1. An O or B star on the zero-age main sequence is still wrapped in cloud, radiating ultraviolet. Photons past the Lyman limit, above thirteen point six electronvolts, ionise the hydrogen. Recombining electrons emit Balmer light, above all H-alpha at six hundred and fifty-six nanometres, so the nebula glows red, like a fluorescent lamp.\n\nIonisations balance recombinations: N equals four pi over three times r-S cubed times alpha times n-e times n-H. N is the ionising photons each second, r-S the radius of the ionised sphere, alpha the recombination coefficient — three point one times ten to the minus nineteen cubic metres per second at eight thousand kelvin — and n-e and n-H the electron and hydrogen densities. For pure hydrogen n-e equals n-H, so the Strömgren radius Bengt Strömgren derived in nineteen thirty-nine is r-S about the cube root of three N over four pi alpha, times n-H to the minus two thirds. The volume grows until it soaks up every ionising photon, so denser gas means a smaller sphere.\n\nTry the widget. Choose an O star, then a B star, and watch N and the radius fall. Raise the density and watch the ionisation front halt closer while the H-alpha glow fills the sphere. An O6 star near forty-five thousand kelvin emits about ten to the forty-nine ionising photons a second; at ten to the eight per cubic metre the radius is a few parsecs. Real H two regions span a tenth of a parsec to a hundred.\n\nRadiation pressure and winds clear the gas, and ionisation fronts photoevaporate the rest into the pillars of the Eagle Nebula and Carina's shredded clouds. Star formation stops. A marginally bound cloud that loses most of its mass unbinds into an OB association. The Trapezium, under ten million years and above two thousand stars per cubic parsec, shows dispersing gas in its carbon-thirteen monoxide velocities.",
+   "hash": "cc8aae1915c9",
+   "duration": 130.55,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 8.78,
+     "text": "We've reached M42 behind the panel, four hundred and fifty parsecs away, lit by the Trapezium in front of OMC-1."
+    },
+    {
+     "start": 8.78,
+     "end": 15.22,
+     "text": "An O or B star on the zero-age main sequence is still wrapped in cloud, radiating ultraviolet."
+    },
+    {
+     "start": 15.22,
+     "end": 21.76,
+     "text": "Photons past the Lyman limit, above thirteen point six electronvolts, ionise the hydrogen."
+    },
+    {
+     "start": 21.76,
+     "end": 31.86,
+     "text": "Recombining electrons emit Balmer light, above all H-alpha at six hundred and fifty-six nanometres, so the nebula glows red, like a fluorescent lamp."
+    },
+    {
+     "start": 31.86,
+     "end": 40.7,
+     "text": "Ionisations balance recombinations: N equals four pi over three times r-S cubed times alpha times n-e times n-H."
+    },
+    {
+     "start": 40.7,
+     "end": 57.74,
+     "text": "N is the ionising photons each second, r-S the radius of the ionised sphere, alpha the recombination coefficient — three point one times ten to the minus nineteen cubic metres per second at eight thousand kelvin — and n-e and n-H the electron and hydrogen densities."
+    },
+    {
+     "start": 57.74,
+     "end": 71.49,
+     "text": "For pure hydrogen n-e equals n-H, so the Strömgren radius Bengt Strömgren derived in nineteen thirty-nine is r-S about the cube root of three N over four pi alpha, times n-H to the minus two thirds."
+    },
+    {
+     "start": 71.49,
+     "end": 77.81,
+     "text": "The volume grows until it soaks up every ionising photon, so denser gas means a smaller sphere."
+    },
+    {
+     "start": 77.81,
+     "end": 78.95,
+     "text": "Try the widget."
+    },
+    {
+     "start": 78.95,
+     "end": 83.65,
+     "text": "Choose an O star, then a B star, and watch N and the radius fall."
+    },
+    {
+     "start": 83.65,
+     "end": 89.73,
+     "text": "Raise the density and watch the ionisation front halt closer while the H-alpha glow fills the sphere."
+    },
+    {
+     "start": 89.73,
+     "end": 101.39,
+     "text": "An O6 star near forty-five thousand kelvin emits about ten to the forty-nine ionising photons a second; at ten to the eight per cubic metre the radius is a few parsecs."
+    },
+    {
+     "start": 101.39,
+     "end": 105.11,
+     "text": "Real H two regions span a tenth of a parsec to a hundred."
+    },
+    {
+     "start": 105.11,
+     "end": 114.41,
+     "text": "Radiation pressure and winds clear the gas, and ionisation fronts photoevaporate the rest into the pillars of the Eagle Nebula and Carina's shredded clouds."
+    },
+    {
+     "start": 114.41,
+     "end": 116.15,
+     "text": "Star formation stops."
+    },
+    {
+     "start": 116.15,
+     "end": 121.67,
+     "text": "A marginally bound cloud that loses most of its mass unbinds into an OB association."
+    },
+    {
+     "start": 121.67,
+     "end": 130.55,
+     "text": "The Trapezium, under ten million years and above two thousand stars per cubic parsec, shows dispersing gas in its carbon-thirteen monoxide velocities."
+    }
+   ],
+   "voicedHash": "ae205ef5d748"
+  },
+  "jets-and-disks": {
+   "script": "Look behind the panel at beta Pictoris. That older star still keeps a debris disk, with comets falling onto it two or three times a week, and planets have already formed there. Young stars are more violent. They lose mass not only in shells but in narrow jets, beams shooting out in opposite directions at hundreds of kilometres per second. Those beams ram into the surrounding gas, shock it, and light up emission-line knots — the Herbig–Haro objects found near the Orion Nebula by George Herbig and Guillermo Haro in the early nineteen fifties. HH 1 and HH 2 fly apart from a star still hidden in dust between them. HH 47 shows the jet itself. HH 30 shows the source: a dark disk seen edge-on, its surfaces lit by the hidden star, with a jet emerging straight out of the plane.\n\nDisks are the rule. Hubble images of Orion’s Trapezium found fifty-six of one hundred and ten stars brighter than visual magnitude twenty-one wrapped in proplyds, protoplanetary disks of several Earth masses, well above two times ten to the twenty-five kilograms.\n\nDisks are the price of angular momentum. Add the centripetal term to the collapse equation and conserve angular momentum, and collapse in the equatorial plane halts where the rotation speed reaches orbital speed. That stopping radius is r sub f, equal to omega zero squared times r zero to the fourth, all divided by G times M sub r. Omega zero is the initial spin, r zero the starting radius, G the gravitational constant, and M sub r the mass that is falling in. Angular momentum L equals I omega and stays constant, so the spin rate scales as one over r squared. A one-solar-mass cloud a tenth of a parsec across, turning once in a few million years — omega zero about ten to the minus fourteen per second — stops near a hundred astronomical units. Along the axis there is no centrifugal support, so collapse continues and the cloud flattens into a disk. Think of spinning pizza dough: the spin won’t let it stay round, so it spreads into a flat disk.\n\nA protostar’s moment of inertia shrinks by a factor of ten billion. Kept spin would reach breakup long before a star formed. Instead gas settles into the disk and accretes through it, and the star sheds most of what remains, probably by magnetic braking: field lines anchored in the convective star and the disk fling ionised wind outward and carry angular momentum away, the same process that spins down main-sequence stars. The jets, launched and collimated by the rotating field of the inner disk, are part of that shedding. Solar-like coronal activity on T Tauri stars shows the magnetic machinery is already running.\n\nTry the widget. Move the sliders for initial spin and radius. Watch the cloud fall faster along the axis than across it, settle into a disk whose size follows the starting spin, and send jets out along the axis. A faster spin makes a larger disk.\n\nJets appear everywhere, from these beams at hundreds of kilometres per second to the relativistic jets of quasars, over twenty orders of magnitude in power. In every case a rotating object, a disk and a magnetic field are involved. Herbig–Haro flows were the first whose sources we could study in detail, and they remain the laboratory for the launching mechanism.",
+   "hash": "cb0b8fbabd26",
+   "duration": 201.91,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.04,
+     "text": "Look behind the panel at beta Pictoris."
+    },
+    {
+     "start": 3.04,
+     "end": 11.06,
+     "text": "That older star still keeps a debris disk, with comets falling onto it two or three times a week, and planets have already formed there."
+    },
+    {
+     "start": 11.06,
+     "end": 13.18,
+     "text": "Young stars are more violent."
+    },
+    {
+     "start": 13.18,
+     "end": 21.26,
+     "text": "They lose mass not only in shells but in narrow jets, beams shooting out in opposite directions at hundreds of kilometres per second."
+    },
+    {
+     "start": 21.26,
+     "end": 34.4,
+     "text": "Those beams ram into the surrounding gas, shock it, and light up emission-line knots — the Herbig–Haro objects found near the Orion Nebula by George Herbig and Guillermo Haro in the early nineteen fifties."
+    },
+    {
+     "start": 34.4,
+     "end": 39.66,
+     "text": "HH 1 and HH 2 fly apart from a star still hidden in dust between them."
+    },
+    {
+     "start": 39.66,
+     "end": 42.52,
+     "text": "HH 47 shows the jet itself."
+    },
+    {
+     "start": 42.52,
+     "end": 51.64,
+     "text": "HH 30 shows the source: a dark disk seen edge-on, its surfaces lit by the hidden star, with a jet emerging straight out of the plane."
+    },
+    {
+     "start": 51.64,
+     "end": 53.16,
+     "text": "Disks are the rule."
+    },
+    {
+     "start": 53.16,
+     "end": 68.64,
+     "text": "Hubble images of Orion’s Trapezium found fifty-six of one hundred and ten stars brighter than visual magnitude twenty-one wrapped in proplyds, protoplanetary disks of several Earth masses, well above two times ten to the twenty-five kilograms."
+    },
+    {
+     "start": 68.64,
+     "end": 71.22,
+     "text": "Disks are the price of angular momentum."
+    },
+    {
+     "start": 71.22,
+     "end": 80.86,
+     "text": "Add the centripetal term to the collapse equation and conserve angular momentum, and collapse in the equatorial plane halts where the rotation speed reaches orbital speed."
+    },
+    {
+     "start": 80.86,
+     "end": 89.8,
+     "text": "That stopping radius is r sub f, equal to omega zero squared times r zero to the fourth, all divided by G times M sub r."
+    },
+    {
+     "start": 89.8,
+     "end": 98.72,
+     "text": "Omega zero is the initial spin, r zero the starting radius, G the gravitational constant, and M sub r the mass that is falling in."
+    },
+    {
+     "start": 98.72,
+     "end": 105.67,
+     "text": "Angular momentum L equals I omega and stays constant, so the spin rate scales as one over r squared."
+    },
+    {
+     "start": 105.67,
+     "end": 117.11,
+     "text": "A one-solar-mass cloud a tenth of a parsec across, turning once in a few million years — omega zero about ten to the minus fourteen per second — stops near a hundred astronomical units."
+    },
+    {
+     "start": 117.11,
+     "end": 123.45,
+     "text": "Along the axis there is no centrifugal support, so collapse continues and the cloud flattens into a disk."
+    },
+    {
+     "start": 123.45,
+     "end": 129.25,
+     "text": "Think of spinning pizza dough: the spin won’t let it stay round, so it spreads into a flat disk."
+    },
+    {
+     "start": 129.25,
+     "end": 133.27,
+     "text": "A protostar’s moment of inertia shrinks by a factor of ten billion."
+    },
+    {
+     "start": 133.27,
+     "end": 136.71,
+     "text": "Kept spin would reach breakup long before a star formed."
+    },
+    {
+     "start": 136.71,
+     "end": 154.33,
+     "text": "Instead gas settles into the disk and accretes through it, and the star sheds most of what remains, probably by magnetic braking: field lines anchored in the convective star and the disk fling ionised wind outward and carry angular momentum away, the same process that spins down main-sequence stars."
+    },
+    {
+     "start": 154.33,
+     "end": 159.91,
+     "text": "The jets, launched and collimated by the rotating field of the inner disk, are part of that shedding."
+    },
+    {
+     "start": 159.91,
+     "end": 165.77,
+     "text": "Solar-like coronal activity on T Tauri stars shows the magnetic machinery is already running."
+    },
+    {
+     "start": 165.77,
+     "end": 166.91,
+     "text": "Try the widget."
+    },
+    {
+     "start": 166.91,
+     "end": 169.69,
+     "text": "Move the sliders for initial spin and radius."
+    },
+    {
+     "start": 169.69,
+     "end": 178.59,
+     "text": "Watch the cloud fall faster along the axis than across it, settle into a disk whose size follows the starting spin, and send jets out along the axis."
+    },
+    {
+     "start": 178.59,
+     "end": 180.95,
+     "text": "A faster spin makes a larger disk."
+    },
+    {
+     "start": 180.95,
+     "end": 190.19,
+     "text": "Jets appear everywhere, from these beams at hundreds of kilometres per second to the relativistic jets of quasars, over twenty orders of magnitude in power."
+    },
+    {
+     "start": 190.19,
+     "end": 195.11,
+     "text": "In every case a rotating object, a disk and a magnetic field are involved."
+    },
+    {
+     "start": 195.11,
+     "end": 201.91,
+     "text": "Herbig–Haro flows were the first whose sources we could study in detail, and they remain the laboratory for the launching mechanism."
+    }
+   ],
+   "voicedHash": "d5ca98859098"
+  },
+  "t-tauri-stars": {
+   "script": "Look behind the panel at Messier forty-two, the Orion Nebula.\n\nT Tauri stars are low-mass pre-main-sequence stars, half a solar mass to about two, between the dusty infrared phase and the main sequence. They vary by magnitudes over days. Strong Balmer emission, ionised calcium H and K, and iron. Strong lithium absorption: lithium is destroyed once the star is fully mixed and hot enough, so it marks youth. Forbidden lines of neutral oxygen and singly ionised sulphur, only from very thin gas.\n\nH-alpha is a broad emission peak with a blue edge absorption trough. I call that a P Cygni profile, the star shining through its own outflow.\n\nM-dot for a T Tauri star, the mass lost per year, is about ten to the minus eight solar masses per year, a million times the Sun's ten to the minus fourteen. v-absorption is about minus eighty kilometres per second — blueshifted gas in front of the star, a wind. In an FU Orionis outburst M-dot jumps to about ten to the minus four solar masses per year, ten thousand times higher, and delta-m is about minus four magnitudes, brighter, for decades. The inner disk outshines the star by a hundred to a thousand, winds exceed three hundred kilometres per second, and a hundredth of a solar mass is dumped on the star in a century.\n\nOn the widget, slide shell speed and the trough marches blue. Raise the optical depth and it bites deeper. Side gas emits the broad line; gas in front absorbs. Toggle outflow, then inverse: some stars switch within days to redshifted absorption, gas falling in at a comparable rate. Then the FU Orionis state — violently unsteady, and a star may suffer several outbursts.\n\nHerbig Ae and Be stars are the same phenomenon at two to ten solar masses, A and B types with emission lines and leftover dust, rarer because the initial mass function makes fewer of them and they reach the main sequence sooner.",
+   "hash": "939e88b629d1",
+   "duration": 124.47,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 4.84,
+     "text": "Look behind the panel at Messier forty-two, the Orion Nebula."
+    },
+    {
+     "start": 4.84,
+     "end": 14.48,
+     "text": "T Tauri stars are low-mass pre-main-sequence stars, half a solar mass to about two, between the dusty infrared phase and the main sequence."
+    },
+    {
+     "start": 14.48,
+     "end": 17.14,
+     "text": "They vary by magnitudes over days."
+    },
+    {
+     "start": 17.14,
+     "end": 22.22,
+     "text": "Strong Balmer emission, ionised calcium H and K, and iron."
+    },
+    {
+     "start": 22.22,
+     "end": 29.28,
+     "text": "Strong lithium absorption: lithium is destroyed once the star is fully mixed and hot enough, so it marks youth."
+    },
+    {
+     "start": 29.28,
+     "end": 35.46,
+     "text": "Forbidden lines of neutral oxygen and singly ionised sulphur, only from very thin gas."
+    },
+    {
+     "start": 35.46,
+     "end": 39.8,
+     "text": "H-alpha is a broad emission peak with a blue edge absorption trough."
+    },
+    {
+     "start": 39.8,
+     "end": 44.66,
+     "text": "I call that a P Cygni profile, the star shining through its own outflow."
+    },
+    {
+     "start": 44.66,
+     "end": 56.02,
+     "text": "M-dot for a T Tauri star, the mass lost per year, is about ten to the minus eight solar masses per year, a million times the Sun's ten to the minus fourteen."
+    },
+    {
+     "start": 56.02,
+     "end": 63.25,
+     "text": "v-absorption is about minus eighty kilometres per second — blueshifted gas in front of the star, a wind."
+    },
+    {
+     "start": 63.25,
+     "end": 76.25,
+     "text": "In an FU Orionis outburst M-dot jumps to about ten to the minus four solar masses per year, ten thousand times higher, and delta-m is about minus four magnitudes, brighter, for decades."
+    },
+    {
+     "start": 76.25,
+     "end": 86.29,
+     "text": "The inner disk outshines the star by a hundred to a thousand, winds exceed three hundred kilometres per second, and a hundredth of a solar mass is dumped on the star in a century."
+    },
+    {
+     "start": 86.29,
+     "end": 90.21,
+     "text": "On the widget, slide shell speed and the trough marches blue."
+    },
+    {
+     "start": 90.21,
+     "end": 92.99,
+     "text": "Raise the optical depth and it bites deeper."
+    },
+    {
+     "start": 92.99,
+     "end": 96.91,
+     "text": "Side gas emits the broad line; gas in front absorbs."
+    },
+    {
+     "start": 96.91,
+     "end": 104.75,
+     "text": "Toggle outflow, then inverse: some stars switch within days to redshifted absorption, gas falling in at a comparable rate."
+    },
+    {
+     "start": 104.75,
+     "end": 110.83,
+     "text": "Then the FU Orionis state — violently unsteady, and a star may suffer several outbursts."
+    },
+    {
+     "start": 110.83,
+     "end": 124.47,
+     "text": "Herbig Ae and Be stars are the same phenomenon at two to ten solar masses, A and B types with emission lines and leftover dust, rarer because the initial mass function makes fewer of them and they reach the main sequence sooner."
+    }
+   ],
+   "voicedHash": "546b26a44dce"
+  }
+ }
+}

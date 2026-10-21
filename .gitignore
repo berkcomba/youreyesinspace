@@ -4,3 +4,6 @@ dist
 *.local
 .env
 .env.*
+
+# textbook (not for the repo)
+*.pdf

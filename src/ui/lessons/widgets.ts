@@ -10283,6 +10283,857 @@ class ActivityWidget extends CanvasWidget {
   }
 }
 
+/* ================================================================================ */
+/*  CHAPTER 12 — THE INTERSTELLAR MEDIUM AND STAR FORMATION                          */
+/* ================================================================================ */
+
+const YR_S = 3.156e7, MH = 1.6735575e-27;
+/** Cardelli, Clayton & Mathis (1989) extinction law: A_λ/A_V for x = 1/λ in μm⁻¹ */
+function ccm89(x: number, Rv: number): number {
+  let a: number, b: number;
+  if (x < 1.1) { a = 0.574 * x ** 1.61; b = -0.527 * x ** 1.61; }
+  else if (x < 3.3) { const y = x - 1.82; a = 1 + 0.17699 * y - 0.50447 * y ** 2 - 0.02427 * y ** 3 + 0.72085 * y ** 4 + 0.01979 * y ** 5 - 0.7753 * y ** 6 + 0.32999 * y ** 7; b = 1.41338 * y + 2.28305 * y ** 2 + 1.07233 * y ** 3 - 5.38434 * y ** 4 - 0.62251 * y ** 5 + 5.3026 * y ** 6 - 2.09002 * y ** 7; }
+  else if (x < 8) { const fa = x >= 5.9 ? -0.04473 * (x - 5.9) ** 2 - 0.009779 * (x - 5.9) ** 3 : 0, fb = x >= 5.9 ? 0.213 * (x - 5.9) ** 2 + 0.1207 * (x - 5.9) ** 3 : 0; a = 1.752 - 0.316 * x - 0.104 / ((x - 4.67) ** 2 + 0.341) + fa; b = -3.09 + 1.825 * x + 1.206 / ((x - 4.62) ** 2 + 0.263) + fb; }
+  else { const y = Math.min(x, 10) - 8; a = -1.073 - 0.628 * y + 0.137 * y ** 2 - 0.07 * y ** 3; b = 13.67 + 4.257 * y - 0.42 * y ** 2 + 0.374 * y ** 3; }
+  return a + b / Rv;
+}
+const ISM_CLOUDS: Array<{ name: string; T: number; n: number; M: number; size: number; Av: string; mu: number }> = [
+  { name: 'Diffuse H I cloud', T: 50, n: 5e8, M: 50, size: 5, Av: '< 1', mu: 1 },
+  { name: 'Diffuse molecular cloud', T: 30, n: 2e9, M: 30, size: 3, Av: '1–5', mu: 2 },
+  { name: 'Giant molecular cloud', T: 15, n: 2e8, M: 3e5, size: 50, Av: '—', mu: 2 },
+  { name: 'Dark cloud complex', T: 10, n: 5e8, M: 1e4, size: 10, Av: '~5', mu: 2 },
+  { name: 'Clump', T: 10, n: 1e9, M: 30, size: 2, Av: '~10', mu: 2 },
+  { name: 'Dense core', T: 10, n: 1e10, M: 10, size: 0.1, Av: '> 10', mu: 2 },
+  { name: 'Hot core', T: 200, n: 1e14, M: 300, size: 0.07, Av: '50–1000', mu: 2 },
+  { name: 'Bok globule', T: 10, n: 2e10, M: 30, size: 0.5, Av: '~10', mu: 2 },
+];
+const jeansMass = (T: number, mu: number, rho: number) => (5 * K_B * T / (GRAV * mu * MH)) ** 1.5 * Math.sqrt(3 / (4 * Math.PI * rho));   // kg
+const jeansLength = (T: number, mu: number, rho: number) => Math.sqrt(15 * K_B * T / (4 * Math.PI * GRAV * mu * MH * rho));   // m
+const freeFallTime = (rho: number) => Math.sqrt(3 * Math.PI / (32 * GRAV * rho));   // s
+
+/* ------------------------------------------------------ 12.1a extinction ---- */
+
+type ExtStar = 'B0' | 'A0' | 'G2' | 'K5';
+const EXT_STARS: Record<ExtStar, { T: number; MV: number; BV: number; label: string }> = { B0: { T: 30000, MV: -4.0, BV: -0.30, label: 'B0 V' }, A0: { T: 9600, MV: 0.6, BV: 0.0, label: 'A0 V' }, G2: { T: 5777, MV: 4.8, BV: 0.65, label: 'G2 V' }, K5: { T: 4000, MV: -0.2, BV: 1.5, label: 'K5 III' } };
+class ExtinctionWidget extends CanvasWidget {
+  private Av = 1.1; private Rv = 3.1; private lkpc = Math.log10(0.8); private star: ExtStar = 'B0'; private t = 0;
+  constructor() {
+    super(1.8);
+    this.segmented<ExtStar>([['B0', 'B0 V'], ['A0', 'A0 V'], ['G2', 'G2 V (Sun)'], ['K5', 'K5 III']], this.star, (v) => { this.star = v; });
+    this.slider('Extinction A_V', 0, 5, 0.05, this.Av, (v) => `${fmt(v, 2)} mag`, (v) => { this.Av = v; });
+    this.slider('R_V = A_V / E(B−V)', 2.2, 5.5, 0.05, this.Rv, (v) => fmt(v, 2), (v) => { this.Rv = v; });
+    this.slider('Distance', -1, 0.7, 0.02, this.lkpc, (v) => `${fmt(10 ** v, 2)} kpc`, (v) => { this.lkpc = v; });
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h; this.t += dt;
+    const S = EXT_STARS[this.star], d = 10 ** this.lkpc * 1e3;
+    const AB = this.Av * ccm89(1 / 0.44, this.Rv), EBV = AB - this.Av;
+    const mV = S.MV + 5 * Math.log10(d) - 5 + this.Av, mV0 = mV - this.Av;
+    const dApp = 10 ** ((mV - S.MV + 5) / 5);
+    // left: geometry
+    const gx0 = 10, gx1 = w * 0.46, gy = h * 0.42;
+    const sx = gx0 + 22, cx = (gx0 + gx1) / 2, cw = (gx1 - gx0) * 0.22;
+    for (let i = 0; i < 70; i++) { const a = i * 2.399, r = cw * 0.9 * Math.sqrt((i * 0.618) % 1); const x = cx + r * Math.cos(a) * 1.1, y = gy + r * Math.sin(a) * 0.9; this.glow(x, y, cw * 0.35, hexA('#5a4632', 0.06 + 0.1 * Math.min(1, this.Av / 2))); }
+    this.text('dust cloud', cx, gy - cw - 10, C.dim, 8, 'center');
+    const col = tempRGB(S.T);
+    this.glow(sx, gy, 14, rgba(col, 0.8)); this.circle(sx, gy, 4, undefined, rgba(col, 1)); this.text(S.label, sx, gy + 16, C.dim, 8, 'center');
+    const ax = gx1 - 12; const red = tempRGB(Math.max(2500, S.T / (1 + 0.5 * EBV)));
+    for (let k = 0; k < 7; k++) { const ph = ((this.t * 0.25 + k / 7) % 1); const x = sx + (ax - sx) * ph; const inside = Math.abs(x - cx) < cw; const colK = x > cx + cw * 0.3 ? red : col; c.fillStyle = rgba(colK, inside ? 0.5 : 0.9); c.fillRect(x, gy - 1 + (k - 3) * 1.2, 3, 2); }
+    this.text('A', ax, gy + 14, C.text, 10, 'center'); this.text('reddened, dimmed', ax, gy + 26, C.dim, 8, 'center');
+    const by = gy - cw - 34; this.line(cx, gy - cw * 0.8, cx + 20, by + 8, hexA(C.blue, 0.6), 1, [2, 3]); this.circle(cx + 22, by + 6, 2, undefined, C.blue);
+    for (let k = 0; k < 4; k++) { const ph = ((this.t * 0.35 + k / 4) % 1); c.fillStyle = hexA(C.blue, 0.7); c.fillRect(cx + 20 * ph, gy - cw * 0.8 - (cw * 0.8 + gy - by - 8) * ph, 2, 2); }
+    this.text('B: blue reflection nebula', cx + 28, by + 6, C.blue, 8);
+    // left-bottom: magnitudes bar
+    const my = h * 0.78; const Xm = (m: number) => gx0 + 20 + (m + 5) / 25 * (gx1 - gx0 - 30);
+    this.line(gx0 + 20, my, gx1 - 10, my, C.grid, 1); for (let m = -5; m <= 20; m += 5) { this.text(`${m}`, Xm(m), my + 10, C.dim, 7, 'center'); }
+    this.text('apparent V magnitude', gx0 + 20, my - 22, C.dim, 8);
+    this.circle(Xm(mV0), my, 4, '#000', C.sun); this.text('no dust', Xm(mV0), my - 10, C.sun, 7, 'center');
+    this.circle(Xm(mV), my, 4, '#000', C.red); this.text(`with A_V`, Xm(mV), my + 22, C.red, 7, 'center');
+    // right: spectrum
+    const x0 = w * 0.55, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (nm: number) => x0 + (nm - 300) / 700 * (x1 - x0);
+    let pk = 0; for (let nm = 300; nm <= 1000; nm += 5) pk = Math.max(pk, planck(nm * 1e-9, S.T));
+    const Y = (f: number) => y1 - 6 - f / pk * (y1 - y0 - 14);
+    for (let nm = 300; nm < 1000; nm += 5) { c.fillStyle = rgba(waveRGB(nm), 0.12); c.fillRect(X(nm), y0, X(nm + 5) - X(nm) + 0.5, y1 - y0); }
+    plotCurve(c, 300, 1000, 140, X, (nm) => Y(planck(nm * 1e-9, S.T)), C.text, 1.5, [3, 3]);
+    plotCurve(c, 300, 1000, 140, X, (nm) => Y(planck(nm * 1e-9, S.T) * 10 ** (-0.4 * this.Av * ccm89(1000 / nm, this.Rv))), C.red, 2);
+    for (const [nm, lab] of [[365, 'U'], [440, 'B'], [550, 'V'], [800, 'I']] as Array<[number, string]>) { this.line(X(nm), y0, X(nm), y1, hexA(C.grid, 1), 1, [2, 4]); this.text(lab, X(nm), y0 + 10, C.dim, 8, 'center'); }
+    this.text('intrinsic', x1 - 6, y0 + 10, C.text, 8, 'right'); this.text('through the cloud', x1 - 6, y0 + 22, C.red, 8, 'right');
+    this.text('300', X(300), y1 + 10, C.dim, 7, 'center'); this.text('1000 nm', X(1000), y1 + 10, C.dim, 7, 'center');
+    this.setReadout([
+      ['Apparent magnitude', `V = ${fmt(mV, 2)} (would be ${fmt(mV0, 2)} without dust)`, C.red],
+      ['Colour excess E(B−V)', `${fmt(EBV, 2)} → observed B−V = ${fmt(S.BV + EBV, 2)} (intrinsic ${fmt(S.BV, 2)})`, C.blue],
+      ['Optical depth · dust column', `τ_V = ${fmt(this.Av / 1.086, 2)} · N_d ≈ ${sci(this.Av / 1.086 / 2e-13, 1)} m⁻² · n_d ≈ ${sci(this.Av / 1.086 / 2e-13 / (d * PC_M), 1)} m⁻³`],
+      ['Distance if dust is ignored', `${fmt(dApp / 1e3, 2)} kpc instead of ${fmt(d / 1e3, 2)}: ${fmt(100 * (dApp / d - 1), 0)} % too far`, C.accent],
+    ]);
+  }
+}
+
+/* --------------------------------------------- 12.1b Mie + extinction curve ---- */
+
+class ExtcurveWidget extends CanvasWidget {
+  private la = Math.log10(0.1); private Rv = 3.1;
+  constructor() {
+    super(1.8);
+    this.slider('Grain radius a', -2, 0.3, 0.02, this.la, (v) => `${fmt(10 ** v, 10 ** v < 0.1 ? 3 : 2)} μm`, (v) => { this.la = v; });
+    this.slider('R_V (grain-size proxy)', 2.2, 5.5, 0.05, this.Rv, (v) => fmt(v, 2), (v) => { this.Rv = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const a = 10 ** this.la;   // μm
+    const Q = (x: number) => { const r = 2 * x * 0.5; return x < 0.02 ? 0 : 2 - 4 * Math.sin(r) / r + 4 * (1 - Math.cos(r)) / (r * r); };   // anomalous diffraction, m = 1.5
+    // left: Q vs x = 2πa/λ
+    const x0 = PLOT_MARGIN, x1 = w * 0.46, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (lx: number) => x0 + (lx + 1.5) / 3 * (x1 - x0);
+    const Y = (q: number) => y1 - 6 - q / 4 * (y1 - y0 - 12);
+    for (const q of [1, 2, 3]) { this.line(x0, Y(q), x1, Y(q), hexA(C.grid, 0.9)); this.text(`${q}`, x0 - 4, Y(q), C.dim, 8, 'right'); }
+    for (const lx of [-1, 0, 1]) this.text(lx === 0 ? '1' : `10${sup(lx)}`, X(lx), y1 + 10, C.dim, 8, 'center');
+    this.text('x = 2πa/λ', x1, y1 + 22, C.dim, 9, 'right'); this.text('Q_ext = σ/πa²', x0 + 6, y0 + 10, C.dim, 8);
+    const xv0 = Math.log10(2 * Math.PI * a / 0.7), xv1 = Math.log10(2 * Math.PI * a / 0.4);
+    c.fillStyle = hexA(C.sun, 0.12); c.fillRect(X(Math.max(-1.5, xv0)), y0, X(Math.min(1.5, xv1)) - X(Math.max(-1.5, xv0)), y1 - y0);
+    this.text('visible', X((Math.max(-1.5, xv0) + Math.min(1.5, xv1)) / 2), y1 - 12, C.sun, 8, 'center');
+    plotCurve(c, -1.5, 1.5, 300, X, (lx) => Y(Q(10 ** lx)), C.text, 2);
+    plotCurve(c, -1.5, Math.log10(2), 60, X, (lx) => Y(Math.min(4, 0.9 * 10 ** lx)), C.accent, 1, [3, 3]);
+    this.text('Q ~ a/λ', X(0.1), Y(1.2) - 10, C.accent, 8); this.text('Q → 2 (blocked)', X(1.2), Y(2.1) - 10, C.dim, 8, 'center'); this.text('Q → 0', X(-1.2), Y(0.15) - 10, C.dim, 8, 'center');
+    // right: CCM extinction curve
+    const u0 = w * 0.57, u1 = w - 12;
+    axesBox(c, u0, y0, u1, y1);
+    const U = (ix: number) => u0 + ix / 10 * (u1 - u0);
+    const V = (r: number) => y1 - 6 - r / 7 * (y1 - y0 - 12);
+    for (const r of [1, 2, 3, 4, 5, 6]) { this.line(u0, V(r), u1, V(r), hexA(C.grid, 0.9)); this.text(`${r}`, u0 - 4, V(r), C.dim, 8, 'right'); }
+    for (const ix of [2, 4, 6, 8, 10]) this.text(`${ix}`, U(ix), y1 + 10, C.dim, 8, 'center');
+    this.text('1/λ (μm⁻¹)', u1, y1 + 22, C.dim, 9, 'right'); this.text('A_λ / A_V', u0 + 6, y0 + 10, C.dim, 8);
+    for (const [ix, lab] of [[1 / 0.365, 'U'], [1 / 0.44, 'B'], [1 / 0.55, 'V']] as Array<[number, string]>) { this.line(U(ix), y0, U(ix), y1, hexA(C.grid, 1), 1, [2, 4]); this.text(lab, U(ix), y0 + 22, C.dim, 8, 'center'); }
+    plotCurve(c, 0.3, 10, 300, U, (ix) => V(Math.min(7, ccm89(ix, 3.1))), hexA(C.dim, 0.6), 1, [3, 3]);
+    plotCurve(c, 0.3, 10, 300, U, (ix) => V(Math.min(7, ccm89(ix, this.Rv))), C.red, 2);
+    plotCurve(c, 0.3, 10, 100, U, (ix) => V(Math.min(7, ix / (1 / 0.55))), C.accent, 1, [4, 3]);
+    this.text('Mie ∝ 1/λ', U(6.5), V(6.5 * 0.55) - 10, C.accent, 8, 'center');
+    this.text('217.5 nm bump', U(4.6), V(ccm89(4.6, this.Rv)) - 12, C.red, 8, 'center');
+    this.text(`R_V = ${fmt(this.Rv, 1)}`, u1 - 6, y0 + 10, C.red, 8, 'right'); this.text('R_V = 3.1 (diffuse ISM)', u1 - 6, y0 + 22, C.dim, 8, 'right');
+    const qV = Q(2 * Math.PI * a / 0.55);
+    this.setReadout([
+      ['At 550 nm', `x = ${fmt(2 * Math.PI * a / 0.55, 2)} · Q = ${fmt(qV, 2)} · σ = ${sci(qV * Math.PI * (a * 1e-6) ** 2, 1)} m²`, C.text],
+      ['Regime', a < 0.03 ? 'λ ≫ a: nearly transparent in the visible (UV only)' : a < 0.3 ? 'λ ~ a: strong reddening, σ ∝ a³/λ' : 'λ ≪ a: grey extinction, σ ∝ a²', C.accent],
+      ['A_B/A_V · E(B−V)/A_V', `${fmt(ccm89(1 / 0.44, this.Rv), 2)} · ${fmt(1 / this.Rv, 2)}`, C.red],
+      ['Bump · far-UV', `A(217.5)/A_V = ${fmt(ccm89(4.6, this.Rv), 1)} · A(125 nm)/A_V = ${fmt(ccm89(8, this.Rv), 1)}`],
+    ]);
+  }
+}
+
+/* -------------------------------------------------------- 12.1c 21-cm line ---- */
+
+class Hi21cmWidget extends CanvasWidget {
+  private lN = 25; private T = 80; private dv = 10; private t = 0;
+  constructor() {
+    super(1.8);
+    this.slider('H I column density N_H', 23.5, 26.5, 0.02, this.lN, (v) => `10^${fmt(v, 1)} m⁻²`, (v) => { this.lN = v; });
+    this.slider('Spin temperature', 10, 300, 1, this.T, (v) => `${v} K`, (v) => { this.T = v; });
+    this.slider('Line width (FWHM)', 2, 30, 0.5, this.dv, (v) => `${fmt(v, 1)} km/s`, (v) => { this.dv = v; });
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h; this.t += dt;
+    const N = 10 ** this.lN, tau = 5.2e-23 * N / (this.T * this.dv);   // 5.2e-19 for N in cm⁻²
+    // left: atom
+    const cx = w * 0.22, cy = h * 0.42, R = Math.min(w * 0.14, h * 0.26);
+    const period = 6, ph = (this.t % period) / period, aligned = ph < 0.5;
+    this.circle(cx, cy, R, hexA(C.grid, 1), undefined, 1, [3, 3]);
+    this.circle(cx, cy, 7, undefined, C.red); this.text('p', cx, cy, '#000', 9, 'center');
+    const arrow = (x: number, y: number, dir: number, col: string, len = 14) => { this.line(x, y + dir * len / 2, x, y - dir * len / 2, col, 2); this.line(x, y - dir * len / 2, x - 3, y - dir * len / 2 + dir * 4, col, 2); this.line(x, y - dir * len / 2, x + 3, y - dir * len / 2 + dir * 4, col, 2); };
+    arrow(cx, cy - 14, 1, C.red, 12);
+    const ea = this.t * 1.6; const ex = cx + R * Math.cos(ea), ey = cy + R * Math.sin(ea);
+    this.circle(ex, ey, 4, undefined, C.blue); arrow(ex, ey - 12, aligned ? 1 : -1, C.blue, 12);
+    this.text(aligned ? 'spins parallel: higher energy' : 'spins antiparallel: ground state', cx, cy - R - 16, aligned ? C.accent : C.green, 9, 'center');
+    if (!aligned && ph < 0.75) { const q = (ph - 0.5) / 0.25; const px = cx + R * 1.1 + q * (w * 0.2); c.beginPath(); for (let i = 0; i <= 40; i++) { const x = px - 24 + i * 1.2, y = cy + 6 * Math.sin(i * 0.7 + this.t * 20); i ? c.lineTo(x, y) : c.moveTo(x, y); } c.strokeStyle = hexA(C.sun, 1 - q * 0.6); c.lineWidth = 1.5; c.stroke(); this.text('λ = 21.1 cm · ν = 1420 MHz · hν = 5.9 μeV', cx, cy + R + 16, C.sun, 8, 'center'); }
+    else this.text('spontaneous flip once in 11 Myr · collisions every ~100 yr', cx, cy + R + 16, C.dim, 8, 'center');
+    // right: profile
+    const x0 = w * 0.5, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (v: number) => x0 + (v + 40) / 80 * (x1 - x0);
+    const Tmax = 300; const Y = (T: number) => y1 - 6 - T / Tmax * (y1 - y0 - 12);
+    for (const T of [100, 200, 300]) { this.line(x0, Y(T), x1, Y(T), hexA(C.grid, 0.9)); this.text(`${T}`, x0 - 4, Y(T), C.dim, 8, 'right'); }
+    for (const v of [-40, -20, 0, 20, 40]) this.text(`${v}`, X(v), y1 + 10, C.dim, 8, 'center');
+    this.text('velocity (km/s)', x1, y1 + 22, C.dim, 9, 'right'); this.text('brightness temperature T_B (K)', x0 + 6, y0 + 10, C.dim, 8);
+    const sig = this.dv / 2.3548;
+    const tauV = (v: number) => tau * Math.exp(-(v * v) / (2 * sig * sig));
+    this.line(x0, Y(this.T), x1, Y(this.T), hexA(C.accent, 0.6), 1, [4, 3]); this.text(`T_spin = ${this.T} K (saturation)`, x1 - 6, Y(this.T) - 8, C.accent, 8, 'right');
+    plotCurve(c, -40, 40, 200, X, (v) => Y(Math.min(Tmax, this.T * tauV(v))), hexA(C.dim, 0.7), 1, [3, 3]);
+    plotCurve(c, -40, 40, 200, X, (v) => Y(this.T * (1 - Math.exp(-tauV(v)))), C.sun, 2);
+    this.text('optically thin: T_B = T τ', x0 + 6, y0 + 22, C.dim, 8); this.text('T_B = T (1 − e^−τ)', x0 + 6, y0 + 34, C.sun, 8);
+    const sigmaMsun = N * MH * PC_M ** 2 / MSUN;
+    this.setReadout([
+      ['Optical depth at line centre τ_H', `${fmt(tau, tau < 0.1 ? 3 : 2)} — ${tau < 0.3 ? 'optically thin: T_B ∝ N_H' : tau < 1 ? 'turning over' : 'optically thick: T_B → T, N_H hidden'}`, tau < 0.3 ? C.green : tau < 1 ? C.accent : C.red],
+      ['Peak brightness temperature', `${fmt(this.T * (1 - Math.exp(-tau)), 1)} K`, C.sun],
+      ['Mass per unit area', `${fmt(sigmaMsun, 1)} M☉ pc⁻² (N_H m_H)`],
+      ['Path length for n = 5 × 10⁸ m⁻³', `${fmt(N / 5e8 / PC_M, N / 5e8 / PC_M < 10 ? 2 : 0)} pc`],
+    ]);
+  }
+}
+
+/* ----------------------------------------------------- 12.1d ISM phases ---- */
+
+class IsmPhasesWidget extends CanvasWidget {
+  private sel = 5;
+  constructor() {
+    super(1.8);
+    this.canvas.addEventListener('pointerdown', (e) => { const { x, y } = canvasPos(this.canvas, e, this.w, this.h); let best = -1, bd = 1e9; ISM_CLOUDS.forEach((cl, i) => { const [px, py] = this.pos(cl); const d = Math.hypot(px - x, py - y); if (d < bd) { bd = d; best = i; } }); if (bd < 40) this.sel = best; });
+  }
+  private pos(cl: { n: number; T: number }): [number, number] { const x0 = PLOT_MARGIN, x1 = this.w * 0.64, y0 = 14, y1 = this.h - 30; return [x0 + (Math.log10(cl.n) - 7.5) / 8 * (x1 - x0), y1 - (Math.log10(cl.T) - 0.7) / 2.1 * (y1 - y0)]; }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const x0 = PLOT_MARGIN, x1 = w * 0.64, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    for (let lx = 8; lx <= 15; lx++) { const [px] = this.pos({ n: 10 ** lx, T: 10 }); this.line(px, y0, px, y1, hexA(C.grid, 0.8)); this.text(`10${sup(lx)}`, px, y1 + 10, C.dim, 8, 'center'); }
+    for (const T of [10, 100, 1000]) { const [, py] = this.pos({ n: 1e8, T }); this.line(x0, py, x1, py, hexA(C.grid, 0.8)); this.text(`${T}`, x0 - 4, py, C.dim, 8, 'right'); }
+    this.text('number density n (m⁻³)', x1, y1 + 22, C.dim, 9, 'right'); this.text('T (K)', x0 + 6, y0 + 10, C.dim, 8);
+    // isobars nT = const
+    for (const lp of [10, 11, 12, 14, 16]) { c.beginPath(); let pen = false; for (let lx = 7.5; lx <= 15.5; lx += 0.1) { const lT = lp - lx; if (lT < 0.7 || lT > 2.8) { pen = false; continue; } const [px, py] = this.pos({ n: 10 ** lx, T: 10 ** lT }); pen ? c.lineTo(px, py) : c.moveTo(px, py); pen = true; } c.strokeStyle = hexA(C.line, 0.6); c.lineWidth = 1; c.setLineDash([2, 4]); c.stroke(); c.setLineDash([]); const [px, py] = this.pos({ n: 10 ** (lp - 2.75), T: 10 ** 2.75 }); if (px > x0 && px < x1) this.text(`nT = 10${sup(lp)}`, px + 4, py + 8, C.faint, 7); }
+    ISM_CLOUDS.forEach((cl, i) => {
+      const [px, py] = this.pos(cl); const r = 6 + 6 * Math.log10(cl.size * 20 + 1);
+      const mj = jeansMass(cl.T, cl.mu, cl.mu * MH * cl.n) / MSUN; const unstable = cl.M > mj;
+      const col = unstable ? C.red : C.blue;
+      this.circle(px, py, r, i === this.sel ? '#fff' : hexA(col, 0.9), hexA(col, i === this.sel ? 0.5 : 0.25), i === this.sel ? 2 : 1);
+      this.text(cl.name.replace('Giant molecular cloud', 'GMC').replace('Dark cloud complex', 'dark complex').replace('Diffuse molecular cloud', 'diffuse molecular').replace('Diffuse H I cloud', 'diffuse H I'), px, py - r - 8, i === this.sel ? C.text : C.dim, 8, 'center');
+    });
+    this.text('circle size ∝ log(cloud size) · red: M > M_J (unstable) · blue: stable', x0 + 6, y0 + 22, C.dim, 8);
+    // right: card
+    const cl = ISM_CLOUDS[this.sel]; const rx = w * 0.69, ry = 14;
+    this.text(cl.name, rx, ry + 10, C.text, 12);
+    const rows: Array<[string, string]> = [['T', `${cl.T} K`], ['n', `${sci(cl.n, 0)} m⁻³ = ${sci(cl.n / 1e6, 0)} cm⁻³`], ['Mass', `${cl.M >= 1000 ? sci(cl.M, 0) : cl.M} M☉`], ['Size', `${cl.size} pc`], ['A_V', cl.Av], ['μ', `${cl.mu} (${cl.mu === 1 ? 'atomic' : 'molecular'})`], ['Pressure nT', `${sci(cl.n * cl.T, 1)} K m⁻³`], ['Free-fall time', fmtYr(freeFallTime(cl.mu * MH * cl.n) / YR_S)]];
+    rows.forEach(([k, v], i) => { this.text(k, rx, ry + 34 + i * 16, C.dim, 9); this.text(v, w - 12, ry + 34 + i * 16, C.text, 9, 'right'); });
+    const mj = jeansMass(cl.T, cl.mu, cl.mu * MH * cl.n) / MSUN;
+    const vol = 4 / 3 * Math.PI * (cl.size / 2 * PC_M) ** 3, Mrho = cl.n * cl.mu * MH * vol / MSUN;
+    this.setReadout([
+      ['Jeans mass at this T, n', `${mj >= 100 ? sci(mj, 1) : fmt(mj, 1)} M☉ — ${cl.M > mj ? 'cloud mass exceeds it: unstable' : 'cloud mass below it: stable'}`, cl.M > mj ? C.red : C.blue],
+      ['Mass from n × volume', `${Mrho >= 1000 ? sci(Mrho, 1) : fmt(Mrho, 1)} M☉ (uniform sphere; real clouds are clumpy)`],
+      ['Vacuum comparison', `${sci(cl.n / 1e6, 0)} cm⁻³ vs ~10⁴ cm⁻³ in the best laboratory vacuum, 2.5 × 10¹⁹ in air`],
+    ]);
+  }
+}
+
+/* --------------------------------------------------- 12.1e heating/cooling ---- */
+
+class HeatcoolWidget extends CanvasWidget {
+  private ln = 8; private lG = 0; private Av = 0; private lz = -17;
+  constructor() {
+    super(1.8);
+    this.slider('Density n', 7, 13, 0.05, this.ln, (v) => `10^${fmt(v, 1)} m⁻³`, (v) => { this.ln = v; });
+    this.slider('UV field G₀ (Habing units)', -1, 3, 0.05, this.lG, (v) => `${fmt(10 ** v, 10 ** v < 1 ? 2 : 0)}`, (v) => { this.lG = v; });
+    this.slider('Depth into the cloud A_V', 0, 10, 0.1, this.Av, (v) => `${fmt(v, 1)} mag`, (v) => { this.Av = v; });
+    this.slider('Cosmic-ray ionisation rate ζ', -18, -15, 0.05, this.lz, (v) => `10^${fmt(v, 1)} s⁻¹`, (v) => { this.lz = v; });
+  }
+  /** heating per H nucleus (erg/s) and cooling per H² (erg cm³/s), cgs */
+  private rates(ncm: number, T: number, G0: number, Av: number, zeta: number) {
+    const Tdust = 10 * Math.pow(1 + G0 * Math.exp(-1.0 * Av), 0.2);
+    const heat = zeta * 1.6e-11 + 2e-26 * G0 * Math.exp(-2.5 * Av) / (1 + ncm / 1e5);   // cosmic rays (10 eV per ionisation) + photoelectric on grains
+    const line = 2e-26 * (1e7 * Math.exp(-1.184e5 / (T + 1000)) + 1.4e-2 * Math.sqrt(T) * Math.exp(-92 / T)) / (1 + ncm / 1e3);   // Lyα + C II / O I (Koyama & Inutsuka 2002), C⁺ → CO at high n
+    const co = 1e-31 * Math.pow(T / 10, 2.5) / (1 + ncm / 3e3);   // CO rotational lines, optically thick at high n
+    const dust = 2e-33 * Math.sqrt(T) * (T - Tdust);   // gas–grain collisions
+    return { heat, cool: line + co + dust, Tdust };
+  }
+  private teq(ncm: number, G0: number, Av: number, zeta: number): number {
+    let lo = 0.3, hi = 4.2;
+    for (let i = 0; i < 40; i++) { const mid = (lo + hi) / 2, T = 10 ** mid; const r = this.rates(ncm, T, G0, Av, zeta); if (ncm * r.cool > r.heat) hi = mid; else lo = mid; }
+    return 10 ** ((lo + hi) / 2);
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const ncm = 10 ** this.ln / 1e6, G0 = 10 ** this.lG, zeta = 10 ** this.lz;
+    const Teq = this.teq(ncm, G0, this.Av, zeta), rq = this.rates(ncm, Teq, G0, this.Av, zeta);
+    // left: heating vs cooling against T at this n
+    const x0 = PLOT_MARGIN, x1 = w * 0.47, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (lT: number) => x0 + (lT - 0.5) / 3.5 * (x1 - x0);
+    const Y = (lr: number) => y1 - 6 - (lr + 30) / 10 * (y1 - y0 - 12);
+    for (let lr = -29; lr <= -21; lr += 2) { this.line(x0, Y(lr), x1, Y(lr), hexA(C.grid, 0.9)); this.text(`10${sup(lr)}`, x0 - 4, Y(lr), C.dim, 7, 'right'); }
+    for (const lT of [1, 2, 3, 4]) this.text(`10${sup(lT)}`, X(lT), y1 + 10, C.dim, 8, 'center');
+    this.text('T (K)', x1, y1 + 22, C.dim, 9, 'right'); this.text('rate per H atom (erg s⁻¹)', x0 + 6, y0 + 10, C.dim, 8);
+    plotCurve(c, 0.5, 4, 200, X, (lT) => Y(Math.log10(ncm * this.rates(ncm, 10 ** lT, G0, this.Av, zeta).cool)), C.blue, 2);
+    plotCurve(c, 0.5, 4, 200, X, (lT) => Y(Math.log10(this.rates(ncm, 10 ** lT, G0, this.Av, zeta).heat)), C.red, 2);
+    this.text('cooling n Λ(T)', x1 - 6, y0 + 10, C.blue, 8, 'right'); this.text('heating Γ', x1 - 6, y0 + 22, C.red, 8, 'right');
+    this.circle(X(Math.log10(Teq)), Y(Math.log10(rq.heat)), 5, '#fff', C.sun); this.text(`T_eq = ${fmt(Teq, 0)} K`, X(Math.log10(Teq)), Y(Math.log10(rq.heat)) - 14, C.sun, 9, 'center');
+    // right: T_eq vs n with cloud types
+    const u0 = w * 0.58, u1 = w - 12;
+    axesBox(c, u0, y0, u1, y1);
+    const U = (ln: number) => u0 + (ln - 7) / 6 * (u1 - u0);
+    const V = (lT: number) => y1 - 6 - (lT - 0.5) / 2.5 * (y1 - y0 - 12);
+    for (const lT of [1, 2, 3]) { this.line(u0, V(lT), u1, V(lT), hexA(C.grid, 0.9)); this.text(`10${sup(lT)}`, u0 - 4, V(lT), C.dim, 8, 'right'); }
+    for (let ln = 8; ln <= 12; ln += 2) this.text(`10${sup(ln)}`, U(ln), y1 + 10, C.dim, 8, 'center');
+    this.text('n (m⁻³)', u1, y1 + 22, C.dim, 9, 'right'); this.text('equilibrium T (K)', u0 + 6, y0 + 10, C.dim, 8);
+    plotCurve(c, 7, 13, 120, U, (ln) => V(Math.log10(this.teq(10 ** ln / 1e6, G0, this.Av, zeta))), C.sun, 2);
+    plotCurve(c, 7, 13, 120, U, (ln) => V(Math.log10(this.teq(10 ** ln / 1e6, 1, 0, 1e-17))), hexA(C.dim, 0.6), 1, [3, 3]);
+    this.text('G₀ = 1, A_V = 0, ζ = 10⁻¹⁷', u1 - 6, y1 - 12, C.dim, 7, 'right');
+    for (const cl of ISM_CLOUDS) { if (cl.n > 1e13) continue; this.circle(U(Math.log10(cl.n)), V(Math.log10(cl.T)), 3, undefined, hexA(C.blue, 0.8)); this.text(cl.name.replace('Giant molecular cloud', 'GMC').replace('Diffuse H I cloud', 'diffuse H I').replace('Diffuse molecular cloud', 'diffuse mol.').replace('Dark cloud complex', 'dark complex'), U(Math.log10(cl.n)) + 5, V(Math.log10(cl.T)) - 6, C.dim, 7); }
+    this.circle(U(this.ln), V(Math.log10(Teq)), 5, '#fff', C.sun);
+    const crPart = zeta * 1.6e-11 / rq.heat;
+    this.setReadout([
+      ['Equilibrium temperature', `${fmt(Teq, 0)} K (dust at ${fmt(rq.Tdust, 0)} K)`, C.sun],
+      ['Heating', `${fmt(100 * crPart, 0)} % cosmic rays · ${fmt(100 * (1 - crPart), 0)} % photoelectric (UV × e^−2.5A_V = ${sci(G0 * Math.exp(-2.5 * this.Av), 1)})`, C.red],
+      ['Cooling', Teq > 3000 ? 'Lyα dominates' : Teq > 40 ? 'C II 158 μm and O I 63 μm fine-structure lines' : ncm > 1e3 ? 'CO rotational lines + gas–dust collisions' : 'C II 158 μm', C.blue],
+      ['Timescale to cool', `${fmtYr(1.5 * K_B * Teq / (ncm * 1e6 * rq.cool * 1e-7 * 1e-6) / YR_S)} (≪ free-fall: the gas stays in thermal balance)`],
+    ]);
+  }
+}
+
+/* ---------------------------------------------------------- 12.2a Jeans ---- */
+
+class JeansWidget extends CanvasWidget {
+  private lT = 1; private mu = 2; private ln = 10;
+  constructor() {
+    super(1.8);
+    this.slider('Temperature', 0.7, 2.3, 0.02, this.lT, (v) => `${fmt(10 ** v, 0)} K`, (v) => { this.lT = v; });
+    this.segmented<'1' | '2'>([['1', 'atomic H (μ = 1)'], ['2', 'molecular H₂ (μ = 2)']], '2', (v) => { this.mu = +v; });
+    this.slider('Density n', 7, 15, 0.05, this.ln, (v) => `10^${fmt(v, 1)} m⁻³`, (v) => { this.ln = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const T = 10 ** this.lT, n = 10 ** this.ln, rho = this.mu * MH * n;
+    const MJ = jeansMass(T, this.mu, rho), RJ = jeansLength(T, this.mu, rho);
+    const vT = Math.sqrt(K_B * T / (this.mu * MH)), P0 = rho * vT * vT, MBE = 1.18 * vT ** 4 / (Math.sqrt(P0) * GRAV ** 1.5);
+    const x0 = PLOT_MARGIN, x1 = w * 0.64, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (ln: number) => x0 + (ln - 7) / 8 * (x1 - x0);
+    const Y = (lM: number) => y1 - 6 - (lM + 2) / 9 * (y1 - y0 - 12);
+    for (let lM = -1; lM <= 6; lM++) { this.line(x0, Y(lM), x1, Y(lM), hexA(C.grid, 0.9)); this.text(`10${sup(lM)}`, x0 - 4, Y(lM), C.dim, 8, 'right'); }
+    for (let ln = 8; ln <= 14; ln += 2) this.text(`10${sup(ln)}`, X(ln), y1 + 10, C.dim, 8, 'center');
+    this.text('n (m⁻³)', x1, y1 + 22, C.dim, 9, 'right'); this.text('mass (M☉)', x0 + 6, y0 + 10, C.dim, 8);
+    const lineFor = (TT: number, mu: number, col: string, wd: number, dash?: number[]) => plotCurve(c, 7, 15, 80, X, (ln) => Y(Math.log10(jeansMass(TT, mu, mu * MH * 10 ** ln) / MSUN)), col, wd, dash);
+    lineFor(10, 2, hexA(C.dim, 0.5), 1, [3, 3]); this.text('M_J (10 K, H₂)', X(14.6), Y(Math.log10(jeansMass(10, 2, 2 * MH * 10 ** 14.6) / MSUN)) - 8, C.dim, 7, 'right');
+    lineFor(50, 1, hexA(C.dim, 0.5), 1, [3, 3]); this.text('M_J (50 K, H I)', X(7.4), Y(Math.log10(jeansMass(50, 1, MH * 10 ** 7.4) / MSUN)) - 8, C.dim, 7);
+    lineFor(T, this.mu, C.sun, 2);
+    plotCurve(c, 7, 15, 80, X, (ln) => { const r = this.mu * MH * 10 ** ln, v = Math.sqrt(K_B * T / (this.mu * MH)); return Y(Math.log10(1.18 * v ** 4 / (Math.sqrt(r * v * v) * GRAV ** 1.5) / MSUN)); }, C.green, 1.5, [5, 3]);
+    this.text(`M_J (${fmt(T, 0)} K, μ = ${this.mu})`, X(12.5), Y(Math.log10(jeansMass(T, this.mu, this.mu * MH * 10 ** 12.5) / MSUN)) - 10, C.sun, 8, 'center');
+    this.text('Bonnor–Ebert', X(8.5), Y(Math.log10(1.18 * vT ** 4 / (Math.sqrt(this.mu * MH * 10 ** 8.5 * vT * vT) * GRAV ** 1.5) / MSUN)) + 12, C.green, 8, 'center');
+    c.fillStyle = hexA(C.red, 0.05); c.beginPath(); c.moveTo(X(7), Y(Math.log10(jeansMass(T, this.mu, this.mu * MH * 1e7) / MSUN))); for (let ln = 7; ln <= 15; ln += 0.5) c.lineTo(X(ln), Y(Math.log10(jeansMass(T, this.mu, this.mu * MH * 10 ** ln) / MSUN))); c.lineTo(X(15), y0); c.lineTo(X(7), y0); c.closePath(); c.fill();
+    this.text('collapses', X(13.5), y0 + 24, C.red, 9, 'center'); this.text('stable', X(8), y1 - 14, C.blue, 9, 'center');
+    for (const cl of ISM_CLOUDS) { if (cl.n > 1e15 || cl.M > 1e6) continue; const mj = jeansMass(cl.T, cl.mu, cl.mu * MH * cl.n) / MSUN; const col = cl.M > mj ? C.red : C.blue; this.circle(X(Math.log10(cl.n)), Y(Math.log10(cl.M)), 4, '#000', col); this.text(cl.name.replace('Giant molecular cloud', 'GMC').replace('Diffuse H I cloud', 'diffuse H I').replace('Diffuse molecular cloud', 'diffuse mol.').replace('Dark cloud complex', 'dark complex'), X(Math.log10(cl.n)) + 6, Y(Math.log10(cl.M)) - 7, col, 7); }
+    this.line(X(this.ln), y0, X(this.ln), y1, hexA('#fff', 0.4), 1);
+    // right: the cloud at the chosen n
+    const cx = w * 0.82, cy = h * 0.4, R = Math.min(w * 0.12, h * 0.25);
+    this.glow(cx, cy, R, hexA(C.blue, 0.35)); this.circle(cx, cy, R, hexA(C.blue, 0.8));
+    this.line(cx - R, cy + R + 10, cx + R, cy + R + 10, C.dim, 1); this.text(`R_J = ${RJ / PC_M < 1 ? `${fmt(RJ / PC_M, 2)} pc` : `${fmt(RJ / PC_M, 0)} pc`}`, cx, cy + R + 20, C.text, 9, 'center');
+    this.text(`M_J = ${MJ / MSUN >= 100 ? sci(MJ / MSUN, 1) : fmt(MJ / MSUN, 1)} M☉`, cx, cy, C.text, 10, 'center');
+    this.setReadout([
+      ['Jeans mass · length', `${MJ / MSUN >= 100 ? sci(MJ / MSUN, 2) : fmt(MJ / MSUN, 1)} M☉ · ${RJ / PC_M < 1 ? fmt(RJ / PC_M, 3) : fmt(RJ / PC_M, 1)} pc`, C.sun],
+      ['Bonnor–Ebert mass (P₀ = nkT)', `${MBE / MSUN >= 100 ? sci(MBE / MSUN, 2) : fmt(MBE / MSUN, 1)} M☉ (c_BE = 1.18 vs c_J = 5.46)`, C.green],
+      ['Sound speed · free-fall time', `${fmt(vT / 1e3, 2)} km/s · ${fmtYr(freeFallTime(rho) / YR_S)}`],
+      ['Scaling', 'M_J ∝ T^{3/2} ρ^{−1/2} μ^{−3/2}: cold, dense, molecular gas collapses first'],
+    ]);
+  }
+}
+
+/* ------------------------------------------------------ 12.2b free fall ---- */
+
+/** θ = r/r₀ from ξ + ½ sin 2ξ = χ t (Newton) */
+function collapseTheta(tauFrac: number): number {   // tauFrac = t/t_ff in [0,1]
+  const target = tauFrac * Math.PI / 2; let xi = Math.min(Math.PI / 2 - 1e-6, Math.max(0, target));
+  for (let i = 0; i < 30; i++) { const f = xi + 0.5 * Math.sin(2 * xi) - target, df = 1 + Math.cos(2 * xi); if (df < 1e-9) break; xi -= f / df; xi = Math.min(Math.PI / 2 - 1e-9, Math.max(0, xi)); }
+  return Math.cos(xi) ** 2;
+}
+class FreefallWidget extends CanvasWidget {
+  private lrho = Math.log10(3e-17); private mode: 'homo' | 'inout' = 'homo'; private u = 0;
+  constructor() {
+    super(1.8);
+    this.slider('Initial density ρ₀', -20, -14, 0.05, this.lrho, (v) => `${sci(10 ** v, 1)} kg/m³`, (v) => { this.lrho = v; });
+    this.segmented<'homo' | 'inout'>([['homo', 'uniform → homologous'], ['inout', 'centrally condensed → inside-out']], this.mode, (v) => { this.mode = v; });
+    this.playButton();
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    this.u = (this.u + dt / 10) % 1.08;
+    const rho0 = 10 ** this.lrho, tff = freeFallTime(rho0), u = Math.min(1, this.u);
+    // left: shells
+    const cx = w * 0.24, cy = h * 0.46, R = Math.min(w * 0.2, h * 0.4);
+    const shells = [0.2, 0.4, 0.6, 0.8, 1.0];
+    const shellTheta = (s: number) => { if (this.mode === 'homo') return collapseTheta(u); const rhoBar = 1.8 - 0.8 * s * s; return collapseTheta(Math.min(1, u * Math.sqrt(rhoBar))); };   // inner shells: higher mean density → shorter t_ff
+    for (let i = shells.length - 1; i >= 0; i--) { const s = shells[i], th = shellTheta(s); const r = R * s * th; this.circle(cx, cy, Math.max(1, r), hexA(C.blue, 0.9), hexA(C.blue, 0.05 + 0.15 * Math.min(1, 0.05 / (th * th * th + 1e-4))), 1); }
+    for (let k = 0; k < 24; k++) { const a = k * TAU / 24, s = 0.6 + 0.4 * ((k * 7) % 5) / 5, th = shellTheta(s), r = R * s * th; this.line(cx + r * Math.cos(a) * 1.08, cy + r * Math.sin(a) * 1.08, cx + r * Math.cos(a) * 0.95, cy + r * Math.sin(a) * 0.95, hexA('#fff', 0.5), 1); }
+    this.circle(cx, cy, R, hexA(C.grid, 1), undefined, 1, [3, 4]);
+    this.text(`t = ${fmt(u, 2)} t_ff = ${fmtYr(u * tff / YR_S)}`, cx, cy + R + 16, C.text, 9, 'center');
+    this.text(this.mode === 'homo' ? 'all shells arrive together' : 'inner shells fall first', cx, cy - R - 12, C.dim, 8, 'center');
+    // right: r/r0 and log density vs time
+    const x0 = w * 0.55, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (f: number) => x0 + f * (x1 - x0);
+    const Y = (v: number) => y1 - 6 - v * (y1 - y0 - 12);
+    for (const v of [0.2, 0.4, 0.6, 0.8, 1]) { this.line(x0, Y(v), x1, Y(v), hexA(C.grid, 0.9)); this.text(`${v}`, x0 - 4, Y(v), C.blue, 8, 'right'); this.text(`${v * 8}`, x1 + 4, Y(v), C.accent, 8); }
+    for (const f of [0, 0.5, 1]) this.text(`${fmt(f * tff / YR_S / 1e3, 0)} kyr`, X(f), y1 + 10, C.dim, 8, 'center');
+    this.text('r/r₀', x0 + 6, y0 + 10, C.blue, 8); this.text('log₁₀ ρ/ρ₀', x1 - 6, y0 + 10, C.accent, 8, 'right');
+    plotCurve(c, 0, 1, 300, X, (f) => Y(collapseTheta(f)), C.blue, 2);
+    plotCurve(c, 0, 0.9995, 300, X, (f) => Y(Math.min(1, -3 * Math.log10(Math.max(1e-9, collapseTheta(f))) / 8)), C.accent, 2, [4, 3]);
+    this.line(X(u), y0, X(u), y1, hexA('#fff', 0.4), 1);
+    const th = collapseTheta(u), r0 = 0.1 * PC_M, vin = Math.sqrt(8 * Math.PI * GRAV * rho0 / 3) * r0 * Math.sqrt(Math.max(0, 1 / Math.max(th, 1e-6) - 1));
+    this.setReadout([
+      ['Free-fall time (3π/32Gρ₀)^½', fmtYr(tff / YR_S), C.sun],
+      ['Now', `r/r₀ = ${fmt(th, 3)} · ρ/ρ₀ = ${sci(1 / Math.max(th, 1e-9) ** 3, 1)}`, C.blue],
+      ['Infall speed of the surface (r₀ = 0.1 pc)', `${vin / 1e3 < 100 ? fmt(vin / 1e3, 2) : sci(vin / 1e3, 1)} km/s`, C.accent],
+      ['Note', 't_ff is independent of r₀: a uniform cloud collapses homologously; a condensed one inside-out'],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 12.2c fragmentation ---- */
+
+class FragmentationWidget extends CanvasWidget {
+  private le = -1; private lTtr = 3; private mu = 1; private lrho = -17;
+  private sR: ReturnType<CanvasWidget['slider']>;
+  constructor() {
+    super(1.8);
+    this.slider('Radiative efficiency e', -2, 0, 0.05, this.le, (v) => fmt(10 ** v, 2), (v) => { this.le = v; });
+    this.slider('Temperature when adiabatic', 2, 3.5, 0.05, this.lTtr, (v) => `${fmt(10 ** v, 0)} K`, (v) => { this.lTtr = v; });
+    this.segmented<'1' | '2'>([['1', 'μ = 1'], ['2', 'μ = 2']], '1', (v) => { this.mu = +v; });
+    this.sR = this.slider('Density during collapse', -17, -9, 0.05, this.lrho, (v) => `${sci(10 ** v, 1)} kg/m³`, (v) => { this.lrho = v; });
+    this.playButton();
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    if (this.playing) { this.lrho += dt * 0.6; if (this.lrho > -9) this.lrho = -17; this.sR.set(Math.round(this.lrho * 20) / 20); }
+    const e = 10 ** this.le, Ttr = 10 ** this.lTtr;
+    const Mmin = 0.03 * Ttr ** 0.25 / (Math.sqrt(e) * this.mu ** 2.25);   // M☉
+    // isothermal 10 K branch until M_J reaches Mmin, then adiabatic (γ = 5/3): M_J ∝ ρ^{1/2}
+    const T0 = 10; const rhoA = (5 * K_B * T0 / (GRAV * this.mu * MH)) ** 3 * 3 / (4 * Math.PI) / (Mmin * MSUN) ** 2;
+    const MJ = (rho: number) => rho < rhoA ? jeansMass(T0, this.mu, rho) / MSUN : Mmin * Math.sqrt(rho / rhoA);
+    const Tof = (rho: number) => rho < rhoA ? T0 : T0 * (rho / rhoA) ** (2 / 3);
+    const x0 = PLOT_MARGIN, x1 = w * 0.58, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (lr: number) => x0 + (lr + 17) / 8 * (x1 - x0);
+    const Y = (lM: number) => y1 - 6 - (lM + 2.5) / 7 * (y1 - y0 - 12);
+    for (let lM = -2; lM <= 4; lM++) { this.line(x0, Y(lM), x1, Y(lM), hexA(C.grid, 0.9)); this.text(`10${sup(lM)}`, x0 - 4, Y(lM), C.dim, 8, 'right'); }
+    for (let lr = -17; lr <= -9; lr += 2) this.text(`10${sup(lr)}`, X(lr), y1 + 10, C.dim, 8, 'center');
+    this.text('ρ (kg m⁻³)', x1, y1 + 22, C.dim, 9, 'right'); this.text('Jeans mass (M☉)', x0 + 6, y0 + 10, C.dim, 8);
+    plotCurve(c, -17, -9, 200, X, (lr) => Y(Math.log10(jeansMass(T0, this.mu, 10 ** lr) / MSUN)), hexA(C.dim, 0.5), 1, [3, 3]);
+    this.text('isothermal 10 K: M_J ∝ ρ^−1/2', X(-13), Y(Math.log10(jeansMass(T0, this.mu, 1e-13) / MSUN)) - 10, C.dim, 7, 'center');
+    plotCurve(c, -17, -9, 300, X, (lr) => Y(Math.max(-2.5, Math.min(4.5, Math.log10(MJ(10 ** lr))))), C.sun, 2);
+    const lrA = Math.log10(rhoA);
+    if (lrA > -17 && lrA < -9) { this.circle(X(lrA), Y(Math.log10(Mmin)), 5, '#fff', C.red); this.text(`M_J^min = ${fmt(Mmin, 2)} M☉`, X(lrA), Y(Math.log10(Mmin)) + 16, C.red, 9, 'center'); this.text('adiabatic: M_J ∝ ρ^+1/2', X(Math.min(-9.5, lrA + 2)), Y(Math.log10(MJ(10 ** Math.min(-9.5, lrA + 2)))) - 10, C.sun, 7, 'center'); }
+    this.line(X(this.lrho), y0, X(this.lrho), y1, hexA('#fff', 0.4), 1);
+    // right: the cascade
+    const rho = 10 ** this.lrho, cx = w * 0.8, cy = h * 0.42, R = Math.min(w * 0.14, h * 0.3);
+    const Mcloud = 1000, nFrag = Math.min(400, Math.max(1, Math.floor(Mcloud / MJ(rho))));
+    this.circle(cx, cy, R, hexA(C.blue, 0.6), hexA(C.blue, 0.06), 1, [3, 3]);
+    let s = 17; const rnd = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+    const rf = Math.max(1.5, R / Math.sqrt(nFrag) * 0.8);
+    for (let i = 0; i < nFrag; i++) { const a = rnd() * TAU, rr = R * Math.sqrt(rnd()) * 0.92; this.circle(cx + rr * Math.cos(a), cy + rr * Math.sin(a), rf, undefined, hexA(rho < rhoA ? C.blue : C.sun, 0.7)); }
+    this.text(`1000 M☉ cloud → ${nFrag} Jeans-mass fragments`, cx, cy + R + 14, C.text, 9, 'center');
+    this.text(rho < rhoA ? 'isothermal: still fragmenting' : 'adiabatic: fragmentation has stopped', cx, cy - R - 12, rho < rhoA ? C.blue : C.sun, 8, 'center');
+    this.setReadout([
+      ['Minimum fragment mass 0.03 T^¼/(e^½ μ^9/4)', `${fmt(Mmin, 2)} M☉ (${fmt(Mmin * 1047, 0)} M_Jup)`, C.red],
+      ['At this density', `M_J = ${MJ(rho) >= 100 ? sci(MJ(rho), 1) : fmt(MJ(rho), 2)} M☉ · T = ${fmt(Tof(rho), 0)} K · ${rho < rhoA ? 'optically thin' : 'optically thick'}`, C.sun],
+      ['Transition density', `${sci(rhoA, 1)} kg/m³ = ${sci(rhoA / (this.mu * MH), 1)} m⁻³`],
+      ['Refined estimates', '~0.01 M☉ with radiative transfer, grain and molecule physics — the deuterium-burning limit'],
+    ]);
+  }
+}
+
+/* -------------------------------------------------- 12.2d magnetic support ---- */
+
+class MagcollapseWidget extends CanvasWidget {
+  private lB = 0; private lR = -1; private ln = 10; private lM = 1; private t = 0;
+  constructor() {
+    super(1.8);
+    this.slider('Field strength B', -0.5, 2.5, 0.05, this.lB, (v) => `${fmt(10 ** v, 10 ** v < 10 ? 1 : 0)} nT = ${fmt(10 ** v * 10, 0)} μG`, (v) => { this.lB = v; });
+    this.slider('Radius R', -1.7, 0.5, 0.05, this.lR, (v) => `${fmt(10 ** v, 2)} pc`, (v) => { this.lR = v; });
+    this.slider('Density n_H₂', 8, 12, 0.05, this.ln, (v) => `10^${fmt(v, 1)} m⁻³`, (v) => { this.ln = v; });
+    this.slider('Cloud mass', 0, 3, 0.05, this.lM, (v) => `${fmt(10 ** v, 0)} M☉`, (v) => { this.lM = v; });
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h; this.t += dt;
+    const B = 10 ** this.lB, R = 10 ** this.lR, n = 10 ** this.ln, M = 10 ** this.lM;
+    const MB = 70 * B * R * R, tAD = 10e9 * (n / 1e10) * B ** -2 * R * R, tff = freeFallTime(2 * MH * n) / YR_S, MJ = jeansMass(10, 2, 2 * MH * n) / MSUN;
+    const super_ = M > MB;
+    // left: cloud with field lines
+    const cx = w * 0.24, cy = h * 0.45, Rp = Math.min(w * 0.18, h * 0.36);
+    const squeeze = super_ ? 0.6 + 0.4 * Math.abs(Math.sin(this.t * 0.8)) : 1;
+    c.save(); c.beginPath(); c.ellipse(cx, cy, Rp * squeeze, Rp, 0, 0, TAU); c.fillStyle = hexA(C.blue, 0.12); c.fill(); c.strokeStyle = hexA(C.blue, 0.8); c.lineWidth = 1; c.stroke(); c.restore();
+    const nl = Math.max(3, Math.min(15, Math.round(3 + this.lB * 4)));
+    for (let i = 0; i < nl; i++) { const f = (i + 0.5) / nl * 2 - 1; const xo = f * Rp * 1.3; c.beginPath(); for (let y = -Rp * 1.3; y <= Rp * 1.3; y += 4) { const inside = Math.abs(y) < Rp ? Math.sqrt(1 - (y / Rp) ** 2) : 0; const x = cx + xo * (1 - inside * (1 - squeeze) * 0.8 * (Math.abs(f) < 1 ? 1 : 0)); y === -Rp * 1.3 ? c.moveTo(x, cy + y) : c.lineTo(x, cy + y); } c.strokeStyle = hexA(C.purple, 0.7); c.lineWidth = 1; c.stroke(); }
+    this.text(`B = ${fmt(B, B < 10 ? 1 : 0)} nT · R = ${fmt(R, 2)} pc · M = ${fmt(M, 0)} M☉`, cx, cy + Rp + 16, C.text, 9, 'center');
+    this.text(super_ ? 'supercritical: gravity overwhelms the field' : 'subcritical: the field holds the cloud up', cx, cy - Rp - 12, super_ ? C.red : C.purple, 9, 'center');
+    // right: bars
+    const bx0 = w * 0.55, bx1 = w - 12, y0 = 14, ymid = h * 0.5, y1 = h - 30;
+    const bar = (x: number, yb: number, yt: number, col: string, lab: string, val: string) => { c.fillStyle = hexA(col, 0.8); c.fillRect(x, yt, 36, yb - yt); this.text(lab, x + 18, yb + 10, col, 8, 'center'); this.text(val, x + 18, yt - 8, C.text, 8, 'center'); };
+    // masses
+    const YM = (lm: number) => ymid - 20 - (lm + 1) / 5 * (ymid - 20 - y0 - 10);
+    this.text('masses (M☉, log)', bx0, y0 + 6, C.dim, 8);
+    this.line(bx0, YM(Math.log10(M)), bx1, YM(Math.log10(M)), hexA('#fff', 0.5), 1, [3, 3]); this.text(`cloud ${fmt(M, 0)}`, bx1 - 4, YM(Math.log10(M)) - 8, C.text, 8, 'right');
+    bar(bx0 + 10, ymid - 20, YM(Math.log10(Math.max(0.1, MB))), C.purple, 'M_B', MB >= 100 ? sci(MB, 1) : fmt(MB, 1));
+    bar(bx0 + 70, ymid - 20, YM(Math.log10(Math.max(0.1, MJ))), C.sun, 'M_J (10 K)', fmt(MJ, 1));
+    bar(bx0 + 130, ymid - 20, YM(Math.log10(Math.max(0.1, M))), super_ ? C.red : C.blue, 'cloud', fmt(M, 0));
+    // times
+    const YT = (lt: number) => y1 - 6 - (lt - 4) / 7 * (y1 - 6 - ymid - 24);
+    this.text('timescales (yr, log)', bx0, ymid + 6, C.dim, 8);
+    bar(bx0 + 10, y1 - 6, YT(Math.log10(tff)), C.sun, 't_ff', fmtYr(tff));
+    bar(bx0 + 70, y1 - 6, YT(Math.min(11, Math.log10(tAD))), C.purple, 't_AD', fmtYr(tAD));
+    bar(bx0 + 130, y1 - 6, YT(Math.log10(1.4e10)), C.dim, 'universe', '13.8 Gyr');
+    this.setReadout([
+      ['Magnetic critical mass 70 M☉ (B/nT)(R/pc)²', `${MB >= 100 ? sci(MB, 2) : fmt(MB, 2)} M☉ → ${super_ ? 'supercritical (M > M_B)' : 'subcritical (M < M_B)'}`, super_ ? C.red : C.purple],
+      ['Ambipolar diffusion time', `${fmtYr(tAD)} = ${fmt(tAD / tff, 0)} × t_ff`, C.purple],
+      ['Free-fall time · thermal Jeans mass', `${fmtYr(tff)} · ${fmt(MJ, 1)} M☉`, C.sun],
+      ['Magnetic flux Φ = πR²B', `${sci(Math.PI * (R * PC_M) ** 2 * B * 1e-9, 1)} Wb — conserved while the field is frozen in`],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 12.2e protostar tracks ---- */
+
+/** schematic protostellar track of a 1 M☉ cloud (after Wuchterl & Tscharnuter 2003): [u, logT, logL, t (yr), stage] */
+const PROTO_STAGES: Array<[number, number, number, number, string]> = [
+  [0, 2.15, -1.8, 1e3, 'isothermal collapse: the cloud is transparent, 10 K'],
+  [0.2, 2.5, -0.3, 1e4, 'first hydrostatic core, ~5 AU, with a dust photosphere'],
+  [0.4, 2.9, 1.0, 3e4, 'accretion shock powers the luminosity; dust vaporises at 1000 K'],
+  [0.55, 3.4, 1.4, 5e4, 'H₂ dissociates at 2000 K: second collapse to ~1.3 R☉'],
+  [0.75, 3.62, 1.2, 2e5, 'main accretion phase; deuterium burning gives up to 60 % of L'],
+  [0.9, 3.63, 0.4, 5e5, 'deuterium burn-out, envelope exhausted: L drops'],
+  [1, 3.62, 0.0, 1e6, 'pre-main-sequence star on the Hayashi track'],
+];
+function protoPoint(u: number, M: number): { lT: number; lL: number; t: number; stage: string } {
+  let i = 0; while (i < PROTO_STAGES.length - 2 && PROTO_STAGES[i + 1][0] <= u) i++;
+  const a = PROTO_STAGES[i], b = PROTO_STAGES[i + 1], f = Math.min(1, Math.max(0, (u - a[0]) / (b[0] - a[0])));
+  const lm = Math.log10(M);
+  return { lT: a[1] + (b[1] - a[1]) * f + 0.08 * lm, lL: a[2] + (b[2] - a[2]) * f + 1.5 * lm, t: 10 ** (Math.log10(a[3]) + (Math.log10(b[3]) - Math.log10(a[3])) * f) * M ** -0.5, stage: a[4] };
+}
+class ProtostartrackWidget extends CanvasWidget {
+  private u = 0.3;
+  private sU: ReturnType<CanvasWidget['slider']>;
+  constructor() {
+    super(1.8);
+    this.sU = this.slider('Stage (1 M☉ cloud)', 0, 1, 0.005, this.u, (v) => fmt(v, 2), (v) => { this.u = v; });
+    this.playButton();
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    if (this.playing) { this.u = (this.u + dt * 0.06) % 1; this.sU.set(Math.round(this.u * 200) / 200); }
+    const x0 = PLOT_MARGIN, x1 = w * 0.6, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (lT: number) => x1 - (lT - 2) / 2.2 * (x1 - x0);
+    const Y = (lL: number) => y1 - 6 - (lL + 2.5) / 6 * (y1 - y0 - 12);
+    for (let lL = -2; lL <= 3; lL++) { this.line(x0, Y(lL), x1, Y(lL), hexA(C.grid, 0.9)); this.text(`10${sup(lL)}`, x0 - 4, Y(lL), C.dim, 8, 'right'); }
+    for (const lT of [2, 2.5, 3, 3.5, 4]) this.text(`${lT}`, X(lT), y1 + 10, C.dim, 8, 'center');
+    this.text('log T_eff (K) →  cooler', x1, y1 + 22, C.dim, 9, 'right'); this.text('L (L☉)', x0 + 6, y0 + 10, C.dim, 8);
+    for (const M of [0.05, 0.1, 0.5, 1, 2, 10]) { const col = M === 1 ? C.sun : hexA(C.dim, 0.7); plotCurve(c, 0, 1, 200, (u) => X(protoPoint(u, M).lT), (u) => Y(protoPoint(u, M).lL), col, M === 1 ? 2 : 1); const p = protoPoint(0.75, M); this.text(`${M} M☉`, X(p.lT) - 6, Y(p.lL) - 8, col, 7, 'right'); }
+    for (const [u, lab] of [[0.2, '10 kyr'], [0.4, '30 kyr'], [0.75, '0.2 Myr'], [1, '1 Myr']] as Array<[number, string]>) { const p = protoPoint(u, 1); this.text(lab, X(p.lT) + 6, Y(p.lL) + 8, C.faint, 7); }
+    // Hayashi tracks hint
+    this.line(X(3.6), Y(-0.5), X(3.6), Y(1), hexA(C.green, 0.5), 1, [2, 3]); this.text('PMS tracks', X(3.6) - 4, Y(-0.3), C.green, 7, 'right');
+    const P = protoPoint(this.u, 1);
+    this.circle(X(P.lT), Y(P.lL), 5, '#fff', C.sun);
+    // right-top: structure cartoon
+    const cx = w * 0.8, cy = h * 0.3, R = Math.min(w * 0.14, h * 0.24);
+    const envel = 1 - this.u * 0.9, core = this.u < 0.2 ? 0 : this.u < 0.55 ? 0.35 : 0.12, dustPh = this.u < 0.4 ? 0.9 * envel : 0;
+    this.glow(cx, cy, R * Math.max(0.05, envel), hexA(C.blue, 0.3));
+    if (dustPh > 0) { this.circle(cx, cy, R * dustPh, hexA(C.accent, 0.8), undefined, 1, [3, 3]); this.text('dust photosphere', cx, cy - R * dustPh - 8, C.accent, 7, 'center'); }
+    if (core > 0) { this.glow(cx, cy, R * core * 1.3, rgba(tempRGB(this.u < 0.55 ? 1500 : 4000), 0.9)); this.circle(cx, cy, R * core, undefined, rgba(tempRGB(this.u < 0.55 ? 1500 : 4000), 1)); this.text(this.u < 0.55 ? 'first core ~5 AU' : 'core ~1–2 R☉', cx, cy + R * core + 10, C.text, 7, 'center'); }
+    if (this.u > 0.35 && this.u < 0.95) for (let k = 0; k < 10; k++) { const a = k * TAU / 10 + this.u * 3, r1 = R * envel * 0.9, r2 = R * Math.max(core, 0.1) * 1.4; this.line(cx + r1 * Math.cos(a), cy + r1 * Math.sin(a), cx + r2 * Math.cos(a), cy + r2 * Math.sin(a), hexA('#fff', 0.35), 1); }
+    this.text('infalling envelope', cx, cy + R + 12, C.dim, 7, 'center');
+    // right-bottom: infall profile
+    const px0 = w * 0.66, px1 = w - 12, py0 = h * 0.58, py1 = h - 30;
+    axesBox(c, px0, py0, px1, py1);
+    const PX = (v: number) => px0 + (v + 3) / 6 * (px1 - px0);
+    const PY = (f: number) => py1 - 6 - f / 1.3 * (py1 - py0 - 12);
+    const infall = this.u > 0.1 ? Math.min(1, (this.u - 0.1) / 0.3) : 0;
+    const prof = (v: number) => { const em = Math.exp(-(v * v) / 2.2), blue = infall * 0.45 * Math.exp(-((v + 0.9) ** 2) / 0.3), red = infall * 0.3 * Math.exp(-((v - 0.9) ** 2) / 0.3), abs = 0.75 * Math.exp(-(v * v) / 0.12); return 0.15 + em * (1 - abs) + blue + red; };
+    plotCurve(c, -3, 3, 200, PX, (v) => PY(prof(v)), C.sun, 1.5);
+    this.line(PX(0), py0, PX(0), py1, hexA(C.grid, 1), 1, [2, 3]);
+    this.text('blue', PX(-1.2), py0 + 10, C.blue, 7, 'center'); this.text('red', PX(1.2), py0 + 10, C.red, 7, 'center'); this.text('optically thick line: blue-asymmetric infall profile', px0 + 4, py1 + 10, C.dim, 7);
+    this.setReadout([
+      ['Stage', P.stage, C.sun],
+      ['Time since collapse began', fmtYr(P.t)],
+      ['L · T_eff', `${fmt(10 ** P.lL, 10 ** P.lL < 1 ? 2 : 1)} L☉ · ${fmt(10 ** P.lT, 0)} K · R_phot ≈ ${fmt(Math.sqrt(10 ** P.lL) * (5772 / 10 ** P.lT) ** 2, 1)} R☉`],
+      ['Energy source', this.u < 0.2 ? 'gravitational, radiated freely' : this.u < 0.6 ? 'accretion shock (kinetic energy of infall)' : this.u < 0.9 ? 'accretion + deuterium burning' : 'gravitational contraction (Kelvin–Helmholtz)'],
+    ]);
+  }
+}
+
+/* ------------------------------------------------------- 12.3a PMS tracks ---- */
+
+/** Bernasconi & Maeder (1996) contraction times: [M, Myr] */
+const PMS_TIMES: Array<[number, number]> = [[0.8, 68.4], [1, 38.9], [1.5, 35.4], [2, 23.4], [3, 7.24], [5, 1.15], [9, 0.288], [15, 0.117], [25, 0.0708], [60, 0.0282]];
+function pmsTime(M: number): number {
+  const lm = Math.log10(M);
+  for (let i = 0; i < PMS_TIMES.length - 1; i++) { const [m0, t0] = PMS_TIMES[i], [m1, t1] = PMS_TIMES[i + 1]; if (M <= m1 || i === PMS_TIMES.length - 2) { const f = (lm - Math.log10(m0)) / (Math.log10(m1) - Math.log10(m0)); return 10 ** (Math.log10(t0) + (Math.log10(t1) - Math.log10(t0)) * Math.min(1.2, Math.max(-0.2, f))); } }
+  return 1;
+}
+/** schematic PMS track: fraction s ∈ [0,1] → (logT, logL); Hayashi descent then Henyey rise */
+function pmsPoint(s: number, M: number): { lT: number; lL: number; conv: number } {
+  const ms = mainSequence(M), lTz = Math.log10(ms.T), lLz = Math.log10(ms.L), lm = Math.log10(M);
+  const lTH = 3.575 + 0.06 * lm;                                   // Hayashi track temperature
+  const lLtop = lLz + Math.max(0.3, 1.6 - 0.9 * lm);              // where the track starts
+  const dip = M < 1.2 ? 0.45 : M < 3 ? 0.5 - 0.25 * (lm - 0.08) : 0.1;   // depth of the luminosity minimum below ZAMS
+  const lLmin = lLz - dip;
+  const sH = M < 3 ? 0.55 : 0.25;                                   // fraction of the track spent on the Hayashi descent
+  if (s < sH) { const f = s / sH; return { lT: lTH + 0.01 * f, lL: lLtop + (lLmin - lLtop) * f, conv: 1 }; }
+  const f = (s - sH) / (1 - sH);
+  const bump = Math.sin(Math.PI * f) * (M < 0.5 ? 0 : 0.12);
+  return { lT: lTH + 0.01 + (lTz - lTH - 0.01) * f, lL: lLmin + (lLz - lLmin) * f + bump, conv: M < 0.5 ? 1 : Math.max(M > 10 ? 0.35 : 0.02, 1 - f * 1.2) };
+}
+class PmstracksWidget extends CanvasWidget {
+  private lM = 0; private s = 0;
+  constructor() {
+    super(1.8);
+    this.slider('Mass', Math.log10(0.8), Math.log10(60), 0.01, this.lM, (v) => `${fmt(10 ** v, 10 ** v < 3 ? 2 : 0)} M☉`, (v) => { this.lM = v; this.s = 0; });
+    this.playButton();
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    const M = 10 ** this.lM;
+    this.s = (this.s + dt * 0.08) % 1.1; const s = Math.min(1, this.s);
+    const x0 = PLOT_MARGIN, x1 = w * 0.62, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (lT: number) => x1 - (lT - 3.5) / 1.3 * (x1 - x0);
+    const Y = (lL: number) => y1 - 6 - (lL + 1) / 8 * (y1 - y0 - 12);
+    for (let lL = -1; lL <= 7; lL++) { this.line(x0, Y(lL), x1, Y(lL), hexA(C.grid, 0.9)); this.text(`10${sup(lL)}`, x0 - 4, Y(lL), C.dim, 8, 'right'); }
+    for (const lT of [3.6, 3.8, 4.0, 4.2, 4.4, 4.6, 4.8]) this.text(fmt(lT, 1), X(lT), y1 + 10, C.dim, 8, 'center');
+    this.text('log T_eff (K)  ← hotter', x1, y1 + 22, C.dim, 9, 'right'); this.text('L (L☉)', x0 + 6, y0 + 10, C.dim, 8);
+    // forbidden region (right of the Hayashi line for this mass)
+    const lTH = 3.575 + 0.06 * this.lM;
+    c.fillStyle = hexA(C.red, 0.07); c.fillRect(X(lTH) , y0, x1 - X(lTH), y1 - y0); this.text('forbidden', (X(lTH) + x1) / 2, y0 + 24, C.red, 8, 'center'); this.text('(no hydrostatic star)', (X(lTH) + x1) / 2, y0 + 36, C.red, 7, 'center');
+    this.line(X(lTH), y0, X(lTH), y1, hexA(C.red, 0.5), 1, [3, 3]); this.text('Hayashi track', X(lTH) - 4, y1 - 14, C.red, 8, 'right');
+    // ZAMS
+    plotCurve(c, Math.log10(0.5), Math.log10(80), 60, (lm) => X(Math.log10(mainSequence(10 ** lm).T)), (lm) => Y(Math.log10(mainSequence(10 ** lm).L)), hexA(C.dim, 0.6), 1.5, [5, 4]); this.text('ZAMS', X(Math.log10(mainSequence(40).T)) + 6, Y(Math.log10(mainSequence(40).L)) + 10, C.dim, 8);
+    for (const [m] of PMS_TIMES) { const col = Math.abs(Math.log10(m) - this.lM) < 0.02 ? C.sun : hexA(C.blue, 0.6); plotCurve(c, 0, 1, 120, (u) => X(pmsPoint(u, m).lT), (u) => Y(pmsPoint(u, m).lL), col, col === C.sun ? 2 : 1); const p0 = pmsPoint(0, m); this.text(`${m}`, X(p0.lT) + 4, Y(p0.lL), C.dim, 7); }
+    plotCurve(c, 0, 1, 120, (u) => X(pmsPoint(u, M).lT), (u) => Y(pmsPoint(u, M).lL), C.sun, 2);
+    const P = pmsPoint(s, M), ms = mainSequence(M), L = 10 ** P.lL, T = 10 ** P.lT, R = Math.sqrt(L) * (5772 / T) ** 2;
+    this.circle(X(P.lT), Y(P.lL), 5, '#fff', rgba(tempRGB(T), 1));
+    // right: structure
+    const cx = w * 0.81, cy = h * 0.36, Rp = Math.min(w * 0.13, h * 0.24) * Math.min(1, 0.35 + 0.65 * Math.log10(R + 1) / 1.5);
+    c.fillStyle = rgba(tempRGB(T), 1); c.beginPath(); c.arc(cx, cy, Rp, 0, TAU); c.fill();
+    const convOuter = P.conv, coreConv = M > 1.2 && s > 0.75 ? 0.2 : 0;
+    if (convOuter < 1) { c.fillStyle = hexA('#000', 0.35); c.beginPath(); c.arc(cx, cy, Rp * (1 - convOuter), 0, TAU); c.fill(); }
+    for (let k = 0; k < 16; k++) { const a = k * TAU / 16 + this.s; const r1 = Rp * (1 - convOuter) + 2, r2 = Rp - 3; if (r2 > r1) { c.beginPath(); c.arc(cx, cy, (r1 + r2) / 2, a, a + 0.15); c.strokeStyle = hexA('#000', 0.5); c.lineWidth = Math.max(1, (r2 - r1) * 0.6); c.stroke(); } }
+    if (coreConv > 0) { c.fillStyle = hexA('#fff', 0.35); c.beginPath(); c.arc(cx, cy, Rp * coreConv, 0, TAU); c.fill(); }
+    this.text(convOuter >= 0.99 ? 'fully convective' : coreConv > 0 ? 'radiative envelope, convective core' : convOuter > 0.3 ? 'radiative core growing' : 'radiative interior', cx, cy + Rp + 14, C.text, 9, 'center');
+    this.text(`R = ${fmt(R, 1)} R☉ (ZAMS ${fmt(ms.R, 1)})`, cx, cy + Rp + 26, C.dim, 8, 'center');
+    const tTot = pmsTime(M) * 1e6, tNow = tTot * (s < 0.55 ? 0.4 * (s / 0.55) ** 0.5 : 0.4 + 0.6 * ((s - 0.55) / 0.45) ** 1.5);
+    const tKH = GRAV * (M * MSUN) ** 2 / (ms.R * RSUN * ms.L * LSUN_W) / YR_S;
+    this.setReadout([
+      ['Time to the ZAMS (Bernasconi & Maeder)', `${fmtYr(tTot)} · now at ${fmtYr(tNow)}`, C.sun],
+      ['Kelvin–Helmholtz estimate GM²/RL at ZAMS', fmtYr(tKH)],
+      ['Now', `L = ${L >= 100 ? sci(L, 1) : fmt(L, 2)} L☉ · T_eff = ${fmt(T, 0)} K · ${s < (M < 3 ? 0.55 : 0.25) ? 'descending the Hayashi track' : s < 1 ? 'Henyey track: radiative core, contracting' : 'on the zero-age main sequence'}`, C.text],
+      ['Burning', s < 0.3 ? 'deuterium (²H + p → ³He)' : s < 0.7 ? 'none yet: gravitational contraction' : s < 1 ? 'PP I first steps + ¹²C → ¹⁴N (CNO), core adjusting' : M > 1.3 ? 'CNO cycle, convective core' : 'pp chain, radiative core'],
+    ]);
+  }
+}
+
+/* -------------------------------------------------------------- 12.3b IMF ---- */
+
+type ImfForm = 'salpeter' | 'kroupa' | 'chabrier';
+/** dN/dm (per unit mass) up to normalisation */
+function imfDm(m: number, form: ImfForm): number {
+  if (form === 'salpeter') return m ** -2.35;
+  if (form === 'kroupa') return m < 0.08 ? 0.08 ** -1 * (m / 0.08) ** -0.3 : m < 0.5 ? (m / 0.08) ** -1.3 * 0.08 ** -1 : (0.5 / 0.08) ** -1.3 * 0.08 ** -1 * (m / 0.5) ** -2.3;
+  // Chabrier 2003: ξ(log m) log-normal below 1 M☉, power law above; dN/dm = ξ(log m)/(m ln 10)
+  const xi = m < 1 ? 0.158 * Math.exp(-((Math.log10(m) - Math.log10(0.079)) ** 2) / (2 * 0.69 ** 2)) : 0.158 * Math.exp(-((0 - Math.log10(0.079)) ** 2) / (2 * 0.69 ** 2)) * m ** -1.3;
+  return xi / (m * Math.LN10);
+}
+class ImfWidget extends CanvasWidget {
+  private form: ImfForm = 'kroupa'; private lMc = 3;
+  constructor() {
+    super(1.8);
+    this.segmented<ImfForm>([['salpeter', 'Salpeter 1955'], ['kroupa', 'Kroupa 2001'], ['chabrier', 'Chabrier 2003']], this.form, (v) => { this.form = v; });
+    this.slider('Cluster mass', 2, 5, 0.05, this.lMc, (v) => `${sci(10 ** v, 0)} M☉`, (v) => { this.lMc = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const Mc = 10 ** this.lMc, mlo = this.form === 'salpeter' ? 0.08 : 0.01, mhi = 120;
+    // normalise: ∫ m dN = Mc
+    let mass = 0, N = 0; const nb = 400; const bins: number[] = []; const dlm = (Math.log10(mhi) - Math.log10(mlo)) / nb;
+    for (let i = 0; i < nb; i++) { const m = 10 ** (Math.log10(mlo) + (i + 0.5) * dlm); const dn = imfDm(m, this.form) * m * Math.LN10 * dlm; bins.push(dn); mass += dn * m; N += dn; }
+    const k = Mc / mass; N *= k;
+    const ranges: Array<[number, number, string, string]> = [[0.013, 0.08, 'brown dwarfs', C.purple], [0.08, 0.5, 'M dwarfs', C.red], [0.5, 2, '0.5–2 (Sun-like)', C.sun], [2, 8, '2–8 (A, B)', C.blue], [8, 120, '> 8 (supernovae)', '#fff']];
+    const stats = ranges.map(([a, b]) => { let n = 0, mm = 0, l = 0; for (let i = 0; i < nb; i++) { const m = 10 ** (Math.log10(mlo) + (i + 0.5) * dlm); if (m >= a && m < b) { n += bins[i] * k; mm += bins[i] * k * m; l += bins[i] * k * mainSequence(Math.max(0.08, m)).L * (m < 0.08 ? 1e-3 : 1); } } return { n, mm, l }; });
+    const Ltot = stats.reduce((s, r) => s + r.l, 0);
+    // left: ξ(log m)
+    const x0 = PLOT_MARGIN, x1 = w * 0.56, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (lm: number) => x0 + (lm + 2.1) / 4.3 * (x1 - x0);
+    const Y = (lx: number) => y1 - 6 - (lx + 2) / 6 * (y1 - y0 - 12);
+    for (let lx = -1; lx <= 3; lx++) { this.line(x0, Y(lx), x1, Y(lx), hexA(C.grid, 0.9)); this.text(`10${sup(lx)}`, x0 - 4, Y(lx), C.dim, 8, 'right'); }
+    for (const lm of [-2, -1, 0, 1, 2]) this.text(lm === 0 ? '1' : `10${sup(lm)}`, X(lm), y1 + 10, C.dim, 8, 'center');
+    this.text('mass (M☉)', x1, y1 + 22, C.dim, 9, 'right'); this.text('ξ(log m): stars per dex, per 10³ M☉ formed', x0 + 6, y0 + 10, C.dim, 8);
+    for (const [a, b, lab, col] of ranges) { c.fillStyle = hexA(col, 0.05); c.fillRect(X(Math.log10(a)), y0, X(Math.log10(b)) - X(Math.log10(a)), y1 - y0); this.text(lab, (X(Math.log10(a)) + X(Math.log10(b))) / 2, y1 - 12, col, 7, 'center'); }
+    for (const f of ['salpeter', 'kroupa', 'chabrier'] as ImfForm[]) { const lo = f === 'salpeter' ? 0.08 : 0.01; let mm = 0; for (let i = 0; i < nb; i++) { const m = 10 ** (Math.log10(lo) + (i + 0.5) * dlm); mm += imfDm(m, f) * m * Math.LN10 * dlm * m; } const kk = 1e3 / mm; plotCurve(c, Math.log10(lo), Math.log10(mhi), 150, X, (lm) => Y(Math.log10(imfDm(10 ** lm, f) * 10 ** lm * Math.LN10 * kk)), f === this.form ? C.sun : hexA(C.dim, 0.5), f === this.form ? 2 : 1, f === this.form ? undefined : [3, 3]); }
+    for (const [m, lab] of [[0.013, 'D burning'], [0.072, 'H burning']] as Array<[number, string]>) { this.line(X(Math.log10(m)), y0, X(Math.log10(m)), y1, hexA(C.accent, 0.6), 1, [2, 3]); this.text(lab, X(Math.log10(m)), y0 + 24 + (m > 0.05 ? 12 : 0), C.accent, 7, 'center'); }
+    this.text('slope −1.35', X(1.2), Y(Math.log10(imfDm(10 ** 1.2, 'salpeter') * 10 ** 1.2 * Math.LN10 * 1e3 / 3.6)) - 10, C.dim, 7, 'center');
+    // right: bars of number, mass, light
+    const bx0 = w * 0.64, bx1 = w - 12, by0 = 14, by1 = h - 30;
+    this.text(`cluster of ${sci(Mc, 0)} M☉: ${N >= 1e4 ? sci(N, 1) : fmt(N, 0)} stars`, bx0, by0 + 6, C.text, 9);
+    const rowH = (by1 - by0 - 30) / ranges.length;
+    ranges.forEach(([, , lab, col], i) => {
+      const y = by0 + 30 + i * rowH; const st = stats[i];
+      this.text(lab, bx0, y + 4, col, 8);
+      const bw = bx1 - bx0 - 4;
+      const fN = st.n / N, fM = st.mm / Mc, fL = st.l / Ltot;
+      c.fillStyle = hexA(C.blue, 0.8); c.fillRect(bx0, y + 10, bw * fN, 6); this.text(`${fmt(100 * fN, fN < 0.01 ? 2 : 0)} % of stars (${st.n >= 1e4 ? sci(st.n, 1) : fmt(st.n, 0)})`, bx0 + bw * fN + 4, y + 13, C.blue, 7);
+      c.fillStyle = hexA(C.sun, 0.8); c.fillRect(bx0, y + 18, bw * fM, 6); this.text(`${fmt(100 * fM, 0)} % of mass`, bx0 + bw * fM + 4, y + 21, C.sun, 7);
+      c.fillStyle = hexA('#fff', 0.7); c.fillRect(bx0, y + 26, bw * fL, 6); this.text(`${fmt(100 * fL, fL < 0.01 ? 2 : 0)} % of light`, bx0 + bw * fL + 4, y + 29, C.text, 7);
+    });
+    this.setReadout([
+      ['Stars formed', `${N >= 1e4 ? sci(N, 2) : fmt(N, 0)} · mean mass ${fmt(Mc / N, 2)} M☉`, C.sun],
+      ['Future supernovae (> 8 M☉)', `${fmt(stats[4].n, stats[4].n < 10 ? 1 : 0)} stars holding ${fmt(100 * stats[4].mm / Mc, 0)} % of the mass and ${fmt(100 * stats[4].l / Ltot, 0)} % of the light`, '#fff'],
+      ['Most massive star expected', `${fmt(Math.min(120, (0.3 * Mc) ** 0.75 * 1.5), 0)} M☉ (statistical upper end)`],
+      ['Brown dwarfs', this.form === 'salpeter' ? 'not included below 0.08 M☉' : `${fmt(100 * stats[0].n / N, 0)} % of objects, ${fmt(100 * stats[0].mm / Mc, 1)} % of the mass`, C.purple],
+    ]);
+  }
+}
+
+/* --------------------------------------------------------- 12.3c Strömgren ---- */
+
+type OBType = 'O3' | 'O5' | 'O6' | 'O8' | 'B0' | 'B2';
+const OB_STARS: Record<OBType, { T: number; L: number; lQ: number }> = { O3: { T: 44600, L: 8e5, lQ: 49.6 }, O5: { T: 41500, L: 4e5, lQ: 49.3 }, O6: { T: 39000, L: 1.3e5, lQ: 49.0 }, O8: { T: 35000, L: 6e4, lQ: 48.5 }, B0: { T: 30000, L: 2.5e4, lQ: 47.8 }, B2: { T: 21000, L: 5e3, lQ: 45.6 } };
+class StromgrenWidget extends CanvasWidget {
+  private type: OBType = 'O6'; private ln = 8; private t = 0;
+  constructor() {
+    super(1.8);
+    this.segmented<OBType>([['O3', 'O3 V'], ['O5', 'O5 V'], ['O6', 'O6 V'], ['O8', 'O8 V'], ['B0', 'B0 V'], ['B2', 'B2 V']], this.type, (v) => { this.type = v; this.t = 0; });
+    this.slider('Gas density n_H', 6, 10, 0.05, this.ln, (v) => `10^${fmt(v, 1)} m⁻³`, (v) => { this.ln = v; this.t = 0; });
+    this.playButton();
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h; this.t += dt;
+    const S = OB_STARS[this.type], n = 10 ** this.ln, Q = 10 ** S.lQ, alpha = 3.1e-19;
+    const rS = (3 * Q / (4 * Math.PI * alpha)) ** (1 / 3) * n ** (-2 / 3);   // m
+    const tRec = 1 / (alpha * n), tNow = this.t / 8 * 5 * tRec;   // 8 s of animation ≈ 5 recombination times
+    const Rfront = rS * (1 - Math.exp(-tNow / tRec)) ** (1 / 3);
+    // left: the nebula
+    const cx = w * 0.27, cy = h * 0.46, Rp = Math.min(w * 0.22, h * 0.42);
+    c.fillStyle = hexA('#2a2118', 0.6); c.fillRect(cx - Rp * 1.15, cy - Rp * 1.05, Rp * 2.3, Rp * 2.1);
+    for (let i = 0; i < 80; i++) { const a = i * 2.399, r = Rp * 1.1 * Math.sqrt((i * 0.618) % 1); this.circle(cx + r * Math.cos(a) * 1.05, cy + r * Math.sin(a) * 0.95, 1, undefined, hexA('#8a7a66', 0.5)); }
+    const frac = Rfront / rS;
+    this.glow(cx, cy, Rp * frac * 1.05, hexA('#ff4b3a', 0.55)); this.glow(cx, cy, Rp * frac * 0.6, hexA('#ff9a7a', 0.4));
+    this.circle(cx, cy, Rp * frac, hexA('#ffb0a0', 0.8), undefined, 1);
+    this.glow(cx, cy, 10, rgba(tempRGB(S.T), 1)); this.circle(cx, cy, 3, undefined, '#fff');
+    this.circle(cx, cy, Rp, hexA(C.dim, 0.5), undefined, 1, [3, 4]); this.text('r_S', cx + Rp + 4, cy, C.dim, 8);
+    this.text(`ionisation front at ${fmt(100 * frac, 0)} % of r_S · t = ${fmtYr(tNow / YR_S)}`, cx, cy + Rp + 16, C.text, 9, 'center');
+    this.text('H II: Hα fluorescence   ·   outside: neutral H I + dust', cx, cy - Rp - 12, C.dim, 8, 'center');
+    const bar = Rp * 2 / (2 * rS / PC_M); this.line(cx - Rp, cy + Rp + 28, cx - Rp + bar, cy + Rp + 28, C.text, 2); this.text('1 pc', cx - Rp + bar / 2, cy + Rp + 38, C.text, 8, 'center');
+    // right: r_S vs n for the types
+    const x0 = w * 0.6, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (ln: number) => x0 + (ln - 6) / 4 * (x1 - x0);
+    const Y = (lr: number) => y1 - 6 - (lr + 1.5) / 4 * (y1 - y0 - 12);
+    for (let lr = -1; lr <= 2; lr++) { this.line(x0, Y(lr), x1, Y(lr), hexA(C.grid, 0.9)); this.text(`${10 ** lr}`, x0 - 4, Y(lr), C.dim, 8, 'right'); }
+    for (let ln = 6; ln <= 10; ln++) this.text(`10${sup(ln)}`, X(ln), y1 + 10, C.dim, 8, 'center');
+    this.text('n_H (m⁻³)', x1, y1 + 22, C.dim, 9, 'right'); this.text('Strömgren radius (pc)', x0 + 6, y0 + 10, C.dim, 8);
+    for (const k of Object.keys(OB_STARS) as OBType[]) { const st = OB_STARS[k]; const col = k === this.type ? C.sun : hexA(C.dim, 0.6); plotCurve(c, 6, 10, 40, X, (ln) => Y(Math.log10((3 * 10 ** st.lQ / (4 * Math.PI * alpha)) ** (1 / 3) * (10 ** ln) ** (-2 / 3) / PC_M)), col, k === this.type ? 2 : 1); this.text(k, x1 - 4, Y(Math.log10((3 * 10 ** st.lQ / (4 * Math.PI * alpha)) ** (1 / 3) * 1e10 ** (-2 / 3) / PC_M)), col, 7, 'right'); }
+    this.circle(X(this.ln), Y(Math.log10(rS / PC_M)), 5, '#fff', C.sun);
+    const Mion = 4 / 3 * Math.PI * rS ** 3 * n * MH / MSUN;
+    const lamMax = 2.898e-3 / S.T * 1e9, Egam = EV_NM / lamMax, Nwien = S.L * LSUN_W / (Egam * EV);
+    this.setReadout([
+      ['Ionising photons N (λ < 91.2 nm)', `${sci(Q, 1)} s⁻¹ (model atmospheres) · Wien estimate L/E_γ = ${sci(Nwien, 1)} with λ_max = ${fmt(lamMax, 0)} nm, E = ${fmt(Egam, 0)} eV`, C.sun],
+      ['Strömgren radius', `${rS / PC_M < 1 ? fmt(rS / PC_M, 2) : fmt(rS / PC_M, 1)} pc`, '#ff9a7a'],
+      ['Recombination time 1/αn', `${fmtYr(tRec / YR_S)} — the front reaches equilibrium in a few of these`],
+      ['Ionised mass', `${Mion >= 1000 ? sci(Mion, 1) : fmt(Mion, 1)} M☉ of hydrogen at ~8000 K`],
+    ]);
+  }
+}
+
+/* ------------------------------------------------------------ 12.3d P Cygni ---- */
+
+type ShellMode = 'outflow' | 'inverse' | 'fuori';
+class PcygniWidget extends CanvasWidget {
+  private v = 80; private tau = 1.2; private mode: ShellMode = 'outflow'; private t = 0;
+  private sV: ReturnType<CanvasWidget['slider']>;
+  constructor() {
+    super(1.8);
+    this.segmented<ShellMode>([['outflow', 'P Cygni (wind)'], ['inverse', 'inverse P Cygni (infall)'], ['fuori', 'FU Orionis outburst']], this.mode, (v) => { this.mode = v; if (v === 'fuori') { this.v = 300; this.sV.set(300); } });
+    this.sV = this.slider('Shell speed', 20, 400, 5, this.v, (v) => `${v} km/s`, (v) => { this.v = v; });
+    this.slider('Optical depth of the shell', 0.1, 5, 0.05, this.tau, (v) => fmt(v, 2), (v) => { this.tau = v; });
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h; this.t += dt;
+    const infall = this.mode === 'inverse', sgn = infall ? -1 : 1;
+    // left: geometry (observer to the right)
+    const cx = w * 0.22, cy = h * 0.46, R = Math.min(w * 0.15, h * 0.3);
+    const ph = (this.t * 0.3) % 1, rs = R * (infall ? 1.3 - 0.5 * ph : 0.8 + 0.5 * ph);
+    this.circle(cx, cy, rs, hexA(C.blue, 0.7), hexA(C.blue, 0.06), 1);
+    this.circle(cx, cy, R, hexA(C.blue, 0.25), undefined, 1, [3, 3]);
+    this.glow(cx, cy, 16, rgba(tempRGB(this.mode === 'fuori' ? 7000 : 4500), 1)); this.circle(cx, cy, 5, undefined, '#fff');
+    // shaded part A in front of the star (toward observer)
+    c.beginPath(); c.moveTo(cx + 5, cy - 5); c.lineTo(cx + R * 1.1, cy - 7); c.lineTo(cx + R * 1.1, cy + 7); c.lineTo(cx + 5, cy + 5); c.closePath(); c.fillStyle = hexA(C.red, 0.35); c.fill();
+    for (let k = 0; k < 8; k++) { const a = k * TAU / 8 + 0.2; const r1 = R * 0.95, r2 = R * (0.95 + 0.2 * sgn); this.line(cx + r1 * Math.cos(a), cy + r1 * Math.sin(a), cx + r2 * Math.cos(a), cy + r2 * Math.sin(a), hexA('#fff', 0.6), 1.5); }
+    this.text('A: absorbs starlight, ' + (infall ? 'moving away → redshifted' : 'approaching → blueshifted'), cx + R * 0.55, cy + 18, C.red, 7, 'center');
+    this.text('C', cx, cy - R - 8, C.sun, 8, 'center'); this.text('C', cx, cy + R + 10, C.sun, 8, 'center'); this.text('emission from the shell seen sideways: no net shift', cx, cy + R + 24, C.sun, 7, 'center');
+    this.text('D', cx - R - 8, cy, C.dim, 8, 'center'); this.text('B', cx + R + 10, cy - 14, C.dim, 8, 'center');
+    this.line(cx + R * 1.2, cy, w * 0.44, cy, hexA(C.text, 0.6), 1); this.text('to Earth →', w * 0.44, cy - 10, C.text, 8, 'right');
+    this.text(infall ? 'infalling shell' : 'expanding shell', cx, cy - R - 24, C.text, 9, 'center');
+    // right: profile
+    const x0 = w * 0.52, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const vmax = 500; const X = (v: number) => x0 + (v + vmax) / (2 * vmax) * (x1 - x0);
+    const Y = (f: number) => y1 - 6 - f / 3.2 * (y1 - y0 - 12);
+    for (const v of [-400, -200, 0, 200, 400]) this.text(`${v}`, X(v), y1 + 10, C.dim, 8, 'center');
+    this.text('velocity (km/s)   blueshift ← | → redshift', x1, y1 + 22, C.dim, 9, 'right'); this.text('intensity / continuum', x0 + 6, y0 + 10, C.dim, 8);
+    this.line(x0, Y(1), x1, Y(1), hexA(C.grid, 1), 1, [3, 3]); this.text('continuum', x1 - 6, Y(1) - 8, C.dim, 7, 'right');
+    const emA = this.mode === 'fuori' ? 0.6 : 1.4 * Math.min(1, this.tau), wid = this.v * 0.9;
+    const prof = (u: number) => { const em = emA * Math.exp(-(u * u) / (2 * wid * wid)); const abs = (1 - Math.exp(-this.tau)) * Math.exp(-((u + sgn * this.v) ** 2) / (2 * (0.25 * this.v) ** 2)); return (1 + em) * (1 - 0.85 * abs); };
+    plotCurve(c, -vmax, vmax, 300, X, (u) => Y(prof(u)), C.sun, 2);
+    this.line(X(-sgn * this.v), y0, X(-sgn * this.v), y1, hexA(C.red, 0.5), 1, [2, 3]); this.text(`${infall ? '+' : '−'}${this.v} km/s`, X(-sgn * this.v), y0 + 10, C.red, 8, 'center');
+    this.line(X(0), y0, X(0), y1, hexA(C.grid, 1), 1, [2, 3]); this.text('λ₀', X(0), y0 + 10, C.dim, 8, 'center');
+    const mdot = this.mode === 'fuori' ? 1e-4 : infall ? 1e-8 * this.tau : 1e-8 * this.tau * (this.v / 80) ** 2;
+    this.setReadout([
+      ['Profile', this.mode === 'outflow' ? 'P Cygni: broad emission + blueshifted absorption → mass loss' : infall ? 'inverse P Cygni: redshifted absorption → accretion onto the star' : 'FU Ori: disk outshines the star 100–1000×, broad blueshifted wind lines', C.sun],
+      ['Absorption at', `${infall ? '+' : '−'}${this.v} km/s · depth ${fmt(100 * (1 - Math.exp(-this.tau)) * 0.85, 0)} %`, C.red],
+      ['Typical rate', `${sci(mdot, 1)} M☉/yr ${this.mode === 'fuori' ? '(0.01 M☉ in a century; Δm ≈ −4 for decades)' : '(the Sun: 10⁻¹⁴)'}`],
+      ['Also in the spectrum', 'Balmer, Ca II H & K and Fe emission; Li I 670.8 nm absorption (youth); forbidden [O I], [S II] (thin gas)'],
+    ]);
+  }
+}
+
+/* -------------------------------------------------------- 12.3e disk formation ---- */
+
+class ProtodiskWidget extends CanvasWidget {
+  private lw = -14; private lr0 = -1; private M = 1; private u = 0;
+  constructor() {
+    super(1.8);
+    this.slider('Initial angular velocity ω₀', -15, -13, 0.05, this.lw, (v) => `${sci(10 ** v, 1)} s⁻¹ (P = ${fmtYr(TAU / 10 ** v / YR_S)})`, (v) => { this.lw = v; });
+    this.slider('Initial radius r₀', -1.7, -0.3, 0.05, this.lr0, (v) => `${fmt(10 ** v, 2)} pc`, (v) => { this.lr0 = v; });
+    this.slider('Mass', 0.3, 3, 0.1, this.M, (v) => `${fmt(v, 1)} M☉`, (v) => { this.M = v; });
+    this.playButton();
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    this.u = (this.u + dt / 9) % 1.15; const u = Math.min(1, this.u);
+    const w0 = 10 ** this.lw, r0 = 10 ** this.lr0 * PC_M, Mkg = this.M * MSUN;
+    const rf = w0 * w0 * r0 ** 4 / (GRAV * Mkg);
+    const rho0 = Mkg / (4 / 3 * Math.PI * r0 ** 3), tff = freeFallTime(rho0);
+    const th = collapseTheta(u);   // axial collapse follows free fall
+    const thEq = Math.max(th, rf / r0);   // equatorial collapse halts at r_f
+    // left: side view; log-scaled radius so AU-scale disks remain visible
+    const cx = w * 0.26, cy = h * 0.46, R = Math.min(w * 0.2, h * 0.4);
+    const scale = (x: number) => R * Math.max(0.03, 1 + Math.log10(Math.max(x, 1e-4)) / 4);   // 1 → R, 1e-4 → 0
+    const ax = scale(thEq), az = scale(th);
+    this.circle(cx, cy, R, hexA(C.grid, 1), undefined, 1, [3, 4]);
+    c.beginPath(); c.ellipse(cx, cy, ax, Math.max(2, az), 0, 0, TAU); c.fillStyle = hexA(C.blue, 0.15 + 0.5 * (1 - th)); c.fill(); c.strokeStyle = hexA(C.blue, 0.9); c.lineWidth = 1; c.stroke();
+    const disk = thEq > th * 1.5;
+    if (disk) { this.glow(cx, cy, 10, rgba(tempRGB(3500), 1)); this.circle(cx, cy, 3, undefined, '#fff'); const jl = R * 0.9 * Math.min(1, (thEq / th - 1.5) / 3); for (const s of [-1, 1]) { c.beginPath(); c.moveTo(cx - 3, cy); c.lineTo(cx - 8, cy + s * jl); c.lineTo(cx + 8, cy + s * jl); c.lineTo(cx + 3, cy); c.closePath(); c.fillStyle = hexA(C.red, 0.5); c.fill(); this.glow(cx, cy + s * jl, 8, hexA(C.red, 0.7)); } this.text('jets → Herbig–Haro objects', cx, cy - R - 12, C.red, 8, 'center'); }
+    else this.text('collapse: faster along the axis than in the plane', cx, cy - R - 12, C.dim, 8, 'center');
+    // rotation arrows
+    for (let k = 0; k < 6; k++) { const a = k * TAU / 6 + this.u * 8 * (1 / Math.max(thEq, 0.01)) ** 0.3; const x = cx + ax * Math.cos(a), y = cy + Math.max(2, az) * Math.sin(a) * 0.9; this.circle(x, y, 1.5, undefined, hexA('#fff', 0.7)); }
+    this.text(`t = ${fmt(u, 2)} t_ff · equator at ${thEq * r0 / AU_M < 1e4 ? fmt(thEq * r0 / AU_M, 0) + ' AU' : fmt(thEq * r0 / PC_M, 3) + ' pc'} · pole at ${th * r0 / AU_M < 1e4 ? fmt(th * r0 / AU_M, 0) + ' AU' : fmt(th * r0 / PC_M, 3) + ' pc'}`, cx, cy + R + 16, C.text, 8, 'center');
+    this.text('(radius drawn on a log scale)', cx, cy + R + 28, C.faint, 7, 'center');
+    // right: r_f and spin budget
+    const x0 = w * 0.58, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (lw: number) => x0 + (lw + 15) / 2 * (x1 - x0);
+    const Y = (lr: number) => y1 - 6 - (lr + 0.5) / 5 * (y1 - y0 - 12);   // AU, 10^-0.5 .. 10^4.5
+    for (let lr = 0; lr <= 4; lr++) { this.line(x0, Y(lr), x1, Y(lr), hexA(C.grid, 0.9)); this.text(`10${sup(lr)}`, x0 - 4, Y(lr), C.dim, 8, 'right'); }
+    for (const lw of [-15, -14.5, -14, -13.5, -13]) this.text(`10^${lw}`, X(lw), y1 + 10, C.dim, 7, 'center');
+    this.text('ω₀ (s⁻¹)', x1, y1 + 22, C.dim, 9, 'right'); this.text('disk radius r_f (AU)', x0 + 6, y0 + 10, C.dim, 8);
+    for (const lr0 of [-1.7, -1, -0.3]) { const col = Math.abs(lr0 - this.lr0) < 0.03 ? C.sun : hexA(C.dim, 0.6); plotCurve(c, -15, -13, 40, X, (lw) => Y(Math.log10((10 ** lw) ** 2 * (10 ** lr0 * PC_M) ** 4 / (GRAV * Mkg) / AU_M)), col, col === C.sun ? 2 : 1); this.text(`r₀ = ${fmt(10 ** lr0, 2)} pc`, x1 - 4, Y(Math.log10(1e-26 * (10 ** lr0 * PC_M) ** 4 / (GRAV * Mkg) / AU_M)) - 8, col, 7, 'right'); }
+    plotCurve(c, -15, -13, 40, X, (lw) => Y(Math.log10((10 ** lw) ** 2 * r0 ** 4 / (GRAV * Mkg) / AU_M)), C.sun, 2);
+    this.line(x0, Y(Math.log10(30)), x1, Y(Math.log10(30)), hexA(C.accent, 0.6), 1, [4, 3]); this.text('Neptune\'s orbit', x0 + 6, Y(Math.log10(30)) - 8, C.accent, 7);
+    this.line(x0, Y(Math.log10(RSUN / AU_M)), x1, Y(Math.log10(RSUN / AU_M)), hexA(C.red, 0.6), 1, [4, 3]); this.text('R☉', x0 + 6, Y(Math.log10(RSUN / AU_M)) - 8, C.red, 7);
+    this.circle(X(this.lw), Y(Math.log10(rf / AU_M)), 5, '#fff', C.sun);
+    const vEdge = w0 * r0, vKep = Math.sqrt(GRAV * Mkg / rf), wStar = w0 * (r0 / RSUN) ** 2, wBreak = Math.sqrt(GRAV * Mkg / RSUN ** 3);
+    this.setReadout([
+      ['Disk radius r_f = ω₀²r₀⁴/GM', `${rf / AU_M >= 1e4 ? sci(rf / AU_M, 1) : fmt(rf / AU_M, rf / AU_M < 10 ? 2 : 0)} AU`, C.sun],
+      ['Initial edge speed · Keplerian speed at r_f', `${fmt(vEdge, 1)} m/s · ${fmt(vKep / 1e3, 1)} km/s`],
+      ['If all spin were kept to R☉', `ω = ${sci(wStar, 1)} s⁻¹ = ${sci(wStar / wBreak, 1)} × breakup — impossible: angular momentum must be shed (disk, jets, magnetic braking)`, C.red],
+      ['Free-fall time', fmtYr(tff / YR_S)],
+    ]);
+  }
+}
+
 export function createWidget(spec: WidgetSpec): Widget {
   switch (spec.type) {
     case 'ancientsky': return new AncientSkyWidget();
@@ -10438,5 +11289,20 @@ export function createWidget(spec: WidgetSpec): Widget {
     case 'flareenergy': return new FlareEnergyWidget();
     case 'dynamo': return new DynamoWidget();
     case 'activity': return new ActivityWidget();
+    case 'extinction': return new ExtinctionWidget();
+    case 'extcurve': return new ExtcurveWidget();
+    case 'hi21cm': return new Hi21cmWidget();
+    case 'ismphases': return new IsmPhasesWidget();
+    case 'heatcool': return new HeatcoolWidget();
+    case 'jeans': return new JeansWidget();
+    case 'freefall': return new FreefallWidget();
+    case 'fragmentation': return new FragmentationWidget();
+    case 'magcollapse': return new MagcollapseWidget();
+    case 'protostartrack': return new ProtostartrackWidget();
+    case 'pmstracks': return new PmstracksWidget();
+    case 'imf': return new ImfWidget();
+    case 'stromgren': return new StromgrenWidget();
+    case 'pcygni': return new PcygniWidget();
+    case 'protodisk': return new ProtodiskWidget();
   }
 }

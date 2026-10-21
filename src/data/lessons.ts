@@ -330,7 +330,37 @@ export type WidgetSpec =
   /** Babcock's dynamo in stages: poloidal field wound into toroidal by differential rotation, flux tubes rising into bipolar spot groups, and the polar field reversing over 22 years */
   | { type: 'dynamo' }
   /** Magnetic activity in other stars: X-ray-to-bolometric luminosity against Rossby number with the saturated and unsaturated branches, real stars placed and sliders for rotation period and spectral type */
-  | { type: 'activity' };
+  | { type: 'activity' }
+  /** Interstellar extinction and reddening: a star seen through a dust cloud, with sliders for A_V, R_V and distance; the reddened spectrum, apparent magnitude, colour excess E(B−V) and the distance error if extinction is ignored */
+  | { type: 'extinction' }
+  /** Mie scattering and the extinction curve: the extinction efficiency Q against grain size over wavelength, and A_λ/A_V against 1/λ with the 217.5 nm bump for a chosen R_V, the U, B and V bands marked */
+  | { type: 'extcurve' }
+  /** The 21-cm line: the spin-flip transition animated and the line profile for a chosen H I column density, temperature and width, with the optical depth τ_H and the brightness temperature */
+  | { type: 'hi21cm' }
+  /** The phases of the interstellar medium: cloud types placed on a density–temperature diagram with their masses and sizes drawn to scale; click a type for its properties and Jeans mass */
+  | { type: 'ismphases' }
+  /** Heating and cooling of a molecular cloud: cosmic-ray and photoelectric heating against line and dust cooling as functions of density, with the equilibrium temperature of the gas */
+  | { type: 'heatcool' }
+  /** The Jeans criterion: Jeans mass and length against density for a chosen temperature and composition, with the Bonnor–Ebert mass and the observed cloud types marked as stable or collapsing */
+  | { type: 'jeans' }
+  /** Homologous free-fall collapse: an animated cloud whose shells fall together, with r/r₀ and log ρ/ρ₀ against time and the free-fall time for the chosen density; inside-out collapse for comparison */
+  | { type: 'freefall' }
+  /** Fragmentation: the Jeans mass falling as the density rises during isothermal collapse and rising again when it turns adiabatic, with the minimum fragment mass for chosen efficiency and temperature, and a cascading-fragmentation cartoon */
+  | { type: 'fragmentation' }
+  /** Magnetic support of a cloud: the magnetic critical mass and the ambipolar-diffusion time against the free-fall time for a chosen field, radius and density; subcritical or supercritical */
+  | { type: 'magcollapse' }
+  /** Protostellar collapse on the H–R diagram: evolutionary tracks of 0.05–10 solar-mass clouds from the first hydrostatic core to deuterium burn-out, with a stage slider for the 1 solar-mass case and the infall line profile */
+  | { type: 'protostartrack' }
+  /** Pre-main-sequence tracks: the Hayashi forbidden region, tracks for 0.8–60 solar masses with contraction times, a mass slider animating a star down its Hayashi track and across to the ZAMS, and its convective structure */
+  | { type: 'pmstracks' }
+  /** The initial mass function: Salpeter, Kroupa and Chabrier forms with the deuterium- and hydrogen-burning limits, and the numbers and masses of stars in each range for a cluster of chosen mass */
+  | { type: 'imf' }
+  /** Strömgren spheres: the ionising photon rate of an O or B star, the equilibrium radius of its H II region for a chosen gas density, the ionisation front expanding, and the Hα glow */
+  | { type: 'stromgren' }
+  /** P Cygni profiles: an expanding or infalling shell around a T Tauri star and the line profile it produces, with sliders for the shell speed and optical depth; toggles outflow, inverse (accretion) and the FU Orionis state */
+  | { type: 'pcygni' }
+  /** Disk formation: a rotating cloud collapsing, faster along the axis than in the plane, settling into a disk of radius set by angular momentum, with jets; sliders for the initial spin and radius */
+  | { type: 'protodisk' };
 
 export type SceneCue =
   | { action: 'goto'; ref: string; kind?: 'body' | 'blackhole' | 'star' | 'landmark' | 'galaxy' }
@@ -5355,6 +5385,305 @@ const S11_3: Section = {
   ],
 };
 
+/* ================================================================================ */
+/*  CHAPTER 12 — THE INTERSTELLAR MEDIUM AND STAR FORMATION                          */
+/* ================================================================================ */
+
+const S12_1: Section = {
+  id: 'interstellar-dust-gas',
+  number: '12.1',
+  title: 'Interstellar Dust and Gas',
+  summary: 'The gas and dust between the stars: how dust dims and reddens starlight (extinction, Mie scattering, the extinction curve), what the grains are made of, how neutral hydrogen is mapped with the 21-cm line and molecular hydrogen with CO, the family of interstellar clouds from diffuse H I to dense cores, and the chemistry, heating and cooling that set their temperatures.',
+  minutes: 30,
+  steps: [
+    {
+      id: 'interstellar-extinction',
+      kicker: 'Interactive · dimmed and reddened',
+      title: 'Interstellar extinction',
+      widget: { type: 'extinction' },
+      scene: [goto('l-pleiades', 'landmark'), rate(1)],
+      body: [
+        p('Stars are born from the gas and dust between the stars — the <b>interstellar medium</b> (ISM) — and much of their material goes back to it through winds and explosions, so that later generations form from processed gas. The ISM is also in the way: the dark lanes along the Milky Way are not gaps in the stars but dust clouds hiding the stars behind them. This <b>interstellar extinction</b> is the combined effect of scattering and absorption by dust grains, and it forces an extra term into the distance modulus.'),
+        eq('m_\\lambda = M_\\lambda + 5\\log_{10} d - 5 + A_\\lambda, \\qquad A_\\lambda = -2.5\\log_{10} e^{-\\tau_\\lambda} = 1.086\\,\\tau_\\lambda, \\qquad \\tau_\\lambda = \\int_0^s n_d\\,\\sigma_\\lambda\\,ds\' = \\sigma_\\lambda N_d', 'The distance modulus with A_λ magnitudes of extinction in the band centred on λ. Since I/I₀ = e^{−τ}, the extinction in magnitudes is almost exactly the optical depth along the line of sight, which is the grain cross-section times the dust column density N_d — the number of grains in a 1 m² cylinder from us to the star.'),
+        p('Grains scatter short wavelengths more than long ones, so a star behind a cloud looks <em>redder</em> than its temperature implies — <b>interstellar reddening</b> — while an observer looking at the cloud from the side sees the scattered blue light as a <b>reflection nebula</b>, like the one around the Pleiades behind this panel. Reddening is measured by the colour excess E(B−V) = (B−V)_observed − (B−V)_intrinsic, where the intrinsic colour comes from the spectral type; the ratio R_V = A_V/E(B−V) is about 3.1 in the diffuse ISM, so one magnitude of reddening means three of dimming. Neglect extinction and a star\'s distance is overestimated: the widget shows a star through a cloud, lets you set A_V, R_V and the distance, and reports the reddened spectrum, the apparent magnitude, E(B−V) and the error made by ignoring the dust.'),
+        example('A star 0.8 kpc away is dimmer than expected at 550 nm by A_V = 1.1 mag, so τ_550 ≈ 1. With spherical grains of radius a = 0.2 μm and Q_550 = 1.5 the cross-section is σ = πa²Q ≈ 2 × 10⁻¹³ m², so the dust column is N_d = τ/σ ≈ 5 × 10¹² m⁻² and the mean grain density along the path is n = N_d/0.8 kpc ≈ 2 × 10⁻⁷ m⁻³ — typical of the plane of the Galaxy, a grain every 200 cubic metres, yet enough to dim a star by a magnitude per kiloparsec.', 'Example 12.1 — dust along the line of sight'),
+      ],
+    },
+    {
+      id: 'mie-and-dust',
+      kicker: 'Interactive · what the grains are',
+      title: 'Mie scattering, the extinction curve and the nature of dust',
+      widget: { type: 'extcurve' },
+      scene: [goto('l-pleiades', 'landmark'), rate(1)],
+      body: [
+        p('Gustav Mie solved in 1908 the scattering of light by a dielectric sphere of radius a. Writing the cross-section as the geometric one times an <b>extinction efficiency</b>, σ_λ = Q_λ πa², he found that when the wavelength is comparable to the grain, Q_λ ∼ a/λ, so σ_λ ∝ a³/λ; for λ ≫ a the grain is invisible (Q → 0, as a sand grain is to an ocean swell), and for λ ≪ a the grain simply blocks the light, Q → constant and σ_λ ∝ a² — an island in the waves. The 1/λ dependence between these limits is the reddening of the previous step. Molecules, much smaller than visible wavelengths, scatter as λ⁻⁴ instead: Rayleigh scattering, the blue of the Earth\'s sky.'),
+        eq('Q_\\lambda \\equiv \\frac{\\sigma_\\lambda}{\\pi a^2}, \\qquad \\sigma_\\lambda \\propto \\frac{a^3}{\\lambda}\\ (\\lambda \\gtrsim a), \\qquad \\sigma_\\lambda \\propto a^2\\ (\\lambda \\ll a), \\qquad \\sigma_{\\rm Rayleigh} \\propto \\lambda^{-4}', 'Mie\'s limits for a sphere, and the Rayleigh law for scatterers much smaller than the wavelength. Grains of 0.1–0.3 μm redden visible light; grains of 10 nm and smaller only matter in the ultraviolet.'),
+        p('The observed <b>extinction curve</b>, A_λ/A_V against 1/λ, follows the Mie line from the infrared through the visible, then breaks away in the ultraviolet: a broad <b>bump at 217.5 nm</b> (4.6 μm⁻¹) and a steep rise into the far UV. Graphite has a strong resonance at exactly 217.5 nm, and so do <b>polycyclic aromatic hydrocarbons</b> (PAHs), planar molecules of fused benzene rings whose C–C and C–H bond vibrations also produce the "unidentified" infrared emission bands between 3.3 and 12 μm. Absorption features at 9.7 and 18 μm — the Si–O stretch and the Si–O–Si bend — show that <b>silicate</b> grains are present too, and the few per cent polarisation of starlight means the grains are elongated and aligned, spinning with their long axes perpendicular to the Galactic magnetic field. The widget draws Q against a/λ for a chosen grain size and the extinction curve for a chosen R_V: lines of sight through dense clouds have larger grains, larger R_V (up to 5.3 toward Herschel 36) and a flatter curve.'),
+        terms(
+          ['Composition', 'Graphite and amorphous carbon, silicates, PAHs; sizes from 0.3 nm (small PAHs) to a few μm; about 1 per cent of the ISM mass.'],
+          ['Origin', 'Condensed in the cool winds of red giants and in supernova ejecta; destroyed by UV, X-rays and shocks; grown by coagulation inside molecular clouds, which is where the large grains must come from.'],
+          ['R_V', 'A_V/E(B−V): 3.1 in the diffuse ISM, 2.75 toward BD+56 524, 5.3 in Orion\'s dense gas; a proxy for the grain-size distribution.'],
+          ['Icy mantles', 'In dense clouds grains acquire coats of H₂O, CO, CO₂, CH₄, CH₃OH and NH₃ ice, seen in infrared absorption against embedded stars.'],
+        ),
+      ],
+    },
+    {
+      id: 'hydrogen-21cm',
+      kicker: 'Interactive · the dominant component',
+      title: 'Hydrogen and the 21-cm line',
+      widget: { type: 'hi21cm' },
+      scene: [backdrop()],
+      body: [
+        p('Dust does the hiding, but <b>hydrogen</b> is the ISM: about 70 per cent of its mass, with helium nearly all the rest and metals a few per cent. It comes as neutral atoms (<b>H I</b>), as ions (<b>H II</b>) and as molecules (<b>H₂</b>). Cold H I is almost all in the ground state, so it produces no optical emission lines and absorbs only in the ultraviolet Lyman series; it would be invisible but for a quirk of the ground state itself. The electron and the proton each have spin, and hence a magnetic moment; when the two spins are parallel the atom has very slightly more energy than when they are antiparallel. The spin flip emits a photon of wavelength 21.1 cm (1420 MHz), predicted by van de Hulst in 1944 and detected by Ewen and Purcell in 1951.'),
+        eq('\\tau_H = 5.2\\times10^{-19}\\,\\frac{N_H\\,[{\\rm cm^{-2}}]}{T\\,\\Delta v} = 5.2\\times10^{-23}\\,\\frac{N_H\\,[{\\rm m^{-2}}]}{T\\,\\Delta v}, \\qquad h\\nu_{21} = 5.9\\ \\mu{\\rm eV}, \\qquad A_{21} = 2.9\\times10^{-15}\\ {\\rm s^{-1}}\\ (\\text{once in 11 Myr})', 'Optical depth at the centre of a Gaussian 21-cm line for an H I column density N_H, temperature T (K) and full width Δv (km s⁻¹, typically ~10); a typical cloud with N_H = 10²⁵ m⁻², T = 80 K and Δv = 10 km s⁻¹ has τ_H ≈ 0.65. (The coefficient printed in Carroll & Ostlie, 5.2 × 10⁻¹⁵, is a misprint for SI units.) The transition is so improbable that an atom waits 11 million years to emit; in the ISM collisions come every few hundred years and keep the two levels populated at their statistical 3:1 ratio, but there are so many atoms that the Galaxy glows.'),
+        p('Because single atoms emit so rarely the line stays optically thin over kiloparsecs, so its strength measures the column density directly, its Doppler shift the velocity, and its Zeeman splitting the magnetic field: the 21-cm line is how the structure and rotation of the Galaxy, and of other galaxies, are mapped. Diffuse H I clouds have T = 30–80 K, n = 1–8 × 10⁸ m⁻³ and masses of 1–100 M☉. Along lines of sight with A_V < 1, N_H tracks the dust column N_d — gas and dust are mixed — but above A_V ≈ 1 the hydrogen column stops growing with the dust. The dust has become optically thick to ultraviolet light, which shields <b>molecular hydrogen</b> from photodissociation; grains also catalyse its formation, giving two atoms a surface on which to meet and absorbing the binding energy. The cloud becomes molecular inside a shell of H I.'),
+        p('H₂ itself is almost unobservable when cold: a symmetric molecule with no dipole moment, no 21-cm analogue and ro-vibrational lines only above 2000 K. Molecular clouds are therefore mapped with <b>tracers</b>, above all carbon monoxide, about 10⁻⁴ as abundant as H₂, whose rotational transition at 2.6 mm (115 GHz) is excited by collisions with H₂; the isotopomers ¹³CO and C¹⁸O, with different moments of inertia and hence different line frequencies, stay optically thin deeper into the cloud. Other tracers — CS, HCO⁺, N₂H⁺, NH₃ — need higher densities to be excited and so pick out the dense cores. The widget animates the spin flip and draws the 21-cm profile for a chosen column, temperature and width.'),
+      ],
+    },
+    {
+      id: 'molecular-clouds',
+      kicker: 'Interactive · a zoo of clouds',
+      title: 'The classification of interstellar clouds',
+      widget: { type: 'ismphases' },
+      scene: [goto('l-m42', 'landmark'), rate(1)],
+      body: [
+        p('Conditions in interstellar clouds vary so widely that any discrete classification blurs at the edges, but a broad scheme is still useful. Where the gas is mostly atomic and 1 < A_V < 5, with H₂ in the denser parts, we speak of <b>diffuse</b> or <b>translucent molecular clouds</b>. <b>Giant molecular clouds</b> (GMCs) are complexes of 10⁵–10⁶ M☉ and ~50 pc at 15 K, thousands of them in the spiral arms; the Orion complex behind this panel, with the Horsehead Nebula silhouetted against an H II region, is the nearest. GMCs are clumpy: dark cloud complexes of 10⁴ M☉, clumps of 30 M☉, and <b>dense cores</b> of ~10 M☉ and 0.1 pc at 10 K and 10¹⁰ m⁻³, the immediate sites of star formation. <b>Hot cores</b> of 100–300 K and 10¹³–10¹⁵ m⁻³ have massive young O and B stars inside them. <b>Bok globules</b>, nearly spherical clouds of 1–1000 M☉ and under a parsec, lying outside the big complexes, are dense cores stripped of their surroundings by nearby hot stars; infrared surveys find young low-luminosity stars in most of them.'),
+        table(
+          ['Type', 'T (K)', 'n (m⁻³)', 'M (M☉)', 'Size (pc)', 'A_V'],
+          [
+            ['Diffuse H I cloud', '30–80', '1–8 × 10⁸', '1–100', '1–10', '< 1'],
+            ['Diffuse / translucent molecular', '15–50', '5 × 10⁸ – 5 × 10⁹', '3–100', 'several', '1–5'],
+            ['Giant molecular cloud', '~15', '1–3 × 10⁸', '10⁵ – 10⁶', '~50', '—'],
+            ['Dark cloud complex', '~10', '~5 × 10⁸', '~10⁴', '~10', '~5'],
+            ['Clump', '~10', '~10⁹', '~30', '~2', '~10'],
+            ['Dense core', '~10', '~10¹⁰', '~10', '~0.1', '> 10'],
+            ['Hot core', '100–300', '10¹³ – 10¹⁵', '10–3000', '0.05–0.1', '50–1000'],
+            ['Bok globule', '~10', '> 10¹⁰', '1–1000', '< 1', '~10'],
+          ],
+          'Characteristic properties of interstellar clouds (Carroll & Ostlie, Section 12.1). Note that the dense cores are the coldest places in the Galaxy and the hot cores, heated from within, among the warmest molecular gas.',
+        ),
+        p('The widget places these types on a density–temperature diagram with their sizes and masses to scale; click one to read its properties, and keep its Jeans mass in mind for the next section — the dense cores are the only ones with masses above the critical value. Densities of 10¹⁰ m⁻³, the densest ordinary molecular gas, are still a hundred thousand times emptier than the best laboratory vacuum.'),
+      ],
+    },
+    {
+      id: 'chemistry-heating-cooling',
+      kicker: 'Interactive · the thermostat',
+      title: 'Interstellar chemistry, heating and cooling',
+      widget: { type: 'heatcool' },
+      scene: [goto('l-m42', 'landmark'), rate(1)],
+      body: [
+        p('Radio astronomy has identified well over two hundred interstellar molecules, from H₂, CO, H₂O and H₃⁺ to long carbon chains like HC₁₁N and, in the last decade, individual PAHs and simple sugars. H₂ forms on grain surfaces, and so do CH, NH, OH, CO, CO₂ and H₂O; in dense clouds the products freeze onto the grains as icy mantles. Gas-phase chemistry is driven by ions, because ion–molecule reactions have no activation barrier at 10 K: a cosmic ray ionises H₂, H₂⁺ reacts to H₃⁺, and chains such as H⁺ + O → O⁺ + H, O⁺ + H₂ → OH⁺ + H, OH⁺ + H₂ → H₂O⁺ + H, then H₂O⁺ + e⁻ → OH + H (or on to H₃O⁺, which recombines to OH three times out of four and to water once) build the molecules observed.'),
+        eq('\\text{heating:}\\quad p^+ + {\\rm H_2} \\to {\\rm H_2^+} + e^- + p^+ \\qquad\\qquad \\text{cooling:}\\quad {\\rm O} + {\\rm H} \\to {\\rm O}^* + {\\rm H}, \\quad {\\rm O}^* \\to {\\rm O} + \\gamma_{\\rm IR}', 'The main heating of molecular gas is by cosmic-ray protons of 10³–10⁸ MeV: the ejected electron shares its energy with the gas by collisions. Cooling is by collisionally excited atoms, ions and molecules — O I, C II, CO — and by warmed dust grains, all radiating infrared photons that, with λ ≫ a, escape the cloud.'),
+        p('Why are diffuse clouds warmer than GMCs, dense cores colder still, and hot cores hot? Heating comes from cosmic rays everywhere, from ultraviolet starlight that ionises carbon and ejects electrons from grains (the <em>photoelectric effect</em> on dust, dominant at the surfaces of clouds), from X-rays, and from shocks; cooling comes from infrared lines and dust emission. In a diffuse cloud starlight penetrates and heats; deep in a dense core only cosmic rays reach, the gas and the dust are thermally coupled by collisions, and the dust radiates efficiently at 10 K. Hot cores are heated from within by embedded massive stars. The widget balances the heating and cooling rates as functions of density and radiation field and finds the equilibrium temperature — the thermostat that makes the cold, dense gas the place where stars can form.'),
+        note('Cosmic rays span 10 to 10¹⁴ MeV per particle — the latter the kinetic energy of a tennis ball at 100 km h⁻¹ in a single proton. The common ones, 10³–10⁸ MeV, come from supernova remnants; the ionisation rate they produce, ζ ≈ 10⁻¹⁷–10⁻¹⁶ s⁻¹ per H₂, is measured from the abundance of H₃⁺ and sets the pace of all cold interstellar chemistry.', 'Cosmic rays'),
+      ],
+    },
+    {
+      id: 'ism-summary',
+      kicker: 'Summary',
+      title: 'Section 12.1 in brief',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Extinction: m_λ = M_λ + 5 log d − 5 + A_λ, with A_λ = 1.086 τ_λ = 1.086 σ_λ N_d; dust reddens (E(B−V), R_V ≈ 3.1) and makes blue reflection nebulae.',
+          'Mie theory: σ ∝ a³/λ for λ ≳ a, ∝ a² for λ ≪ a; the extinction curve has a 217.5 nm bump (graphite/PAHs) and silicate features at 9.7 and 18 μm; grains are aligned (polarisation), 1 per cent of the mass.',
+          'Hydrogen is 70 per cent of the ISM: H I via the 21-cm spin-flip line (τ_H = 5.2 × 10⁻²³ N_H/TΔv, N_H in m⁻²), H₂ via CO and other tracers; dust shields and makes H₂.',
+          'Clouds from diffuse H I (50 K, 10⁸ m⁻³) through GMCs (10⁵ M☉, 50 pc, 15 K) to dense cores (10 M☉, 0.1 pc, 10 K, 10¹⁰ m⁻³), hot cores and Bok globules.',
+          'Chemistry on grains and by ion–molecule reactions; heating by cosmic rays and UV; cooling by infrared lines of O, C⁺, CO and by dust.',
+        ),
+        key('The interstellar medium is cold, thin and mostly hydrogen, with one per cent of its mass in dust that nevertheless controls what we see, what molecules form and how the gas cools — and its densest, coldest knots are where the next section begins.'),
+      ],
+    },
+  ],
+};
+
+const S12_2: Section = {
+  id: 'protostar-formation',
+  number: '12.2',
+  title: 'The Formation of Protostars',
+  summary: 'When a cloud collapses: the Jeans criterion from the virial theorem, free-fall and the homologous collapse, why fragmentation makes solar-mass pieces and then stops, the magnetic fields that hold cores up and the ambipolar diffusion that lets them go, and the numerical story of a collapsing solar-mass cloud becoming a protostar.',
+  minutes: 30,
+  steps: [
+    {
+      id: 'jeans-criterion',
+      kicker: 'Interactive · when gravity wins',
+      title: 'The Jeans criterion',
+      widget: { type: 'jeans' },
+      scene: [goto('l-m42', 'landmark'), rate(1)],
+      body: [
+        p('What makes a core collapse? James Jeans asked in 1902 what happens to a cloud nudged away from hydrostatic equilibrium, neglecting rotation, turbulence and magnetic fields. The virial theorem, 2K + U = 0, is the condition of balance: if twice the thermal kinetic energy exceeds |U| the pressure wins and the cloud expands; if it falls short, gravity wins and the cloud collapses. For a uniform sphere U ≈ −3GM²/5R and K = 3NkT/2 with N = M/μm_H particles, so the condition 2K < |U| gives a minimum mass — the <b>Jeans mass</b> — or equivalently a minimum radius, the <b>Jeans length</b>, for a cloud of given temperature and density.'),
+        eq('M_J \\simeq \\left(\\frac{5kT}{G\\mu m_H}\\right)^{3/2}\\left(\\frac{3}{4\\pi\\rho_0}\\right)^{1/2}, \\qquad R_J \\simeq \\left(\\frac{15kT}{4\\pi G\\mu m_H\\rho_0}\\right)^{1/2}, \\qquad M_{\\rm BE} = \\frac{c_{\\rm BE}\\,v_T^4}{P_0^{1/2}G^{3/2}}', 'Jeans mass and length for a uniform cloud of temperature T, mean molecular weight μ and density ρ₀; collapse requires M > M_J or R > R_J. With an external pressure P₀ from the surrounding medium the critical mass is the Bonnor–Ebert mass, with the isothermal sound speed v_T = (kT/μm_H)^{1/2} and c_BE ≈ 1.18 — the Jeans mass has the same form with c_J ≈ 5.46; the outside pressure helps the collapse along.'),
+        example('A diffuse H I cloud: T = 50 K, n = 5 × 10⁸ m⁻³, so ρ₀ = m_H n = 8.4 × 10⁻¹⁹ kg m⁻³ and μ = 1. Then M_J ≈ 1500 M☉ — far above the 1–100 M☉ such clouds contain: diffuse clouds are stable. A dense core: T = 10 K, n_H₂ = 10¹⁰ m⁻³, ρ₀ = 2m_H n = 3 × 10⁻¹⁷ kg m⁻³, μ ≈ 2. Then M_J ≈ 8 M☉, right at the ~10 M☉ of observed cores; with the Bonnor–Ebert mass the critical value drops to about 2 M☉. Dense cores are unstable — which is why they are where stars form.', 'Example 12.2 — which clouds collapse?'),
+        p('The widget plots M_J and R_J against density for a chosen temperature and composition, marks the Bonnor–Ebert mass, and places the cloud types of the previous step on the diagram as stable or unstable. Notice the scalings: M_J ∝ T^{3/2} ρ^{−1/2}. Cold and dense is unstable; and since the density rises during a collapse while the temperature, as long as the cloud can radiate, does not, the Jeans mass keeps falling — the seed of fragmentation.'),
+      ],
+    },
+    {
+      id: 'free-fall-collapse',
+      kicker: 'Interactive · the homologous collapse',
+      title: 'Free-fall collapse',
+      widget: { type: 'freefall' },
+      scene: [goto('l-m42', 'landmark'), rate(1)],
+      body: [
+        p('Once the criterion is met, and if pressure gradients are too small to matter, the cloud is in free fall and, while it stays optically thin and radiates the released energy away, isothermal. Each shell of initial radius r₀ enclosing a mass M_r then obeys d²r/dt² = −GM_r/r². Multiplying by dr/dt and integrating once gives the infall speed, and the substitutions θ = r/r₀ = cos²ξ and χ = (8πGρ₀/3)^{1/2} turn the second integration into a cycloid: the shell reaches the centre when ξ = π/2, at the <b>free-fall time</b>.'),
+        eq('\\xi + \\tfrac12\\sin 2\\xi = \\chi t, \\qquad \\frac{r}{r_0} = \\cos^2\\xi, \\qquad t_{\\rm ff} = \\frac{\\pi}{2\\chi} = \\left(\\frac{3\\pi}{32}\\,\\frac{1}{G\\rho_0}\\right)^{1/2}', 'The parametric solution for pressure-free collapse of a uniform sphere, and the free-fall time, which depends only on the initial density. Every shell of a uniform cloud arrives at the centre at the same moment, and the density rises at the same rate everywhere: a homologous collapse. If the cloud starts centrally condensed, the inner shells fall first — an inside-out collapse.'),
+        example('For the dense core of the previous step, ρ₀ = 3 × 10⁻¹⁷ kg m⁻³, the free-fall time is t_ff = 3.8 × 10⁵ yr. The collapse is slow at first and runs away at the end: r/r₀ is still 0.9 after half the time, and the density has risen a million-fold only in the last few per cent of it.', 'Example 12.3 — how long does it take?'),
+        p('The widget animates the shells of a collapsing cloud for a chosen density, plotting r/r₀ and log(ρ/ρ₀) against time, and lets you compare the homologous case with a centrally condensed one. A free-fall time of a few hundred thousand years is short on stellar timescales — which, as the next steps show, is itself a puzzle.'),
+      ],
+    },
+    {
+      id: 'fragmentation',
+      kicker: 'Interactive · why stars and not a star',
+      title: 'Fragmentation and the minimum fragment mass',
+      widget: { type: 'fragmentation' },
+      scene: [goto('l-m42', 'landmark'), rate(1)],
+      body: [
+        p('A GMC is far above its Jeans mass, so why does it not collapse into a single million-solar-mass star? Because during the isothermal collapse the density rises by many orders of magnitude while T stays near 10 K, so M_J ∝ ρ^{−1/2} falls, and every denser-than-average region becomes unstable on its own: the cloud <b>fragments</b>, and the fragments fragment, into the groups and clusters in which stars are in fact born. (Taken literally the cascade would make far too many stars; in reality only a few per cent of a cloud\'s mass ends up in them.) What stops it is the assumption that T stays constant. Once a fragment becomes opaque to its own radiation the collapse turns <b>adiabatic</b>, T = K″ρ^{γ−1}, and then M_J ∝ ρ^{(3γ−4)/2} — for γ = 5/3, M_J ∝ ρ^{1/2} <em>rises</em> with density, and fragmentation ceases.'),
+        eq('M_J \\propto \\rho^{(3\\gamma-4)/2}, \\qquad L_{\\rm ff} \\sim G^{3/2}\\left(\\frac{M_J}{R_J}\\right)^{5/2} = L_{\\rm rad} = 4\\pi R_J^2\\,e\\,\\sigma T^4 \\;\\Longrightarrow\\; M_J^{\\min} \\simeq 0.03\\,\\frac{T^{1/4}}{e^{1/2}\\mu^{9/4}}\\ M_\\odot', 'The transition happens when the gravitational energy released per free-fall time can no longer be radiated away by a body of efficiency e (e = 1 for a black body). Equating the two luminosities and eliminating R_J gives the minimum Jeans mass. With T ∼ 1000 K, e ∼ 0.1 and μ ∼ 1, M_J^min ≈ 0.5 M☉; with e ∼ 1, 0.2 M☉. The estimate is insensitive to the inputs — fragmentation stops in the range of solar masses.'),
+        p('The widget follows M_J as the density climbs through a collapse, isothermal first and then adiabatic, and shows the minimum fragment mass for the efficiency and transition temperature you choose, with a cartoon of the cascade. More careful treatments, including radiative transfer, grain vaporisation, molecular dissociation and ionisation, bring the limit down about an order of magnitude, to ~0.01 M☉ — just the deuterium-burning limit that separates brown dwarfs from planets. The back-of-the-envelope estimate captured the physics.'),
+        think('Our derivation re-applied the Jeans criterion at every stage of the collapse, though it was derived for a perturbation of a <em>static</em> cloud, and ignored the infall velocity the outer layers already have. Which way would that bias the fragment mass? And since the first fragments to turn adiabatic are the densest ones, does fragmentation stop everywhere at once?'),
+      ],
+    },
+    {
+      id: 'magnetic-support',
+      kicker: 'Interactive · what holds the cores up',
+      title: 'Magnetic fields and ambipolar diffusion',
+      widget: { type: 'magcollapse' },
+      scene: [goto('l-m42', 'landmark'), rate(1)],
+      body: [
+        p('A free-fall time of 10⁵ yr poses a problem: if dense cores collapsed as soon as they formed they would be rare, yet the Galaxy is full of them. Something besides thermal pressure holds them up, and Zeeman measurements point to the answer: molecular clouds carry <b>magnetic fields</b> of 1–100 nT. In a highly conducting gas the field is <em>frozen in</em>, so compressing the cloud compresses the field and raises the magnetic pressure B²/2μ₀ against the squeeze. Adding the magnetic energy to the virial balance gives a <b>magnetic critical mass</b>: a cloud below it is <b>subcritical</b> and stable as long as its field survives; above it, <b>supercritical</b>, and gravity wins.'),
+        eq('M_B = c_B\\,\\frac{\\pi R^2 B}{G^{1/2}} \\simeq 70\\,M_\\odot\\left(\\frac{B}{1\\ {\\rm nT}}\\right)\\left(\\frac{R}{1\\ {\\rm pc}}\\right)^2, \\qquad t_{\\rm AD} \\simeq \\frac{2R}{v_{\\rm drift}} \\simeq 10\\ {\\rm Gyr}\\left(\\frac{n_{\\rm H_2}}{10^{10}\\ {\\rm m^{-3}}}\\right)\\left(\\frac{B}{1\\ {\\rm nT}}\\right)^{-2}\\left(\\frac{R}{1\\ {\\rm pc}}\\right)^2', 'The magnetic critical mass for a uniform spherical cloud (c_B = 380 N^{1/2} m⁻¹ T⁻¹) — the mass is set by the magnetic flux πR²B threading the cloud — and the timescale for ambipolar diffusion, the slow drift of the neutral gas through the field-tied ions.'),
+        example('Our dense core, R = 0.1 pc and 10 M☉: with B = 100 nT the critical mass is 70 M☉ and the core is subcritical, held up by its field; with B = 1 nT, M_B = 0.7 M☉ and it collapses. How does a core get from one state to the other? Only charged particles feel the field; the neutrals that make up almost all the gas feel it only through collisions with the ions, and drift slowly inward through them under gravity — <b>ambipolar diffusion</b>. For B = 1 nT and R = 0.1 pc the drift time is about 100 Myr, several hundred free-fall times: the field can regulate a core for a long while, letting mass seep into the centre until it becomes supercritical, and then the collapse of the previous step begins. Once collapse is under way, reconnection — as in solar flares — can rid the gas of more of its flux.', 'Example 12.4 — subcritical or supercritical?'),
+        p('The widget compares the cloud mass with M_B and the ambipolar-diffusion time with the free-fall time for a chosen field, radius and density. Cores can also become supercritical by merging, but the slow leak of neutrals through the field is thought to dominate the pre-collapse life of most of them — which is why the Galaxy has so many dense cores and so few stars forming at any moment.'),
+      ],
+    },
+    {
+      id: 'protostar-collapse',
+      kicker: 'Interactive · the birth of a protostar',
+      title: 'Numerical simulations: a protostar is born',
+      widget: { type: 'protostartrack' },
+      scene: [goto('l-m42', 'landmark'), rate(1)],
+      body: [
+        p('The full problem — magnetohydrodynamics with radiative transfer, dust and chemistry — can only be solved numerically, and the first such calculation, by Richard Larson in 1969, already found the sequence that modern codes refine. Follow a supercritical cloud of 1 M☉ and solar composition. The early collapse is isothermal and, because the centre is slightly denser, inside-out. When the central density reaches ~10⁻¹⁰ kg m⁻³ the dust makes the core opaque, the collapse there turns adiabatic, the pressure rises and a nearly hydrostatic <b>first core</b> of about 5 AU forms: the <b>protostar</b>. It now has a photosphere — a <em>dust</em> photosphere where τ = 2/3 — and a luminosity and effective temperature, so it can be placed on the H–R diagram and followed along an <b>evolutionary track</b>.'),
+        p('Material still falls onto the core supersonically and stops in an <b>accretion shock</b>, where its kinetic energy becomes heat; this, not nuclear burning, powers the protostar, and L and T_eff climb together. At ~1000 K the dust vaporises, the opacity collapses, the photosphere shrinks toward the core and T_eff jumps. At ~2000 K molecular hydrogen dissociates, soaking up energy that would have supported the core: it collapses a second time, to about 1.3 R☉, and re-establishes equilibrium behind a second accretion shock. The track flattens in the quasi-steady <b>main accretion phase</b>; deep inside, deuterium ignites — favoured over the pp chain by its large cross-section at low temperature — and supplies up to 60 per cent of a 1 M☉ protostar\'s luminosity. When the deuterium is gone and the envelope is used up the luminosity drops, the track bends sharply downward, and the object enters the pre-main-sequence phase of the next section.'),
+        eq('L = 4\\pi R_{\\tau=2/3}^2\\,\\sigma T_e^4, \\qquad {\\rm H_2} \\to 2{\\rm H}\\ \\text{at}\\ T \\approx 2000\\ {\\rm K}\\ (4.5\\ {\\rm eV\\ absorbed}), \\qquad {}^2{\\rm H} + {}^1{\\rm H} \\to {}^3{\\rm He} + \\gamma\\ \\text{at}\\ T \\approx 10^6\\ {\\rm K}', 'The protostar\'s photosphere is wherever the optical depth reaches 2/3 — first in dust at a few AU, later at the hydrostatic core — and the two thresholds that mark its collapse: the dissociation of H₂ that triggers the second collapse, and the deuterium burning that briefly powers it.'),
+        p('The widget draws the protostellar tracks of 0.05–10 M☉ clouds through this phase, with time marks and a stage slider for the solar-mass case, and beside them the spectral signature observers look for. A protostar is buried in its cloud and seen only in the infrared and at millimetre wavelengths — B335 in Aquila, L1527 in Taurus and many sources in Orion are the best candidates — and its infall shows in optically thick molecular lines: a central absorption dip from the cool outer envelope, a <em>blue</em> wing from gas on the far side falling toward us, a red wing from the near side falling away. The asymmetry, blue brighter than red, is the fingerprint of collapse.'),
+      ],
+    },
+    {
+      id: 'protostar-summary',
+      kicker: 'Summary',
+      title: 'Section 12.2 in brief',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Jeans criterion from 2K < |U|: M_J ∝ T^{3/2} ρ^{−1/2}; diffuse H I clouds (1500 M☉) stable, dense cores (8 M☉; 2 M☉ Bonnor–Ebert) unstable.',
+          'Free fall: ξ + ½ sin 2ξ = χt, t_ff = (3π/32Gρ₀)^{1/2} = 3.8 × 10⁵ yr for a dense core; homologous if uniform, inside-out if condensed.',
+          'Fragmentation while isothermal (M_J falls as ρ^{−1/2}); stops when adiabatic (M_J ∝ ρ^{1/2}); M_J^min ≈ 0.03 T^{1/4}/(e^{1/2}μ^{9/4}) M☉ ≈ 0.2–0.5 M☉, refined to ~0.01 M☉.',
+          'Magnetic support: M_B ≈ 70 M☉ (B/nT)(R/pc)²; sub/supercritical; ambipolar diffusion t_AD ~ 100 Myr ≫ t_ff regulates cores.',
+          'Collapse of 1 M☉: isothermal → opaque at 10⁻¹⁰ kg m⁻³ → first core 5 AU → dust vaporises (1000 K) → H₂ dissociates (2000 K), second collapse to 1.3 R☉ → accretion shock, deuterium burning → PMS; seen as IR sources with blue-asymmetric infall profiles.',
+        ),
+        key('Gravity needs cold, dense, magnetically weakened gas to win; when it does, it wins in a free-fall time, breaks the cloud into solar-mass pieces, and heats each piece until it becomes a hydrostatic, accreting, deuterium-burning protostar hidden in dust.'),
+      ],
+    },
+  ],
+};
+
+const S12_3: Section = {
+  id: 'pre-main-sequence',
+  number: '12.3',
+  title: 'Pre-Main-Sequence Evolution',
+  summary: 'From protostar to the zero-age main sequence: the Hayashi track and its forbidden region, the classical contraction tracks and their timescales, brown dwarfs and the initial mass function, the H II regions that massive newborn stars blow in their clouds, the T Tauri and FU Orionis stars with their P Cygni winds, and the jets, Herbig–Haro objects and disks that angular momentum demands.',
+  minutes: 30,
+  steps: [
+    {
+      id: 'hayashi-track',
+      kicker: 'Interactive · the slow descent',
+      title: 'The Hayashi track and pre-main-sequence contraction',
+      widget: { type: 'pmstracks' },
+      scene: [goto('l-pleiades', 'landmark'), rate(1)],
+      body: [
+        p('With a quasi-static protostar in place, evolution is no longer paced by free fall but by how fast the star can radiate away gravitational energy — the Kelvin–Helmholtz timescale, 10⁷ years for the Sun rather than 10⁵. The envelope\'s opacity is dominated by H⁻, whose extra electrons come from metals with low ionisation potentials, and this large opacity makes the envelope — often the whole star — convective. In 1961 Chushiro Hayashi showed that a fully convective star in hydrostatic equilibrium must lie on a nearly vertical line in the H–R diagram, the <b>Hayashi track</b>, at an effective temperature of a few thousand kelvin that depends weakly on mass. To its right no hydrostatic star can exist: there is no way to carry the luminosity out at such low T_eff. So the protostar descends the track, shrinking at nearly constant temperature with falling luminosity.'),
+        table(
+          ['Mass (M☉)', '60', '25', '15', '9', '5', '3', '2', '1.5', '1', '0.8'],
+          [['Time to ZAMS (Myr)', '0.028', '0.071', '0.117', '0.288', '1.15', '7.24', '23.4', '35.4', '38.9', '68.4']],
+          'Pre-main-sequence contraction times from the classical tracks of Bernasconi & Maeder (1996), X = 0.68, Y = 0.30, Z = 0.02 — the models that Icko Iben first computed in 1965, now with modern opacities and reaction rates.',
+        ),
+        p('Follow 1 M☉. The star is fully convective for about its first million years, burning its deuterium (the squares on the tracks). As the centre heats, ionisation lowers the opacity there and a <b>radiative core</b> grows outward; energy escapes more easily, and at the bottom of the Hayashi descent the luminosity turns up again while T_eff keeps rising — the nearly horizontal <b>Henyey track</b>. Nuclear reactions begin in earnest: the first steps of PP I and the CNO conversion of ¹²C into ¹⁴N, whose steep temperature dependence drives a convective core. At the local luminosity maximum the burning is so vigorous that the core expands, the gravitational term in ε turns negative, and L and T_eff fall slightly; when the ¹²C is exhausted the rest of the PP chain takes over, the gravitational term fades, and the star settles on the <b>zero-age main sequence</b> (ZAMS) after ~40 Myr — close to the crude Kelvin–Helmholtz estimate.'),
+        p('Below 0.5 M☉ the centre never burns ¹²C efficiently and the upward branch is missing; the star stays fully convective all the way to the main sequence. Massive stars leave the Hayashi track at high luminosity and cross almost horizontally, igniting the full CNO cycle at once, with convective cores that persist on the main sequence. The widget shows the forbidden region, the tracks from 0.8 to 60 M☉ with their times, and a mass slider that runs a star down its Hayashi track and across to the ZAMS while its interior switches from convective to radiative. The classical pictures have caveats: they begin from unrealistically large radii, ignore rotation, fields and accretion, and ignore feedback; models from realistic initial sizes give a <b>birth line</b> above which no visible protostar should be found, stars above ~10 M☉ may form through disks or mergers rather than spherical infall, and since massive stars reach the ZAMS in 10⁴–10⁵ yr while their low-mass siblings need 10⁷–10⁸, their radiation would disperse the cloud first — a puzzle that is still being worked out.'),
+      ],
+    },
+    {
+      id: 'brown-dwarfs-imf',
+      kicker: 'Interactive · how many of each',
+      title: 'Brown dwarfs and the initial mass function',
+      widget: { type: 'imf' },
+      scene: [goto('l-pleiades', 'landmark'), rate(1)],
+      body: [
+        p('Below about 0.072 M☉ a contracting object never gets hot enough for hydrogen burning to halt its contraction; degeneracy pressure does, and it cools forever as a <b>brown dwarf</b>, of spectral type L, T or Y. Some nuclear burning still happens: above ~0.06 M☉ lithium is destroyed, and above ~0.013 M☉ — thirteen Jupiter masses, and about where fragmentation stops — deuterium burns for a few million years. The first confirmed brown dwarf, Gliese 229B, was announced in 1995; infrared surveys (2MASS, SDSS, WISE) have since found thousands, and they are probably about as numerous as stars.'),
+        eq('\\xi(\\log m)\\,d\\log m \\propto m^{-1.35}\\,d\\log m \\quad (m > 0.5\\,M_\\odot,\\ \\text{Salpeter 1955}); \\qquad \\xi \\propto m^{-0.3}\\ (0.08 < m < 0.5),\\quad m^{+0.7}\\ (m < 0.08)\\ \\ \\text{(Kroupa)}', 'The initial mass function: the number of stars formed per logarithmic mass interval. Salpeter\'s power law fits above half a solar mass; below it the function flattens and turns over near 0.2–0.3 M☉ (Kroupa\'s broken power law, Chabrier\'s log-normal). Below 0.1 M☉ it is still uncertain and may be rather flat.'),
+        p('Fragmentation produces many more small pieces than large, and the cluster that emerges from a cloud has a characteristic distribution of masses — the <b>initial mass function</b> (IMF). Its shape, combined with the enormously different lifetimes, is why massive stars are so rare and M dwarfs so common: in a cluster of 1000 M☉ the IMF gives about two thousand stars, of which one or two are above 20 M☉ while half have less than 0.5 M☉ — yet the few massive ones emit nearly all the light. The widget draws the Salpeter, Kroupa and Chabrier forms with the deuterium- and hydrogen-burning limits marked and counts the stars and the mass in each range for a cluster of chosen size. Whether the IMF is universal or depends on the environment — metallicity, pressure, the first stars — is a central open question.'),
+      ],
+    },
+    {
+      id: 'hii-regions',
+      kicker: 'Interactive · the cloud lights up',
+      title: 'H II regions and the effects of massive stars',
+      widget: { type: 'stromgren' },
+      scene: [goto('l-m42', 'landmark'), rate(1)],
+      body: [
+        p('A massive star reaches the ZAMS as an O or B star still wrapped in its cloud, radiating mostly in the ultraviolet. Its photons beyond the Lyman limit, λ < 91.2 nm (E > 13.6 eV), ionise the hydrogen around it, and the recombining electrons cascade down through the levels, emitting Balmer photons — above all Hα at 656 nm — so that the <b>H II region</b> fluoresces red. In equilibrium ionisations balance recombinations: if the star emits N ionising photons per second and αn_e n_H recombinations occur per unit volume (α = 3.1 × 10⁻¹⁹ m³ s⁻¹ at the typical 8000 K), the ionised sphere has the radius Bengt Strömgren derived in 1939. Orion\'s M42, behind this panel, 450 pc away and lit by the Trapezium stars in front of the giant molecular cloud OMC-1, is the classic case.'),
+        eq('N = \\frac{4\\pi}{3}r_S^3\\,\\alpha\\,n_e n_H \\;\\Longrightarrow\\; r_S \\simeq \\left(\\frac{3N}{4\\pi\\alpha}\\right)^{1/3} n_H^{-2/3}', 'The Strömgren radius for a pure hydrogen nebula with n_e = n_H. An O6 star (T_e ≈ 45 000 K, L ≈ 1.3 × 10⁵ L☉) has λ_max = 64 nm, so nearly every photon ionises; at ~19 eV each, N ≈ L/E_γ ≈ 1.6 × 10⁴⁹ s⁻¹, and for n_H ∼ 10⁸ m⁻³, r_S ≈ 3.5 pc. Real H II regions span 0.1 to 100 pc.'),
+        p('The widget chooses the spectral type and the gas density, computes N and r_S, and animates the ionisation front sweeping out to its equilibrium radius while the nebula glows. The newborn massive stars then destroy their cradle: radiation pressure and winds drive the gas away, ionisation fronts photoevaporate the remaining dense gas into the pillars of the Eagle Nebula and the shredded clouds of Carina, and star formation stops. If the cloud was only marginally bound, losing most of its mass unbinds the newborn cluster, which drifts apart as an <b>OB association</b> — like the Trapezium, under 10 Myr old, with more than 2000 stars per cubic parsec and ¹³CO velocities that show the gas being dispersed.'),
+      ],
+    },
+    {
+      id: 't-tauri-stars',
+      kicker: 'Interactive · winds and outbursts',
+      title: 'T Tauri, FU Orionis and Herbig Ae/Be stars',
+      widget: { type: 'pcygni' },
+      scene: [goto('l-m42', 'landmark'), rate(1)],
+      body: [
+        p('<b>T Tauri stars</b> are low-mass pre-main-sequence stars, 0.5–2 M☉, caught between the dust-shrouded infrared phase and the main sequence; they vary irregularly by magnitudes on timescales of days, and their spectra are odd: strong emission in the Balmer lines, in Ca II H and K and in Fe lines, strong lithium absorption (lithium is destroyed once a star is fully mixed and hot enough, so it is a youth indicator), and <em>forbidden</em> lines of [O I] and [S II] that only very thin gas can emit. Most telling is the shape of Hα: a broad emission peak with an absorption trough cut into its blue edge — a <b>P Cygni profile</b>.'),
+        eq('\\dot M_{\\rm T\\,Tau} \\approx 10^{-8}\\ M_\\odot\\,{\\rm yr^{-1}}, \\qquad v_{\\rm abs} \\approx -80\\ {\\rm km\\,s^{-1}}, \\qquad \\dot M_{\\rm FU\\,Ori} \\approx 10^{-4}\\ M_\\odot\\,{\\rm yr^{-1}}\\ (\\Delta m \\approx -4\\ \\text{for decades})', 'Typical T Tauri wind: a million times the present Sun\'s 10⁻¹⁴ M☉ yr⁻¹, with the blueshifted absorption at about 80 km s⁻¹. In an FU Orionis outburst the accretion rate jumps ten thousand-fold, the inner disk outshines the star by a factor of 100–1000, winds exceed 300 km s⁻¹, and 0.01 M☉ is dumped onto the star in a century.'),
+        p('The profile reveals an expanding shell. Gas moving across the line of sight, on either side of the star, emits the broad line; gas directly in front, moving toward us, absorbs the star\'s light and is blueshifted — a wind. The widget builds the profile from the shell geometry for a chosen speed and optical depth, and can reverse the flow: some T Tauri stars switch within days to an <em>inverse</em> P Cygni profile, with redshifted absorption, as material falls <em>in</em> — accretion at rates comparable to the mass loss. The environment is violently unsteady, and in the extreme case of the <b>FU Orionis stars</b> an instability in the circumstellar disk dumps a hundredth of a solar mass onto the star in decades; a T Tauri star may suffer several such outbursts. The <b>Herbig Ae/Be stars</b> are the same phenomenon at 2–10 M☉ — A and B spectral types with emission lines and leftover dust — rarer because the IMF makes fewer of them and they reach the main sequence sooner.'),
+      ],
+    },
+    {
+      id: 'jets-and-disks',
+      kicker: 'Interactive · angular momentum\'s price',
+      title: 'Jets, Herbig–Haro objects and circumstellar disks',
+      widget: { type: 'protodisk' },
+      scene: [goto('β Pic', 'star'), rate(1)],
+      body: [
+        p('Young stars lose mass not only in shells but in <b>jets</b>: narrow beams in opposite directions at hundreds of kilometres per second that ram into the surrounding gas, shock it and light up emission-line knots — the <b>Herbig–Haro objects</b> found near the Orion Nebula by George Herbig and Guillermo Haro in the early 1950s. HH 1 and HH 2 fly apart from a star hidden in dust between them; HH 47 shows the jet itself; and HH 30 shows the source: a dark circumstellar disk seen edge-on, its surfaces lit by the hidden star, with a jet emerging perpendicular to it. Disks are the rule: the Hubble images of Orion\'s Trapezium found 56 of 110 stars brighter than V = 21 surrounded by <b>proplyds</b> — protoplanetary disks with masses well above 2 × 10²⁵ kg, several Earth masses — and older stars like Vega and β Pictoris, behind this panel, keep debris disks in which comets fall onto the star two or three times a week and planets have formed.'),
+        eq('r_f = \\frac{\\omega_0^2 r_0^4}{G M_r}, \\qquad L = I\\omega = \\text{const} \\;\\Rightarrow\\; \\omega \\propto r^{-2}', 'Add the centripetal term to the collapse equation and conserve angular momentum: collapse in the equatorial plane halts where the rotation speed reaches the orbital speed, at r_f, while collapse along the axis, with no centrifugal support, continues — the cloud flattens into a disk. A 1 M☉ cloud of 0.1 pc rotating once in a few million years (ω₀ ∼ 10⁻¹⁴ s⁻¹) stops at ~100 AU.'),
+        p('Disks are the price of angular momentum. A protostar\'s moment of inertia shrinks by a factor of 10¹⁰ as it collapses, so if it kept its spin it would reach breakup long before it became a star; instead the gas settles into a disk and accretes through it, and the star somehow sheds most of what remains — probably by magnetic braking, with field lines anchored in the convective star and in the disk flinging the ionised wind outward and carrying the angular momentum away, the same process that spins down main-sequence stars. The jets, launched and collimated by the rotating field of the inner disk, are part of that shedding. The widget collapses a rotating cloud, faster along the axis than across it, into a disk whose radius follows from the initial spin, with the jets emerging along the axis; the solar-like coronal activity seen on T Tauri stars is evidence that the magnetic machinery is already running.'),
+        history('Astrophysical jets are everywhere: from protostars at hundreds of km s⁻¹ to the relativistic beams of quasars, over twenty orders of magnitude in power, and in every case a rotating object, a disk and a magnetic field are involved. Herbig–Haro flows were the first jets whose sources could be studied in detail, and remain the laboratory for the launching mechanism.', 'Jets everywhere'),
+      ],
+    },
+    {
+      id: 'chapter-close',
+      kicker: 'Chapter close',
+      title: 'The interstellar medium and star formation in one page',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Dust: extinction A_λ = 1.086 τ_λ, reddening with R_V ≈ 3.1; Mie scattering σ ∝ a³/λ; graphite/PAH bump at 217.5 nm, silicates at 9.7 and 18 μm; aligned grains polarise starlight.',
+          'Gas: 70 per cent hydrogen; H I via 21 cm (τ_H = 5.2 × 10⁻²³ N_H/TΔv, N_H in m⁻²), H₂ via CO; clouds from diffuse H I to GMCs, dense cores (10 M☉, 0.1 pc, 10 K, 10¹⁰ m⁻³), hot cores and Bok globules; cosmic-ray heating and infrared cooling.',
+          'Collapse: Jeans mass M_J ∝ T^{3/2}ρ^{−1/2} (8 M☉ for a dense core), Bonnor–Ebert 2 M☉; free fall in t_ff = (3π/32Gρ₀)^{1/2} ≈ 4 × 10⁵ yr; fragmentation to ~0.5 M☉ until adiabatic; magnetic critical mass 70 M☉ (B/nT)(R/pc)² and ambipolar diffusion over 10⁸ yr.',
+          'Protostar: first core at 5 AU, dust vaporisation, H₂ dissociation and second collapse, accretion shock, deuterium burning; infrared source with blue-asymmetric infall lines.',
+          'Pre-main sequence: Hayashi track (vertical, fully convective, forbidden region to the right), radiative core and Henyey track, ZAMS after 40 Myr for 1 M☉ (28 000 yr for 60 M☉); brown dwarfs 0.013–0.072 M☉; IMF ∝ m^{−1.35} above 0.5 M☉.',
+          'Feedback and disks: Strömgren spheres r_S ∝ N^{1/3} n^{−2/3} (3.5 pc for an O6 star), clouds dispersed, OB associations unbound; T Tauri winds (P Cygni, 10⁻⁸ M☉ yr⁻¹), FU Ori outbursts; jets, Herbig–Haro objects, proplyds and the disk radius r_f = ω₀²r₀⁴/GM set by angular momentum.',
+        ),
+        key('Star formation is gravity against everything else — thermal pressure, magnetic fields, rotation and the radiation of the stars it has already made — and the outcome of that contest, written into the initial mass function, decides what kind of galaxy the gas becomes.'),
+        { kind: 'callout', tone: 'think', title: 'Critical thinking: what the simple models leave out', html: 'Every estimate in this chapter — the Jeans mass, the free-fall time, the fragment mass, the Strömgren radius — comes from a spherical, uniform, static, non-rotating, unmagnetised cloud, and each is nonetheless within a factor of a few of what simulations and observations give. Ask of each: which neglected ingredient would change it most, and in which direction? Turbulence supports clouds on large scales and seeds fragmentation on small ones; magnetic fields delay collapse by 10⁸ yr; rotation makes disks; feedback from the first massive stars may end star formation before the low-mass stars finish forming. Then ask the observational question: a dense core\'s free-fall time is 10⁵ yr and the Galaxy makes about one solar mass of stars per year — how many cores should be collapsing at this moment, and how many are seen? The gap between that number and the ~1 per cent efficiency of star formation is one of the live problems of the field.' },
+        { kind: 'callout', tone: 'history', title: 'Suggested reading', html: 'Carroll & Ostlie, <em>An Introduction to Modern Astrophysics</em>, Chapter 12, which this chapter follows; S. W. Stahler & F. Palla, <em>The Formation of Stars</em> (2004), the standard text; B. T. Draine, <em>Physics of the Interstellar and Intergalactic Medium</em> (2011) and "Interstellar dust grains", <em>ARA&A</em> 41, 241 (2003); J. E. Dyson & D. A. Williams, <em>The Physics of the Interstellar Medium</em> (2nd ed., 1997); F. H. Shu, F. C. Adams & S. Lizano, "Star formation in molecular clouds", <em>ARA&A</em> 25, 23 (1987); R. B. Larson, "Numerical calculations of the dynamics of a collapsing proto-star", <em>MNRAS</em> 145, 271 (1969) and "The physics of star formation", <em>Rep. Prog. Phys.</em> 66, 1651 (2003); I. Iben, "Stellar evolution I. The approach to the main sequence", <em>ApJ</em> 141, 993 (1965); C. F. McKee & E. C. Ostriker, "Theory of star formation", <em>ARA&A</em> 45, 565 (2007); B. Reipurth & J. Bally, "Herbig–Haro flows", <em>ARA&A</em> 39, 403 (2001); D. E. Osterbrock & G. J. Ferland, <em>Astrophysics of Gaseous Nebulae and Active Galactic Nuclei</em> (2006).' },
+        { kind: 'callout', tone: 'think', title: 'Problems to try', html: '(1) In part of the North America Nebula A_V = 1.1 mag; the nebula is 20 pc thick and 700 pc away. A B0 V star with M_V = −4.0 is seen in that direction. Find its apparent magnitude if it lies just in front of, and just behind, the nebula; and how far away the second case would appear to be if extinction were ignored, with the percentage error. (2) Estimate the temperature of a dust grain 100 AU from a newly formed F0 V star, treating the grain as a black body in equilibrium. (3) Use the Boltzmann factor to estimate the temperature needed to populate the upper 21-cm level; are H I clouds warm enough? (4) An H I cloud has τ_H = 0.5 at line centre, T = 100 K, Δv = 10 km s⁻¹ and n = 10⁷ m⁻³; find its thickness in pc. (5) Estimate the collision rate per cubic metre per second between CO and H₂ in a GMC at 15 K with n_H₂ = 10⁸ m⁻³, taking the molecules as 0.1 nm spheres. (6) Why probe a GMC with ¹³CO or C¹⁸O rather than ¹²CO? (7) With I = μr² for CO (r = 0.113 nm) and E_rot = ℓ(ℓ+1)ħ²/2I, find the wavelength of the ℓ = 1 → 0 transition of ¹²CO and of ¹³CO. (8) Why is collisional excitation of hydrogen not an effective coolant, while that of oxygen is? Why are hot cores hotter than dense cores? (9) Calculate the Jeans length for the dense core of Example 12.2. (10) Show that M_J can be written c_J v_T⁴/(P₀^{1/2}G^{3/2}) with c_J ≈ 5.46. (11) Compute |dP/dr| ∼ P_c/R_J for the dense core at the start of collapse and compare with GM_rρ/r²; show that during isothermal collapse the pressure term becomes ever less important. (12) Assuming constant free-fall acceleration, derive a free-fall time and show it differs from (3π/32Gρ₀)^{1/2} by a factor of order unity. (13) Find the sound-crossing time R_J/v_s of the dense core and compare with t_ff; explain. (14) Derive M_J^min = 0.03 T^{1/4}/(e^{1/2}μ^{9/4}) M☉. (15) Compare the gravitational energy density of the dense core with the magnetic energy density for B = 1 nT. (16) Adding a centripetal term to the collapse equation and conserving angular momentum, show that collapse in the plane stops at r_f = ω₀²r₀⁴/GM_r; for a 1 M☉ cloud of 0.5 pc halted at 100 AU, find ω₀, the initial edge speed, the rotation speed at 100 AU with I_sphere → I_disk, and compare the rotation period with the Keplerian one. (17) For Ṁ = 10⁻⁸ M☉ yr⁻¹ and v = 80 km s⁻¹, find the density of a T Tauri wind at 100 AU and compare with the GMC density.' },
+      ],
+    },
+  ],
+};
+
 export const COURSE: Course = {
   id: 'astrophysics',
   title: 'Introduction to Astrophysics',
@@ -5433,6 +5762,12 @@ export const COURSE: Course = {
       title: 'The Sun',
       summary: 'The one star we know from the inside: its history and interior, the sound waves and neutrinos that test the model, the photosphere, chromosphere and million-degree corona, the solar wind and the eruptions that reach the Earth, sunspots and the eleven-year cycle, the dynamo that drives it, and the same magnetism on other stars.',
       sections: [S11_1, S11_2, S11_3],
+    },
+    {
+      id: 'ch12', number: 12,
+      title: 'The Interstellar Medium and Star Formation',
+      summary: 'The gas and dust between the stars and how stars are made from it: extinction and the nature of dust, the 21-cm line and molecular clouds, the Jeans criterion, free-fall collapse, fragmentation and magnetic support, the birth of a protostar, the Hayashi track to the zero-age main sequence, brown dwarfs and the initial mass function, H II regions, T Tauri stars, jets and the disks from which planets form.',
+      sections: [S12_1, S12_2, S12_3],
     },
   ],
 };
