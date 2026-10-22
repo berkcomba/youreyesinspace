@@ -619,5 +619,21 @@
   "Prosedürel nesneler (üretilmiş yıldızlar, galaksiler, kozmik ağ)": "Procedural objects (generated stars, galaxies, cosmic web)",
   "Etiketlerde uzaklık": "Distances in labels",
   "Prosedürel yıldız isimleri (YE …)": "Procedural star names (YE …)",
-  "Çözümlenmemiş yıldız alanı · yakındaki tekil yıldızlar tıklanabilir (imleç değişir)": "Unresolved star field · nearby individual stars are clickable (the cursor changes)"
+  "Çözümlenmemiş yıldız alanı · yakındaki tekil yıldızlar tıklanabilir (imleç değişir)": "Unresolved star field · nearby individual stars are clickable (the cursor changes)",
+  "Hakkında": "About",
+  "Hakkında, yazar ve geri bildirim": "About, author and feedback",
+  "Yazar": "Author",
+  "Yazar:": "Author:",
+  "Geri bildirim": "Feedback",
+  "Geri bildirim:": "Feedback:",
+  "İş birliği": "Collaboration",
+  "E-posta gönder": "Send an e-mail",
+  "Kontroller ve kaynaklar": "Controls and sources",
+  "Evrene gerçek verilerle bakan açık kaynak uzay simülatörü ve astrofizik dersliği": "An open-source space simulator and astrophysics classroom that looks at the universe with real data",
+  "Your Eyes In Space, evrene gerçek verilerle bakmak için yapılmış açık kaynak bir uzay simülatörü ve astrofizik dersliğidir. 109 000 gerçek yıldız, gerçek galaksiler, kara delikler ve pulsarlar; görev planlayıcı, sesli turlar ve ders kitabı izleğinde interaktif dersler tek bir tarayıcı sekmesinde buluşur. Amaç basit: merak eden herkesin, hangi dili konuşursa konuşsun, gökyüzünü kendi gözleriyle keşfedebilmesi.": "Your Eyes In Space is an open-source space simulator and astrophysics classroom built to look at the universe with real data. 109,000 real stars, real galaxies, black holes and pulsars; a mission planner, narrated tours and interactive lessons that follow a textbook, all in a single browser tab. The aim is simple: anyone who is curious, whatever language they speak, should be able to explore the sky with their own eyes.",
+  "109 000 gerçek yıldız, gerçek galaksiler, kara delikler ve pulsarlar; görev planlayıcı, sesli turlar ve ders kitabı izleğinde interaktif dersler tek bir tarayıcı sekmesinde. Amaç basit: merak eden herkesin, hangi dili konuşursa konuşsun, gökyüzünü kendi gözleriyle keşfedebilmesi.": "109,000 real stars, real galaxies, black holes and pulsars; a mission planner, narrated tours and interactive lessons that follow a textbook, all in a single browser tab. The aim is simple: anyone who is curious, whatever language they speak, should be able to explore the sky with their own eyes.",
+  "Projeyi tek başıma tasarlıyor ve geliştiriyorum; fizik, veri ve arayüz dahil her katmanı anlayarak kurmaya çalışıyorum.": "I design and develop the project on my own, and I try to build every layer — physics, data and interface — by understanding it.",
+  "Bir hata gördüyseniz, bir bölüm anlaşılmaz geldiyse ya da aklınızda bir özellik varsa yazın; her mesajı okuyorum.": "If you spotted a bug, found a section unclear or have a feature in mind, write to me; I read every message.",
+  "İş birliğine açığım: eğitim kurumları, gökevleri, bilim iletişimcileri, araştırmacılar ve geliştiriciler için ortak projelere, içerik ortaklıklarına, çevirilere ve katkılara kapım açık. Birlikte daha iyisini yapabileceğimizi düşünüyorsanız bir e-posta yeterli.": "I am open to collaboration: joint projects, content partnerships, translations and contributions with schools and universities, planetariums, science communicators, researchers and developers are all welcome. If you think we could build something better together, an e-mail is enough.",
+  "Kod MIT lisansıyla açık kaynaktır; isim ve logo BigBrains markasıdır. © 2026": "The code is open source under the MIT licence; the name and logo are BigBrains trademarks. © 2026"
 }

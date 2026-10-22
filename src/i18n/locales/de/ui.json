@@ -619,5 +619,21 @@
   "Prosedürel nesneler (üretilmiş yıldızlar, galaksiler, kozmik ağ)": "Prozedurale Objekte (generierte Sterne, Galaxien, kosmisches Netz)",
   "Etiketlerde uzaklık": "Entfernungen in Beschriftungen",
   "Prosedürel yıldız isimleri (YE …)": "Namen prozeduraler Sterne (YE …)",
-  "Çözümlenmemiş yıldız alanı · yakındaki tekil yıldızlar tıklanabilir (imleç değişir)": "Unaufgelöstes Sternfeld · nahe Einzelsterne sind anklickbar (der Cursor ändert sich)"
+  "Çözümlenmemiş yıldız alanı · yakındaki tekil yıldızlar tıklanabilir (imleç değişir)": "Unaufgelöstes Sternfeld · nahe Einzelsterne sind anklickbar (der Cursor ändert sich)",
+  "Hakkında": "Über",
+  "Hakkında, yazar ve geri bildirim": "Über, Autor und Feedback",
+  "Yazar": "Autor",
+  "Yazar:": "Autor:",
+  "Geri bildirim": "Feedback",
+  "Geri bildirim:": "Feedback:",
+  "İş birliği": "Zusammenarbeit",
+  "E-posta gönder": "E-Mail schreiben",
+  "Kontroller ve kaynaklar": "Steuerung und Quellen",
+  "Evrene gerçek verilerle bakan açık kaynak uzay simülatörü ve astrofizik dersliği": "Ein Open-Source-Weltraumsimulator und Astrophysik-Klassenzimmer, das das Universum mit echten Daten betrachtet",
+  "Your Eyes In Space, evrene gerçek verilerle bakmak için yapılmış açık kaynak bir uzay simülatörü ve astrofizik dersliğidir. 109 000 gerçek yıldız, gerçek galaksiler, kara delikler ve pulsarlar; görev planlayıcı, sesli turlar ve ders kitabı izleğinde interaktif dersler tek bir tarayıcı sekmesinde buluşur. Amaç basit: merak eden herkesin, hangi dili konuşursa konuşsun, gökyüzünü kendi gözleriyle keşfedebilmesi.": "Your Eyes In Space ist ein Open-Source-Weltraumsimulator und Astrophysik-Klassenzimmer, gebaut, um das Universum mit echten Daten zu betrachten. 109 000 echte Sterne, echte Galaxien, Schwarze Löcher und Pulsare; ein Missionsplaner, gesprochene Touren und interaktive Lektionen entlang eines Lehrbuchs – alles in einem einzigen Browser-Tab. Das Ziel ist einfach: Jeder Neugierige soll, egal welche Sprache er spricht, den Himmel mit eigenen Augen erkunden können.",
+  "109 000 gerçek yıldız, gerçek galaksiler, kara delikler ve pulsarlar; görev planlayıcı, sesli turlar ve ders kitabı izleğinde interaktif dersler tek bir tarayıcı sekmesinde. Amaç basit: merak eden herkesin, hangi dili konuşursa konuşsun, gökyüzünü kendi gözleriyle keşfedebilmesi.": "109 000 echte Sterne, echte Galaxien, Schwarze Löcher und Pulsare; ein Missionsplaner, gesprochene Touren und interaktive Lektionen entlang eines Lehrbuchs – alles in einem einzigen Browser-Tab. Das Ziel ist einfach: Jeder Neugierige soll, egal welche Sprache er spricht, den Himmel mit eigenen Augen erkunden können.",
+  "Projeyi tek başıma tasarlıyor ve geliştiriyorum; fizik, veri ve arayüz dahil her katmanı anlayarak kurmaya çalışıyorum.": "Ich entwerfe und entwickle das Projekt allein und versuche, jede Schicht – Physik, Daten und Oberfläche – verstehend aufzubauen.",
+  "Bir hata gördüyseniz, bir bölüm anlaşılmaz geldiyse ya da aklınızda bir özellik varsa yazın; her mesajı okuyorum.": "Wenn Sie einen Fehler gesehen haben, ein Abschnitt unklar war oder Sie eine Funktion im Kopf haben, schreiben Sie mir; ich lese jede Nachricht.",
+  "İş birliğine açığım: eğitim kurumları, gökevleri, bilim iletişimcileri, araştırmacılar ve geliştiriciler için ortak projelere, içerik ortaklıklarına, çevirilere ve katkılara kapım açık. Birlikte daha iyisini yapabileceğimizi düşünüyorsanız bir e-posta yeterli.": "Ich bin offen für Zusammenarbeit: gemeinsame Projekte, Inhaltspartnerschaften, Übersetzungen und Beiträge mit Bildungseinrichtungen, Planetarien, Wissenschaftskommunikatoren, Forschenden und Entwicklern sind willkommen. Wenn Sie glauben, dass wir gemeinsam etwas Besseres bauen können, genügt eine E-Mail.",
+  "Kod MIT lisansıyla açık kaynaktır; isim ve logo BigBrains markasıdır. © 2026": "Der Code ist unter der MIT-Lizenz quelloffen; Name und Logo sind Marken von BigBrains. © 2026"
 }

@@ -1006,6 +1006,7 @@ class App implements UIHost {
         else if (this.camera.autopilot) this.camera.autopilot = null;
         else { this.select(null); this.selectStar(null); this.selectGalaxy(null); this.selectLandmark(null); }
         this.ui.toggleHelp(false);
+        this.ui.toggleAbout(false);
         break;
       case 'KeyJ': this.time.reverseWarp(); break;
       case 'KeyK': this.time.togglePause(); break;

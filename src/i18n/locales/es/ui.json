@@ -619,5 +619,21 @@
   "Prosedürel nesneler (üretilmiş yıldızlar, galaksiler, kozmik ağ)": "Objetos procedurales (estrellas, galaxias y red cósmica generadas)",
   "Etiketlerde uzaklık": "Distancias en las etiquetas",
   "Prosedürel yıldız isimleri (YE …)": "Nombres de estrellas procedurales (YE …)",
-  "Çözümlenmemiş yıldız alanı · yakındaki tekil yıldızlar tıklanabilir (imleç değişir)": "Campo estelar sin resolver · las estrellas cercanas se pueden seleccionar (el cursor cambia)"
+  "Çözümlenmemiş yıldız alanı · yakındaki tekil yıldızlar tıklanabilir (imleç değişir)": "Campo estelar sin resolver · las estrellas cercanas se pueden seleccionar (el cursor cambia)",
+  "Hakkında": "Acerca de",
+  "Hakkında, yazar ve geri bildirim": "Acerca de, autor y comentarios",
+  "Yazar": "Autor",
+  "Yazar:": "Autor:",
+  "Geri bildirim": "Comentarios",
+  "Geri bildirim:": "Comentarios:",
+  "İş birliği": "Colaboración",
+  "E-posta gönder": "Enviar un correo",
+  "Kontroller ve kaynaklar": "Controles y fuentes",
+  "Evrene gerçek verilerle bakan açık kaynak uzay simülatörü ve astrofizik dersliği": "Un simulador espacial y aula de astrofísica de código abierto que mira el universo con datos reales",
+  "Your Eyes In Space, evrene gerçek verilerle bakmak için yapılmış açık kaynak bir uzay simülatörü ve astrofizik dersliğidir. 109 000 gerçek yıldız, gerçek galaksiler, kara delikler ve pulsarlar; görev planlayıcı, sesli turlar ve ders kitabı izleğinde interaktif dersler tek bir tarayıcı sekmesinde buluşur. Amaç basit: merak eden herkesin, hangi dili konuşursa konuşsun, gökyüzünü kendi gözleriyle keşfedebilmesi.": "Your Eyes In Space es un simulador espacial y aula de astrofísica de código abierto, hecho para mirar el universo con datos reales. 109 000 estrellas reales, galaxias reales, agujeros negros y púlsares; un planificador de misiones, recorridos narrados y lecciones interactivas que siguen un libro de texto, todo en una sola pestaña del navegador. El objetivo es simple: que cualquier persona curiosa, hable el idioma que hable, pueda explorar el cielo con sus propios ojos.",
+  "109 000 gerçek yıldız, gerçek galaksiler, kara delikler ve pulsarlar; görev planlayıcı, sesli turlar ve ders kitabı izleğinde interaktif dersler tek bir tarayıcı sekmesinde. Amaç basit: merak eden herkesin, hangi dili konuşursa konuşsun, gökyüzünü kendi gözleriyle keşfedebilmesi.": "109 000 estrellas reales, galaxias reales, agujeros negros y púlsares; un planificador de misiones, recorridos narrados y lecciones interactivas que siguen un libro de texto, todo en una sola pestaña del navegador. El objetivo es simple: que cualquier persona curiosa, hable el idioma que hable, pueda explorar el cielo con sus propios ojos.",
+  "Projeyi tek başıma tasarlıyor ve geliştiriyorum; fizik, veri ve arayüz dahil her katmanı anlayarak kurmaya çalışıyorum.": "Diseño y desarrollo el proyecto en solitario, e intento construir cada capa —física, datos e interfaz— comprendiéndola.",
+  "Bir hata gördüyseniz, bir bölüm anlaşılmaz geldiyse ya da aklınızda bir özellik varsa yazın; her mesajı okuyorum.": "Si ha visto un error, una sección le pareció confusa o tiene una función en mente, escríbame; leo todos los mensajes.",
+  "İş birliğine açığım: eğitim kurumları, gökevleri, bilim iletişimcileri, araştırmacılar ve geliştiriciler için ortak projelere, içerik ortaklıklarına, çevirilere ve katkılara kapım açık. Birlikte daha iyisini yapabileceğimizi düşünüyorsanız bir e-posta yeterli.": "Estoy abierto a colaborar: proyectos conjuntos, alianzas de contenido, traducciones y contribuciones con centros educativos, planetarios, divulgadores, investigadores y desarrolladores son bienvenidos. Si cree que juntos podemos hacer algo mejor, basta con un correo.",
+  "Kod MIT lisansıyla açık kaynaktır; isim ve logo BigBrains markasıdır. © 2026": "El código es abierto bajo licencia MIT; el nombre y el logotipo son marcas de BigBrains. © 2026"
 }

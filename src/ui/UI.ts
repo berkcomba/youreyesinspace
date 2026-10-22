@@ -140,6 +140,7 @@ export class UI {
   private readonly infoDesc = $('info-desc');
   private readonly settingsPanel = $('settings');
   private readonly help = $('help');
+  private readonly about = $('about');
   private readonly toast = $('toast');
   private readonly searchInput = $<HTMLInputElement>('search-input');
   private readonly searchResults = $<HTMLUListElement>('search-results');
@@ -169,6 +170,13 @@ export class UI {
     $('btn-help').addEventListener('click', () => this.toggleHelp());
     $('help-close').addEventListener('click', () => this.toggleHelp(false));
     this.help.addEventListener('click', (e) => { if (e.target === this.help) this.toggleHelp(false); });
+    $('btn-about').addEventListener('click', () => this.toggleAbout());
+    const logo = $('brand-logo');
+    logo.addEventListener('click', () => this.toggleAbout());
+    logo.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.toggleAbout(); } });
+    $('about-close').addEventListener('click', () => this.toggleAbout(false));
+    $('about-help').addEventListener('click', () => { this.toggleAbout(false); this.toggleHelp(true); });
+    this.about.addEventListener('click', (e) => { if (e.target === this.about) this.toggleAbout(false); });
     $('btn-settings').addEventListener('click', () => this.toggleSettings());
     this.missionPanel = new MissionPanel(host);
     $('btn-mission').addEventListener('click', () => this.toggleMission());
@@ -514,6 +522,13 @@ export class UI {
   toggleHelp(force?: boolean): void {
     const show = force ?? this.help.hidden === true;
     this.help.hidden = !show;
+    if (show) this.about.hidden = true;
+  }
+
+  toggleAbout(force?: boolean): void {
+    const show = force ?? this.about.hidden === true;
+    this.about.hidden = !show;
+    if (show) this.help.hidden = true;
   }
 
   showToast(msg: string, ms = 1800): void {

@@ -43,7 +43,7 @@
       <!-- Top bar -->
       <header id="topbar">
         <div class="brand">
-          <img class="brand-mark" src="/logo-white.png" alt="Your Eyes In Space" />
+          <img id="brand-logo" class="brand-mark" src="/logo-white.png" alt="Your Eyes In Space" role="button" tabindex="0" data-i18n-title title="Hakkında, yazar ve geri bildirim" />
           <span class="brand-name">YOUR EYES IN SPACE</span>
           <span class="brand-version" title="Version">v 0.5</span>
           <span id="brand-sub" class="brand-sub" data-i18n>Güneş Sistemi</span>
@@ -199,7 +199,39 @@
         </div>
       </footer>
       <div id="imagery-credit" hidden></div>
-      <a id="copyright" href="https://github.com/berkcomba/youreyesinspace" target="_blank" rel="noopener noreferrer" data-i18n>© 2026 BigBrains · Açık kaynak (MIT)</a>
+      <div id="corner-links">
+        <button id="btn-about" class="corner-link" data-i18n data-i18n-title title="Hakkında, yazar ve geri bildirim">Hakkında</button>
+        <a id="copyright" href="https://github.com/berkcomba/youreyesinspace" target="_blank" rel="noopener noreferrer" data-i18n>© 2026 BigBrains · Açık kaynak (MIT)</a>
+      </div>
+
+      <!-- About card -->
+      <div id="about" class="modal" hidden>
+        <div class="modal-card about-card">
+          <div class="panel-title"><span data-i18n>Hakkında</span> <button id="about-close" class="icon-btn small" data-i18n-title title="Kapat">✕</button></div>
+          <div class="about-head">
+            <img class="about-mark" src="/logo-white.png" alt="Your Eyes In Space" />
+            <div>
+              <div class="about-name">YOUR EYES IN SPACE <span class="brand-version">v 0.5</span></div>
+              <div class="about-tag" data-i18n>Evrene gerçek verilerle bakan açık kaynak uzay simülatörü ve astrofizik dersliği</div>
+            </div>
+          </div>
+          <p><span data-i18n>109 000 gerçek yıldız, gerçek galaksiler, kara delikler ve pulsarlar; görev planlayıcı, sesli turlar ve ders kitabı izleğinde interaktif dersler tek bir tarayıcı sekmesinde. Amaç basit: merak eden herkesin, hangi dili konuşursa konuşsun, gökyüzünü kendi gözleriyle keşfedebilmesi.</span></p>
+          <div class="about-grid">
+            <div class="about-k" data-i18n>Yazar</div>
+            <div><strong>Berk Çomba</strong> · <a href="https://bigbrains.com.tr" target="_blank" rel="noopener noreferrer">BigBrains</a><br /><span data-i18n>Projeyi tek başıma tasarlıyor ve geliştiriyorum; fizik, veri ve arayüz dahil her katmanı anlayarak kurmaya çalışıyorum.</span></div>
+            <div class="about-k" data-i18n>Geri bildirim</div>
+            <div><a href="mailto:berkcomba@bigbrains.com.tr?subject=Your%20Eyes%20In%20Space">berkcomba@bigbrains.com.tr</a> · <a href="https://github.com/berkcomba/youreyesinspace/issues" target="_blank" rel="noopener noreferrer">GitHub Issues</a><br /><span data-i18n>Bir hata gördüyseniz, bir bölüm anlaşılmaz geldiyse ya da aklınızda bir özellik varsa yazın; her mesajı okuyorum.</span></div>
+            <div class="about-k" data-i18n>İş birliği</div>
+            <div><span data-i18n>İş birliğine açığım: eğitim kurumları, gökevleri, bilim iletişimcileri, araştırmacılar ve geliştiriciler için ortak projelere, içerik ortaklıklarına, çevirilere ve katkılara kapım açık. Birlikte daha iyisini yapabileceğimizi düşünüyorsanız bir e-posta yeterli.</span></div>
+          </div>
+          <div class="about-actions">
+            <a class="text-btn" href="mailto:berkcomba@bigbrains.com.tr?subject=Your%20Eyes%20In%20Space" data-i18n>E-posta gönder</a>
+            <a class="text-btn" href="https://github.com/berkcomba/youreyesinspace" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <button id="about-help" class="text-btn" data-i18n>Kontroller ve kaynaklar</button>
+          </div>
+          <p class="about-foot" data-i18n>Kod MIT lisansıyla açık kaynaktır; isim ve logo BigBrains markasıdır. © 2026</p>
+        </div>
+      </div>
 
       <!-- Help -->
       <div id="help" class="modal" hidden>
@@ -232,6 +264,13 @@
             <div><kbd>Tab</kbd> <span data-i18n>Arayüzü gizle</span> &nbsp; <kbd>P</kbd> <span data-i18n>Ekran görüntüsü</span> &nbsp; <kbd>Esc</kbd> <span data-i18n>Seçimi bırak</span></div>
             <div><kbd data-i18n>Görmeye değecek yerler</kbd> <span data-i18n>Uzay araçları (Voyager, JWST, ISS…), kara delikler (Sgr A*, Cygnus X-1…), pulsarlar (Yengeç, Vela, Hulse–Taylor…), bulutsular ve kümeler (Orion, Tarantula, Ülker…), gezegenler, yıldızlar ve galaksilere tek tıkla uçuş</span></div>
             <div><kbd data-i18n>Turlar</kbd> <span data-i18n>10 sesli rehberli ders (Güneş Sistemi, Mars ve robotları, Jüpiter, Satürn, uzay araçları, yıldızların yaşamı, kara delikler, pulsarlar, komşu yıldızlar, galaksiler): kamera her durağa uçar, anlatıcı eşzamanlı anlatır;</span> <kbd>Esc</kbd> <span data-i18n>turu bitirir</span></div>
+          </div>
+          <div class="help-credits help-about">
+            <div class="panel-title small" data-i18n>Hakkında</div>
+            <p><span data-i18n>Your Eyes In Space, evrene gerçek verilerle bakmak için yapılmış açık kaynak bir uzay simülatörü ve astrofizik dersliğidir. 109 000 gerçek yıldız, gerçek galaksiler, kara delikler ve pulsarlar; görev planlayıcı, sesli turlar ve ders kitabı izleğinde interaktif dersler tek bir tarayıcı sekmesinde buluşur. Amaç basit: merak eden herkesin, hangi dili konuşursa konuşsun, gökyüzünü kendi gözleriyle keşfedebilmesi.</span></p>
+            <p><span data-i18n>Yazar:</span> <strong>Berk Çomba</strong> — <a href="https://bigbrains.com.tr" target="_blank" rel="noopener noreferrer">BigBrains</a>. <span data-i18n>Projeyi tek başıma tasarlıyor ve geliştiriyorum; fizik, veri ve arayüz dahil her katmanı anlayarak kurmaya çalışıyorum.</span></p>
+            <p><span data-i18n>Geri bildirim:</span> <span data-i18n>Bir hata gördüyseniz, bir bölüm anlaşılmaz geldiyse ya da aklınızda bir özellik varsa yazın; her mesajı okuyorum.</span> <a href="mailto:berkcomba@bigbrains.com.tr?subject=Your%20Eyes%20In%20Space">berkcomba@bigbrains.com.tr</a> · <a href="https://github.com/berkcomba/youreyesinspace/issues" target="_blank" rel="noopener noreferrer">GitHub Issues</a></p>
+            <p><span data-i18n>İş birliğine açığım: eğitim kurumları, gökevleri, bilim iletişimcileri, araştırmacılar ve geliştiriciler için ortak projelere, içerik ortaklıklarına, çevirilere ve katkılara kapım açık. Birlikte daha iyisini yapabileceğimizi düşünüyorsanız bir e-posta yeterli.</span></p>
           </div>
           <div class="help-credits">
             <div class="panel-title small" data-i18n>Veri kaynakları ve lisanslar</div>
