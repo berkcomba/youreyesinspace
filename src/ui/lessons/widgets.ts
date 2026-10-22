@@ -11134,6 +11134,855 @@ class ProtodiskWidget extends CanvasWidget {
   }
 }
 
+/* ============================================================================ */
+/*  CHAPTER 13 — MAIN SEQUENCE AND POST-MAIN-SEQUENCE EVOLUTION                   */
+/* ============================================================================ */
+
+/** Schaller et al. (1992) elapsed times (Myr) to the numbered points of Fig. 13.1 (Table 13.1) */
+const EVO_TIMES: Array<[number, number[]]> = [
+  [25, [0, 6.33044, 6.40774, 6.41337, 6.43767, 6.51783, 7.04971, 7.0591]],
+  [15, [0, 11.4099, 11.5842, 11.5986, 11.6118, 11.6135, 11.6991, 12.7554]],
+  [12, [0, 15.7149, 16.0176, 16.0337, 16.0555, 16.1150, 16.4230, 16.7120, 17.5847, 17.6749]],
+  [9, [0, 25.9376, 26.3886, 26.4198, 26.4580, 26.5019, 27.6446, 28.1330, 28.9618, 29.2294]],
+  [7, [0, 42.4607, 43.1880, 43.2291, 43.3388, 43.4304, 45.3175, 46.1810, 47.9727, 48.3916]],
+  [5, [0, 92.9357, 94.4591, 94.5735, 94.9218, 95.2108, 99.3835, 100.888, 107.208, 108.454]],
+  [4, [0, 162.043, 164.734, 164.916, 165.701, 166.362, 172.38, 185.435, 192.198, 194.284]],
+  [3, [0, 346.240, 352.503, 352.792, 355.018, 357.310, 366.880, 420.502, 440.536]],
+  [2.5, [0, 574.337, 584.916, 586.165, 589.786, 595.476, 607.356, 710.235, 757.056]],
+  [2, [0, 1094.08, 1115.94, 1117.74, 1129.12, 1148.10, 1160.96, 1379.94, 1411.25]],
+  [1.5, [0, 2632.52, 2690.39, 2699.52, 2756.73, 2910.76]],
+  [1.25, [0, 4703.20, 4910.11, 4933.83, 5114.83, 5588.92]],
+  [1, [0, 7048.40, 9844.57, 11386.0, 11635.8, 12269.8]],
+  [0.8, [0, 18828.9, 25027.9]],
+];
+/** main-sequence lifetime (Myr): end of core H burning — point 2 above 2 M☉, point 3 below (Schaller), extrapolated outside */
+function evoMsLifetime(M: number): number {
+  const rows = EVO_TIMES.map(([m, t]) => [Math.log10(m), Math.log10(m >= 2 ? t[1] : t[Math.min(2, t.length - 1)])] as [number, number]).reverse();
+  const lm = Math.log10(M);
+  if (lm <= rows[0][0]) return 10 ** (rows[0][1] - 2.5 * (lm - rows[0][0]));
+  const last = rows[rows.length - 1];
+  if (lm >= last[0]) return 10 ** (last[1] - 1.15 * (lm - last[0]));
+  for (let i = 0; i < rows.length - 1; i++) if (lm <= rows[i + 1][0]) { const f = (lm - rows[i][0]) / (rows[i + 1][0] - rows[i][0]); return 10 ** (rows[i][1] + f * (rows[i + 1][1] - rows[i][1])); }
+  return 1e4;
+}
+/** Hayashi-line temperature of a giant of mass M */
+const giantLT = (M: number) => 3.62 + 0.035 * Math.log10(M);
+/** luminosity, radius and T_eff of a main-sequence star at fraction u of its lifetime */
+function msEvolved(M: number, u: number) {
+  const ms = mainSequence(M); const L = ms.L * (1 + 0.4 * u + 0.7 * u * u), R = ms.R * (1 + 0.35 * u * u);
+  return { L, R, T: 5772 * Math.pow(L / (R * R), 0.25) };
+}
+/** schematic track points 1..n for the masses of Table 13.1, in (log T_eff, log L) */
+function evoTrackPoints(M: number, n: number): Array<{ lT: number; lL: number }> {
+  const ms = mainSequence(M), lT1 = Math.log10(ms.T), lL1 = Math.log10(ms.L), lTH = giantLT(M), lm = Math.log10(M);
+  const pts: Array<{ lT: number; lL: number }> = [{ lT: lT1, lL: lL1 }];
+  if (M >= 2) {
+    const loop = M >= 20 ? 0.45 : M >= 12 ? 0.12 : 0.28;
+    pts.push({ lT: lT1 - 0.07, lL: lL1 + 0.3 }, { lT: lT1 - 0.03, lL: lL1 + 0.38 }, { lT: lT1 - 0.15, lL: lL1 + 0.33 }, { lT: lTH + 0.05, lL: lL1 + 0.23 }, { lT: lTH - 0.02, lL: lL1 + 0.68 }, { lT: lTH + loop, lL: lL1 + 0.83 }, { lT: lTH + 0.05, lL: lL1 + 0.98 }, { lT: lTH - 0.03, lL: lL1 + 1.08 }, { lT: lTH - 0.06, lL: lL1 + 1.3 });
+  } else {
+    const p2 = msEvolved(M, 0.72), p3 = msEvolved(M, 1);
+    pts.push({ lT: Math.log10(p2.T), lL: Math.log10(p2.L) }, { lT: Math.log10(p3.T), lL: Math.log10(p3.L) }, { lT: Math.log10(p3.T) - 0.03, lL: Math.log10(p3.L) + 0.17 }, { lT: lTH, lL: Math.log10(p3.L) + 0.4 + 0.3 * lm }, { lT: lTH - 0.08, lL: 3.3 });
+  }
+  return pts.slice(0, n);
+}
+/** piecewise-linear interpolation through track points with softened corners, u in [0, n-1] */
+function splineAt(pts: Array<{ lT: number; lL: number }>, u: number): { lT: number; lL: number } {
+  const n = pts.length; const i = Math.max(0, Math.min(n - 2, Math.floor(u))); const t = Math.max(0, Math.min(1, u - i));
+  const s = t * t * (3 - 2 * t) * 0.3 + t * 0.7;                                   // mild ease keeps corners but rounds them a little
+  const p1 = pts[i], p2 = pts[Math.min(n - 1, i + 1)];
+  return { lT: p1.lT + s * (p2.lT - p1.lT), lL: p1.lL + s * (p2.lL - p1.lL) };
+}
+/** H–R frame: axes, grid and labels; returns mapping functions */
+function hrFrame(c: CanvasRenderingContext2D, x0: number, y0: number, x1: number, y1: number, lTa: number, lTb: number, lLa: number, lLb: number, yLabel = 'L (L☉)') {
+  axesBox(c, x0, y0, x1, y1);
+  const X = (lT: number) => x1 - (lT - lTa) / (lTb - lTa) * (x1 - x0);
+  const Y = (lL: number) => y1 - 6 - (lL - lLa) / (lLb - lLa) * (y1 - y0 - 12);
+  c.font = '8px -apple-system, system-ui, sans-serif'; c.textBaseline = 'middle';
+  for (let lL = Math.ceil(lLa); lL <= Math.floor(lLb); lL++) { c.strokeStyle = hexA(C.grid, 0.9); c.lineWidth = 1; c.beginPath(); c.moveTo(x0, Y(lL)); c.lineTo(x1, Y(lL)); c.stroke(); c.fillStyle = C.dim; c.textAlign = 'right'; c.fillText(lL === 0 ? '1' : `10${sup(lL)}`, x0 - 4, Y(lL)); }
+  c.textAlign = 'center'; for (let lT = Math.ceil(lTa * 10) / 10; lT <= lTb + 1e-9; lT = Math.round((lT + 0.2) * 10) / 10) c.fillText(fmt(lT, 1), X(lT), y1 + 10);
+  c.textAlign = 'right'; c.fillStyle = C.dim; c.font = '9px -apple-system, system-ui, sans-serif'; c.fillText('log T_eff (K)  ← hotter', x1, y1 + 22);
+  c.textAlign = 'left'; c.font = '8px -apple-system, system-ui, sans-serif'; c.fillText(yLabel, x0 + 6, y0 + 10);
+  return { X, Y };
+}
+
+type EvoPhase = 'pms' | 'ms' | 'sgb' | 'rgb' | 'he' | 'agb' | 'pagb' | 'wd' | 'sn';
+/** phase and H–R position of a star of mass M at age t (Myr) */
+function evoState(M: number, t: number, popII = false): { phase: EvoPhase; lT: number; lL: number } {
+  const tP = pmsTime(M), tMS = evoMsLifetime(M), lm = Math.log10(M), lTH = giantLT(M);
+  if (t < tP) { const p = pmsPoint(t / tP, M); return { phase: 'pms', lT: p.lT, lL: p.lL }; }
+  const u = (t - tP) / tMS;
+  if (u < 1) { const s = msEvolved(M, u); return { phase: 'ms', lT: Math.log10(s.T), lL: Math.log10(s.L) }; }
+  const w = Math.max(0, Math.min(1, (lm - 0.1) / 0.2));                    // 0 below 1.25 M☉, 1 above 2 M☉
+  const fS = 0.18 + w * (0.012 - 0.18), fR = 0.06 + w * (0.02 - 0.06), fH = 0.012 + w * (0.08 - 0.012), fA = 0.001 + w * (0.01 - 0.001), fP = 2e-6;
+  const to = msEvolved(M, 1), lTto = Math.log10(to.T), lLto = Math.log10(to.L);
+  const lLbase = lLto + (M < 2 ? 0.45 + 0.3 * lm : -0.15), lLtip = M < 2 ? 3.3 : lLbase + 0.45;
+  let v = u - 1;
+  if (v < fS) { const f = v / fS; return { phase: 'sgb', lT: lTto + f * (lTH - lTto), lL: lLto + f * (lLbase - lLto) }; }
+  v -= fS;
+  if (v < fR) { const f = (v / fR) ** 0.6; return { phase: 'rgb', lT: lTH - 0.08 * f, lL: lLbase + f * (lLtip - lLbase) }; }
+  v -= fR;
+  if (v < fH) {
+    const f = v / fH;
+    if (M < 2) return popII ? { phase: 'he', lT: 3.68 + 0.35 * f, lL: 1.7 - 0.1 * f } : { phase: 'he', lT: 3.68 + 0.02 * Math.sin(f * 6), lL: 1.7 + 0.1 * f };
+    const loop = M >= 20 ? 0.45 : M >= 12 ? 0.12 : 0.28;
+    return { phase: 'he', lT: lTH + loop * Math.sin(Math.PI * f) ** 2, lL: lLtip + 0.15 + 0.15 * f };
+  }
+  v -= fH;
+  if (M > 8) return { phase: 'sn', lT: lTH, lL: lLtip + 0.3 };
+  if (v < fA) { const f = v / fA; return { phase: 'agb', lT: lTH - 0.06 - 0.06 * f, lL: lLtip + 0.3 + f * (M < 2 ? 0.45 : 0.7) }; }
+  v -= fA;
+  const lLagb = lLtip + 0.3 + (M < 2 ? 0.45 : 0.7);
+  if (v < fP) { const f = v / fP; return { phase: 'pagb', lT: lTH - 0.12 + f * (5.0 - lTH + 0.12), lL: lLagb - 0.1 * f }; }
+  const tWD = Math.max(0.01, (v - fP) * tMS);                               // Myr since the planetary nebula
+  const L = 10 ** (-0.4 - 1.25 * Math.log10(tWD / 5));                       // Mestel-like cooling, 0.4 L☉ at 5 Myr
+  const R = 0.0135, T = 5772 * Math.pow(L / (R * R), 0.25);
+  return { phase: 'wd', lT: Math.log10(T), lL: Math.log10(L) };
+}
+const PHASE_META: Record<EvoPhase, [string, string]> = { pms: ['pre-main-sequence', C.purple], ms: ['main sequence', C.blue], sgb: ['subgiant branch', C.accent], rgb: ['red giant branch', C.red], he: ['core He burning (HB / clump / loop)', C.sun], agb: ['asymptotic giant branch', C.mars], pagb: ['post-AGB / planetary nebula', C.green], wd: ['white dwarf', '#dfe7ff'], sn: ['gone: supernova (M > 8 M☉)', C.dim] };
+
+/* ------------------------------------------------------ 13.1a timescales ---- */
+
+class EvotimescalesWidget extends CanvasWidget {
+  private lM = 0;
+  constructor() {
+    super(1.8);
+    this.slider('Mass', Math.log10(0.1), 2, 0.01, this.lM, (v) => `${fmt(10 ** v, 10 ** v < 3 ? 2 : 0)} M☉`, (v) => { this.lM = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const M = 10 ** this.lM, ms = mainSequence(M);
+    const tff = (m: number) => { const s = mainSequence(m); const rho = m * MSUN / (4 / 3 * Math.PI * (s.R * RSUN) ** 3); return Math.sqrt(3 * Math.PI / (32 * GRAV * rho)) / YR_S; };
+    const tkh = (m: number) => { const s = mainSequence(m); return GRAV * (m * MSUN) ** 2 / (s.R * RSUN * s.L * LSUN_W) / YR_S; };
+    const tnuc = (m: number) => evoMsLifetime(m) * 1e6;
+    const x0 = PLOT_MARGIN, x1 = w * 0.58, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (lm: number) => x0 + (lm + 1) / 3 * (x1 - x0);
+    const Y = (lt: number) => y1 - 6 - (lt + 7) / 19 * (y1 - y0 - 12);
+    for (let lt = -6; lt <= 11; lt += 2) { this.line(x0, Y(lt), x1, Y(lt), hexA(C.grid, 0.9)); this.text(`10${sup(lt)}`, x0 - 4, Y(lt), C.dim, 8, 'right'); }
+    for (const lm of [-1, 0, 1, 2]) this.text(lm === 0 ? '1' : `10${sup(lm)}`, X(lm), y1 + 10, C.dim, 8, 'center');
+    this.text('mass (M☉)', x1, y1 + 22, C.dim, 9, 'right'); this.text('timescale (yr)', x0 + 6, y0 + 10, C.dim, 8);
+    this.line(x0, Y(Math.log10(13.8e9)), x1, Y(Math.log10(13.8e9)), hexA(C.purple, 0.6), 1, [3, 3]); this.text('age of the universe', x1 - 4, Y(Math.log10(13.8e9)) - 7, C.purple, 7, 'right');
+    plotCurve(c, -1, 2, 80, X, (lm) => Y(Math.log10(tnuc(10 ** lm))), C.sun, 2); this.text('t_nuc (main sequence)', X(1.2), Y(Math.log10(tnuc(10 ** 1.2))) - 10, C.sun, 8, 'center');
+    plotCurve(c, -1, 2, 80, X, (lm) => Y(Math.log10(tkh(10 ** lm))), C.blue, 2); this.text('t_KH = GM²/RL', X(1.2), Y(Math.log10(tkh(10 ** 1.2))) - 10, C.blue, 8, 'center');
+    plotCurve(c, -1, 2, 80, X, (lm) => Y(Math.log10(tff(10 ** lm))), C.red, 2); this.text('t_ff', X(1.2), Y(Math.log10(tff(10 ** 1.2))) - 10, C.red, 8, 'center');
+    const vals = [tff(M), tkh(M), tnuc(M)]; const cols = [C.red, C.blue, C.sun];
+    vals.forEach((v, i) => this.circle(X(this.lM), Y(Math.log10(v)), 4, '#fff', cols[i]));
+    this.line(X(this.lM), y0, X(this.lM), y1, hexA(C.text, 0.25), 1, [2, 3]);
+    // right: life budget
+    const bx0 = w * 0.65, bx1 = w - 12; let y = y0 + 8;
+    this.text(`life budget of a ${fmt(M, M < 3 ? 2 : 0)} M☉ star`, bx0, y, C.text, 9); y += 16;
+    const tMS = tnuc(M), tKH = tkh(M);
+    const items: Array<[string, number, string]> = [['pre-MS contraction (~t_KH)', pmsTime(M) * 1e6, C.purple], ['main sequence (t_nuc)', tMS, C.blue], ['SGB + RGB', tMS * (M < 1.25 ? 0.24 : 0.03), C.accent], ['core He burning', tMS * (M < 1.25 ? 0.012 : 0.08), C.sun], ['AGB + planetary nebula', tMS * 0.003, C.mars]];
+    const tot = items.reduce((s, it) => s + it[1], 0);
+    for (const [lab, t, col] of items) { const f = t / tot; this.text(lab, bx0, y, col, 8); c.fillStyle = hexA(col, 0.8); c.fillRect(bx0, y + 7, (bx1 - bx0) * Math.max(0.004, f), 6); this.text(`${fmtYr(t)} · ${fmt(100 * f, f < 0.01 ? 2 : 0)} %`, bx0 + (bx1 - bx0) * Math.max(0.004, f) + 4 > bx1 - 60 ? bx1 : bx0 + (bx1 - bx0) * Math.max(0.004, f) + 4, y + 10, C.dim, 7, bx0 + (bx1 - bx0) * Math.max(0.004, f) + 4 > bx1 - 60 ? 'right' : 'left'); y += 24; }
+    this.text(`core H burning: ${fmt(100 * tMS / tot, 0)} % of its life`, bx0, y + 4, C.text, 8);
+    this.text(M > 0.9 && tMS < 13.8e9 ? 'transitions run on t_KH: few stars caught there' : 't_MS > age of the universe: none has left the MS yet', bx0, y + 18, C.dim, 7);
+    this.setReadout([
+      ['Free-fall (3π/32Gρ̄)^½', `${fmt(vals[0] * YR_S / 60, 0)} min · ρ̄ = ${fmtSci(M * MSUN / (4 / 3 * Math.PI * (ms.R * RSUN) ** 3), 0)} kg m⁻³`, C.red],
+      ['Kelvin–Helmholtz GM²/RL', `${fmtYr(tKH)} — contraction and the readjustments between fuels`, C.blue],
+      ['Nuclear (main-sequence lifetime)', `${fmtYr(tMS)} — L = ${fmtSci(ms.L, 1)} L☉, so t_nuc ∝ M/L ∝ M^−2.5`, C.sun],
+      ['Ratio t_nuc : t_KH : t_ff', `1 : ${sci(tKH / tMS, 0)} : ${sci(vals[0] / tMS, 0)}`],
+    ]);
+  }
+}
+
+/* --------------------------------------------- 13.1b main-sequence ageing ---- */
+
+class MscoreWidget extends CanvasWidget {
+  private lM = 0; private u = 0.47;
+  constructor() {
+    super(1.8);
+    this.slider('Mass', Math.log10(0.8), Math.log10(1.5), 0.01, this.lM, (v) => `${fmt(10 ** v, 2)} M☉`, (v) => { this.lM = v; });
+    this.slider('Age / t_MS', 0, 1.15, 0.005, this.u, (v) => fmt(v, 2), (v) => { this.u = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const M = 10 ** this.lM, tMS = evoMsLifetime(M) * 1e6, u = this.u, um = Math.min(1, u);
+    const X0 = 0.71, Y0 = 0.27, Z = 0.02; const Xc = X0 * (1 - um), Yc = Y0 + X0 * um;
+    const mu = (X: number, Y: number) => 1 / (2 * X + 0.75 * Y + 0.5 * Z);
+    const Tc0 = 13.6e6 * M ** 0.5, rc0 = 8.8e4 / M ** 0.7;
+    const Tc = Tc0 * (1 + 0.4 * um), rc = rc0 * (1 + 1.3 * um + 0.9 * um * um);
+    const s = msEvolved(M, um); const ms = mainSequence(M);
+    const core = u > 1 ? Math.min(0.13, 0.08 * (u - 1) / 0.1) : 0;   // isothermal core mass fraction after H exhaustion
+    // left: histories
+    const x0 = PLOT_MARGIN, x1 = w * 0.55, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (uu: number) => x0 + uu / 1.15 * (x1 - x0);
+    const Y = (f: number) => y1 - 6 - f / 3.4 * (y1 - y0 - 12);
+    for (let f = 0; f <= 3; f += 0.5) { this.line(x0, Y(f), x1, Y(f), hexA(C.grid, 0.9)); this.text(fmt(f, 1), x0 - 4, Y(f), C.dim, 8, 'right'); }
+    for (const uu of [0, 0.25, 0.5, 0.75, 1]) this.text(fmt(uu, 2), X(uu), y1 + 10, C.dim, 8, 'center');
+    this.text('age / main-sequence lifetime', x1, y1 + 22, C.dim, 9, 'right'); this.text('relative to the ZAMS value', x0 + 6, y0 + 10, C.dim, 8);
+    c.fillStyle = hexA(C.red, 0.08); c.fillRect(X(1), y0, x1 - X(1), y1 - y0); this.text('core H', (X(1) + x1) / 2, y1 - 36, C.red, 7, 'center'); this.text('gone', (X(1) + x1) / 2, y1 - 26, C.red, 7, 'center');
+    const curves: Array<[string, (v: number) => number, string]> = [
+      ['L / L₀', (v) => msEvolved(M, Math.min(1, v)).L / ms.L, C.sun], ['R / R₀', (v) => msEvolved(M, Math.min(1, v)).R / ms.R, C.accent], ['T_c / T_c0', (v) => 1 + 0.4 * Math.min(1, v), C.red], ['ρ_c / ρ_c0', (v) => { const q = Math.min(1, v); return 1 + 1.3 * q + 0.9 * q * q; }, C.purple], ['X_c / X₀', (v) => 1 - Math.min(1, v), C.blue], ['μ_c / μ₀', (v) => mu(X0 * (1 - Math.min(1, v)), Y0 + X0 * Math.min(1, v)) / mu(X0, Y0), C.green],
+    ];
+    for (const [, f, col] of curves) plotCurve(c, 0, 1.15, 100, X, (v) => Y(f(v)), col, 1.5);
+    const labs = curves.map(([lab, f, col]) => ({ lab, y: Y(f(1.15)), col })).sort((a, b) => a.y - b.y);
+    for (let i = 1; i < labs.length; i++) labs[i].y = Math.max(labs[i].y, labs[i - 1].y + 10);
+    for (const e of labs) this.text(e.lab, X(1.02), e.y, e.col, 7);
+    this.line(X(u), y0, X(u), y1, hexA(C.text, 0.4), 1, [2, 3]);
+    if (Math.abs(M - 1) < 0.03) { this.circle(X(0.47), Y(1.3), 4, C.sun); this.text('Sun today', X(0.47), Y(1.3) - 10, C.sun, 7, 'center'); }
+    // right: interior profile
+    const px0 = w * 0.63, px1 = w - 12, py0 = 14, py1 = h - 30;
+    axesBox(c, px0, py0, px1, py1);
+    const PX = (m: number) => px0 + m * (px1 - px0); const PY = (f: number) => py1 - 6 - f * (py1 - py0 - 12);
+    for (const m of [0, 0.25, 0.5, 0.75, 1]) this.text(fmt(m, 2), PX(m), py1 + 10, C.dim, 8, 'center');
+    this.text('mass coordinate M_r / M', px1, py1 + 22, C.dim, 9, 'right'); this.text('interior profiles', px0 + 6, py0 + 10, C.dim, 8);
+    const Xr = (m: number) => { const prof = X0 - (X0 - Xc) * Math.exp(-((m / 0.32) ** 2)); return u > 1 && m < core ? 0 : prof; };
+    plotCurve(c, 0, 1, 120, PX, (m) => PY(Xr(m) / 0.75), C.blue, 2); this.text('X(M_r)', PX(0.8), PY(X0 / 0.75) - 9, C.blue, 8, 'center');
+    const Tr = (m: number) => { const base = Math.exp(-((m / 0.45) ** 1.4)); return u > 1 && m < core ? Math.exp(-((core / 0.45) ** 1.4)) : base; };
+    plotCurve(c, 0, 1, 120, PX, (m) => PY(0.95 * Tr(m)), C.red, 2); this.text('T(M_r)', PX(0.35), PY(0.95 * Tr(0.35)) - 9, C.red, 8, 'center');
+    const Lr = (m: number) => { const edge = u > 1 ? core : 0; const q = Math.max(0, m - edge) / (0.35 + 0.2 * (u > 1 ? 1 : 0) - edge); return Math.min(1, 1 - Math.exp(-(q ** 1.6) * 3)); };
+    plotCurve(c, 0, 1, 120, PX, (m) => PY(0.9 * Lr(m)), C.sun, 1.5, [4, 3]); this.text('L_r / L', PX(0.6), PY(0.9) - 9, C.sun, 8, 'center');
+    if (u > 1) { c.fillStyle = hexA(C.red, 0.12); c.fillRect(PX(0), py0, PX(core) - PX(0), py1 - py0); this.text('He core', PX(core / 2), py0 + 26, C.red, 7, 'center'); this.text('dT/dr = 0', PX(core / 2), py0 + 36, C.red, 7, 'center'); this.text('H shell →', PX(core) + 4, PY(0.5), C.sun, 7); }
+    this.setReadout([
+      ['Age', `${fmtYr(u * tMS)} of t_MS = ${fmtYr(tMS)}${u > 1 ? ' — past hydrogen exhaustion, thick H shell burning' : ''}`, C.text],
+      ['Core', u > 1 ? `X_c = 0 · isothermal He core of ${fmt(100 * core, 0)} % of the mass, growing on shell ash${core >= 0.13 ? ' — at the Schönberg–Chandrasekhar limit' : ''}` : `X_c = ${fmt(Xc, 2)} (from ${X0}) · Y_c = ${fmt(Yc, 2)} · μ_c = ${fmt(mu(Xc, Yc), 3)} (from ${fmt(mu(X0, Y0), 3)})`, C.blue],
+      ['Centre', `T_c = ${fmt(Tc / 1e6, 1)} × 10⁶ K · ρ_c = ${fmtSci(rc, 1)} kg m⁻³ · P_c = ${fmtSci(rc * K_B * Tc / (mu(Xc, Yc) * M_H), 1)} Pa`, C.red],
+      ['Surface', `L = ${fmt(s.L, 2)} L☉ (+${fmt(100 * (s.L / ms.L - 1), 0)} %) · R = ${fmt(s.R, 2)} R☉ · T_eff = ${fmt(s.T, 0)} K`, C.sun],
+    ]);
+  }
+}
+
+/* ------------------------------------------ 13.1c Schönberg–Chandrasekhar ---- */
+
+class SclimitWidget extends CanvasWidget {
+  private muE = 0.63; private muI = 1.34; private deg = 0;
+  constructor() {
+    super(1.8);
+    this.slider('μ envelope', 0.55, 0.8, 0.01, this.muE, (v) => fmt(v, 2), (v) => { this.muE = v; });
+    this.slider('μ core', 0.6, 1.4, 0.01, this.muI, (v) => fmt(v, 2), (v) => { this.muI = v; });
+    this.slider('Electron degeneracy', 0, 1, 0.01, this.deg, (v) => v === 0 ? 'none (ideal gas)' : v < 0.5 ? 'partial' : 'strong', (v) => { this.deg = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const q = 0.37 * (this.muE / this.muI) ** 2;           // exact S–C fraction
+    const boost = 1 + 2.5 * this.deg;                        // degenerate pressure support raises P_ic,max
+    const qDeg = q * Math.sqrt(boost);
+    // left: P_ic,max / P_env against core fraction
+    const x0 = PLOT_MARGIN, x1 = w * 0.55, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (f: number) => x0 + f / 0.3 * (x1 - x0);
+    const Y = (lp: number) => y1 - 6 - (lp + 1.5) / 3.5 * (y1 - y0 - 12);
+    for (let lp = -1; lp <= 2; lp++) { this.line(x0, Y(lp), x1, Y(lp), hexA(C.grid, 0.9)); this.text(`10${sup(lp)}`, x0 - 4, Y(lp), C.dim, 8, 'right'); }
+    for (const f of [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3]) this.text(fmt(f, 2), X(f), y1 + 10, C.dim, 8, 'center');
+    this.text('isothermal core mass fraction M_ic / M', x1, y1 + 22, C.dim, 9, 'right'); this.text('pressure / envelope demand', x0 + 6, y0 + 10, C.dim, 8);
+    this.line(x0, Y(0), x1, Y(0), C.accent, 1.5); this.text('P_env ∼ GM²/4πR⁴: what the envelope needs', x0 + 8, Y(0) - 9, C.accent, 7);
+    plotCurve(c, 0.01, 0.3, 120, X, (f) => Y(Math.log10((q / f) ** 2)), C.blue, 2); this.text('P_ic,max ∝ (kT/μ_ic m_H)⁴ / G³M_ic²  (ideal)', X(0.11), Y(Math.log10((q / 0.11) ** 2)) + 12, C.blue, 7);
+    if (this.deg > 0) { plotCurve(c, 0.01, 0.3, 120, X, (f) => Y(Math.log10(boost * (q / f) ** 2)), C.purple, 2); this.text('+ degenerate electrons', X(0.2), Y(Math.log10(boost * (q / 0.2) ** 2)) - 9, C.purple, 7); }
+    const lim = this.deg > 0 ? qDeg : q;
+    c.fillStyle = hexA(C.red, 0.08); c.fillRect(X(Math.min(0.3, lim)), y0, x1 - X(Math.min(0.3, lim)), y1 - y0); this.text('core cannot support envelope', X(Math.min(0.3, lim)) + 4, y0 + 24, C.red, 7); this.text('→ collapse on t_KH', X(Math.min(0.3, lim)) + 4, y0 + 34, C.red, 7);
+    this.line(X(lim), y0, X(lim), y1, C.red, 1, [3, 3]); this.text(`(M_ic/M)_SC = ${fmt(lim, 3)}`, X(lim), y1 - 14, C.red, 8, X(lim) > x1 - 70 ? 'right' : 'left');
+    // right: P_ic(R_ic) for a given core mass, showing the maximum
+    const px0 = w * 0.63, px1 = w - 12, py0 = 14, py1 = h - 30;
+    axesBox(c, px0, py0, px1, py1);
+    const PX = (r: number) => px0 + r / 3 * (px1 - px0); const PY = (p: number) => py1 - 6 - (p + 0.6) / 1.7 * (py1 - py0 - 12);
+    for (const r of [0, 1, 2, 3]) this.text(r === 1 ? 'R_max' : `${r} R_max`, PX(r), py1 + 10, C.dim, 8, 'center');
+    this.text('core radius R_ic', px1, py1 + 22, C.dim, 9, 'right'); this.text('P_ic at fixed M_ic, T_ic', px0 + 6, py0 + 10, C.dim, 8);
+    this.line(px0, PY(0), px1, PY(0), hexA(C.grid, 0.9));
+    // P ∝ (1/R³)(a − b/R): thermal term minus gravity term, normalised so the maximum sits at R = 1 with P = 1
+    const clampP = (p: number) => Math.max(-0.6, Math.min(1.08, p));
+    const P = (r: number) => 4 * (1 / r ** 3) * (1 - 0.75 / r);
+    plotCurve(c, 0.5, 3, 150, PX, (r) => PY(clampP(P(r))), C.blue, 2);
+    plotCurve(c, 0.5, 3, 150, PX, (r) => PY(clampP(4 / r ** 3)), C.green, 1, [3, 3]); this.text('thermal ∝ M kT / μm_H R³', PX(1.05), PY(0.75), C.green, 7);
+    plotCurve(c, 0.5, 3, 150, PX, (r) => PY(clampP(-3 / r ** 4)), C.red, 1, [3, 3]); this.text('gravity ∝ −GM² / R⁴', PX(1.3), PY(-0.4), C.red, 7);
+    this.circle(PX(1), PY(1), 4, '#fff', C.blue); this.text('P_ic,max at R_ic = (2/5) GM_ic μ_ic m_H / kT_ic', PX(1) + 8, PY(1) + 14, C.text, 7);
+    this.text('P_ic = (3/4πR³)(M kT/μm_H − GM²/5R)', px0 + 8, py1 - 14, C.dim, 7);
+    this.setReadout([
+      ['Schönberg–Chandrasekhar fraction', `0.37 (μ_env/μ_ic)² = 0.37 × (${fmt(this.muE, 2)}/${fmt(this.muI, 2)})² = ${fmt(q, 3)} — the rough estimate 0.54 (μ_env/μ_ic)² gives ${fmt(0.54 * (this.muE / this.muI) ** 2, 3)}`, C.blue],
+      ['With degeneracy', this.deg === 0 ? 'ideal gas only: a 1 M☉ star would leave the main sequence when the He core reaches 8 % of its mass' : `pressure support ×${fmt(boost, 1)}: the core may reach ${fmt(100 * qDeg, 0)} % before collapsing${qDeg > 0.12 ? ' — like the partly degenerate 1 M☉ core (~13 %)' : ''}`, C.purple],
+      ['Why a maximum', 'at large R the core is too dilute to press on the envelope; at small R its own gravity eats the thermal pressure — so for a given M_ic and T_ic there is a largest surface pressure it can supply'],
+    ]);
+  }
+}
+
+/* ---------------------------------------------- 13.1d evolutionary tracks ---- */
+
+class EvotracksWidget extends CanvasWidget {
+  private idx = 5; private u = 0.5;
+  constructor() {
+    super(1.8);
+    this.slider('Mass (Table 13.1)', 0, EVO_TIMES.length - 1, 1, this.idx, (v) => `${EVO_TIMES[Math.round(v)][0]} M☉`, (v) => { this.idx = Math.round(v); this.u = Math.min(this.u, EVO_TIMES[this.idx][1].length - 1); });
+    this.slider('Position along track', 0, 9, 0.01, this.u, (v) => `point ${fmt(1 + v, 2)}`, (v) => { this.u = v; });
+    this.playButton();
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    const [M, times] = EVO_TIMES[this.idx]; const n = times.length;
+    if (dt > 0) { this.u = (this.u + dt * 0.35) % (n - 1 + 0.6); }
+    const u = Math.min(n - 1, this.u);
+    const x0 = PLOT_MARGIN, x1 = w * 0.64, y0 = 14, y1 = h - 30;
+    const { X, Y } = hrFrame(c, x0, y0, x1, y1, 3.4, 4.8, -1, 6);
+    plotCurve(c, Math.log10(0.5), Math.log10(60), 60, (lm) => X(Math.log10(mainSequence(10 ** lm).T)), (lm) => Y(Math.log10(mainSequence(10 ** lm).L)), hexA(C.dim, 0.5), 1, [5, 4]); this.text('ZAMS', X(Math.log10(mainSequence(0.6).T)) - 4, Y(Math.log10(mainSequence(0.6).L)), C.dim, 8, 'right');
+    for (const [m, t] of EVO_TIMES) {
+      const pts = evoTrackPoints(m, t.length); const sel = m === M;
+      plotCurve(c, 0, t.length - 1, 100, (v) => X(splineAt(pts, v).lT), (v) => Y(splineAt(pts, v).lL), sel ? C.sun : hexA(C.blue, 0.22), sel ? 2 : 1);
+      this.text(`${m}`, X(pts[0].lT) + 5, Y(pts[0].lL) + 2, sel ? C.sun : C.dim, 7);
+      if (sel) pts.forEach((p, i) => { this.circle(X(p.lT), Y(p.lL), 2.5, undefined, C.sun); this.text(`${i + 1}`, X(p.lT) + (i === 0 ? -8 : 6), Y(p.lL) - 6, C.text, 7, 'center'); });
+    }
+    const pts = evoTrackPoints(M, n); const P = splineAt(pts, u); const T = 10 ** P.lT, L = 10 ** P.lL, R = Math.sqrt(L) * (5772 / T) ** 2;
+    this.circle(X(P.lT), Y(P.lL), 6, '#fff', rgba(tempRGB(T), 1), 1.5);
+    if (M === 1) { const s = msEvolved(1, 0.47); this.circle(X(Math.log10(s.T)), Y(Math.log10(s.L)), 3, C.sun); this.text('☉ today', X(Math.log10(s.T)) + 6, Y(Math.log10(s.L)) + 8, C.sun, 7); }
+    const i = Math.min(n - 2, Math.floor(u)), f = u - i; const age = times[i] + f * (times[i + 1] - times[i]);
+    // right: the table for this mass
+    const bx0 = w * 0.7; let y = y0 + 8;
+    this.text(`${M} M☉ — elapsed time (Myr) to each point`, bx0, y, C.text, 9); y += 14;
+    const labels = M >= 2 ? ['ZAMS', 'core H → 0.05: overall contraction', 'thick H shell ignites', 'S–C limit: core contracts (SGB)', 'base of the giant branch', 'He ignition (3α)', 'blue loop: core He burning', 'loop ends, He → CO', 'core He exhausted', 'early AGB'] : M >= 1.5 ? ['ZAMS', 'mid main sequence', 'core H exhausted', 'S–C limit (partly degenerate)', 'base of the RGB', 'RGB tip: He core flash'] : M === 0.8 ? ['ZAMS', 'mid main sequence', 'core H exhausted'] : ['ZAMS', 'mid main sequence (☉ today lies before)', 'core H exhausted (9.8 Gyr)', 'S–C limit at ~13 % (degenerate)', 'base of the RGB', 'RGB tip: He core flash'];
+    times.forEach((t, k) => { const hot = Math.abs(u - k) < 0.5; this.text(`${k + 1}`, bx0, y, hot ? C.sun : C.dim, 8); this.text(t === 0 ? '0' : t < 100 ? fmt(t, 2) : fmt(t, 0), bx0 + 40, y, hot ? C.sun : C.text, 8, 'right'); this.text(labels[k] ?? '', bx0 + 46, y, hot ? C.text : C.dim, 7); y += 13; });
+    if (y + 10 < y1) { const tMS = M >= 2 ? times[1] : times[Math.min(2, n - 1)]; this.text(`main sequence: ${fmtYr(tMS * 1e6)} · after it: ${fmtYr((times[n - 1] - tMS) * 1e6)} (${fmt(100 * (times[n - 1] - tMS) / tMS, 0)} %)`, bx0, y + 6, C.dim, 7); }
+    this.setReadout([
+      ['Age since the ZAMS', `${fmtYr(age * 1e6)} — between points ${i + 1} and ${i + 2}`, C.sun],
+      ['Star now', `L = ${L >= 100 ? sci(L, 1) : fmt(L, 2)} L☉ · T_eff = ${fmt(T, 0)} K (${spectralClass(T)}) · R = ${R >= 100 ? fmt(R, 0) : fmt(R, 1)} R☉`, C.text],
+      ['Doing', labels[Math.round(u)] ?? '', C.dim],
+      ['Models', 'Schaller et al. 1992: X = 0.68, Y = 0.30, Z = 0.02, mass loss and convective overshooting; track shapes schematic, times from Table 13.1'],
+    ]);
+  }
+}
+
+/* --------------------------------------------- 13.2a giant stages (1, 5 M☉) ---- */
+
+type GiantStage = { name: string; lT: number; lL: number; core: number; he: number; hsh: number; conv: number; what: string; burn: string };
+function giantStages(five: boolean): GiantStage[] {
+  if (!five) return [
+    { name: 'ZAMS (point 1)', lT: 3.76, lL: -0.15, core: 0.25, he: 0, hsh: 0, conv: 0.3, what: 'hydrogen burning by the pp chain in a radiative core; thin convective envelope', burn: 'core H (pp)' },
+    { name: 'Sun today (4.6 Gyr)', lT: 3.762, lL: 0, core: 0.22, he: 0, hsh: 0, conv: 0.29, what: 'X_c down from 0.71 to 0.34; μ up, core contracted and hotter, L up 30 %', burn: 'core H (pp)' },
+    { name: 'core H exhausted (point 3, 9.8 Gyr)', lT: 3.773, lL: 0.33, core: 0.03, he: 0, hsh: 0.06, conv: 0.28, what: 'isothermal He core (3 % of the mass), thick H-burning shell; R = 1.35 R☉, L = 2.1 L☉', burn: 'thick H shell' },
+    { name: 'Schönberg–Chandrasekhar (point 4)', lT: 3.745, lL: 0.5, core: 0.08, he: 0, hsh: 0.1, conv: 0.4, what: 'partly degenerate core reaches ~13 % and contracts on t_KH; envelope expands and cools', burn: 'H shell, narrowing' },
+    { name: 'subgiant → base of RGB (point 5)', lT: 3.68, lL: 0.78, core: 0.05, he: 0, hsh: 0.07, conv: 0.75, what: 'H⁻ opacity drives a deep convective envelope: the star reaches the Hayashi line', burn: 'H shell' },
+    { name: 'first dredge-up', lT: 3.66, lL: 1.4, core: 0.04, he: 0, hsh: 0.05, conv: 0.9, what: 'convection reaches processed layers: Li ↓, ³He ↑, ¹²C/¹⁴N ↓ at the surface', burn: 'H shell' },
+    { name: 'RGB tip: He core flash (point 6)', lT: 3.54, lL: 3.3, core: 0.02, he: 0.02, hsh: 0.025, conv: 0.95, what: 'degenerate He core of 0.45 M☉ ignites explosively: 10¹¹ L☉ for seconds, absorbed by the envelope', burn: '3α flash + H shell' },
+    { name: 'horizontal branch / red clump', lT: 3.68, lL: 1.7, core: 0.1, he: 0, hsh: 0.3, conv: 0.5, what: 'quiet core He burning for ~10⁸ yr; convective core; RR Lyrae stars pulsate here', burn: 'core He (3α) + H shell' },
+    { name: 'early AGB', lT: 3.6, lL: 2.6, core: 0.03, he: 0.05, hsh: 0.07, conv: 0.85, what: 'inert, degenerate CO core; He shell supplies the energy; second ascent of the Hayashi line', burn: 'He shell (+ weak H shell)' },
+    { name: 'thermal-pulse AGB (Mira)', lT: 3.5, lL: 3.7, core: 0.012, he: 0.018, hsh: 0.022, conv: 0.97, what: 'He shell flashes every ~10⁵ yr; pulsations; superwind 10⁻⁴ M☉/yr strips the envelope', burn: 'H shell, He flashes' },
+    { name: 'post-AGB', lT: 4.3, lL: 3.6, core: 0.5, he: 0.75, hsh: 0.9, conv: 0, what: 'envelope gone; the hot core crosses the diagram at constant L and ionises the ejecta', burn: 'dying H/He shells' },
+    { name: 'planetary nebula + white dwarf', lT: 4.9, lL: 1.5, core: 0.9, he: 0.97, hsh: 0.99, conv: 0, what: '0.55 M☉ CO white dwarf, R ≈ 0.013 R☉, cooling for ever; nebula merges with the ISM in 5 × 10⁴ yr', burn: 'none' },
+  ];
+  return [
+    { name: 'ZAMS (point 1)', lT: 4.19, lL: 2.6, core: 0.25, he: 0, hsh: 0, conv: 0, what: 'CNO cycle in a convective core (≈ 25 % of the mass), radiative envelope', burn: 'core H (CNO)' },
+    { name: 'X_c → 0.05: overall contraction (point 2)', lT: 4.12, lL: 2.9, core: 0.12, he: 0, hsh: 0, conv: 0, what: 'the shrinking convective core runs out of H; the whole star contracts, L and T_eff rise', burn: 'core H (dying)' },
+    { name: 'thick H shell ignites (point 3)', lT: 4.228, lL: 3.05, core: 0.06, he: 0, hsh: 0.12, conv: 0, what: 'L = 1130 L☉, T_eff = 16 900 K, R = 3.9 R☉; the envelope absorbs energy, L dips', burn: 'thick H shell' },
+    { name: 'Schönberg–Chandrasekhar (point 4)', lT: 4.05, lL: 3.0, core: 0.08, he: 0, hsh: 0.12, conv: 0, what: 'isothermal core past the limit contracts on t_KH; subgiant branch crossed in 0.35 Myr', burn: 'H shell, narrowing' },
+    { name: 'base of the RGB (point 5)', lT: 3.67, lL: 2.9, core: 0.06, he: 0, hsh: 0.08, conv: 0.7, what: 'envelope convection deepens; Hayashi line; first dredge-up (Li gone from the inner 98 %)', burn: 'H shell' },
+    { name: 'He ignition at the tip (point 6)', lT: 3.6, lL: 3.3, core: 0.05, he: 0.05, hsh: 0.06, conv: 0.8, what: 'T_c = 1.3 × 10⁸ K, ρ_c = 7.7 × 10⁶ kg m⁻³: quiet 3α ignition (non-degenerate)', burn: 'core He + H shell' },
+    { name: 'blue loop (point 7)', lT: 3.9, lL: 3.4, core: 0.1, he: 0, hsh: 0.35, conv: 0.1, what: 'core He burning with a convective core; T_eff rises as the H shell strengthens; Cepheids here', burn: 'core He + H shell' },
+    { name: 'end of the loop (point 8)', lT: 3.67, lL: 3.55, core: 0.08, he: 0, hsh: 0.3, conv: 0.5, what: 'core μ up, core contracts, envelope expands; core He soon exhausted → CO', burn: 'core He (ending)' },
+    { name: 'early AGB (point 10)', lT: 3.761, lL: 3.29, core: 0.0008 / 0.0056 * 0.08, he: 0.0029 / 0.0056 * 0.08, hsh: 0.08, conv: 0.75, what: 'L = 1940 L☉, T_eff = 5770 K, R = 44 R☉; He shell at 0.003 R, CO core at 0.0008 R; second dredge-up', burn: 'He shell' },
+    { name: 'thermal-pulse AGB', lT: 3.52, lL: 4.3, core: 0.01, he: 0.015, hsh: 0.018, conv: 0.97, what: 'shell flashes every few thousand years; third dredge-up → carbon star; superwind', burn: 'H shell, He flashes' },
+    { name: 'post-AGB', lT: 4.4, lL: 4.2, core: 0.5, he: 0.75, hsh: 0.9, conv: 0, what: 'F/G supergiant spectrum turning blue; the ejected envelope becomes a planetary nebula', burn: 'dying shells' },
+    { name: 'white dwarf (0.9 M☉, CO)', lT: 5.0, lL: 2.0, core: 0.9, he: 0.97, hsh: 0.99, conv: 0, what: 'mass loss kept the core under 1.4 M☉; a 4–8 M☉ star would leave an ONeMg dwarf', burn: 'none' },
+  ];
+}
+class GiantstagesWidget extends CanvasWidget {
+  private five = false; private s = 1;
+  constructor() {
+    super(1.8);
+    this.segmented<'one' | 'five'>([['one', '1 M☉ (Fig. 13.4)'], ['five', '5 M☉ (Fig. 13.5)']], 'one', (v) => { this.five = v === 'five'; });
+    this.slider('Stage', 0, 11, 0.01, this.s, (v) => giantStages(this.five)[Math.round(v)].name, (v) => { this.s = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const st = giantStages(this.five); const k = Math.round(this.s); const S = st[k];
+    const x0 = PLOT_MARGIN, x1 = w * 0.58, y0 = 14, y1 = h - 30;
+    const { X, Y } = hrFrame(c, x0, y0, x1, y1, 3.4, 5.1, -0.5, 4.6);
+    plotCurve(c, Math.log10(0.5), Math.log10(20), 60, (lm) => X(Math.log10(mainSequence(10 ** lm).T)), (lm) => Y(Math.log10(mainSequence(10 ** lm).L)), hexA(C.dim, 0.5), 1, [5, 4]);
+    const P = splineAt(st, this.s);
+    plotCurve(c, 0, st.length - 1, 220, (v) => X(splineAt(st, v).lT), (v) => Y(splineAt(st, v).lL), hexA(C.sun, 0.9), 1.5);
+    st.forEach((p, i) => { this.circle(X(p.lT), Y(p.lL), i === k ? 4 : 2, i === k ? '#fff' : undefined, i === k ? C.sun : hexA(C.sun, 0.8)); });
+    const T = 10 ** P.lT, L = 10 ** P.lL, R = Math.sqrt(L) * (5772 / T) ** 2;
+    this.circle(X(P.lT), Y(P.lL), 6, '#fff', rgba(tempRGB(T), 1), 1.5);
+    for (const [lab, lT, lL] of [['SGB', 3.72, this.five ? 2.75 : 0.95], ['RGB', 3.56, this.five ? 3.05 : 2.4], ['HB', 3.72, this.five ? 3.6 : 1.9], ['AGB', 3.47, this.five ? 3.9 : 3.0], ['post-AGB', 4.5, this.five ? 4.4 : 3.85], ['WD', 4.95, this.five ? 1.6 : 1.1]] as Array<[string, number, number]>) this.text(lab, X(lT), Y(lL), C.dim, 8, 'center');
+    // right: cross-section
+    const cx = w * 0.79, cy = h * 0.42, Rp = Math.min(w * 0.17, h * 0.3);
+    this.text(S.name, cx, y0 + 6, C.sun, 9, 'center');
+    const conv = S.conv;
+    c.fillStyle = rgba(tempRGB(T), 1); c.beginPath(); c.arc(cx, cy, Rp, 0, TAU); c.fill();
+    if (conv > 0) {
+      c.fillStyle = hexA('#000000', 0.42); c.beginPath(); c.arc(cx, cy, Rp, 0, TAU); c.moveTo(cx + Rp * (1 - conv), cy); c.arc(cx, cy, Rp * (1 - conv), TAU, 0, true); c.fill('evenodd');
+      const r1 = Rp * (1 - conv), r2 = Rp; const rings = Math.max(1, Math.floor((r2 - r1) / 14));
+      for (let k = 0; k < rings; k++) { const rc = r1 + (r2 - r1) * (k + 0.5) / rings; const cells = Math.max(8, Math.round(rc / 7)); for (let i = 0; i < cells; i++) { const a = i * TAU / cells + k * 0.3; c.beginPath(); c.arc(cx + rc * Math.cos(a), cy + rc * Math.sin(a), Math.min(5, (r2 - r1) / rings * 0.35), 0, TAU); c.strokeStyle = hexA('#ffffff', 0.25); c.lineWidth = 1; c.stroke(); } }
+    }
+    const rr = (f: number) => Math.max(0, f) * Rp;
+    if (S.hsh > 0) { this.circle(cx, cy, Math.max(rr(S.hsh), 3), C.sun, hexA(C.sun, 0.35), 1.5); }
+    if (S.he > 0) { this.circle(cx, cy, Math.max(rr(S.he), 2.5), C.mars, hexA(C.mars, 0.5), 1.5); }
+    if (S.core > 0) { this.circle(cx, cy, Math.max(rr(S.core), 2), '#fff', S.burn.startsWith('core He') ? hexA(C.mars, 0.9) : S.burn.startsWith('core H') ? hexA(C.sun, 0.9) : '#e8e8ff', 1); }
+    this.text(`R = ${R >= 100 ? fmt(R, 0) : fmt(R, R < 0.1 ? 3 : 1)} R☉ (not to scale)`, cx, cy + Rp + 14, C.dim, 8, 'center');
+    const legend: Array<[string, string]> = [['convective envelope', '#4a4a52'], ['H-burning shell', C.sun], ['He-burning shell / core', C.mars], ['inert core (He or CO)', '#e8e8ff']];
+    let ly = cy + Rp + 30; for (const [lab, col] of legend) { c.fillStyle = col; c.fillRect(cx - Rp, ly - 4, 8, 8); this.text(lab, cx - Rp + 12, ly, C.dim, 7); ly += 11; }
+    this.setReadout([
+      ['Stage', S.what, C.text],
+      ['Burning', S.burn, S.burn === 'none' ? C.dim : C.sun],
+      ['Surface', `L = ${L >= 100 ? sci(L, 1) : fmt(L, 2)} L☉ · T_eff = ${fmt(T, 0)} K (${spectralClass(T)}) · R = ${R >= 100 ? fmt(R, 0) : fmt(R, R < 0.1 ? 3 : 2)} R☉`],
+      ['Structure', `convective envelope: outer ${fmt(100 * S.conv, 0)} % of the radius${S.hsh > 0 ? ` · H shell at ${fmt(S.hsh, S.hsh < 0.05 ? 3 : 2)} R` : ''}${S.core > 0 ? ` · core ${fmt(S.core, S.core < 0.05 ? 3 : 2)} R` : ''}`],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 13.2b helium core flash ---- */
+
+class HeflashWidget extends CanvasWidget {
+  private lrho = 7.3;
+  constructor() {
+    super(1.8);
+    this.slider('Core density', 5.5, 8, 0.05, this.lrho, (v) => `10^${fmt(v, 1)} kg m⁻³`, (v) => { this.lrho = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const rho = 10 ** this.lrho, mue = 2;
+    const ne = rho / (mue * M_H);
+    const TF = (H_PLANCK ** 2 / (2 * 9.109e-31 * K_B)) * (3 * ne / (8 * Math.PI)) ** (2 / 3);   // Fermi temperature
+    const Pdeg = (H_PLANCK ** 2 / (20 * 9.109e-31)) * (3 / Math.PI) ** (2 / 3) * ne ** (5 / 3);
+    const Pgas = (T: number) => rho * K_B * T / (1.34 * M_H);
+    // left: P vs T
+    const x0 = PLOT_MARGIN, x1 = w * 0.5, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (lT: number) => x0 + (lT - 7) / 2 * (x1 - x0);
+    const Y = (lP: number) => y1 - 6 - (lP - 16.5) / 5 * (y1 - y0 - 12);
+    for (let lP = 17; lP <= 21; lP++) { this.line(x0, Y(lP), x1, Y(lP), hexA(C.grid, 0.9)); this.text(`10${sup(lP)}`, x0 - 4, Y(lP), C.dim, 8, 'right'); }
+    for (const lT of [7, 7.5, 8, 8.5, 9]) this.text(`10^${fmt(lT, 1)}`, X(lT), y1 + 10, C.dim, 8, 'center');
+    this.text('temperature (K)', x1, y1 + 22, C.dim, 9, 'right'); this.text('pressure (Pa)', x0 + 6, y0 + 10, C.dim, 8);
+    plotCurve(c, 7, 9, 60, X, (lT) => Y(Math.log10(Pgas(10 ** lT))), C.blue, 2); this.text('ideal gas ρkT/μm_H', X(8.6), Y(Math.log10(Pgas(10 ** 8.6))) - 10, C.blue, 8, 'center');
+    this.line(x0, Y(Math.log10(Pdeg)), x1, Y(Math.log10(Pdeg)), C.purple, 2); this.text('degenerate electrons Kρ^5/3: no T', x0 + 8, Y(Math.log10(Pdeg)) - 9, C.purple, 8);
+    this.line(X(Math.log10(TF)), y0, X(Math.log10(TF)), y1, hexA(C.purple, 0.6), 1, [3, 3]); this.text('T_F', X(Math.log10(TF)) + 3, y0 + 24, C.purple, 8);
+    this.line(X(8), y0, X(8), y1, hexA(C.red, 0.6), 1, [3, 3]); this.text('3α ignites', X(8) + 3, y1 - 14, C.red, 8);
+    c.fillStyle = hexA(C.purple, 0.07); c.fillRect(x0, y0, X(Math.log10(TF)) - x0, y1 - y0);
+    this.text(TF > 1e8 ? 'degenerate at ignition → flash' : 'ideal at ignition → quiet start', x0 + 8, y0 + 36, TF > 1e8 ? C.purple : C.blue, 8);
+    // right: luminosity of helium burning vs time, two cases (toy model)
+    const px0 = w * 0.58, px1 = w - 12, py0 = 14, py1 = h - 30;
+    axesBox(c, px0, py0, px1, py1);
+    const PX = (f: number) => px0 + f * (px1 - px0); const PY = (lL: number) => py1 - 6 - (lL + 1) / 13 * (py1 - py0 - 12);
+    for (let lL = 0; lL <= 11; lL += 2) { this.line(px0, PY(lL), px1, PY(lL), hexA(C.grid, 0.9)); this.text(`10${sup(lL)}`, px0 - 4, PY(lL), C.dim, 8, 'right'); }
+    this.text('time (schematic) →', px1, py1 + 22, C.dim, 9, 'right'); this.text('He-burning luminosity (L☉)', px0 + 6, py0 + 10, C.dim, 8);
+    // toy model: ε_3α ∝ T⁻³ exp(−44.027/T₈), normalised to 100 L☉ at T₈ = 1.04; ideal gas has a thermostat (expansion), a degenerate core has none until kT ≈ E_F
+    const epsHat = (T8: number) => Math.exp(44.027 * (1 / 1.04 - 1 / T8)) * (1.04 / T8) ** 3;
+    const TF8 = TF / 1e8;
+    const sim = (degen: boolean) => { const out: number[] = []; let T8 = 1.0, lift = false; for (let i = 0; i < 400; i++) { if (degen && !lift) { T8 += Math.min(0.03, 2e-3 * epsHat(T8)); if (T8 > 1.5 * TF8 || T8 > 3.2) lift = true; } else if (degen && lift) { T8 += (1.06 - T8) * 0.08; } else { T8 += Math.min(0.03, 2e-3 * epsHat(T8)) - 0.1 * (T8 - 1.0); } out.push(Math.min(11, Math.max(0, Math.log10(100 * epsHat(T8))))); } return out; };
+    const a = sim(false), b = sim(true);
+    plotCurve(c, 0, 1, 399, PX, (f) => PY(a[Math.round(f * 399)]), C.blue, 2); this.text('non-degenerate (M > 1.8 M☉): thermostat', PX(0.55), PY(a[399]) - 10, C.blue, 8, 'center');
+    plotCurve(c, 0, 1, 399, PX, (f) => PY(b[Math.round(f * 399)]), C.purple, 2);
+    const pk = Math.max(...b); const ipk = b.indexOf(pk); this.text(`degenerate: flash to 10^${fmt(pk, 0)} L☉`, PX(Math.min(0.75, ipk / 399 + 0.05)), PY(pk) + 10, C.purple, 8, 'center');
+    this.text('galaxy luminosity 10¹¹ L☉', px1 - 4, PY(11) + 8, C.dim, 7, 'right');
+    this.setReadout([
+      ['Core at ignition', `ρ = ${fmtSci(rho, 0)} kg m⁻³ · T_F = ${fmtSci(TF, 1)} K vs T_ign ≈ 10⁸ K → ${TF > 1e8 ? 'electrons degenerate (P_deg ' + fmt(Pdeg / Pgas(1e8), 1) + '× P_gas)' : 'gas nearly ideal'}`, TF > 1e8 ? C.purple : C.blue],
+      ['Runaway', TF > 1e8 ? 'heating does not raise P, the core does not expand, ε_3α ∝ T⁴⁰ soars until kT ≈ E_F lifts the degeneracy; the energy is absorbed by the envelope' : 'heating raises P, the core expands and cools: ε settles to the horizontal-branch value', C.text],
+      ['Triple alpha', 'ε_3α ∝ ρ² Y³ T⁴⁰ near 10⁸ K — doubles for every 2 % in T; 3 ⁴He → ¹²C (+ γ), then ¹²C + ⁴He → ¹⁶O'],
+      ['Who flashes', 'stars below ~1.8 M☉: their He cores (≈ 0.45 M☉) become degenerate during the RGB climb; models could not follow it (tracks end at point 6)'],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 13.2c thermal pulses AGB ---- */
+
+class ThermalpulsesWidget extends CanvasWidget {
+  private Mc = 0.6; private t = 0;
+  constructor() {
+    super(1.8);
+    this.slider('Core mass', 0.55, 0.95, 0.01, this.Mc, (v) => `${fmt(v, 2)} M☉`, (v) => { this.Mc = v; });
+    this.playButton();
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    const Mc = this.Mc; const dtp = 10 ** (3.05 - 4.5 * (Mc - 1)); const LH = 5.9e4 * (Mc - 0.52);
+    this.t = (this.t + dt * 0.12) % 6;
+    const N = 6;
+    const lum = (x: number) => { // x in interpulse units
+      const n = Math.floor(x), f = x - n; const amp = 1 + 0.25 * n; const fl = f < 0.03 ? Math.exp(-(((f - 0.012) / 0.012) ** 2)) : f < 0.12 ? 0.25 * Math.exp(-(f - 0.03) / 0.03) : 0;
+      const LHe = LH * (0.02 + 60 * amp * fl); const quench = f < 0.2 ? 1 - 0.9 * Math.exp(-(((f - 0.03) / 0.08) ** 2)) : 1;
+      const LHn = LH * quench * (0.8 + 0.25 * f); const Lsurf = LHn + 0.3 * LHe * (f > 0.02 ? 1 : 0) + LH * 0.15 * Math.exp(-(((f - 0.1) / 0.15) ** 2)) * (f > 0.03 ? 1 : 0);
+      return { LHe, LH: LHn, L: Math.max(LHn, Lsurf) };
+    };
+    const x0 = PLOT_MARGIN, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (x: number) => x0 + x / N * (x1 - x0); const Y = (lL: number) => y1 - 6 - (lL - 1) / 6 * (y1 - y0 - 12);
+    for (let lL = 1; lL <= 7; lL++) { this.line(x0, Y(lL), x1, Y(lL), hexA(C.grid, 0.9)); this.text(`10${sup(lL)}`, x0 - 4, Y(lL), C.dim, 8, 'right'); }
+    for (let n = 0; n <= N; n++) this.text(fmtYr(n * dtp), X(n), y1 + 10, C.dim, 8, 'center');
+    this.text('time on the TP-AGB', x1, y1 + 22, C.dim, 9, 'right'); this.text('luminosity (L☉)', x0 + 6, y0 + 10, C.dim, 8);
+    plotCurve(c, 0, N, 1500, X, (x) => Y(Math.log10(Math.max(10, lum(x).LHe))), C.mars, 1.5); this.text('L_He (shell flashes)', X(0.3), Y(Math.log10(LH * 0.02)) - 9, C.mars, 8);
+    plotCurve(c, 0, N, 1500, X, (x) => Y(Math.log10(Math.max(10, lum(x).LH))), C.sun, 1.5); this.text('L_H (hydrogen shell)', X(0.3), Y(Math.log10(LH)) + 12, C.sun, 8);
+    plotCurve(c, 0, N, 1500, X, (x) => Y(Math.log10(lum(x).L)), '#fff', 1, [3, 2]); this.text('L surface', X(N - 0.7), Y(Math.log10(lum(N - 0.7).L)) - 9, C.text, 8, 'center');
+    const cur = lum(this.t); this.line(X(this.t), y0, X(this.t), y1, hexA(C.text, 0.35), 1, [2, 3]);
+    this.text('interpulse: H shell dominates, He ash piles onto the thin He layer', X(0.6), y0 + 26, C.dim, 7); this.text('flash: He layer ignites, pushes the H shell out and quenches it', X(0.6), y0 + 37, C.dim, 7);
+    const f = this.t - Math.floor(this.t);
+    this.setReadout([
+      ['Core mass → interpulse period', `M_c = ${fmt(Mc, 2)} M☉ · Δt ≈ ${fmtYr(dtp)} · pulse ${Math.floor(this.t) + 1} of ${N}, growing in amplitude`, C.mars],
+      ['Now', f < 0.03 ? 'He shell flash: L_He ~ ' + sci(cur.LHe, 1) + ' L☉, hydrogen shell quenched' : f < 0.2 ? 'after the flash: intershell convection, third dredge-up possible; surface L dips then recovers' : 'quiet interpulse: hydrogen shell burning, He layer growing', C.text],
+      ['Luminosities', `L_H = ${sci(cur.LH, 1)} · L_He = ${sci(cur.LHe, 1)} · L = ${sci(cur.L, 1)} L☉ (Paczyński: L ≈ 5.9×10⁴ (M_c − 0.52) = ${sci(LH, 1)} L☉)`, C.sun],
+      ['Observed as', 'Mira / long-period variables (100–700 d); period changes of R Hya, R Aql, W Dra may be shell flashes made visible'],
+    ]);
+  }
+}
+
+/* --------------------------------------------- 13.2d s-process & carbon stars ---- */
+
+const SPROC_STABLE: Array<[number, number[]]> = [[38, [46, 48, 49, 50]], [39, [50]], [40, [50, 51, 52, 54, 56]], [41, [52]], [42, [50, 52, 53, 54, 55, 56, 58]], [43, []], [44, [52, 54, 55, 56, 57, 58, 60]]];
+const SPROC_PATH: Array<[number, number, string]> = [[38, 50, '⁸⁸Sr'], [38, 51, '⁸⁹Sr β⁻ 50 d'], [39, 50, '⁸⁹Y'], [39, 51, '⁹⁰Y β⁻ 64 h'], [40, 50, '⁹⁰Zr'], [40, 51, '⁹¹Zr'], [40, 52, '⁹²Zr'], [40, 53, '⁹³Zr (1.5 Myr: captures first)'], [40, 54, '⁹⁴Zr'], [40, 55, '⁹⁵Zr β⁻ 64 d'], [41, 54, '⁹⁵Nb β⁻ 35 d'], [42, 53, '⁹⁵Mo'], [42, 54, '⁹⁶Mo'], [42, 55, '⁹⁷Mo'], [42, 56, '⁹⁸Mo'], [42, 57, '⁹⁹Mo β⁻ 66 h'], [43, 56, '⁹⁹Tc — 2.1 × 10⁵ yr: seen in S and C stars'], [43, 57, '¹⁰⁰Tc β⁻ 16 s'], [44, 56, '¹⁰⁰Ru']];
+const SPROC_EL = ['Sr', 'Y', 'Zr', 'Nb', 'Mo', 'Tc', 'Ru'];
+class SprocessWidget extends CanvasWidget {
+  private step = 0; private co = 0.5;
+  constructor() {
+    super(1.8);
+    this.slider('C/O at the surface', 0.3, 2, 0.01, this.co, (v) => fmt(v, 2), (v) => { this.co = v; });
+    this.playButton();
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    this.step = (this.step + dt * 1.2) % (SPROC_PATH.length + 2); const k = Math.min(SPROC_PATH.length - 1, Math.floor(this.step));
+    // left: chart of nuclides
+    const x0 = 46, x1 = w * 0.56, y0 = 20, y1 = h - 34;
+    const cw = (x1 - x0) / 15, ch = (y1 - y0) / 7;
+    const CX = (N: number) => x0 + (N - 46) * cw, CY = (Z: number) => y1 - (Z - 38 + 1) * ch;
+    for (const [Z, Ns] of SPROC_STABLE) { this.text(`${SPROC_EL[Z - 38]} ${Z}`, x0 - 4, CY(Z) + ch / 2, Z === 43 ? C.red : C.dim, 8, 'right'); for (const N of Ns) { c.fillStyle = hexA(C.dim, 0.35); c.fillRect(CX(N) + 1, CY(Z) + 1, cw - 2, ch - 2); } }
+    for (let N = 46; N <= 60; N += 2) this.text(`${N}`, CX(N) + cw / 2, y1 + 10, C.dim, 8, 'center');
+    this.text('neutron number N →', x1, y1 + 22, C.dim, 9, 'right'); this.text('Z ↑', x0 + 4, y0 - 8, C.dim, 8);
+    this.text('grey: stable isotopes · ⁹⁹Tc has none', x0 + 10, y0 + 2, C.dim, 7);
+    for (let i = 0; i <= k; i++) { const [Z, N] = SPROC_PATH[i]; const isTc = Z === 43; c.fillStyle = isTc ? hexA(C.red, 0.85) : hexA(C.sun, i === k ? 0.95 : 0.5); c.fillRect(CX(N) + 1, CY(Z) + 1, cw - 2, ch - 2); if (i > 0) { const [Z0, N0] = SPROC_PATH[i - 1]; const beta = Z !== Z0; this.line(CX(N0) + cw / 2, CY(Z0) + ch / 2, CX(N) + cw / 2, CY(Z) + ch / 2, beta ? C.blue : C.green, 1.5); } }
+    this.text(SPROC_PATH[k][2], (x0 + x1) / 2, y0 + 14, C.text, 9, 'center');
+    this.text('→ (n,γ) capture', x1 - 4, y0 + 2, C.green, 7, 'right'); this.text('↖ β⁻ decay', x1 - 4, y0 + 12, C.blue, 7, 'right');
+    // right: C/O chemistry
+    const px0 = w * 0.64, px1 = w - 12, py0 = 14, py1 = h - 30;
+    const co = this.co, Cn = co, On = 1; const CO = Math.min(Cn, On), spareC = Math.max(0, Cn - On), spareO = Math.max(0, On - Cn);
+    const type = co < 0.95 ? 'M' : co <= 1.05 ? 'S' : 'C';
+    this.text(`atmosphere with C/O = ${fmt(co, 2)}: spectral type ${type}`, px0, py0 + 6, type === 'C' ? C.red : type === 'S' ? C.accent : C.blue, 9);
+    const bars: Array<[string, number, string]> = [['CO (locks up the scarcer element)', CO, C.dim], ['free O → TiO, VO, H₂O, silicate dust', spareO, C.blue], ['free C → C₂, CN, SiC, graphite dust', spareC, C.red], ['ZrO (S stars, Zr from the s-process)', co > 0.85 && co < 1.15 ? 0.4 * (1 - Math.abs(co - 1) / 0.15) : 0, C.accent]];
+    let y = py0 + 30; const bw = px1 - px0 - 10;
+    for (const [lab, v, col] of bars) { this.text(lab, px0, y, col, 8); c.fillStyle = hexA(col, 0.8); c.fillRect(px0, y + 7, bw * Math.min(1, v), 7); y += 26; }
+    const desc = type === 'M' ? 'oxygen-rich: TiO bands, silicate dust; the giants of the first ascent and most of the AGB' : type === 'S' ? 'C ≈ O: ZrO instead of TiO, technetium lines — s-process ash reaching the surface' : 'carbon star: C₂ and CN bands, SiC and graphite dust; third dredge-up has flipped the ratio';
+    const lines: string[] = []; let cur = ''; for (const word of desc.split(' ')) { if ((cur + ' ' + word).length > 40) { lines.push(cur); cur = word; } else cur = cur ? cur + ' ' + word : word; } lines.push(cur);
+    lines.forEach((ln, i) => this.text(ln, px0, y + 4 + 10 * i, C.text, 7));
+    this.text('CO (11.1 eV) forms first, taking all of the scarcer element', px0, py1 - 10, C.dim, 7);
+    this.setReadout([
+      ['Third dredge-up', 'in stars above ~2 M☉ the post-flash convection reaches the intershell, where C/O ≈ 5–10; each pulse raises the surface C/O until the star turns from M to S to C', C.text],
+      ['Neutron sources', '¹³C(α,n)¹⁶O and ²²Ne(α,n)²⁵Mg in the intershell; captures every few years, so unstable nuclei decay before the next: the slow process', C.green],
+      ['Technetium', '⁹⁹Tc half-life 2.1 × 10⁵ yr — Merrill 1952: its lines in S stars prove nucleosynthesis in the last few hundred thousand years', C.red],
+      ['Products', 'about half the elements beyond iron: Sr, Y, Zr, Ba, La, Ce, Pb — the "s-process peaks" at closed neutron shells N = 50, 82, 126'],
+    ]);
+  }
+}
+
+/* --------------------------------------------------- 13.2e AGB mass loss ---- */
+
+class AgbmasslossWidget extends CanvasWidget {
+  private lL = Math.log10(7000); private R = 310; private M0 = 1; private eta = 1;
+  constructor() {
+    super(1.8);
+    this.slider('Luminosity', 3, 4.6, 0.02, this.lL, (v) => `${sci(10 ** v, 1)} L☉`, (v) => { this.lL = v; });
+    this.slider('Radius', 100, 600, 5, this.R, (v) => `${v} R☉`, (v) => { this.R = v; });
+    this.slider('Initial mass', 0.8, 8, 0.1, this.M0, (v) => `${fmt(v, 1)} M☉`, (v) => { this.M0 = v; });
+    this.slider('η (Reimers)', 0.3, 3, 0.05, this.eta, (v) => fmt(v, 2), (v) => { this.eta = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const L = 10 ** this.lL, R = this.R, M0 = this.M0, eta = this.eta;
+    const finalMass = (m: number) => Math.min(1.38, 0.5 + 0.1 * m);        // initial–final mass relation (schematic, book values)
+    const Mf = finalMass(M0);
+    const mdot = (M: number) => 4e-13 * eta * L * R / M;                  // M☉/yr
+    const T = 5772 * Math.pow(L / (R * R), 0.25);
+    // M(t): M² = M0² − 2·4e-13 η L R t
+    const kk = 8e-13 * eta * L * R; const tEnd = (M0 * M0 - Mf * Mf) / kk;
+    const x0 = PLOT_MARGIN, x1 = w * 0.55, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (t: number) => x0 + t / (tEnd * 1.1) * (x1 - x0); const Y = (M: number) => y1 - 6 - M / (M0 * 1.1) * (y1 - y0 - 12);
+    for (let i = 0; i <= 5; i++) { const t = tEnd * 1.1 * i / 5; this.text(fmtYr(t), X(t), y1 + 10, C.dim, 7, 'center'); }
+    for (let M = 0; M <= M0; M += M0 > 3 ? 1 : 0.2) { this.line(x0, Y(M), x1, Y(M), hexA(C.grid, 0.9)); this.text(fmt(M, 1), x0 - 4, Y(M), C.dim, 8, 'right'); }
+    this.text('time on the AGB', x1, y1 + 22, C.dim, 9, 'right'); this.text('mass (M☉)', x0 + 6, y0 + 10, C.dim, 8);
+    c.fillStyle = hexA(C.purple, 0.1); c.fillRect(x0, Y(Mf), x1 - x0, y1 - Y(Mf)); this.text(`degenerate core ${fmt(Mf, 2)} M☉ → white dwarf`, x0 + 8, Y(Mf) + 10, C.purple, 7);
+    plotCurve(c, 0, tEnd, 120, X, (t) => Y(Math.sqrt(Math.max(Mf * Mf, M0 * M0 - kk * t))), C.sun, 2);
+    // superwind: last 10 % faster
+    const tsw = tEnd * 0.85; this.line(X(tsw), y0, X(tsw), y1, hexA(C.red, 0.5), 1, [3, 3]); this.text('superwind 10⁻⁴ M☉/yr, OH/IR phase', X(tsw) - 4, y0 + 24, C.red, 7, 'right');
+    this.text('M² = M₀² − 8×10⁻¹³ η L R t  (L, R constant — not really)', x0 + 8, y1 - 14, C.dim, 7);
+    // right: initial–final mass relation
+    const px0 = w * 0.63, px1 = w - 12, py0 = 14, py1 = h - 30;
+    axesBox(c, px0, py0, px1, py1);
+    const PX = (m: number) => px0 + m / 10 * (px1 - px0); const PY = (m: number) => py1 - 6 - m / 1.6 * (py1 - py0 - 12);
+    for (const m of [0, 2, 4, 6, 8, 10]) this.text(`${m}`, PX(m), py1 + 10, C.dim, 8, 'center');
+    for (const m of [0.5, 1, 1.5]) { this.line(px0, PY(m), px1, PY(m), hexA(C.grid, 0.9)); this.text(fmt(m, 1), px0 - 4, PY(m), C.dim, 8, 'right'); }
+    this.text('initial mass (M☉)', px1, py1 + 22, C.dim, 9, 'right'); this.text('final (white dwarf) mass', px0 + 6, py0 + 10, C.dim, 8);
+    this.line(px0, PY(1.4), px1, PY(1.4), C.red, 1.5, [4, 3]); this.text('Chandrasekhar limit 1.4 M☉', px1 - 4, PY(1.4) - 8, C.red, 8, 'right');
+    plotCurve(c, 0.8, 8, 40, PX, (m) => PY(finalMass(m)), C.sun, 2);
+    plotCurve(c, 4, 8, 20, PX, (m) => PY(Math.min(1.58, 0.9 + (m - 4) * 0.35)), hexA(C.red, 0.6), 1, [3, 3]); this.text('no mass loss: core', PX(7.2), PY(1.05), C.red, 7, 'center'); this.text('would pass 1.4 M☉', PX(7.2), PY(0.97), C.red, 7, 'center');
+    c.fillStyle = hexA(C.blue, 0.07); c.fillRect(PX(0.8), py0, PX(4) - PX(0.8), py1 - py0); this.text('CO cores', PX(2.4), py1 - 14, C.blue, 8, 'center');
+    c.fillStyle = hexA(C.green, 0.07); c.fillRect(PX(4), py0, PX(8) - PX(4), py1 - py0); this.text('ONeMg cores', PX(6), py1 - 14, C.green, 8, 'center');
+    c.fillStyle = hexA(C.red, 0.1); c.fillRect(PX(8), py0, px1 - PX(8), py1 - py0); this.text('SN', PX(9), py1 - 14, C.red, 8, 'center');
+    this.circle(PX(M0), PY(Mf), 5, '#fff', C.sun);
+    this.setReadout([
+      ['Reimers rate now', `Ṁ = 4×10⁻¹³ η L R / M = ${sci(mdot(M0), 1)} M☉ yr⁻¹ at M = ${fmt(M0, 1)} M☉ (T_eff = ${fmt(T, 0)} K, g = ${fmt(274 * M0 / (R * R), 4)} m s⁻²)`, C.sun],
+      ['Envelope gone after', `${fmtYr(tEnd)} — ${fmt(M0 - Mf, 2)} M☉ returned to the ISM, enriched in He, C, N, s-process; dust: ${T < 3200 ? 'condenses (silicates or SiC/graphite)' : 'too hot to condense near the star'}`, C.text],
+      ['Remnant', `${fmt(Mf, 2)} M☉ ${M0 < 4 ? 'CO white dwarf (core never hot enough for carbon burning)' : 'ONeMg white dwarf (carbon burned; ²²Ne(α,n)²⁵Mg, ²²Ne(α,γ)²⁶Mg)'} — below 1.4 M☉ thanks to the wind`, C.purple],
+      ['Driver', 'radiation pressure on dust grains formed at ~3000 K, dragging the gas; helped by pulsation and shell flashes — mechanism still uncertain'],
+    ]);
+  }
+}
+
+/* ----------------------------------------------------- 13.2f planetary nebula ---- */
+
+class PlanetaryWidget extends CanvasWidget {
+  private v = 20; private age = 10000;
+  constructor() {
+    super(1.8);
+    this.slider('Expansion speed', 5, 60, 1, this.v, (v) => `${v} km/s`, (v) => { this.v = v; });
+    this.slider('Age', 0, 50000, 250, this.age, (v) => fmtYr(v), (v) => { this.age = v; });
+  }
+  protected draw(dt: number) {
+    const c = this.ctx, w = this.w, h = this.h;
+    if (dt > 0) { this.age = (this.age + dt * 2500) % 50000; }
+    const age = this.age, v = this.v; const Rpc = v * 1e3 * age * YR_S / PC_M;   // radius in pc
+    const d = 213; const thetaArcmin = 2 * Rpc / d * (180 / Math.PI) * 60;
+    // central star: post-AGB crossing in ~1e4 yr at L≈5000, then fading
+    const f = Math.min(1, age / 10000); const lT = 3.7 + 1.4 * f; const Lstar = age < 10000 ? 5000 : 5000 * Math.pow(10000 / age, 2.2);
+    const T = 10 ** lT;
+    const bright = Math.max(0, 1 - age / 50000) * Math.min(1, (T - 25000) / 20000 + 0.2) * Math.pow(0.3 / Math.max(0.05, Rpc), 1.2) * 0.8;
+    // left: nebula
+    const cx = w * 0.28, cy = h * 0.5, scale = Math.min(w * 0.26, h * 0.46) / 1.0;   // 1 pc = scale px
+    c.fillStyle = C.bg; c.fillRect(0, 0, w * 0.56, h);
+    const Rpx = Math.max(2, Rpc * scale);
+    if (age > 0) {
+      const g = c.createRadialGradient(cx, cy, Rpx * 0.3, cx, cy, Rpx * 1.15);
+      g.addColorStop(0, hexA('#2ad4c8', 0.02 + 0.5 * Math.min(1, bright)));
+      g.addColorStop(0.65, hexA('#2ad4c8', 0.35 * Math.min(1, bright)));
+      g.addColorStop(0.85, hexA('#e0484f', 0.5 * Math.min(1, bright)));
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      c.fillStyle = g; c.beginPath(); c.arc(cx, cy, Rpx * 1.15, 0, TAU); c.fill();
+      c.fillStyle = hexA('#000000', 0.5); c.beginPath(); c.arc(cx, cy, Rpx * 0.35, 0, TAU); c.fill();
+    }
+    this.circle(cx, cy, 2.5 + (age < 10000 ? 1.5 : 0), undefined, rgba(tempRGB(T), 1)); this.glow(cx, cy, 10, rgba(tempRGB(T), 0.6));
+    this.line(cx - scale * 0.5, h - 18, cx + scale * 0.5, h - 18, C.text, 1); this.text('1 pc', cx, h - 28, C.text, 8, 'center');
+    this.text('[O III] 500.7 nm teal · Hα + [N II] red rim', 8, 12, C.dim, 7); this.text(`T_gas ≈ 10⁴ K · n ∝ R⁻³ → surface brightness fades`, 8, 23, C.dim, 7);
+    if (bright < 0.03 && age > 1000) this.text('merged with the ISM', cx, cy - Rpx - 10, C.dim, 8, 'center');
+    // right: H–R
+    const x0 = w * 0.64, x1 = w - 12, y0 = 14, y1 = h - 30;
+    const { X, Y } = hrFrame(c, x0, y0, x1, y1, 3.4, 5.3, -2, 4.5);
+    plotCurve(c, Math.log10(0.3), Math.log10(8), 50, (lm) => X(Math.log10(mainSequence(10 ** lm).T)), (lm) => Y(Math.log10(mainSequence(10 ** lm).L)), hexA(C.dim, 0.5), 1, [5, 4]); this.text('MS', X(3.6), Y(-0.9), C.dim, 7);
+    plotCurve(c, 0, 1, 60, (q) => X(3.7 + 1.4 * q), () => Y(Math.log10(5000)), C.green, 1.5);
+    plotCurve(c, 0, 1, 60, (q) => X(5.1 - 0.7 * q * q), (q) => Y(Math.log10(5000) - 5 * q), C.purple, 1.5, [3, 3]); this.text('WD cooling', X(4.6), Y(-0.3), C.purple, 7);
+    this.text('post-AGB: constant L', X(4.4), Y(3.9), C.green, 7, 'center'); this.text('AGB', X(3.55), Y(3.9), C.red, 7, 'center');
+    const lTs = age < 10000 ? lT : 5.1 - 0.7 * Math.min(1, Math.log10(Lstar / 5000) / -5) ** 2;
+    this.circle(X(lTs), Y(Math.log10(Lstar)), 5, '#fff', rgba(tempRGB(10 ** lTs), 1), 1.5);
+    this.setReadout([
+      ['Nebula', `R = ${fmt(Rpc, 2)} pc, diameter ${fmt(2 * Rpc, 2)} pc · at 213 pc (Helix) that is ${fmt(thetaArcmin, 1)}′${Math.abs(thetaArcmin - 16) < 1.5 ? ' — the Helix\'s 16′' : ''}`, '#2ad4c8'],
+      ['Kinematic age', `t = R / v = ${fmtYr(age)} at ${v} km/s · typical PN: 10–30 km/s, 0.3 pc, ~10⁴ yr; gone in 5 × 10⁴ yr`, C.text],
+      ['Central star', `T_eff ≈ ${fmtSci(10 ** lTs, 0)} K · L = ${fmtSci(Lstar, 1)} L☉ · ${age < 10000 ? 'crossing the H–R diagram; UV ionises the ejecta' : 'shells out: fading white dwarf'}`, rgba(tempRGB(10 ** lTs), 1)],
+      ['Galaxy', '~1500 known, ~15 000 estimated; ~0.5 M☉ each → ≈ 1 M☉ yr⁻¹ of enriched gas back to the ISM'],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 13.3a stellar populations ---- */
+
+class StellarpopsWidget extends CanvasWidget {
+  private t = 13.8; private seedPts: Array<[number, number, number]> = [];
+  constructor() {
+    super(1.8);
+    this.slider('Time since the Big Bang', 0, 13.8, 0.05, this.t, (v) => `${fmt(v, 1)} Gyr`, (v) => { this.t = v; });
+    let s = 7; const rnd = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+    for (let i = 0; i < 700; i++) { const kind = rnd(); const r = kind < 0.55 ? rnd() ** 0.7 : kind < 0.75 ? rnd() * 0.25 : rnd() ** 0.5; const ang = rnd() * TAU; const z = kind < 0.55 ? (rnd() - 0.5) * 0.06 : kind < 0.75 ? (rnd() - 0.5) * 0.3 * (1 - r) : (rnd() - 0.5) * 1.6 * Math.sqrt(1 - r * r); this.seedPts.push([r * Math.cos(ang), z, kind]); }
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const t = this.t;
+    const Z = (tt: number) => 0.03 * (1 - Math.exp(-tt / 6.5)) ** 1.4;        // schematic enrichment
+    // left: edge-on Galaxy
+    const cx = w * 0.3, cy = h * 0.5, sc = Math.min(w * 0.26, h * 0.5);
+    c.fillStyle = hexA(C.sun, 0.05); c.beginPath(); c.ellipse(cx, cy, sc * 1.05, sc * 0.78, 0, 0, TAU); c.fill();
+    this.text('halo: Pop II, globulars, 10–13 Gyr, Z ~ 10⁻⁴–10⁻³, fast', cx, cy - sc * 0.78 - 8, C.accent, 7, 'center');
+    for (const [x, z, kind] of this.seedPts) {
+      const popI = kind < 0.55, bulge = kind >= 0.55 && kind < 0.75;
+      const born = popI ? 5 + 8.8 * ((kind) / 0.55) : bulge ? 1 + 3 * ((kind - 0.55) / 0.2) : 0.3 + 1.5 * ((kind - 0.75) / 0.25);
+      if (born > t) continue;
+      const col = popI ? (kind < 0.15 ? C.blue : kind < 0.4 ? C.star : C.sun) : bulge ? C.venus : C.red;
+      c.fillStyle = hexA(col, popI ? 0.9 : 0.7); c.fillRect(cx + x * sc, cy + z * sc, popI && kind < 0.15 ? 2 : 1.5, popI && kind < 0.15 ? 2 : 1.5);
+    }
+    if (t < 0.3) this.text('only hydrogen and helium: no stars yet', cx, cy, C.dim, 9, 'center');
+    if (t >= 0.3 && t < 1.5) this.text('Population III: Z = 0, massive, short-lived (none found)', cx, cy + sc * 0.55, C.purple, 8, 'center');
+    this.text('disc: Pop I, Z ≈ 0.01–0.03, slow, 0–9 Gyr; Sun Z = 0.02', cx, cy + sc * 0.78 + 10, C.blue, 7, 'center');
+    this.text('bulge', cx, cy - sc * 0.33, C.venus, 7, 'center');
+    this.circle(cx + 0.6 * sc, cy, 3, C.sun); this.text('☉', cx + 0.6 * sc + 7, cy, C.sun, 8);
+    // right: enrichment curve
+    const x0 = w * 0.66, x1 = w - 12, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (tt: number) => x0 + tt / 13.8 * (x1 - x0); const Y = (z: number) => y1 - 6 - z / 0.032 * (y1 - y0 - 12);
+    for (const z of [0, 0.01, 0.02, 0.03]) { this.line(x0, Y(z), x1, Y(z), hexA(C.grid, 0.9)); this.text(fmt(z, 2), x0 - 4, Y(z), C.dim, 8, 'right'); }
+    for (const tt of [0, 5, 10, 13.8]) this.text(fmt(tt, 0), X(tt), y1 + 10, C.dim, 8, 'center');
+    this.text('Gyr after the Big Bang', x1, y1 + 22, C.dim, 9, 'right'); this.text('Z of newly formed stars', x0 + 6, y0 + 10, C.dim, 8);
+    plotCurve(c, 0, t, 60, X, (tt) => Y(Z(tt)), C.sun, 2); plotCurve(c, t, 13.8, 60, X, (tt) => Y(Z(tt)), hexA(C.sun, 0.3), 1, [3, 3]);
+    c.fillStyle = hexA(C.purple, 0.1); c.fillRect(X(0.1), y0, X(1.0) - X(0.1), y1 - y0); this.text('III', X(0.55), y0 + 24, C.purple, 8, 'center');
+    c.fillStyle = hexA(C.accent, 0.08); c.fillRect(X(1.0), y0, X(4) - X(1.0), y1 - y0); this.text('II', X(2.5), y0 + 24, C.accent, 8, 'center');
+    c.fillStyle = hexA(C.blue, 0.06); c.fillRect(X(4), y0, x1 - X(4), y1 - y0); this.text('I', X(9), y0 + 24, C.blue, 8, 'center');
+    this.circle(X(9.2), Y(0.02), 4, C.sun); this.text('Sun forms', X(9.2), Y(0.02) - 10, C.sun, 7, 'center');
+    this.line(X(t), y0, X(t), y1, hexA(C.text, 0.4), 1, [2, 3]);
+    this.setReadout([
+      ['Now', `${fmt(t, 1)} Gyr after the Big Bang · new stars form with Z ≈ ${fmt(Z(t), 3)}`, C.sun],
+      ['Population III', 'the first stars, Z = 0: born ~0.1–1 Gyr, massive and gone; still hypothetical', C.purple],
+      ['Population II', 'metal-poor (Z ~ 10⁻⁴–10⁻³, [Fe/H] −1 to −2.5), old, in the halo and bulge, large random velocities; Baade 1944', C.accent],
+      ['Population I', 'metal-rich (Z up to 0.03), disc, near-circular orbits, all ages including the Sun; each generation adds metals via winds, PNe and supernovae', C.blue],
+    ]);
+  }
+}
+
+/* ------------------------------------------------- 13.3b main-sequence fitting ---- */
+
+type FitCluster = 'hyades' | 'pleiades' | 'praesepe' | 'm67';
+const FIT_CLUSTERS: Record<FitCluster, { name: string; dm: number; age: number; ebv: number }> = { hyades: { name: 'Hyades', dm: 3.33, age: 625, ebv: 0.0 }, pleiades: { name: 'Pleiades', dm: 5.65, age: 115, ebv: 0.04 }, praesepe: { name: 'Praesepe (M44)', dm: 6.3, age: 650, ebv: 0.03 }, m67: { name: 'M67', dm: 9.6, age: 4000, ebv: 0.04 } };
+class MsfittingWidget extends CanvasWidget {
+  private cl: FitCluster = 'pleiades'; private shift = 0; private stars: Array<[number, number]> = [];
+  constructor() {
+    super(1.8);
+    this.segmented<FitCluster>([['hyades', 'Hyades'], ['pleiades', 'Pleiades'], ['praesepe', 'Praesepe'], ['m67', 'M67']], this.cl, (v) => { this.cl = v; this.build(); });
+    this.slider('Vertical shift m − M', 0, 12, 0.02, this.shift, (v) => `${fmt(v, 2)} mag`, (v) => { this.shift = v; });
+    this.build();
+  }
+  private build() {
+    const cfg = FIT_CLUSTERS[this.cl]; let s = 13; const rnd = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+    this.stars = [];
+    for (let i = 0; i < 160; i++) {
+      const M = 10 ** (Math.log10(0.4) + rnd() * (Math.log10(6) - Math.log10(0.4)));
+      const st = evoState(M, cfg.age); if (st.phase === 'wd' || st.phase === 'sn' || st.phase === 'pagb') continue;
+      const T = 10 ** st.lT, L = 10 ** st.lL; const bin = rnd() < 0.25 ? -0.75 * rnd() : 0;
+      this.stars.push([bvFromT(T) + cfg.ebv + (rnd() - 0.5) * 0.04, mvFromLum(L, T) + cfg.dm + 3.1 * cfg.ebv + bin + (rnd() - 0.5) * 0.1]);
+    }
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const cfg = FIT_CLUSTERS[this.cl];
+    const x0 = PLOT_MARGIN, x1 = w * 0.6, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (bv: number) => x0 + (bv + 0.3) / 2.1 * (x1 - x0); const Y = (Mv: number) => y0 + 6 + (Mv + 4) / 20 * (y1 - y0 - 12);
+    for (let Mv = -4; Mv <= 16; Mv += 4) { this.line(x0, Y(Mv), x1, Y(Mv), hexA(C.grid, 0.9)); this.text(`${Mv}`, x0 - 4, Y(Mv), C.dim, 8, 'right'); }
+    for (const bv of [0, 0.5, 1, 1.5]) this.text(fmt(bv, 1), X(bv), y1 + 10, C.dim, 8, 'center');
+    this.text('B − V', x1, y1 + 22, C.dim, 9, 'right'); this.text('M_V (calibrated)  ·  cluster: V − shift', x0 + 6, y0 + 10, C.dim, 8);
+    // calibrated MS from parallax stars
+    plotCurve(c, Math.log10(0.25), Math.log10(8), 80, (lm) => X(bvFromT(mainSequence(10 ** lm).T)), (lm) => Y(mvFromLum(mainSequence(10 ** lm).L, mainSequence(10 ** lm).T)), C.sun, 2); this.text('calibrated ZAMS (parallaxes)', X(1.0), Y(mvFromLum(mainSequence(0.6).L, mainSequence(0.6).T)) + 14, C.sun, 7);
+    for (const [bv, V] of this.stars) { const Mv = V - this.shift; if (Mv > 16.5 || Mv < -4.5) continue; this.circle(X(bv), Y(Mv), 1.8, undefined, hexA(C.blue, 0.85)); }
+    // fit quality: rms distance in magnitude of unevolved MS stars (B−V > 0.4) from the ZAMS
+    let sum = 0, n = 0; for (const [bv, V] of this.stars) { if (bv < 0.45 || bv > 1.4) continue; let lo = Math.log10(0.25), hi = Math.log10(8); for (let k = 0; k < 30; k++) { const m = (lo + hi) / 2; if (bvFromT(mainSequence(10 ** m).T) > bv) lo = m; else hi = m; } const ms = mainSequence(10 ** lo); const r = V - this.shift - mvFromLum(ms.L, ms.T) + 0.25; sum += Math.min(4, Math.abs(r)); n++; }
+    const rms = n ? sum / n : 9; const good = Math.abs(this.shift - cfg.dm - 3.1 * cfg.ebv) < 0.15;
+    const dist = 10 ** ((this.shift - 3.1 * cfg.ebv + 5) / 5);
+    // right
+    const bx0 = w * 0.67, bx1 = w - 12; let y = y0 + 8;
+    this.text(cfg.name, bx0, y, C.text, 10); y += 16;
+    this.text(`shift applied: ${fmt(this.shift, 2)} mag`, bx0, y, C.blue, 8); y += 12;
+    this.text(`mean offset from ZAMS: ${fmt(rms, 2)} mag`, bx0, y, rms < 0.35 ? C.green : C.dim, 8); y += 12;
+    c.fillStyle = hexA(C.grid, 1); c.fillRect(bx0, y, bx1 - bx0, 6); c.fillStyle = good ? C.green : C.blue; c.fillRect(bx0, y, (bx1 - bx0) * Math.max(0, 1 - rms / 2), 6); y += 16;
+    this.text(good ? 'fit: the lower main sequence lies on the calibration' : this.shift < cfg.dm + 3.1 * cfg.ebv ? 'cluster too faint → shift more' : 'cluster too bright → shift less', bx0, y, good ? C.green : C.dim, 8); y += 20;
+    this.text('reddening E(B−V) moves the cluster right and', bx0, y, C.dim, 7); y += 10; this.text(`down by A_V = 3.1 E(B−V) = ${fmt(3.1 * cfg.ebv, 2)} mag: remove first`, bx0, y, C.dim, 7); y += 16;
+    this.text('binaries sit up to 0.75 mag above; fit the lower edge', bx0, y, C.dim, 7); y += 10;
+    this.text(`turn-off: ${cfg.age < 200 ? 'B stars still on the MS' : cfg.age < 1000 ? 'A stars leaving' : 'near solar: old cluster, giants present'}`, bx0, y, C.dim, 7);
+    this.setReadout([
+      ['Distance modulus → distance', `m − M = ${fmt(this.shift - 3.1 * cfg.ebv, 2)} (after A_V) → d = 10^((m−M+5)/5) = ${fmt(dist, 0)} pc`, good ? C.green : C.blue],
+      ['Literature', `${cfg.name}: m − M ≈ ${fmt(cfg.dm, 2)}, d ≈ ${fmt(10 ** ((cfg.dm + 5) / 5), 0)} pc, age ${fmtYr(cfg.age * 1e6)}`, C.text],
+      ['Method', 'all members share one distance, so the apparent CMD is the absolute CMD shifted by m − M; the Hyades (parallaxes) calibrate the ZAMS used for everything farther'],
+    ]);
+  }
+}
+
+/* ------------------------------------------------------ 13.3c isochrones (CMD) ---- */
+
+const ISO_CLUSTERS: Array<[string, number]> = [['NGC 2362', 1.0e6], ['h + χ Per', 6.5e6], ['Pleiades', 1.15e8], ['Hyades', 6.25e8], ['NGC 752', 1.9e9], ['M67', 4.0e9], ['M3 / 47 Tuc', 1.2e10]];
+class IsochroneWidget extends CanvasWidget {
+  private lt = 8; private popII = false; private masses: number[] = [];
+  constructor() {
+    super(1.8);
+    this.slider('Cluster age', 6, 10.14, 0.01, this.lt, (v) => fmtYr(10 ** v), (v) => { this.lt = v; });
+    this.segmented<'I' | 'II'>([['I', 'metal-rich (open cluster)'], ['II', 'metal-poor (globular)']], 'I', (v) => { this.popII = v === 'II'; });
+    let s = 21; const rnd = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+    // IMF-weighted sample via inverse CDF on a grid (Kroupa), 0.15–40 M☉
+    const grid: number[] = []; const cdf: number[] = []; let acc = 0; const lo = Math.log10(0.15), hi = Math.log10(40);
+    for (let i = 0; i < 400; i++) { const lm = lo + (i + 0.5) / 400 * (hi - lo); const m = 10 ** lm; acc += imfDm(m, 'kroupa') * m; grid.push(lm); cdf.push(acc); }
+    for (let i = 0; i < 1400; i++) { const r = rnd() * acc; let k = 0; while (k < 399 && cdf[k] < r) k++; this.masses.push(10 ** (grid[k] + (rnd() - 0.5) * (hi - lo) / 400)); }
+    // guarantee some massive stars for the young ages
+    for (let i = 0; i < 25; i++) this.masses.push(10 ** (Math.log10(3) + rnd() * (Math.log10(40) - Math.log10(3))));
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const t = 10 ** this.lt / 1e6;
+    const x0 = PLOT_MARGIN, x1 = w * 0.62, y0 = 14, y1 = h - 30;
+    axesBox(c, x0, y0, x1, y1);
+    const X = (bv: number) => x0 + (bv + 0.4) / 2.4 * (x1 - x0); const Y = (Mv: number) => y0 + 6 + (Mv + 9) / 26 * (y1 - y0 - 12);
+    for (let Mv = -8; Mv <= 16; Mv += 4) { this.line(x0, Y(Mv), x1, Y(Mv), hexA(C.grid, 0.9)); this.text(`${Mv}`, x0 - 4, Y(Mv), C.dim, 8, 'right'); }
+    for (const bv of [-0.3, 0, 0.5, 1, 1.5, 2]) this.text(fmt(bv, 1), X(bv), y1 + 10, C.dim, 8, 'center');
+    this.text('B − V', x1, y1 + 22, C.dim, 9, 'right'); this.text(`M_V  —  isochrone at ${fmtYr(t * 1e6)}`, x0 + 6, y0 + 10, C.dim, 8);
+    plotCurve(c, Math.log10(0.15), Math.log10(40), 80, (lm) => X(bvFromT(mainSequence(10 ** lm).T)), (lm) => Y(mvFromLum(mainSequence(10 ** lm).L, mainSequence(10 ** lm).T)), hexA(C.dim, 0.5), 1, [5, 4]);
+    const counts: Partial<Record<EvoPhase, number>> = {}; let mTO = 0;
+    let s = 5; const rnd = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+    for (const M of this.masses) {
+      let st = evoState(M, t, this.popII);
+      if (st.phase === 'sn') continue;
+      // blue stragglers: 1.5 % of stars above the turn-off kept on the MS in old clusters
+      if (t > 500 && st.phase !== 'ms' && st.phase !== 'pms' && M < 2.5 * Math.max(1, mTO || 1) && rnd() < 0.015) { const ms = mainSequence(M * 1.3); st = { phase: 'ms', lT: Math.log10(ms.T), lL: Math.log10(ms.L) }; }
+      if (st.phase === 'ms') mTO = Math.max(mTO, M);
+      counts[st.phase] = (counts[st.phase] ?? 0) + 1;
+      const T = 10 ** st.lT, L = 10 ** st.lL; const bv = bvFromT(T) + (rnd() - 0.5) * 0.03, Mv = mvFromLum(L, T) + (rnd() - 0.5) * 0.12;
+      if (Mv > 17 || Mv < -9) continue;
+      const col = st.phase === 'ms' ? hexA('#ffffff', 0.85) : PHASE_META[st.phase][1];
+      this.circle(X(bv), Y(Mv), st.phase === 'ms' || st.phase === 'pms' ? 1.5 : 2.2, undefined, col);
+    }
+    if (mTO > 0) { const to = msEvolved(mTO, 1); this.text('turn-off', X(bvFromT(to.T)) - 8, Y(mvFromLum(to.L, to.T)), C.text, 8, 'right'); }
+    const gap = mTO > 1.3 && mTO < 12; if (gap) this.text('Hertzsprung gap', X(0.65), Y(mvFromLum(msEvolved(mTO, 1).L, msEvolved(mTO, 1).T) - 0.5), C.accent, 8, 'center');
+    // right: legend + cluster list
+    const bx0 = w * 0.69, bx1 = w - 12; let y = y0 + 8;
+    this.text(`turn-off ≈ ${fmt(mTO, mTO < 3 ? 2 : 0)} M☉ (${spectralClass(msEvolved(mTO, 1).T)})`, bx0, y, C.text, 9); y += 14;
+    for (const ph of ['pms', 'ms', 'sgb', 'rgb', 'he', 'agb', 'pagb', 'wd'] as EvoPhase[]) { const n = counts[ph] ?? 0; this.text(`${PHASE_META[ph][0]}: ${n}`, bx0, y, n ? PHASE_META[ph][1] : C.faint, 7); y += 10; }
+    y += 6; this.text('real clusters (turn-off ages)', bx0, y, C.dim, 8); y += 12;
+    for (const [name, age] of ISO_CLUSTERS) { const near = Math.abs(Math.log10(age) - this.lt) < 0.12; this.text(`${name}`, bx0, y, near ? C.sun : C.dim, 7); this.text(fmtYr(age), bx1, y, near ? C.sun : C.dim, 7, 'right'); if (near) this.line(bx0, y + 6, bx1, y + 6, hexA(C.sun, 0.5)); y += 10; }
+    this.setReadout([
+      ['Turn-off clock', `t ≈ t_MS(M_TO): stars of ${fmt(mTO, mTO < 3 ? 2 : 0)} M☉ are leaving now; everything heavier has gone to the giant branches or beyond${(counts.sn ?? 0) ? '' : ''}`, C.text],
+      ['What you see', t < 20 ? 'upper MS only; low-mass stars still contracting (PMS, above the MS to the right): h + χ Persei' : gap ? 'a Hertzsprung gap between the turn-off and the red giants: the SGB crossing takes ~1 % of t_MS' : 'no gap: below ~1.25 M☉ the partly degenerate core makes the subgiant branch slow and continuous (M67, M3)', C.accent],
+      ['Helium burners', this.popII ? 'metal-poor: a blue horizontal branch spread in colour (RR Lyrae in the strip)' : mTO > 2 ? 'blue loop: core-He stars sit left of the giants (Cepheids among them)' : 'red clump: the HB of metal-rich stars bunches near B−V ≈ 1', C.sun],
+      ['Blue stragglers', t > 500 ? 'a few MS stars above the turn-off: rejuvenated by mass transfer or collisions' : 'none expected yet'],
+    ]);
+  }
+}
+
+/* -------------------------------------------------- 13.3d counts by phase ---- */
+
+class PhasecountsWidget extends CanvasWidget {
+  private lt = 10; private lN = 5;
+  constructor() {
+    super(1.8);
+    this.slider('Cluster age', 7, 10.14, 0.01, this.lt, (v) => fmtYr(10 ** v), (v) => { this.lt = v; });
+    this.slider('Stars formed', 3, 6, 0.1, this.lN, (v) => sci(10 ** v, 0), (v) => { this.lN = v; });
+  }
+  protected draw() {
+    const c = this.ctx, w = this.w, h = this.h;
+    const t = 10 ** this.lt / 1e6, N = 10 ** this.lN;
+    // cumulative IMF in log mass, then count stars whose main-sequence lifetime falls in each phase window (exact, no binning)
+    const lo = Math.log10(0.08), hi = Math.log10(100), nb = 600; const cum: number[] = [0];
+    for (let i = 0; i < nb; i++) { const m = 10 ** (lo + (i + 0.5) / nb * (hi - lo)); cum.push(cum[i] + imfDm(m, 'kroupa') * m); }
+    const F = (lm: number) => { const x = Math.max(0, Math.min(nb, (lm - lo) / (hi - lo) * nb)); const i = Math.floor(x); return i >= nb ? cum[nb] : cum[i] + (x - i) * (cum[i + 1] - cum[i]); };
+    const nIn = (lmA: number, lmB: number) => N * Math.max(0, F(Math.min(hi, lmB)) - F(Math.max(lo, lmA))) / cum[nb];
+    const lmFor = (fn: (m: number) => number, target: number) => { let a = lo, b = hi; for (let k = 0; k < 50; k++) { const m = (a + b) / 2; if (fn(10 ** m) > target) a = m; else b = m; } return (a + b) / 2; };
+    const lmTO = lmFor(evoMsLifetime, t), mTO = 10 ** lmTO, tMS = evoMsLifetime(mTO);
+    const wq = Math.max(0, Math.min(1, (lmTO - 0.1) / 0.2));
+    const fS = 0.18 + wq * (0.012 - 0.18), fR = 0.06 + wq * (0.02 - 0.06), fH = 0.012 + wq * (0.08 - 0.012), fA = 0.001 + wq * (0.01 - 0.001), fP = 2e-6;
+    const win = (a: number, b: number) => nIn(lmFor(evoMsLifetime, t / (1 + a)), lmFor(evoMsLifetime, t / (1 + b)));
+    const lmPms = pmsTime(0.08) > t ? lmFor(pmsTime, t) : lo;
+    const counts: Record<EvoPhase, number> = {
+      pms: nIn(lo, lmPms), ms: nIn(lmPms, lmTO), sgb: win(0, fS), rgb: win(fS, fS + fR), he: win(fS + fR, fS + fR + fH),
+      agb: Math.min(win(fS + fR + fH, fS + fR + fH + fA), nIn(lmFor(evoMsLifetime, t / (1 + fS + fR + fH + fA)), Math.log10(8))), pagb: win(fS + fR + fH + fA, fS + fR + fH + fA + fP),
+      wd: nIn(lmFor(evoMsLifetime, t / (1 + fS + fR + fH + fA + fP)), Math.log10(8)), sn: nIn(Math.max(Math.log10(8), lmFor(evoMsLifetime, t / (1 + fS + fR + fH))), hi),
+    };
+    const x0 = w * 0.3, x1 = w - 14, y0 = 14, y1 = h - 30;
+    const phases: EvoPhase[] = ['pms', 'ms', 'sgb', 'rgb', 'he', 'agb', 'pagb', 'wd', 'sn'];
+    const rowH = (y1 - y0) / phases.length;
+    const LX = (n: number) => x0 + Math.max(0, Math.log10(Math.max(0.3, n)) + 0.6) / (this.lN + 0.8) * (x1 - x0);
+    for (let e = 0; e <= this.lN; e++) { this.line(LX(10 ** e), y0, LX(10 ** e), y1, hexA(C.grid, 0.9)); this.text(`10${sup(e)}`, LX(10 ** e), y1 + 10, C.dim, 8, 'center'); }
+    this.text('expected number of stars (log)', x1, y1 + 22, C.dim, 9, 'right');
+    const shortLab: Record<EvoPhase, string> = { pms: 'pre-main-sequence', ms: 'main sequence', sgb: 'subgiant branch', rgb: 'red giant branch', he: 'core He burning (HB)', agb: 'AGB', pagb: 'post-AGB / PN', wd: 'white dwarfs', sn: 'exploded (> 8 M☉)' };
+    phases.forEach((ph, i) => {
+      const y = y0 + i * rowH; const n = counts[ph]; const col = PHASE_META[ph][1];
+      this.text(shortLab[ph], x0 - 6, y + rowH / 2, col, 8, 'right');
+      const bw = Math.max(1, LX(n) - x0); c.fillStyle = hexA(col, 0.75); c.fillRect(x0, y + rowH * 0.2, bw, rowH * 0.6);
+      const lab = n >= 1 ? (n >= 1e4 ? sci(n, 1) : fmt(n, n < 10 ? 1 : 0)) : n > 0.01 ? `${fmt(n, 2)} (likely none)` : '0';
+      const inside = x0 + bw + 70 > x1; this.text(lab, inside ? x0 + bw - 4 : x0 + bw + 4, y + rowH / 2, inside ? C.bg : C.text, 8, inside ? 'right' : 'left');
+    });
+    const frac = (ph: EvoPhase) => counts[ph] / Math.max(1, counts.ms);
+    this.setReadout([
+      ['Cluster', `${sci(N, 0)} stars formed, age ${fmtYr(t * 1e6)} · turn-off ${fmt(mTO, mTO < 3 ? 2 : 1)} M☉ (t_MS = ${fmtYr(tMS * 1e6)})`, C.text],
+      ['Why so few giants', `a phase holding a fraction f of a star's life is populated by ≈ f × (stars near the turn-off): RGB/MS = ${sci(frac('rgb'), 1)}, HB/MS = ${sci(frac('he'), 1)}, AGB/MS = ${sci(frac('agb'), 1)}, post-AGB/MS = ${sci(frac('pagb'), 1)}`, C.red],
+      ['Hertzsprung gap', mTO > 1.3 ? `turn-off above 1.25 M☉: the SGB holds only ${counts.sgb < 1 ? fmt(counts.sgb, 2) : fmt(counts.sgb, 0)} stars — a gap` : `turn-off below 1.25 M☉: slow, continuous SGB with ${fmt(counts.sgb, 0)} stars — no gap (M67, M3)`, C.accent],
+      ['Remnants', `${fmt(counts.wd, 0)} white dwarfs${counts.sn > 0.5 ? ` · ${fmt(counts.sn, 0)} stars above 8 M☉ have exploded as supernovae` : ''}`, '#dfe7ff'],
+    ]);
+  }
+}
+
 export function createWidget(spec: WidgetSpec): Widget {
   switch (spec.type) {
     case 'ancientsky': return new AncientSkyWidget();
@@ -11304,5 +12153,19 @@ export function createWidget(spec: WidgetSpec): Widget {
     case 'stromgren': return new StromgrenWidget();
     case 'pcygni': return new PcygniWidget();
     case 'protodisk': return new ProtodiskWidget();
+    case 'evotimescales': return new EvotimescalesWidget();
+    case 'mscore': return new MscoreWidget();
+    case 'sclimit': return new SclimitWidget();
+    case 'evotracks': return new EvotracksWidget();
+    case 'giantstages': return new GiantstagesWidget();
+    case 'heflash': return new HeflashWidget();
+    case 'thermalpulses': return new ThermalpulsesWidget();
+    case 'sprocess': return new SprocessWidget();
+    case 'agbmassloss': return new AgbmasslossWidget();
+    case 'planetary': return new PlanetaryWidget();
+    case 'stellarpops': return new StellarpopsWidget();
+    case 'msfitting': return new MsfittingWidget();
+    case 'isochrone': return new IsochroneWidget();
+    case 'phasecounts': return new PhasecountsWidget();
   }
 }

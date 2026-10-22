@@ -1,0 +1,561 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "chapter-close": {
+   "script": "Behind the panel the planetary system circles the Sun. I want you to remember this. t free-fall is much less than t Kelvin-Helmholtz, which is much less than t nuclear: dynamical collapse, thermal adjustment, nuclear burning. Stars pile up on the slow clock and leave gaps on the fast one, so the Hertzsprung gap belongs only to young clusters. Above one point two solar masses a convective core is present, so the main sequence ends when the hydrogen fraction X falls to about five hundredths and the whole star contracts. Without a convective core the helium core is isothermal, and the end is the Schönberg-Chandrasekhar limit, zero point three seven times the square of mu envelope over mu core, about eight hundredths. Mu envelope and mu core are those mean molecular weights. Past that limit the core collapses. Helium ignites near a hundred million kelvin. Below one point eight solar masses the flash hits a hundred billion solar luminosities and none escapes, so core mass and horizontal-branch luminosity are fixed at ignition. That is the test. Cores under the Chandrasekhar mass, one point four solar masses, become white dwarfs. Above eight solar masses comes a supernova. Every cluster feature is a timescale made visible, and isochrones across four orders of magnitude in age prove we understand how stars live.",
+   "hash": "14bba80e187e",
+   "duration": 84.15,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 3.72,
+     "text": "Behind the panel the planetary system circles the Sun."
+    },
+    {
+     "start": 3.72,
+     "end": 5.62,
+     "text": "I want you to remember this."
+    },
+    {
+     "start": 5.62,
+     "end": 16,
+     "text": "t free-fall is much less than t Kelvin-Helmholtz, which is much less than t nuclear: dynamical collapse, thermal adjustment, nuclear burning."
+    },
+    {
+     "start": 16,
+     "end": 23.44,
+     "text": "Stars pile up on the slow clock and leave gaps on the fast one, so the Hertzsprung gap belongs only to young clusters."
+    },
+    {
+     "start": 23.44,
+     "end": 34.38,
+     "text": "Above one point two solar masses a convective core is present, so the main sequence ends when the hydrogen fraction X falls to about five hundredths and the whole star contracts."
+    },
+    {
+     "start": 34.38,
+     "end": 46.91,
+     "text": "Without a convective core the helium core is isothermal, and the end is the Schönberg-Chandrasekhar limit, zero point three seven times the square of mu envelope over mu core, about eight hundredths."
+    },
+    {
+     "start": 46.91,
+     "end": 50.59,
+     "text": "Mu envelope and mu core are those mean molecular weights."
+    },
+    {
+     "start": 50.59,
+     "end": 52.99,
+     "text": "Past that limit the core collapses."
+    },
+    {
+     "start": 52.99,
+     "end": 55.77,
+     "text": "Helium ignites near a hundred million kelvin."
+    },
+    {
+     "start": 55.77,
+     "end": 66.17,
+     "text": "Below one point eight solar masses the flash hits a hundred billion solar luminosities and none escapes, so core mass and horizontal-branch luminosity are fixed at ignition."
+    },
+    {
+     "start": 66.17,
+     "end": 67.49,
+     "text": "That is the test."
+    },
+    {
+     "start": 67.49,
+     "end": 73.15,
+     "text": "Cores under the Chandrasekhar mass, one point four solar masses, become white dwarfs."
+    },
+    {
+     "start": 73.15,
+     "end": 76.01,
+     "text": "Above eight solar masses comes a supernova."
+    },
+    {
+     "start": 76.01,
+     "end": 84.15,
+     "text": "Every cluster feature is a timescale made visible, and isochrones across four orders of magnitude in age prove we understand how stars live."
+    }
+   ],
+   "voicedHash": "5df42ee30902"
+  },
+  "clusters-and-distances": {
+   "script": "Look at the Pleiades behind the panel. That little knot of blue stars is what a collapsing molecular cloud leaves behind: anything from tens of stars up to hundreds of thousands, all born from the same gas, with the same composition, within a short span of time. Set aside rotation, magnetic fields and binaries, and the Vogt–Russell theorem says the only thing that distinguishes one member from another is its initial mass. A cluster is a controlled experiment in stellar evolution. Same age, same recipe, different masses.\n\nGlobular clusters such as M13, about seven thousand parsecs away in Hercules, or Omega Centauri, are extreme Population II: the oldest objects in the Galaxy, packed with members, spherical and tightly bound. Open clusters like the Pleiades, only about a hundred and thirty parsecs away and Population I, are smaller, younger and loosely bound.\n\nHere is why they are so useful. A cluster is tiny compared with its distance, so every star shares one distance modulus. A plot of apparent magnitude against colour has the same shape as a plot of absolute magnitude, merely shifted vertically. Slide the cluster’s main sequence until it lies on a sequence calibrated in absolute magnitude, from nearby stars with trigonometric parallaxes, and that shift is the distance modulus. We call this main-sequence fitting, or spectroscopic parallax.\n\nTry the widget. You have a cluster in apparent magnitudes. Drag it onto the calibrated sequence and read off m minus M, and the distance that follows.\n\nThe formula is m minus M equals five times the log base ten of d, minus five, plus A sub V. So d equals ten to the power of m minus M minus A sub V plus five, all over five, in parsecs. Here m is apparent magnitude, M absolute magnitude, d distance, and A sub V the visual extinction. Dust must come off first: it shifts the cluster right as well as down. Composition still matters at a few tenths of a magnitude. For the Pleiades the modulus is about five point six, giving roughly a hundred and thirty-five parsecs. The Hyades, at forty-six parsecs, calibrate everything else.",
+   "hash": "7031a1d64675",
+   "duration": 134.39,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.48,
+     "text": "Look at the Pleiades behind the panel."
+    },
+    {
+     "start": 2.48,
+     "end": 16.58,
+     "text": "That little knot of blue stars is what a collapsing molecular cloud leaves behind: anything from tens of stars up to hundreds of thousands, all born from the same gas, with the same composition, within a short span of time."
+    },
+    {
+     "start": 16.58,
+     "end": 26.1,
+     "text": "Set aside rotation, magnetic fields and binaries, and the Vogt–Russell theorem says the only thing that distinguishes one member from another is its initial mass."
+    },
+    {
+     "start": 26.1,
+     "end": 29.7,
+     "text": "A cluster is a controlled experiment in stellar evolution."
+    },
+    {
+     "start": 29.7,
+     "end": 33.1,
+     "text": "Same age, same recipe, different masses."
+    },
+    {
+     "start": 33.1,
+     "end": 47.7,
+     "text": "Globular clusters such as M13, about seven thousand parsecs away in Hercules, or Omega Centauri, are extreme Population II: the oldest objects in the Galaxy, packed with members, spherical and tightly bound."
+    },
+    {
+     "start": 47.7,
+     "end": 56.26,
+     "text": "Open clusters like the Pleiades, only about a hundred and thirty parsecs away and Population I, are smaller, younger and loosely bound."
+    },
+    {
+     "start": 56.26,
+     "end": 58.26,
+     "text": "Here is why they are so useful."
+    },
+    {
+     "start": 58.26,
+     "end": 63.94,
+     "text": "A cluster is tiny compared with its distance, so every star shares one distance modulus."
+    },
+    {
+     "start": 63.94,
+     "end": 71.39,
+     "text": "A plot of apparent magnitude against colour has the same shape as a plot of absolute magnitude, merely shifted vertically."
+    },
+    {
+     "start": 71.39,
+     "end": 82.31,
+     "text": "Slide the cluster’s main sequence until it lies on a sequence calibrated in absolute magnitude, from nearby stars with trigonometric parallaxes, and that shift is the distance modulus."
+    },
+    {
+     "start": 82.31,
+     "end": 86.31,
+     "text": "We call this main-sequence fitting, or spectroscopic parallax."
+    },
+    {
+     "start": 86.31,
+     "end": 87.43,
+     "text": "Try the widget."
+    },
+    {
+     "start": 87.43,
+     "end": 89.75,
+     "text": "You have a cluster in apparent magnitudes."
+    },
+    {
+     "start": 89.75,
+     "end": 95.29,
+     "text": "Drag it onto the calibrated sequence and read off m minus M, and the distance that follows."
+    },
+    {
+     "start": 95.29,
+     "end": 102.51,
+     "text": "The formula is m minus M equals five times the log base ten of d, minus five, plus A sub V."
+    },
+    {
+     "start": 102.51,
+     "end": 109.69,
+     "text": "So d equals ten to the power of m minus M minus A sub V plus five, all over five, in parsecs."
+    },
+    {
+     "start": 109.69,
+     "end": 117.19,
+     "text": "Here m is apparent magnitude, M absolute magnitude, d distance, and A sub V the visual extinction."
+    },
+    {
+     "start": 117.19,
+     "end": 121.49,
+     "text": "Dust must come off first: it shifts the cluster right as well as down."
+    },
+    {
+     "start": 121.49,
+     "end": 124.75,
+     "text": "Composition still matters at a few tenths of a magnitude."
+    },
+    {
+     "start": 124.75,
+     "end": 130.59,
+     "text": "For the Pleiades the modulus is about five point six, giving roughly a hundred and thirty-five parsecs."
+    },
+    {
+     "start": 130.59,
+     "end": 134.39,
+     "text": "The Hyades, at forty-six parsecs, calibrate everything else."
+    }
+   ],
+   "voicedHash": "68039b32f524"
+  },
+  "gaps-and-stragglers": {
+   "script": "Look at forty-seven Tucanae behind the panel. The young double cluster aitch and kai Persei has bright blue stars at the top of its main sequence, a handful of red supergiants, and nothing between them. Those would be the brightest stars in the cluster, so this is not incompleteness. It is the Hertzsprung gap. Once the core exceeds the Schönberg–Chandrasekhar limit, the star crosses that region on the Kelvin–Helmholtz timescale, the time it takes to radiate away its thermal energy. It spends so little time there that catching one is unlikely.\n\nOld clusters with turn-offs near one solar mass, such as M sixty-seven and M three, show no gap. Below one and a quarter solar masses the core is already degenerate, so the transition is gradual and the subgiants fill in continuously.\n\nThe same arithmetic explains a thinly populated asymptotic giant branch. I want you to try the widget. It predicts star counts on the main sequence, the subgiant, giant, horizontal and asymptotic branches from the lifetime of each phase and the initial mass function. Watch the asymptotic branch come out sparse, and the post-asymptotic region nearly empty. Those phases last a million years and ten thousand years, against ten billion years on the main sequence and a hundred million years on the horizontal branch. The proportions match the diagrams.\n\nOne population does not fit. Blue stragglers are main-sequence stars above the turn-off that should have evolved away long ago. They were probably given extra mass, by transfer from a binary companion or by a collision in the dense core, extending their main-sequence lives.\n\nThe agreement between computed isochrones and the colour–magnitude diagrams of clusters of every age is the strongest evidence that the picture in these two chapters is essentially right. We fine-tune opacities, reaction cross-sections and, above all, convection, while mass loss, rotation, magnetic fields and close companions remain open. The theory is a work in progress, but the clusters say it is on the right road.",
+   "hash": "2e786dd07cf8",
+   "duration": 120.95,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.04,
+     "text": "Look at forty-seven Tucanae behind the panel."
+    },
+    {
+     "start": 3.04,
+     "end": 12.9,
+     "text": "The young double cluster aitch and kai Persei has bright blue stars at the top of its main sequence, a handful of red supergiants, and nothing between them."
+    },
+    {
+     "start": 12.9,
+     "end": 17.52,
+     "text": "Those would be the brightest stars in the cluster, so this is not incompleteness."
+    },
+    {
+     "start": 17.52,
+     "end": 19.44,
+     "text": "It is the Hertzsprung gap."
+    },
+    {
+     "start": 19.44,
+     "end": 29.38,
+     "text": "Once the core exceeds the Schönberg–Chandrasekhar limit, the star crosses that region on the Kelvin–Helmholtz timescale, the time it takes to radiate away its thermal energy."
+    },
+    {
+     "start": 29.38,
+     "end": 32.88,
+     "text": "It spends so little time there that catching one is unlikely."
+    },
+    {
+     "start": 32.88,
+     "end": 39.58,
+     "text": "Old clusters with turn-offs near one solar mass, such as M sixty-seven and M three, show no gap."
+    },
+    {
+     "start": 39.58,
+     "end": 47.42,
+     "text": "Below one and a quarter solar masses the core is already degenerate, so the transition is gradual and the subgiants fill in continuously."
+    },
+    {
+     "start": 47.42,
+     "end": 52.06,
+     "text": "The same arithmetic explains a thinly populated asymptotic giant branch."
+    },
+    {
+     "start": 52.06,
+     "end": 53.62,
+     "text": "I want you to try the widget."
+    },
+    {
+     "start": 53.62,
+     "end": 63.57,
+     "text": "It predicts star counts on the main sequence, the subgiant, giant, horizontal and asymptotic branches from the lifetime of each phase and the initial mass function."
+    },
+    {
+     "start": 63.57,
+     "end": 68.97,
+     "text": "Watch the asymptotic branch come out sparse, and the post-asymptotic region nearly empty."
+    },
+    {
+     "start": 68.97,
+     "end": 77.59,
+     "text": "Those phases last a million years and ten thousand years, against ten billion years on the main sequence and a hundred million years on the horizontal branch."
+    },
+    {
+     "start": 77.59,
+     "end": 79.91,
+     "text": "The proportions match the diagrams."
+    },
+    {
+     "start": 79.91,
+     "end": 81.91,
+     "text": "One population does not fit."
+    },
+    {
+     "start": 81.91,
+     "end": 87.57,
+     "text": "Blue stragglers are main-sequence stars above the turn-off that should have evolved away long ago."
+    },
+    {
+     "start": 87.57,
+     "end": 96.15,
+     "text": "They were probably given extra mass, by transfer from a binary companion or by a collision in the dense core, extending their main-sequence lives."
+    },
+    {
+     "start": 96.15,
+     "end": 106.19,
+     "text": "The agreement between computed isochrones and the colour–magnitude diagrams of clusters of every age is the strongest evidence that the picture in these two chapters is essentially right."
+    },
+    {
+     "start": 106.19,
+     "end": 116.87,
+     "text": "We fine-tune opacities, reaction cross-sections and, above all, convection, while mass loss, rotation, magnetic fields and close companions remain open."
+    },
+    {
+     "start": 116.87,
+     "end": 120.95,
+     "text": "The theory is a work in progress, but the clusters say it is on the right road."
+    }
+   ],
+   "voicedHash": "a12cb26fe89c"
+  },
+  "isochrones-ages": {
+   "script": "Rather than take a spectrum of every member, we measure colours. A plot of V against B minus V is the observer's Hertzsprung–Russell diagram. Mark where each mass has got to at one age on evolutionary tracks for the cluster's composition. That curve is an isochrone. Star counts along it follow the initial mass function and how long each phase lasts.\n\nMassive stars reach the main sequence first and leave it first, while low-mass stars are still contracting toward it. As the cluster ages, the turn-off, where stars leave the main sequence, moves fainter and redder. It is the cluster's clock. Sandage's composite runs from NGC 2362 and h and chi Persei at a few million years, through the Pleiades at a hundred million and the Hyades at six hundred million, to M67 at four billion years. The globular clusters, at twelve to thirteen billion years, set a lower limit to the age of the universe that the cosmologists must respect.\n\nt cluster is approximately t MS of M TO, ten to the ten years times the ratio of M TO to M sun, raised to minus two point five. t cluster is the cluster age. t MS of M TO is the main-sequence lifetime of the turn-off mass M TO, and M sun is the Sun's mass. Core hydrogen is running out now, so that lifetime is the age. Heavier stars burn faster, hence the steep power. A B-zero turn-off at fifteen solar masses means ten million years; the Sun's colour means ten billion years. Precision depends on composition, convective overshooting and distance. Cluster ages and the stellar models are refined together.\n\nM3 shows the main sequence, turn-off, subgiant and red-giant branches, horizontal branch, asymptotic giant branch, post-asymptotic stars, and blue stragglers above the turn-off. Look at 47 Tucanae behind the panel. Drag from one million to thirteen billion years. Watch the turn-off march fainter and redder, the young Hertzsprung gap, giants, horizontal branch, white dwarfs, and marked clusters.",
+   "hash": "fc9546643985",
+   "duration": 128.63,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 4.26,
+     "text": "Rather than take a spectrum of every member, we measure colours."
+    },
+    {
+     "start": 4.26,
+     "end": 9.86,
+     "text": "A plot of V against B minus V is the observer's Hertzsprung–Russell diagram."
+    },
+    {
+     "start": 9.86,
+     "end": 15.46,
+     "text": "Mark where each mass has got to at one age on evolutionary tracks for the cluster's composition."
+    },
+    {
+     "start": 15.46,
+     "end": 17.74,
+     "text": "That curve is an isochrone."
+    },
+    {
+     "start": 17.74,
+     "end": 23.1,
+     "text": "Star counts along it follow the initial mass function and how long each phase lasts."
+    },
+    {
+     "start": 23.1,
+     "end": 29.9,
+     "text": "Massive stars reach the main sequence first and leave it first, while low-mass stars are still contracting toward it."
+    },
+    {
+     "start": 29.9,
+     "end": 35.98,
+     "text": "As the cluster ages, the turn-off, where stars leave the main sequence, moves fainter and redder."
+    },
+    {
+     "start": 35.98,
+     "end": 37.86,
+     "text": "It is the cluster's clock."
+    },
+    {
+     "start": 37.86,
+     "end": 52.94,
+     "text": "Sandage's composite runs from NGC 2362 and h and chi Persei at a few million years, through the Pleiades at a hundred million and the Hyades at six hundred million, to M67 at four billion years."
+    },
+    {
+     "start": 52.94,
+     "end": 60.88,
+     "text": "The globular clusters, at twelve to thirteen billion years, set a lower limit to the age of the universe that the cosmologists must respect."
+    },
+    {
+     "start": 60.88,
+     "end": 70.65,
+     "text": "t cluster is approximately t MS of M TO, ten to the ten years times the ratio of M TO to M sun, raised to minus two point five."
+    },
+    {
+     "start": 70.65,
+     "end": 72.77,
+     "text": "t cluster is the cluster age."
+    },
+    {
+     "start": 72.77,
+     "end": 80.35,
+     "text": "t MS of M TO is the main-sequence lifetime of the turn-off mass M TO, and M sun is the Sun's mass."
+    },
+    {
+     "start": 80.35,
+     "end": 84.39,
+     "text": "Core hydrogen is running out now, so that lifetime is the age."
+    },
+    {
+     "start": 84.39,
+     "end": 87.85,
+     "text": "Heavier stars burn faster, hence the steep power."
+    },
+    {
+     "start": 87.85,
+     "end": 94.67,
+     "text": "A B-zero turn-off at fifteen solar masses means ten million years; the Sun's colour means ten billion years."
+    },
+    {
+     "start": 94.67,
+     "end": 99.09,
+     "text": "Precision depends on composition, convective overshooting and distance."
+    },
+    {
+     "start": 99.09,
+     "end": 102.47,
+     "text": "Cluster ages and the stellar models are refined together."
+    },
+    {
+     "start": 102.47,
+     "end": 114.77,
+     "text": "M3 shows the main sequence, turn-off, subgiant and red-giant branches, horizontal branch, asymptotic giant branch, post-asymptotic stars, and blue stragglers above the turn-off."
+    },
+    {
+     "start": 114.77,
+     "end": 117.59,
+     "text": "Look at 47 Tucanae behind the panel."
+    },
+    {
+     "start": 117.59,
+     "end": 120.49,
+     "text": "Drag from one million to thirteen billion years."
+    },
+    {
+     "start": 120.49,
+     "end": 128.63,
+     "text": "Watch the turn-off march fainter and redder, the young Hertzsprung gap, giants, horizontal branch, white dwarfs, and marked clusters."
+    }
+   ],
+   "voicedHash": "afc479854607"
+  },
+  "stellar-populations": {
+   "script": "Look at Omega Centauri behind the panel, extreme Population Two, twelve billion years old, iron about a hundredth of the Sun's.\n\nStars form from the interstellar medium and return most of their mass through winds, planetary nebulae and supernovae, enriched in the heavy elements their reactions made. So each generation starts with more metals than the last. The Big Bang, thirteen point seven to thirteen point eight billion years ago, made only hydrogen and helium, plus a trace of lithium.\n\nZ for Population Three equals zero. Z for Population Two is of order ten to the minus four to ten to the minus three, with bracket iron over hydrogen about minus one to minus two point five. Z for Population One is about one hundredth to three hundredths, with bracket iron over hydrogen near zero. Z is the mass fraction in elements heavier than helium. Population Three, Z of zero, is still hypothetical, none yet found. Population Two are metal-poor but not metal-free. Population One are the metal-rich stars of later generations. The Sun, Z of two hundredths, is Population One.\n\nBracket iron over hydrogen is defined as the base-ten logarithm of the star's iron-to-hydrogen number ratio divided by the Sun's. N-iron and N-hydrogen are atom counts for star and Sun. Zero means solar iron. Minus one means ten times less iron. Omega Centauri sits near minus one point six.\n\nWalter Baade, in nineteen forty-four, defined the populations by kinematics and location, not chemistry. Population One stars move slowly relative to the Sun and lie in the disc. Population Two stars have large velocities and are found far above and below the disc, in the halo and the bulge. Only later did we realise they differ in composition. That link is a main clue to how the Galaxy formed.\n\nTry the widget. Place the three populations in the cut-away Milky Way and compare ages, velocities and metallicities. Notice the metallicity of each generation rising with time.",
+   "hash": "95ef964a1729",
+   "duration": 124.15,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 8.88,
+     "text": "Look at Omega Centauri behind the panel, extreme Population Two, twelve billion years old, iron about a hundredth of the Sun's."
+    },
+    {
+     "start": 8.88,
+     "end": 19.12,
+     "text": "Stars form from the interstellar medium and return most of their mass through winds, planetary nebulae and supernovae, enriched in the heavy elements their reactions made."
+    },
+    {
+     "start": 19.12,
+     "end": 22.52,
+     "text": "So each generation starts with more metals than the last."
+    },
+    {
+     "start": 22.52,
+     "end": 30.76,
+     "text": "The Big Bang, thirteen point seven to thirteen point eight billion years ago, made only hydrogen and helium, plus a trace of lithium."
+    },
+    {
+     "start": 30.76,
+     "end": 33.48,
+     "text": "Z for Population Three equals zero."
+    },
+    {
+     "start": 33.48,
+     "end": 44,
+     "text": "Z for Population Two is of order ten to the minus four to ten to the minus three, with bracket iron over hydrogen about minus one to minus two point five."
+    },
+    {
+     "start": 44,
+     "end": 50.64,
+     "text": "Z for Population One is about one hundredth to three hundredths, with bracket iron over hydrogen near zero."
+    },
+    {
+     "start": 50.64,
+     "end": 53.96,
+     "text": "Z is the mass fraction in elements heavier than helium."
+    },
+    {
+     "start": 53.96,
+     "end": 59.12,
+     "text": "Population Three, Z of zero, is still hypothetical, none yet found."
+    },
+    {
+     "start": 59.12,
+     "end": 62.53,
+     "text": "Population Two are metal-poor but not metal-free."
+    },
+    {
+     "start": 62.53,
+     "end": 66.35,
+     "text": "Population One are the metal-rich stars of later generations."
+    },
+    {
+     "start": 66.35,
+     "end": 70.09,
+     "text": "The Sun, Z of two hundredths, is Population One."
+    },
+    {
+     "start": 70.09,
+     "end": 78.07,
+     "text": "Bracket iron over hydrogen is defined as the base-ten logarithm of the star's iron-to-hydrogen number ratio divided by the Sun's."
+    },
+    {
+     "start": 78.07,
+     "end": 81.89,
+     "text": "N-iron and N-hydrogen are atom counts for star and Sun."
+    },
+    {
+     "start": 81.89,
+     "end": 83.65,
+     "text": "Zero means solar iron."
+    },
+    {
+     "start": 83.65,
+     "end": 86.29,
+     "text": "Minus one means ten times less iron."
+    },
+    {
+     "start": 86.29,
+     "end": 89.49,
+     "text": "Omega Centauri sits near minus one point six."
+    },
+    {
+     "start": 89.49,
+     "end": 96.15,
+     "text": "Walter Baade, in nineteen forty-four, defined the populations by kinematics and location, not chemistry."
+    },
+    {
+     "start": 96.15,
+     "end": 100.69,
+     "text": "Population One stars move slowly relative to the Sun and lie in the disc."
+    },
+    {
+     "start": 100.69,
+     "end": 107.45,
+     "text": "Population Two stars have large velocities and are found far above and below the disc, in the halo and the bulge."
+    },
+    {
+     "start": 107.45,
+     "end": 110.49,
+     "text": "Only later did we realise they differ in composition."
+    },
+    {
+     "start": 110.49,
+     "end": 113.59,
+     "text": "That link is a main clue to how the Galaxy formed."
+    },
+    {
+     "start": 113.59,
+     "end": 114.71,
+     "text": "Try the widget."
+    },
+    {
+     "start": 114.71,
+     "end": 120.91,
+     "text": "Place the three populations in the cut-away Milky Way and compare ages, velocities and metallicities."
+    },
+    {
+     "start": 120.91,
+     "end": 124.15,
+     "text": "Notice the metallicity of each generation rising with time."
+    }
+   ],
+   "voicedHash": "09c7ec465504"
+  }
+ }
+}

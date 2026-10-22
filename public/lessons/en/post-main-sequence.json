@@ -1,0 +1,717 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "agb-mass-loss": {
+   "script": "Look at Mira behind the panel. AGB stars shed up to about ten to the minus four solar masses a year. Near three thousand kelvin, dust condenses: silicates from oxygen rich stars, graphite and silicon carbide from carbon stars. Radiation pressure on the grains drags the gas and probably drives the wind, perhaps helped by pulsations and shell flashes, though the mechanism is still poorly understood. It hides in an optically thick dust shell and shines in the infrared, an OH IR source with hydroxyl masers, returning Chapter twelve dust.\n\nWe write the empirical Reimers law as M dot Reimers equals minus four times ten to the minus thirteen times eta times L over g R, equal to minus four times ten to the minus thirteen times eta times L R over M, in solar masses per year, solar units, eta about one. M dot is the mass loss rate, and the minus sign means mass is leaving. L is luminosity, g surface gravity, R radius, M mass, and eta near one. So the rate climbs as gravity drops. For one solar mass, seven thousand solar luminosities and three hundred and ten solar radii, about ten to the minus six solar masses a year, a few hundred thousand years, then the superwind.\n\nM Ch equals one point four solar masses, the Chandrasekhar limit, the most a degenerate core can support. Below about four solar masses the carbon oxygen core never burns and stays under that. Between four and eight the core would collapse catastrophically if the envelope stayed, but the winds strip it first. Carbon burns to oxygen, neon and magnesium, with neon twenty two plus an alpha particle. Above eight solar masses lies the supernova of Chapter fifteen.\n\nTry the widget. Choose luminosity, radius and mass. Notice the slow fall, then the superwind. One solar mass ends near zero point five five, five near zero point nine, eight near one point three, all under one point four.",
+   "hash": "a3520cd719dd",
+   "duration": 122.87,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.22,
+     "text": "Look at Mira behind the panel."
+    },
+    {
+     "start": 2.22,
+     "end": 7.54,
+     "text": "AGB stars shed up to about ten to the minus four solar masses a year."
+    },
+    {
+     "start": 7.54,
+     "end": 16.44,
+     "text": "Near three thousand kelvin, dust condenses: silicates from oxygen rich stars, graphite and silicon carbide from carbon stars."
+    },
+    {
+     "start": 16.44,
+     "end": 26.4,
+     "text": "Radiation pressure on the grains drags the gas and probably drives the wind, perhaps helped by pulsations and shell flashes, though the mechanism is still poorly understood."
+    },
+    {
+     "start": 26.4,
+     "end": 35.36,
+     "text": "It hides in an optically thick dust shell and shines in the infrared, an OH IR source with hydroxyl masers, returning Chapter twelve dust."
+    },
+    {
+     "start": 35.36,
+     "end": 54.4,
+     "text": "We write the empirical Reimers law as M dot Reimers equals minus four times ten to the minus thirteen times eta times L over g R, equal to minus four times ten to the minus thirteen times eta times L R over M, in solar masses per year, solar units, eta about one."
+    },
+    {
+     "start": 54.4,
+     "end": 58.8,
+     "text": "M dot is the mass loss rate, and the minus sign means mass is leaving."
+    },
+    {
+     "start": 58.8,
+     "end": 65.43,
+     "text": "L is luminosity, g surface gravity, R radius, M mass, and eta near one."
+    },
+    {
+     "start": 65.43,
+     "end": 67.87,
+     "text": "So the rate climbs as gravity drops."
+    },
+    {
+     "start": 67.87,
+     "end": 80.19,
+     "text": "For one solar mass, seven thousand solar luminosities and three hundred and ten solar radii, about ten to the minus six solar masses a year, a few hundred thousand years, then the superwind."
+    },
+    {
+     "start": 80.19,
+     "end": 86.91,
+     "text": "M Ch equals one point four solar masses, the Chandrasekhar limit, the most a degenerate core can support."
+    },
+    {
+     "start": 86.91,
+     "end": 92.05,
+     "text": "Below about four solar masses the carbon oxygen core never burns and stays under that."
+    },
+    {
+     "start": 92.05,
+     "end": 98.29,
+     "text": "Between four and eight the core would collapse catastrophically if the envelope stayed, but the winds strip it first."
+    },
+    {
+     "start": 98.29,
+     "end": 104.41,
+     "text": "Carbon burns to oxygen, neon and magnesium, with neon twenty two plus an alpha particle."
+    },
+    {
+     "start": 104.41,
+     "end": 108.37,
+     "text": "Above eight solar masses lies the supernova of Chapter fifteen."
+    },
+    {
+     "start": 108.37,
+     "end": 109.47,
+     "text": "Try the widget."
+    },
+    {
+     "start": 109.47,
+     "end": 112.09,
+     "text": "Choose luminosity, radius and mass."
+    },
+    {
+     "start": 112.09,
+     "end": 114.95,
+     "text": "Notice the slow fall, then the superwind."
+    },
+    {
+     "start": 114.95,
+     "end": 122.87,
+     "text": "One solar mass ends near zero point five five, five near zero point nine, eight near one point three, all under one point four."
+    }
+   ],
+   "voicedHash": "067a7ca05b36"
+  },
+  "dredge-up-s-process": {
+   "script": "Look at Mira behind the panel, where the ashes come up into the light.\n\nA shell flash bursts and sets up convection between the two shells, and the envelope convection deepens. Above about two solar masses the zones merge and reach the intershell, where triple-alpha carbon outnumbers oxygen five to ten times, the reverse of ordinary stellar matter. That third dredge-up, pulse after pulse, drives the surface oxygen-to-carbon ratio down until carbon wins.\n\nCarbon monoxide locks up the scarcer element, the way a full dance card leaves only the extras free. Spare oxygen makes titanium oxide, silicon oxide and water, an M star. Spare carbon makes dicarbon, cyanogen and silicon carbide, spectral class C. Near equality, zirconium oxide replaces titanium oxide, an S star. On the widget, slide carbon over oxygen from an M giant through S to C, and watch the bands flip as carbon monoxide claims the scarcer element.\n\nS and C stars also show technetium, with no stable isotope. The half-life, t one-half, of technetium-99 is two point one times ten to the five years, about two hundred thousand years, so it was made in the star within the last few hundred thousand years and dredged up. Paul Merrill found that in nineteen fifty-two.\n\nFree neutrons are released in the intershell: carbon-13 plus helium-4 goes to oxygen-16 plus a neutron, and neon-22 plus helium-4 goes to magnesium-25 plus a neutron. A nucleus of mass number A and proton number Z captures a neutron, uncharged, so no Coulomb barrier, and becomes mass A plus one at the same Z. If the flux is low, beta-minus decay takes it to A plus one, Z plus one, before the next capture. That path — capture, then decay, then capture — moves one mass unit at a time along the valley of stability and builds half the elements heavier than iron: strontium, zirconium, barium, lead, and technetium-99. Step the captures and decays on the chart until technetium-99, and notice each decay must finish first.",
+   "hash": "9013ff0f6d69",
+   "duration": 129.27,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.96,
+     "text": "Look at Mira behind the panel, where the ashes come up into the light."
+    },
+    {
+     "start": 3.96,
+     "end": 10.18,
+     "text": "A shell flash bursts and sets up convection between the two shells, and the envelope convection deepens."
+    },
+    {
+     "start": 10.18,
+     "end": 20.86,
+     "text": "Above about two solar masses the zones merge and reach the intershell, where triple-alpha carbon outnumbers oxygen five to ten times, the reverse of ordinary stellar matter."
+    },
+    {
+     "start": 20.86,
+     "end": 28.06,
+     "text": "That third dredge-up, pulse after pulse, drives the surface oxygen-to-carbon ratio down until carbon wins."
+    },
+    {
+     "start": 28.06,
+     "end": 34.18,
+     "text": "Carbon monoxide locks up the scarcer element, the way a full dance card leaves only the extras free."
+    },
+    {
+     "start": 34.18,
+     "end": 39.82,
+     "text": "Spare oxygen makes titanium oxide, silicon oxide and water, an M star."
+    },
+    {
+     "start": 39.82,
+     "end": 45.66,
+     "text": "Spare carbon makes dicarbon, cyanogen and silicon carbide, spectral class C."
+    },
+    {
+     "start": 45.66,
+     "end": 51,
+     "text": "Near equality, zirconium oxide replaces titanium oxide, an S star."
+    },
+    {
+     "start": 51,
+     "end": 60.14,
+     "text": "On the widget, slide carbon over oxygen from an M giant through S to C, and watch the bands flip as carbon monoxide claims the scarcer element."
+    },
+    {
+     "start": 60.14,
+     "end": 64.38,
+     "text": "S and C stars also show technetium, with no stable isotope."
+    },
+    {
+     "start": 64.38,
+     "end": 77.35,
+     "text": "The half-life, t one-half, of technetium-99 is two point one times ten to the five years, about two hundred thousand years, so it was made in the star within the last few hundred thousand years and dredged up."
+    },
+    {
+     "start": 77.35,
+     "end": 80.17,
+     "text": "Paul Merrill found that in nineteen fifty-two."
+    },
+    {
+     "start": 80.17,
+     "end": 92.09,
+     "text": "Free neutrons are released in the intershell: carbon-13 plus helium-4 goes to oxygen-16 plus a neutron, and neon-22 plus helium-4 goes to magnesium-25 plus a neutron."
+    },
+    {
+     "start": 92.09,
+     "end": 102.09,
+     "text": "A nucleus of mass number A and proton number Z captures a neutron, uncharged, so no Coulomb barrier, and becomes mass A plus one at the same Z."
+    },
+    {
+     "start": 102.09,
+     "end": 109.09,
+     "text": "If the flux is low, beta-minus decay takes it to A plus one, Z plus one, before the next capture."
+    },
+    {
+     "start": 109.09,
+     "end": 123.33,
+     "text": "That path — capture, then decay, then capture — moves one mass unit at a time along the valley of stability and builds half the elements heavier than iron: strontium, zirconium, barium, lead, and technetium-99."
+    },
+    {
+     "start": 123.33,
+     "end": 129.27,
+     "text": "Step the captures and decays on the chart until technetium-99, and notice each decay must finish first."
+    }
+   ],
+   "voicedHash": "8c5ae76dac52"
+  },
+  "helium-flash": {
+   "script": "Look at Arcturus behind the panel. At the tip the helium core is about a hundred million kelvin and ten million kilograms per cubic metre. Helium nuclei can tunnel through the Coulomb barrier, triple alpha burning starts, and some carbon becomes oxygen.\n\nThe energy per unit mass per unit time, epsilon three alpha, is proportional to rho squared, helium fraction Y cubed, and T to the fortieth, near a hundred million kelvin. Rho is density and T is temperature. Three particles must meet, and the rate doubles for every two per cent rise in temperature.\n\nThat heat expands the core and pushes out the hydrogen shell, the main source of light. So luminosity drops, the envelope contracts, effective temperature rises, and the star leaves the tip for the horizontal branch.\n\nBelow about one point eight solar masses the ignition is explosive. The core is electron degenerate, neutrinos have cooled the centre, and temperature peaks in a shell. There P deg equals K times rho to the power five over three, independent of temperature. P deg is degenerate electron pressure, K a quantum constant, rho density. In an ideal gas, heat would expand and cool the core, a thermostat. Here that thermostat is disconnected, so temperature runs away.\n\nThis is the helium core flash. For a few seconds L flash is about ten to the eleven solar luminosities. L flash is the flash power, L sun the Sun's luminosity. A galaxy of light, and none of it reaches the surface. The envelope absorbs it and may lose a little mass. Only after degeneracy lifts can the core expand, cool, and burn quietly.\n\nOn the widget, compare ideal and degenerate pressure against temperature. Notice flat pressure, a soaring triple alpha rate, a spike against quiet ignition. Classical codes stopped, so in Figure thirteen point one the one, one point two five and one point five solar mass tracks end at point six, and Figure thirteen point four is dotted.",
+   "hash": "958245b9b872",
+   "duration": 123.51,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.44,
+     "text": "Look at Arcturus behind the panel."
+    },
+    {
+     "start": 2.44,
+     "end": 9.06,
+     "text": "At the tip the helium core is about a hundred million kelvin and ten million kilograms per cubic metre."
+    },
+    {
+     "start": 9.06,
+     "end": 16.54,
+     "text": "Helium nuclei can tunnel through the Coulomb barrier, triple alpha burning starts, and some carbon becomes oxygen."
+    },
+    {
+     "start": 16.54,
+     "end": 28.48,
+     "text": "The energy per unit mass per unit time, epsilon three alpha, is proportional to rho squared, helium fraction Y cubed, and T to the fortieth, near a hundred million kelvin."
+    },
+    {
+     "start": 28.48,
+     "end": 31.22,
+     "text": "Rho is density and T is temperature."
+    },
+    {
+     "start": 31.22,
+     "end": 36.36,
+     "text": "Three particles must meet, and the rate doubles for every two per cent rise in temperature."
+    },
+    {
+     "start": 36.36,
+     "end": 41.72,
+     "text": "That heat expands the core and pushes out the hydrogen shell, the main source of light."
+    },
+    {
+     "start": 41.72,
+     "end": 49.92,
+     "text": "So luminosity drops, the envelope contracts, effective temperature rises, and the star leaves the tip for the horizontal branch."
+    },
+    {
+     "start": 49.92,
+     "end": 54.16,
+     "text": "Below about one point eight solar masses the ignition is explosive."
+    },
+    {
+     "start": 54.16,
+     "end": 60.18,
+     "text": "The core is electron degenerate, neutrinos have cooled the centre, and temperature peaks in a shell."
+    },
+    {
+     "start": 60.18,
+     "end": 66.19,
+     "text": "There P deg equals K times rho to the power five over three, independent of temperature."
+    },
+    {
+     "start": 66.19,
+     "end": 71.91,
+     "text": "P deg is degenerate electron pressure, K a quantum constant, rho density."
+    },
+    {
+     "start": 71.91,
+     "end": 76.43,
+     "text": "In an ideal gas, heat would expand and cool the core, a thermostat."
+    },
+    {
+     "start": 76.43,
+     "end": 80.35,
+     "text": "Here that thermostat is disconnected, so temperature runs away."
+    },
+    {
+     "start": 80.35,
+     "end": 82.41,
+     "text": "This is the helium core flash."
+    },
+    {
+     "start": 82.41,
+     "end": 87.09,
+     "text": "For a few seconds L flash is about ten to the eleven solar luminosities."
+    },
+    {
+     "start": 87.09,
+     "end": 91.21,
+     "text": "L flash is the flash power, L sun the Sun's luminosity."
+    },
+    {
+     "start": 91.21,
+     "end": 94.49,
+     "text": "A galaxy of light, and none of it reaches the surface."
+    },
+    {
+     "start": 94.49,
+     "end": 97.63,
+     "text": "The envelope absorbs it and may lose a little mass."
+    },
+    {
+     "start": 97.63,
+     "end": 102.73,
+     "text": "Only after degeneracy lifts can the core expand, cool, and burn quietly."
+    },
+    {
+     "start": 102.73,
+     "end": 106.97,
+     "text": "On the widget, compare ideal and degenerate pressure against temperature."
+    },
+    {
+     "start": 106.97,
+     "end": 112.31,
+     "text": "Notice flat pressure, a soaring triple alpha rate, a spike against quiet ignition."
+    },
+    {
+     "start": 112.31,
+     "end": 123.51,
+     "text": "Classical codes stopped, so in Figure thirteen point one the one, one point two five and one point five solar mass tracks end at point six, and Figure thirteen point four is dotted."
+    }
+   ],
+   "voicedHash": "86400491674d"
+  },
+  "horizontal-branch-agb": {
+   "script": "The horizontal branch is a second main sequence, helium in the core and hydrogen in a shell, a hundred times shorter. Triple-alpha sensitivity makes the core convective, as the CNO cycle does on the upper main sequence, and envelope convection retreats. The star moves blueward as the shell brightens, then redward at point eight for five solar masses, when the core contracts and the envelope expands. Core helium ends as carbon and oxygen, and that crossing is rapid, like the subgiant branch. These pulsators, in the instability strip, we call RR Lyrae stars.\n\nA helium shell lights, narrows, and switches the hydrogen shell off. Neutrinos cool the core into degeneracy. The star climbs the asymptotic giant branch, approaching the red-giant branch from the left, the helium-shell analogue of the hydrogen-shell giant, already about two thousand suns and forty-four solar radii. The second dredge-up raises surface helium and nitrogen.\n\nNear the top, hydrogen reignites and dumps helium ash until the thin shell flashes, a miniature core flash. Each flash quenches hydrogen; the star dims and shrinks, then recovers. Pulses grow, every few thousand years for five solar masses.\n\nOn the widget, pick a core mass and follow hydrogen luminosity, helium luminosity and surface luminosity through the pulses. Notice the gaps and the spikes. Delta t pulse, the interpulse period, is about a hundred thousand years at a core mass of zero point six solar masses, but only a thousand years at zero point nine. L AGB, the asymptotic giant luminosity, is about fifty-nine thousand solar luminosities times the core mass M c over the solar mass M sun, minus zero point five two. Paczyński’s relation: the core, not the envelope, sets the brightness. A zero point six solar-mass core gives roughly five thousand solar luminosities.\n\nLook at Mira behind the panel. Miras, with periods of a hundred to seven hundred days, are these thermal-pulse stars, and changes in W Draconis, R Aquilae and R Hydrae may be the flashes made visible.",
+   "hash": "e0c1ae6acc41",
+   "duration": 130.23,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 7.86,
+     "text": "The horizontal branch is a second main sequence, helium in the core and hydrogen in a shell, a hundred times shorter."
+    },
+    {
+     "start": 7.86,
+     "end": 16.48,
+     "text": "Triple-alpha sensitivity makes the core convective, as the CNO cycle does on the upper main sequence, and envelope convection retreats."
+    },
+    {
+     "start": 16.48,
+     "end": 25.5,
+     "text": "The star moves blueward as the shell brightens, then redward at point eight for five solar masses, when the core contracts and the envelope expands."
+    },
+    {
+     "start": 25.5,
+     "end": 31.88,
+     "text": "Core helium ends as carbon and oxygen, and that crossing is rapid, like the subgiant branch."
+    },
+    {
+     "start": 31.88,
+     "end": 36.92,
+     "text": "These pulsators, in the instability strip, we call RR Lyrae stars."
+    },
+    {
+     "start": 36.92,
+     "end": 41.38,
+     "text": "A helium shell lights, narrows, and switches the hydrogen shell off."
+    },
+    {
+     "start": 41.38,
+     "end": 44.1,
+     "text": "Neutrinos cool the core into degeneracy."
+    },
+    {
+     "start": 44.1,
+     "end": 56.4,
+     "text": "The star climbs the asymptotic giant branch, approaching the red-giant branch from the left, the helium-shell analogue of the hydrogen-shell giant, already about two thousand suns and forty-four solar radii."
+    },
+    {
+     "start": 56.4,
+     "end": 59.78,
+     "text": "The second dredge-up raises surface helium and nitrogen."
+    },
+    {
+     "start": 59.78,
+     "end": 66.77,
+     "text": "Near the top, hydrogen reignites and dumps helium ash until the thin shell flashes, a miniature core flash."
+    },
+    {
+     "start": 66.77,
+     "end": 71.63,
+     "text": "Each flash quenches hydrogen; the star dims and shrinks, then recovers."
+    },
+    {
+     "start": 71.63,
+     "end": 75.71,
+     "text": "Pulses grow, every few thousand years for five solar masses."
+    },
+    {
+     "start": 75.71,
+     "end": 83.21,
+     "text": "On the widget, pick a core mass and follow hydrogen luminosity, helium luminosity and surface luminosity through the pulses."
+    },
+    {
+     "start": 83.21,
+     "end": 85.17,
+     "text": "Notice the gaps and the spikes."
+    },
+    {
+     "start": 85.17,
+     "end": 95.53,
+     "text": "Delta t pulse, the interpulse period, is about a hundred thousand years at a core mass of zero point six solar masses, but only a thousand years at zero point nine."
+    },
+    {
+     "start": 95.53,
+     "end": 107.57,
+     "text": "L AGB, the asymptotic giant luminosity, is about fifty-nine thousand solar luminosities times the core mass M c over the solar mass M sun, minus zero point five two."
+    },
+    {
+     "start": 107.57,
+     "end": 112.37,
+     "text": "Paczyński’s relation: the core, not the envelope, sets the brightness."
+    },
+    {
+     "start": 112.37,
+     "end": 117.33,
+     "text": "A zero point six solar-mass core gives roughly five thousand solar luminosities."
+    },
+    {
+     "start": 117.33,
+     "end": 119.23,
+     "text": "Look at Mira behind the panel."
+    },
+    {
+     "start": 119.23,
+     "end": 130.23,
+     "text": "Miras, with periods of a hundred to seven hundred days, are these thermal-pulse stars, and changes in W Draconis, R Aquilae and R Hydrae may be the flashes made visible."
+    }
+   ],
+   "voicedHash": "eb7eb8395a05"
+  },
+  "late-stages-summary": {
+   "script": "Look with me behind the panel: the whole planetary system slowly circling the Sun. Past the Schönberg–Chandrasekhar limit, the subgiant core contracts on the Kelvin–Helmholtz time and the envelope expands redward. On the red giant branch, convection climbs the Hayashi track, luminosity is set by core mass, and the first dredge-up lowers lithium, raises helium-three, and drops the carbon-to-nitrogen ratio. Triple-alpha ignites near a hundred million kelvin. Below one point eight solar masses the core flashes for seconds near a hundred billion solar luminosities, lifting the degeneracy; the horizontal branch then burns helium for a hundred million years. Pulses every thousand to a hundred thousand years follow. Above two solar masses, third dredge-up makes carbon stars by carbon monoxide lock-up, with s-process neutrons from carbon-thirteen and neon-twenty alpha captures. Mass loss can reach ten to the minus four solar masses per year. Reimers’ law says M dot, the mass-loss rate, is proportional to L times R over M, luminosity times radius divided by mass, so a bright, large, light envelope is stripped fastest. The core stays below one point four solar masses, then a planetary nebula and a white dwarf. Below eight solar masses the end is gentle: hydrogen and helium burn in shells, the envelope returns enriched, and a degenerate core cools forever. The Sun will do exactly this.",
+   "hash": "774b419636f1",
+   "duration": 89.91,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 5.54,
+     "text": "Look with me behind the panel: the whole planetary system slowly circling the Sun."
+    },
+    {
+     "start": 5.54,
+     "end": 13.94,
+     "text": "Past the Schönberg–Chandrasekhar limit, the subgiant core contracts on the Kelvin–Helmholtz time and the envelope expands redward."
+    },
+    {
+     "start": 13.94,
+     "end": 26.78,
+     "text": "On the red giant branch, convection climbs the Hayashi track, luminosity is set by core mass, and the first dredge-up lowers lithium, raises helium-three, and drops the carbon-to-nitrogen ratio."
+    },
+    {
+     "start": 26.78,
+     "end": 29.92,
+     "text": "Triple-alpha ignites near a hundred million kelvin."
+    },
+    {
+     "start": 29.92,
+     "end": 41.54,
+     "text": "Below one point eight solar masses the core flashes for seconds near a hundred billion solar luminosities, lifting the degeneracy; the horizontal branch then burns helium for a hundred million years."
+    },
+    {
+     "start": 41.54,
+     "end": 44.94,
+     "text": "Pulses every thousand to a hundred thousand years follow."
+    },
+    {
+     "start": 44.94,
+     "end": 55.93,
+     "text": "Above two solar masses, third dredge-up makes carbon stars by carbon monoxide lock-up, with s-process neutrons from carbon-thirteen and neon-twenty alpha captures."
+    },
+    {
+     "start": 55.93,
+     "end": 60.41,
+     "text": "Mass loss can reach ten to the minus four solar masses per year."
+    },
+    {
+     "start": 60.41,
+     "end": 72.79,
+     "text": "Reimers’ law says M dot, the mass-loss rate, is proportional to L times R over M, luminosity times radius divided by mass, so a bright, large, light envelope is stripped fastest."
+    },
+    {
+     "start": 72.79,
+     "end": 78.59,
+     "text": "The core stays below one point four solar masses, then a planetary nebula and a white dwarf."
+    },
+    {
+     "start": 78.59,
+     "end": 87.97,
+     "text": "Below eight solar masses the end is gentle: hydrogen and helium burn in shells, the envelope returns enriched, and a degenerate core cools forever."
+    },
+    {
+     "start": 87.97,
+     "end": 89.91,
+     "text": "The Sun will do exactly this."
+    }
+   ],
+   "voicedHash": "7d7673133bdd"
+  },
+  "planetary-nebulae": {
+   "script": "Look at the Helix behind the panel — that glowing ring is the last act of a star like the Sun. As the dust shell expands and thins, the central star reappears with the spectrum of an F or G supergiant, and the track turns blueward. It crosses the Hertzsprung–Russell diagram at nearly constant luminosity as a post-asymptotic-giant-branch star. The last of the envelope is blown off. With almost nothing left above them, the hydrogen and helium shells go out and the luminosity falls steeply. What remains is the degenerate carbon–oxygen core, or sometimes oxygen–neon–magnesium, wrapped in a thin skin of hydrogen and helium — a white dwarf. Iben’s zero-point-six-solar-mass model leaves the asymptotic giant branch after its tenth thermal pulse with only three thousandths of a solar mass of envelope, reaches thirty thousand kelvin, suffers an eleventh flash on the way, and ends as a white dwarf about three hundredths of a solar radius across.\n\nThe departing envelope, lit by the ultraviolet of that hot star, is a planetary nebula, named in the eighteenth century for its disc-like look in small telescopes. Those photons ionise and excite the gas. Recombination cascades and collisionally excited forbidden lines make it glow: the blue-green of doubly ionised oxygen near five hundred nanometres, and the red of hydrogen alpha and ionised nitrogen, at about ten thousand kelvin.\n\nTry the widget. Move the sliders for expansion speed and age and watch the size grow around the Helix. Notice the oxygen and hydrogen colours, and how the central star races across to the white-dwarf cooling track.\n\nThe kinematic age is simply the radius divided by the expansion speed. For the Helix the angular size is sixteen arcminutes at about two hundred parsecs, so the diameter is roughly one parsec. At twenty kilometres per second the age is about twenty-four thousand years. That division works because the shell has been coasting outward since it left the star. Typical speeds are ten to thirty kilometres per second, sizes about a third of a parsec, ages around ten thousand years; after fifty thousand years the gas has merged with the interstellar medium. About fifteen hundred are known, perhaps fifteen thousand exist, and with half a solar mass each they return about a solar mass of enriched gas every year.\n\nHubble images show they are rarely spherical: rings seen pole-on, bipolar butterflies, jets probably from a companion, and the Helix’s cometary knots — dark globules with bright cusps facing the star. Angular momentum, repeated ejections, companions and magnetic fields all shape them. Think of a smoke ring twisted by whatever spin and company the star still has. Fleeting as it is — ten thousand years out of ten billion — this is how most of the stars in the sky will end.",
+   "hash": "87de34b0c860",
+   "duration": 170.87,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.2,
+     "text": "Look at the Helix behind the panel — that glowing ring is the last act of a star like the Sun."
+    },
+    {
+     "start": 6.2,
+     "end": 15.34,
+     "text": "As the dust shell expands and thins, the central star reappears with the spectrum of an F or G supergiant, and the track turns blueward."
+    },
+    {
+     "start": 15.34,
+     "end": 23.14,
+     "text": "It crosses the Hertzsprung–Russell diagram at nearly constant luminosity as a post-asymptotic-giant-branch star."
+    },
+    {
+     "start": 23.14,
+     "end": 25.56,
+     "text": "The last of the envelope is blown off."
+    },
+    {
+     "start": 25.56,
+     "end": 32.14,
+     "text": "With almost nothing left above them, the hydrogen and helium shells go out and the luminosity falls steeply."
+    },
+    {
+     "start": 32.14,
+     "end": 42.5,
+     "text": "What remains is the degenerate carbon–oxygen core, or sometimes oxygen–neon–magnesium, wrapped in a thin skin of hydrogen and helium — a white dwarf."
+    },
+    {
+     "start": 42.5,
+     "end": 60.58,
+     "text": "Iben’s zero-point-six-solar-mass model leaves the asymptotic giant branch after its tenth thermal pulse with only three thousandths of a solar mass of envelope, reaches thirty thousand kelvin, suffers an eleventh flash on the way, and ends as a white dwarf about three hundredths of a solar radius across."
+    },
+    {
+     "start": 60.58,
+     "end": 70.6,
+     "text": "The departing envelope, lit by the ultraviolet of that hot star, is a planetary nebula, named in the eighteenth century for its disc-like look in small telescopes."
+    },
+    {
+     "start": 70.6,
+     "end": 73.58,
+     "text": "Those photons ionise and excite the gas."
+    },
+    {
+     "start": 73.58,
+     "end": 87.77,
+     "text": "Recombination cascades and collisionally excited forbidden lines make it glow: the blue-green of doubly ionised oxygen near five hundred nanometres, and the red of hydrogen alpha and ionised nitrogen, at about ten thousand kelvin."
+    },
+    {
+     "start": 87.77,
+     "end": 88.95,
+     "text": "Try the widget."
+    },
+    {
+     "start": 88.95,
+     "end": 94.03,
+     "text": "Move the sliders for expansion speed and age and watch the size grow around the Helix."
+    },
+    {
+     "start": 94.03,
+     "end": 100.33,
+     "text": "Notice the oxygen and hydrogen colours, and how the central star races across to the white-dwarf cooling track."
+    },
+    {
+     "start": 100.33,
+     "end": 104.45,
+     "text": "The kinematic age is simply the radius divided by the expansion speed."
+    },
+    {
+     "start": 104.45,
+     "end": 111.97,
+     "text": "For the Helix the angular size is sixteen arcminutes at about two hundred parsecs, so the diameter is roughly one parsec."
+    },
+    {
+     "start": 111.97,
+     "end": 116.17,
+     "text": "At twenty kilometres per second the age is about twenty-four thousand years."
+    },
+    {
+     "start": 116.17,
+     "end": 120.71,
+     "text": "That division works because the shell has been coasting outward since it left the star."
+    },
+    {
+     "start": 120.71,
+     "end": 132.29,
+     "text": "Typical speeds are ten to thirty kilometres per second, sizes about a third of a parsec, ages around ten thousand years; after fifty thousand years the gas has merged with the interstellar medium."
+    },
+    {
+     "start": 132.29,
+     "end": 141.29,
+     "text": "About fifteen hundred are known, perhaps fifteen thousand exist, and with half a solar mass each they return about a solar mass of enriched gas every year."
+    },
+    {
+     "start": 141.29,
+     "end": 154.69,
+     "text": "Hubble images show they are rarely spherical: rings seen pole-on, bipolar butterflies, jets probably from a companion, and the Helix’s cometary knots — dark globules with bright cusps facing the star."
+    },
+    {
+     "start": 154.69,
+     "end": 160.25,
+     "text": "Angular momentum, repeated ejections, companions and magnetic fields all shape them."
+    },
+    {
+     "start": 160.25,
+     "end": 164.69,
+     "text": "Think of a smoke ring twisted by whatever spin and company the star still has."
+    },
+    {
+     "start": 164.69,
+     "end": 170.87,
+     "text": "Fleeting as it is — ten thousand years out of ten billion — this is how most of the stars in the sky will end."
+    }
+   ],
+   "voicedHash": "95ea68259972"
+  },
+  "subgiant-red-giant": {
+   "script": "Let’s look at Aldebaran behind the panel. After the main sequence the star alternates between core and shell burning, readjusting. Switch the widget between one and five solar masses and drag the stage slider. Watch the core, shells and convective envelope on the subgiant and red giant branches.\n\nOut of hydrogen, the one solar-mass core contracts under a thick shell burning harder than the core did, so luminosity rises, the envelope swells and effective temperature falls. The five solar-mass star brightens and heats while contracting, until a shell at point three lights so fast the envelope expands, absorbs energy, and luminosity dips: about eleven hundred solar luminosities, seventeen thousand kelvin, four solar radii, a helium core of six hundredths of a solar radius.\n\nAsh grows an isothermal helium core to the Schönberg–Chandrasekhar limit, points four. Kelvin–Helmholtz contraction releases gravitational energy, the envelope puffs, and the star races redward along the subgiant branch.\n\nThe subgiant time t is of order the Kelvin–Helmholtz contraction time, so the crossing is fast. On the red giant branch the effective temperature, T-eff, stays roughly constant, the Hayashi line, while luminosity L rises as the core mass, M-core, rises. Shell luminosity, L-shell, is essentially L, and it scales as M-core to the seventh power, fixed by the degenerate core, not the envelope.\n\nThe core rebuilds a temperature gradient, the hydrogen shell narrows and heats, and falling effective temperature raises the opacity of the negative hydrogen ion. Convection deepens, energy flows on an adiabatic gradient, and the star climbs that line almost vertically, a path young stars descend.\n\nWatch the convective base reach processed gas. Lithium, destroyed above two point seven million kelvin, is gone from the inner ninety-eight per cent of the five solar-mass star. Helium-three has built up in the middle third, and the CNO isotopes have shifted toward nitrogen-fourteen. First dredge-up mixes this to the surface: lithium falls, helium-three rises, and carbon-twelve to nitrogen-fourteen and carbon-twelve to carbon-thirteen fall, a sharp test in giant spectra.",
+   "hash": "ea0d4efa777d",
+   "duration": 133.75,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.14,
+     "text": "Let’s look at Aldebaran behind the panel."
+    },
+    {
+     "start": 3.14,
+     "end": 8.54,
+     "text": "After the main sequence the star alternates between core and shell burning, readjusting."
+    },
+    {
+     "start": 8.54,
+     "end": 13.3,
+     "text": "Switch the widget between one and five solar masses and drag the stage slider."
+    },
+    {
+     "start": 13.3,
+     "end": 18.7,
+     "text": "Watch the core, shells and convective envelope on the subgiant and red giant branches."
+    },
+    {
+     "start": 18.7,
+     "end": 29.3,
+     "text": "Out of hydrogen, the one solar-mass core contracts under a thick shell burning harder than the core did, so luminosity rises, the envelope swells and effective temperature falls."
+    },
+    {
+     "start": 29.3,
+     "end": 48.54,
+     "text": "The five solar-mass star brightens and heats while contracting, until a shell at point three lights so fast the envelope expands, absorbs energy, and luminosity dips: about eleven hundred solar luminosities, seventeen thousand kelvin, four solar radii, a helium core of six hundredths of a solar radius."
+    },
+    {
+     "start": 48.54,
+     "end": 54.24,
+     "text": "Ash grows an isothermal helium core to the Schönberg–Chandrasekhar limit, points four."
+    },
+    {
+     "start": 54.24,
+     "end": 62.24,
+     "text": "Kelvin–Helmholtz contraction releases gravitational energy, the envelope puffs, and the star races redward along the subgiant branch."
+    },
+    {
+     "start": 62.24,
+     "end": 68.29,
+     "text": "The subgiant time t is of order the Kelvin–Helmholtz contraction time, so the crossing is fast."
+    },
+    {
+     "start": 68.29,
+     "end": 79.23,
+     "text": "On the red giant branch the effective temperature, T-eff, stays roughly constant, the Hayashi line, while luminosity L rises as the core mass, M-core, rises."
+    },
+    {
+     "start": 79.23,
+     "end": 88.09,
+     "text": "Shell luminosity, L-shell, is essentially L, and it scales as M-core to the seventh power, fixed by the degenerate core, not the envelope."
+    },
+    {
+     "start": 88.09,
+     "end": 97.03,
+     "text": "The core rebuilds a temperature gradient, the hydrogen shell narrows and heats, and falling effective temperature raises the opacity of the negative hydrogen ion."
+    },
+    {
+     "start": 97.03,
+     "end": 105.59,
+     "text": "Convection deepens, energy flows on an adiabatic gradient, and the star climbs that line almost vertically, a path young stars descend."
+    },
+    {
+     "start": 105.59,
+     "end": 108.49,
+     "text": "Watch the convective base reach processed gas."
+    },
+    {
+     "start": 108.49,
+     "end": 115.71,
+     "text": "Lithium, destroyed above two point seven million kelvin, is gone from the inner ninety-eight per cent of the five solar-mass star."
+    },
+    {
+     "start": 115.71,
+     "end": 122.07,
+     "text": "Helium-three has built up in the middle third, and the CNO isotopes have shifted toward nitrogen-fourteen."
+    },
+    {
+     "start": 122.07,
+     "end": 133.75,
+     "text": "First dredge-up mixes this to the surface: lithium falls, helium-three rises, and carbon-twelve to nitrogen-fourteen and carbon-twelve to carbon-thirteen fall, a sharp test in giant spectra."
+    }
+   ],
+   "voicedHash": "fe0264fafedf"
+  }
+ }
+}

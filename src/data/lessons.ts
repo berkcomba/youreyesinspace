@@ -360,7 +360,35 @@ export type WidgetSpec =
   /** P Cygni profiles: an expanding or infalling shell around a T Tauri star and the line profile it produces, with sliders for the shell speed and optical depth; toggles outflow, inverse (accretion) and the FU Orionis state */
   | { type: 'pcygni' }
   /** Disk formation: a rotating cloud collapsing, faster along the axis than in the plane, settling into a disk of radius set by angular momentum, with jets; sliders for the initial spin and radius */
-  | { type: 'protodisk' };
+  | { type: 'protodisk' }
+  /** Stellar evolution timescales against mass: free-fall, Kelvin–Helmholtz and nuclear timescales on a log plot with a mass slider, and the fraction of stars expected in each phase */
+  | { type: 'evotimescales' }
+  /** A main-sequence star ageing: core hydrogen fraction, mean molecular weight, central temperature and density, luminosity and radius against age for a chosen mass, with the interior profile and the isothermal core appearing at hydrogen exhaustion */
+  | { type: 'mscore' }
+  /** The Schönberg–Chandrasekhar limit: pressure at the surface of an isothermal core against core mass, its maximum, the envelope pressure, and the limiting core fraction for chosen mean molecular weights; degeneracy raises the limit */
+  | { type: 'sclimit' }
+  /** Main-sequence and post-main-sequence evolutionary tracks of 0.8–25 solar-mass stars (Schaller et al. 1992) with the numbered points and elapsed times of Table 13.1; a mass selector and age cursor move a star along its track */
+  | { type: 'evotracks' }
+  /** The giant stages of a 1 or 5 solar-mass star: the annotated track from ZAMS through SGB, RGB, helium burning, AGB and planetary nebula, with a stage slider showing the cross-section (core, burning shells, convective envelope) and the first dredge-up */
+  | { type: 'giantstages' }
+  /** The helium core flash: pressure of an ideal and a degenerate gas against temperature, the triple-alpha rate's steep temperature dependence, and the runaway luminosity of the flash for a degenerate core compared with quiet ignition in a non-degenerate one */
+  | { type: 'heflash' }
+  /** Thermal pulses on the AGB: hydrogen- and helium-shell luminosities and the surface luminosity against time for a chosen core mass, with the interpulse period and the growing pulse amplitude */
+  | { type: 'thermalpulses' }
+  /** Third dredge-up and the s-process: slow neutron captures and beta decays walked across the chart of nuclides to technetium-99, and a C/O ratio slider that turns an M giant into an S and then a C star as carbon monoxide locks up the lesser element */
+  | { type: 'sprocess' }
+  /** AGB mass loss: the Reimers rate for chosen luminosity, radius and mass, the mass of the star against time, the superwind, and the initial–final mass relation that keeps white dwarfs below the Chandrasekhar limit */
+  | { type: 'agbmassloss' }
+  /** A planetary nebula: the ejected envelope expanding while the central star crosses the H–R diagram to the white-dwarf cooling track; sliders for expansion speed and age give the size, the Helix as the worked case, and the [O III] and Hα colours */
+  | { type: 'planetary' }
+  /** Stellar populations: Population I, II and III placed in a cut-away Milky Way with their metallicities, ages and velocities, and the metallicity of each generation rising with time */
+  | { type: 'stellarpops' }
+  /** Main-sequence fitting: a cluster's colour–magnitude diagram in apparent magnitude is dragged vertically onto the calibrated main sequence; the shift is the distance modulus and gives the distance */
+  | { type: 'msfitting' }
+  /** Isochrones: a synthetic cluster colour–magnitude diagram at a chosen age from 1 Myr to 13 Gyr, with the turn-off, giants, horizontal branch, white dwarfs, the Hertzsprung gap in young clusters and the ages of real clusters marked */
+  | { type: 'isochrone' }
+  /** Star counts by evolutionary phase: the number of a cluster's stars expected on the main sequence, subgiant, giant, horizontal and asymptotic branches from the lifetimes of each phase and the initial mass function; why the AGB and post-AGB are nearly empty */
+  | { type: 'phasecounts' };
 
 export type SceneCue =
   | { action: 'goto'; ref: string; kind?: 'body' | 'blackhole' | 'star' | 'landmark' | 'galaxy' }
@@ -5684,6 +5712,278 @@ const S12_3: Section = {
   ],
 };
 
+/* ================================================================================ */
+/*  CHAPTER 13 — MAIN SEQUENCE AND POST-MAIN-SEQUENCE STELLAR EVOLUTION               */
+/* ================================================================================ */
+
+const S13_1: Section = {
+  id: 'main-sequence-evolution',
+  number: '13.1',
+  title: 'Evolution on the Main Sequence',
+  summary: 'The three timescales of a star\'s life and why most stars are on the main sequence; how a Sun-like star brightens as its core turns to helium; the isothermal helium core and the Schönberg–Chandrasekhar limit that ends the main sequence; electron degeneracy as a reprieve; and the convective cores and overall contraction of massive stars.',
+  minutes: 25,
+  steps: [
+    {
+      id: 'evolution-timescales',
+      kicker: 'Interactive · three clocks',
+      title: 'Stellar evolution timescales',
+      widget: { type: 'evotimescales' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('The main sequence exists because hydrogen fusion in the core holds a star in balance; everything that follows is the consequence of gravity and of the slow change of composition that fusion causes. Three clocks pace the story. The <b>free-fall timescale</b>, (3π/32Gρ)^{1/2}, is minutes to hours for a star and governs collapse; the <b>Kelvin–Helmholtz timescale</b>, GM²/RL, the time to radiate the gravitational energy, is about 10⁷ years for the Sun and governs contraction and the readjustments between burning phases; and the <b>nuclear timescale</b>, the time to burn the available fuel, is about 10¹⁰ years for the Sun and governs the main sequence itself. Chemical energy plays no role at all.'),
+        eq('t_{\\rm ff} = \\left(\\frac{3\\pi}{32 G\\bar\\rho}\\right)^{1/2}, \\qquad t_{\\rm KH} = \\frac{GM^2}{RL}, \\qquad t_{\\rm nuc} \\approx 0.007\\,\\frac{0.1\\,M c^2}{L} \\approx 10^{10}\\ {\\rm yr}\\,\\frac{M/M_\\odot}{L/L_\\odot}', 'The three timescales. For the Sun: t_ff ≈ 30 min, t_KH ≈ 3 × 10⁷ yr, t_nuc ≈ 10¹⁰ yr — about 10 per cent of the hydrogen is available to the core and 0.7 per cent of its mass becomes energy. Along the main sequence L ∝ M^{3.5}, so t_nuc ∝ M^{−2.5}: a 25 M☉ star lives 6 million years, a 0.8 M☉ star 25 billion.'),
+        p('The ordering t_ff ≪ t_KH ≪ t_nuc is why 80–90 per cent of the stars in the solar neighbourhood are main-sequence stars: a star spends most of its life there, and the later phases, paced by the Kelvin–Helmholtz clock each time one fuel runs out and the next has not yet lit, are brief. The widget plots the three timescales against mass and shows the fraction of a star\'s life spent in each phase. The observed main sequence is a band rather than a line: observational errors, differing compositions and, above all, the slow evolution <em>along</em> the main sequence that we examine next give it a finite width.'),
+      ],
+    },
+    {
+      id: 'low-mass-ms-evolution',
+      kicker: 'Interactive · the Sun ages',
+      title: 'Low-mass main-sequence evolution and the isothermal core',
+      widget: { type: 'mscore' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('Zero-age main-sequence stars above about 1.2 M☉ have convective cores, driven by the steep temperature dependence of the CNO cycle; those between 0.3 and 1.2 M☉, burning by the gentler pp chain, have radiative cores; and below 0.3 M☉ the whole star is convective. Take the Sun. Its luminosity, radius and temperature have all risen since it reached the ZAMS 4.57 Gyr ago, because as four protons become one helium nucleus the mean molecular weight μ of the core goes up, and by the ideal gas law a gas of fewer, heavier particles at the same ρ and T exerts less pressure. The core must compress; the virial theorem puts half the released gravitational energy into heat, the temperature rises, the burning region widens slightly, and since the pp rate goes as ρX²T⁶ the higher ρ and T more than compensate for the falling X. The Sun was 30 per cent fainter at birth and brightens by about 1 per cent every 100 million years.'),
+        p('Eventually the central hydrogen is gone — for the Sun, about 9.8 Gyr after the ZAMS (point 3 in Fig. 13.1, where the 1 M☉ model has R = 1.35 R☉ and L = 2.1 L☉). The pp chain stops at the centre, but the core is now hot enough that hydrogen keeps burning in a <b>thick shell</b> around a small, almost pure-helium core. Inside the shell L_r ≈ 0, and since the radiative gradient is proportional to L_r, dT/dr ≈ 0 there too: the helium core is <b>isothermal</b>, and must support the envelope by a density that rises steeply toward the centre. The shell produces more energy than the core did, the track continues to rise, and because some of that energy goes into a slow expansion of the envelope the effective temperature begins to fall; the shell\'s ash makes the isothermal core grow.'),
+        eq('P = \\frac{\\rho k T}{\\mu m_H}: \\quad \\mu \\uparrow \\ \\Rightarrow\\ \\rho, T \\uparrow\\ \\Rightarrow\\ \\varepsilon_{pp} \\propto \\rho X^2 T^{4}\\ \\uparrow, \\qquad \\frac{dT}{dr} \\propto -\\frac{\\kappa\\rho}{T^3}\\frac{L_r}{r^2} \\to 0 \\ \\text{where}\\ L_r \\to 0', 'Why a main-sequence star brightens as it burns, and why an exhausted core without an energy source becomes isothermal. The widget follows the core hydrogen fraction, μ, T_c, ρ_c, L and R from the ZAMS to hydrogen exhaustion for a chosen mass and draws the interior profile, with the isothermal core appearing at the end.'),
+        note('The present Sun\'s interior (Bahcall, Pinsonneault & Basu 2001): T_c = 15.69 × 10⁶ K, ρ_c = 1.527 × 10⁵ kg m⁻³, P_c = 2.342 × 10¹⁶ Pa, central X = 0.34 against the initial 0.71. ³He has accumulated to 3 × 10⁻³ in a shell where it is made faster than it is destroyed; the CNO isotopes have shifted toward ¹⁴N, the slowest link in that cycle.', 'The Sun today'),
+      ],
+    },
+    {
+      id: 'schonberg-chandrasekhar',
+      kicker: 'Interactive · how much core can a star carry?',
+      title: 'The Schönberg–Chandrasekhar limit and degeneracy',
+      widget: { type: 'sclimit' },
+      scene: [goto('sun'), rate(1)],
+      body: [
+        p('An isothermal core can hold up an envelope only so long. Write hydrostatic equilibrium with mass as the variable, dP/dM_r = −GM_r/4πr⁴, multiply by 4πr³ and integrate over the core: the result is a <b>virial theorem with a surface term</b>, 4πR_ic³P_ic − 2K_ic = U_ic. Solving for the pressure the core exerts at its surface gives two competing terms — thermal energy pushing out, gravity pulling in — and for fixed T_ic the pressure has a <em>maximum</em> as a function of the core mass, P_ic,max ∝ (kT_ic/μ_ic m_H)⁴/G³M_ic². The weight of the envelope demands a pressure that is independent of M_ic, P_env ∝ (kT_ic/μ_env m_H)⁴/G³M². Equating the two gives the largest core fraction that can stay in equilibrium — the <b>Schönberg–Chandrasekhar limit</b> of 1942.'),
+        eq('4\\pi R_{ic}^3 P_{ic} - 2K_{ic} = U_{ic}, \\qquad P_{ic} = \\frac{3}{4\\pi R_{ic}^3}\\left(\\frac{M_{ic} k T_{ic}}{\\mu_{ic} m_H} - \\frac{1}{5}\\frac{G M_{ic}^2}{R_{ic}}\\right), \\qquad \\left(\\frac{M_{ic}}{M}\\right)_{\\rm SC} \\simeq 0.37\\left(\\frac{\\mu_{\\rm env}}{\\mu_{ic}}\\right)^2', 'The generalised virial theorem for a core with a non-zero surface pressure, the core pressure with its thermal and gravitational terms, and the limit. The back-of-the-envelope version in the text gives 0.54 (μ_env/μ_ic)²; the exact coefficient is 0.37. With X = 0.68, Y = 0.30, Z = 0.02, μ_env ≈ 0.63 and a pure-helium core μ_ic ≈ 1.34, so (M_ic/M)_SC ≈ 0.08: the core collapses when it exceeds 8 per cent of the star.'),
+        p('When the core passes the limit it contracts on a Kelvin–Helmholtz timescale and the star leaves the main sequence (points 4 in Fig. 13.1) — for stars below 1.2 M☉ this is the end of the main-sequence phase. There is a reprieve: if the core is dense enough its electrons become <b>degenerate</b>, stacked by the Pauli principle into the lowest available states, and supply a pressure P_e = Kρ^{5/3} that does not depend on temperature and so can exceed what an ideal isothermal gas could provide. The core of a 1 M☉ star between points 3 and 4 is partly degenerate and reaches about 13 per cent of the mass before it gives way; stars of lower mass are more degenerate still and may never hit the limit before the next fuel ignites. The widget draws P_ic against M_ic, marks the maximum and the envelope\'s demand, and lets you change μ_env/μ_ic and add degeneracy.'),
+        p('Massive stars evolve differently on the main sequence because their convective cores keep the burning region mixed and homogeneous — the convective turnover time is far shorter than the nuclear one. In a 5 M☉ star the convective core shrinks slowly in mass during hydrogen burning, leaving a composition gradient behind; above 10 M☉ it retreats so fast that it vanishes before the hydrogen is gone. When the core X falls to about 0.05 (point 2) the <em>whole</em> star contracts, releasing gravitational energy, so L and T_eff both rise briefly (points 2 → 3): for stars above 1.2 M☉ this <b>overall contraction</b> marks the end of the main sequence, before a thick hydrogen shell ignites at point 3.'),
+      ],
+    },
+    {
+      id: 'evolutionary-tracks',
+      kicker: 'Interactive · the whole grid',
+      title: 'Evolutionary tracks and their timescales',
+      widget: { type: 'evotracks' },
+      scene: [goto('Aldebaran', 'star'), rate(1)],
+      body: [
+        p('Icko Iben computed the first grid of main-sequence and post-main-sequence tracks in the mid-1960s; the modern grid of Schaller and co-workers (1992), with mass loss and <em>convective overshooting</em> — the inertia that carries a convective bubble some distance into a radiative region — is the one in Fig. 13.1 and Table 13.1. The widget reproduces the tracks from 0.8 to 25 M☉ with their numbered points and elapsed times. Point 1 is the ZAMS; 2 is the hydrogen exhaustion of the convective core (massive stars) or the mid-main-sequence; 3, thick-shell ignition; 4, the Schönberg–Chandrasekhar collapse; 5, the base of the red giant branch; 6, helium ignition; 7–10, helium burning and beyond. Pick a mass and drag the age cursor to see where the star is and what it is doing.'),
+        table(
+          ['M (M☉)', 'to point 2', 'point 3', 'point 4', 'point 5', 'point 6', 'point 7', 'point 8'],
+          [
+            ['25', '6.33', '6.41', '6.41', '6.44', '6.52', '7.05', '7.06'],
+            ['15', '11.41', '11.58', '11.60', '11.61', '11.61', '11.70', '12.76'],
+            ['9', '25.94', '26.39', '26.42', '26.46', '26.50', '27.64', '28.13'],
+            ['5', '92.94', '94.46', '94.57', '94.92', '95.21', '99.38', '100.9'],
+            ['3', '346.2', '352.5', '352.8', '355.0', '357.3', '366.9', '420.5'],
+            ['2', '1094', '1116', '1118', '1129', '1148', '1161', '1380'],
+            ['1.5', '2633', '2690', '2700', '2757', '2911', '—', '—'],
+            ['1', '7048', '9845', '11386', '11636', '12270', '—', '—'],
+            ['0.8', '18829', '25028', '—', '—', '—', '—', '—'],
+          ],
+          'Elapsed times since the ZAMS in Myr to the numbered points of Fig. 13.1 (Schaller et al. 1992; selection from Table 13.1). The 1 M☉ track stops at point 6, the helium core flash, which the models of that era could not follow.',
+        ),
+        p('Two features stand out. First, the times: a 5 M☉ star spends 93 Myr on the main sequence, 1.5 Myr crossing to the giant branch and 6 Myr burning helium — the ratios that set the populations of a colour–magnitude diagram in Section 13.3. Second, the shapes: every track turns right and up into the giant region, but the low-mass tracks rise smoothly while the intermediate ones make a <em>blue loop</em> during helium burning. The present Sun sits between points 1 and 2 of the 1 M☉ track; in another 5 Gyr it will be at point 3, twice as bright, and after that the main sequence will be behind it.'),
+      ],
+    },
+    {
+      id: 'ms-evolution-summary',
+      kicker: 'Summary',
+      title: 'Section 13.1 in brief',
+      scene: [backdrop()],
+      body: [
+        summary(
+          't_ff ≪ t_KH ≪ t_nuc (minutes, 10⁷ yr, 10¹⁰ yr for the Sun): stars sit on the main sequence 80–90 per cent of their lives; transitions between fuels run on the Kelvin–Helmholtz clock.',
+          'On the main sequence μ_core rises → core contracts and heats → L, R, T_eff rise (the Sun: +30 per cent since the ZAMS); the main sequence is a band.',
+          'Hydrogen exhaustion → thick H-burning shell around an isothermal He core (L_r = 0 ⇒ dT/dr = 0), which grows on shell ash.',
+          'Schönberg–Chandrasekhar: (M_ic/M) ≤ 0.37 (μ_env/μ_ic)² ≈ 0.08; beyond it the core collapses on t_KH. Electron degeneracy (P = Kρ^{5/3}, T-independent) lets low-mass cores exceed it (~13 per cent for 1 M☉).',
+          'Stars above 1.2 M☉: convective cores, overall contraction at X_c ≈ 0.05 ends the main sequence; Schaller et al. tracks and times (Table 13.1).',
+        ),
+        key('A star on the main sequence is slowly poisoning itself with helium, and responds by growing hotter and brighter; the main sequence ends when the helium core can no longer bear the weight above it.'),
+      ],
+    },
+  ],
+};
+
+const S13_2: Section = {
+  id: 'post-main-sequence',
+  number: '13.2',
+  title: 'Late Stages of Stellar Evolution',
+  summary: 'From the subgiant branch to the white dwarf: shell burning and the red giant branch, the first dredge-up, the helium core flash in degenerate cores, the horizontal branch, the asymptotic giant branch with its thermal pulses, third dredge-up, carbon stars and the s-process, the superwind that strips the envelope, and the planetary nebula that marks the end for stars below 8 solar masses.',
+  minutes: 35,
+  steps: [
+    {
+      id: 'subgiant-red-giant',
+      kicker: 'Interactive · up the giant branch',
+      title: 'Off the main sequence: subgiant and red giant branches',
+      widget: { type: 'giantstages' },
+      scene: [goto('Aldebaran', 'star'), rate(1)],
+      body: [
+        p('After the main sequence a star alternates between burning in its core and in concentric shells, readjusting its structure each time a source switches on or off; late in the game, mass loss takes over. Follow a 1 M☉ and a 5 M☉ star (Figs. 13.4 and 13.5). When the 1 M☉ core runs out of hydrogen it contracts while a thick shell burns around it, more fiercely than the core did: L rises, the envelope swells, T_eff falls. The 5 M☉ star instead goes through its overall contraction first, brightening and heating, until a thick shell lights at point 3 — so suddenly that the envelope expands and absorbs energy, and L dips briefly (the structure then: L = 1130 L☉, T_eff = 16 900 K, R = 3.9 R☉, helium core of 0.06 R☉).'),
+        p('Shell ash grows the isothermal helium core until it reaches the Schönberg–Chandrasekhar limit (points 4) and contracts on the Kelvin–Helmholtz timescale; the released gravitational energy puffs up the envelope, T_eff drops, and the star moves rapidly redward along the <b>subgiant branch</b> (SGB). The contracting core re-establishes a temperature gradient; the hydrogen shell narrows, heats and strengthens; the envelope expands further. As T_eff falls the H⁻ opacity rises and a surface convection zone forms and deepens, until much of the star is convective and the energy can be carried out efficiently along an adiabatic gradient: the star then climbs the <b>red giant branch</b> (RGB) almost vertically — the same Hayashi line a pre-main-sequence star descends, now climbed in the other direction.'),
+        eq('\\text{SGB: } t \\sim t_{\\rm KH}\\ \\text{(core contraction)}, \\qquad \\text{RGB: } T_{\\rm eff} \\approx \\text{const (Hayashi)},\\ L \\uparrow\\ \\text{as}\\ M_{\\rm core} \\uparrow, \\qquad L_{\\rm shell} \\approx L \\propto M_{\\rm core}^{\\,7}', 'The subgiant crossing is fast; the giant branch is a Hayashi track whose luminosity is set by the mass of the degenerate helium core (the core-mass–luminosity relation), independent of the envelope. The widget runs the stage slider along the 1 or 5 M☉ track and draws the star\'s cross-section — core, shells, convective envelope — at each stage.'),
+        p('As the convective envelope deepens on the RGB its base reaches material processed by nuclear reactions: lithium, destroyed above 2.7 × 10⁶ K, is gone from the inner 98 per cent of the 5 M☉ star; ³He has built up in the middle third; the CNO isotopes have shifted toward ¹⁴N. Mixing brings this to the surface — lithium falls, ³He rises, ¹²C/¹⁴N and ¹²C/¹³C fall — in the <b>first dredge-up</b>, directly observable in giant spectra and one of the sharpest tests of stellar evolution theory.'),
+      ],
+    },
+    {
+      id: 'helium-flash',
+      kicker: 'Interactive · a galaxy\'s worth of light, for seconds',
+      title: 'The red giant tip and the helium core flash',
+      widget: { type: 'heflash' },
+      scene: [goto('Arcturus', 'star'), rate(1)],
+      body: [
+        p('At the tip of the red giant branch the core has reached about 10⁸ K and 10⁷ kg m⁻³ (1.3 × 10⁸ K and 7.7 × 10⁶ kg m⁻³ for the 5 M☉ model): helium nuclei can tunnel through their Coulomb barrier and the <b>triple-alpha process</b> begins, with some of the carbon going on to oxygen. The new, steeply temperature-dependent source heats and expands the core; the expansion pushes the hydrogen shell — still the main source of luminosity — outward, cooling it, so the star\'s luminosity drops abruptly, the envelope contracts and T_eff rises: the star leaves the tip and moves to the horizontal branch.'),
+        p('Below about 1.8 M☉ the ignition is explosive. During the climb the helium core has become strongly electron-degenerate, and neutrino losses have cooled its centre so that the temperature peaks in a shell. When helium ignites there, the degenerate pressure does not respond to the temperature — so the core does not expand, the temperature rises, the triple-alpha rate (∝ T⁴⁰) soars, and for a few seconds the core generates 10¹¹ L☉, the luminosity of a galaxy. None of it reaches the surface; it is absorbed by the envelope (and may drive off some mass). Only when the energy has <em>lifted the degeneracy</em> can the core expand, cool and settle to quiet burning. This <b>helium core flash</b> is so fast that the classical codes stopped at it — which is why the 1, 1.25 and 1.5 M☉ tracks in Fig. 13.1 end at point 6, and why Fig. 13.4 shows a dotted line there.'),
+        eq('\\varepsilon_{3\\alpha} \\propto \\rho^2 Y^3 T^{40}\\ (\\text{near }10^8\\ {\\rm K}), \\qquad P_{\\rm deg} = K\\rho^{5/3}\\ \\text{independent of }T, \\qquad L_{\\rm flash} \\sim 10^{11}\\,L_\\odot\\ \\text{for seconds}', 'The ingredients of the runaway: an energy source that doubles with every 2 per cent rise in temperature, and a pressure that does not rise at all. In an ideal gas the heating expands and cools the core — a thermostat; in a degenerate gas the thermostat is disconnected. The widget contrasts the two cases and shows the flash\'s luminosity spike.'),
+      ],
+    },
+    {
+      id: 'horizontal-branch-agb',
+      kicker: 'Interactive · the second main sequence and the second ascent',
+      title: 'The horizontal branch and the asymptotic giant branch',
+      widget: { type: 'thermalpulses' },
+      scene: [goto('Mira', 'star'), rate(1)],
+      body: [
+        p('With helium burning quietly in the core and hydrogen in a shell, the star sits on the <b>horizontal branch</b> (HB): the helium-burning analogue of the main sequence, but a hundred times shorter. The triple-alpha process\'s temperature sensitivity gives the core a convective zone, just as the CNO cycle does on the upper main sequence; the envelope convection retreats. As the compression of the hydrogen shell raises its output the star moves blueward, and when the core\'s μ has grown enough (point 8 for 5 M☉) the core contracts, the envelope expands, and the star moves back redward; shortly after, core helium is exhausted — converted to carbon and oxygen — and, like the SGB crossing, the redward evolution with an inert, contracting CO core is rapid. Many HB stars pulsate; the RR Lyrae variables are HB stars in the instability strip.'),
+        p('A thick helium shell lights outside the CO core, narrows and strengthens, pushing the hydrogen shell outward until it switches off; neutrino losses cool the core and electron degeneracy sets in there. Reaching the Hayashi track again, the star climbs the <b>asymptotic giant branch</b> (AGB), so named because it approaches the RGB asymptotically from the left: the helium-shell analogue of the hydrogen-shell RGB. On the <em>early</em> AGB the helium shell supplies the energy (for 5 M☉: T_c ≈ 2 × 10⁸ K, ρ_c ≈ 10⁹ kg m⁻³, L = 1940 L☉, R = 44 R☉, the hydrogen shell at 0.006 R, the CO core at 0.0008 R); the deepening envelope convection reaches the helium-rich layer and the <b>second dredge-up</b> raises the surface helium and nitrogen.'),
+        p('Near the top, on the <b>thermal-pulse AGB</b>, the hydrogen shell reignites and dominates — but it rains helium ash onto the thin helium layer below, whose base grows slightly degenerate until it ignites in a <b>helium shell flash</b>: a small-scale version of the core flash. The flash drives the hydrogen shell outward and quenches it; the star\'s luminosity drops, its radius shrinks and T_eff rises; then the helium shell fades, the hydrogen shell recovers, and the cycle repeats every few thousand years for 5 M☉ and every few hundred thousand for 0.6 M☉, with growing amplitude. The widget shows L_H, L_He and the surface luminosity through a train of pulses for a chosen core mass. Long-period variables — Miras, with periods of 100–700 days, like Mira itself behind this panel — are TP-AGB stars, and the period changes seen in W Dra, R Aql and R Hya may be the structural adjustments of shell flashes made visible.'),
+        eq('\\Delta t_{\\rm pulse} \\approx 10^{5}\\ {\\rm yr}\\ \\text{at}\\ M_c = 0.6\\,M_\\odot,\\ \\sim 10^{3}\\ {\\rm yr}\\ \\text{at}\\ M_c = 0.9\\,M_\\odot, \\qquad L_{\\rm AGB} \\approx 5.9\\times10^4\\,L_\\odot\\,(M_c/M_\\odot - 0.52)', 'The interpulse period falls steeply with core mass; the AGB luminosity, like the RGB\'s, is set by the core mass (Paczyński\'s relation), not the envelope. A 0.6 M☉ core gives ~5000 L☉.'),
+      ],
+    },
+    {
+      id: 'dredge-up-s-process',
+      kicker: 'Interactive · the ashes come up',
+      title: 'Third dredge-up, carbon stars and the s-process',
+      widget: { type: 'sprocess' },
+      scene: [goto('Mira', 'star'), rate(1)],
+      body: [
+        p('The energy burst of a shell flash sets up a convection zone between the two shells, and the envelope convection deepens too; in stars above about 2 M☉ the two zones merge and reach down to where the triple-alpha process has made carbon — in the intershell region carbon outnumbers oxygen five to ten times, the reverse of ordinary stellar matter. This <b>third dredge-up</b> carries carbon to the surface, and repeated pulses drive the photospheric O/C ratio down until carbon wins. The chemistry then flips: carbon monoxide is so tightly bound that it locks up whichever element is scarcer. In an oxygen-rich atmosphere the carbon is all in CO and the spare oxygen makes TiO, SiO and H₂O — the bands of an M star; with carbon in excess the oxygen is in CO and the spare carbon makes C₂, CN and SiC — a <b>carbon star</b>, spectral class C. Between them, with C ≈ O, the <b>S stars</b> show ZrO instead of TiO.'),
+        p('S and C stars also show lines of <b>technetium</b>, an element with no stable isotope; its most abundant form, ⁹⁹Tc, has a half-life of only 200 000 years, so it must have been made in the star within the last few hundred thousand years and dredged up — the smoking gun of nucleosynthesis in progress, found by Paul Merrill in 1952. Technetium is made by the <b>s-process</b>: free neutrons, released by reactions such as ¹³C(α,n)¹⁶O and ²²Ne(α,n)²⁵Mg in the intershell, are captured by existing nuclei without any Coulomb barrier to cross. If the neutron flux is low enough, each unstable nucleus produced has time to β-decay before it catches another neutron, and the path winds along the valley of stability one mass unit at a time, building half the elements heavier than iron — Sr, Zr, Ba, Pb — and ⁹⁹Tc along the way.'),
+        eq('{}^{13}{\\rm C} + {}^4{\\rm He} \\to {}^{16}{\\rm O} + n, \\qquad {}^{22}{\\rm Ne} + {}^4{\\rm He} \\to {}^{25}{\\rm Mg} + n, \\qquad (A,Z) + n \\to (A+1,Z)\\ \\xrightarrow{\\ \\beta^-\\ }\\ (A+1,Z+1), \\qquad t_{1/2}({}^{99}{\\rm Tc}) = 2.1\\times10^5\\ {\\rm yr}', 'Neutron sources of the AGB intershell and the slow-capture step: capture, then decay, then capture. The widget walks the s-process across the chart of nuclides to ⁹⁹Tc and lets you slide the C/O ratio of an atmosphere to watch its molecules and spectral type change from M to S to C.'),
+      ],
+    },
+    {
+      id: 'agb-mass-loss',
+      kicker: 'Interactive · the envelope departs',
+      title: 'Mass loss on the AGB and the fate of the core',
+      widget: { type: 'agbmassloss' },
+      scene: [goto('Mira', 'star'), rate(1)],
+      body: [
+        p('AGB stars lose mass prodigiously, up to 10⁻⁴ M☉ yr⁻¹. At 3000 K dust condenses in the outflow — silicates from oxygen-rich stars, graphite and SiC from carbon stars — and radiation pressure on the grains, which drag the gas with them, probably drives the wind, perhaps helped by the pulsations and shell flashes; the mechanism is still poorly understood. The rate grows with time because L and R rise while M falls and the surface gravity drops, until a <b>superwind</b> of 10⁻⁴ M☉ yr⁻¹ sets in. The star disappears inside an optically thick dust shell and radiates in the infrared, with OH maser emission from the shell: an <b>OH/IR source</b>. The dust this phase returns to the interstellar medium is a major part of the dust we met in Chapter 12.'),
+        eq('\\dot M_{\\rm Reimers} = -4\\times10^{-13}\\,\\eta\\,\\frac{L}{gR} = -4\\times10^{-13}\\,\\eta\\,\\frac{LR}{M}\\ M_\\odot\\,{\\rm yr^{-1}}\\ (\\text{solar units},\\ \\eta \\approx 1), \\qquad M_{\\rm Ch} = 1.4\\,M_\\odot', 'The empirical Reimers law for red-giant winds, and the Chandrasekhar limit, the largest mass a degenerate core can support. For a 1 M☉ AGB star with L = 7000 L☉ and R = 310 R☉, Ṁ ≈ 10⁻⁶ M☉ yr⁻¹ — the envelope goes in a few hundred thousand years; the superwind finishes the job.'),
+        p('What happens next is set by the initial mass and by how much is lost. Below about 4 M☉ the CO core never gets hot enough to burn; its mass stays well under 1.4 M☉. Between 4 and 8 M☉ the core would, <em>without</em> mass loss, grow past the <b>Chandrasekhar limit</b> and collapse catastrophically — but the observed winds strip the envelope first, and the core instead burns carbon to an oxygen–neon–magnesium composition (with ²²Ne(α,n)²⁵Mg and ²²Ne(α,γ)²⁶Mg among the reactions) and stays below the limit. Above 8 M☉ the core goes on to further burning and a different end, the supernova of Chapter 15. The widget integrates the Reimers rate for chosen L, R and M, shows M(t) and the superwind, and draws the <b>initial–final mass relation</b>: 1 M☉ → 0.55 M☉, 5 M☉ → 0.9 M☉, 8 M☉ → 1.3 M☉, every white dwarf under 1.4.'),
+      ],
+    },
+    {
+      id: 'planetary-nebulae',
+      kicker: 'Interactive · the last act',
+      title: 'Post-AGB evolution and planetary nebulae',
+      widget: { type: 'planetary' },
+      scene: [goto('l-helix', 'landmark'), rate(1)],
+      body: [
+        p('As the dust shell expands and thins the central star reappears with the spectrum of an F or G supergiant and the track turns blueward, crossing the H–R diagram at nearly constant luminosity as a <b>post-AGB star</b>. The last of the envelope is blown off; with almost nothing above them the hydrogen and helium shells go out and the luminosity falls steeply; what remains is the degenerate CO (or ONeMg) core with a thin skin of hydrogen and helium — a <b>white dwarf</b>. Iben\'s 0.6 M☉ model (Fig. 13.12) leaves the AGB after its tenth thermal pulse with 0.003 M☉ of envelope, reaches 30 000 K, suffers an eleventh flash on the way, and ends as a white dwarf of 0.0285 R☉.'),
+        p('The departing envelope, lit by the ultraviolet of the central star, is a <b>planetary nebula</b> — named in the eighteenth century for its disc-like look in small telescopes. Its photons ionise and excite the gas, and the recombination cascade and collisionally excited forbidden lines make it glow: the blue-green of [O III] at 500.7 and 495.9 nm (with [O II] and [Ne III]), the red of Hα and [N II], at temperatures of about 10⁴ K. Expansion speeds from Doppler shifts are typically 10–30 km s⁻¹ (1000 km s⁻¹ in the Ant Nebula Mz 3), sizes about 0.3 pc, ages therefore ~10⁴ years; after 50 000 years the nebula has merged with the interstellar medium. About 1500 are known in the Galaxy, perhaps 15 000 exist, and with ~0.5 M☉ each they return about a solar mass of enriched gas to the ISM every year.'),
+        eq('t_{\\rm PN} \\approx \\frac{R}{v_{\\rm exp}}: \\quad \\text{Helix: } \\theta = 16\', d = 213\\ {\\rm pc} \\Rightarrow D \\approx 1\\ {\\rm pc},\\ v = 20\\ {\\rm km\\,s^{-1}} \\Rightarrow t \\approx 2.4\\times10^4\\ {\\rm yr}', 'The kinematic age of a planetary nebula from its size and expansion speed; the Helix (NGC 7293, behind this panel) is one of the nearest. The widget expands a nebula around its heating central star while the star crosses to the white-dwarf track, and reports size, age and the emission colours.'),
+        p('Hubble images show that planetaries are rarely spherical: rings seen pole-on, where the envelope left along the equator; bipolar "butterflies" like M2-9; jets, as in the Cat\'s Eye NGC 6543, probably from a binary companion; the cometary knots of the Helix, dark globules with bright cusps facing the star. Angular momentum, multiple ejections, companions and magnetic fields all shape them. Fleeting as it is — ten thousand years out of ten billion — the planetary nebula is how most of the stars in the sky will end.'),
+      ],
+    },
+    {
+      id: 'late-stages-summary',
+      kicker: 'Summary',
+      title: 'Section 13.2 in brief',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'SGB: core past the S–C limit contracts on t_KH, envelope expands redward; RGB: deep convection, Hayashi track climbed upward, L set by core mass; first dredge-up (Li ↓, ³He ↑, ¹²C/¹⁴N ↓).',
+          'RGB tip: 3α at 10⁸ K; below 1.8 M☉ the degenerate core ignites in a helium core flash (10¹¹ L☉ for seconds, lifting degeneracy); then the horizontal branch — core He burning, ~10⁸ yr.',
+          'He exhausted → CO core, He shell, E-AGB (second dredge-up), TP-AGB with He shell flashes every 10³–10⁵ yr; Miras/LPVs.',
+          'Third dredge-up (M > 2 M☉): carbon to the surface, M → S → C stars via CO lock-up; technetium and the s-process (neutrons from ¹³C(α,n), ²²Ne(α,n)).',
+          'Mass loss up to 10⁻⁴ M☉/yr (Reimers Ṁ ∝ LR/M), superwind, OH/IR; cores stay below 1.4 M☉ (CO below 4 M☉, ONeMg for 4–8); post-AGB crossing, planetary nebula (10⁴ K, [O III], 20 km/s, 10⁴ yr) and a white dwarf.',
+        ),
+        key('Below eight solar masses a star\'s end is gentle: it burns hydrogen and then helium in shells, throws its envelope back to the Galaxy enriched in carbon, nitrogen and s-process elements, and leaves a degenerate core cooling for eternity — the Sun will do exactly this.'),
+      ],
+    },
+  ],
+};
+
+const S13_3: Section = {
+  id: 'stellar-clusters',
+  number: '13.3',
+  title: 'Stellar Clusters',
+  summary: 'The cycle of enrichment and the stellar populations it produced; globular and open clusters as stars of one age and composition; distances by main-sequence fitting; colour–magnitude diagrams, isochrones and cluster ages from the turn-off; the Hertzsprung gap, the sparse AGB and blue stragglers; and what the clusters say about the theory.',
+  minutes: 25,
+  steps: [
+    {
+      id: 'stellar-populations',
+      kicker: 'Interactive · generations',
+      title: 'Population I, II and III stars',
+      widget: { type: 'stellarpops' },
+      scene: [goto('l-omegacen', 'landmark'), rate(1)],
+      body: [
+        p('Stars form from the interstellar medium and give most of their mass back — through winds, planetary nebulae and supernovae — enriched in the heavy elements their reactions made, so each generation starts with more metals than the last. The Big Bang, 13.7–13.8 billion years ago, made only hydrogen and helium (and a trace of lithium); the first stars had Z = 0 — <b>Population III</b>, still hypothetical, none yet found; the metal-poor stars that followed, with Z small but not zero, are <b>Population II</b>; the metal-rich stars of later generations, with Z up to 0.03, are <b>Population I</b>. The Sun, with Z = 0.02, is a Population I star.'),
+        p('Walter Baade defined the populations in 1944 by their kinematics and location, not their chemistry: Population I stars move slowly relative to the Sun and lie in the disc of the Milky Way; Population II stars have large velocities and are found far above and below the disc, in the halo and the bulge. Only later was it realised that the two groups differ in composition — and the connection between where stars are, how they move and what they are made of is one of the main clues to how the Galaxy formed. The globular cluster behind this panel, Omega Centauri, is extreme Population II: 12 billion years old, with [Fe/H] ≈ −1.6, a hundredth of the Sun\'s iron.'),
+        eq('Z_{\\rm Pop\\,III} = 0, \\qquad Z_{\\rm Pop\\,II} \\sim 10^{-4}\\!-\\!10^{-3}\\ ([{\\rm Fe/H}] \\approx -1\\ \\text{to}\\ -2.5), \\qquad Z_{\\rm Pop\\,I} \\approx 0.01\\!-\\!0.03\\ ([{\\rm Fe/H}] \\approx 0), \\qquad [{\\rm Fe/H}] \\equiv \\log_{10}\\frac{(N_{\\rm Fe}/N_{\\rm H})_\\star}{(N_{\\rm Fe}/N_{\\rm H})_\\odot}', 'Metallicities of the populations and the logarithmic metallicity index used for stars. The widget places the populations in a cut-away Galaxy with their ages, velocities and metallicities, and shows the enrichment of successive generations.'),
+      ],
+    },
+    {
+      id: 'clusters-and-distances',
+      kicker: 'Interactive · stars of one birthday',
+      title: 'Globular and open clusters; main-sequence fitting',
+      widget: { type: 'msfitting' },
+      scene: [goto('l-pleiades', 'landmark'), rate(1)],
+      body: [
+        p('A collapsing molecular cloud leaves a <b>cluster</b> of anything from tens to hundreds of thousands of stars that formed from the same gas, with the same composition, within a short span of time. Setting aside rotation, magnetic fields and binaries, the Vogt–Russell theorem then says that the only thing distinguishing the members is their initial mass — a cluster is a controlled experiment in stellar evolution. <b>Globular clusters</b> like M13, 7000 pc away in Hercules, or Omega Centauri, are extreme Population II: the oldest objects in the Galaxy, with the most members, spherical and tightly bound. <b>Galactic</b> or <b>open clusters</b> like the Pleiades (130 pc, Population I) are smaller, younger and loosely bound.'),
+        p('Because a cluster is small compared with its distance all its members share one distance modulus, so a diagram of apparent magnitude against colour has the same shape as one of absolute magnitude, merely shifted vertically. Slide the cluster\'s main sequence up or down until it lies on a main sequence calibrated in absolute magnitude — from nearby stars with trigonometric parallaxes — and the shift <em>is</em> the distance modulus: <b>main-sequence fitting</b>, also called spectroscopic parallax. The widget gives a cluster in apparent magnitudes; drag it onto the calibrated sequence and read off m − M and the distance. Reddening must be removed first (it shifts the cluster to the right as well as down), and the composition matters at the few-tenths-of-a-magnitude level.'),
+        eq('m - M = 5\\log_{10} d - 5 + A_V \\;\\Longrightarrow\\; d = 10^{(m - M - A_V + 5)/5}\\ {\\rm pc}', 'The distance modulus recovered from the vertical shift of the cluster sequence, corrected for extinction. The Pleiades: m − M ≈ 5.6, d ≈ 135 pc; the Hyades, at 46 pc, are the calibrator for everything else.'),
+      ],
+    },
+    {
+      id: 'isochrones-ages',
+      kicker: 'Interactive · a cluster\'s clock',
+      title: 'Colour–magnitude diagrams, isochrones and cluster ages',
+      widget: { type: 'isochrone' },
+      scene: [goto('l-47tuc', 'landmark'), rate(1)],
+      body: [
+        p('Rather than take a spectrum of every member, one measures their colours: a <b>colour–magnitude diagram</b> of V against B−V is the observer\'s H–R diagram. Compute evolutionary tracks for the cluster\'s composition and mark where each mass has got to at a given age; the curve through those points is an <b>isochrone</b>, and the number of stars along each part of it follows from the initial mass function and the time each phase takes. For M3, an old globular, the diagram shows the main sequence (MS), its <b>turn-off</b> (TO), the subgiant and red giant branches (SGB, RGB), the horizontal branch (HB), the asymptotic giant branch (AGB), a few post-AGB stars and the blue stragglers (BS) above the turn-off.'),
+        p('The massive stars reach the main sequence first and leave it first, while the low-mass stars are still contracting toward it; as the cluster ages the <b>turn-off point</b>, where stars are now leaving the main sequence, moves to fainter, redder stars. The turn-off is therefore the cluster\'s clock: Sandage\'s composite diagram runs from NGC 2362 and h and χ Persei at a few million years, through the Pleiades at 10⁸ and the Hyades at 6 × 10⁸, to M67 at 4 × 10⁹ years; the globular clusters, at 12–13 × 10⁹ years, set a lower limit to the age of the universe that the cosmologists must respect. The widget builds a synthetic cluster at any age from 1 Myr to 13 Gyr and marks the real clusters.'),
+        eq('t_{\\rm cluster} \\approx t_{\\rm MS}(M_{\\rm TO}) \\approx 10^{10}\\ {\\rm yr}\\left(\\frac{M_{\\rm TO}}{M_\\odot}\\right)^{-2.5}', 'The age of a cluster from the mass of the stars now leaving the main sequence. A turn-off at B0 (15 M☉) means ~10⁷ yr; at the Sun\'s colour, ~10¹⁰. The precision depends on the composition, on convective overshooting and on the distance — which is why cluster ages and the stellar models are refined together.'),
+      ],
+    },
+    {
+      id: 'gaps-and-stragglers',
+      kicker: 'Interactive · reading the gaps',
+      title: 'The Hertzsprung gap, the sparse AGB and blue stragglers',
+      widget: { type: 'phasecounts' },
+      scene: [goto('l-47tuc', 'landmark'), rate(1)],
+      body: [
+        p('The young double cluster h and χ Persei has bright blue stars at the top of its main sequence, a handful of red supergiants, and <em>nothing</em> between them. These would be the brightest stars in the cluster, so the gap is not incompleteness: it is the <b>Hertzsprung gap</b>, the region crossed on the Kelvin–Helmholtz timescale after the core exceeds the Schönberg–Chandrasekhar limit, where a star spends so little time that catching one there is unlikely. Old clusters with turn-offs near 1 M☉, like M67 and M3, show no gap: below 1.25 M☉ the degenerate core makes the transition gradual and the subgiants fill in continuously.'),
+        p('The same arithmetic explains why the AGB of M3 is thinly populated and the post-AGB region nearly empty: those phases last 10⁶ and 10⁴ years against 10¹⁰ on the main sequence and 10⁸ on the horizontal branch. The widget counts the stars a cluster should have in each phase from the lifetimes and the initial mass function, and the proportions match the diagrams. One population does not fit: the <b>blue stragglers</b>, main-sequence stars above the turn-off that should have evolved away long ago. They are probably stars that were given extra mass — by transfer from a binary companion or by a collision in the dense cluster core — and so had their main-sequence lives extended.'),
+        p('The agreement between the computed isochrones and the colour–magnitude diagrams of clusters of every age is the strongest evidence that the picture of stellar evolution in these two chapters is essentially right. The fine-tuning continues — opacities, reaction cross-sections, and above all a better theory of convection — and the big open questions are mass loss, rotation, magnetic fields and close companions. The theory is a work in progress, but the clusters say it is on the right road.'),
+      ],
+    },
+    {
+      id: 'chapter-close',
+      kicker: 'Chapter close',
+      title: 'Stellar evolution in one page',
+      scene: [backdrop()],
+      body: [
+        summary(
+          'Timescales t_ff ≪ t_KH ≪ t_nuc explain the dominance of the main sequence and the speed of the transitions.',
+          'Main sequence: μ rises, core contracts, L, R, T_eff rise; H exhaustion → isothermal He core + thick shell; Schönberg–Chandrasekhar limit 0.37(μ_env/μ_ic)² ≈ 0.08 ends it (overall contraction above 1.2 M☉); degeneracy delays it in low-mass stars.',
+          'SGB (fast) → RGB (Hayashi, deep convection, first dredge-up) → He ignition at 10⁸ K: a core flash below 1.8 M☉ → HB → CO core → E-AGB (second dredge-up) → TP-AGB (shell flashes, third dredge-up, C stars, Tc and the s-process).',
+          'Reimers winds and the superwind strip the envelope; cores stay below M_Ch = 1.4 M☉ (CO < 4 M☉, ONeMg 4–8); post-AGB → planetary nebula (10⁴ yr) → white dwarf; above 8 M☉ the story continues to a supernova.',
+          'Clusters: Populations I/II/III; main-sequence fitting for distance; isochrones and the turn-off for age (10⁶ yr for h + χ Per to 13 × 10⁹ for globulars); Hertzsprung gap, sparse AGB and blue stragglers as consequences of timescales and binaries.',
+        ),
+        key('Every feature of a cluster\'s colour–magnitude diagram is a timescale made visible: where stars are many, evolution is slow; where they are few or absent, it is fast. That the computed isochrones reproduce these diagrams across four orders of magnitude in age is the proof that we understand how stars live.'),
+        { kind: 'callout', tone: 'think', title: 'Critical thinking: the end of the main sequence', html: 'Two different criteria mark "the end of the main sequence" in this chapter: for stars below 1.2 M☉, the Schönberg–Chandrasekhar collapse of the isothermal core; for stars above, the onset of overall contraction when the convective core\'s hydrogen falls to X ≈ 0.05. Why does the distinction follow from the presence or absence of a convective core, and why is the Hertzsprung gap a feature of young clusters only? Then consider the helium core flash: the classical models could not follow it, so the tracks were simply resumed on the horizontal branch. What observational test would tell you that the flash happens as described — that 10¹¹ L☉ is generated and none of it escapes? (Hint: think about what the mass of the helium core must be at the moment of ignition, and what sets the luminosity of the horizontal branch.) Finally, the 4–8 M☉ stars avoid collapse only because of mass loss whose mechanism is unknown; how confident should we be in the initial–final mass relation at the top of that range?' },
+        { kind: 'callout', tone: 'history', title: 'Suggested reading', html: 'Carroll & Ostlie, <em>An Introduction to Modern Astrophysics</em>, Chapter 13, which this chapter follows; R. Kippenhahn, A. Weigert & A. Weiss, <em>Stellar Structure and Evolution</em> (2nd ed., 2012); D. Prialnik, <em>An Introduction to the Theory of Stellar Structure and Evolution</em> (2nd ed., 2009); I. Iben, "Stellar evolution within and off the main sequence", <em>ARA&A</em> 5, 571 (1967) and Iben & Renzini, "Asymptotic giant branch evolution and beyond", <em>ARA&A</em> 21, 271 (1983); F. Herwig, "Evolution of asymptotic giant branch stars", <em>ARA&A</em> 43, 435 (2005); M. Busso, R. Gallino & G. J. Wasserburg, "Nucleosynthesis in AGB stars", <em>ARA&A</em> 37, 239 (1999); G. Schaller et al., "New grids of stellar models", <em>A&AS</em> 96, 269 (1992); L. A. Willson, "Mass loss from cool stars", <em>ARA&A</em> 38, 573 (2000); S. Kwok, <em>Cosmic Butterflies</em> (2001); B. W. Carney & W. E. Harris, <em>Star Clusters</em> (2001).' },
+        { kind: 'callout', tone: 'think', title: 'Problems to try', html: '(1) For the 5 M☉ star, use Table 13.1 to express the times between points 2–3, 3–4, … as percentages of the main-sequence lifetime (points 1–2); which phases are the fastest, and what fraction of the star\'s life is spent after point 2? (2) Estimate the Kelvin–Helmholtz timescale for a 5 M☉ star on the subgiant branch (use L and R from the track) and compare with the 0.35 Myr between points 4 and 5. (3) Starting from P_ic = (3/4πR³)(M kT/μm_H − GM²/5R), show that the maximum occurs at R_ic = (2/5) GM_ic μ_ic m_H/kT_ic and that P_ic,max = (375/64π)(kT_ic/μ_ic m_H)⁴/(G³M_ic²). (4) During the first dredge-up of a 5 M☉ star, would you expect ¹³C/¹²C at the surface to rise or fall? Why? (5) Show from the Gamow-peak estimate of the ignition temperature that the triple-alpha process begins near 10⁸ K. (6) Explain why L, g and R enter the Reimers law as they do; compute Ṁ for a 1 M☉ AGB star with L = 7000 L☉ and T_eff = 3000 K. (7) Rewrite the Reimers law as Ṁ = −4 × 10⁻¹³ η LR/M; assuming L, R and η constant, integrate to get M(t); with L = 7000 L☉, R = 310 R☉, M₀ = 1 M☉, η = 1, how long until the mass is down to the 0.6 M☉ core? (8) The Helix has an angular diameter of 16′ at 213 pc; find its diameter and, for 20 km s⁻¹, its age. (9) Early twentieth-century "evolution" had stars born as red giants, contracting to blue O stars and then sliding down the main sequence to become M dwarfs; explain how cluster H–R diagrams refute this. (10) Compare the pre-main-sequence time of a 0.8 M☉ star (68 Myr) with the main-sequence lifetime of a 15 M☉ star (11.4 Myr) and explain the appearance of the h and χ Persei diagram. (11) A cluster\'s turn-off is at B−V = 0.6, M_V = 4.0; estimate the turn-off mass and the cluster\'s age.' },
+      ],
+    },
+  ],
+};
+
 export const COURSE: Course = {
   id: 'astrophysics',
   title: 'Introduction to Astrophysics',
@@ -5768,6 +6068,12 @@ export const COURSE: Course = {
       title: 'The Interstellar Medium and Star Formation',
       summary: 'The gas and dust between the stars and how stars are made from it: extinction and the nature of dust, the 21-cm line and molecular clouds, the Jeans criterion, free-fall collapse, fragmentation and magnetic support, the birth of a protostar, the Hayashi track to the zero-age main sequence, brown dwarfs and the initial mass function, H II regions, T Tauri stars, jets and the disks from which planets form.',
       sections: [S12_1, S12_2, S12_3],
+    },
+    {
+      id: 'ch13', number: 13,
+      title: 'Main Sequence and Post-Main-Sequence Stellar Evolution',
+      summary: 'What happens to a star after it reaches the main sequence: the timescales that make the main sequence dominant, the brightening of the ageing Sun, the isothermal helium core and the Schönberg–Chandrasekhar limit, the giant branches, the helium core flash, the horizontal and asymptotic giant branches with their thermal pulses, dredge-ups, carbon stars and the s-process, mass loss and the planetary nebula that leaves a white dwarf — and the stellar clusters whose colour–magnitude diagrams test it all.',
+      sections: [S13_1, S13_2, S13_3],
     },
   ],
 };

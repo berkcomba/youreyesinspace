@@ -1,0 +1,586 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "evolution-timescales": {
+   "script": "Look at the Sun behind the panel. The main sequence exists because hydrogen fusion in the core holds a star in balance. After that, gravity and slow composition change do the rest. I want three clocks in your mind.\n\nFree-fall time, t sub ff, equals the square root of three pi over thirty-two G rho-bar. G is the gravitational constant, rho-bar the mean density. If pressure vanished, collapse takes minutes to hours, about thirty minutes for the Sun. That clock governs collapse.\n\nKelvin–Helmholtz time, t sub KH, equals G M squared over R L. M is mass, R radius, L luminosity. That is gravitational energy divided by luminosity: about thirty million years for the Sun. It governs contraction and the readjustments between burning phases.\n\nNuclear time, t sub nuc, is about seven thousandths times one tenth of M c squared over L. c is the speed of light. A tenth of the hydrogen fuels the core, and zero point seven per cent of that mass becomes energy. So the lifetime is about ten billion years times mass over solar mass, divided by luminosity over solar luminosity. For the Sun, ten billion years. That governs the main sequence. Chemical energy plays no role at all.\n\nFree-fall is much shorter than Kelvin–Helmholtz, which is much shorter than nuclear, so a star spends most of its life on the main sequence: eighty to ninety per cent of stars in the solar neighbourhood. Later phases, on the Kelvin–Helmholtz clock between one fuel dying and the next lighting, are brief.\n\nLuminosity scales as mass to the three and a half, so nuclear lifetime scales as mass to the minus two and a half. A twenty-five solar-mass star lives about six million years; a zero point eight solar-mass star about twenty-five billion years.\n\nTry dragging the mass slider. Watch the three timescales on the log plot, and the fraction of life in each phase. Massive stars race; low-mass stars linger. Errors, differing compositions, and the slow evolution we examine next make the observed main sequence a band of finite width, not a line.",
+   "hash": "b85159b8dd0f",
+   "duration": 128.95,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.38,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 2.38,
+     "end": 7.54,
+     "text": "The main sequence exists because hydrogen fusion in the core holds a star in balance."
+    },
+    {
+     "start": 7.54,
+     "end": 11.48,
+     "text": "After that, gravity and slow composition change do the rest."
+    },
+    {
+     "start": 11.48,
+     "end": 13.6,
+     "text": "I want three clocks in your mind."
+    },
+    {
+     "start": 13.6,
+     "end": 20.52,
+     "text": "Free-fall time, t sub ff, equals the square root of three pi over thirty-two G rho-bar."
+    },
+    {
+     "start": 20.52,
+     "end": 24.74,
+     "text": "G is the gravitational constant, rho-bar the mean density."
+    },
+    {
+     "start": 24.74,
+     "end": 30.16,
+     "text": "If pressure vanished, collapse takes minutes to hours, about thirty minutes for the Sun."
+    },
+    {
+     "start": 30.16,
+     "end": 32.2,
+     "text": "That clock governs collapse."
+    },
+    {
+     "start": 32.2,
+     "end": 38.12,
+     "text": "Kelvin–Helmholtz time, t sub KH, equals G M squared over R L."
+    },
+    {
+     "start": 38.12,
+     "end": 41.68,
+     "text": "M is mass, R radius, L luminosity."
+    },
+    {
+     "start": 41.68,
+     "end": 47.12,
+     "text": "That is gravitational energy divided by luminosity: about thirty million years for the Sun."
+    },
+    {
+     "start": 47.12,
+     "end": 51.06,
+     "text": "It governs contraction and the readjustments between burning phases."
+    },
+    {
+     "start": 51.06,
+     "end": 57.78,
+     "text": "Nuclear time, t sub nuc, is about seven thousandths times one tenth of M c squared over L."
+    },
+    {
+     "start": 57.78,
+     "end": 59.34,
+     "text": "c is the speed of light."
+    },
+    {
+     "start": 59.34,
+     "end": 64.85,
+     "text": "A tenth of the hydrogen fuels the core, and zero point seven per cent of that mass becomes energy."
+    },
+    {
+     "start": 64.85,
+     "end": 72.09,
+     "text": "So the lifetime is about ten billion years times mass over solar mass, divided by luminosity over solar luminosity."
+    },
+    {
+     "start": 72.09,
+     "end": 74.57,
+     "text": "For the Sun, ten billion years."
+    },
+    {
+     "start": 74.57,
+     "end": 76.59,
+     "text": "That governs the main sequence."
+    },
+    {
+     "start": 76.59,
+     "end": 79.15,
+     "text": "Chemical energy plays no role at all."
+    },
+    {
+     "start": 79.15,
+     "end": 90.11,
+     "text": "Free-fall is much shorter than Kelvin–Helmholtz, which is much shorter than nuclear, so a star spends most of its life on the main sequence: eighty to ninety per cent of stars in the solar neighbourhood."
+    },
+    {
+     "start": 90.11,
+     "end": 96.17,
+     "text": "Later phases, on the Kelvin–Helmholtz clock between one fuel dying and the next lighting, are brief."
+    },
+    {
+     "start": 96.17,
+     "end": 103.07,
+     "text": "Luminosity scales as mass to the three and a half, so nuclear lifetime scales as mass to the minus two and a half."
+    },
+    {
+     "start": 103.07,
+     "end": 110.37,
+     "text": "A twenty-five solar-mass star lives about six million years; a zero point eight solar-mass star about twenty-five billion years."
+    },
+    {
+     "start": 110.37,
+     "end": 112.25,
+     "text": "Try dragging the mass slider."
+    },
+    {
+     "start": 112.25,
+     "end": 116.95,
+     "text": "Watch the three timescales on the log plot, and the fraction of life in each phase."
+    },
+    {
+     "start": 116.95,
+     "end": 120.31,
+     "text": "Massive stars race; low-mass stars linger."
+    },
+    {
+     "start": 120.31,
+     "end": 128.95,
+     "text": "Errors, differing compositions, and the slow evolution we examine next make the observed main sequence a band of finite width, not a line."
+    }
+   ],
+   "voicedHash": "d93cd6ccfe8a"
+  },
+  "evolutionary-tracks": {
+   "script": "Look at Aldebaran behind the panel. That star has already left the main sequence and become the kind of giant these tracks are climbing toward. Icko Iben computed the first grid of main-sequence and post-main-sequence tracks in the mid nineteen sixties. The modern grid we are using, from Schaller and co-workers in nineteen ninety-two, adds mass loss and convective overshooting. Overshooting is the inertia that carries a convective bubble some distance into a radiative region, like a pendulum swinging past its lowest point.\n\nThe widget shows tracks from zero point eight to twenty-five solar masses, with the numbered points and elapsed times of table thirteen point one. Point one is the zero-age main sequence. Point two is hydrogen exhaustion of the convective core in massive stars, or the mid main sequence otherwise. Point three is thick shell ignition, point four the Schoenberg Chandrasekhar collapse, point five the base of the red giant branch, and point six helium ignition. Points seven to ten cover helium burning and beyond.\n\nPick a mass and drag the age cursor. Notice how fast the heavy stars move compared with the light ones. A five solar mass star spends ninety-three million years on the main sequence, only one and a half million years crossing to the giant branch, and about six million years burning helium. Those ratios set the populations of a colour magnitude diagram, which we take up in section thirteen point three.\n\nEvery track turns right and up into the giant region. Low mass tracks rise smoothly, while intermediate mass ones make a blue loop during helium burning. The present Sun sits between points one and two of the one solar mass track. In another five billion years it will be at point three, twice as bright, and the main sequence will be behind it. The one solar mass track stops at point six, the helium core flash, which the models of that era could not follow.",
+   "hash": "8234a4e9cf60",
+   "duration": 113.27,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.68,
+     "text": "Look at Aldebaran behind the panel."
+    },
+    {
+     "start": 2.68,
+     "end": 8.84,
+     "text": "That star has already left the main sequence and become the kind of giant these tracks are climbing toward."
+    },
+    {
+     "start": 8.84,
+     "end": 15.34,
+     "text": "Icko Iben computed the first grid of main-sequence and post-main-sequence tracks in the mid nineteen sixties."
+    },
+    {
+     "start": 15.34,
+     "end": 22.86,
+     "text": "The modern grid we are using, from Schaller and co-workers in nineteen ninety-two, adds mass loss and convective overshooting."
+    },
+    {
+     "start": 22.86,
+     "end": 31.42,
+     "text": "Overshooting is the inertia that carries a convective bubble some distance into a radiative region, like a pendulum swinging past its lowest point."
+    },
+    {
+     "start": 31.42,
+     "end": 39.74,
+     "text": "The widget shows tracks from zero point eight to twenty-five solar masses, with the numbered points and elapsed times of table thirteen point one."
+    },
+    {
+     "start": 39.74,
+     "end": 42.42,
+     "text": "Point one is the zero-age main sequence."
+    },
+    {
+     "start": 42.42,
+     "end": 49.32,
+     "text": "Point two is hydrogen exhaustion of the convective core in massive stars, or the mid main sequence otherwise."
+    },
+    {
+     "start": 49.32,
+     "end": 59.67,
+     "text": "Point three is thick shell ignition, point four the Schoenberg Chandrasekhar collapse, point five the base of the red giant branch, and point six helium ignition."
+    },
+    {
+     "start": 59.67,
+     "end": 62.95,
+     "text": "Points seven to ten cover helium burning and beyond."
+    },
+    {
+     "start": 62.95,
+     "end": 65.45,
+     "text": "Pick a mass and drag the age cursor."
+    },
+    {
+     "start": 65.45,
+     "end": 69.17,
+     "text": "Notice how fast the heavy stars move compared with the light ones."
+    },
+    {
+     "start": 69.17,
+     "end": 79.59,
+     "text": "A five solar mass star spends ninety-three million years on the main sequence, only one and a half million years crossing to the giant branch, and about six million years burning helium."
+    },
+    {
+     "start": 79.59,
+     "end": 86.27,
+     "text": "Those ratios set the populations of a colour magnitude diagram, which we take up in section thirteen point three."
+    },
+    {
+     "start": 86.27,
+     "end": 89.55,
+     "text": "Every track turns right and up into the giant region."
+    },
+    {
+     "start": 89.55,
+     "end": 95.49,
+     "text": "Low mass tracks rise smoothly, while intermediate mass ones make a blue loop during helium burning."
+    },
+    {
+     "start": 95.49,
+     "end": 100.09,
+     "text": "The present Sun sits between points one and two of the one solar mass track."
+    },
+    {
+     "start": 100.09,
+     "end": 106.45,
+     "text": "In another five billion years it will be at point three, twice as bright, and the main sequence will be behind it."
+    },
+    {
+     "start": 106.45,
+     "end": 113.27,
+     "text": "The one solar mass track stops at point six, the helium core flash, which the models of that era could not follow."
+    }
+   ],
+   "voicedHash": "e564ea1a6f9f"
+  },
+  "low-mass-ms-evolution": {
+   "script": "Look at the Sun behind the panel. Even while it sits quietly on the main sequence it is changing, and the way it changes depends on mass. Stars above about one point two solar masses develop convective cores because the CNO cycle is so sensitive to temperature. Between a third of a solar mass and one point two, the gentler proton-proton chain leaves a radiative core; below that the whole star is convective. The Sun is in the middle group.\n\nSince it reached the zero-age main sequence about four and a half billion years ago, its luminosity, radius and temperature have all risen. Four protons become one helium nucleus, so the mean molecular weight in the core goes up. Picture the particles as a crowd holding up the envelope. As they lock into heavier helium there are fewer of them, and by the ideal gas law a gas of fewer, heavier particles at the same density and temperature exerts less pressure. The core must compress. The virial theorem puts half the released gravitational energy into heat, the temperature rises, the burning region widens slightly, and the higher density and temperature more than compensate for the falling hydrogen. The Sun was thirty per cent fainter at birth and still brightens by about one per cent every hundred million years.\n\nHere is the relation in words. Pressure P equals density rho times Boltzmann’s constant k times temperature T, divided by mu times the hydrogen mass m_H. Mu is the mean mass per particle in units of m_H. When mu rises, density and temperature must rise to keep the pressure support, and that drives the energy generation rate epsilon sub pp upward; it scales as density times X squared times temperature to the fourth. The temperature gradient dT by dr is proportional to minus kappa rho over T cubed, times the luminosity interior to r divided by r squared. So wherever that interior luminosity falls to zero, the gradient vanishes.\n\nThat is what happens when the central hydrogen is exhausted, for the Sun roughly ten billion years after the zero-age main sequence. Burning continues in a thick shell around a small, almost pure helium core. Inside the shell the luminosity is essentially zero, so the core is isothermal and supports the envelope only by a density that rises steeply inward. The shell outshines the old core, the star keeps brightening, and part of the energy expands the envelope so the effective temperature begins to fall while the shell’s ash grows the isothermal core.\n\nTry the widget with a solar-mass star. Watch the core hydrogen fraction drop, mu and the central temperature and density climb, and luminosity and radius rise with age. At hydrogen exhaustion the interior profile shows the isothermal core appear. Change the mass and notice how the timing shifts.",
+   "hash": "41b654ec4047",
+   "duration": 165.43,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.5,
+     "text": "Look at the Sun behind the panel."
+    },
+    {
+     "start": 2.5,
+     "end": 8.92,
+     "text": "Even while it sits quietly on the main sequence it is changing, and the way it changes depends on mass."
+    },
+    {
+     "start": 8.92,
+     "end": 16.46,
+     "text": "Stars above about one point two solar masses develop convective cores because the CNO cycle is so sensitive to temperature."
+    },
+    {
+     "start": 16.46,
+     "end": 25.78,
+     "text": "Between a third of a solar mass and one point two, the gentler proton-proton chain leaves a radiative core; below that the whole star is convective."
+    },
+    {
+     "start": 25.78,
+     "end": 27.6,
+     "text": "The Sun is in the middle group."
+    },
+    {
+     "start": 27.6,
+     "end": 35.52,
+     "text": "Since it reached the zero-age main sequence about four and a half billion years ago, its luminosity, radius and temperature have all risen."
+    },
+    {
+     "start": 35.52,
+     "end": 41.34,
+     "text": "Four protons become one helium nucleus, so the mean molecular weight in the core goes up."
+    },
+    {
+     "start": 41.34,
+     "end": 44.48,
+     "text": "Picture the particles as a crowd holding up the envelope."
+    },
+    {
+     "start": 44.48,
+     "end": 54.6,
+     "text": "As they lock into heavier helium there are fewer of them, and by the ideal gas law a gas of fewer, heavier particles at the same density and temperature exerts less pressure."
+    },
+    {
+     "start": 54.6,
+     "end": 56.4,
+     "text": "The core must compress."
+    },
+    {
+     "start": 56.4,
+     "end": 68.26,
+     "text": "The virial theorem puts half the released gravitational energy into heat, the temperature rises, the burning region widens slightly, and the higher density and temperature more than compensate for the falling hydrogen."
+    },
+    {
+     "start": 68.26,
+     "end": 74.7,
+     "text": "The Sun was thirty per cent fainter at birth and still brightens by about one per cent every hundred million years."
+    },
+    {
+     "start": 74.7,
+     "end": 76.62,
+     "text": "Here is the relation in words."
+    },
+    {
+     "start": 76.62,
+     "end": 85.17,
+     "text": "Pressure P equals density rho times Boltzmann’s constant k times temperature T, divided by mu times the hydrogen mass m_H."
+    },
+    {
+     "start": 85.17,
+     "end": 88.99,
+     "text": "Mu is the mean mass per particle in units of m_H."
+    },
+    {
+     "start": 88.99,
+     "end": 101.85,
+     "text": "When mu rises, density and temperature must rise to keep the pressure support, and that drives the energy generation rate epsilon sub pp upward; it scales as density times X squared times temperature to the fourth."
+    },
+    {
+     "start": 101.85,
+     "end": 111.43,
+     "text": "The temperature gradient dT by dr is proportional to minus kappa rho over T cubed, times the luminosity interior to r divided by r squared."
+    },
+    {
+     "start": 111.43,
+     "end": 116.23,
+     "text": "So wherever that interior luminosity falls to zero, the gradient vanishes."
+    },
+    {
+     "start": 116.23,
+     "end": 123.45,
+     "text": "That is what happens when the central hydrogen is exhausted, for the Sun roughly ten billion years after the zero-age main sequence."
+    },
+    {
+     "start": 123.45,
+     "end": 128.01,
+     "text": "Burning continues in a thick shell around a small, almost pure helium core."
+    },
+    {
+     "start": 128.01,
+     "end": 136.71,
+     "text": "Inside the shell the luminosity is essentially zero, so the core is isothermal and supports the envelope only by a density that rises steeply inward."
+    },
+    {
+     "start": 136.71,
+     "end": 147.83,
+     "text": "The shell outshines the old core, the star keeps brightening, and part of the energy expands the envelope so the effective temperature begins to fall while the shell’s ash grows the isothermal core."
+    },
+    {
+     "start": 147.83,
+     "end": 150.19,
+     "text": "Try the widget with a solar-mass star."
+    },
+    {
+     "start": 150.19,
+     "end": 158.03,
+     "text": "Watch the core hydrogen fraction drop, mu and the central temperature and density climb, and luminosity and radius rise with age."
+    },
+    {
+     "start": 158.03,
+     "end": 162.75,
+     "text": "At hydrogen exhaustion the interior profile shows the isothermal core appear."
+    },
+    {
+     "start": 162.75,
+     "end": 165.43,
+     "text": "Change the mass and notice how the timing shifts."
+    }
+   ],
+   "voicedHash": "4b01479df827"
+  },
+  "ms-evolution-summary": {
+   "script": "Look behind the panel: our circling system. Free-fall time is much less than Kelvin–Helmholtz time, much less than nuclear time: minutes, ten million years, ten billion years for the Sun. Stars spend eighty to ninety per cent of life on the main sequence; Kelvin–Helmholtz runs the transitions.\n\nCore mu, the mean molecular weight, rises as hydrogen becomes helium, so the core contracts and heats. Luminosity L, radius R, and effective temperature rise. The Sun is thirty per cent brighter since the ZAMS, so the main sequence is a band.\n\nHydrogen exhaustion leaves a thick burning shell around an isothermal helium core of shell ash. L sub r, radiative luminosity, is zero, so dT by dr is zero, since no energy flows.\n\nSchönberg–Chandrasekhar: isothermal core mass over total mass at most zero point three seven times the square of envelope mu over core mu, eight per cent. Collapse is then Kelvin–Helmholtz. Degeneracy pressure P equals K times density to the five-thirds, independent of temperature, so a solar-mass core reaches thirteen per cent.\n\nAbove one point two solar masses, convective cores contract overall once central hydrogen X sub c nears five hundredths, ending the main sequence. Schaller, Table thirteen point one.\n\nA star poisons itself with helium and grows hotter and brighter, until the helium core cannot bear the weight above it.",
+   "hash": "e54f7fd2f5a3",
+   "duration": 87.03,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 3.44,
+     "text": "Look behind the panel: our circling system."
+    },
+    {
+     "start": 3.44,
+     "end": 13.28,
+     "text": "Free-fall time is much less than Kelvin–Helmholtz time, much less than nuclear time: minutes, ten million years, ten billion years for the Sun."
+    },
+    {
+     "start": 13.28,
+     "end": 19.68,
+     "text": "Stars spend eighty to ninety per cent of life on the main sequence; Kelvin–Helmholtz runs the transitions."
+    },
+    {
+     "start": 19.68,
+     "end": 26.68,
+     "text": "Core mu, the mean molecular weight, rises as hydrogen becomes helium, so the core contracts and heats."
+    },
+    {
+     "start": 26.68,
+     "end": 30.96,
+     "text": "Luminosity L, radius R, and effective temperature rise."
+    },
+    {
+     "start": 30.96,
+     "end": 35.76,
+     "text": "The Sun is thirty per cent brighter since the ZAMS, so the main sequence is a band."
+    },
+    {
+     "start": 35.76,
+     "end": 41.64,
+     "text": "Hydrogen exhaustion leaves a thick burning shell around an isothermal helium core of shell ash."
+    },
+    {
+     "start": 41.64,
+     "end": 48.89,
+     "text": "L sub r, radiative luminosity, is zero, so dT by dr is zero, since no energy flows."
+    },
+    {
+     "start": 48.89,
+     "end": 58.75,
+     "text": "Schönberg–Chandrasekhar: isothermal core mass over total mass at most zero point three seven times the square of envelope mu over core mu, eight per cent."
+    },
+    {
+     "start": 58.75,
+     "end": 60.87,
+     "text": "Collapse is then Kelvin–Helmholtz."
+    },
+    {
+     "start": 60.87,
+     "end": 69.55,
+     "text": "Degeneracy pressure P equals K times density to the five-thirds, independent of temperature, so a solar-mass core reaches thirteen per cent."
+    },
+    {
+     "start": 69.55,
+     "end": 78.79,
+     "text": "Above one point two solar masses, convective cores contract overall once central hydrogen X sub c nears five hundredths, ending the main sequence."
+    },
+    {
+     "start": 78.79,
+     "end": 81.07,
+     "text": "Schaller, Table thirteen point one."
+    },
+    {
+     "start": 81.07,
+     "end": 87.03,
+     "text": "A star poisons itself with helium and grows hotter and brighter, until the helium core cannot bear the weight above it."
+    }
+   ],
+   "voicedHash": "262ed7efb2b9"
+  },
+  "schonberg-chandrasekhar": {
+   "script": "Look at our Sun behind the panel. An isothermal core holds its envelope only so long. Hydrostatic equilibrium: dP by dM-r equals minus G times M-r, interior mass, over four pi r to the fourth. We multiply by four pi r cubed and integrate. Four pi R-ic cubed P-ic minus two K-ic equals U-ic. R-ic, the core radius, P-ic the surface pressure, K-ic thermal energy, U-ic gravitational energy.\n\nP-ic equals three over four pi R-ic cubed, times the whole difference, M-ic k T-ic over mu-ic m-H, minus one fifth G M-ic squared over R-ic. k is Boltzmann's constant, T-ic the temperature, mu-ic the mean molecular weight, m-H the hydrogen mass. Heat pushes out, gravity pulls in, so pressure peaks. That maximum scales as k T-ic over mu-ic m-H to the fourth, over G cubed M-ic squared.\n\nThe envelope's demand ignores core mass and scales as k T-ic over mu-env m-H to the fourth, over G cubed M squared. Equating them gives the Schönberg–Chandrasekhar limit of 1942, a core fraction about 0.37 times mu-env over mu-ic squared. Roughly 0.54, exactly 0.37. With mu-env near 0.63, helium 1.34, collapse comes near eight percent on a Kelvin–Helmholtz time. Below 1.2 solar masses that ends the main sequence.\n\nDegeneracy is the reprieve. Electrons stacked by the Pauli principle give P-e equals K times density to the five-thirds, independent of temperature, beating an ideal gas. A partly degenerate solar core reaches thirteen percent. Lower-mass stars may miss the limit before new fuel ignites.\n\nOn the widget, plot pressure against core mass, mark the peak and demand, change the mu ratio, add degeneracy, and see a heavier core hold.\n\nConvective cores stay mixed, turnover far shorter than nuclear burning. At five solar masses the core shrinks, leaving a composition gradient. Above ten solar masses it vanishes before hydrogen is gone. Near core hydrogen 0.05 the star contracts, luminosity and effective temperature rise. Above 1.2 solar masses that ends the main sequence before a shell ignites.",
+   "hash": "42d6a00d9d1d",
+   "duration": 149.43,
+   "sentences": [
+    {
+     "start": 0,
+     "end": 2.499,
+     "text": "Look at our Sun behind the panel."
+    },
+    {
+     "start": 2.499,
+     "end": 6.362,
+     "text": "An isothermal core holds its envelope only so long."
+    },
+    {
+     "start": 6.362,
+     "end": 14.39,
+     "text": "Hydrostatic equilibrium: dP by dM-r equals minus G times M-r, interior mass, over four pi r to the fourth."
+    },
+    {
+     "start": 14.39,
+     "end": 17.798,
+     "text": "We multiply by four pi r cubed and integrate."
+    },
+    {
+     "start": 17.798,
+     "end": 21.661,
+     "text": "Four pi R-ic cubed P-ic minus two K-ic equals U-ic."
+    },
+    {
+     "start": 21.661,
+     "end": 29.007,
+     "text": "R-ic, the core radius, P-ic the surface pressure, K-ic thermal energy, U-ic gravitational energy."
+    },
+    {
+     "start": 29.007,
+     "end": 39.611,
+     "text": "P-ic equals three over four pi R-ic cubed, times the whole difference, M-ic k T-ic over mu-ic m-H, minus one fifth G M-ic squared over R-ic."
+    },
+    {
+     "start": 39.611,
+     "end": 47.487,
+     "text": "k is Boltzmann's constant, T-ic the temperature, mu-ic the mean molecular weight, m-H the hydrogen mass."
+    },
+    {
+     "start": 47.487,
+     "end": 51.501,
+     "text": "Heat pushes out, gravity pulls in, so pressure peaks."
+    },
+    {
+     "start": 51.501,
+     "end": 58.015,
+     "text": "That maximum scales as k T-ic over mu-ic m-H to the fourth, over G cubed M-ic squared."
+    },
+    {
+     "start": 58.015,
+     "end": 66.725,
+     "text": "The envelope's demand ignores core mass and scales as k T-ic over mu-env m-H to the fourth, over G cubed M squared."
+    },
+    {
+     "start": 66.725,
+     "end": 78.313,
+     "text": "Equating them gives the Schönberg–Chandrasekhar limit of 1942, a core fraction about 0. 37 times mu-env over mu-ic squared. Roughly 0. 54, exactly 0. 37."
+    },
+    {
+     "start": 78.313,
+     "end": 89.825,
+     "text": "With mu-env near 0. 63, helium 1. 34, collapse comes near eight percent on a Kelvin–Helmholtz time. Below 1. 2 solar masses that ends the main sequence."
+    },
+    {
+     "start": 89.825,
+     "end": 91.87,
+     "text": "Degeneracy is the reprieve."
+    },
+    {
+     "start": 91.87,
+     "end": 102.624,
+     "text": "Electrons stacked by the Pauli principle give P-e equals K times density to the five-thirds, independent of temperature, beating an ideal gas."
+    },
+    {
+     "start": 102.624,
+     "end": 106.866,
+     "text": "A partly degenerate solar core reaches thirteen percent."
+    },
+    {
+     "start": 106.866,
+     "end": 111.41,
+     "text": "Lower-mass stars may miss the limit before new fuel ignites."
+    },
+    {
+     "start": 111.41,
+     "end": 121.937,
+     "text": "On the widget, plot pressure against core mass, mark the peak and demand, change the mu ratio, add degeneracy, and see a heavier core hold."
+    },
+    {
+     "start": 121.937,
+     "end": 127.315,
+     "text": "Convective cores stay mixed, turnover far shorter than nuclear burning."
+    },
+    {
+     "start": 127.315,
+     "end": 132.616,
+     "text": "At five solar masses the core shrinks, leaving a composition gradient."
+    },
+    {
+     "start": 132.616,
+     "end": 137.085,
+     "text": "Above ten solar masses it vanishes before hydrogen is gone."
+    },
+    {
+     "start": 137.085,
+     "end": 149.43,
+     "text": "Near core hydrogen 0. 05 the star contracts, luminosity and effective temperature rise. Above 1. 2 solar masses that ends the main sequence before a shell ignites."
+    }
+   ],
+   "voicedHash": "688440842361"
+  }
+ }
+}
