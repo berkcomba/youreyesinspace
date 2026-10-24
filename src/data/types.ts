@@ -69,7 +69,18 @@ export interface TrajectoryOrbit {
 /** minimal mutable vector (three.js Vector3 satisfies it) */
 export interface Vector3Like { x: number; y: number; z: number; set(x: number, y: number, z: number): unknown }
 
-export type OrbitElements = JplElements | SimpleElements | LinearState | SurfaceFix | LagrangeFix | TrajectoryOrbit;
+/**
+ * Sampled ephemeris (JPL Horizons): positions tabulated in `public/ephem/<file>` relative to
+ * named bodies, interpolated at run time (src/core/Ephemeris.ts). The table is fetched lazily;
+ * outside its time span the body is hidden rather than extrapolated.
+ */
+export interface EphemerisOrbit {
+  kind: 'ephemeris';
+  /** table id → /ephem/<table>.json */
+  table: string;
+}
+
+export type OrbitElements = JplElements | SimpleElements | LinearState | SurfaceFix | LagrangeFix | TrajectoryOrbit | EphemerisOrbit;
 
 export interface PoleRaDec { ra: number; dec: number }
 
@@ -124,6 +135,12 @@ export type Appearance =
       procedural?: 'saucer' | 'freighter' | 'xwing' | 'corvette' | 'capsule' | 'rocket';
       /** engine glow tint for procedural ships (linear RGB) */
       glow?: [number, number, number];
+      /**
+       * Landers / rovers: the real ground around the vehicle — HiRISE relief and orthophotos in
+       * nested rings (`dir` holds `meta.json` plus the maps, built by scripts/terrain-scene.py),
+       * lazily loaded when the camera comes near.
+       */
+      terrain?: { dir: string; credit: string };
     }
   | {
       /** Nothing drawn: an invisible marker body (centre of mass of a binary) */

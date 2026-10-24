@@ -1,6 +1,6 @@
 # Third-party notices
 
-The source code of Your Eyes In Space is MIT-licensed (see `LICENSE`). The project bundles or
+The source code of Your Eyes In Space is licensed under the GNU AGPL-3.0 (see `LICENSE`); tours, lessons and audio are covered by `LICENSE-CONTENT.md`. The project bundles or
 streams the following third-party material, each under its own terms.
 
 ## Data

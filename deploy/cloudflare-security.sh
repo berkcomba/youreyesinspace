@@ -165,6 +165,24 @@ put_phase http_request_cache_settings "$(cat <<JSON
       "browser_ttl": {"mode": "respect_origin"}
     },
     "enabled": true
+  },
+  {
+    "description": "Olay duzeltmeleri ve efemeris: kisa edge TTL",
+    "expression": "(http.host eq \"${SITE_HOST}\" and (starts_with(http.request.uri.path, \"/events/\") or starts_with(http.request.uri.path, \"/ephem/\")))",
+    "action": "set_cache_settings",
+    "action_parameters": {
+      "cache": true,
+      "edge_ttl": {"mode": "respect_origin"},
+      "browser_ttl": {"mode": "respect_origin"}
+    },
+    "enabled": true
+  },
+  {
+    "description": "Kullanim isaretcisi: cache yok (her istek origin loguna dusmeli)",
+    "expression": "(http.host eq \"${SITE_HOST}\" and http.request.uri.path eq \"/_b.gif\")",
+    "action": "set_cache_settings",
+    "action_parameters": {"cache": false},
+    "enabled": true
   }
 ]
 JSON
@@ -189,6 +207,8 @@ else
 fi
 
 echo "▶ Yanıt başlıkları (http_response_headers_transform) – origin'de zaten var, edge'de garanti"
+# X-Frame-Options yalnızca gömülebilir olay görünümü (?embed=1) dışında: Olaylar panelinin verdiği
+# iframe kodu başka sitelerde çalışmalı; origin (nginx) aynı koşulla CSP frame-ancestors'ı da açar.
 put_phase http_response_headers_transform "$(cat <<JSON
 [
   {
@@ -197,11 +217,19 @@ put_phase http_response_headers_transform "$(cat <<JSON
     "action": "rewrite",
     "action_parameters": {"headers": {
       "X-Content-Type-Options": {"operation": "set", "value": "nosniff"},
-      "X-Frame-Options": {"operation": "set", "value": "DENY"},
       "Referrer-Policy": {"operation": "set", "value": "strict-origin-when-cross-origin"},
       "Permissions-Policy": {"operation": "set", "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=()"},
       "Server": {"operation": "remove"},
       "X-Powered-By": {"operation": "remove"}
+    }},
+    "enabled": true
+  },
+  {
+    "description": "Cerceve yasagi (embed disinda)",
+    "expression": "(http.host eq \"${SITE_HOST}\" and not http.request.uri.args[\"embed\"][0] eq \"1\")",
+    "action": "rewrite",
+    "action_parameters": {"headers": {
+      "X-Frame-Options": {"operation": "set", "value": "DENY"}
     }},
     "enabled": true
   }

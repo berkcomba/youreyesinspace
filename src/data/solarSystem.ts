@@ -97,7 +97,11 @@ export const SOLAR_SYSTEM: BodyData[] = [
   {
     id: 'moon', name: 'Ay', type: 'moon', parent: 'earth',
     radius: 1737.4, mass: 7.342e22, albedo: 0.136, rotationPeriod: 'sync',
-    orbit: moonOrbit(384_400, 0.0549, 5.145, 27.321661, 135.27, { frame: 'ecliptic', node: 125.08, argPeri: 318.15, nodeRate: -0.0529539, periRate: 0.1114041 }),
+    // Mean elements at J2000 (Simon et al.). `period` drives the mean anomaly, so it is the
+    // anomalistic month (27.5545 d), and `periRate` is the argument of perigee rate
+    // ω' = ϖ' − Ω' = 0.11140 + 0.05295 °/d: together with the node rate the mean longitude
+    // advances 13.17636 °/d (the sidereal month), which keeps the phases on the calendar.
+    orbit: moonOrbit(384_400, 0.0549, 5.145, 27.554550, 134.96, { frame: 'ecliptic', node: 125.04, argPeri: 318.31, nodeRate: -0.0529539, periRate: 0.1643580 }),
     appearance: { kind: 'terrestrial', seed: 33, landLow: [0.22, 0.22, 0.23], landMid: [0.38, 0.38, 0.38], landHigh: [0.58, 0.57, 0.55], craters: 1.0, roughness: 1.0, variation: 0.6 },
     description: 'Dünya\'nın tek doğal uydusu ve Güneş Sistemi\'nin beşinci büyük uydusu. Kilitli dönüş nedeniyle hep aynı yüzünü Dünya\'ya gösterir.',
     facts: { 'Yüzey çekimi': '1.62 m/s²', 'Ortalama uzaklık': '384 400 km' },
@@ -332,12 +336,24 @@ export const SOLAR_SYSTEM: BodyData[] = [
   },
 
   /* ---------------- Pluto system ---------------- */
+  // Pluto and Charon are a true binary: their centre of mass lies ~2 100 km from Pluto's centre,
+  // outside the dwarf planet (radius 1 188 km). The heliocentric orbit belongs to that point; the
+  // two bodies circle it on opposite sides with a shared 6.387-day period (a·m₂/M and a·m₁/M of
+  // the 19 591 km separation). The barycentre carries Pluto's pole so Charon's orbit stays in
+  // Pluto's equatorial plane.
   {
-    id: 'pluto', name: 'Plüton', type: 'dwarf', parent: 'sun',
-    radius: 1188.3, mass: 1.303e22, albedo: 0.52, rotationPeriod: -153.2928,
+    id: 'pluto-bary', name: 'Plüton–Charon kütle merkezi', type: 'barycenter', parent: 'sun',
+    radius: 0, mass: 1.303e22 + 1.586e21,
     pole: { ra: 132.99, dec: -6.16 },
     orbit: jpl(39.48211675, 0.24882730, 17.14001206, 238.92903833, 224.06891629, 110.30393684,
       -0.00031596, 0.00005170, 0.00004818, 145.20780515, -0.04062942, -0.01183482),
+    appearance: { kind: 'none', seed: 0 },
+  },
+  {
+    id: 'pluto', name: 'Plüton', type: 'dwarf', parent: 'pluto-bary',
+    radius: 1188.3, mass: 1.303e22, albedo: 0.52, rotationPeriod: -153.2928,
+    pole: { ra: 132.99, dec: -6.16 },
+    orbit: moonOrbit(2_126, 0.0002, 0.08, 6.387230, 180, { node: 306, argPeri: 234 }),
     appearance: { kind: 'terrestrial', seed: 91, landLow: [0.35, 0.22, 0.15], landMid: [0.72, 0.60, 0.50], landHigh: [0.95, 0.93, 0.90], ice: [0.97, 0.96, 0.95], iceCaps: 0.6, craters: 0.3, roughness: 0.8, variation: 1.0 },
     atmosphere: { color: [0.55, 0.65, 0.95], height: 0.03, density: 0.2 },
     temperature: 44,
@@ -345,9 +361,9 @@ export const SOLAR_SYSTEM: BodyData[] = [
     facts: { 'Keşif': '1930, Clyde Tombaugh', 'Uydular': '5', 'Yeniden sınıflandırma': '2006 (cüce gezegen)' },
   },
   {
-    id: 'charon', name: 'Charon', type: 'moon', parent: 'pluto',
+    id: 'charon', name: 'Charon', type: 'moon', parent: 'pluto-bary',
     radius: 606, mass: 1.586e21, albedo: 0.38, rotationPeriod: 'sync',
-    orbit: moonOrbit(19_591, 0.0002, 0.08, 6.387230, 180),
+    orbit: moonOrbit(17_465, 0.0002, 0.08, 6.387230, 180, { node: 306, argPeri: 54 }),
     appearance: { kind: 'terrestrial', seed: 92, landLow: [0.35, 0.34, 0.34], landMid: [0.55, 0.54, 0.54], landHigh: [0.78, 0.76, 0.75], craters: 0.5, roughness: 0.9, variation: 0.5 },
     description: 'Plüton\'un yarısı büyüklüğündeki uydusu; kızılımsı kutup bölgesi (Mordor Macula) Plüton\'dan kaçan metanla oluşmuştur.',
   },
@@ -427,9 +443,58 @@ export const SOLAR_SYSTEM: BodyData[] = [
   {
     id: 'halley', name: '1P/Halley', type: 'comet', parent: 'sun',
     radius: 5.5, mass: 2.2e14, albedo: 0.04, rotationPeriod: 52.8, tilt: 60,
-    orbit: helio(17.834, 0.96714, 162.262, 58.42, 111.33, 0, 27_509, 2_446_467.395), // perihelion 1986-02-09
+    orbit: helio(17.8600, 0.9680328, 162.19216, 59.257416, 112.15810, 194.10145, 27_568.4, 2_461_335.5), // JPL Horizons osculating, 2026-10-22
     appearance: { kind: 'terrestrial', seed: 111, landLow: [0.05, 0.05, 0.05], landMid: [0.12, 0.11, 0.10], landHigh: [0.25, 0.24, 0.22], craters: 0.6, roughness: 2.5, variation: 0.4 },
     description: 'Her 75–79 yılda bir görünen en ünlü periyodik kuyruklu yıldız. Retrograd yörüngesi ile 1986\'da Giotto sondası tarafından ziyaret edildi; bir sonraki perihelyonu 2061.',
+  },
+
+  /* ---------------- Small bodies of the Events tab (JPL Horizons osculating elements, 2026-10-22) ---------------- */
+  {
+    id: 'didymos', name: '65803 Didymos', type: 'asteroid', parent: 'sun',
+    radius: 0.39, mass: 5.2e11, albedo: 0.15, rotationPeriod: 2.26, tilt: 171,
+    orbit: helio(1.64277, 0.3831054, 3.413776, 72.984986, 319.57586, 324.0609, 769.06, 2_461_335.5),
+    appearance: { kind: 'terrestrial', seed: 121, landLow: [0.30, 0.29, 0.27], landMid: [0.48, 0.46, 0.43], landHigh: [0.66, 0.64, 0.60], craters: 0.7, roughness: 2.0, variation: 0.4 },
+    description: 'Dünya\'ya yakın ikili asteroit: 780 m\'lik Didymos ve çevresinde dolanan 150 m\'lik Dimorphos. NASA\'nın DART aracı 2022\'de Dimorphos\'a çarparak yörünge periyodunu 32 dakika kısalttı; ESA\'nın Hera görevi sonucu yerinde inceliyor.',
+    facts: { 'Keşif': '1996, Spacewatch', 'Uydu': 'Dimorphos', 'DART çarpması': '26 Eylül 2022' },
+  },
+  {
+    id: 'dimorphos', name: 'Dimorphos', type: 'moon', parent: 'didymos',
+    radius: 0.0755, mass: 4.3e9, albedo: 0.15, rotationPeriod: 'sync',
+    orbit: { kind: 'simple', a: 1.19, e: 0.03, i: 0, node: 0, argPeri: 0, M0: 0, epoch: J2000_JD, period: 0.4738, frame: 'parentEquator' },
+    appearance: { kind: 'terrestrial', seed: 122, landLow: [0.28, 0.27, 0.25], landMid: [0.46, 0.44, 0.41], landHigh: [0.64, 0.62, 0.58], craters: 0.4, roughness: 2.5, variation: 0.5 },
+    description: 'Didymos\'un küçük uydusu; insanlığın yörüngesini bilerek değiştirdiği ilk gök cismi (DART, 2022). Çarpma sonrası periyodu 11 sa 55 dk\'dan 11 sa 23 dk\'ya indi.',
+  },
+  {
+    id: 'phaethon', name: '3200 Phaethon', type: 'asteroid', parent: 'sun',
+    radius: 2.9, mass: 1.4e14, albedo: 0.11, rotationPeriod: 3.604,
+    orbit: helio(1.27144, 0.8896639, 22.310287, 265.09492, 322.30221, 34.293814, 523.65, 2_461_335.5),
+    appearance: { kind: 'terrestrial', seed: 123, landLow: [0.12, 0.13, 0.15], landMid: [0.24, 0.25, 0.28], landHigh: [0.40, 0.41, 0.44], craters: 0.5, roughness: 2.0, variation: 0.4 },
+    description: 'Güneş\'e Merkür\'den de çok yaklaşan (0,14 GB) "kaya kuyruklu yıldız". Her Aralık izlenen Geminid meteor yağmurunun ana cismidir; JAXA\'nın DESTINY+ sondasının hedefi.',
+    facts: { 'Keşif': '1983, IRAS', 'Günberi': '0,14 GB', 'Meteor yağmuru': 'Geminidler (13–14 Aralık)' },
+  },
+  {
+    id: 'tempeltuttle', name: '55P/Tempel-Tuttle', type: 'comet', parent: 'sun',
+    radius: 1.8, mass: 1.2e13, albedo: 0.04, rotationPeriod: 15.3,
+    orbit: helio(10.3300, 0.9055286, 162.47462, 235.39641, 172.55108, 310.26943, 12_127.3, 2_461_335.5),
+    appearance: { kind: 'terrestrial', seed: 124, landLow: [0.05, 0.05, 0.05], landMid: [0.12, 0.11, 0.10], landHigh: [0.25, 0.24, 0.22], craters: 0.6, roughness: 2.5, variation: 0.4 },
+    description: 'Her 33 yılda bir dönen retrograd kuyruklu yıldız; Kasım ortasındaki Leonid meteor yağmurunun kaynağı. 1833 ve 1966\'daki ünlü Leonid fırtınaları, son perihelyonu (1998) sonrası bıraktığı yoğun döküntü şeritlerinden geldi. Bir sonraki perihelyonu 2031.',
+    facts: { 'Keşif': '1865–66, Tempel & Tuttle', 'Periyot': '33,2 yıl', 'Meteor yağmuru': 'Leonidler (17–18 Kasım)' },
+  },
+  {
+    id: 'encke', name: '2P/Encke', type: 'comet', parent: 'sun',
+    radius: 2.4, mass: 9.2e13, albedo: 0.05, rotationPeriod: 11.1,
+    orbit: helio(2.21774, 0.8473211, 11.347783, 334.01916, 187.28794, 326.80643, 1206.3, 2_461_335.5),
+    appearance: { kind: 'terrestrial', seed: 125, landLow: [0.06, 0.06, 0.06], landMid: [0.13, 0.12, 0.11], landHigh: [0.26, 0.25, 0.23], craters: 0.6, roughness: 2.5, variation: 0.4 },
+    description: 'Bilinen en kısa periyotlu kuyruklu yıldız: Güneş\'i her 3,3 yılda bir dolaşır. Ekim–Kasım\'daki Taurid meteor yağmurlarının (Güney ve Kuzey Tauridler) ana kaynağıdır; geniş toz akımı "Halloween ateş topları" ile ünlüdür.',
+    facts: { 'Keşif': '1786, P. Méchain; periyodu 1819, J. F. Encke', 'Periyot': '3,3 yıl', 'Meteor yağmuru': 'Tauridler (Ekim–Kasım)' },
+  },
+  {
+    id: 'tuttle', name: '8P/Tuttle', type: 'comet', parent: 'sun',
+    radius: 2.25, mass: 7e13, albedo: 0.04, rotationPeriod: 11.4,
+    orbit: helio(5.70685, 0.8207537, 54.969545, 270.18374, 207.48491, 135.88316, 4979.6, 2_461_335.5),
+    appearance: { kind: 'terrestrial', seed: 126, landLow: [0.06, 0.06, 0.06], landMid: [0.13, 0.12, 0.11], landHigh: [0.26, 0.25, 0.23], craters: 0.6, roughness: 2.5, variation: 0.4 },
+    description: '13,6 yıl periyotlu, iki loblu çekirdeğe sahip kuyruklu yıldız. Aralık sonundaki Ursid meteor yağmurunun kaynağıdır; son perihelyonu 2021, bir sonraki 2035.',
+    facts: { 'Keşif': '1790, P. Méchain; 1858, H. Tuttle', 'Periyot': '13,6 yıl', 'Meteor yağmuru': 'Ursidler (22 Aralık)' },
   },
 
   /* ---------------- Spacecraft ---------------- */

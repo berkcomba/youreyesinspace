@@ -72,15 +72,16 @@ export class GalaxyCloud {
     this.center.copy(model.center);
   }
 
-  /** @param camPc camera (scene pc) */
-  update(camPc: Vector3, pxPerRad: number, pixelRatio: number, visible: boolean): void {
+  /** @param camPc camera (scene pc) @param fovDeg vertical field of view */
+  update(camPc: Vector3, pxPerRad: number, pixelRatio: number, visible: boolean, fovDeg = 50): void {
     const u = this.mat.uniforms;
     u.uCenterRel.value.copy(this.center).sub(camPc);
     u.uPxPerRad.value = pxPerRad;
     u.uPixelRatio.value = pixelRatio;
     const ratio = u.uCenterRel.value.length() / this.model.radius;
-    // crossfade with the sprite: fully on inside 8 radii, gone beyond 18
-    const fade = 1 - smoothstep(8, 18, ratio);
+    // crossfade with the sprite: fully on inside 8 radii, gone beyond 18; and gone again under a
+    // telescopic field of view, where the unresolved blobs would magnify into soft patches
+    const fade = (1 - smoothstep(8, 18, ratio)) * smoothstep(4, 12, fovDeg);
     u.uFade.value = fade;
     // inside a disc: dust limits the view to the nearest few kpc (≈1 mag/kpc)
     let ext = 0;

@@ -1,7 +1,7 @@
 import {
   AdditiveBlending, AmbientLight, BackSide, Box3, CircleGeometry, Color, CylinderGeometry, DirectionalLight, DoubleSide, FrontSide, Group, Mesh,
-  MeshStandardMaterial, NormalBlending, PlaneGeometry, RingGeometry, Scene, ShaderMaterial, Sphere, SphereGeometry, Vector2, Vector3, Vector4,
-  type Camera, type IUniform, type Quaternion,
+  MeshStandardMaterial, NormalBlending, PlaneGeometry, Quaternion, RingGeometry, Scene, ShaderMaterial, Sphere, SphereGeometry, Vector2, Vector3, Vector4,
+  type Camera, type IUniform,
 } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
@@ -14,6 +14,7 @@ import { IMAGERY } from '../data/imagery';
 import { Shaders } from './shaders';
 import { TileGlobe } from './TileGlobe';
 import { buildProceduralShip, disposeGroup } from './ProceduralShips';
+import { Terrain, type TerrainMeta } from './Terrain';
 
 export interface RenderSettings {
   atmospheres: boolean;
@@ -31,6 +32,7 @@ export interface RenderSettings {
 }
 
 const _v = new Vector3();
+const _qInv = new Quaternion();
 const _n = new Vector3();
 const _v2 = new Vector3();
 
@@ -76,6 +78,17 @@ function ringGapUniforms(body: CelestialBody): Vector4[] {
 // NASA 3D Resources GLBs are Draco-compressed; three r186 resolves the decoder (wasm) through
 // the bundler, so it ships as a hashed asset alongside the app.
 const gltfLoader = new GLTFLoader().setDRACOLoader(new DRACOLoader());
+/**
+ * Lander terrain (HiRISE relief + orthophotos, see `Terrain`): fetched inside `TERRAIN_LOAD_KM`
+ * of the vehicle, faded in between `TERRAIN_FAR_KM` and `TERRAIN_NEAR_KM` so the descent from
+ * orbit never jumps, released again beyond `TERRAIN_DROP_KM`.
+ */
+const TERRAIN_LOAD_KM = 1500;
+const TERRAIN_FAR_KM = 350, TERRAIN_NEAR_KM = 120;
+const TERRAIN_DROP_KM = 4000;
+const smoothstep = (edge0: number, edge1: number, x: number): number => smooth01((x - edge0) / (edge1 - edge0));
+/** the vehicle is drawn after its terrain (depth-tested against it) */
+const ORDER_VEHICLE = 3;
 /** Loaded glTF scenes by URL (shared between views, cloned per body) */
 const modelCache = new Map<string, Promise<Group>>();
 
@@ -101,6 +114,12 @@ export class BodyView {
   model: Group | null = null;
   private modelRequested = false;
   private ground: Mesh | null = null;
+  /** real ground of a lander (HiRISE relief + orthophotos), see `requestTerrain` */
+  private terrain: Terrain | null = null;
+  private terrainRequested = false;
+  private terrainFade = 0;
+  /** true while the lander's terrain is what the visitor sees (drives the imagery credit) */
+  terrainActive = false;
   clouds?: Mesh;
   cloudsMat?: ShaderMaterial;
   atmosphere?: Mesh;
@@ -136,7 +155,7 @@ export class BodyView {
 
   private lit: Uniforms[] = [];
 
-  constructor(body: CelestialBody, sphereGeo: SphereGeometry, starRadius: number, maxAnisotropy = 1) {
+  constructor(body: CelestialBody, sphereGeo: SphereGeometry, starRadius: number, private readonly maxAnisotropy = 1) {
     this.body = body;
     const d = body.data;
     const a = d.appearance;
@@ -297,8 +316,10 @@ export class BodyView {
           uSunRadius: { value: starRadius },
           uSunColor: { value: new Vector3(1, 1, 1) },
           uBodyPos: { value: new Vector3() },
-          uBodyRadius: { value: body.radius },
-          uOuterRadius: { value: body.radius * (1 + d.atmosphere.height * 3.2) },
+          uBodyRadius: { value: body.equatorialRadius },
+          uOuterRadius: { value: body.equatorialRadius * (1 + d.atmosphere.height * 3.2) },
+          uPole: { value: new Vector3(0, 1, 0) },
+          uPolarScale: { value: body.equatorialRadius / body.polarRadius },
           uColor: { value: vec3(d.atmosphere.color) },
           uSunsetColor: { value: d.atmosphere.sunsetColor ? vec3(d.atmosphere.sunsetColor) : vec3(d.atmosphere.color) },
           uDensity: { value: d.atmosphere.density },
@@ -311,7 +332,7 @@ export class BodyView {
         side: FrontSide,
       });
       this.atmosphere = new Mesh(sphereGeo, this.atmosphereMat);
-      this.atmosphere.scale.setScalar(body.radius * (1 + d.atmosphere.height * 3.2));
+      this.atmosphere.scale.setScalar(body.equatorialRadius * (1 + d.atmosphere.height * 3.2));
       this.atmosphere.renderOrder = 3;
       this.atmosphere.frustumCulled = false;
     }
@@ -406,6 +427,7 @@ export class BodyView {
     for (const m of [this.surfaceMat, this.cloudsMat, this.atmosphereMat, this.ringsMat, this.coronaMat, this.beamMat]) m?.dispose();
     if (this.beams) for (const m of this.beams.children) (m as Mesh).geometry.dispose();
     if (this.ground) { this.ground.geometry.dispose(); (this.ground.material as MeshStandardMaterial).dispose(); }
+    this.releaseTerrain();
     this.tiles?.dispose();
     // model geometries/materials stay in the shared cache (procedural ships own theirs)
     if (this.ownsModel && this.model) disposeGroup(this.model);
@@ -424,7 +446,7 @@ export class BodyView {
       model.position.copy(sphere.center).multiplyScalar(-1);
       wrapper.add(model);
       wrapper.scale.setScalar(s);
-      wrapper.traverse((o) => { o.frustumCulled = false; });
+      wrapper.traverse((o) => { o.frustumCulled = false; o.renderOrder = ORDER_VEHICLE; });
       this.model = wrapper;
       this.group.add(wrapper);
     };
@@ -436,7 +458,7 @@ export class BodyView {
     }
     loadModel(a.model).then((src) => {
       fit(src.clone(true));
-      if (this.body.data.orbit?.kind === 'surface') this.addGroundPatch();
+      if (this.body.data.orbit?.kind === 'surface' && !a.terrain) this.addGroundPatch();
     }).catch((err) => console.warn(`Model yüklenemedi: ${a.model}`, err));
   }
 
@@ -460,6 +482,57 @@ export class BodyView {
     this.group.add(disc);
   }
 
+  /**
+   * Rovers with real ground: the HiRISE terrain patch is fetched once the camera comes within
+   * `TERRAIN_LOAD_KM`; the plain disc (if any) goes once it is drawable.
+   */
+  private requestTerrain(): void {
+    const a = this.body.data.appearance;
+    if (a.kind !== 'spacecraft' || !a.terrain || this.terrainRequested) return;
+    this.terrainRequested = true;
+    const dir = a.terrain.dir;
+    fetch(`${dir}/meta.json?v=${__BUILD_ID__}`).then((r) => r.json()).then(async (meta: TerrainMeta) => {
+      if (!this.terrainRequested) return; // released meanwhile
+      const atm = this.body.parent?.data.atmosphere;
+      const t = new Terrain(dir, meta, -this.body.radius * 0.7, this.body.parent?.radius ?? 1e9, this.maxAnisotropy, {
+        color: atm ? vec3(atm.color) : new Vector3(1, 1, 1),
+        density: atm?.density ?? 0,
+        sunsetColor: atm?.sunsetColor ? vec3(atm.sunsetColor) : new Vector3(1, 0.6, 0.35),
+      });
+      this.terrain = t;
+      this.group.add(t.group);
+      await t.load();
+      if (this.terrain === t && this.ground) { this.group.remove(this.ground); this.ground.geometry.dispose(); this.ground = null; }
+    }).catch((err) => console.warn(`Arazi yüklenemedi: ${dir}`, err));
+  }
+
+  private releaseTerrain(): void {
+    this.terrain?.dispose();
+    this.terrain = null;
+    this.terrainRequested = false;
+    this.terrainFade = 0;
+    this.terrainActive = false;
+  }
+
+  /** Fade the terrain by camera distance; a slew limit smooths the moment it finishes loading. */
+  private updateTerrain(dist: number, dtReal: number, sunPos: Vector3, sunColor: Vector3, settings: RenderSettings): void {
+    const a = this.body.data.appearance;
+    if (a.kind !== 'spacecraft' || !a.terrain) return;
+    if (dist < TERRAIN_LOAD_KM) this.requestTerrain();
+    else if (dist > TERRAIN_DROP_KM && this.terrainRequested) { this.releaseTerrain(); return; }
+    const t = this.terrain;
+    const goal = t?.ready ? 1 - smoothstep(TERRAIN_NEAR_KM, TERRAIN_FAR_KM, dist) : 0;
+    const slew = dtReal / 1.5;
+    this.terrainFade = this.terrainFade < goal ? Math.min(goal, this.terrainFade + slew) : Math.max(goal, this.terrainFade - slew);
+    this.terrainActive = this.terrainFade > 0.5 && dist < t!.half * 1.5;
+    if (!t) return;
+    // the Sun and the camera in the vehicle's frame (+Y = local up; the camera is the origin)
+    _qInv.copy(this.body.rotation).invert();
+    _v2.copy(this.relPos).negate().applyQuaternion(_qInv);
+    _v.copy(sunPos).sub(this.body.position).normalize().applyQuaternion(_qInv);
+    t.update(this.terrainFade, _v, sunColor, settings.fill?.get(this.body.parent?.id ?? '') ?? 0, _v2);
+  }
+
   update(
     camPos: Vector3, camQuat: Quaternion, camera: Camera, viewportH: number, fovRad: number,
     sunPos: Vector3, sunRadius: number, sunColor: Vector3, time: number, settings: RenderSettings,
@@ -468,6 +541,15 @@ export class BodyView {
     this.relPos.copy(b.position).sub(camPos);
     const dist = this.relPos.length();
     this.distance = dist;
+    if (b.hidden || b.filtered) {
+      this.apparentRadiusPx = 0;
+      this.meshVisible = false;
+      this.group.visible = false;
+      if (this.atmosphere) this.atmosphere.visible = false;
+      if (this.corona) this.corona.visible = false;
+      if (this.ringParticles) this.ringParticles.group.visible = false;
+      return;
+    }
     const pxPerRad = viewportH / 2 / Math.tan(fovRad / 2);
     this.apparentRadiusPx = (b.radius / Math.max(dist, 1e-6)) * pxPerRad;
 
@@ -478,6 +560,18 @@ export class BodyView {
     this.group.quaternion.copy(b.rotation);
     if (b.data.type === 'spacecraft') {
       if (this.apparentRadiusPx > 0.2) this.requestModel();
+      const a = b.data.appearance;
+      if (a.kind === 'spacecraft' && a.terrain) {
+        const now = performance.now();
+        const dtReal = this.lastNow ? Math.min(0.5, (now - this.lastNow) / 1000) : 0;
+        this.lastNow = now;
+        this.updateTerrain(dist, dtReal, sunPos, sunColor, settings);
+        // the terrain spans kilometres: keep the group alive while the vehicle itself is sub-pixel
+        if (this.terrainFade > 0.002) {
+          this.group.visible = true;
+          if (this.model) this.model.visible = this.meshVisible;
+        } else if (this.model) this.model.visible = true;
+      }
       if (this.ground) this.ground.visible = dist < 12; // km
       return;
     }
@@ -583,6 +677,7 @@ export class BodyView {
         u.uSunRadius.value = sunRadius;
         u.uSunColor.value.copy(sunColor);
         u.uBodyPos.value.copy(this.relPos);
+        u.uPole.value.copy(b.pole);
         u.uAlpha.value = alpha;
         const occ = u.uOccluders.value as Vector4[];
         for (let i = 0; i < 4; i++) {
@@ -703,6 +798,13 @@ export class BodyRenderer {
     const d = _v.length();
     if (d > 0) this.sunLight.position.copy(_v).multiplyScalar(1e3 / d);
     this.sunLight.color.setRGB(sunColor.x, sunColor.y, sunColor.z);
+    // the work light for spacecraft: their PBR materials ignore `uFill`, so the ambient term is
+    // raised instead — towards white and near-noon strength — by the strongest fill among the
+    // vehicles (only one is ever resolvable at a time, so a scene-wide light reads as per-ship)
+    let shipFill = 0;
+    if (settings.fill) for (const v of this.views) if (v.body.data.type === 'spacecraft') shipFill = Math.max(shipFill, settings.fill.get(v.body.id) ?? 0);
+    this.fillLight.intensity = 0.25 + 1.9 * shipFill;
+    this.fillLight.color.setRGB(0.4 + 0.6 * shipFill, 0.53 + 0.47 * shipFill, 0.73 + 0.27 * shipFill);
     let credit: string | null = null;
     let best = 12; // px: only credit imagery when the body is clearly resolved
     for (const v of this.views) {
@@ -711,6 +813,7 @@ export class BodyRenderer {
         best = v.apparentRadiusPx;
         credit = v.tiles.imagery.credit;
       }
+      if (v.terrainActive) { const a = v.body.data.appearance; if (a.kind === 'spacecraft' && a.terrain) { credit = a.terrain.credit; best = Infinity; } }
     }
     this.imageryCredit = credit;
   }

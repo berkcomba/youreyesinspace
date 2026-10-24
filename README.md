@@ -113,7 +113,7 @@ src/i18n      Translation runtime and dictionaries
 
 ## License
 
-Code: [MIT](LICENSE). See [NOTICE.md](NOTICE.md) for the licences of data, models and streamed imagery
+Code: [AGPL-3.0-or-later](LICENSE) (versions up to the `mit-final` tag remain MIT; a commercial licence is available from BigBrains). Content (tours, lessons, audio): see [LICENSE-CONTENT.md](LICENSE-CONTENT.md). See [NOTICE.md](NOTICE.md) for the licences of data, models and streamed imagery
 (the HYG-derived catalogue is **CC BY-SA 4.0**; NASA content is public domain). The name "Your Eyes In
 Space" and the logo are trademarks of BigBrains; forks should use their own name and logo.
 

@@ -73,6 +73,11 @@ export class CameraController {
    * while dwelling. Any new flight or re-targeting clears it.
    */
   autoOrbit = 0;
+  /**
+   * Slow automatic push-in (negative) / pull-out (positive) toward the orbit pivot, in
+   * ln(distance) per second — the tours' cinematic drift. Cleared like `autoOrbit`.
+   */
+  autoDolly = 0;
   mouseSensitivity = 0.0032;
   invertY = false;
   /**
@@ -89,6 +94,19 @@ export class CameraController {
   setReference(b: CelestialBody | null): void {
     this.reference = b;
     if (b) this.refLastPos.copy(b.position);
+  }
+
+  /**
+   * Inherit the reference body's motion since the last frame. `update` does this first thing,
+   * but a flight planned from inside the frame loop (tour cues fire after the bodies moved and
+   * before the camera caught up) must measure its start offset after the catch-up too — at
+   * thousands of times real time one frame of lag is hundreds of kilometres.
+   */
+  private catchUp(): void {
+    if (!this.reference) return;
+    _v.copy(this.reference.position).sub(this.refLastPos);
+    this.position.add(_v);
+    this.refLastPos.copy(this.reference.position);
   }
 
   /** Place camera at an offset from a body and look at it. */
@@ -109,6 +127,7 @@ export class CameraController {
     this.setReference(null);
     this.autopilot = null;
     this.autoOrbit = 0;
+    this.autoDolly = 0;
     this.mode = 'orbit';
     this.lookAt(point);
   }
@@ -124,6 +143,7 @@ export class CameraController {
 
   /** Fly to a body (autopilot). `durationS` overrides the distance-based flight time. */
   goTo(body: CelestialBody, sunPos: Vector3, durationS?: number): void {
+    this.catchUp();
     const r0 = _v.copy(this.position).sub(body.position);
     let dist1 = body.radius * 3.6;
     if (body.data.rings) dist1 = Math.max(dist1, body.data.rings.outer * 2.2);
@@ -183,6 +203,7 @@ export class CameraController {
       r0: r0.clone(), dir1, dist1, q0: this.quaternion.clone(),
     };
     this.autoOrbit = 0;
+    this.autoDolly = 0;
     this.setReference(body);
     this.target = body;
     this.anchor = null;
@@ -195,6 +216,7 @@ export class CameraController {
    * `durationS` overrides the distance-based flight time; `up1` fixes the roll at arrival.
    */
   goToVantage(body: CelestialBody, dir1: Vector3, dist1: number, durationS?: number, up1?: Vector3): void {
+    this.catchUp();
     const r0 = _v.copy(this.position).sub(body.position);
     const ratio = Math.max(r0.length(), 1) / dist1;
     const duration = durationS ?? 2.2 + Math.min(4.5, Math.abs(Math.log10(ratio)) * 0.9);
@@ -204,6 +226,7 @@ export class CameraController {
       up1: up1?.clone().normalize(),
     };
     this.autoOrbit = 0;
+    this.autoDolly = 0;
     this.setReference(body);
     this.target = body;
     this.anchor = null;
@@ -235,6 +258,7 @@ export class CameraController {
    * away, approaching along `approachDir` (unit, from the point toward the camera's final spot).
    */
   goToPoint(point: Vector3, arriveDist: number, approachDir?: Vector3, anchor?: { radius: number; name: string }): void {
+    this.catchUp();
     const r0 = _v.copy(this.position).sub(point);
     const dir1 = approachDir ? approachDir.clone().normalize() : (r0.lengthSq() > 0 ? r0.clone().normalize() : new Vector3(0, 0.3, 1).normalize());
     const ratio = Math.max(r0.length(), 1) / arriveDist;
@@ -244,6 +268,7 @@ export class CameraController {
       r0: r0.clone(), dir1, dist1: arriveDist, q0: this.quaternion.clone(),
     };
     this.autoOrbit = 0;
+    this.autoDolly = 0;
     this.target = null;
     this.anchor = null;
     this.mode = 'free';
@@ -256,6 +281,7 @@ export class CameraController {
       r0: new Vector3(), dir1: new Vector3(), dist1: 0, q0: this.quaternion.clone(),
     };
     this.autoOrbit = 0;
+    this.autoDolly = 0;
     this.target = body;
   }
 
@@ -266,6 +292,7 @@ export class CameraController {
       r0: new Vector3(), dir1: dir.clone().normalize(), dist1: 0, q0: this.quaternion.clone(),
     };
     this.autoOrbit = 0;
+    this.autoDolly = 0;
   }
 
   /**
@@ -276,6 +303,7 @@ export class CameraController {
     this.position.add(delta);
     this.autopilot = null;
     this.autoOrbit = 0;
+    this.autoDolly = 0;
     this.mode = 'free';
     this.target = null;
     this.anchor = null;
@@ -287,6 +315,7 @@ export class CameraController {
     if (mode === 'orbit' && !this.target && !this.anchor) return;
     this.mode = mode;
     this.autoOrbit = 0;
+    this.autoDolly = 0;
     if (mode === 'orbit') {
       if (this.target) {
         this.setReference(this.target);
@@ -303,11 +332,7 @@ export class CameraController {
 
   update(dt: number, input: Input, viewportW: number, viewportH: number, fovRad: number): void {
     // 1. Inherit reference-frame motion
-    if (this.reference) {
-      _v.copy(this.reference.position).sub(this.refLastPos);
-      this.position.add(_v);
-      this.refLastPos.copy(this.reference.position);
-    }
+    this.catchUp();
 
     const { dx, dy, wheel, pinch, panX, panY } = input.flush();
     const ySign = this.invertY ? -1 : 1;
@@ -367,7 +392,7 @@ export class CameraController {
 
     // Any hand on the controls ends the automatic drift (opening backdrop, tour dwell): it must
     // not creep back once the visitor has taken over.
-    if (this.autoOrbit !== 0 && (dx !== 0 || dy !== 0 || wheel !== 0 || touching || MOVE_KEYS.some((k) => input.down(k)))) this.autoOrbit = 0;
+    if ((this.autoOrbit !== 0 || this.autoDolly !== 0) && (dx !== 0 || dy !== 0 || wheel !== 0 || touching || MOVE_KEYS.some((k) => input.down(k)))) { this.autoOrbit = 0; this.autoDolly = 0; }
 
     // 3. Mouse look / orbit
     if (!this.autopilot) {
@@ -384,10 +409,16 @@ export class CameraController {
           offset.applyQuaternion(_q);
           this.quaternion.premultiply(_q);
         } else if (this.autoOrbit !== 0) {
-          const up = _v2.set(0, 1, 0).applyQuaternion(this.quaternion);
-          _q.setFromAxisAngle(up, this.autoOrbit * dt);
+          // sweep around the body's axis so the elevation holds (around screen-up a high
+          // overview would tumble over the pole instead of circling it)
+          const axis = this.target ? _v2.copy(this.target.pole) : _v2.set(0, 0, 0);
+          if (axis.lengthSq() < 1e-6) axis.set(0, 1, 0).applyQuaternion(this.quaternion);
+          _q.setFromAxisAngle(axis.normalize(), this.autoOrbit * dt);
           offset.applyQuaternion(_q);
           this.quaternion.premultiply(_q);
+        }
+        if (this.autoDolly !== 0 && dx === 0 && dy === 0) {
+          offset.setLength(Math.max(tgt.radius * 1.3, offset.length() * Math.exp(this.autoDolly * dt)));
         }
         if (wheel !== 0 || pinch !== 0) {
           const minD = tgt.radius * 1.02;

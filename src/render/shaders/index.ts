@@ -33,9 +33,23 @@ import landmarkVert from './landmark.vert?raw';
 import landmarkFrag from './landmark.frag?raw';
 import beamVert from './beam.vert?raw';
 import beamFrag from './beam.frag?raw';
+import meteorVert from './meteor.vert?raw';
+import meteorFrag from './meteor.frag?raw';
+import terrainVert from './terrain.vert?raw';
+import terrainFrag from './terrain.frag?raw';
+import depthClearFrag from './depthclear.frag?raw';
+import depthFloorVert from './depthfloor.vert?raw';
+import panoVert from './pano.vert?raw';
+import panoFrag from './pano.frag?raw';
 
 /** Compose shader sources with shared chunks. */
 export const Shaders = {
+  terrainVert,
+  terrainFrag,
+  depthClearFrag,
+  depthFloorVert,
+  panoVert,
+  panoFrag,
   surfaceVert: common + '\n' + surfaceVert,
   tileVert,
   tileFrag: common + '\n' + lighting + '\n' + tileFrag,
@@ -69,4 +83,6 @@ export const Shaders = {
   galaxyFrag,
   beamVert,
   beamFrag,
+  meteorVert,
+  meteorFrag,
 };

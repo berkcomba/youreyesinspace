@@ -1,5 +1,5 @@
 import './style.css';
-import { Matrix3, Quaternion, Vector3 } from 'three';
+import { Matrix3, Matrix4, Quaternion, Vector3 } from 'three';
 import { Engine } from './core/Engine';
 import { TimeSystem } from './core/TimeSystem';
 import { Universe, catalogIndexOf, type StarId } from './core/Universe';
@@ -7,6 +7,8 @@ import type { StarSystem } from './core/StarSystem';
 import { CelestialBody } from './core/CelestialBody';
 import { StarCatalog } from './data/StarCatalog';
 import { LightPulse } from './render/TourEffects';
+import { MeteorShower } from './render/MeteorShower';
+import { raDecToScene } from './math/frames';
 import { BodyRenderer, type BodyView } from './render/BodyRenderer';
 import { BodyPoints } from './render/BodyPoints';
 import { OrbitLines } from './render/OrbitLines';
@@ -31,19 +33,31 @@ import { fmtDuration, fmtLightYears, fmtScaleDistance } from './ui/format';
 import { _, applyDom, initI18n } from './i18n';
 import { Missions, type ActiveMission } from './core/Missions';
 import { TrajectoryLines } from './render/TrajectoryLines';
-import { TourPlayer, type SurfacePin, type TourOverrides } from './core/TourPlayer';
+import { EphemerisLines } from './render/EphemerisLines';
+import { TourPlayer, type ReadoutKind, type SurfacePin, type TourOverrides } from './core/TourPlayer';
+import { ephemeris } from './core/Ephemeris';
+import { fmtDistance } from './ui/format';
+import { eventById, eventTour, KIND_LABELS, type SkyEvent } from './data/events';
+import { fmtEventDate } from './ui/EventPanel';
+import { SOLAR_SYSTEM } from './data/solarSystem';
+import { applyEventMeta, beacon, eventUrl, parseLaunch, type LaunchParams } from './app/share';
+import { EmbedUI } from './ui/EmbedUI';
+import { C_KM_S } from './core/constants';
 import { LessonPlayer } from './core/LessonPlayer';
 import type { MissionPlan } from './astro/mission';
 
 const IDENTITY = new Matrix3();
-/** Flight time of a tour cue's hop (overview and back): quick, so the demo fits in one sentence */
-const TOUR_HOP_S = 1.6;
+/** Flight time of a tour cue's hop (overview and back): a slow, even glide rather than a snap */
+const TOUR_HOP_S = 2.8;
+/** Closer than this many body radii, the night side is lit (see `updateFill`) */
+const NEAR_LIGHT_RADII = 9;
 /** auto-orbit speed (rad/s) of the opening backdrop */
 const BACKDROP_ORBIT = 0.03;
 /** camera distance from the Sun (pc, ≈ 200 AU: beyond the planets) from which the Sun is marked with its distance */
 const SUN_MARKER_PC = 0.001;
 /** scratch */
-const _dir = new Vector3();
+const _dir = new Vector3(), _up = new Vector3(), _zero = new Vector3();
+const _m4 = new Matrix4();
 
 class App implements UIHost {
   readonly universe: Universe;
@@ -74,8 +88,14 @@ class App implements UIHost {
   readonly nebulaClouds: NebulaClouds;
   readonly missions: Missions;
   readonly trajectories: TrajectoryLines;
+  readonly ephemLines: EphemerisLines;
   readonly tours: TourPlayer;
   readonly lessons: LessonPlayer;
+  /** event scene currently playing (Events tab / ?event=) */
+  currentEvent: SkyEvent | null = null;
+  /** iframe chrome when launched with ?embed=1 */
+  embed: EmbedUI | null = null;
+  private persistSettings = true;
   /** render settings forced by the running tour (empty when none) */
   private tourOverrides: TourOverrides = {};
   /** labelled surface feature the overlay points at (tours) */
@@ -85,6 +105,7 @@ class App implements UIHost {
   /** tour size comparison: a true-scale stand-in of `ref` kept at the screen-right of `beside` */
   private ghost: { body: CelestialBody; ref: CelestialBody; beside: CelestialBody; alpha: number; leaving: boolean } | null = null;
   private pulse: LightPulse | null = null;
+  private meteors: MeteorShower | null = null;
   /** camera offset from the followed vehicle, kept across frame switches */
   private readonly followOffset = new Vector3();
   private followOffsetValid = false;
@@ -136,6 +157,7 @@ class App implements UIHost {
     this.input = new Input(sceneCanvas);
     this.camera = new CameraController(this.universe);
     this.trajectories = new TrajectoryLines(scene);
+    this.ephemLines = new EphemerisLines(scene);
     this.missions = new Missions(this.universe, {
       spawned: (m, b) => this.onMissionSpawned(m, b),
       despawned: (m, b) => this.onMissionDespawned(m, b),
@@ -144,10 +166,24 @@ class App implements UIHost {
     });
     this.tours = new TourPlayer(this);
     this.tours.onEnd = (why) => {
-      this.ui.showToast(why === 'finished' ? _('Tur tamamlandı') : _('Tur bitirildi'), 2400);
-      // a finished tour hands back to the circling backdrop; an interrupted one leaves the
-      // camera where the visitor sent it
-      if (why === 'finished') this.showBackdrop(true);
+      const wasEvent = this.currentEvent !== null;
+      if (wasEvent) this.endEvent();
+      if (why === 'finished' && !wasEvent) {
+        // the support nudge is shown at most once a week per browser; the rest of the time it's a plain toast
+        const KEY = 'yeits.supportNudge';
+        const last = Number(localStorage.getItem(KEY) ?? 0);
+        if (Date.now() - last > 7 * 86400_000) {
+          localStorage.setItem(KEY, String(Date.now()));
+          this.ui.showToast(_('Tur tamamlandı'), 7000, { label: _('Beğendiyseniz projeyi destekleyin'), href: 'https://github.com/sponsors/berkcomba' });
+        } else {
+          this.ui.showToast(_('Tur tamamlandı'), 2400);
+        }
+      } else {
+        this.ui.showToast(why === 'finished' ? _('Sahne tamamlandı') : _('Tur bitirildi'), 2400);
+      }
+      // a finished tour hands back to the circling backdrop; an interrupted one (or an event
+      // scene, which is a single composed shot) leaves the camera where it is
+      if (why === 'finished' && !wasEvent) this.showBackdrop(true);
     };
     this.lessons = new LessonPlayer(this, this.tours);
     this.ui = new UI(this);
@@ -224,6 +260,7 @@ class App implements UIHost {
     this.bodies.setSystem(sys);
     this.orbits.setSystem(sys);
     this.points.setViews(this.bodies.views);
+    this.ephemLines.track(sys.bodies);
     this.belts.setSystem(sys.belts, sys.star.gm, sys.catalogIndex === 0 ? IDENTITY : sys.star.poleBasis);
     const [r, g, b] = starLightColor(sys.starTemperature);
     this.sunColor.set(r, g, b);
@@ -414,6 +451,7 @@ class App implements UIHost {
     }
     const b = u.get(id);
     if (!b) { this.ui.showToast(_('Hedef bulunamadı')); return; }
+    if (b.data.orbit?.kind === 'ephemeris') void ephemeris.prioritize(b.data.orbit.table);
     this.select(b);
     if (App.backlitKind(b)) this.camera.goToBacklit(b, u.star.position);
     else this.camera.goTo(b, u.star.position);
@@ -421,19 +459,22 @@ class App implements UIHost {
   }
 
   /** Pull back above `bodyId`'s orbit around its parent so the whole orbit is in view. */
-  goToOverview(bodyId: string): void {
+  goToOverview(bodyId: string, seconds = TOUR_HOP_S): void {
     const b = this.universe.get(bodyId);
     const p = b?.parent;
     if (!b || !p) return;
     const a = b.resolved?.a ?? b.localPosition.length();
-    // ~70° above the orbital plane, leaning to the body's side so it sits in the foreground;
-    // 2.7 a keeps the whole orbit inside a ~50° field of view
+    // ~70° above the orbital plane, leaning away from the body so it sits on the far side of
+    // the orbit — the upper half of the frame, clear of the subtitles; 2.7 a keeps the whole
+    // orbit inside a ~50° field of view
     const toBody = new Vector3().copy(b.position).sub(p.position).normalize();
-    const dir = new Vector3().copy(b.orbitNormal);
-    if (dir.lengthSq() < 1e-6) dir.copy(p.pole);
-    dir.addScaledVector(toBody, 0.35).normalize();
+    const normal = new Vector3().copy(b.orbitNormal);
+    if (normal.lengthSq() < 1e-6) normal.copy(p.pole);
+    const dir = new Vector3().copy(normal).addScaledVector(toBody, -0.35).normalize();
     this.select(b);
-    this.camera.goToVantage(p, dir, Math.max(a * 2.7, p.radius * 6), TOUR_HOP_S);
+    // roll: the orbit normal is "up", otherwise the roll inherited from the previous shot (e.g. a
+    // retrograde comet seen from the south) can leave the frame upside down
+    this.camera.goToVantage(p, dir, Math.max(a * 2.7, p.radius * 6), seconds, normal);
   }
 
   /** Hop back to `bodyId` after an overview/pin cue (quick flight, no toast). */
@@ -446,7 +487,7 @@ class App implements UIHost {
   }
 
   /** Camera `elev`° above the equator plane, `az`° around the pole from the noon meridian, `dist` radii out. */
-  goToVantageOf(bodyId: string, elev: number, az: number, dist: number): void {
+  goToVantageOf(bodyId: string, elev: number, az: number, dist: number, seconds = TOUR_HOP_S * 1.5): void {
     const b = this.universe.get(bodyId);
     if (!b) return;
     const noon = this.noonDirection(b, new Vector3());
@@ -459,7 +500,43 @@ class App implements UIHost {
       .normalize();
     const minD = b.data.rings ? Math.max(b.radius * dist, b.data.rings.outer * 1.15) : b.radius * dist;
     this.select(b);
-    this.camera.goToVantage(b, dir, minD, TOUR_HOP_S * 1.5);
+    // on a surface the horizon must end up level: roll to the local vertical
+    this.camera.goToVantage(b, dir, minD, seconds, b.data.orbit?.kind === 'surface' ? b.pole : undefined);
+  }
+
+  /**
+   * Over-the-shoulder shot: camera `dist` radii from `refId` on the side facing away from
+   * `towardId`, so the latter fills the background; `az`/`elev` (degrees) swing it off that axis
+   * (az around ecliptic north, elev toward it) so the subject does not hide its backdrop.
+   */
+  goToShot(refId: string, towardId: string, dist: number, az: number, elev: number, seconds = TOUR_HOP_S * 1.5): void {
+    const ref = this.universe.get(refId), toward = this.universe.get(towardId);
+    if (!ref || !toward) return;
+    const away = new Vector3().copy(ref.position).sub(toward.position).normalize();
+    if (away.lengthSq() < 0.5) away.set(1, 0, 0);
+    // screen-up: ecliptic north made perpendicular to the line of sight
+    const up = new Vector3(0, 1, 0).addScaledVector(away, -away.y);
+    if (up.lengthSq() < 1e-6) up.set(1, 0, 0).addScaledVector(away, -away.x);
+    up.normalize();
+    const right = new Vector3().crossVectors(away, up).normalize();
+    const ce = Math.cos(elev * DEG);
+    const dir = new Vector3()
+      .addScaledVector(away, ce * Math.cos(az * DEG))
+      .addScaledVector(right, ce * Math.sin(az * DEG))
+      .addScaledVector(up, Math.sin(elev * DEG))
+      .normalize();
+    if (ref.data.orbit?.kind === 'ephemeris') void ephemeris.prioritize(ref.data.orbit.table);
+    this.select(ref);
+    this.camera.goToVantage(ref, dir, ref.radius * dist, seconds, up);
+  }
+
+  currentFov(): number {
+    return this.tourOverrides.fov ?? this.settings.fov;
+  }
+
+  setClock(d: Date): void {
+    this.time.setDate(d);
+    this.universe.update(this.time.jd, this.time.t);
   }
 
   /** Unit vector from `b` toward the Sun, projected onto its equator plane (the sub-solar meridian). */
@@ -554,6 +631,27 @@ class App implements UIHost {
     this.pulse.start(a, b, p.seconds);
   }
 
+  setMeteors(m: { ref: string; ra: number; dec: number; speed: number; rate: number; fireballs?: number; approach?: boolean; seconds?: number } | null): void {
+    if (!m) { this.meteors?.stop(); return; }
+    const b = this.universe.get(m.ref);
+    if (!b) return;
+    const radiant = raDecToScene(m.ra, m.dec);
+    this.meteors ??= new MeteorShower(this.engine.scene);
+    this.meteors.start(b, { radiant, speed: m.speed, rate: m.rate, fireballs: m.fireballs });
+    if (!m.approach) return;
+    // Viewing spot: the streaks all fly away from the radiant, so stand roughly side-on to them
+    // (perpendicular to the radiant), on the night side so they burn against a dark globe, and a
+    // little toward the radiant and the pole so the hemisphere being hit faces us.
+    const night = this.noonDirection(b, new Vector3()).negate();
+    const side = new Vector3().copy(night).addScaledVector(radiant, -night.dot(radiant));
+    if (side.lengthSq() < 0.05) side.copy(b.pole).addScaledVector(radiant, -b.pole.dot(radiant));
+    side.normalize();
+    const dir = new Vector3().copy(side).addScaledVector(radiant, 0.35).addScaledVector(b.pole, 0.3).normalize();
+    const up = new Vector3().copy(b.pole).addScaledVector(dir, -b.pole.dot(dir)).normalize();
+    this.select(b);
+    this.camera.goToVantage(b, dir, b.radius * 2.7, m.seconds ?? TOUR_HOP_S * 2.5, up);
+  }
+
   /** Fly in above a surface point (lat/lon, degrees) of `bodyId`, looking down at it. */
   goToSurface(bodyId: string, lat: number, lon: number, storm = false): void {
     const b = this.universe.get(bodyId);
@@ -629,25 +727,26 @@ class App implements UIHost {
   private readonly aimTarget = new Vector3();
 
   /**
-   * Tour work light: in tour close-ups the shadows go — the body in front of the camera, the
-   * comparison copy beside it and any pinned body are lit up to near-noon over ~2 s (backlit
-   * compositions and Mercury's / Venus's slow days would otherwise leave them black), and fade
-   * back down when the close-up ends.
+   * Work light: whatever brought the camera here — free flight, Go, a tour or a lesson — a body
+   * we are close to has its shadows lifted to near-noon over ~2 s (backlit compositions and
+   * Mercury's / Venus's slow days would otherwise leave it black), fading back down as we
+   * leave. Tours add their comparison copy and any pinned body, and may opt a shot out.
    */
   private updateFill(dt: number): void {
     const want = this.fillWant;
     want.clear();
     const cam = this.camera;
-    // lessons fly to the same close-ups, so they get the same light
-    if (this.tours.state.tour || this.lessons.active) {
-      const t = cam.target;
-      if (t && t !== this.universe.star && cam.position.distanceTo(t.position) < t.radius * 9) want.add(t.id);
+    const star = this.universe.star;
+    const touring = this.tours.state.tour !== null || this.lessons.active;
+    const skip = touring && this.tourOverrides.fill === false ? cam.target : null;
+    for (const b of this.universe.current.bodies) {
+      if (b === star || b === skip || b.data.type === 'barycenter' || b.data.type === 'blackhole') continue;
+      // spacecraft and small rocks: a floor on the reach so a few hundred metres count as close
+      if (cam.position.distanceTo(b.position) < Math.max(b.radius * NEAR_LIGHT_RADII, 5)) want.add(b.id);
+    }
+    if (touring) {
       if (this.ghost && !this.ghost.leaving) want.add(this.ghost.body.id);
       if (this.surfacePin && !this.pinLeaving) want.add(this.surfacePin.bodyId);
-    } else if (this.settings.nearLight) {
-      // free flight: the same work light fades in once we are close to the body we are at
-      const t = cam.target ?? cam.reference;
-      if (t && t !== this.universe.star && cam.position.distanceTo(t.position) < t.radius * 6) want.add(t.id);
     }
     const step = dt / 2;
     for (const id of want) if (!this.fill.has(id)) this.fill.set(id, 0);
@@ -677,10 +776,94 @@ class App implements UIHost {
     return b.surfaceDirection(lat, lon, out);
   }
 
+  /**
+   * Bodies a tour step is about: they (with their primaries and their moons / companion stars)
+   * keep their tags while everything else on the sky rests. `null` ends the scoping.
+   */
+  setTourScope(ids: string[] | null): void {
+    if (!ids) { this.overlay.scope = null; return; }
+    const scope = new Set<string>(['tour-ghost']);
+    const u = this.universe;
+    for (const id of ids) {
+      const b = u.get(id);
+      if (!b) { scope.add(id); continue; }
+      // its primaries, except an (empty) barycentre, whose cross and name would sit on the star's face
+      for (let p: CelestialBody | null = b; p; p = p.parent) if (p === b || p.data.type !== 'barycenter') scope.add(p.id);
+      const kin = (c: CelestialBody): boolean => {
+        const t = c.data.type;
+        return t === 'moon' || t === 'planet' || t === 'star' || t === 'blackhole';
+      };
+      // its moons (a planet), its planets (the star) — not the dwarfs, rocks and probes of the whole system
+      for (const c of b.children) if (kin(c)) scope.add(c.id);
+      // the other half of a binary (both circle a barycentre): the companion is part of the story
+      if (b.parent?.data.type === 'barycenter') for (const c of b.parent.children) if (kin(c) || c.data.type === 'dwarf') scope.add(c.id);
+    }
+    this.overlay.scope = scope;
+  }
+
   setTourOverrides(o: TourOverrides): void {
     this.tourOverrides = o;
     const s = this.settings;
     this.grid.setVisible(o.eclipticGrid ?? s.eclipticGrid, o.equatorialGrid ?? s.equatorialGrid);
+    this.engine.setFov(o.fov ?? s.fov);
+  }
+
+  /** Sky view: camera `alt` km above `refId`, on the side facing the `toward` bodies, aimed at their midpoint. */
+  lookFrom(refId: string, toward: string[], alt: number): void {
+    const ref = this.universe.get(refId);
+    if (!ref) return;
+    const aim = new Vector3();
+    let n = 0;
+    for (const id of toward) {
+      const b = this.universe.get(id);
+      if (!b) continue;
+      // average of unit directions: the midpoint on the sky, not the midpoint in space
+      aim.add(_dir.copy(b.position).sub(ref.position).normalize());
+      n++;
+    }
+    if (!n) return;
+    aim.normalize();
+    const cam = this.camera;
+    cam.position.copy(ref.position).addScaledVector(aim, ref.radius + alt);
+    // keep the reference body's pole as screen-up so the horizon reads naturally
+    const up = _up.copy(ref.pole).addScaledVector(aim, -ref.pole.dot(aim));
+    if (up.lengthSq() < 1e-6) up.set(0, 1, 0);
+    // Matrix4.lookAt(eye, target, up): the camera's -Z ends up pointing from eye toward target
+    _m4.lookAt(_zero, aim, up.normalize());
+    cam.quaternion.setFromRotationMatrix(_m4);
+    cam.setReference(ref);
+    cam.target = null;
+    cam.anchor = null;
+    cam.autopilot = null;
+    cam.autoOrbit = 0;
+    cam.mode = 'free';
+  }
+
+  /** Live measurement for the `readout` tour cue. */
+  measure(kind: ReadoutKind, aId: string, bId: string, fromId = 'earth'): string {
+    const a = this.universe.get(aId), b = this.universe.get(bId);
+    if (!a || !b) return '';
+    switch (kind) {
+      case 'distance': return fmtDistance(a.position.distanceTo(b.position));
+      case 'altitude': return fmtDistance(Math.max(0, a.position.distanceTo(b.position) - b.radius));
+      case 'light': {
+        const sec = a.position.distanceTo(b.position) / C_KM_S;
+        if (sec < 90) return `${sec.toFixed(1)} s`;
+        const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), ss = Math.floor(sec % 60);
+        return h >= 24
+          ? `${Math.floor(h / 24)} ${_('gün')} ${String(h % 24).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(ss).padStart(2, '0')}`
+          : `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(ss).padStart(2, '0')}`;
+      }
+      case 'separation': {
+        const o = this.universe.get(fromId);
+        if (!o) return '';
+        const da = _dir.copy(a.position).sub(o.position).normalize();
+        const db = _up.copy(b.position).sub(o.position).normalize();
+        const deg = Math.acos(Math.min(1, Math.max(-1, da.dot(db)))) / DEG;
+        if (deg < 1) return `${(deg * 60).toFixed(1)}′`;
+        return `${deg.toFixed(deg < 10 ? 2 : 1)}°`;
+      }
+    }
   }
 
   setSurfacePin(pin: SurfacePin | null): void {
@@ -842,12 +1025,106 @@ class App implements UIHost {
     this.ui.showToast(`${m.name}: ${_('{name} hedefine varıldı', { name: m.plan.targetName })}`, 3200);
   }
 
+  /* ---------------- events (Events tab, ?event=, embed) ---------------- */
+
+  hasBody(id: string): boolean {
+    return SOLAR_SYSTEM.some((b) => b.id === id);
+  }
+
+  /** Play an event scene: fetch its Horizons tables first, then run it as a one-step tour. */
+  playEvent(e: SkyEvent, from: 'panel' | 'url' = 'panel'): void {
+    for (const id of e.bodies) {
+      const d = SOLAR_SYSTEM.find((b) => b.id === id);
+      if (d?.orbit?.kind === 'ephemeris') void ephemeris.prioritize(d.orbit.table);
+    }
+    if (this.lessons.active) this.ui.toggleAcademy(false);
+    // a running tour/scene ends first (its onEnd must not clear the state set below)
+    if (this.tours.active) this.tours.stop();
+    this.currentEvent = e;
+    applyEventMeta(e);
+    this.embed?.setEvent(e);
+    const embed = this.embed !== null;
+    beacon(from === 'url' && embed ? 'embed_open' : 'event_open', e.id, embed);
+    if (!embed) {
+      const u = new URL(eventUrl(e));
+      history.replaceState(null, '', `${u.pathname}${u.search}`);
+    }
+    document.body.classList.add('event-scene');
+    this.overlay.cinematic = true;
+    // chapter card: "YAKIN GEÇİŞ · 4 KAS 2026 · 00:00 UTC" above the event title
+    this.tours.startDef({ ...eventTour(e), eyebrow: `${_(KIND_LABELS[e.kind])} · ${fmtEventDate(e)}` });
+  }
+
+  /** The current event scene again from the start (embed "replay") */
+  replayEvent(): void {
+    const e = this.currentEvent ?? this.lastEvent;
+    if (e) this.playEvent(e);
+  }
+  private lastEvent: SkyEvent | null = null;
+
+  private endEvent(): void {
+    this.lastEvent = this.currentEvent;
+    this.currentEvent = null;
+    document.body.classList.remove('event-scene');
+    this.overlay.cinematic = false;
+    if (!this.embed) {
+      applyEventMeta(null);
+      const lang = new URLSearchParams(location.search).get('lang');
+      history.replaceState(null, '', lang ? `/?lang=${lang}` : '/');
+    }
+  }
+
+  /** Camera direction from `b` (scene axes, unit) and distance in radii (share links) */
+  viewOf(b: CelestialBody): { dir: [number, number, number]; radii: number } {
+    const d = _dir.copy(this.camera.position).sub(b.position);
+    const len = Math.max(d.length(), b.radius * 1.01);
+    return { dir: [d.x / len, d.y / len, d.z / len], radii: len / b.radius };
+  }
+
+  /** Apply the launch URL (?event=, ?target=, &t=, &rate=, &cam=, &embed=1) once the app is up. */
+  launch(p: LaunchParams): void {
+    if (p.embed) {
+      this.persistSettings = false;
+      // iframe: light on traffic (no NASA tiles, no background Horizons tables), silent narration,
+      // and the host page keeps its scrolling until the visitor clicks the view
+      this.settings.imagery = false;
+      this.applySettings();
+      ephemeris.deferBackground = true;
+      this.input.setArmOnClick(true);
+      this.tours.muted = true;
+      this.embed = new EmbedUI(this);
+    }
+    const e = p.event ? eventById(p.event) : undefined;
+    if (e) {
+      if (!e.bodies.every((id) => this.hasBody(id))) { this.ui.showToast(_('Bu olay bu sürümde gösterilemiyor')); return; }
+      this.playEvent(e, 'url');
+      if (p.time) this.time.setDate(p.time);
+      if (p.rate !== null) { if (p.rate === 0) { if (!this.time.paused) this.time.togglePause(); } else this.time.setRate(p.rate); }
+      return;
+    }
+    if (p.event) this.ui.showToast(_('Olay bulunamadı'), 3000);
+    if (p.time) this.time.setDate(p.time);
+    if (p.target) {
+      const b = this.universe.get(p.target);
+      if (b) {
+        if (b.data.orbit?.kind === 'ephemeris') void ephemeris.prioritize(b.data.orbit.table);
+        this.select(b);
+        if (p.cam) {
+          this.universe.update(this.time.jd, this.time.t);
+          this.camera.placeAt(b, _dir.set(p.cam.dir[0], p.cam.dir[1], p.cam.dir[2]).multiplyScalar(p.cam.radii * b.radius));
+          this.camera.autoOrbit = 0;
+        } else this.camera.goTo(b, this.universe.star.position);
+      } else this.ui.showToast(_('Hedef bulunamadı'));
+    }
+    if (p.rate !== null) { if (p.rate === 0) { if (!this.time.paused) this.time.togglePause(); } else this.time.setRate(p.rate); }
+  }
+
   applySettings(): void {
     const s = this.settings;
-    saveSettings(s);
+    if (this.persistSettings) saveSettings(s);
     this.engine.setFov(s.fov);
     this.engine.bloom.enabled = s.bloom;
-    this.engine.setRenderScale(s.renderScale);
+    this.engine.setRenderScale(s.renderScale * (s.autoResolution ? this.autoScale : 1));
     this.resizeOverlay();
     this.engine.renderer.toneMappingExposure = s.exposure;
     this.overlay.showLabels = s.labels;
@@ -1001,12 +1278,13 @@ class App implements UIHost {
         this.goToGalaxy(0);
         break;
       case 'Escape':
-        if (this.tours.active) { this.tours.stop(); this.ui.showToast(_('Tur bitirildi')); }
+        if (this.tours.active) this.tours.stop();
         else if (this.lessons.active) this.ui.toggleAcademy(false);
         else if (this.camera.autopilot) this.camera.autopilot = null;
         else { this.select(null); this.selectStar(null); this.selectGalaxy(null); this.selectLandmark(null); }
         this.ui.toggleHelp(false);
         this.ui.toggleAbout(false);
+        this.ui.toggleChangelog(false);
         break;
       case 'KeyJ': this.time.reverseWarp(); break;
       case 'KeyK': this.time.togglePause(); break;
@@ -1122,11 +1400,69 @@ class App implements UIHost {
       : Math.exp(Math.log(cur) + (Math.log(targetKm) - Math.log(cur)) * 0.4);
   }
 
+  /* ---------------- Dynamic resolution ---------------- */
+  /** multiplier the frame-rate governor applies under the user's render scale (1 = none) */
+  private autoScale = 1;
+  private fpsAcc = 0;
+  private fpsFrames = 0;
+  /** consecutive one-second windows comfortably above the target (recovery needs several) */
+  private fastWindows = 0;
+  private autoToastShown = false;
+
+  /** Pixels actually rendered: the window at the device pixel ratio × user scale × automatic drop */
+  renderSize(): [number, number] {
+    const eng = this.engine;
+    return [Math.round(eng.width * eng.pixelRatio), Math.round(eng.height * eng.pixelRatio)];
+  }
+
+  /**
+   * Frame-rate governor: when the machine cannot keep up, the render resolution steps down
+   * (to 40 % of the chosen scale at most) and climbs back once the frame rate has been
+   * comfortable for a while. Measured over one-second windows; the first seconds after load
+   * and tab switches (huge gaps) are ignored.
+   */
+  private adaptResolution(now: number, rawDt: number): void {
+    const s = this.settings;
+    if (!s.autoResolution) {
+      if (this.autoScale !== 1) { this.autoScale = 1; this.applyRenderScale(); }
+      return;
+    }
+    if (now < 6000 || rawDt > 0.5 || document.hidden) { this.fpsAcc = 0; this.fpsFrames = 0; return; }
+    this.fpsAcc += rawDt;
+    this.fpsFrames++;
+    if (this.fpsAcc < 1) return;
+    const fps = this.fpsFrames / this.fpsAcc;
+    this.fpsAcc = 0;
+    this.fpsFrames = 0;
+    if (fps < 27 && this.autoScale > 0.4) {
+      this.autoScale = Math.max(0.4, +(this.autoScale - 0.15).toFixed(2));
+      this.fastWindows = 0;
+      this.applyRenderScale();
+      if (!this.autoToastShown) {
+        this.autoToastShown = true;
+        this.ui.showToast(_('Akıcılık için render çözünürlüğü düşürüldü · Ayarlar'), 3200);
+      }
+    } else if (fps > 55 && this.autoScale < 1) {
+      if (++this.fastWindows >= 6) {
+        this.autoScale = Math.min(1, +(this.autoScale + 0.15).toFixed(2));
+        this.fastWindows = 0;
+        this.applyRenderScale();
+      }
+    } else this.fastWindows = 0;
+  }
+
+  private applyRenderScale(): void {
+    this.engine.setRenderScale(this.settings.renderScale * this.autoScale);
+    this.ui.syncSettings();
+  }
+
   /* ---------------- Frame ---------------- */
   private frame = (now: number): void => {
     requestAnimationFrame(this.frame);
-    const dt = Math.min(0.1, Math.max(0.0001, (now - this.last) / 1000));
+    const rawDt = (now - this.last) / 1000;
+    const dt = Math.min(0.1, Math.max(0.0001, rawDt));
     this.last = now;
+    this.adaptResolution(now, rawDt);
 
     // Simulation
     this.time.advance(dt);
@@ -1171,7 +1507,9 @@ class App implements UIHost {
     const ov = this.tourOverrides;
     this.updateGhost(dt);
     if (this.pulse?.active) this.pulse.update(dt, camPos, pxPerRad);
+    if (this.meteors?.active) this.meteors.update(dt, camPos, pxPerRad);
     this.updateFill(dt);
+    this.applyBodyFilter();
     const g = this.ghost;
     this.bodies.update(camPos, this.camera.quaternion, eng.camera, eng.height, fovRad, star.position, star.radius, this.sunColor, this.time.t / 3600, {
       atmospheres: s.atmospheres, clouds: ov.clouds ?? s.clouds, rings: s.rings, ringParticles: s.ringParticles, shadows: s.shadows, imagery: s.imagery,
@@ -1184,7 +1522,7 @@ class App implements UIHost {
     this.starPoints.setPixelRatio(eng.pixelRatio);
     this.starPoints.update(this.camPc, this.universe.current.catalogIndex);
     this.procPoints.update(this.camPc, eng.pixelRatio, this.universe.current.starId, dt);
-    for (const c of this.clouds.values()) c.update(this.camPc, pxPerRad, eng.pixelRatio, s.milkyWay);
+    for (const c of this.clouds.values()) c.update(this.camPc, pxPerRad, eng.pixelRatio, s.milkyWay, fovRad / DEG);
     this.galaxySprites.update(this.camPc, pxPerRad, eng.pixelRatio, this.galaxyBoost, this.universe.currentGalaxy ?? -1);
     this.landmarkSprites.update(this.camPc, pxPerRad, this.universe.current.starId, (gi) => this.galaxySprites.apparent(gi).ratio);
     this.nebulaClouds.update(this.camPc, pxPerRad, eng.pixelRatio, this.landmarkSprites.k, this.landmarkSprites.mesh.visible);
@@ -1204,6 +1542,12 @@ class App implements UIHost {
     });
     this.orbits.update(camPos, ov.orbits ?? (s.orbits || this.backdrop || this.backdropPending), ov.moonOrbits ?? s.moonOrbits, pxPerRad, (id) => this.bodies.byId.get(id)?.apparentRadiusPx ?? 0, this.selected?.id ?? null);
     this.trajectories.update(camPos, this.time.jd, this.missions.lookup, s.orbits, eng.width * eng.pixelRatio, eng.height * eng.pixelRatio);
+    // Horizons trails only inside an event scene, or for the spacecraft the visitor has selected:
+    // on the everyday sky the stacked capture orbits read as clutter
+    const selOrbit = this.selected?.data.orbit;
+    const selTable = selOrbit?.kind === 'ephemeris' ? selOrbit.table : null;
+    const inScene = this.currentEvent !== null;
+    this.ephemLines.update(camPos, this.time.jd, this.universe.current.get, (table) => (ov.orbits ?? s.orbits) && (inScene || table === selTable));
     this.belts.update(this.time.t, sunRel, eng.pixelRatio, s.belts);
 
     // Render
@@ -1266,7 +1610,42 @@ class App implements UIHost {
     this.overlay.draw(this.bodies.views, eng.camera, this.selected, namedStars, starSel, this.uiVisible, s.galaxies ? this.galaxySprites.named : [], this.blackHoleMarkers(camPos), this.landmarkSprites.named, pin.visible ? pin : null, this.sunMarker(camPos));
     const selDist = this.selected ? this.bodies.byId.get(this.selected.id)?.distance ?? 0 : 0;
     this.ui.update(now, dt, selDist);
+    this.embed?.update();
   };
+
+  /**
+   * The "dwarf planets / asteroids & comets / spacecraft" switches: a body goes with its
+   * category, a barycentre with its members, moons and landers with their primary. The current
+   * selection and the camera's target always stay. Guided tours, event scenes and lessons are
+   * composed shots and show what they need, so the switches rest while one plays.
+   */
+  private applyBodyFilter(): void {
+    const s = this.settings;
+    const bodies = this.universe.current.bodies;
+    const touring = this.tours.active || this.lessons.active;
+    // a tour step keeps the small fry it is about (the overlay scope) and clears the rest away:
+    // comet ellipses and probe markers through an overview of the planets are noise
+    const scope = touring ? this.overlay.scope : null;
+    const noDwarfs = scope ? true : !touring && !s.dwarfs;
+    const noMinor = scope ? true : !touring && !s.minorBodies;
+    const noCraft = scope ? true : !touring && !s.spacecraft;
+    if (!noDwarfs && !noMinor && !noCraft) {
+      for (const b of bodies) b.filtered = false;
+      return;
+    }
+    const off = (b: CelestialBody): boolean => {
+      const t = b.data.type;
+      // Pluto–Charon: the pair's barycentre (and so Charon) goes with its primary
+      if (t === 'barycenter') return b.children.some((c) => c.data.type !== 'moon' && off(c));
+      return (t === 'dwarf' && noDwarfs) || ((t === 'asteroid' || t === 'comet') && noMinor) || (t === 'spacecraft' && noCraft);
+    };
+    const keep = this.selected ?? null, target = this.camera.target;
+    // parents come before children in the system's list, so the inherited flag is already final
+    for (const b of bodies) {
+      const f = (b.parent?.filtered ?? false) || off(b);
+      b.filtered = f && b !== keep && b !== target && !scope?.has(b.id);
+    }
+  }
 
   /** Hand the most prominent black hole in the current system to the lensing pass. */
   private updateLensing(fovRad: number): void {
@@ -1288,7 +1667,8 @@ class App implements UIHost {
    * reference that tells you how far from home you are when nothing else gives a sense of scale.
    */
   private sunMarker(camPos: Vector3): SunMarkerScreen | null {
-    if (!this.settings.sunMarker) return null;
+    // a tour is a composed shot: no home-compass over its subtitles
+    if (!this.settings.sunMarker || this.tours.active) return null;
     const dPc = this.camPc.length();
     if (dPc < SUN_MARKER_PC) return null;
     const m = this.sunScreen;
@@ -1354,9 +1734,12 @@ async function boot(): Promise<void> {
     if (loaderText) loaderText.textContent = _('Yıldız kataloğu yükleniyor…');
     const catalog = await StarCatalog.load(import.meta.env.BASE_URL);
     if (loaderText) loaderText.textContent = _('Evren hazırlanıyor…');
+    const launch = parseLaunch();
+    if (launch.embed) document.body.classList.add('embed');
     const app = new App(catalog);
     // Expose for debugging / console experiments
     (window as unknown as { yeits: App }).yeits = app;
+    app.launch(launch);
   } catch (err) {
     console.error(err);
     if (loaderText) loaderText.textContent = `${_('Yükleme hatası')}: ${(err as Error).message}`;

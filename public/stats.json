@@ -1,0 +1,139 @@
+{
+ "since": "2026-09-29",
+ "updatedAt": "2026-10-24",
+ "visits": 31741,
+ "human": 28237,
+ "visitors": 18776,
+ "days": {
+  "2026-09-29": {
+   "visits": 138,
+   "human": 105,
+   "visitors": 67
+  },
+  "2026-09-30": {
+   "visits": 333,
+   "human": 277,
+   "visitors": 158
+  },
+  "2026-10-01": {
+   "visits": 329,
+   "human": 291,
+   "visitors": 150
+  },
+  "2026-10-02": {
+   "visits": 263,
+   "human": 229,
+   "visitors": 118
+  },
+  "2026-10-03": {
+   "visits": 182,
+   "human": 164,
+   "visitors": 88
+  },
+  "2026-10-04": {
+   "visits": 180,
+   "human": 172,
+   "visitors": 84
+  },
+  "2026-10-05": {
+   "visits": 143,
+   "human": 136,
+   "visitors": 66
+  },
+  "2026-10-06": {
+   "visits": 157,
+   "human": 146,
+   "visitors": 69
+  },
+  "2026-10-07": {
+   "visits": 3643,
+   "human": 3346,
+   "visitors": 2039
+  },
+  "2026-10-08": {
+   "visits": 834,
+   "human": 698,
+   "visitors": 451
+  },
+  "2026-10-09": {
+   "visits": 448,
+   "human": 409,
+   "visitors": 244
+  },
+  "2026-10-10": {
+   "visits": 535,
+   "human": 450,
+   "visitors": 281
+  },
+  "2026-10-11": {
+   "visits": 370,
+   "human": 297,
+   "visitors": 191
+  },
+  "2026-10-12": {
+   "visits": 303,
+   "human": 259,
+   "visitors": 165
+  },
+  "2026-10-13": {
+   "visits": 231,
+   "human": 187,
+   "visitors": 108
+  },
+  "2026-10-14": {
+   "visits": 230,
+   "human": 181,
+   "visitors": 103
+  },
+  "2026-10-15": {
+   "visits": 4960,
+   "human": 4319,
+   "visitors": 2609
+  },
+  "2026-10-16": {
+   "visits": 2387,
+   "human": 2174,
+   "visitors": 1473
+  },
+  "2026-10-17": {
+   "visits": 851,
+   "human": 741,
+   "visitors": 504
+  },
+  "2026-10-18": {
+   "visits": 871,
+   "human": 786,
+   "visitors": 529
+  },
+  "2026-10-19": {
+   "visits": 894,
+   "human": 791,
+   "visitors": 530
+  },
+  "2026-10-20": {
+   "visits": 767,
+   "human": 645,
+   "visitors": 361
+  },
+  "2026-10-21": {
+   "visits": 655,
+   "human": 600,
+   "visitors": 367
+  },
+  "2026-10-22": {
+   "visits": 9136,
+   "human": 8368,
+   "visitors": 6164
+  },
+  "2026-10-23": {
+   "visits": 2432,
+   "human": 2067,
+   "visitors": 1561
+  },
+  "2026-10-24": {
+   "visits": 469,
+   "human": 399,
+   "visitors": 296
+  }
+ }
+}

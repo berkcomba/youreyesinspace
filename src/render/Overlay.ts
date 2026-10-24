@@ -113,6 +113,14 @@ export class Overlay {
   hoverId: string | null = null;
   /** draw a centre crosshair (free roam / pointer lock) */
   crosshair = false;
+  /** event scene playing: no finder reticle around the subject the camera is composed on */
+  cinematic = false;
+  /**
+   * A guided tour is playing: only these body ids (the step's subject, its primary and moons,
+   * everything the narration refers to) keep their markers and labels; the sky names (stars,
+   * galaxies, landmarks, other black holes) rest so the shot is not papered with tags.
+   */
+  scope: Set<string> | null = null;
   /** where the sun marker / compass was last drawn (click target), screen px */
   private sunHit: { x: number; y: number; w: number; h: number } | null = null;
 
@@ -155,7 +163,7 @@ export class Overlay {
       const inFront = _v.z < 1 && _v.z > -1;
       const x = (_v.x * 0.5 + 0.5) * W;
       const y = (-_v.y * 0.5 + 0.5) * H;
-      const visible = inFront && x > -50 && x < W + 50 && y > -50 && y < H + 50;
+      const visible = inFront && !v.body.hidden && !v.body.filtered && x > -50 && x < W + 50 && y > -50 && y < H + 50;
       const item: ScreenItem = { body: v.body, x, y, radiusPx: v.apparentRadiusPx, distance: v.distance, visible, labelShown: false, labelBox: null };
       this.items.push(item);
       byId.set(v.body.id, item);
@@ -165,9 +173,11 @@ export class Overlay {
 
     // Bodies large enough on screen hide the sky labels behind them (ground, planet discs)
     const occluders = views.filter((v) => v.apparentRadiusPx > 40 && v.meshVisible);
-    const occluded = (dir: Vector3): boolean => {
+    const anyOccluder = occluders.length > 0;
+    const occluded = (dir: Vector3, beyond = Infinity): boolean => {
       for (const v of occluders) {
         const d = v.distance;
+        if (d >= beyond) continue; // the occluder itself, or something behind the body in question
         if (d <= v.body.radius) return true;
         const cosA = dir.dot(v.relPos) / d;
         if (cosA <= 0) continue;
@@ -176,6 +186,8 @@ export class Overlay {
       }
       return false;
     };
+    const viewOf = new Map<CelestialBody, BodyView>();
+    for (const v of views) viewOf.set(v.body, v);
 
     ctx.font = '500 12px Inter, ui-sans-serif, system-ui, sans-serif';
     ctx.textBaseline = 'middle';
@@ -188,8 +200,9 @@ export class Overlay {
     // star names are off: they are the only way to find the way around the galaxy.
     // Generated-star names (entries with an id) are governed by their own setting upstream, so they
     // draw even when catalogue star names are off.
+    const scope = this.scope;
     const anyForced = !this.showStarNames && namedStars.some((s) => (s.landmark && this.showMarkers) || s.id !== undefined);
-    if (this.showStarNames || anyForced) {
+    if (!scope && (this.showStarNames || anyForced)) {
       ctx.font = '400 11px Inter, ui-sans-serif, system-ui, sans-serif';
       const taken: Array<{ x: number; y: number; w: number }> = sunBox ? [sunBox] : [];
       const shown = this.shownStars;
@@ -200,7 +213,7 @@ export class Overlay {
       for (const s of sortedStars) {
         if (!this.showStarNames && !(s.landmark && this.showMarkers) && s.id === undefined) continue;
         if (selectedStar && selectedStar.kind === 'star' && selectedStar.name === s.name) continue;
-        if (occluders.length && occluded(s.dir)) continue;
+        if (anyOccluder && occluded(s.dir)) continue;
         _v.copy(s.dir).multiplyScalar(1e11).project(camera);
         if (_v.z > 1 || _v.z < -1) continue;
         const x = (_v.x * 0.5 + 0.5) * W;
@@ -239,11 +252,11 @@ export class Overlay {
     }
 
     // Galaxy names
-    if (this.showGalaxyNames && namedGalaxies.length) {
+    if (!scope && this.showGalaxyNames && namedGalaxies.length) {
       ctx.font = 'italic 400 11px Inter, ui-sans-serif, system-ui, sans-serif';
       for (const s of namedGalaxies) {
         if (selectedStar && selectedStar.kind === 'galaxy' && selectedStar.name === s.name) continue;
-        if (occluders.length && occluded(s.dir)) continue;
+        if (anyOccluder && occluded(s.dir)) continue;
         _v.copy(s.dir).multiplyScalar(1e11).project(camera);
         if (_v.z > 1 || _v.z < -1) continue;
         const x = (_v.x * 0.5 + 0.5) * W;
@@ -258,12 +271,12 @@ export class Overlay {
     }
 
     // Deep-sky landmarks (nebulae, clusters, remnants, record stars): dashed ring + name
-    if ((this.showMarkers || this.showLabels) && landmarks.length) {
+    if (!scope && (this.showMarkers || this.showLabels) && landmarks.length) {
       ctx.font = '400 11px Inter, ui-sans-serif, system-ui, sans-serif';
       const taken: Array<{ x: number; y: number; w: number }> = sunBox ? [sunBox] : [];
       for (const s of landmarks) {
         if (selectedStar && selectedStar.kind === 'landmark' && selectedStar.name === s.name) continue;
-        if (occluders.length && occluded(s.dir)) continue;
+        if (anyOccluder && occluded(s.dir)) continue;
         _v.copy(s.dir).multiplyScalar(1e11).project(camera);
         if (_v.z > 1 || _v.z < -1) continue;
         const x = (_v.x * 0.5 + 0.5) * W;
@@ -302,10 +315,10 @@ export class Overlay {
     }
 
     // Black holes in other systems: ring marker + name
-    if (this.showMarkers && blackHoles.length) {
+    if (!scope && this.showMarkers && blackHoles.length) {
       for (const s of blackHoles) {
         if (selectedStar && selectedStar.name === s.name) continue;
-        if (occluders.length && occluded(s.dir)) continue;
+        if (anyOccluder && occluded(s.dir)) continue;
         _v.copy(s.dir).multiplyScalar(1e11).project(camera);
         if (_v.z > 1 || _v.z < -1) continue;
         const x = (_v.x * 0.5 + 0.5) * W;
@@ -369,16 +382,33 @@ export class Overlay {
       if (!it.visible) continue;
       const b = it.body;
       const isSel = b === selected;
+      // guided tour: only what the step is about carries a tag
+      if (scope && !isSel && !scope.has(b.id)) continue;
       const parentItem = b.parent ? byId.get(b.parent.id) : undefined;
 
       // Moons: hide when their parent system is unresolved and they sit within the parent's neighbourhood
       if ((b.data.type === 'moon' || b.data.type === 'spacecraft') && parentItem && !isSel) {
         const d = Math.hypot(it.x - parentItem.x, it.y - parentItem.y);
-        if (d < 26 + parentItem.radiusPx * 0.4 && it.radiusPx < 2) continue;
+        // event spacecraft (sampled ephemerides) keep their label right down to the planet's limb;
+        // landers sit on the disc itself: once the planet is resolved, they are hidden only when
+        // on its far side (the occlusion test below), not for being near its centre
+        const kind = b.data.orbit?.kind;
+        const keep = kind === 'ephemeris' ? 8 : kind === 'surface' ? (parentItem.radiusPx < 8 ? 26 : 0) : 26 + parentItem.radiusPx * 0.4;
+        if (d < keep && it.radiusPx < 2) continue;
+      }
+      // A barycentre inside a system (Pluto–Charon): its cross only once the pair is resolved apart
+      if (b.data.type === 'barycenter' && b.parent && !isSel) {
+        const prim = b.children[0] ? byId.get(b.children[0].id) : undefined;
+        if (!prim || Math.hypot(it.x - prim.x, it.y - prim.y) < 10 + prim.radiusPx) continue;
       }
       // Small bodies far away: too faint to be meaningfully labelled
       const minor = b.data.type === 'moon' || b.data.type === 'asteroid' || b.data.type === 'comet';
       if (!isSel && minor && it.radiusPx < 0.003) continue;
+      // Unresolved bodies behind a planet disc in the foreground: no marker through the planet
+      if (!isSel && it.radiusPx < 6 && anyOccluder) {
+        const v = viewOf.get(b);
+        if (v && occluded(_v.copy(v.relPos).multiplyScalar(1 / Math.max(v.distance, 1e-9)), v.distance)) continue;
+      }
       // Camera very close: skip marker/label (we're on the surface)
       if (it.radiusPx > Math.max(W, H)) continue;
       // The home star far behind us is labelled by the sun marker (with its distance) instead
@@ -397,7 +427,9 @@ export class Overlay {
         ctx.strokeStyle = color;
         ctx.lineWidth = 1;
         ctx.globalAlpha = it.radiusPx < 6 ? 0.85 : 0.5;
-        if (isSel) {
+        if (isSel && this.cinematic && it.radiusPx >= 6) {
+          // a composed shot: the resolved subject needs no reticle
+        } else if (isSel) {
           // finder-chart reticle: a thin circle with four short ticks, in the selection colour
           const r = Math.max(it.radiusPx + 8, 12);
           ctx.strokeStyle = SELECTION_COLOR;

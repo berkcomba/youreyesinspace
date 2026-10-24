@@ -26,7 +26,8 @@ export const LANDMARK_IMAGES: Record<string, LandmarkImage> = {
   'l-sn1987a': { file: 'sn1987a', span: 1.6, source: 'ESA/Hubble & NASA (CC BY 4.0)' },
   'l-ngc346': { file: 'ngc346', span: 1.4, source: 'ESA/Hubble & NASA, A. Nota, P. Massey, E. Sabbi, C. Murray, M. Zamani (CC BY 4.0)' },
   'l-ngc604': { file: 'ngc604', span: 1.4, source: 'NASA, Hubble Space Telescope' },
-  'l-pleiades': { file: 'pleiades', span: 1.5, source: 'NASA, ESA, AURA/Caltech, Palomar Observatory' },
+  // the cluster's radiusPc is its tidal extent; the Palomar frame covers ~2.7° (≈ 3.2 pc half-width)
+  'l-pleiades': { file: 'pleiades', span: 0.45, source: 'NASA, ESA, AURA/Caltech, Palomar Observatory' },
   'l-omegacen': { file: 'omegacen', span: 1.3, source: 'ESO (CC BY 4.0)' },
 };
 

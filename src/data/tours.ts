@@ -27,8 +27,8 @@ export type TourCue =
   | { at: number; action: 'clouds'; on: boolean }
   /** change the simulation rate from this sentence on (s/s) */
   | { at: number; action: 'rate'; rate: number }
-  /** pull back above `ref`'s orbit around its parent so the whole orbit is in view */
-  | { at: number; action: 'overview'; ref: string }
+  /** pull back above `ref`'s orbit around its parent so the whole orbit is in view (`seconds`: flight time) */
+  | { at: number; action: 'overview'; ref: string; seconds?: number }
   /**
    * Pin a surface feature of `ref` (east longitude, degrees) with a labelled marker and, unless
    * `approach` is false, fly in above it. `storm` snaps to the gas giant's rendered storm instead.
@@ -55,11 +55,49 @@ export type TourCue =
   /**
    * Fly to a vantage point around `ref` (default: the step's target): `elev` degrees above its
    * equator plane, `az` degrees around the pole measured from the sunlit side (0 = noon side,
-   * 90 = morning terminator), `dist` in radii.
+   * 90 = morning terminator), `dist` in radii. `seconds` stretches the flight (slow reveals).
    */
-  | { at: number; action: 'vantage'; ref?: string; elev: number; az: number; dist: number }
+  | { at: number; action: 'vantage'; ref?: string; elev: number; az: number; dist: number; seconds?: number }
+  /**
+   * Over-the-shoulder shot: camera `dist` radii from `ref` on the side away from `toward`, so
+   * `toward` hangs in the background behind it (a spacecraft against the world it approaches).
+   * `az`/`elev` (degrees) swing the camera off that axis so both stay in frame; `seconds` = flight time.
+   */
+  | { at: number; action: 'shot'; ref: string; toward: string; dist: number; az?: number; elev?: number; seconds?: number }
+  /** continuous push-in (negative) / pull-out (positive) while dwelling: ln(distance) per second */
+  | { at: number; action: 'dolly'; rate: number }
+  /** auto-orbit drift speed (rad/s) from this sentence on */
+  | { at: number; action: 'drift'; rate: number }
   /** a pulse of light travels from body `from` to body `to` in `seconds` (light-travel time demo) */
-  | { at: number; action: 'pulse'; from: string; to: string; seconds: number };
+  | { at: number; action: 'pulse'; from: string; to: string; seconds: number }
+  /**
+   * Live figure in the corner card, recomputed every frame from the simulation: the distance
+   * between `a` and `b`, the altitude of `a` above `b`'s surface, the angular separation of `a`
+   * and `b` seen from `from` (default Earth), or the one-way light time between them.
+   */
+  | { at: number; action: 'readout'; kind: 'distance' | 'altitude' | 'separation' | 'light'; a: string; b: string; from?: string; label: string; text?: string; until?: number }
+  /**
+   * Sky view: park the camera just above `ref` (`alt` km, default 300) on the side facing the
+   * `toward` bodies and keep it aimed at their midpoint while the step plays (a "look up from
+   * Earth" shot for conjunctions and oppositions). `fov` narrows the field of view (degrees).
+   */
+  | { at: number; action: 'lookFrom'; ref: string; toward: string[]; alt?: number; fov?: number }
+  /** field of view (degrees) from this sentence on, eased over `seconds` (slow zoom); restored at step end */
+  | { at: number; action: 'fov'; deg: number; seconds?: number }
+  /** set the simulation clock to an instant (ISO 8601 UTC) */
+  | { at: number; action: 'time'; iso: string }
+  /** force orbit lines on/off (planet orbits; `moons` for moon orbits) without moving the camera */
+  | { at: number; action: 'orbits'; on: boolean; moons?: boolean }
+  /** the soft "work light" tours add on a body's night side when close: off for genuinely backlit shots */
+  | { at: number; action: 'fill'; on: boolean }
+  /**
+   * Meteor shower raining into `ref`'s atmosphere from the radiant at `ra`/`dec` (ICRF degrees):
+   * `speed` km/s sets the streak speed, `rate` is streaks per real second (a cinematic figure),
+   * `fireballs` the fraction of bright bolides. `approach` flies the camera to a spot that looks
+   * across the night side at the hemisphere being hit (`seconds`: flight time). `on: false` stops it.
+   */
+  | { at: number; action: 'meteors'; on: true; ref: string; ra: number; dec: number; speed: number; rate: number; fireballs?: number; approach?: boolean; seconds?: number }
+  | { at: number; action: 'meteors'; on: false };
 
 export interface TourStep {
   /** stable id — audio file name */
@@ -71,10 +109,23 @@ export interface TourStep {
   timeRate?: number;
   /** auto-orbit speed around the target (rad/s); default 0.05 */
   orbitRate?: number;
+  /** continuous push-in (negative) / pull-out while dwelling, ln(distance)/s; default 0 */
+  dollyRate?: number;
   /** extra seconds to linger after the narration ends; default 1.5 */
   dwell?: number;
   /** timed events during the narration (see TourCue) */
   cues?: TourCue[];
+  /**
+   * Bodies that keep their tags while the step plays, besides the target, its primary and moons
+   * and everything the cues refer to (the player hides every other tag during a tour)
+   */
+  show?: string[];
+  /** chapter title shown full-screen for a few seconds as the step opens (cinematic) */
+  title?: string;
+  /** one line under the chapter title */
+  kicker?: string;
+  /** supporting figures shown in the side strip while the step plays: [label, value] */
+  facts?: Array<[string, string]>;
 }
 
 export interface TourDef {
@@ -82,6 +133,14 @@ export interface TourDef {
   title: string;
   summary: string;
   steps: TourStep[];
+  /** small line above the chapter title (default: "<tour title> · i / n"); single-scene events use it for kind and date */
+  eyebrow?: string;
+  /** simulation clock at the start (ISO 8601 UTC); default: leave the visitor's clock alone */
+  startIso?: string;
+  /** audio folder (`public/tours/<locale>/<audio>/`); default `id` */
+  audio?: string;
+  /** at the end stay on the scene's date at 1× instead of restoring the visitor's clock (events) */
+  keepClock?: boolean;
 }
 
 const body = (ref: string): TourTarget => ({ kind: 'body', ref });
@@ -95,15 +154,25 @@ type CardOpts = Omit<Extract<TourCue, { action: 'card' }>, 'at' | 'action'>;
 const card = (at: number, c: CardOpts): TourCue => ({ at, action: 'card', ...c });
 const uncard = (at: number): TourCue => ({ at, action: 'uncard' });
 const rate = (at: number, r: number): TourCue => ({ at, action: 'rate', rate: r });
-const overview = (at: number, ref: string): TourCue => ({ at, action: 'overview', ref });
+const overview = (at: number, ref: string, seconds?: number): TourCue => ({ at, action: 'overview', ref, seconds });
 const ret = (at: number): TourCue => ({ at, action: 'return' });
 const pin = (at: number, ref: string, lat: number, lon: number, label: string, extra: { storm?: boolean; approach?: boolean } = {}): TourCue => ({ at, action: 'pin', ref, lat, lon, label, ...extra });
 const unpin = (at: number): TourCue => ({ at, action: 'unpin' });
 const clouds = (at: number, on: boolean): TourCue => ({ at, action: 'clouds', on });
 const compare = (at: number, ref: string): TourCue => ({ at, action: 'compare', ref });
 const uncompare = (at: number): TourCue => ({ at, action: 'uncompare' });
-const vantage = (at: number, elev: number, az: number, dist: number, ref?: string): TourCue => ({ at, action: 'vantage', elev, az, dist, ref });
+const vantage = (at: number, elev: number, az: number, dist: number, ref?: string, seconds?: number): TourCue => ({ at, action: 'vantage', elev, az, dist, ref, seconds });
 const pulse = (at: number, from: string, to: string, seconds: number): TourCue => ({ at, action: 'pulse', from, to, seconds });
+const shot = (at: number, ref: string, toward: string, dist: number, o: { az?: number; elev?: number; seconds?: number } = {}): TourCue => ({ at, action: 'shot', ref, toward, dist, ...o });
+const dolly = (at: number, r: number): TourCue => ({ at, action: 'dolly', rate: r });
+const drift = (at: number, r: number): TourCue => ({ at, action: 'drift', rate: r });
+const fov = (at: number, deg: number, seconds?: number): TourCue => ({ at, action: 'fov', deg, seconds });
+type MeteorOpts = Omit<Extract<TourCue, { action: 'meteors'; on: true }>, 'at' | 'action' | 'on'>;
+const meteors = (at: number, m: MeteorOpts): TourCue => ({ at, action: 'meteors', on: true, ...m });
+const unmeteors = (at: number): TourCue => ({ at, action: 'meteors', on: false });
+
+/** cue shorthands shared with the Events scenes (src/data/events.ts) */
+export const cues = { body, star, bh, lm, gal, card, uncard, rate, overview, ret, pin, unpin, clouds, compare, uncompare, vantage, pulse, shot, dolly, drift, fov, meteors, unmeteors };
 
 /* picture credits (not translated) */
 const NASA = 'NASA';
@@ -286,14 +355,20 @@ export const TOURS: TourDef[] = [
 
       { id: 'curiosity', target: body('curiosity'),
         text: 'Şimdi yüzeye iniyoruz: karşınızda Curiosity, bir ton ağırlığında, araba büyüklüğünde bir robot. İki bin on iki Ağustos\'unda Gale Krateri\'ne bir gökyüzü vinciyle, halatlarla sarkıtılarak indi. Enerjisini plütonyumun ısısından üretir, bu yüzden toz fırtınalarından etkilenmez. Krater tabanında eskiden milyonlarca yıl süren bir göl olduğunu kanıtladı ve yaşam için gereken kimyasal bileşenleri buldu. On yılı aşkın süredir Sharp Dağı\'nın yamaçlarını tırmanarak Mars\'ın iklim tarihini katman katman okuyor.',
+        // 0 approach: low over the ground, Mont Mercou's cliff behind · 4 the far side, Mount Sharp rising
         cues: [
+          vantage(0, 8, 40, 5),
           card(0, { image: 'curiosity.jpg', source: 'NASA/JPL-Caltech/MSSS', title: 'Curiosity\'nin öz çekimi', text: 'Buckskin kaya örneği alanı, Sharp Dağı\'nın eteği, 2015.' }),
+          vantage(4, 12, 215, 8, undefined, 5),
         ], dwell: 2 },
 
       { id: 'perseverance', target: body('perseverance'),
         text: 'Ve Perseverance, Mars\'taki en gelişmiş robot; iki bin yirmi bir Şubat\'ında Jezero Krateri\'ne indi. Burası üç buçuk milyar yıl önce bir nehrin göle döküldüğü eski bir delta. Görevi, geçmiş mikrobik yaşamın izlerini aramak ve kaya örneklerini titanyum tüplere doldurarak gelecekteki bir görevin Dünya\'ya getirmesi için bırakmak. Yanında getirdiği küçük helikopter Ingenuity, başka bir gezegende uçan ilk araç oldu ve planlanan beş uçuş yerine yetmiş iki uçuş gerçekleştirdi. MOXIE deneyi ise Mars havasından oksijen üreterek gelecekteki astronotlar için yolu açtı.',
+        // 0 approach: wheel height, Jezero's boulder field all around · 4 drift to the other flank
         cues: [
+          vantage(0, 7, 230, 5),
           card(3, { image: 'perseverance.jpg', source: 'NASA/JPL-Caltech/ASU/MSSS', title: 'Ingenuity', text: 'Perseverance\'ın kamerasından, Haziran 2021; bir kilo sekiz yüz gramlık helikopter.' }),
+          vantage(4, 15, 60, 9, undefined, 5),
         ], dwell: 2 },
 
       { id: 'finale', target: body('mars'),
@@ -537,9 +612,13 @@ export const TOURS: TourDef[] = [
         ] },
       { id: 'cygx1', target: bh('cygx1'), text: 'Ve en ağır yıldızlar için son durak: kara delik. Cygnus X-Bir, keşfedilen ilk kara deliktir. Yirmi bir güneş kütlesindeki bu nesne, mavi süperdev yoldaşından gaz çeker; gaz akreasyon diskinde milyonlarca dereceye ısınarak X-ışını yayar. İkisi ortak kütle merkezlerinin etrafında beş buçuk günde bir dönerler. Olay ufkunun içinden ışık bile kaçamaz. Bir gaz bulutunda başlayan yolculuk, uzay-zamanın kendisinde açılmış bir delikle sona erer. Yıldızların yaşamı turu burada bitiyor.',
         cues: [
+          // "draws gas from its blue supergiant companion": the disc with the star looming behind
+          shot(2, 'cygx1', '@star', 110, { az: 28, elev: 6 }),
           card(2, { image: 'cygx1.jpg', source: 'ESA/Hubble (CC BY 4.0)', title: 'Cygnus X-1', text: 'Sanatçı çizimi: mavi süperdevden kara deliğe akan gaz.' }),
-          rate(3, 5e4), uncard(3),
-          rate(5, 1),
+          // the pair circling their barycentre, one 5.6-day orbit every ~10 s
+          rate(3, 5e4), uncard(3), overview(3, 'cygx1'),
+          // "not even light escapes": back to the lensed hole
+          rate(4, 1), ret(4),
         ] },
     ],
   },
@@ -551,23 +630,33 @@ export const TOURS: TourDef[] = [
     steps: [
       { id: 'cygx1', target: bh('cygx1'), text: 'Kara delikler turuna hoş geldiniz. Başlangıç noktamız bir klasik: Cygnus X-Bir. Bin dokuz yüz altmış dörtte bir roketle keşfedilen bu X-ışını kaynağı, bin dokuz yüz yetmiş birde bir kara delik olarak tanımlanan ilk nesne oldu. Yirmi bir güneş kütlesindedir ve mavi süperdev yoldaşı HDE iki yüz yirmi altı bin sekiz yüz altmış sekiz ile beş buçuk günde bir ortak kütle merkezlerinin etrafında döner. Yoldaşından çektiği gaz, parlak bir diskte milyonlarca dereceye ısınır. Stephen Hawking bu nesnenin kara delik olmadığına bahse girmişti; bin dokuz yüz doksanda yenilgisini kabul etti.',
         cues: [
-          rate(3, 5e4),
-          card(4, { image: 'cygx1.jpg', source: 'ESA/Hubble (CC BY 4.0)', title: 'Cygnus X-1', text: 'Sanatçı çizimi: mavi süperdevden kara deliğe akan gaz.' }),
-          rate(5, 1),
+          card(2, { image: 'cygx1.jpg', source: 'ESA/Hubble (CC BY 4.0)', title: 'Cygnus X-1', text: 'Sanatçı çizimi: mavi süperdevden kara deliğe akan gaz.' }),
+          // the pair: above the orbit while the clock runs at 50 000× (one 5.6-day orbit ≈ 10 s)
+          uncard(3), rate(3, 5e4), overview(3, 'cygx1'),
+          // back to the disc, the blue supergiant looming behind it (its disc spans ~25° from the hole)
+          rate(4, 1), shot(4, 'cygx1', '@star', 110, { az: 28, elev: 6 }),
           card(5, { big: '1 yıllık Penthouse', title: 'Hawking\'in bahsi', text: 'Kip Thorne\'a karşı girdiği bahsi kaybetti; kaybetmekten memnundu: kara delikler üzerine çalışmaları boşa gitmemişti.' }),
         ] },
       { id: 'gaiabh1', target: bh('b2'), text: 'Gaia BH Bir, bize en yakın bilinen kara delik: bin beş yüz altmış ışık yılı. Ne diski var ne de X-ışını yayar; tamamen sessiz. Varlığı yalnızca Güneş benzeri bir yıldızın görünmez bir eşin etrafında yüz seksen altı günde bir sallanmasından anlaşıldı. Bu sallantıyı iki bin yirmi ikide Gaia uydusunun hassas konum ölçümleri ortaya çıkardı. Dokuz virgül altı güneş kütlesindedir ve olay ufkunun çapı yalnızca elli altı kilometredir. Burada onu yalnızca arka plandaki yıldızları büken kütle çekimsel merceklemeyle görebilirsiniz.',
         cues: [
-          rate(2, 2e6),
+          // the wobble: the Sun-like star swinging round the barycentre it shares with its invisible
+          // partner (the star's orbit is the wide one: 1.3 AU against the hole's 0.1 AU), one 186-day orbit every ~8 s
+          rate(2, 2e6), overview(2, 'gaiabh1-star'),
+          // down to the hole itself for the lensing
+          rate(4, 1), ret(4),
           card(4, { big: '56 km', title: 'Olay ufkunun çapı', text: 'Dokuz buçuk güneş kütlesi, İstanbul kadar bir alana sığmış.' }),
-          rate(5, 1),
         ] },
       { id: 'v404', target: bh('b3'), text: 'V Dört Yüz Dört Cygni, bir X-ışını novası. Çoğu zaman sessizdir ama yoldaşından biriken gaz bir eşiği aştığında birkaç gün içinde patlayarak gökyüzünün en parlak X-ışını kaynağı olur. Bu patlamalar bin dokuz yüz otuz sekiz, elli altı, seksen dokuz ve iki bin on beşte gözlendi. İki bin on beşteki patlamada jetlerinin saniyeler içinde yön değiştirdiği görüldü; kara deliğin dönüşü uzay-zamanı sürükleyerek diski bir topaç gibi yalpalatıyordu. Dokuz güneş kütlesindedir ve uzaklığı radyo paralaksıyla doğrudan ölçülen ilk kara deliktir.',
         cues: [
+          // the disc with the orange subgiant that feeds it hanging behind
+          shot(1, 'v404', 'v404-star', 120, { az: 20, elev: 8 }),
           card(2, { big: '1938 · 1956 · 1989 · 2015', title: 'Patlamalar', text: 'Aralarda onlarca yıl sessizlik; sonra birkaç günde gökyüzünün en parlak X-ışını kaynağı.' }),
         ] },
       { id: 'sgra', target: bh('b0'), text: 'Şimdi galaksimizin kalbine, yirmi altı bin ışık yılı uzağa gidiyoruz. Sagittarius A yıldız, Samanyolu\'nun merkezindeki süper kütleli kara delik: dört virgül üç milyon güneş kütlesi. Etrafındaki yıldızlar onun kütlesini ölçmemizi sağladı; S İki adlı yıldız, on altı yılda bir ona o kadar yaklaşır ki ışık hızının yüzde üçüne ulaşır. Bu gözlemler iki bin yirmide Nobel Fizik Ödülü\'nü getirdi. İki bin yirmi ikide Olay Ufku Teleskobu onun gölgesini görüntüledi. Şu anda oldukça sessiz; neredeyse hiç madde yutmuyor.',
         cues: [
+          // the S-stars: above S2's orbit with the clock at 50 million× (its 16-year orbit in ~10 s)
+          rate(2, 5e7), overview(2, 's2'),
+          rate(4, 1), ret(4),
           card(4, { image: 'sgra.jpg', source: EHT, title: 'Sagittarius A*', text: 'Olay Ufku Teleskobu, Mayıs 2022: gölgenin etrafındaki sıcak gaz halkası.' }),
         ] },
       { id: 'm87', target: bh('b1'), text: 'Son durağımız, fotoğrafı çekilen ilk kara delik: M Seksen Yedi yıldız. Elli beş milyon ışık yılı uzaktaki dev eliptik galaksi Virgo A\'nın merkezinde oturur. Altı buçuk milyar güneş kütlesindedir; olay ufku Plüton\'un yörüngesinden altı kat geniştir. İki bin on dokuzda yayımlanan ünlü turuncu halka görüntüsü, gölgesini çevreleyen sıcak gazın ışığıdır. Buradan ışık hızına yakın bir jet fırlar ve beş bin ışık yılı boyunca uzanır. Kara delikler turumuz sona erdi.',
@@ -696,6 +785,106 @@ export const TOURS: TourDef[] = [
     ],
   },
 ];
+
+/* ------------------------------------------------------------------------------------------ */
+/* Cinematic chapter titles and supporting figures, per tour and step (source language).      */
+/* Kept apart from the narration so the voice tracks stay untouched when these change.        */
+/* ------------------------------------------------------------------------------------------ */
+
+type StepExtras = { title: string; kicker?: string; facts?: Array<[string, string]> };
+const EXTRAS: Record<string, Record<string, StepExtras>> = {
+  'solar-system': {
+    sun: { title: 'Güneş', kicker: 'Her şeyin merkezi', facts: [['Yaş', '4,6 milyar yıl'], ['Çap', '1 392 700 km · 109 Dünya'], ['Yüzey', '5 500 °C'], ['Çekirdek', '15 milyon °C'], ['Kütle payı', 'Sistemin %99,8\'i']] },
+    mercury: { title: 'Merkür', kicker: 'Güneş\'e en yakın, en küçük gezegen', facts: [['Çap', '4 879 km'], ['Yıl', '88 gün'], ['Güneş günü', '176 Dünya günü'], ['Sıcaklık', '−180 °C … +430 °C'], ['Uydular', 'Yok']] },
+    venus: { title: 'Venüs', kicker: 'Dünya\'nın ikizi, bulutların altında cehennem', facts: [['Çap', '12 104 km'], ['Yüzey', '465 °C'], ['Basınç', '92 atmosfer'], ['Gün', '243 Dünya günü (ters yönde)'], ['Bulutlar', 'Sülfürik asit']] },
+    earth: { title: 'Dünya', kicker: 'Yaşam barındırdığını bildiğimiz tek yer', facts: [['Çap', '12 742 km'], ['Su yüzeyi', '%71'], ['Atmosfer', '%78 azot, %21 oksijen'], ['Uydular', '1 — Ay'], ['Yaş', '4,54 milyar yıl']] },
+    moon: { title: 'Ay', kicker: 'İnsanın ayak bastığı tek başka dünya', facts: [['Çap', '3 474 km · Dünya\'nın ¼\'ü'], ['Uzaklık', '384 400 km'], ['Yürüyen insan', '12 astronot, 1969–72'], ['Getirilen kaya', '382 kg'], ['Uzaklaşma', 'Yılda 3,8 cm']] },
+    mars: { title: 'Mars', kicker: 'Kızıl Gezegen', facts: [['Çap', '6 779 km · Dünya\'nın yarısı'], ['Gün', '24 sa 37 dk'], ['Olympus Mons', '22 km yüksek'], ['Valles Marineris', '4 000 km uzun'], ['Uydular', '2 — Phobos, Deimos']] },
+    jupiter: { title: 'Jüpiter', kicker: 'Gezegenlerin kralı', facts: [['Çap', '139 820 km · 11 Dünya'], ['Kütle', 'Diğer gezegenlerin 2,5 katı'], ['Gün', '9 sa 56 dk'], ['Büyük Kırmızı Leke', '350+ yıllık fırtına'], ['Uydular', '95+']] },
+    saturn: { title: 'Satürn', kicker: 'Halkaların efendisi', facts: [['Çap', '116 460 km'], ['Halka genişliği', '280 000 km'], ['Halka kalınlığı', '~10 m'], ['Yoğunluk', '0,69 g/cm³ — suda yüzer'], ['Uydular', '146+']] },
+    uranus: { title: 'Uranüs', kicker: 'Yan yatmış gezegen', facts: [['Çap', '50 724 km'], ['Eksen eğikliği', '98°'], ['Yıl', '84 Dünya yılı'], ['Kutup gecesi', '42 yıl'], ['Keşif', '1781, W. Herschel']] },
+    neptune: { title: 'Neptün', kicker: 'Kâğıt üzerinde keşfedilen gezegen', facts: [['Çap', '49 244 km'], ['Yıl', '165 Dünya yılı'], ['Rüzgâr', '2 100 km/sa'], ['Keşif', '1846, hesapla'], ['Ziyaret', 'Voyager 2, 1989']] },
+    pluto: { title: 'Plüton', kicker: 'Dokuzuncu gezegenden cüce gezegene', facts: [['Çap', '2 377 km · Ay\'dan küçük'], ['Yüzey', '−230 °C'], ['Yıl', '248 Dünya yılı'], ['En büyük uydu', 'Charon'], ['Ziyaret', 'New Horizons, 2015']] },
+  },
+  mars: {
+    mars: { title: 'Mars', kicker: 'İnsanlığın en çok araç gönderdiği dünya', facts: [['Gün', '24 sa 37 dk'], ['Atmosfer', '%95 CO₂, çok ince'], ['Ortalama sıcaklık', '−60 °C'], ['Hellas Havzası', '2 300 km geniş, 9 km derin'], ['Çap', '6 779 km']] },
+    phobos: { title: 'Phobos', kicker: 'Mars\'ın yakın ve acele eden ayı', facts: [['Boyut', '22 km, patates biçimli'], ['Yörünge yüksekliği', '6 000 km'], ['Tur süresi', '7 sa 39 dk'], ['Gökyüzünde', 'Batıdan doğar'], ['Gelecek', '~50 milyon yılda parçalanacak']] },
+    deimos: { title: 'Deimos', kicker: 'Küçük ve uzak olan', facts: [['Çap', '~12 km'], ['Tur süresi', '30 saat'], ['Yüzey', 'Tozla dolmuş kraterler'], ['Köken', 'Tartışmalı'], ['Ziyaret', 'MMX (JAXA), 2026+']] },
+    curiosity: { title: 'Curiosity', kicker: 'Gale Krateri, 2012\'den beri', facts: [['Kütle', '899 kg'], ['İniş', '6 Ağustos 2012, gökyüzü vinci'], ['Güç', 'Plütonyum RTG'], ['Buluş', 'Eski bir gölün kanıtı'], ['Hedef', 'Aeolis Mons (Sharp Dağı)']] },
+    perseverance: { title: 'Perseverance', kicker: 'Jezero Krateri\'nde yaşam izi arayan robot', facts: [['İniş', '18 Şubat 2021'], ['Yer', 'Jezero: 3,5 milyar yıllık delta'], ['Örnek tüpleri', 'Titanyum, Dünya\'ya dönecek'], ['Yol arkadaşı', 'Ingenuity helikopteri'], ['Uçuş', '72 uçuş, 2021–24']] },
+    finale: { title: 'Mars\'a Veda', kicker: 'Soğuk bir çöle dönüşen ılık dünya', facts: [['Aktif araç', '~12 (yörünge + yüzey)'], ['Kayıp', 'Manyetik alan ve atmosfer'], ['Geçmiş', 'Göller, nehirler, belki yaşam'], ['Gelecek', 'İnsanlı iniş adayı']] },
+  },
+  jupiter: {
+    jupiter: { title: 'Jüpiter', kicker: 'Küçük bir güneş sistemi gibi', facts: [['Uydular', '95+'], ['Galileo ayları', 'Io · Europa · Ganymede · Callisto'], ['Rezonans', 'Io 4 : Europa 2 : Ganymede 1'], ['Hacim', '1 300 Dünya'], ['Gün', '9 sa 56 dk']] },
+    io: { title: 'Io', kicker: 'En volkanik dünya', facts: [['Çap', '3 643 km'], ['Aktif yanardağ', '400+'], ['Loki Patera', '200 km lav gölü'], ['Isı kaynağı', 'Gelgit ısınması'], ['Renk', 'Kükürt bileşikleri']] },
+    europa: { title: 'Europa', kicker: 'Buzun altında bir okyanus', facts: [['Çap', '3 122 km'], ['Okyanus', 'Dünya okyanuslarının 2 katı su'], ['Buz kabuğu', '15–25 km'], ['Görev', 'Europa Clipper, varış 2030'], ['Yüzey', 'Çatlaklı, pürüzsüz']] },
+    ganymede: { title: 'Ganymede', kicker: 'Güneş Sistemi\'nin en büyük ayı', facts: [['Çap', '5 268 km · Merkür\'den büyük'], ['Manyetik alan', 'Kendi alanına sahip tek ay'], ['Yüzey', 'İki yaş: koyu eski, açık genç'], ['Okyanus', 'Buz altında, olası'], ['Görev', 'JUICE (ESA), 2034']] },
+    callisto: { title: 'Callisto', kicker: 'Dört milyar yıldır değişmeyen yüzey', facts: [['Çap', '4 821 km'], ['Yüzey', 'En yoğun kraterli'], ['Radyasyon', 'Kuşakların dışında'], ['Gelecek', 'İnsanlı üs adayı'], ['Tur süresi', '17 gün']] },
+    juno: { title: 'Juno', kicker: 'Kutupların üzerinden geçen gözcü', facts: [['Varış', '4 Temmuz 2016'], ['Güç', 'Güneş panelleri, 60 m²'], ['Yörünge', 'Kutupsal, eliptik'], ['En yakın geçiş', 'Bulutların ~4 000 km üstü'], ['Buluş', 'Kutup siklonları']] },
+  },
+  saturn: {
+    saturn: { title: 'Satürn', kicker: 'Güneş\'ten altıncı gezegen', facts: [['Çap', '116 460 km · 9 Dünya'], ['Yoğunluk', '0,69 g/cm³'], ['Gün', '10 sa 33 dk'], ['Yıl', '29,5 Dünya yılı'], ['Altıgen', 'Kuzey kutbunda, Dünya boyutunda']] },
+    rings: { title: 'Halkalar', kicker: 'Milyarlarca buz parçasından bir disk', facts: [['Genişlik', '280 000 km'], ['Kalınlık', '~10 m'], ['Madde', '%99 su buzu'], ['Cassini Bölümü', '4 800 km boşluk'], ['Yaş', 'Belki yalnızca 100 milyon yıl']] },
+    titan: { title: 'Titan', kicker: 'Kalın atmosferli tek ay', facts: [['Çap', '5 150 km'], ['Atmosfer', '%95 azot, 1,5 bar'], ['Yüzey', '−179 °C'], ['Göller', 'Sıvı metan ve etan'], ['İniş', 'Huygens, 2005']] },
+    enceladus: { title: 'Enceladus', kicker: 'Buzdan fışkıran okyanus', facts: [['Çap', '504 km'], ['Yansıtma', '%99 — en parlak yüzey'], ['Fıskiyeler', 'Güney kutbu, kaplan çizgileri'], ['Okyanus', 'Küresel, buz altında'], ['Besler', 'Satürn\'ün E halkasını']] },
+    mimas: { title: 'Mimas', kicker: 'Ölüm Yıldızı\'na benzeyen ay', facts: [['Çap', '396 km'], ['Herschel Krateri', '139 km — çapın ⅓\'ü'], ['Yörünge', '22,6 saat'], ['Sürpriz', 'Genç bir iç okyanus (2024)']] },
+    iapetus: { title: 'Iapetus', kicker: 'Yarısı kara, yarısı beyaz', facts: [['Çap', '1 469 km'], ['Yansıtma', '%4 ile %60 arası'], ['Ekvator sırtı', '20 km yüksek, 1 300 km uzun'], ['Tur süresi', '79 gün'], ['Keşif', '1671, G. Cassini']] },
+  },
+  explorers: {
+    iss: { title: 'Uluslararası Uzay İstasyonu', kicker: 'İnsanlığın yörüngedeki evi', facts: [['Yükseklik', '~400 km'], ['Hız', '27 600 km/sa'], ['Tur süresi', '93 dakika'], ['Kütle', '420 ton'], ['Sürekli mürettebat', '2000\'den beri']] },
+    hubble: { title: 'Hubble Uzay Teleskobu', kicker: 'Evrene bakışımızı değiştiren göz', facts: [['Fırlatma', '24 Nisan 1990'], ['Ayna', '2,4 m'], ['Yükseklik', '~540 km'], ['Servis', '5 astronot görevi'], ['Gözlem', '1,5 milyondan fazla']] },
+    jwst: { title: 'James Webb Uzay Teleskobu', kicker: 'Kızılötesinde ilk ışığa bakış', facts: [['Fırlatma', '25 Aralık 2021'], ['Konum', 'L₂, 1,5 milyon km'], ['Ayna', '6,5 m, 18 altıgen'], ['Güneş kalkanı', 'Tenis kortu kadar'], ['Sıcaklık', '−233 °C']] },
+    parker: { title: 'Parker Güneş Sondası', kicker: 'Güneş\'e dokunan ilk araç', facts: [['Fırlatma', '12 Ağustos 2018'], ['En yakın geçiş', '6,1 milyon km'], ['Hız', '690 000 km/sa — en hızlı'], ['Isı kalkanı', '1 370 °C\'ye dayanır'], ['Venüs sapanı', '7 kez']] },
+    newhorizons: { title: 'New Horizons', kicker: 'Plüton\'un ilk ziyaretçisi', facts: [['Fırlatma', '19 Ocak 2006'], ['Plüton geçişi', '14 Temmuz 2015'], ['Arrokoth', '1 Ocak 2019, 6,6 milyar km'], ['Hız', '~58 000 km/sa'], ['Durum', 'Kuiper Kuşağı\'nda, aktif']] },
+    voyager1: { title: 'Voyager 1', kicker: 'İnsan yapımı en uzak nesne', facts: [['Fırlatma', '5 Eylül 1977'], ['Uzaklık', '24+ milyar km'], ['Sinyal', '22+ saat tek yön'], ['Yıldızlararası uzay', '2012\'den beri'], ['Altın Plak', 'Dünya\'nın sesleri']] },
+    voyager2: { title: 'Voyager 2', kicker: 'Dört dev gezegeni gören tek araç', facts: [['Fırlatma', '20 Ağustos 1977'], ['Ziyaret', 'Jüpiter · Satürn · Uranüs · Neptün'], ['Yıldızlararası uzay', '2018\'den beri'], ['Uzaklık', '20+ milyar km'], ['Güç', 'RTG, azalıyor']] },
+  },
+  'stellar-life': {
+    orion: { title: 'Orion Bulutsusu', kicker: 'Yıldızların doğduğu yer', facts: [['Uzaklık', '1 344 ışık yılı'], ['Genişlik', '24 ışık yılı'], ['Yaş', '< 2 milyon yıl'], ['Genç yıldız', '~2 000'], ['Çıplak gözle', 'Görünür']] },
+    pleiades: { title: 'Ülker', kicker: 'Kardeş yıldızlar', facts: [['Uzaklık', '444 ışık yılı'], ['Yaş', '~100 milyon yıl'], ['Yıldız sayısı', '1 000+'], ['Parlak üyeler', 'Yedi Kız Kardeş'], ['Dağılma', '~250 milyon yıl içinde']] },
+    sun: { title: 'Güneş', kicker: 'Anakolda sakin bir orta yaş', facts: [['Yaş', '4,6 milyar yıl'], ['Anakol ömrü', '~10 milyar yıl'], ['Yakıt', 'Saniyede 600 milyon ton hidrojen'], ['Sınıf', 'G2 V sarı cüce'], ['Gelecek', 'Kırmızı dev → beyaz cüce']] },
+    betelgeuse: { title: 'Betelgeuse', kicker: 'Ömrünün sonuna yaklaşan dev', facts: [['Uzaklık', '~550 ışık yılı'], ['Yarıçap', '~750 Güneş'], ['Kütle', '~17 Güneş'], ['Yaş', '~10 milyon yıl'], ['Son', 'Süpernova, 100 bin yıl içinde']] },
+    ring: { title: 'Halka Bulutsusu', kicker: 'Güneş benzeri bir yıldızın son nefesi', facts: [['Uzaklık', '2 300 ışık yılı'], ['Çap', '~1 ışık yılı'], ['Yaş', '~4 000 yıl'], ['Merkez', 'Beyaz cüce, 120 000 K'], ['Genişleme', '20 km/s']] },
+    sirius: { title: 'Sirius', kicker: 'En parlak yıldız ve ölü yoldaşı', facts: [['Uzaklık', '8,6 ışık yılı'], ['Sirius A', '2 Güneş kütlesi, A1 V'], ['Sirius B', 'Beyaz cüce, Dünya boyutunda'], ['Yörünge', '50 yıl'], ['Beyaz cüce yoğunluğu', '~1 ton / cm³']] },
+    crab: { title: 'Yengeç Bulutsusu', kicker: '1054 süpernovasının kalıntısı', facts: [['Uzaklık', '6 500 ışık yılı'], ['Patlama', '4 Temmuz 1054'], ['Genişlik', '11 ışık yılı'], ['Genişleme', '1 500 km/s'], ['Merkez', 'Pulsar, saniyede 30 tur']] },
+    cygx1: { title: 'Cygnus X-1', kicker: 'En ağır yıldızların son durağı', facts: [['Uzaklık', '7 200 ışık yılı'], ['Kütle', '21 Güneş'], ['Yoldaş', 'Mavi süperdev HDE 226868'], ['Yörünge', '5,6 gün'], ['Keşif', '1964, X-ışını']] },
+  },
+  'black-holes': {
+    cygx1: { title: 'Cygnus X-1', kicker: 'Bir klasik', facts: [['Uzaklık', '7 200 ışık yılı'], ['Kütle', '21 Güneş'], ['Yoldaş', 'Mavi süperdev'], ['Yörünge', '5,6 gün'], ['Bahis', 'Hawking–Thorne, 1974']] },
+    gaiabh1: { title: 'Gaia BH1', kicker: 'Bize en yakın bilinen kara delik', facts: [['Uzaklık', '1 560 ışık yılı'], ['Kütle', '9,6 Güneş'], ['Yoldaş', 'Güneş benzeri yıldız'], ['Yörünge', '186 gün'], ['Keşif', '2022, Gaia astrometrisi']] },
+    v404: { title: 'V404 Cygni', kicker: 'Uyuyan dev, X-ışını novası', facts: [['Uzaklık', '7 800 ışık yılı'], ['Kütle', '9 Güneş'], ['Patlamalar', '1938 · 1956 · 1989 · 2015'], ['Yoldaş', 'K sınıfı yıldız'], ['Jetler', 'Saniyeler içinde yön değiştirir']] },
+    sgra: { title: 'Sagittarius A*', kicker: 'Samanyolu\'nun kalbi', facts: [['Uzaklık', '26 000 ışık yılı'], ['Kütle', '4,3 milyon Güneş'], ['S2 yıldızı', '16 yılda bir tur'], ['Nobel', '2020, Genzel & Ghez'], ['Fotoğraf', 'EHT, 2022']] },
+    m87: { title: 'M87*', kicker: 'Fotoğrafı çekilen ilk kara delik', facts: [['Uzaklık', '55 milyon ışık yılı'], ['Kütle', '6,5 milyar Güneş'], ['Olay ufku', 'Plüton yörüngesinin 6 katı'], ['Jet', '5 000 ışık yılı'], ['Fotoğraf', 'EHT, 10 Nisan 2019']] },
+  },
+  pulsars: {
+    b1919: { title: 'PSR B1919+21', kicker: 'İlk pulsar — LGM-1', facts: [['Keşif', '1967, Jocelyn Bell'], ['Periyot', '1,337 saniye'], ['Uzaklık', '~2 300 ışık yılı'], ['Takma ad', 'Küçük Yeşil Adamlar'], ['Nobel', '1974 (Hewish)']] },
+    crab: { title: 'Yengeç Pulsarı', kicker: 'Saniyede otuz kez dönen kalp', facts: [['Dönüş', '30 tur / saniye'], ['Çap', '~20 km'], ['Kütle', '1,4 Güneş'], ['Yaş', '970 yıl'], ['Işınım', 'Radyodan gamaya']] },
+    vela: { title: 'Vela Pulsarı', kicker: 'Aniden hızlanan yıldız', facts: [['Uzaklık', '~1 000 ışık yılı'], ['Dönüş', '11 tur / saniye'], ['Yaş', '~11 000 yıl'], ['Glitch', 'Düzensiz hızlanmalar'], ['İç yapı', 'Süperakışkan nötronlar']] },
+    j1748: { title: 'PSR J1748−2446ad', kicker: 'Bilinen en hızlı pulsar', facts: [['Dönüş', '716 tur / saniye'], ['Ekvator hızı', 'Işık hızının ~¼\'ü'], ['Ev', 'Terzan 5 küresel kümesi'], ['Uzaklık', '~18 000 ışık yılı'], ['Keşif', '2004']] },
+    hulsetaylor: { title: 'Hulse–Taylor Çifti', kicker: 'Kütle çekim dalgalarının ilk kanıtı', facts: [['Keşif', '1974'], ['Yörünge', '7 sa 45 dk'], ['Küçülme', 'Yılda ~3,5 m'], ['Nobel', '1993'], ['Birleşme', '~300 milyon yıl sonra']] },
+    lich: { title: 'Lich — PSR B1257+12', kicker: 'İlk ötegezegenlerin yıldızı', facts: [['Keşif', '1992, Wolszczan & Frail'], ['Gezegen', 'Draugr · Poltergeist · Phobetor'], ['Draugr', 'Ay\'ın 2 katı kütle'], ['Uzaklık', '~2 300 ışık yılı'], ['Dönüş', '161 tur / saniye']] },
+    sgr1806: { title: 'SGR 1806−20', kicker: 'Bir magnetar', facts: [['Manyetik alan', 'Dünya\'nın 10¹⁵ katı'], ['Dev patlama', '27 Aralık 2004'], ['Enerji', '0,1 saniyede Güneş\'in 100 000 yılı'], ['Uzaklık', '~50 000 ışık yılı'], ['Etki', 'Dünya iyonosferini sarstı']] },
+  },
+  neighbours: {
+    proxima: { title: 'Proxima Centauri', kicker: 'Güneş\'e en yakın yıldız', facts: [['Uzaklık', '4,24 ışık yılı'], ['Kütle', 'Güneş\'in %12\'si'], ['Sınıf', 'M5.5 kırmızı cüce'], ['Gezegen', 'Proxima b (2016)'], ['Parlamalar', 'Şiddetli, sık']] },
+    alphacen: { title: 'Alpha Centauri', kicker: 'Komşu ikili', facts: [['Uzaklık', '4,37 ışık yılı'], ['A', 'G2 V, Güneş benzeri'], ['B', 'K1 V, turuncu'], ['Yörünge', '80 yıl'], ['Gökyüzünde', '3. en parlak yıldız']] },
+    vega: { title: 'Vega', kicker: 'Eski ve gelecekteki Kutup Yıldızı', facts: [['Uzaklık', '25 ışık yılı'], ['Kütle', '2 Güneş'], ['Parlaklık', '40 Güneş'], ['Dönüş', 'Ekvatoru şişkin, 12,5 saat'], ['Toz diski', 'Var']] },
+    polaris: { title: 'Polaris', kicker: 'Kutup Yıldızı', facts: [['Uzaklık', '~430 ışık yılı'], ['Parlaklık', '~2 000 Güneş'], ['Sınıf', 'F7 sarı süperdev'], ['Kutba uzaklık', '< 1°'], ['Sistem', 'Üçlü']] },
+    antares: { title: 'Antares', kicker: 'Akrep\'in kalbi', facts: [['Uzaklık', '~550 ışık yılı'], ['Yarıçap', '~700 Güneş'], ['Kütle', '~12 Güneş'], ['Yoğunluk', 'Havadan düşük'], ['Son', 'Süpernova']] },
+    deneb: { title: 'Deneb', kicker: 'Kuğu\'nun kuyruğu, çok uzakta', facts: [['Uzaklık', '~2 600 ışık yılı'], ['Parlaklık', '~200 000 Güneş'], ['Sınıf', 'A2 mavi-beyaz süperdev'], ['Yarıçap', '~200 Güneş'], ['Işık yola çıktı', 'Roma Cumhuriyeti dönemi']] },
+  },
+  galaxies: {
+    milkyway: { title: 'Samanyolu', kicker: 'Evimize dışarıdan bakış', facts: [['Çap', '100 000 ışık yılı'], ['Yıldız sayısı', '200–400 milyar'], ['Tip', 'Çubuklu sarmal'], ['Güneş', 'Merkeze 26 000 ışık yılı'], ['Galaktik yıl', '230 milyon yıl']] },
+    lmc: { title: 'Büyük Macellan Bulutu', kicker: 'En büyük uydu galaksimiz', facts: [['Uzaklık', '160 000 ışık yılı'], ['Kütle', 'Samanyolu\'nun ~%1\'i'], ['Tarantula', 'Yerel Grup\'un en büyük yıldız doğumevi'], ['R136a1', 'Bilinen en ağır yıldız'], ['SN 1987A', 'Modern çağın en yakın süpernovası']] },
+    smc: { title: 'Küçük Macellan Bulutu', kicker: 'Biçimsiz küçük kardeş', facts: [['Uzaklık', '200 000 ışık yılı'], ['Tip', 'Düzensiz'], ['Köprü', 'Hidrojen, LMC\'ye uzanır'], ['Leavitt', '1912, Sefeid yasası'], ['Yıldız sayısı', '~3 milyar']] },
+    andromeda: { title: 'Andromeda', kicker: 'En yakın büyük komşumuz', facts: [['Uzaklık', '2,5 milyon ışık yılı'], ['Yıldız sayısı', '~1 trilyon'], ['Çap', '~220 000 ışık yılı'], ['Hubble', '1923, Sefeid ölçümü'], ['Çarpışma', '~4,5 milyar yıl sonra']] },
+    triangulum: { title: 'Üçgen Galaksisi', kicker: 'Yerel Grup\'un üçüncüsü', facts: [['Uzaklık', '2,7 milyon ışık yılı'], ['Yıldız sayısı', '~40 milyar'], ['Merkez', 'Kara delik yok'], ['NGC 604', '1 500 ışık yılı genişliğinde H II bölgesi'], ['Görünüm', 'Neredeyse tepeden']] },
+    m87: { title: 'M87', kicker: 'Virgo Kümesi\'nin devi', facts: [['Uzaklık', '55 milyon ışık yılı'], ['Tip', 'Dev eliptik'], ['Küresel küme', '12 000+'], ['Kara delik', '6,5 milyar Güneş'], ['Jet', '5 000 ışık yılı']] },
+    sombrero: { title: 'Sombrero Galaksisi', kicker: 'Geniş kenarlı şapka', facts: [['Uzaklık', '29 milyon ışık yılı'], ['Eğim', '~6° — neredeyse kenardan'], ['Küresel küme', '~2 000'], ['Kara delik', '~1 milyar Güneş'], ['Katalog', 'M104']] },
+    antennae: { title: 'Antenler', kicker: 'Çarpışan iki galaksi', facts: [['Uzaklık', '45 milyon ışık yılı'], ['Başlangıç', '~600 milyon yıl önce'], ['Kuyruklar', 'Yüz binlerce ışık yılı'], ['Yıldız oluşumu', 'Patlama hâlinde'], ['Son', 'Tek eliptik galaksi']] },
+  },
+};
+for (const t of TOURS) for (const s of t.steps) { const e = EXTRAS[t.id]?.[s.id]; if (e) Object.assign(s, e); }
 
 export function tourById(id: string): TourDef | undefined {
   return TOURS.find((t) => t.id === id);

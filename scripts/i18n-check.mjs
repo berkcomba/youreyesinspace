@@ -127,8 +127,8 @@ function looksLikeText(s) {
 
 // (Academy lesson content in src/data/lessons.ts is English-only and deliberately not translated)
 const DATA_FILE = /\/src\/(data\/(?!lessons\.ts)|galaxy\/galaxies\.ts|ui\/places\.ts|ui\/UI\.ts|gen\/SystemGenerator\.ts|astro\/stellar\.ts|ui\/format\.ts|ui\/MissionPanel\.ts)/;
-const FIELD_RE = /(?:^|[\s,{(])(name|summary|description|desc|tagline|label|title|note|group|credit|hyperLabel|hostName|text|big)\s*:\s*$/;
-const TABLE_NAMES = ['TYPE_LABELS', 'CLASS_LABEL', 'LUM_CLASS_DESC', 'LANDMARK_KIND_LABEL', 'GALAXY_TYPE_LABEL', 'LETTERS_TR'];
+const FIELD_RE = /(?:^|[\s,{(])(name|summary|description|desc|tagline|label|title|note|group|credit|hyperLabel|hostName|text|big|kicker)\s*:\s*$/;
+const TABLE_NAMES = ['TYPE_LABELS', 'CLASS_LABEL', 'LUM_CLASS_DESC', 'LANDMARK_KIND_LABEL', 'GALAXY_TYPE_LABEL', 'LETTERS_TR', 'KIND_LABELS', 'STATUS_LABELS'];
 
 const keys = new Map(); // key -> Set(files)
 const add = (k, file, force = false) => {
@@ -145,17 +145,19 @@ for (const file of walk(SRC)) {
 
   // regions: facts objects and label tables → every literal inside is a key
   const regions = [];
-  const addRegion = (re) => {
+  const addRegion = (re, [lb, rb] = ['{', '}']) => {
     let m;
     while ((m = re.exec(code))) {
-      const open = code.indexOf('{', m.index + m[0].length - 1);
+      const open = code.indexOf(lb, m.index + m[0].length - 1);
       if (open < 0) continue;
       let depth = 0, j = open;
-      for (; j < code.length; j++) { if (code[j] === '{') depth++; else if (code[j] === '}') { depth--; if (depth === 0) break; } }
+      for (; j < code.length; j++) { if (code[j] === lb) depth++; else if (code[j] === rb) { depth--; if (depth === 0) break; } }
       regions.push([open, j]);
     }
   };
   addRegion(/\bfacts\s*:\s*\{/g);
+  // facts strips (tours / events): `facts: [['label', 'value'], …]`
+  addRegion(/\bfacts\s*:\s*\[/g, ['[', ']']);
   for (const t of TABLE_NAMES) addRegion(new RegExp(`\\b${t}\\b[^=\\n]*=\\s*\\{`, 'g'));
   const inRegion = (pos) => regions.some(([a, b]) => pos > a && pos < b);
 

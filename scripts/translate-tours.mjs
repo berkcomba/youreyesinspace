@@ -104,6 +104,9 @@ function cueStrings(step) {
   for (const c of step.cues ?? []) {
     for (const k of ['label', 'title', 'big', 'text']) if (hasLetters(c[k])) out.push(c[k]);
   }
+  // cinematic chapter title / kicker and the facts strip
+  for (const k of ['title', 'kicker']) if (hasLetters(step[k])) out.push(step[k]);
+  for (const [k, v] of step.facts ?? []) for (const s of [k, v]) if (hasLetters(s)) out.push(s);
   return out;
 }
 

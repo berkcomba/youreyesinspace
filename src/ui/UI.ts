@@ -1,12 +1,15 @@
 import type { CelestialBody } from '../core/CelestialBody';
 import { MissionPanel, type MissionPanelHost } from './MissionPanel';
 import { TourPanel } from './TourPanel';
+import { EventPanel } from './EventPanel';
+import type { SkyEvent } from '../data/events';
+import { copyText, viewUrl } from '../app/share';
 import { LessonPanel } from './LessonPanel';
 import type { TourPlayer } from '../core/TourPlayer';
 import type { LessonPlayer } from '../core/LessonPlayer';
 import { phaseLabel } from '../astro/mission';
 import { binaryPartner } from '../astro/binary';
-import { _, fixed, fmtNum, LOCALES, currentLocale, setLocale, type Locale } from '../i18n';
+import { _, fixed, fmtNum, LOCALES, currentLocale, localeTag, setLocale, type Locale } from '../i18n';
 import type { TimeSystem } from '../core/TimeSystem';
 import type { Universe } from '../core/Universe';
 import type { CameraController } from '../camera/CameraController';
@@ -23,6 +26,7 @@ import {
   fmtDeg, fmtDistance, fmtSolarMass, fmtDuration, fmtLightYears, fmtMass, fmtRadius, fmtSci, fmtSpeed, fmtTemp, TYPE_LABELS, typeLabel,
 } from './format';
 import { PLACES } from './places';
+import { CHANGELOG, CURRENT_VERSION } from '../data/changelog';
 
 /** body types that act as the light source / primary of a system */
 function isPrimaryType(t: string): boolean {
@@ -34,6 +38,8 @@ export interface UIHost extends MissionPanelHost {
   time: TimeSystem;
   camera: CameraController;
   settings: Settings;
+  /** size of the frame actually rendered, in pixels (after the resolution scale and the automatic drop) */
+  renderSize(): [number, number];
   tours: TourPlayer;
   lessons: LessonPlayer;
   starPoints: StarPoints;
@@ -70,6 +76,12 @@ export interface UIHost extends MissionPanelHost {
   centerBlackHole(id: string): void;
   /** free roam: pointer-locked mouse look + WASD flight */
   toggleFreeRoam(): void;
+  /** play an event scene (Events tab) */
+  playEvent(e: SkyEvent): void;
+  /** the Solar System catalogue has this body */
+  hasBody(id: string): boolean;
+  /** camera direction from the selected body (scene axes, unit) and distance in radii, for share links */
+  viewOf(b: CelestialBody): { dir: [number, number, number]; radii: number };
   readonly freeRoam: boolean;
   applySettings(): void;
   screenshot(): void;
@@ -90,6 +102,8 @@ interface SettingDef {
   max?: number;
   step?: number;
   group?: string;
+  /** readout beside a range slider (default: the raw value) */
+  format?: (v: number, host: UIHost) => string;
 }
 
 const SETTING_DEFS: SettingDef[] = [
@@ -103,6 +117,9 @@ const SETTING_DEFS: SettingDef[] = [
   { key: 'distances', label: 'Etiketlerde uzaklık', kind: 'bool' },
   { key: 'eclipticGrid', label: 'Ekliptik ızgara', kind: 'bool' },
   { key: 'equatorialGrid', label: 'Ekvatoral ızgara', kind: 'bool' },
+  { key: 'dwarfs', label: 'Cüce gezegenler', kind: 'bool' },
+  { key: 'minorBodies', label: 'Asteroitler ve kuyruklu yıldızlar', kind: 'bool' },
+  { key: 'spacecraft', label: 'İnsan yapımı nesneler (uzay araçları)', kind: 'bool' },
   { key: 'belts', label: 'Asteroit / Kuiper kuşağı', kind: 'bool' },
   { key: 'milkyWay', label: 'Galaksi yıldız bulutları', kind: 'bool' },
   { key: 'galaxies', label: 'Uzak galaksiler', kind: 'bool' },
@@ -114,11 +131,11 @@ const SETTING_DEFS: SettingDef[] = [
   { key: 'rings', label: 'Halkalar', kind: 'bool' },
   { key: 'ringParticles', label: 'Halka parçacıkları', kind: 'bool' },
   { key: 'shadows', label: 'Tutulma / halka gölgeleri', kind: 'bool' },
-  { key: 'nearLight', label: 'Yakınken gece tarafını aydınlat', kind: 'bool' },
   { key: 'imagery', label: 'Uydu görüntüleri (NASA)', kind: 'bool' },
   { key: 'bloom', label: 'Bloom (parıltı)', kind: 'bool' },
   { key: 'exposure', label: 'Pozlama', kind: 'range', min: 0.3, max: 2.5, step: 0.05 },
-  { key: 'renderScale', label: 'Render çözünürlüğü', kind: 'range', min: 0.5, max: 1, step: 0.05 },
+  { key: 'renderScale', label: 'Render çözünürlüğü', kind: 'range', min: 0.25, max: 1, step: 0.05, format: (_v, h) => h.renderSize().join('×') },
+  { key: 'autoResolution', label: 'Otomatik çözünürlük (takılınca düşür)', kind: 'bool' },
   { key: 'fov', label: 'Görüş açısı', kind: 'range', min: 20, max: 110, step: 1, group: 'Kamera' },
   { key: 'mouseSensitivity', label: 'Fare hassasiyeti', kind: 'range', min: 0.2, max: 3, step: 0.1 },
   { key: 'invertY', label: 'Y eksenini ters çevir', kind: 'bool' },
@@ -145,6 +162,7 @@ export class UI {
   private readonly searchInput = $<HTMLInputElement>('search-input');
   private readonly searchResults = $<HTMLUListElement>('search-results');
   private readonly followBtn = $<HTMLButtonElement>('act-follow');
+  private readonly shareBtn = $<HTMLButtonElement>('act-share');
   private readonly brandSub = $('brand-sub');
   private readonly pauseBtn = $<HTMLButtonElement>('t-pause');
   private readonly roamBtn = $<HTMLButtonElement>('btn-roam');
@@ -152,6 +170,7 @@ export class UI {
   private readonly placesMenu = $('places-menu');
   readonly missionPanel: MissionPanel;
   readonly tourPanel: TourPanel;
+  readonly eventPanel: EventPanel;
   readonly lessonPanel: LessonPanel;
   private lastInfoUpdate = 0;
   private toastTimer = 0;
@@ -177,12 +196,23 @@ export class UI {
     $('about-close').addEventListener('click', () => this.toggleAbout(false));
     $('about-help').addEventListener('click', () => { this.toggleAbout(false); this.toggleHelp(true); });
     this.about.addEventListener('click', (e) => { if (e.target === this.about) this.toggleAbout(false); });
+    // the version badge (top bar and About card) opens the release notes
+    document.querySelectorAll<HTMLElement>('[data-changelog]').forEach((el) => {
+      el.textContent = `v ${CURRENT_VERSION}`;
+      el.addEventListener('click', (e) => { e.stopPropagation(); this.toggleChangelog(true); });
+    });
+    $('changelog-close').addEventListener('click', () => this.toggleChangelog(false));
+    this.changelog.addEventListener('click', (e) => { if (e.target === this.changelog) this.toggleChangelog(false); });
     $('btn-settings').addEventListener('click', () => this.toggleSettings());
     this.missionPanel = new MissionPanel(host);
     $('btn-mission').addEventListener('click', () => this.toggleMission());
-    this.tourPanel = new TourPanel(host.tours, (show) => { if (show) { this.toggleSettings(false); this.missionPanel.toggle(false); this.lessonPanel.toggle(false); } });
+    this.tourPanel = new TourPanel(host.tours, (show) => { if (show) { this.toggleSettings(false); this.missionPanel.toggle(false); this.lessonPanel.toggle(false); this.eventPanel.toggle(false); } });
     $('btn-tours').addEventListener('click', () => this.toggleTours());
-    this.lessonPanel = new LessonPanel(host.lessons, (show) => { if (show) { this.toggleSettings(false); this.missionPanel.toggle(false); this.tourPanel.toggle(false); } });
+    this.eventPanel = new EventPanel(
+      { playEvent: (e) => host.playEvent(e), showToast: (m, ms) => this.showToast(m, ms), hasBody: (id) => host.hasBody(id) },
+      (show) => { if (show) { this.toggleSettings(false); this.missionPanel.toggle(false); this.tourPanel.toggle(false); this.lessonPanel.toggle(false); } },
+    );
+    this.lessonPanel = new LessonPanel(host.lessons, (show) => { if (show) { this.toggleSettings(false); this.missionPanel.toggle(false); this.tourPanel.toggle(false); this.eventPanel.toggle(false); } });
     // phones: the info sheet starts folded (name + actions) so the view stays visible
     if (window.matchMedia('(max-width: 700px)').matches) this.info.classList.add('collapsed');
     $('info-expand').addEventListener('click', () => this.info.classList.toggle('collapsed'));
@@ -218,6 +248,12 @@ export class UI {
       else if (h.selectedStar !== null) h.goToStar(h.selectedStar);
       else if (h.selectedGalaxy !== null) h.goToGalaxy(h.selectedGalaxy);
       else if (h.selectedLandmark !== null) h.goToLandmark(h.selectedLandmark);
+    });
+    $('act-share').addEventListener('click', () => {
+      const b = this.host.selected;
+      if (!b) return;
+      const url = viewUrl(b.id, this.host.time.date, this.host.viewOf(b), this.host.time.rate);
+      void copyText(url).then((ok) => this.showToast(ok ? _('Görünümün bağlantısı kopyalandı') : url, ok ? 1800 : 5000));
     });
     $('act-center').addEventListener('click', () => {
       if (h.selected) h.center(h.selected);
@@ -461,18 +497,23 @@ export class UI {
         val.style.fontSize = '11px';
         val.style.minWidth = '34px';
         val.style.textAlign = 'right';
-        val.textContent = String(s[def.key]);
+        const show = (v: number): string => (def.format ? def.format(v, this.host) : String(v));
+        val.textContent = show(s[def.key] as number);
         input.addEventListener('input', () => {
           (s as unknown as Record<string, unknown>)[def.key] = parseFloat(input.value);
-          val.textContent = input.value;
+          val.textContent = show(parseFloat(input.value));
           this.host.applySettings();
         });
         row.appendChild(input);
         row.appendChild(val);
+        this.rangeReadouts.set(def.key, () => { val.textContent = show(s[def.key] as number); });
       }
       body.appendChild(row);
     }
   }
+
+  /** value readouts of the range rows, re-rendered on sync (the resolution one depends on live state) */
+  private readonly rangeReadouts = new Map<keyof Settings, () => void>();
 
   /** Reflect programmatic setting changes (hotkeys) into the panel */
   syncSettings(): void {
@@ -481,7 +522,7 @@ export class UI {
       const el = document.getElementById(`set-${def.key}`) as HTMLInputElement | null;
       if (!el) continue;
       if (def.kind === 'bool') el.checked = s[def.key] as boolean;
-      else el.value = String(s[def.key]);
+      else { el.value = String(s[def.key]); this.rangeReadouts.get(def.key)?.(); }
     }
   }
 
@@ -496,9 +537,14 @@ export class UI {
     if (text !== null) this.creditEl.textContent = translated ? text : _(text);
   }
 
+  toggleEvents(force?: boolean): void {
+    const show = force ?? this.eventPanel.panel.hidden === true;
+    this.eventPanel.toggle(show);
+  }
+
   toggleMission(force?: boolean): void {
     const show = force ?? this.missionPanel.panel.hidden === true;
-    if (show) { this.toggleSettings(false); this.tourPanel.toggle(false); this.lessonPanel.toggle(false); }
+    if (show) { this.toggleSettings(false); this.tourPanel.toggle(false); this.lessonPanel.toggle(false); this.eventPanel.toggle(false); }
     this.missionPanel.toggle(show);
   }
 
@@ -514,7 +560,7 @@ export class UI {
 
   toggleSettings(force?: boolean): void {
     const show = force ?? this.settingsPanel.hidden === true;
-    if (show) { this.missionPanel.toggle(false); this.tourPanel.toggle(false); this.lessonPanel.toggle(false); }
+    if (show) { this.missionPanel.toggle(false); this.tourPanel.toggle(false); this.lessonPanel.toggle(false); this.eventPanel.toggle(false); }
     this.settingsPanel.hidden = !show;
     $('btn-settings').classList.toggle('active', show);
   }
@@ -528,11 +574,78 @@ export class UI {
   toggleAbout(force?: boolean): void {
     const show = force ?? this.about.hidden === true;
     this.about.hidden = !show;
-    if (show) this.help.hidden = true;
+    if (show) { this.help.hidden = true; this.changelog.hidden = true; void this.loadAboutStats(); }
   }
 
-  showToast(msg: string, ms = 1800): void {
+  private readonly changelog = $('changelog');
+  private changelogBuilt = false;
+
+  /** Release notes behind the version badge (built on first open, in the UI language) */
+  toggleChangelog(force?: boolean): void {
+    const show = force ?? this.changelog.hidden === true;
+    this.changelog.hidden = !show;
+    if (!show) return;
+    this.about.hidden = true;
+    this.help.hidden = true;
+    if (this.changelogBuilt) return;
+    this.changelogBuilt = true;
+    const body = $('changelog-body');
+    const fmtDate = (iso: string): string => new Date(iso + 'T00:00:00Z').toLocaleDateString(localeTag(), { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+    for (const r of CHANGELOG) {
+      const sec = document.createElement('section');
+      const head = document.createElement('div');
+      head.className = 'release-head';
+      const v = document.createElement('span');
+      v.className = 'release-version' + (r.version === CURRENT_VERSION ? ' current' : '');
+      v.textContent = `v ${r.version}`;
+      if (r.version === CURRENT_VERSION) v.dataset.current = _('güncel');
+      const d = document.createElement('span');
+      d.className = 'release-date';
+      d.textContent = fmtDate(r.date);
+      const t = document.createElement('div');
+      t.className = 'release-title';
+      t.textContent = _(r.title);
+      head.append(v, d, t);
+      const ul = document.createElement('ul');
+      ul.className = 'release-items';
+      for (const it of r.items) {
+        const li = document.createElement('li');
+        li.textContent = _(it.text);
+        ul.appendChild(li);
+      }
+      sec.append(head, ul);
+      body.appendChild(sec);
+    }
+  }
+
+  private aboutStatsLoaded = false;
+  /** "N visits since launch" line in the About panel, from /stats.json (regenerated daily). */
+  private async loadAboutStats(): Promise<void> {
+    if (this.aboutStatsLoaded) return;
+    this.aboutStatsLoaded = true;
+    try {
+      const res = await fetch('/stats.json');
+      if (!res.ok) return;
+      const s = (await res.json()) as { since: string; updatedAt: string; visits: number };
+      if (!(s.visits > 0)) return;
+      const el = $('about-stats');
+      const since = new Date(s.since + 'T00:00:00Z').toLocaleDateString(localeTag(), { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+      el.textContent = _('{n} ziyaret · {date} tarihinden bu yana', { n: fmtNum(s.visits), date: since });
+      el.hidden = false;
+    } catch { /* offline or blocked: the line simply stays hidden */ }
+  }
+
+  showToast(msg: string, ms = 1800, link?: { label: string; href: string }): void {
     this.toast.textContent = msg;
+    if (link) {
+      const a = document.createElement('a');
+      a.className = 'toast-link';
+      a.href = link.href;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.textContent = link.label;
+      this.toast.append(' · ', a);
+    }
     this.toast.hidden = false;
     window.clearTimeout(this.toastTimer);
     this.toastTimer = window.setTimeout(() => { this.toast.hidden = true; }, ms);
@@ -575,6 +688,7 @@ export class UI {
     const label = gal === null ? `${scaleLabel} · ${sysLabel}` : gal === 0 ? sysLabel : `${u.galaxies.name(gal)} · ${sysLabel}`;
     if (this.brandSub.textContent !== label) this.brandSub.textContent = label;
 
+    this.shareBtn.hidden = !(selected && sys.catalogIndex === 0);
     if (selected) {
       this.info.hidden = false;
       if (now - this.lastInfoUpdate > 120) {
@@ -957,6 +1071,9 @@ export class UI {
     }
     this.infoBody.innerHTML = rowsHtml(rows);
     const rep = b.data.appearance.kind === 'spacecraft' && b.data.appearance.representative;
-    this.infoDesc.textContent = `${_(b.data.description ?? '')} ${_('Konum, 2025 başı JPL Horizons verilerinden yaklaşık olarak türetilmiştir;')} ${_('3B model: NASA 3D Resources')}${rep ? ' ' + _('(temsilî)') : ''}.`;
+    const src = b.data.orbit?.kind === 'ephemeris'
+      ? _('Konum, JPL Horizons\'ın örneklenmiş yörünge tablosundan türetilmiştir (simülasyon, canlı telemetri değil);')
+      : _('Konum, Ekim 2026 JPL Horizons verilerinden yaklaşık olarak türetilmiştir;');
+    this.infoDesc.textContent = `${_(b.data.description ?? '')} ${src} ${_('3B model: NASA 3D Resources')}${rep ? ' ' + _('(temsilî)') : ''}.`;
   }
 }

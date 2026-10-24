@@ -38,6 +38,8 @@
   <body>
     <canvas id="scene"></canvas>
     <canvas id="overlay"></canvas>
+    <!-- letterbox bars while an event scene plays (between the scene and the UI) -->
+    <div id="cine" aria-hidden="true"></div>
 
     <div id="ui">
       <!-- Top bar -->
@@ -45,7 +47,7 @@
         <div class="brand">
           <img id="brand-logo" class="brand-mark" src="/logo-white.png" alt="Your Eyes In Space" role="button" tabindex="0" data-i18n-title title="Hakkında, yazar ve geri bildirim" />
           <span class="brand-name">YOUR EYES IN SPACE</span>
-          <span class="brand-version" title="Version">v 0.5</span>
+          <button class="brand-version" data-changelog data-i18n-title title="Yenilikler">v 0.6</button>
           <span id="brand-sub" class="brand-sub" data-i18n>Güneş Sistemi</span>
         </div>
         <div id="search" class="panel-inline">
@@ -60,6 +62,7 @@
           <button id="btn-tours" class="text-btn" data-i18n data-i18n-title title="Sesli rehberli turlar: kamera uçar, anlatıcı anlatır">Turlar</button>
           <button id="btn-academy" class="text-btn" data-i18n data-i18n-title title="Akademi: bölüm bölüm ilerleyen etkileşimli astrofizik dersleri">Akademi</button>
           <button id="btn-mission" class="text-btn" data-i18n data-i18n-title title="Görev planlayıcı: gerçek ya da hayali bir araçla rota hesapla, fırlat, canlı izle (U)">Görev</button>
+          <button id="btn-events" class="text-btn" data-i18n data-i18n-title title="Olaylar: yaklaşan gök ve uzay olaylarını simülasyonda izleyin, paylaşın, sitenize gömün">Olaylar</button>
           <button id="btn-roam" class="text-btn" data-i18n data-i18n-title title="Serbest dolaşım: fare ile bak, WASD ile uç (V)">Serbest dolaşım</button>
           <button id="btn-help" class="icon-btn" data-i18n-title title="Yardım (F1)">?</button>
           <button id="btn-settings" class="icon-btn" data-i18n-title title="Ayarlar" aria-label="Settings"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1 4h14M1 8h14M1 12h14" /><path d="M10 2.5v3M5 6.5v3M11 10.5v3" /></svg></button>
@@ -83,6 +86,7 @@
           <button id="act-goto" data-i18n data-i18n-title title="Nesneye uç (G)">Git</button>
           <button id="act-center" data-i18n data-i18n-title title="Nesneye bak (C)">Ortala</button>
           <button id="act-follow" data-i18n data-i18n-title title="Yörünge/takip modu (F)">Takip</button>
+          <button id="act-share" data-i18n data-i18n-title title="Bu görünümün bağlantısını kopyala (hedef, zaman ve kamera)">Bağlantı</button>
         </div>
         <dl id="info-body" class="info-grid"></dl>
         <p id="info-desc" class="info-desc"></p>
@@ -142,25 +146,62 @@
         <div id="tours-list" class="tours-list"></div>
       </aside>
 
+      <!-- Right: events (upcoming / recent sky & space events) -->
+      <aside id="events" class="panel" hidden>
+        <div class="panel-title"><span data-i18n>Olaylar</span> <button id="events-close" class="icon-btn small" data-i18n-title title="Kapat">✕</button></div>
+        <p class="tours-intro" data-i18n>Yaklaşan gök ve uzay olayları, simülasyonda kısa birer sahne olarak. Uzay aracı yörüngeleri NASA/JPL Horizons'tan alınmıştır; bu bir simülasyondur, canlı telemetri değildir. Tarihler ajans planlarına göre değişebilir.</p>
+        <div id="events-list" class="events-list"></div>
+      </aside>
+
+      <!-- Main screen: next event chip (while the panel is closed) -->
+      <button id="next-event" class="next-event" hidden>
+        <span id="next-event-text"></span>
+        <span id="next-event-close" class="next-event-close" role="button" data-i18n-title title="Gizle" aria-label="Gizle">✕</span>
+      </button>
+
+      <!-- Embed code dialog -->
+      <div id="embed-dialog" class="modal" hidden>
+        <div class="modal-card embed-card">
+          <div class="panel-title"><span data-i18n>Sitenize gömün</span> <button id="embed-close" class="icon-btn small" data-i18n-title title="Kapat">✕</button></div>
+          <div id="embed-title" class="embed-title"></div>
+          <p class="embed-help" data-i18n>Aşağıdaki kodu sayfanıza yapıştırın. Gömülü görünüm 16:9 oranında, sayfa kaydırmasını engellemez (yakınlaştırma için önce tıklanır) ve anlatım sessiz başlar.</p>
+          <textarea id="embed-code" rows="4" readonly spellcheck="false"></textarea>
+          <div class="embed-actions">
+            <button id="embed-copy" class="text-btn primary" data-i18n>Kodu kopyala</button>
+          </div>
+          <div class="embed-preview-wrap"><iframe id="embed-preview" title="Preview" allow="fullscreen" allowfullscreen></iframe></div>
+          <p class="embed-note" data-i18n>Gömülü içerik Your Eyes In Space'e bağlantı verir; NASA/ESA verileri ve görselleri kendi atıf kurallarına tabidir.</p>
+        </div>
+      </div>
+
       <!-- Right: academy (lessons) -->
       <aside id="academy" class="panel" hidden lang="en"></aside>
 
-      <!-- Bottom-centre: tour playback -->
+      <!-- Cinematic tour stage: vignette, chapter title, facts strip, subtitle, HUD -->
       <div id="tour-bar" class="tour-bar" hidden>
-        <div class="tour-head">
-          <span id="tour-title" class="tour-title"></span>
-          <span id="tour-step" class="tour-step"></span>
+        <div class="tour-vignette"></div>
+        <div id="tour-chapter" class="tour-chapter" aria-live="polite">
+          <div id="tour-chapter-kicker" class="tour-chapter-kicker"></div>
+          <div id="tour-chapter-title" class="tour-chapter-title"></div>
+          <div class="tour-chapter-rule"></div>
+          <div id="tour-chapter-sub" class="tour-chapter-sub"></div>
         </div>
+        <dl id="tour-facts" class="tour-facts"></dl>
         <div id="tour-subtitle" class="tour-subtitle"></div>
-        <div class="tour-progress"><div id="tour-progress-fill"></div></div>
-        <div class="tour-controls">
-          <span class="seg">
+        <div class="tour-hud">
+          <div class="tour-head">
+            <span id="tour-title" class="tour-title"></span>
+            <span id="tour-step" class="tour-step"></span>
+            <span id="tour-dots" class="tour-dots"></span>
+          </div>
+          <div class="tour-controls">
             <button id="tour-prev" data-i18n-title title="Önceki durak">◀&#xFE0E;</button>
             <button id="tour-pause" data-i18n-title title="Duraklat / sürdür">❚❚</button>
             <button id="tour-next" data-i18n-title title="Sonraki durak">▶&#xFE0E;</button>
-          </span>
-          <button id="tour-stop" class="tour-stop" data-i18n data-i18n-title title="Turu bitir">Bitir</button>
+            <button id="tour-stop" class="tour-stop" data-i18n data-i18n-title title="Turu bitir (Esc)">Bitir</button>
+          </div>
         </div>
+        <div class="tour-progress"><div id="tour-progress-fill"></div></div>
       </div>
 
       <!-- Top-right: tour inset (photograph / trivia card) -->
@@ -201,7 +242,24 @@
       <div id="imagery-credit" hidden></div>
       <div id="corner-links">
         <button id="btn-about" class="corner-link" data-i18n data-i18n-title title="Hakkında, yazar ve geri bildirim">Hakkında</button>
-        <a id="copyright" href="https://github.com/berkcomba/youreyesinspace" target="_blank" rel="noopener noreferrer" data-i18n>© 2026 BigBrains · Açık kaynak (MIT)</a>
+        <a id="copyright" href="https://github.com/berkcomba/youreyesinspace" target="_blank" rel="noopener noreferrer" data-i18n>© 2026 BigBrains · Açık kaynak (AGPL-3.0)</a>
+      </div>
+
+      <!-- Embed (iframe) chrome: shown only with ?embed=1 -->
+      <div id="embed-ui" hidden>
+        <div id="embed-head">
+          <span id="embed-head-title"></span>
+          <span id="embed-head-date"></span>
+        </div>
+        <div id="embed-controls">
+          <button id="embed-play" data-i18n-title title="Duraklat / sürdür">❚❚</button>
+          <button id="embed-slower" data-i18n-title title="Yavaşlat">−</button>
+          <span id="embed-rate" class="time-rate">1×</span>
+          <button id="embed-faster" data-i18n-title title="Hızlandır">+</button>
+          <button id="embed-mute" data-i18n-title title="Anlatım sesi">🔇</button>
+          <button id="embed-replay" data-i18n-title title="Sahneyi baştan oynat">↻</button>
+        </div>
+        <a id="embed-open" target="_blank" rel="noopener"><span data-i18n>Your Eyes In Space'te aç</span> ↗</a>
       </div>
 
       <!-- About card -->
@@ -211,25 +269,38 @@
           <div class="about-head">
             <img class="about-mark" src="/logo-white.png" alt="Your Eyes In Space" />
             <div>
-              <div class="about-name">YOUR EYES IN SPACE <span class="brand-version">v 0.5</span></div>
+              <div class="about-name">YOUR EYES IN SPACE <button class="brand-version" data-changelog data-i18n-title title="Yenilikler">v 0.6</button></div>
               <div class="about-tag" data-i18n>Dünyanın her yerinde insanları uzay ve astrofizikle buluşturmak için yapılmış açık kaynak uzay simülatörü ve astrofizik dersliği</div>
+              <div id="about-stats" class="about-stats" hidden></div>
             </div>
           </div>
-          <p><span data-i18n>Your Eyes In Space, dünyanın her yerinde insanların uzay ve astrofizik konularında bilinçlenmesi ve bu alanlara heves duyması için yapıldı. Tüm içerik ücretsizdir ve ücretsiz kalacaktır.</span></p>
+          <p><span data-i18n>Your Eyes In Space, dünyanın her yerinde insanların uzay ve astrofizik konularında bilinçlenmesi ve bu alanlara heves duyması için yapıldı.</span></p>
           <div class="about-grid">
             <div class="about-k" data-i18n>Yazar</div>
             <div><strong>Berk Comba</strong> · <a href="https://bigbrains.com.tr" target="_blank" rel="noopener noreferrer">BigBrains</a></div>
             <div class="about-k" data-i18n>Geri bildirim</div>
             <div><a href="mailto:berkcomba@bigbrains.com.tr?subject=Your%20Eyes%20In%20Space">berkcomba@bigbrains.com.tr</a> · <a href="https://github.com/berkcomba/youreyesinspace/issues" target="_blank" rel="noopener noreferrer">GitHub Issues</a><br /><span data-i18n>Bir hata gördüyseniz, bir bölüm anlaşılmaz geldiyse ya da aklınızda bir özellik varsa yazın; her mesajı okuyorum.</span></div>
             <div class="about-k" data-i18n>İş birliği</div>
-            <div><span data-i18n>İş birliğine açığız: eğitim kurumları, gökevleri, bilim merkezleri, bilim iletişimcileri ve araştırmacılarla ortak projelere, içerik ortaklıklarına, çevirilere ve katkılara kapımız açık. Özel iş birlikleri için Your Eyes In Space'in kuruma ya da amaca özel türevleri de geliştirilebilir; bir e-posta yeterli.</span></div>
+            <div><span data-i18n>Okullar, gökevleri, bilim merkezleri, bilim iletişimcileri ve araştırmacılarla ortak projelere, çevirilere ve katkılara açığız. Bir e-posta yeterli.</span></div>
+            <div class="about-k" data-i18n>Destek</div>
+            <div><span data-i18n>Your Eyes In Space dünyanın dört bir yanında insanların uzaya ilgisini artırıyor; ücretsiz ve reklamsız sunuyoruz, öyle kalacak. Sunucu, uydu görüntüsü akışı ve seslendirme masraflarını paylaşmak isterseniz küçük bir destek bile yeter. Kurumsal destekçilerin adı ve logosu bu bölümde yer alır.</span> <a href="https://github.com/sponsors/berkcomba" target="_blank" rel="noopener noreferrer" data-i18n>Projeyi destekle</a></div>
           </div>
           <div class="about-actions">
             <a class="text-btn" href="mailto:berkcomba@bigbrains.com.tr?subject=Your%20Eyes%20In%20Space" data-i18n>E-posta gönder</a>
             <a class="text-btn" href="https://github.com/berkcomba/youreyesinspace" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a class="text-btn" href="https://github.com/sponsors/berkcomba" target="_blank" rel="noopener noreferrer" data-i18n>♥ Destekle</a>
             <button id="about-help" class="text-btn" data-i18n>Kontroller ve kaynaklar</button>
           </div>
-          <p class="about-foot" data-i18n>Kod MIT lisansıyla açık kaynaktır; isim ve logo BigBrains markasıdır. © 2026</p>
+          <p class="about-foot" data-i18n>Kod AGPL-3.0 lisansıyla açık kaynaktır; isim ve logo BigBrains markasıdır. © 2026</p>
+        </div>
+      </div>
+
+      <!-- Release notes (behind the version badge) -->
+      <div id="changelog" class="modal" hidden>
+        <div class="modal-card changelog-card">
+          <div class="panel-title"><span data-i18n>Yenilikler</span> <button id="changelog-close" class="icon-btn small" data-i18n-title title="Kapat">✕</button></div>
+          <div id="changelog-body" class="changelog-body"></div>
+          <p class="about-foot"><a href="https://github.com/berkcomba/youreyesinspace/commits/main" target="_blank" rel="noopener noreferrer" data-i18n>Tüm değişiklikler GitHub'da</a></p>
         </div>
       </div>
 
@@ -264,26 +335,28 @@
             <div><kbd>Tab</kbd> <span data-i18n>Arayüzü gizle</span> &nbsp; <kbd>P</kbd> <span data-i18n>Ekran görüntüsü</span> &nbsp; <kbd>Esc</kbd> <span data-i18n>Seçimi bırak</span></div>
             <div><kbd data-i18n>Görmeye değecek yerler</kbd> <span data-i18n>Uzay araçları (Voyager, JWST, ISS…), kara delikler (Sgr A*, Cygnus X-1…), pulsarlar (Yengeç, Vela, Hulse–Taylor…), bulutsular ve kümeler (Orion, Tarantula, Ülker…), gezegenler, yıldızlar ve galaksilere tek tıkla uçuş</span></div>
             <div><kbd data-i18n>Turlar</kbd> <span data-i18n>10 sesli rehberli ders (Güneş Sistemi, Mars ve robotları, Jüpiter, Satürn, uzay araçları, yıldızların yaşamı, kara delikler, pulsarlar, komşu yıldızlar, galaksiler): kamera her durağa uçar, anlatıcı eşzamanlı anlatır;</span> <kbd>Esc</kbd> <span data-i18n>turu bitirir</span></div>
+            <div><kbd data-i18n>Olaylar</kbd> <span data-i18n>Yaklaşan gök ve uzay olayları (kavuşumlar, meteor yağmurları, BepiColombo'nun Merkür yörüngesine girişi, Europa Clipper'ın Dünya geçişi…) simülasyonda birer sahne olarak; her olayın paylaşılabilir bağlantısı ve sitenize gömebileceğiniz iframe kodu vardır. Uzay aracı yörüngeleri NASA/JPL Horizons'tan alınmıştır; simülasyondur, canlı telemetri değildir</span></div>
           </div>
           <div class="help-credits help-about">
             <div class="panel-title small" data-i18n>Hakkında</div>
-            <p><span data-i18n>Your Eyes In Space, dünyanın her yerinde insanların uzay, astrofizik ve gökbilim konularında bilinçlenmesi ve bu alanlara ilgi duyması için yapıldı. 109 000 gerçek yıldız, gerçek galaksiler, kara delikler ve pulsarlar; görev planlayıcı, sesli turlar ve ders kitabı izleğinde interaktif dersler tek bir tarayıcı sekmesinde buluşur. Tüm içerik ücretsizdir ve ücretsiz kalacaktır.</span></p>
+            <p><span data-i18n>Your Eyes In Space, dünyanın her yerinde insanların uzay, astrofizik ve gökbilim konularında bilinçlenmesi ve bu alanlara ilgi duyması için yapıldı. 109 000 gerçek yıldız, gerçek galaksiler, kara delikler ve pulsarlar; görev planlayıcı, sesli turlar ve ders kitabı izleğinde interaktif dersler tek bir tarayıcı sekmesinde buluşur.</span></p>
             <p><span data-i18n>Yazar:</span> <strong>Berk Comba</strong> — <a href="https://bigbrains.com.tr" target="_blank" rel="noopener noreferrer">BigBrains</a>.</p>
             <p><span data-i18n>Geri bildirim:</span> <span data-i18n>Bir hata gördüyseniz, bir bölüm anlaşılmaz geldiyse ya da aklınızda bir özellik varsa yazın; her mesajı okuyorum.</span> <a href="mailto:berkcomba@bigbrains.com.tr?subject=Your%20Eyes%20In%20Space">berkcomba@bigbrains.com.tr</a> · <a href="https://github.com/berkcomba/youreyesinspace/issues" target="_blank" rel="noopener noreferrer">GitHub Issues</a></p>
-            <p><span data-i18n>İş birliğine açığız: eğitim kurumları, gökevleri, bilim merkezleri, bilim iletişimcileri ve araştırmacılarla ortak projelere, içerik ortaklıklarına, çevirilere ve katkılara kapımız açık. Özel iş birlikleri için Your Eyes In Space'in kuruma ya da amaca özel türevleri de geliştirilebilir; bir e-posta yeterli.</span></p>
+            <p><span data-i18n>Okullar, gökevleri, bilim merkezleri, bilim iletişimcileri ve araştırmacılarla ortak projelere, çevirilere ve katkılara açığız. Bir e-posta yeterli.</span></p>
+            <p><span data-i18n>Destek:</span> <span data-i18n>Your Eyes In Space dünyanın dört bir yanında insanların uzaya ilgisini artırıyor; ücretsiz ve reklamsız sunuyoruz, öyle kalacak. Sunucu, uydu görüntüsü akışı ve seslendirme masraflarını paylaşmak isterseniz küçük bir destek bile yeter. Kurumsal destekçilerin adı ve logosu bu bölümde yer alır.</span> <a href="https://github.com/sponsors/berkcomba" target="_blank" rel="noopener noreferrer" data-i18n>Projeyi destekle</a></p>
           </div>
           <div class="help-credits">
             <div class="panel-title small" data-i18n>Veri kaynakları ve lisanslar</div>
             <p>
               <span data-i18n>Yıldız kataloğu:</span> <a href="https://github.com/astronexus/HYG-Database" target="_blank" rel="noopener noreferrer">HYG Database v3</a> (David Nash, Astronexus) —
               <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>; <span data-i18n>Hipparcos, Yale BSC ve Gliese kataloglarından derlenmiştir.</span>
-              <span data-i18n>Gezegen yörünge elemanları: NASA/JPL (Standish, Keplerian Elements). Uzay aracı konumları: JPL Horizons (yaklaşık, 2025 başı).</span>
+              <span data-i18n>Gezegen yörünge elemanları: NASA/JPL (Standish, Keplerian Elements). Uzay aracı konumları: JPL Horizons (yaklaşık, Ekim 2026).</span>
               <span data-i18n>Uzay aracı 3B modelleri:</span> <a href="https://science.nasa.gov/3d-resources/" target="_blank" rel="noopener noreferrer">NASA 3D Resources</a> <span data-i18n>(kamu malı). Görev planlayıcı: patched-conic yaklaşımı (Lambert, Hohmann, tek sapan); bilim kurgu gemileri ilgili eserlerin hayranlık amaçlı, isimle anılan temsilleridir; modeller özgün ve şematiktir.</span>
               <span data-i18n>Yüzey görüntüleri: Dünya —</span> <a href="https://www.earthdata.nasa.gov/engage/open-data-services-software/earthdata-developer-portal/gibs-api" target="_blank" rel="noopener noreferrer">NASA GIBS</a> (Blue Marble Next Generation, VIIRS Black Marble);
               <span data-i18n>Ay —</span> <a href="https://trek.nasa.gov/moon/" target="_blank" rel="noopener noreferrer">NASA Moon Trek</a> <span data-i18n>(LRO WAC mozaiği); Mars —</span> <a href="https://trek.nasa.gov/mars/" target="_blank" rel="noopener noreferrer">NASA Mars Trek</a> (Viking MDIM 2.1); <span data-i18n>Merkür, Venüs, Jüpiter ve Satürn uyduları, Ceres ve Vesta —</span> <a href="https://trek.nasa.gov/" target="_blank" rel="noopener noreferrer">NASA Solar System Treks</a> <span data-i18n>(MESSENGER, Magellan, Galileo, Cassini ve Dawn mozaikleri; Venüs yüzeyi radar görüntüsüdür).</span> <span data-i18n>Tümü NASA kamu malıdır ve doğrudan NASA sunucularından akıtılır.</span>
               <span data-i18n>Galaksi kataloğu: NED / literatür değerleri. Kara delikler: literatür değerleri (GRAVITY, EHT, Gaia DR3 vb.); görüntüleme Schwarzschild metriğinde gerçek zamanlı ışın izlemedir. Bulutsu, küme ve kalıntı yer imleri gerçek konumlarında, NASA/ESA Hubble (kamu malı) ve ESO (CC BY 4.0) fotoğraflarından türetilmiş üç boyutlu bulutlar olarak gösterilir; fotoğrafı olmayanlar prosedürel temsildir. Pulsarlar: ATNF Pulsar Kataloğu değerleri; ışın geometrisi temsilîdir. Prosedürel yıldızlar, galaksiler ve kozmik ağ deterministik olarak üretilir; gerçek kataloglarla karıştırılmamalıdır.</span>
             </p>
-            <p><span data-i18n>Your Eyes In Space bir</span> <a href="https://bigbrains.com.tr" target="_blank" rel="noopener noreferrer">BigBrains</a> <span data-i18n>ürünüdür. Kod</span> <a href="https://github.com/berkcomba/youreyesinspace" target="_blank" rel="noopener noreferrer">GitHub</a><span data-i18n>'da MIT lisansıyla açık kaynaktır; isim ve logo BigBrains markasıdır. © 2026</span></p>
+            <p><span data-i18n>Your Eyes In Space bir</span> <a href="https://bigbrains.com.tr" target="_blank" rel="noopener noreferrer">BigBrains</a> <span data-i18n>ürünüdür. Kod</span> <a href="https://github.com/berkcomba/youreyesinspace" target="_blank" rel="noopener noreferrer">GitHub</a><span data-i18n>'da AGPL-3.0 lisansıyla açık kaynaktır; isim ve logo BigBrains markasıdır. © 2026</span></p>
           </div>
         </div>
       </div>

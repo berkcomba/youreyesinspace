@@ -14,6 +14,11 @@ export class Input {
   dragging = false;
   /** last pointer was a finger (coarse pointer): larger pick tolerances, no hover */
   coarse = false;
+  /**
+   * Embedded in a page (iframe): leave wheel and vertical touch scrolling to the host page until the
+   * visitor has clicked/tapped the view once, so the embed does not hijack scrolling.
+   */
+  private armed = true;
   private downX = 0;
   private downY = 0;
   private moved = false;
@@ -43,6 +48,12 @@ export class Input {
     window.addEventListener('keyup', this.onKeyUp);
     window.addEventListener('blur', () => this.keys.clear());
     document.addEventListener('pointerlockchange', () => this.onLockChange?.(this.locked));
+  }
+
+  /** Require a click/tap before wheel zoom and touch drag take over (embed mode). */
+  setArmOnClick(on: boolean): void {
+    this.armed = !on;
+    this.el.style.touchAction = this.armed ? 'none' : 'pan-y';
   }
 
   /** True while the pointer is captured (mouse-look without dragging). */
@@ -96,6 +107,10 @@ export class Input {
         this.onClick?.(r.left + r.width / 2, r.top + r.height / 2, dbl);
       }
       return;
+    }
+    if (!this.armed) {
+      this.armed = true;
+      this.el.style.touchAction = 'none';
     }
     this.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
     try { this.el.setPointerCapture(e.pointerId); } catch { /* synthetic events */ }
@@ -169,6 +184,7 @@ export class Input {
   };
 
   private onWheel = (e: WheelEvent) => {
+    if (!this.armed) return; // the host page scrolls
     e.preventDefault();
     const d = e.deltaMode === 1 ? e.deltaY * 20 : e.deltaY;
     this.wheel += d;

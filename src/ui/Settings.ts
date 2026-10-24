@@ -10,6 +10,12 @@ export interface Settings {
   /** camera distance appended to labels ("Mars · 1.2 AU", "Sirius · 8.6 ly") */
   distances: boolean;
   galaxies: boolean;
+  /** dwarf planets (with their moons) in the planetary system */
+  dwarfs: boolean;
+  /** asteroids and comets */
+  minorBodies: boolean;
+  /** human-made objects: probes, rovers, telescopes, stations */
+  spacecraft: boolean;
   eclipticGrid: boolean;
   equatorialGrid: boolean;
   atmospheres: boolean;
@@ -19,7 +25,6 @@ export interface Settings {
   ringParticles: boolean;
   shadows: boolean;
   /** close to a body, fade in a work light so the night side is not pitch black (as in tours) */
-  nearLight: boolean;
   /** NASA satellite imagery on Earth / Moon / Mars (streamed) */
   imagery: boolean;
   belts: boolean;
@@ -33,6 +38,8 @@ export interface Settings {
   bloom: boolean;
   /** render resolution relative to the (capped) device pixel ratio */
   renderScale: number;
+  /** drop the render resolution on its own while the frame rate is low, and bring it back when it recovers */
+  autoResolution: boolean;
   fov: number;
   exposure: number;
   mouseSensitivity: number;
@@ -49,6 +56,9 @@ export const DEFAULT_SETTINGS: Settings = {
   galaxyNames: true,
   distances: false,
   galaxies: true,
+  dwarfs: true,
+  minorBodies: true,
+  spacecraft: true,
   eclipticGrid: false,
   equatorialGrid: false,
   atmospheres: true,
@@ -56,7 +66,6 @@ export const DEFAULT_SETTINGS: Settings = {
   rings: true,
   ringParticles: true,
   shadows: true,
-  nearLight: true,
   imagery: true,
   belts: true,
   milkyWay: true,
@@ -65,6 +74,7 @@ export const DEFAULT_SETTINGS: Settings = {
   highlightProcedural: true,
   bloom: true,
   renderScale: 1,
+  autoResolution: true,
   fov: 50,
   exposure: 1.0,
   mouseSensitivity: 1.0,

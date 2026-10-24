@@ -61,7 +61,7 @@ export class Engine {
     this.height = window.innerHeight;
     // phones have DPR 3 and small GPUs: cap lower than on desktop, then apply the user's scale
     const cap = this.mobile ? 1.5 : 2;
-    this.pixelRatio = Math.max(0.5, Math.min(window.devicePixelRatio || 1, cap) * this.renderScale);
+    this.pixelRatio = Math.max(0.25, Math.min(window.devicePixelRatio || 1, cap) * this.renderScale);
     this.renderer.setPixelRatio(this.pixelRatio);
     this.renderer.setSize(this.width, this.height, false);
     this.composer.setPixelRatio(this.pixelRatio);
@@ -74,6 +74,11 @@ export class Engine {
     if (scale === this.renderScale) return;
     this.renderScale = scale;
     this.resize();
+  }
+
+  /** Device-pixel cap applied before the user's scale (phones: 1.5, desktop: 2) */
+  static dprCap(mobile: boolean): number {
+    return Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 2);
   }
 
   setFov(deg: number): void {

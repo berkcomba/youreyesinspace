@@ -7,11 +7,13 @@ import {
   type ResolvedElements,
 } from '../math/kepler';
 import { DAY_S, DEG, G } from './constants';
+import { ephemeris } from './Ephemeris';
 
 const _identity3 = new Matrix3();
 
 const _math = new Vector3();
 const _tmp = new Vector3();
+const _up = new Vector3();
 const _tmp2 = new Vector3();
 const _m4 = new Matrix4();
 const _qSpin = new Quaternion();
@@ -58,6 +60,12 @@ export class CelestialBody {
   distanceToStar = 0;
   /** Sidereal rotation period in seconds (signed); 0 if synchronous */
   rotationPeriodS = 0;
+  /** Not representable right now (sampled ephemeris outside its span): not drawn, not labelled */
+  hidden = false;
+  /** Switched off by a display setting (dwarfs / minor bodies / spacecraft): not drawn, not labelled, no orbit */
+  filtered = false;
+  /** Body lookup of the owning system (set by StarSystem); used by ephemeris centres */
+  lookup: ((id: string) => CelestialBody | undefined) | null = null;
 
   constructor(data: BodyData) {
     this.data = data;
@@ -124,12 +132,23 @@ export class CelestialBody {
       this.rotation.setFromUnitVectors(_yAxis, _tmp.normalize());
     } else if (o.kind === 'surface') {
       const lat = o.lat * DEG, lon = o.lon * DEG;
-      // body-fixed frame of the parent: +Y pole, +X prime meridian, east longitude = rotation about +Y
-      _tmp.set(Math.cos(lat) * Math.cos(lon), Math.sin(lat), -Math.cos(lat) * Math.sin(lon));
+      const sl = Math.sin(lat), cl = Math.cos(lat);
+      // body-fixed frame of the parent: +Y pole, +X prime meridian, east longitude = rotation about +Y.
+      // Geodetic latitude on the parent's ellipsoid, exactly as its imagery globe is built, so a
+      // lander stands on the rendered surface (the mean radius would bury it kilometres deep)
+      const re = p.equatorialRadius, e2 = 1 - (p.polarRadius / re) ** 2;
+      const N = re / Math.sqrt(1 - e2 * sl * sl);
+      _tmp.set(N * cl * Math.cos(lon), N * (1 - e2) * sl, -N * cl * Math.sin(lon));
+      _up.set(cl * Math.cos(lon), sl, -cl * Math.sin(lon));
+      _tmp.addScaledVector(_up, o.alt ?? 0);
       _tmp.applyQuaternion(p.rotation);
-      this.localPosition.copy(_tmp).multiplyScalar(p.radius + (o.alt ?? 0));
-      this.orbitalSpeed = (2 * Math.PI * p.radius * Math.cos(lat)) / Math.max(p.rotationSecondsAbs, 1);
-      this.rotation.setFromUnitVectors(_yAxis, _tmp.normalize());
+      this.localPosition.copy(_tmp);
+      this.orbitalSpeed = (2 * Math.PI * N * cl) / Math.max(p.rotationSecondsAbs, 1);
+      // local frame of a surface body: +X east, +Y up, +Z south (north-up terrain maps rely on it)
+      _tmp.set(-Math.sin(lon), 0, -Math.cos(lon));            // east
+      _tmp2.crossVectors(_tmp, _up);                            // east × up = south
+      _m4.makeBasis(_tmp, _up, _tmp2);
+      this.rotation.setFromRotationMatrix(_m4).premultiply(p.rotation);
     } else if (o.kind === 'lagrange') {
       const gp = p.parent;
       if (gp) _tmp.copy(p.position).sub(gp.position).normalize();
@@ -138,6 +157,23 @@ export class CelestialBody {
       this.localPosition.copy(_tmp).multiplyScalar(o.distance);
       this.orbitalSpeed = p.orbitalSpeed * ((p.localPosition.length() + (o.point === 'L2' ? o.distance : -o.distance)) / Math.max(p.localPosition.length(), 1));
       this.rotation.setFromUnitVectors(_yAxis, _tmp.negate().normalize());
+    } else if (o.kind === 'ephemeris') {
+      // sampled JPL Horizons table, relative to whichever body the active segment is centred on
+      ephemeris.ensure(o.table);
+      const center = ephemeris.sample(o.table, jd, _math, _tmp2);
+      const c = center ? (center === p.id ? p : this.lookup?.(center)) : undefined;
+      if (!c) {
+        this.hidden = true;
+        this.localPosition.set(0, 0, 0);
+        this.orbitalSpeed = 0;
+      } else {
+        this.hidden = false;
+        mathToScene(_math, _identity3, this.localPosition);
+        if (c !== p) this.localPosition.add(c.position).sub(p.position);
+        mathToScene(_tmp2, _identity3, _tmp);
+        this.orbitalSpeed = _tmp.length();
+        if (this.orbitalSpeed > 1e-9) this.rotation.setFromUnitVectors(_yAxis, _tmp.normalize());
+      }
     } else if (o.kind === 'trajectory') {
       // mission vehicle: absolute position & velocity from the planner's evaluator
       if (!o.evaluate(jd, this.position, _tmp)) { this.position.copy(p.position); _tmp.set(0, 0, 0); }

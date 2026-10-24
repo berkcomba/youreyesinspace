@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://youreyesinspace.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <!-- Events: shareable scenes (src/data/events.ts) -->
+  <url><loc>https://youreyesinspace.com/?event=orionids-2026</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://youreyesinspace.com/?event=hera-didymos-2026</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://youreyesinspace.com/?event=southern-taurids-2026</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://youreyesinspace.com/?event=northern-taurids-2026</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://youreyesinspace.com/?event=mars-jupiter-conjunction-2026</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://youreyesinspace.com/?event=leonids-2026</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://youreyesinspace.com/?event=voyager1-light-day-2026</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://youreyesinspace.com/?event=mercury-west-elongation-2026</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://youreyesinspace.com/?event=bepicolombo-moi-2026</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://youreyesinspace.com/?event=beaver-supermoon-2026</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://youreyesinspace.com/?event=uranus-opposition-2026</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://youreyesinspace.com/?event=europa-clipper-earth-flyby-2026</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://youreyesinspace.com/?event=new-moon-2026-12</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://youreyesinspace.com/?event=bepicolombo-separation-2026</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://youreyesinspace.com/?event=geminids-2026</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://youreyesinspace.com/?event=december-solstice-2026</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://youreyesinspace.com/?event=ursids-2026</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://youreyesinspace.com/?event=cold-supermoon-2026</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://youreyesinspace.com/?event=annular-eclipse-2027</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
 </urlset>

@@ -29,6 +29,7 @@ export class StarSystem {
   ) {
     for (const d of catalogue) {
       const b = new CelestialBody(d);
+      b.lookup = this.get;
       this.byId.set(b.id, b);
     }
     for (const d of catalogue) {
@@ -51,14 +52,13 @@ export class StarSystem {
     for (const b of this.bodies) b.updateOrbitBasis();
   }
 
-  get(id: string): CelestialBody | undefined {
-    return this.byId.get(id);
-  }
+  readonly get = (id: string): CelestialBody | undefined => this.byId.get(id);
 
   /** Add a body at runtime (mission vehicles). The parent must already exist. */
   addBody(data: BodyData): CelestialBody {
     if (this.byId.has(data.id)) this.removeBody(data.id);
     const b = new CelestialBody(data);
+    b.lookup = this.get;
     if (data.parent) {
       const p = this.byId.get(data.parent);
       if (!p) throw new Error(`Unknown parent ${data.parent} for ${data.id}`);

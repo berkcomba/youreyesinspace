@@ -4,8 +4,10 @@ uniform vec3 uSunPos;
 uniform float uSunRadius;
 uniform vec3 uSunColor;
 uniform vec3 uBodyPos;
-uniform float uBodyRadius;
-uniform float uOuterRadius;
+uniform float uBodyRadius;    // equatorial radius
+uniform float uOuterRadius;   // equatorial radius of the shell's top
+uniform vec3 uPole;           // the body's north pole (scene frame)
+uniform float uPolarScale;    // equatorial / polar radius: the body (and its air) is an oblate ellipsoid
 uniform vec3 uColor;
 uniform vec3 uSunsetColor;
 uniform float uDensity;
@@ -14,16 +16,22 @@ uniform float uAlpha;   // brightness (tours fade comparison bodies in/out)
 
 varying vec3 vWorldPos;
 
-// returns true if hit; t0 <= t1
-bool raySphere(vec3 ro, vec3 rd, vec3 c, float r, out float t0, out float t1) {
-  vec3 oc = ro - c;
+// Stretch along the pole turns the ellipsoid (and its shell) into spheres of equatorial radius;
+// rays are intersected there, their parameters t stay valid in the real frame.
+vec3 stretch(vec3 p) {
+  return p + (uPolarScale - 1.0) * dot(p, uPole) * uPole;
+}
+
+// returns true if hit; t0 <= t1 (rd need not be unit length)
+bool raySphere(vec3 oc, vec3 rd, float r, out float t0, out float t1) {
+  float a = dot(rd, rd);
   float b = dot(oc, rd);
   float cc = dot(oc, oc) - r * r;
-  float disc = b * b - cc;
+  float disc = b * b - a * cc;
   if (disc < 0.0) return false;
   float s = sqrt(disc);
-  t0 = -b - s;
-  t1 = -b + s;
+  t0 = (-b - s) / a;
+  t1 = (-b + s) / a;
   return true;
 }
 
@@ -32,12 +40,13 @@ void main() {
 
   vec3 rd = normalize(vWorldPos);
   vec3 ro = vec3(0.0);
+  vec3 ocS = stretch(ro - uBodyPos), rdS = stretch(rd);
   float tOut0, tOut1;
-  if (!raySphere(ro, rd, uBodyPos, uOuterRadius, tOut0, tOut1)) discard;
+  if (!raySphere(ocS, rdS, uOuterRadius, tOut0, tOut1)) discard;
   float tEntry = max(tOut0, 0.0);
   float tExit = tOut1;
   float tIn0, tIn1;
-  bool hitPlanet = raySphere(ro, rd, uBodyPos, uBodyRadius, tIn0, tIn1) && tIn1 > 0.0;
+  bool hitPlanet = raySphere(ocS, rdS, uBodyRadius, tIn0, tIn1) && tIn1 > 0.0;
   if (hitPlanet) tExit = min(tExit, max(tIn0, 0.0));
   float path = tExit - tEntry;
   if (path <= 0.0) discard;
@@ -51,7 +60,7 @@ void main() {
     float t = tEntry + path * (float(i) + 0.5) / float(STEPS);
     vec3 s = ro + rd * t;
     vec3 up = normalize(s - uBodyPos);
-    float alt = (length(s - uBodyPos) - uBodyRadius) / H;
+    float alt = (length(stretch(s - uBodyPos)) - uBodyRadius) / H;
     float dens = exp(-alt * 3.5) * (1.0 - smoothstep(0.85, 1.0, alt));
     float mu = dot(up, L);
     float light = smoothstep(-0.22, 0.25, mu);

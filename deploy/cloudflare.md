@@ -70,9 +70,9 @@ Script (idempotent) şunları kurar:
 | Bot | Bot Fight Mode, Browser Integrity Check, security level *medium*, doğrulanmamış botlara managed challenge |
 | WAF | Sadece GET/HEAD/OPTIONS; `.map`, `.env`, `.git`, gizli dosya yolları blok; threat score > 30 challenge |
 | Rate limit | `/` 60 istek/10 sn/IP (challenge); `/data`, `/models` 120/10 sn (blok); genel 600/10 sn (blok) |
-| Cache | `/assets`, `/data`, `/models` edge'de 1 yıl (query string cache key'de → `?v=BUILD_ID` ile bust); `/` 5 dk |
+| Cache | `/assets`, `/data`, `/models` edge'de 1 yıl (query string cache key'de → `?v=BUILD_ID` ile bust); `/` 5 dk; `/events/*.json` (5 dk) ve `/ephem/*.json` (1 gün) origin'e saygı; `/_b.gif` cache dışı |
 | Origin koruması | Transform rule ile `X-Origin-Auth: <sır>`; nginx başlığı doğrulamayan isteğe 403 |
-| Başlıklar | nosniff, DENY, Referrer-Policy, Permissions-Policy; `Server`/`X-Powered-By` kaldırılır |
+| Başlıklar | nosniff, Referrer-Policy, Permissions-Policy; `Server`/`X-Powered-By` kaldırılır. `X-Frame-Options: DENY` yalnızca `?embed=1` **dışında** (gömülebilir olay görünümü başka sitelerde iframe içinde çalışır; nginx aynı koşulla CSP `frame-ancestors`'ı da `*` yapar) |
 
 Ek olarak panelden (API'si plana bağlı):
 
@@ -87,6 +87,7 @@ Ek olarak panelden (API'si plana bağlı):
 ```bash
 curl -sI https://example.com/ | grep -iE 'strict-transport|content-security|x-frame|cf-cache-status|cache-control'
 curl -sI https://example.com/data/stars.bin?v=x | grep -iE 'cf-cache-status|cache-control|content-encoding'
+curl -sI "https://example.com/?embed=1&event=bepicolombo-moi-2026" | grep -iE 'x-frame|frame-ancestors'   # XFO yok, frame-ancestors * beklenir
 curl -sI -X POST https://example.com/   # 403/405 beklenir
 curl -sI https://<servis>-<hash>-ew.a.run.app/      # 403 beklenir (origin doğrudan kapalı)
 ```

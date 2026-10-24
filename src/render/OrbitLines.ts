@@ -41,7 +41,8 @@ class OrbitLine {
       vertexShader: Shaders.orbitVert,
       fragmentShader: Shaders.orbitFrag,
       uniforms: {
-        uColor: { value: (ORBIT_COLORS[body.data.type] ?? ORBIT_COLORS.planet).clone() },
+        // a barycentre inside a system (Pluto–Charon) draws its heliocentric orbit in the primary's colour
+        uColor: { value: (ORBIT_COLORS[body.data.type === 'barycenter' && body.children[0] ? body.children[0].data.type : body.data.type] ?? ORBIT_COLORS.planet).clone() },
         uOpacity: { value: 0.6 },
       },
       transparent: true,
@@ -108,7 +109,7 @@ export class OrbitLines {
   ): void {
     for (const l of this.lines) {
       const b = l.body;
-      if (!visible || !b.resolved || !b.parent) {
+      if (!visible || !b.resolved || !b.parent || b.filtered) {
         l.line.visible = false;
         continue;
       }
@@ -127,7 +128,9 @@ export class OrbitLines {
       const dBody = Math.sqrt(
         (b.position.x - camPos.x) ** 2 + (b.position.y - camPos.y) ** 2 + (b.position.z - camPos.z) ** 2,
       );
-      const nearFade = Math.min(1, Math.max(0, (dBody / b.radius - 12) / 30));
+      // …or right on the orbit itself: a black hole or probe is tiny against its orbit, so the
+      // camera can be hundreds of radii out and still have the line run through the lens
+      const nearFade = Math.min(1, Math.max(0, (dBody / b.radius - 12) / 30), Math.max(0, (dBody / b.resolved.a - 0.003) / 0.02));
       if (orbitPx < 4 || nearFade <= 0) {
         l.line.visible = false;
         continue;

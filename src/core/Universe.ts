@@ -375,7 +375,8 @@ export class Universe {
   get bodies(): CelestialBody[] { return this.current.bodies; }
   get roots(): CelestialBody[] { return this.current.roots; }
   get star(): CelestialBody { return this.current.star; }
-  get(id: string): CelestialBody | undefined { return this.current.get(id); }
+  /** Body of the current system; `@star` names its primary star (tour cues in generated systems, whose star ids are not stable) */
+  get(id: string): CelestialBody | undefined { return id === '@star' ? this.current.star : this.current.get(id); }
   update(jd: number, tSeconds: number): void { this.current.update(jd, tSeconds); }
   dominantBody(point: { x: number; y: number; z: number }): CelestialBody { return this.current.dominantBody(point); }
   nearestBody(point: { x: number; y: number; z: number }): { body: CelestialBody; altitude: number } { return this.current.nearestBody(point); }

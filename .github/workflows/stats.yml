@@ -1,0 +1,58 @@
+name: Update usage stats
+
+# Regenerates public/stats.json (the "N visits since launch" line in the About panel) from Cloud Run
+# request logs once a day, commits it and kicks off the normal deploy.
+# Needs the deploy service account to have roles/logging.viewer on the project.
+
+on:
+  schedule:
+    - cron: '20 3 * * *' # 03:20 UTC daily
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+  id-token: write
+
+concurrency:
+  group: update-stats
+  cancel-in-progress: false
+
+jobs:
+  stats:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Fetch stats
+        env:
+          GCP_PROJECT: ${{ vars.GCP_PROJECT }}
+          CLOUD_RUN_SERVICE: ${{ vars.CLOUD_RUN_SERVICE || 'youreyesinthespace' }}
+        run: node scripts/fetch-stats.mjs --days 3
+
+      - name: Commit and deploy if changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- public/stats.json; then echo "no change"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/stats.json
+          git commit -m "stats: $(node -e 'console.log(require("./public/stats.json").visits)') visits as of $(date -u +%F)"
+          git push origin HEAD:main
+          # pushes made with GITHUB_TOKEN don't trigger `on: push`; dispatch the deploy explicitly
+          gh workflow run deploy.yml --ref main
