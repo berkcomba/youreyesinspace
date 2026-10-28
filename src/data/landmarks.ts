@@ -3,13 +3,14 @@ import type { BodyData } from './types';
 import type { StarInfo } from './StarCatalog';
 import { starBody, syntheticInfo } from './blackholes';
 import { PULSARS, pulsarBodies, pulsarInfo, type PulsarParams } from './pulsars';
+import type { ClusterParams } from '../galaxy/ClusterStars';
 
 /**
  * Real, named deep-sky landmarks: nebulae, clusters, supernova remnants and a few record-holding
  * stars — in the Milky Way and in the nearby galaxies. Nebulae/clusters/remnants are drawn as
  * sprites and are destinations; stars become visitable systems (`l{n}` ids).
  */
-export type LandmarkKind = 'nebula' | 'cluster' | 'remnant' | 'star' | 'pulsar';
+export type LandmarkKind = 'nebula' | 'cluster' | 'remnant' | 'star' | 'pulsar' | 'planetary' | 'globular';
 
 export const LANDMARK_KIND_LABEL: Record<LandmarkKind, string> = {
   nebula: 'Bulutsu',
@@ -17,6 +18,8 @@ export const LANDMARK_KIND_LABEL: Record<LandmarkKind, string> = {
   remnant: 'Süpernova / gezegenimsi bulutsu kalıntısı',
   star: 'Yıldız',
   pulsar: 'Pulsar / nötron yıldızı',
+  planetary: 'Gezegenimsi bulutsu',
+  globular: 'Küresel küme',
 };
 
 export interface LandmarkStar {
@@ -50,6 +53,10 @@ export interface LandmarkDef {
   star?: LandmarkStar;
   /** physical parameters when `kind === 'pulsar'` (visitable system, see data/pulsars.ts) */
   pulsar?: PulsarParams;
+  /** generated object (see galaxy/ProcLandmarks.ts); position comes with the landmark, not from ra/dec */
+  procedural?: true;
+  /** star clusters: age / population, from which the selectable member stars are generated */
+  cluster?: ClusterParams;
 }
 
 /** landmark is a visitable system (`l{n}` id) */

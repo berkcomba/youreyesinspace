@@ -21,8 +21,9 @@ export type TourTarget =
 /**
  * Something that happens while a step is narrated. `at` is the index of the sentence (of the
  * source text, 0-based) at whose start the cue fires; the player maps it onto the spoken locale.
+ * `delay` (seconds) holds it back further into that sentence.
  */
-export type TourCue =
+export type TourCue = { delay?: number } & (
   /** fade the cloud layer in/out (e.g. strip Venus to show the radar surface) */
   | { at: number; action: 'clouds'; on: boolean }
   /** change the simulation rate from this sentence on (s/s) */
@@ -33,7 +34,7 @@ export type TourCue =
    * Pin a surface feature of `ref` (east longitude, degrees) with a labelled marker and, unless
    * `approach` is false, fly in above it. `storm` snaps to the gas giant's rendered storm instead.
    */
-  | { at: number; action: 'pin'; ref: string; lat: number; lon: number; label: string; approach?: boolean; storm?: boolean }
+  | { at: number; action: 'pin'; ref: string; lat: number; lon: number; label: string; approach?: boolean; storm?: boolean; extent?: number }
   /** remove the pin */
   | { at: number; action: 'unpin' }
   /** fly back to the step's target */
@@ -50,14 +51,30 @@ export type TourCue =
    * Place a true-scale copy of `ref` (e.g. Earth) beside the step's target so the two can be
    * compared; the camera backs off far enough to see both. Removed by `uncompare` or step end.
    */
-  | { at: number; action: 'compare'; ref: string }
+  | { at: number; action: 'compare'; ref: string; shoulder?: boolean }
   | { at: number; action: 'uncompare' }
+  /**
+   * Postcard of a mountain: a real relief built offline (`relief`: directory under
+   * tour-media/terrain, centred on the summit at `lat`/`lon`, `peak` km above the plains, drawn
+   * `scale` times taller) rises on `ref`, and the camera glides down — looking at the ground as
+   * it comes in — to stand `dist` km from the summit, `alt` km above the ground, looking at it
+   * across the horizon. `fov` narrows the lens (telephoto), `seconds` is the flight time.
+   */
+  | { at: number; action: 'postcard'; ref: string; lat: number; lon: number; relief: string; peak: number; scale: number; dist: number; alt: number; fov?: number; seconds?: number }
+  /**
+   * Over a ringed planet's shoulder: the camera `dist` radii out, `elev` degrees above the ring
+   * plane, `az` degrees round from the sunlit side, aimed at the rings `aimR` radii out and `aimAz`
+   * degrees further round — the planet's limb fills one side of the frame, the rings sweep away
+   * on the other. Holds still while the clock runs fast.
+   */
+  | { at: number; action: 'limb'; ref?: string; elev: number; az: number; dist: number; aimR: number; aimAz: number; seconds?: number }
   /**
    * Fly to a vantage point around `ref` (default: the step's target): `elev` degrees above its
    * equator plane, `az` degrees around the pole measured from the sunlit side (0 = noon side,
    * 90 = morning terminator), `dist` in radii. `seconds` stretches the flight (slow reveals).
+   * `inside`: a ringed planet's camera may come closer than its outer ring.
    */
-  | { at: number; action: 'vantage'; ref?: string; elev: number; az: number; dist: number; seconds?: number }
+  | { at: number; action: 'vantage'; ref?: string; elev: number; az: number; dist: number; seconds?: number; inside?: boolean }
   /**
    * Over-the-shoulder shot: camera `dist` radii from `ref` on the side away from `toward`, so
    * `toward` hangs in the background behind it (a spacecraft against the world it approaches).
@@ -97,7 +114,7 @@ export type TourCue =
    * across the night side at the hemisphere being hit (`seconds`: flight time). `on: false` stops it.
    */
   | { at: number; action: 'meteors'; on: true; ref: string; ra: number; dec: number; speed: number; rate: number; fireballs?: number; approach?: boolean; seconds?: number }
-  | { at: number; action: 'meteors'; on: false };
+  | { at: number; action: 'meteors'; on: false });
 
 export interface TourStep {
   /** stable id — audio file name */
@@ -156,10 +173,10 @@ const uncard = (at: number): TourCue => ({ at, action: 'uncard' });
 const rate = (at: number, r: number): TourCue => ({ at, action: 'rate', rate: r });
 const overview = (at: number, ref: string, seconds?: number): TourCue => ({ at, action: 'overview', ref, seconds });
 const ret = (at: number): TourCue => ({ at, action: 'return' });
-const pin = (at: number, ref: string, lat: number, lon: number, label: string, extra: { storm?: boolean; approach?: boolean } = {}): TourCue => ({ at, action: 'pin', ref, lat, lon, label, ...extra });
+const pin = (at: number, ref: string, lat: number, lon: number, label: string, extra: { storm?: boolean; approach?: boolean; extent?: number } = {}): TourCue => ({ at, action: 'pin', ref, lat, lon, label, ...extra });
 const unpin = (at: number): TourCue => ({ at, action: 'unpin' });
 const clouds = (at: number, on: boolean): TourCue => ({ at, action: 'clouds', on });
-const compare = (at: number, ref: string): TourCue => ({ at, action: 'compare', ref });
+const compare = (at: number, ref: string, o: { shoulder?: boolean } = {}): TourCue => ({ at, action: 'compare', ref, ...o });
 const uncompare = (at: number): TourCue => ({ at, action: 'uncompare' });
 const vantage = (at: number, elev: number, az: number, dist: number, ref?: string, seconds?: number): TourCue => ({ at, action: 'vantage', elev, az, dist, ref, seconds });
 const pulse = (at: number, from: string, to: string, seconds: number): TourCue => ({ at, action: 'pulse', from, to, seconds });
@@ -196,11 +213,11 @@ export const TOURS: TourDef[] = [
         // 0 welcome · 1 mass · 2 Earth comparison · 3 temperatures · 4 light pulse · 5 eight minutes ago
         text: 'Güneş Sistemi turuna hoş geldiniz; yolculuğumuz her şeyin merkezinden, Güneş\'ten başlıyor. Dört buçuk milyar yaşındaki bu yıldız, sistemdeki toplam kütlenin yüzde doksan dokuz virgül sekizini tek başına taşır. Ne kadar büyük olduğunu görmek için yanına gerçek ölçekli bir Dünya koyalım: çapı boyunca yan yana yüz dokuz Dünya dizilir, içine ise bir milyon üç yüz bin tanesi sığar. Yüzeyi beş bin beş yüz derece, çekirdeği on beş milyon derecedir; her saniye altı yüz milyon ton hidrojeni helyuma dönüştürür. Şimdi geri çekilelim ve ışığın yolculuğunu izleyelim: Güneş\'ten çıkan ışık, Dünya\'ya sekiz dakika yirmi saniyede ulaşır. Yani Güneş\'e her baktığınızda, aslında sekiz dakika önceki hâlini görürsünüz.',
         cues: [
-          compare(2, 'earth'),
+          compare(2, 'earth', { shoulder: true }),
           card(2, { big: '109 Dünya', title: 'Güneş\'in çapı boyunca', text: 'Hacmine bir milyon üç yüz bin Dünya sığar.' }),
           card(3, { image: 'sun.jpg', source: 'NASA/SDO', title: 'Güneş patlaması', text: 'Dinamik Güneş Gözlemevi\'nin görüntülediği bir X sınıfı patlama.' }),
           uncompare(4), uncard(4), overview(4, 'earth'), pulse(4, 'sun', 'earth', 7),
-        ], dwell: 4 },
+        ], dwell: 1 },
 
       { id: 'mercury', target: body('mercury'),
         // 0 intro · 1 88-day orbit (overview) · 2 slow spin (back) · 3 temperatures · 4 Caloris pin · 5 BepiColombo
@@ -209,8 +226,11 @@ export const TOURS: TourDef[] = [
           overview(1, 'mercury'), rate(1, 2.8e6),
           ret(2), rate(2, 1),
           card(2, { big: '1 gün = 2 yıl', title: 'Merkür\'de zaman', text: 'Bir güneş günü yüz yetmiş altı Dünya günü sürer.', until: 4 }),
-          pin(4, 'mercury', 30.5, -170.2, 'Caloris Havzası'),
-          unpin(5), ret(5),
+          pin(4, 'mercury', 30.5, 161.2, 'Caloris Havzası', { extent: 775 }),
+          // BepiColombo's capture week (the sampled ephemeris around Mercury): seen from a little
+          // way behind the spacecraft, Mercury filling the background
+          unpin(5), { at: 5, action: 'time', iso: '2026-11-21T12:00:00Z' },
+          shot(5, 'bepicolombo', 'mercury', 8, { az: -32, elev: 10, seconds: 4 }),
           card(5, { image: 'bepicolombo.jpg', source: 'ESA/BepiColombo/MTM (CC BY-SA 3.0 IGO)', title: 'BepiColombo', text: 'Aracın Merkür yakın geçişinde çektiği fotoğraf, 2025.' }),
         ], dwell: 3 },
 
@@ -220,7 +240,7 @@ export const TOURS: TourDef[] = [
         cues: [
           compare(0, 'earth'),
           uncompare(1),
-          clouds(2, false),
+          clouds(2, false), dolly(2, -0.045),
           card(2, { big: '465 °C', title: 'Yüzey sıcaklığı', text: 'Basınç doksan iki atmosfer: bir kilometre derinlikteki denizle aynı.', until: 4 }),
           pin(3, 'venus', 65.2, 3.3, 'Maxwell Dağları'),
           unpin(4), ret(4),
@@ -245,7 +265,8 @@ export const TOURS: TourDef[] = [
           uncompare(2), pin(2, 'moon', 0.67, 23.47, 'Apollo 11 iniş yeri'),
           card(2, { image: 'apollo11.jpg', source: NASA, title: 'Buzz Aldrin, Apollo 11', text: 'Neil Armstrong\'un çektiği fotoğraf, 20 Temmuz 1969.' }),
           uncard(4), pin(4, 'moon', -43.3, -11.4, 'Tycho Krateri'),
-          unpin(5), ret(5),
+          // over the Moon's shoulder: its far side toward us, the Earth it always faces behind
+          unpin(5), shot(5, 'moon', 'earth', 3, { az: 25, elev: 10 }),
         ], dwell: 2 },
 
       { id: 'mars', target: body('mars'),
@@ -253,10 +274,13 @@ export const TOURS: TourDef[] = [
         text: 'Kızıl Gezegen Mars, rengini yüzeyindeki paslanmış demirden alır. Çapı Dünya\'nın yarısı kadardır; ama kara alanı neredeyse Dünya\'nın tüm karalarına eşittir, çünkü okyanusu yoktur. Güneş Sistemi\'nin en büyük yanardağına ev sahipliği yapar: yirmi iki kilometre yüksekliğindeki Olympus Mons, Everest\'in iki buçuk katıdır. Dört bin kilometre uzunluğundaki Valles Marineris kanyonu ise Amerika kıtasını baştan başa geçecek kadar uzundur. Milyarlarca yıl önce yüzeyinde nehirler ve göller vardı; bugün bu suyun izlerini Curiosity ve Perseverance gibi robotlar arıyor. Günü bizimkine çok benzer, yirmi dört saat otuz yedi dakika; yılı ise altı yüz seksen yedi gün sürer.',
         cues: [
           compare(1, 'earth'),
-          uncompare(2), pin(2, 'mars', 18.65, -133.8, 'Olympus Mons'),
-          card(2, { image: 'olympus.jpg', source: 'NASA/JPL/USGS', title: 'Olympus Mons', text: 'Tabanı Fransa kadar geniş; yamaçları o kadar yumuşak ki tepesinden ufku göremezsiniz.' }),
-          pin(3, 'mars', -13.9, -59.2, 'Valles Marineris'),
-          card(3, { image: 'valles.jpg', source: 'NASA/JPL/USGS', title: 'Valles Marineris', text: 'Yer yer yedi kilometre derinliğinde; Büyük Kanyon\'un on katı.' }),
+          // the volcano marked from orbit, then a glide down to a telephoto "postcard" of it
+          // standing over the horizon; the next pin waits a little so the view can be enjoyed
+          uncompare(2), pin(2, 'mars', 18.65, -133.8, 'Olympus Mons', { approach: false }),
+          { at: 2, action: 'postcard', ref: 'mars', lat: 18.65, lon: -133.8, relief: 'olympus', peak: 22, scale: 3, dist: 380, alt: 2.5, fov: 30, seconds: 9 },
+          card(2, { image: 'olympus.jpg', source: 'NASA/JPL/USGS', title: 'Olympus Mons', text: 'Tabanı Fransa kadar geniş; yamaçları o kadar yumuşak ki tepesinden ufku göremezsiniz. Kartpostal görünümünde yükseklik üç kat abartılı.' }),
+          { ...pin(3, 'mars', -13.9, -59.2, 'Valles Marineris'), delay: 3 },
+          { ...card(3, { image: 'valles.jpg', source: 'NASA/JPL/USGS', title: 'Valles Marineris', text: 'Yer yer yedi kilometre derinliğinde; Büyük Kanyon\'un on katı.' }), delay: 3 },
           unpin(4), ret(4),
           card(4, { image: 'perseverance.jpg', source: 'NASA/JPL-Caltech/ASU/MSSS', title: 'Perseverance ve Ingenuity', text: 'Jezero Krateri, Haziran 2021.' }),
           uncard(5), overview(5, 'mars'), rate(5, 6e6),
@@ -279,9 +303,12 @@ export const TOURS: TourDef[] = [
         // 0 elegant · 1 rings width · 2 edge-on (vantage) · 3 density · 4 hexagon pin · 5 Cassini
         text: 'Satürn, hiç şüphesiz Güneş Sistemi\'nin en zarif gezegeni. Halkaları çoğunlukla su buzundan oluşur ve genişlikleri iki yüz seksen bin kilometreyi bulur. Ama tam kenarından baktığımızda neredeyse kaybolurlar: kalınlıkları çoğu yerde yalnızca on metre kadardır. Gezegenin kendisi o kadar hafiftir ki yeterince büyük bir okyanusa koysanız yüzerdi. Kuzey kutbunda, her kenarı Dünya kadar olan gizemli bir altıgen fırtına döner. Cassini aracı on üç yıl boyunca bu sistemi inceledi ve iki bin on yedide görevini gezegenin atmosferine dalarak tamamladı.',
         cues: [
-          vantage(2, 0.3, 70, 4.5),
+          // the approach shows the whole planet first; then over its shoulder, the rings sweeping
+          // away, the clock a little faster; then far out, exactly edge-on
+          { at: 1, delay: 1, action: 'limb', elev: 12, az: 30, dist: 1.6, aimR: 1.9, aimAz: 80, seconds: 5 }, rate(1, 900),
+          vantage(2, 0.3, 70, 9),
           card(2, { image: 'rings_edge.jpg', source: SSI, title: 'Halkalar kenardan', text: 'Cassini\'nin halka düzleminden çektiği görüntü: iki yüz seksen bin kilometre genişlik, on metre kalınlık.' }),
-          ret(3), uncard(3),
+          ret(3), uncard(3), rate(3, 1),
           pin(4, 'saturn', 89, 0, 'Kuzey kutbu altıgeni'),
           card(4, { image: 'hexagon.jpg', source: SSI, title: 'Altıgen', text: 'Her kenarı yaklaşık on dört bin beş yüz kilometre; Cassini, kızılötesi.' }),
           unpin(5), ret(5),

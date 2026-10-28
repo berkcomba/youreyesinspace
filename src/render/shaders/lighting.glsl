@@ -21,6 +21,13 @@ float fillLit(float diffuse) {
   return max(diffuse, uFill * 0.9);
 }
 
+// The work light as a soft lamp from the camera: the limb falls off, so the night side keeps
+// its shape instead of turning into a flat disc (ndv = N·V of the surface)
+float fillLitV(float diffuse, float ndv) {
+  float lamp = uFill * 0.9 * mix(0.2, 1.0, pow(clamp(ndv, 0.0, 1.0), 0.7));
+  return max(diffuse, lamp);
+}
+
 float sunAngularRadius(vec3 P) {
   return uSunRadius / max(length(uSunPos - P), 1.0);
 }

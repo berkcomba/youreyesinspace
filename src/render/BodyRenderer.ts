@@ -7,14 +7,17 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import type { CelestialBody } from '../core/CelestialBody';
 import type { StarSystem } from '../core/StarSystem';
-import { DEG, PARSEC_KM } from '../core/constants';
-import { temperatureToRgb } from '../astro/stellar';
+import { AU_KM, DEG, PARSEC_KM } from '../core/constants';
+import { starLightColor, temperatureToRgb } from '../astro/stellar';
 import { RingParticles } from './RingParticles';
+import { Plumes } from './Plumes';
 import { IMAGERY } from '../data/imagery';
+import type { Clouds } from '../data/types';
 import { Shaders } from './shaders';
 import { TileGlobe } from './TileGlobe';
 import { buildProceduralShip, disposeGroup } from './ProceduralShips';
 import { Terrain, type TerrainMeta } from './Terrain';
+import type { GeneratedGround } from './GroundGen';
 
 export interface RenderSettings {
   atmospheres: boolean;
@@ -45,6 +48,11 @@ function smooth01(x: number): number {
 
 function vec3(c: [number, number, number]): Vector3 {
   return new Vector3(c[0], c[1], c[2]);
+}
+
+/** (coverage, opacity, seed, height / R) of a cloud deck for the ground-shadow lookup; opacity 0 = none */
+function cloudUniform(c: Clouds | undefined): Vector4 {
+  return c ? new Vector4(c.coverage, c.opacity, c.seed, c.height) : new Vector4(0, 0, 0, 0);
 }
 
 function lightingUniforms(): Uniforms {
@@ -120,6 +128,9 @@ export class BodyView {
   private terrainFade = 0;
   /** true while the lander's terrain is what the visitor sees (drives the imagery credit) */
   terrainActive = false;
+  /** generated ground under a visitor who has landed on this body (see App.land) */
+  landing: { ground: GeneratedGround; terrain: Terrain; site: Group; fade: number } | null = null;
+  private landingLast = 0;
   clouds?: Mesh;
   cloudsMat?: ShaderMaterial;
   atmosphere?: Mesh;
@@ -128,6 +139,7 @@ export class BodyView {
   ringsMat?: ShaderMaterial;
   /** boulder layer, populated only when the camera is close to the ring plane */
   ringParticles?: RingParticles;
+  plumes?: Plumes;
   corona?: Mesh;
   coronaMat?: ShaderMaterial;
   /** procedural (primitive-built) model whose GPU resources belong to this view */
@@ -186,7 +198,7 @@ export class BodyView {
       this.surfaceMat = new ShaderMaterial({
         vertexShader: Shaders.surfaceVert,
         fragmentShader: Shaders.starFrag,
-        uniforms: { ...baseUniforms, uRealTime: { value: 0 }, uTemperature: { value: T }, uIntensity: { value: a.kind === 'pulsar' ? 1.8 : 0.75 } },
+        uniforms: { ...baseUniforms, uRealTime: { value: 0 }, uTemperature: { value: T }, uIntensity: { value: a.kind === 'pulsar' ? 1.8 : 0.9 } },
       });
       // Corona billboard, tinted by the photosphere temperature
       const [cr, cg, cb] = temperatureToRgb(T);
@@ -234,6 +246,7 @@ export class BodyView {
           uTurbulence: { value: a.turbulence },
           uStorm: { value: a.storm ? new Vector4(a.storm[0] * DEG, a.storm[1] * DEG, a.storm[2], 1) : new Vector4(0, 0, 0, 0) },
           uStormColor: { value: a.storm ? new Vector3(a.storm[3], a.storm[4], a.storm[5]) : new Vector3() },
+          uHexagon: { value: a.hexagon ? 1 : 0 },
           uAtmColor: { value: d.atmosphere ? vec3(d.atmosphere.color) : new Vector3(1, 1, 1) },
           uAtmDensity: { value: d.atmosphere ? d.atmosphere.density : 0 },
         },
@@ -261,6 +274,7 @@ export class BodyView {
           uAtmColor: { value: d.atmosphere ? vec3(d.atmosphere.color) : new Vector3(1, 1, 1) },
           uAtmDensity: { value: d.atmosphere ? d.atmosphere.density : 0 },
           uSunsetColor: { value: d.atmosphere?.sunsetColor ? vec3(d.atmosphere.sunsetColor) : new Vector3(1, 0.6, 0.35) },
+          uCloud: { value: cloudUniform(d.clouds) },
         },
       });
       const img = IMAGERY[d.id];
@@ -269,6 +283,7 @@ export class BodyView {
           atmColor: this.surfaceMat.uniforms.uAtmColor.value as Vector3,
           atmDensity: d.atmosphere ? d.atmosphere.density : 0,
           sunsetColor: this.surfaceMat.uniforms.uSunsetColor.value as Vector3,
+          cloud: this.surfaceMat.uniforms.uCloud.value as Vector4,
         }, maxAnisotropy);
         this.group.add(this.tiles.group);
       }
@@ -325,6 +340,7 @@ export class BodyView {
           uDensity: { value: d.atmosphere.density },
           uOccluders: { value: [new Vector4(), new Vector4(), new Vector4(), new Vector4()] },
           uAlpha: { value: 1 },
+          uGround: { value: 0 },
         },
         transparent: true,
         blending: AdditiveBlending,
@@ -366,6 +382,14 @@ export class BodyView {
       this.group.add(this.rings);
       // boulders share the lighting uniforms (sun, shadows) with the sheet
       this.ringParticles = new RingParticles(body, lit, this.ringsMat.uniforms.uGaps.value as Vector4[]);
+    }
+
+    // Eruptive activity: plumes in the body frame
+    if (d.activity) {
+      const lit = lightingUniforms();
+      this.lit.push(lit);
+      this.plumes = new Plumes(body, lit);
+      this.group.add(this.plumes.points);
     }
   }
 
@@ -417,17 +441,25 @@ export class BodyView {
     this.group.add(this.beams);
   }
 
-  dispose(scene: Scene): void {
+  /** Take out of the scene without releasing anything (see BodyRenderer.setSystem) */
+  detach(scene: Scene): void {
     scene.remove(this.group);
     if (this.ringParticles) scene.remove(this.ringParticles.group);
     if (this.atmosphere) scene.remove(this.atmosphere);
-    if (this.corona) { scene.remove(this.corona); this.corona.geometry.dispose(); }
+    if (this.corona) scene.remove(this.corona);
+  }
+
+  dispose(scene: Scene): void {
+    this.detach(scene);
+    if (this.corona) this.corona.geometry.dispose();
     if (this.rings) this.rings.geometry.dispose();
     this.ringParticles?.dispose();
+    this.plumes?.dispose();
     for (const m of [this.surfaceMat, this.cloudsMat, this.atmosphereMat, this.ringsMat, this.coronaMat, this.beamMat]) m?.dispose();
     if (this.beams) for (const m of this.beams.children) (m as Mesh).geometry.dispose();
     if (this.ground) { this.ground.geometry.dispose(); (this.ground.material as MeshStandardMaterial).dispose(); }
     this.releaseTerrain();
+    this.releaseLanding();
     this.tiles?.dispose();
     // model geometries/materials stay in the shared cache (procedural ships own theirs)
     if (this.ownsModel && this.model) disposeGroup(this.model);
@@ -494,7 +526,7 @@ export class BodyView {
     fetch(`${dir}/meta.json?v=${__BUILD_ID__}`).then((r) => r.json()).then(async (meta: TerrainMeta) => {
       if (!this.terrainRequested) return; // released meanwhile
       const atm = this.body.parent?.data.atmosphere;
-      const t = new Terrain(dir, meta, -this.body.radius * 0.7, this.body.parent?.radius ?? 1e9, this.maxAnisotropy, {
+      const t = new Terrain({ kind: 'remote', dir, meta }, -this.body.radius * 0.7, this.body.parent?.radius ?? 1e9, this.maxAnisotropy, {
         color: atm ? vec3(atm.color) : new Vector3(1, 1, 1),
         density: atm?.density ?? 0,
         sunsetColor: atm?.sunsetColor ? vec3(atm.sunsetColor) : new Vector3(1, 0.6, 0.35),
@@ -512,6 +544,56 @@ export class BodyView {
     this.terrainRequested = false;
     this.terrainFade = 0;
     this.terrainActive = false;
+  }
+
+  /**
+   * Put generated ground (GroundGen) on this body at its site: a child of the body's transform
+   * group, so it turns with the planet. Returns the terrain (ready at once — the maps are on the
+   * GPU already), whose `surfaceY` is the ground under the visitor.
+   */
+  landAt(ground: GeneratedGround): Terrain {
+    this.releaseLanding();
+    const atm = this.body.data.atmosphere;
+    const terrain = new Terrain(ground.source, 0, ground.site.radius, this.maxAnisotropy, {
+      color: atm ? vec3(atm.color) : new Vector3(1, 1, 1),
+      density: atm?.density ?? 0,
+      sunsetColor: atm?.sunsetColor ? vec3(atm.sunsetColor) : new Vector3(1, 0.6, 0.35),
+    });
+    const site = new Group();
+    site.position.copy(ground.site.pos);
+    site.quaternion.copy(ground.site.quat);
+    site.add(terrain.group);
+    this.group.add(site);
+    void terrain.load();
+    this.landing = { ground, terrain, site, fade: 0 };
+    return terrain;
+  }
+
+  releaseLanding(): void {
+    const L = this.landing;
+    if (!L) return;
+    L.terrain.dispose();
+    L.ground.dispose();
+    L.site.removeFromParent();
+    this.landing = null;
+  }
+
+  /** Fade the landing ground by the camera's distance from its site; light it like the globe. */
+  private updateLanding(camPos: Vector3, dtReal: number, sunPos: Vector3, sunColor: Vector3, settings: RenderSettings): void {
+    const L = this.landing!;
+    const b = this.body;
+    // the site, camera-relative
+    _v2.copy(L.ground.site.pos).applyQuaternion(b.rotation).add(this.relPos);
+    const d = _v2.length();
+    const goal = L.terrain.ready ? 1 - smoothstep(L.ground.half * 1.2, L.ground.half * 3, d) : 0;
+    const slew = dtReal / 1.5;
+    L.fade = L.fade < goal ? Math.min(goal, L.fade + slew) : Math.max(goal, L.fade - slew);
+    // camera and Sun in the site frame (+Y up)
+    _qInv.copy(b.rotation).multiply(L.ground.site.quat).invert();
+    _n.copy(sunPos).sub(camPos).sub(_v2).normalize().applyQuaternion(_qInv);
+    _v2.negate().applyQuaternion(_qInv);
+    L.terrain.update(L.fade, _n, sunColor, settings.fill?.get(b.id) ?? 0, _v2);
+    if (L.fade > 0.002) this.group.visible = true;
   }
 
   /** Fade the terrain by camera distance; a slew limit smooths the moment it finishes loading. */
@@ -637,6 +719,7 @@ export class BodyView {
       const f = this.cloudFade * this.cloudFade * (3 - 2 * this.cloudFade);
       this.cloudsMat.uniforms.uOpacity.value = b.data.clouds.opacity * f;
     }
+    if (this.tiles) this.tiles.setTime(time);
 
     // Imagery tiles take over from the procedural globe as soon as the base level is loaded
     if (this.tiles && this.surface) {
@@ -654,6 +737,9 @@ export class BodyView {
         const alt = dist - b.radius;
         const k = this.imageryActive ? smooth01((alt - 600) / 1900) : 1;
         this.cloudsMat.uniforms.uOpacity.value *= k;
+        // the ground shadows follow the deck's actual opacity
+        const cu = this.surfaceMat?.uniforms.uCloud?.value as Vector4 | undefined;
+        if (cu) cu.y = this.cloudsMat.uniforms.uOpacity.value as number;
       }
     }
 
@@ -666,6 +752,8 @@ export class BodyView {
         (this.ringsMat.uniforms.uLocalFade.value as Vector2).set(0.6 * this.ringParticles.visibility, 2200);
       }
     }
+
+    if (this.plumes) this.plumes.update(this.apparentRadiusPx, pxPerRad, this.meshVisible);
 
     if (this.atmosphere && this.atmosphereMat) {
       const on = settings.atmospheres && this.meshVisible && this.apparentRadiusPx > 1.5;
@@ -687,6 +775,10 @@ export class BodyView {
         }
         const outer = u.uOuterRadius.value as number;
         const inside = dist < outer * 1.02;
+        // from the ground the sky is a bright dome, not the thin limb haze seen from orbit
+        // (faint far from the Sun: Pluto's noon sky stays dark)
+        const dAU = Math.hypot(_v.x - this.relPos.x, _v.y - this.relPos.y, _v.z - this.relPos.z) / AU_KM;
+        u.uGround.value = (1 - smoothstep(0, (outer - b.equatorialRadius) * 0.3, dist - b.polarRadius)) * Math.min(1, 100 / Math.max(1, dAU * dAU));
         // Inside the shell: render the back faces without depth test so the sky is visible
         if (inside) {
           this.atmosphereMat.side = BackSide;
@@ -696,6 +788,13 @@ export class BodyView {
           this.atmosphereMat.depthTest = true;
         }
       }
+    }
+
+    if (this.landing) {
+      const now = performance.now();
+      const dtReal = this.landingLast ? Math.min(0.5, (now - this.landingLast) / 1000) : 0;
+      this.landingLast = now;
+      this.updateLanding(camPos, dtReal, sunPos, sunColor, settings);
     }
 
     // Pulsar: brightness pulse when a beam sweeps across the line of sight
@@ -756,7 +855,13 @@ export class BodyRenderer {
 
   /** Rebuild views for a (new) system. The system must have been evaluated once so orbital elements exist. */
   setSystem(system: StarSystem): void {
-    for (const v of this.views) v.dispose(this.scene);
+    // the old views leave the scene now but are released only after the new system has been
+    // drawn: disposing first would free the shared star / planet shader programs, and the new
+    // system's identical materials would recompile them (a long stall at every frame switch)
+    this.flushRetired();
+    for (const v of this.views) v.detach(this.scene);
+    this.retired.push(...this.views);
+    this.retiredFrames = 0;
     this.views.length = 0;
     this.byId.clear();
     const star = system.star;
@@ -767,6 +872,13 @@ export class BodyRenderer {
       this.byId.set(b.id, v);
     }
     for (const v of this.views) v.computeOccluders();
+  }
+
+  private retired: BodyView[] = [];
+  private retiredFrames = 0;
+  private flushRetired(): void {
+    for (const v of this.retired) v.dispose(this.scene);
+    this.retired.length = 0;
   }
 
   /** Add a view for a body created at runtime (mission vehicles). */
@@ -789,10 +901,30 @@ export class BodyRenderer {
     if (i >= 0) this.views.splice(i, 1);
   }
 
+  /** light colour of a star body, by its photosphere temperature (cached) */
+  private readonly lightColors = new Map<CelestialBody, Vector3>();
+  private lightColorOf(star: CelestialBody): Vector3 {
+    let c = this.lightColors.get(star);
+    if (!c) {
+      const a = star.data.appearance;
+      const T = a.kind === 'star' ? a.temperature : a.kind === 'pulsar' ? 28_000 : 5772;
+      const [r, g, b] = starLightColor(T);
+      c = new Vector3(r, g, b);
+      this.lightColors.set(star, c);
+    }
+    return c;
+  }
+
+  /**
+   * @param hostOf the star lighting a body (multiple systems: each planet has its own sun); the
+   *   primary (`sunPos` …) is used when absent or when it returns null
+   */
   update(
     camPos: Vector3, camQuat: Quaternion, camera: Camera, viewportH: number, fovRad: number,
     sunPos: Vector3, sunRadius: number, sunColor: Vector3, time: number, settings: RenderSettings,
+    hostOf?: (b: CelestialBody) => CelestialBody | null,
   ): void {
+    if (this.retired.length && ++this.retiredFrames > 2) this.flushRetired();
     // sunlight direction as seen from the camera (spacecraft are only resolvable when close)
     _v.copy(sunPos).sub(camPos);
     const d = _v.length();
@@ -808,7 +940,9 @@ export class BodyRenderer {
     let credit: string | null = null;
     let best = 12; // px: only credit imagery when the body is clearly resolved
     for (const v of this.views) {
-      v.update(camPos, camQuat, camera, viewportH, fovRad, sunPos, sunRadius, sunColor, time, settings);
+      const host = hostOf?.(v.body) ?? null;
+      if (host && host !== v.body) v.update(camPos, camQuat, camera, viewportH, fovRad, host.position, host.radius, this.lightColorOf(host), time, settings);
+      else v.update(camPos, camQuat, camera, viewportH, fovRad, sunPos, sunRadius, sunColor, time, settings);
       if (v.imageryActive && v.tiles && v.apparentRadiusPx > best) {
         best = v.apparentRadiusPx;
         credit = v.tiles.imagery.credit;

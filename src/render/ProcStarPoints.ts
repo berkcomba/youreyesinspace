@@ -6,6 +6,7 @@ import { PARSEC_KM, SKY_RADIUS_KM } from '../core/constants';
 import { ProcStars, type ProcTier } from '../galaxy/ProcStars';
 import type { NamedStarScreen } from './StarPoints';
 import { Shaders } from './shaders';
+import { better, PICK_MIN_VIS, starLook, type PickHit } from './pickHit';
 
 /**
  * Tint used by the "highlight procedural content" setting: a green no real star or galaxy ever
@@ -64,6 +65,8 @@ export class ProcStarPoints {
           uSkyRadius: { value: SKY_RADIUS_KM },
           uHideIndex: { value: -1 },
           uMagLimit: { value: 8.5 },
+          uFade: { value: 1 },
+          uDaylight: { value: 0 },
           uSoftness: { value: 0.0 },
           uTint: { value: new Vector4(...PROCEDURAL_TINT, 0) },
         },
@@ -83,6 +86,8 @@ export class ProcStarPoints {
 
   /** Tint every generated star green (debug / "what is real?" view) */
   setHighlight(on: boolean): void { for (const t of this.views) t.mat.uniforms.uTint.value.w = on ? 0.85 : 0; }
+  /** Daytime sky (0 none … 1 full), as StarPoints.setDaylight */
+  setDaylight(d: number): void { for (const t of this.views) { t.mat.uniforms.uMagLimit.value = 8.5 - 13 * d; t.mat.uniforms.uDaylight.value = d * 0.6; } }
 
   /** @param hideId id of the current system's star (rendered as a mesh) */
   update(camPc: Vector3, pixelRatio: number, hideId: string | null, dt = 0): void {
@@ -103,7 +108,7 @@ export class ProcStarPoints {
       v.camRel.copy(camPc).sub(t.origin);
       v.mat.uniforms.uCamPc.value.copy(v.camRel);
       v.mat.uniforms.uPixelRatio.value = pixelRatio;
-      v.mat.uniforms.uHideIndex.value = hideId !== null ? (t.indexOf.get(hideId) ?? -1) : -1;
+      v.mat.uniforms.uHideIndex.value = hideId !== null ? t.indexOfId(hideId) : -1;
     }
 
     // label set – re-chosen a few times per second or when the cells changed; between refreshes the
@@ -148,7 +153,7 @@ export class ProcStarPoints {
         // m = M + 5·log10(d) − 5  ⇒  m ≤ limit ⇔ d² ≤ 10^((limit − M + 5)/2.5)
         if (d2 > Math.pow(10, (limit - t.absMags[i] + 5) / 2.5)) continue;
         const m = t.absMags[i] + 2.5 * Math.log10(Math.max(d2, 1e-14)) - 5;
-        const id = t.ids[i];
+        const id = t.idAt(i);
         if (id === hideId) continue;
         const kept = keep.has(id);
         if (!kept && m > LABEL_MAG_LIMIT) continue; // newcomers must clear the strict limit
@@ -174,8 +179,8 @@ export class ProcStarPoints {
   /** Apparent magnitude of a generated star from the last camera position */
   apparentMag(id: string): number | null {
     for (const v of this.views) {
-      const i = v.tier.indexOf.get(id);
-      if (i === undefined) continue;
+      const i = v.tier.indexOfId(id);
+      if (i < 0) continue;
       const p = v.tier.positions;
       const d = Math.max(Math.hypot(p[i * 3] - v.camRel.x, p[i * 3 + 1] - v.camRel.y, p[i * 3 + 2] - v.camRel.z), 1e-7);
       return v.tier.absMags[i] + 5 * Math.log10(d) - 5;
@@ -183,25 +188,37 @@ export class ProcStarPoints {
     return null;
   }
 
-  pick(x: number, y: number, camera: PerspectiveCamera, W: number, H: number, hideId: string | null, maxPx = 14, magLimit = 6.5): string | null {
-    let best: string | null = null;
-    let bestScore = Infinity;
+  pick(x: number, y: number, camera: PerspectiveCamera, W: number, H: number, hideId: string | null, slackPx = 7): string | null {
+    return this.pickHit(x, y, camera, W, H, hideId, slackPx)?.value ?? null;
+  }
+
+  pickHit(x: number, y: number, camera: PerspectiveCamera, W: number, H: number, hideId: string | null, slackPx = 7): PickHit<string> | null {
+    let best: PickHit<string> | null = null;
     for (const v of this.views) {
+      if (!v.points.visible) continue;
       const t = v.tier;
       const p = t.positions;
+      const magLimit = v.mat.uniforms.uMagLimit.value as number;
+      const fade = v.mat.uniforms.uFade.value as number;
       for (let i = 0; i < t.count; i++) {
         _rel.set(p[i * 3] - v.camRel.x, p[i * 3 + 1] - v.camRel.y, p[i * 3 + 2] - v.camRel.z);
         const d = _rel.length();
         const m = t.absMags[i] + 5 * Math.log10(Math.max(d, 1e-7)) - 5;
         if (m > magLimit) continue;
+        const look = starLook(m);
+        const vis = look.alpha * fade;
+        if (vis < PICK_MIN_VIS) continue;
+        const reach = look.size / 2 + slackPx;
         _proj.copy(_rel).multiplyScalar(1e11 / d).project(camera);
         if (_proj.z > 1 || _proj.z < -1) continue;
-        const sx = (_proj.x * 0.5 + 0.5) * W;
-        const sy = (-_proj.y * 0.5 + 0.5) * H;
-        const dist = Math.hypot(sx - x, sy - y);
-        if (dist > maxPx) continue;
-        const score = dist + m * 0.8;
-        if (score < bestScore && t.ids[i] !== hideId) { bestScore = score; best = t.ids[i]; }
+        const dist = Math.hypot((_proj.x * 0.5 + 0.5) * W - x, (-_proj.y * 0.5 + 0.5) * H - y);
+        if (dist > reach) continue;
+        const hit = { value: '', dist, reach, vis };
+        if (better(best, hit) !== hit) continue;
+        const id = t.idAt(i);
+        if (id === hideId) continue;
+        hit.value = id;
+        best = hit;
       }
     }
     return best;

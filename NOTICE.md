@@ -8,6 +8,7 @@ streams the following third-party material, each under its own terms.
 | Item | Files | Source | Licence |
 |---|---|---|---|
 | Star catalogue (derived) | `public/data/stars.bin`, `public/data/star-names.json` | [HYG Database v3](https://github.com/astronexus/HYG-Database) by David Nash (Astronexus), compiled from Hipparcos, Yale BSC and Gliese | [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) — the derived binary is redistributed under the same licence; build with `scripts/build-stars.mjs` |
+| Olympus Mons relief (derived) | `public/tour-media/terrain/olympus/` | USGS Astrogeology *Mars HRSC MOLA Blended DEM Global 200m v2* (NASA/JPL/GSFC, ESA/DLR/FU Berlin) and NASA Trek *Viking MDIM 2.1 Colour Mosaic*; build with `scripts/olympus-relief.py` | Public domain |
 | Planetary orbital elements | `src/data/solarSystem.ts` | NASA/JPL, E. M. Standish, *Keplerian Elements for Approximate Positions of the Major Planets* | Public domain (US Government work) |
 | Spacecraft state vectors | `src/data/spacecraft.ts` | [JPL Horizons](https://ssd.jpl.nasa.gov/horizons/) (approximate, early 2025) | Public domain |
 | Galaxy catalogue | `src/galaxy/galaxies.ts` | NED / literature values | Facts; no copyright claimed |

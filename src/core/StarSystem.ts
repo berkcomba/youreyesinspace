@@ -50,6 +50,7 @@ export class StarSystem {
     };
     for (const r of this.roots) visit(r, 0);
     for (const b of this.bodies) b.updateOrbitBasis();
+    this.assignHosts();
   }
 
   readonly get = (id: string): CelestialBody | undefined => this.byId.get(id);
@@ -71,6 +72,7 @@ export class StarSystem {
     this.byId.set(b.id, b);
     this.bodies.push(b);
     b.updateOrbitBasis();
+    this.assignHosts();
     return b;
   }
 
@@ -89,14 +91,48 @@ export class StarSystem {
       const j = this.roots.indexOf(b);
       if (j >= 0) this.roots.splice(j, 1);
     }
+    this.assignHosts();
     return b;
   }
 
-  /** The primary star (for a barycentric binary: the first component, which is the primary) */
+  /**
+   * The primary star. For hierarchical multiples (barycentre roots, possibly nested) it is the
+   * catalogue star (`{system}-star`) when present, else the most luminous star of the hierarchy.
+   */
   get star(): CelestialBody {
+    if (this.primary && this.byId.get(this.primary.id) === this.primary) return this.primary;
     const r = this.roots[0];
-    if (r.data.type !== 'barycenter') return r;
-    return r.children.find((c) => c.data.type === 'star') ?? r.children[0] ?? r;
+    if (r.data.type !== 'barycenter') { this.primary = r; return r; }
+    const named = this.byId.get(`${this.id}-star`);
+    this.primary = named && named.data.type === 'star' ? named : (brightestBelow(r) ?? r.children[0] ?? r);
+    return this.primary;
+  }
+  private primary: CelestialBody | null = null;
+
+  /**
+   * The star that lights `b`: the nearest star up its parent chain; when that chain reaches a
+   * barycentre first (circumbinary planets), the most luminous star below the barycentre.
+   */
+  hostStarOf(b: CelestialBody): CelestialBody {
+    const cached = this.hosts.get(b);
+    if (cached) return cached;
+    let host: CelestialBody | null = null;
+    if (b.data.type === 'star' || b.data.type === 'pulsar') host = b;
+    for (let p = b.parent; p && !host; p = p.parent) {
+      if (p.data.type === 'star' || p.data.type === 'pulsar') host = p;
+      else if (p.data.type === 'barycenter') host = brightestBelow(p);
+    }
+    host ??= this.star;
+    this.hosts.set(b, host);
+    return host;
+  }
+  private readonly hosts = new Map<CelestialBody, CelestialBody>();
+
+  /** (Re)assign every body's lighting star (after construction / runtime changes) */
+  private assignHosts(): void {
+    this.hosts.clear();
+    this.primary = null;
+    for (const b of this.bodies) b.hostStar = b.data.type === 'star' || b.data.type === 'pulsar' || b.data.type === 'barycenter' ? null : this.hostStarOf(b);
   }
 
   /** Photosphere temperature of the primary (K) */
@@ -149,4 +185,25 @@ export class StarSystem {
     }
     return { body: best, altitude: bestAlt };
   }
+}
+
+/** Luminosity proxy R²T⁴ of a star body (0 for anything that does not shine) */
+function shine(b: CelestialBody): number {
+  const a = b.data.appearance;
+  if (a.kind === 'star') return b.data.radius * b.data.radius * Math.pow(a.temperature / 5772, 4);
+  if (a.kind === 'pulsar') return 1e-6;
+  return 0;
+}
+
+/** Most luminous star anywhere below a barycentre */
+function brightestBelow(bary: CelestialBody): CelestialBody | null {
+  let best: CelestialBody | null = null, bestL = -1;
+  const walk = (b: CelestialBody) => {
+    for (const c of b.children) {
+      if (c.data.type === 'barycenter') walk(c);
+      else if (c.data.type === 'star' || c.data.type === 'pulsar') { const l = shine(c); if (l > bestL) { bestL = l; best = c; } }
+    }
+  };
+  walk(bary);
+  return best;
 }

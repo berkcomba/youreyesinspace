@@ -102,14 +102,16 @@ export class OrbitLines {
   /**
    * @param apparent map body id → apparent radius px
    * @param pxPerRad pixel scale
+   * @param moonsOnly moon orbits even when the planets' are off (a tour's look at a moon's month)
    */
   update(
     camPos: Vector3, visible: boolean, showMoons: boolean, pxPerRad: number,
-    apparent: (id: string) => number, selectedId: string | null,
+    apparent: (id: string) => number, selectedId: string | null, moonsOnly = false,
   ): void {
     for (const l of this.lines) {
       const b = l.body;
-      if (!visible || !b.resolved || !b.parent || b.filtered) {
+      const on = visible || (moonsOnly && b.data.type === 'moon');
+      if (!on || !b.resolved || !b.parent || b.filtered) {
         l.line.visible = false;
         continue;
       }

@@ -5,6 +5,7 @@ import { PARSEC_KM, SKY_RADIUS_KM } from '../core/constants';
 import type { StarCatalog } from '../data/StarCatalog';
 import { bvToRgb } from '../astro/stellar';
 import { Shaders } from './shaders';
+import { better, PICK_MIN_VIS, starLook, type PickHit } from './pickHit';
 
 export interface NamedStarScreen {
   index: number;
@@ -83,6 +84,8 @@ export class StarPoints {
         uSkyRadius: { value: SKY_RADIUS_KM },
         uHideIndex: { value: 0 },
         uMagLimit: { value: 8.5 },
+        uFade: { value: 1 },
+        uDaylight: { value: 0 },
         uSoftness: { value: 0.0 },
       },
       transparent: true,
@@ -108,6 +111,12 @@ export class StarPoints {
 
   setPixelRatio(pr: number): void {
     this.mat.uniforms.uPixelRatio.value = pr;
+  }
+
+  /** Daytime sky (0 none … 1 full): the faint stars go first, the bright ones dim. */
+  setDaylight(d: number): void {
+    this.mat.uniforms.uMagLimit.value = 8.5 - 13 * d;
+    this.mat.uniforms.uDaylight.value = d * 0.6;
   }
 
   setVisible(v: boolean): void {
@@ -181,40 +190,42 @@ export class StarPoints {
   }
 
   /** Pick the star nearest to a screen point (px). Only stars brighter than `magLimit` are considered. */
-  pick(x: number, y: number, camera: PerspectiveCamera, W: number, H: number, hideIndex: number, maxPx = 14, magLimit = 6.5): number | null {
+  pick(x: number, y: number, camera: PerspectiveCamera, W: number, H: number, hideIndex: number, slackPx = 7, magLimit = this.mat.uniforms.uMagLimit.value as number): number | null {
+    return this.pickHit(x, y, camera, W, H, hideIndex, slackPx, magLimit)?.value ?? null;
+  }
+
+  /** Best candidate under a screen point, sized and weighted as the shader draws it */
+  pickHit(x: number, y: number, camera: PerspectiveCamera, W: number, H: number, hideIndex: number, slackPx = 7, magLimit = this.mat.uniforms.uMagLimit.value as number): PickHit<number> | null {
     const p = this.catalog.positions;
-    let best = -1;
-    let bestScore = Infinity;
+    const fade = this.mat.uniforms.uFade.value as number;
+    let best: PickHit<number> | null = null;
     for (let i = 0; i < this.catalog.count; i++) {
       if (i === hideIndex) continue;
       _rel.set(p[i * 3] - this.camPc.x, p[i * 3 + 1] - this.camPc.y, p[i * 3 + 2] - this.camPc.z);
       const d = _rel.length();
       const m = this.catalog.absMags[i] + 5 * Math.log10(Math.max(d, 1e-7)) - 5;
       if (m > magLimit) continue;
+      const look = starLook(m);
+      const vis = look.alpha * fade;
+      if (vis < PICK_MIN_VIS) continue;
+      const reach = look.size / 2 + slackPx;
       _proj.copy(_rel).multiplyScalar(1e11 / d).project(camera);
       if (_proj.z > 1 || _proj.z < -1) continue;
-      const sx = (_proj.x * 0.5 + 0.5) * W;
-      const sy = (-_proj.y * 0.5 + 0.5) * H;
-      const dist = Math.hypot(sx - x, sy - y);
-      if (dist > maxPx) continue;
-      // prefer brighter stars when several overlap
-      const score = dist + m * 0.8;
-      if (score < bestScore) { bestScore = score; best = i; }
+      const dist = Math.hypot((_proj.x * 0.5 + 0.5) * W - x, (-_proj.y * 0.5 + 0.5) * H - y);
+      if (dist > reach) continue;
+      best = better(best, { value: i, dist, reach, vis });
     }
-    if (best < 0) {
-      // marked stars (the Sun, the neighbourhood, far landmarks) are pickable regardless of brightness
-      for (const i of this.marked) {
-        if (i === hideIndex) continue;
-        _rel.set(p[i * 3] - this.camPc.x, p[i * 3 + 1] - this.camPc.y, p[i * 3 + 2] - this.camPc.z);
-        _proj.copy(_rel).multiplyScalar(1e11 / _rel.length()).project(camera);
-        if (_proj.z > 1 || _proj.z < -1) continue;
-        const sx = (_proj.x * 0.5 + 0.5) * W;
-        const sy = (-_proj.y * 0.5 + 0.5) * H;
-        const dist = Math.hypot(sx - x, sy - y);
-        if (dist > maxPx + 4 || dist >= bestScore) continue;
-        bestScore = dist; best = i;
-      }
+    // marked stars (the Sun, the neighbourhood, far landmarks) carry a label: pickable regardless of brightness
+    for (const i of this.marked) {
+      if (i === hideIndex) continue;
+      _rel.set(p[i * 3] - this.camPc.x, p[i * 3 + 1] - this.camPc.y, p[i * 3 + 2] - this.camPc.z);
+      _proj.copy(_rel).multiplyScalar(1e11 / _rel.length()).project(camera);
+      if (_proj.z > 1 || _proj.z < -1) continue;
+      const dist = Math.hypot((_proj.x * 0.5 + 0.5) * W - x, (-_proj.y * 0.5 + 0.5) * H - y);
+      const reach = slackPx + 4;
+      if (dist > reach) continue;
+      best = better(best, { value: i, dist, reach, vis: 0.5 });
     }
-    return best >= 0 ? best : null;
+    return best;
   }
 }

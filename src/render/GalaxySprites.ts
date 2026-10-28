@@ -7,6 +7,7 @@ import type { NamedStarScreen } from './StarPoints';
 import { GalaxyCloud } from './GalaxyCloud';
 import { PROCEDURAL_TINT } from './ProcStarPoints';
 import { Shaders } from './shaders';
+import { better, PICK_MIN_VIS, type PickHit } from './pickHit';
 
 const _rel = new Vector3();
 const _proj = new Vector3();
@@ -64,6 +65,7 @@ export class GalaxySprites {
         uMaxPx: { value: maxPointPx },
         uHideIndex: { value: -1 },
         uTierFade: { value: 1 },
+        uNearLod: { value: 1 },
         uBoostMag: { value: boostMag },
         uCatalogCount: { value: galaxies.catalogCount },
         uTint: { value: new Vector4(...PROCEDURAL_TINT, 0) },
@@ -89,6 +91,9 @@ export class GalaxySprites {
     this.procVisible = on;
     this.points.geometry.setDrawRange(0, on ? this.galaxies.count : this.galaxies.catalogCount);
   }
+
+  /** Keep the sprite when the camera is close (no point cloud takes over, e.g. far-cluster members) */
+  setNearLod(on: boolean): void { this.mat.uniforms.uNearLod.value = on ? 1 : 0; }
 
   /** Tint procedural (non-catalogue) galaxies green */
   setHighlight(on: boolean): void { this.mat.uniforms.uTint.value.w = on ? 0.85 : 0; }
@@ -150,30 +155,50 @@ export class GalaxySprites {
   }
 
   /** Galaxy nearest to a screen point (px), or null */
-  pick(x: number, y: number, camera: PerspectiveCamera, W: number, H: number, pxPerRad: number, boost: number, hideIndex: number, maxPx = 14): number | null {
+  pick(x: number, y: number, camera: PerspectiveCamera, W: number, H: number, pxPerRad: number, boost: number, hideIndex: number, slackPx = 7): number | null {
+    return this.pickHit(x, y, camera, W, H, pxPerRad, boost, hideIndex, slackPx)?.value ?? null;
+  }
+
+  /**
+   * Galaxy under a screen point, weighted by how bright the sprite is drawn (galaxy.vert). With
+   * `clouds`, galaxies whose sprite has handed over to a point cloud stay clickable via that cloud.
+   */
+  pickHit(x: number, y: number, camera: PerspectiveCamera, W: number, H: number, pxPerRad: number, boost: number, hideIndex: number, slackPx = 7, clouds?: ReadonlySet<number> | Map<number, unknown>): PickHit<number> | null {
+    if (!this.points.visible) return null;
     const g = this.galaxies;
     const p = g.positions;
-    let best = -1;
-    let bestScore = Infinity;
+    const u = this.mat.uniforms;
+    const K = u.uK.value as number, boostMag = u.uBoostMag.value as number, nearLod = u.uNearLod.value as number;
+    let best: PickHit<number> | null = null;
     const n = this.procVisible ? g.count : g.catalogCount;
     for (let i = 0; i < n; i++) {
       if (i === hideIndex) continue;
       _rel.set(p[i * 3] - this.camPc.x, p[i * 3 + 1] - this.camPc.y, p[i * 3 + 2] - this.camPc.z);
-      const d = _rel.length();
-      if (d < g.radius[i] * 6) continue;
-      const m = g.absMag[i] + 5 * Math.log10(Math.max(d, 1e-3)) - 5;
+      const d = Math.max(_rel.length(), 1e-3);
+      const ratio = d / g.radius[i];
+      const m = g.absMag[i] + 5 * Math.log10(d) - 5;
       const px = (g.radius[i] / d) * pxPerRad;
-      if (boost < 0.5 && m > 12 && px < 2) continue;
+      const pxc = Math.max(px, 0.75);
+      const physical = Math.min((K * Math.pow(10, -0.4 * m)) / (0.61 * pxc * pxc), 1);
+      const boostA = Math.min(1, Math.max(0, 1 - (m - boostMag - 7) / 10));
+      const lod = nearLod > 0.5 ? smooth01((ratio - 6) / 6) : 1;
+      let vis = (physical + (Math.max(physical, boostA) - physical) * boost) * lod * this.fade;
+      // the cloud that replaced the sprite is as clickable as the sprite was (from outside it)
+      if (clouds?.has(i) && ratio > 1.3) vis = Math.max(vis, 0.5);
+      if (vis < PICK_MIN_VIS) continue;
       _proj.copy(_rel).multiplyScalar(1e11 / d).project(camera);
       if (_proj.z > 1 || _proj.z < -1) continue;
-      const sx = (_proj.x * 0.5 + 0.5) * W;
-      const sy = (-_proj.y * 0.5 + 0.5) * H;
-      const dist = Math.hypot(sx - x, sy - y);
-      const reach = Math.max(maxPx, px);
+      const dist = Math.hypot((_proj.x * 0.5 + 0.5) * W - x, (-_proj.y * 0.5 + 0.5) * H - y);
+      const drawn = Math.max(px * 0.8, 1 + 2.5 * boost);
+      const reach = Math.min(drawn, H * 0.35) + slackPx;
       if (dist > reach) continue;
-      const score = dist / reach + m * 0.02;
-      if (score < bestScore) { bestScore = score; best = i; }
+      best = better(best, { value: i, dist, reach, vis, extended: px > 6 });
     }
-    return best >= 0 ? best : null;
+    return best;
   }
+}
+
+function smooth01(t: number): number {
+  const x = Math.min(1, Math.max(0, t));
+  return x * x * (3 - 2 * x);
 }

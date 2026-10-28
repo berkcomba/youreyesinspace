@@ -20,6 +20,7 @@ uniform float uK;           // flux → alpha·px² calibration (gain·π·pxPer
 uniform float uMaxPx;
 uniform float uHideIndex;
 uniform float uTierFade;    // whole-layer LOD fade (local index ↔ far-universe tiers)
+uniform float uNearLod;     // 1: fade out when close (a point cloud takes over), 0: keep the sprite
 uniform float uBoostMag;    // magnitude offset of the boosted visibility scale (aggregated tiers)
 uniform float uCatalogCount; // galaxies with index ≥ this are procedural
 uniform vec4 uTint;         // rgb + strength: "procedural content" highlight
@@ -47,7 +48,7 @@ void main() {
   float px = uPxPerRad * radius / d;
   float ratio = d / radius;
   // hide when close: the point cloud takes over
-  float lod = smoothstep(6.0, 12.0, ratio);
+  float lod = mix(1.0, smoothstep(6.0, 12.0, ratio), uNearLod);
   // apparent magnitude → flux; spread over the apparent area gives a physically consistent
   // surface brightness (same calibration constant uK as the GalaxyCloud blobs)
   float m = absMag + 5.0 * (log(d) / log(10.0)) - 5.0;

@@ -35,6 +35,13 @@ interface Cloud {
  * else it is a real 3-D object. Hands over to the flat sprite when only a few pixels wide.
  */
 export class NebulaClouds {
+  private daylight = 0;
+  /** Daytime sky (0 none … 1 full) */
+  setDaylight(d: number): void {
+    this.daylight = Math.min(1, d * 1.5);
+    for (const c of this.clouds) c.mat.uniforms.uDaylight.value = this.daylight;
+  }
+
   private readonly clouds: Cloud[] = [];
   /** fires once every cloud is built (the sprites then start fading out up close) */
   onReady: (() => void) | null = null;
@@ -168,6 +175,7 @@ export class NebulaClouds {
         uBlobRadius: { value: blob },
         uAlpha: { value: alpha },
         uFade: { value: 0 },
+        uDaylight: { value: 0 },
         uMaxPx: { value: this.maxPointPx },
         uSoftness: { value: 1.0 },
         uTint: { value: new Vector4(0, 0, 0, 0) },
@@ -181,6 +189,7 @@ export class NebulaClouds {
     points.renderOrder = -11;
     points.visible = false;
     this.scene.add(points);
+    mat.uniforms.uDaylight.value = this.daylight;
     this.clouds.push({ index, landmark: l, points, mat, center });
   }
 

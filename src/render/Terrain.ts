@@ -38,7 +38,7 @@ export interface TerrainMeta {
 /** at most this many rings are drawn (the shader samples as many textures) */
 export const TERRAIN_MAX_RINGS = 5;
 /** vertices per side of each ring's grid, by ring index (finer grids where the data is finer) */
-const GRID_N = [513, 257, 513, 257, 257];
+export const GRID_N = [513, 257, 513, 257, 257];
 /** share of the outermost ring over which relief and alpha fade out */
 const EDGE_FADE = 0.2;
 /** draw order: depth floor → terrain → panorama band → vehicle (set in BodyRenderer) */
@@ -54,9 +54,18 @@ const NEAR_TONE_KM = 0.3;
 
 const textureLoader = new TextureLoader();
 
-interface HeightField { half: number; n: number; data: Float32Array }
+export interface HeightField { half: number; n: number; data: Float32Array }
 
-async function loadHeights(url: string, hmin: number, hmax: number, half: number): Promise<HeightField> {
+/**
+ * Where a patch's maps come from: fetched from a directory built offline (rover sites), or handed
+ * over ready-made — height fields and colour textures generated on the GPU for a landing site
+ * anywhere on a procedural body (see GroundGen.ts).
+ */
+export type TerrainSource =
+  | { kind: 'remote'; dir: string; meta: TerrainMeta }
+  | { kind: 'generated'; meta: TerrainMeta; fields: HeightField[]; textures: Texture[]; seed: number };
+
+export async function loadHeights(url: string, hmin: number, hmax: number, half: number): Promise<HeightField> {
   const img = new Image();
   img.crossOrigin = 'anonymous';
   await new Promise<void>((resolve, reject) => { img.onload = () => resolve(); img.onerror = () => reject(new Error(`height map ${url}`)); img.src = url; });
@@ -73,7 +82,7 @@ async function loadHeights(url: string, hmin: number, hmax: number, half: number
 }
 
 /** bilinear height at (x, z) km in the vehicle frame; `null` outside the field */
-function sampleField(f: HeightField, x: number, z: number): number | null {
+export function sampleField(f: HeightField, x: number, z: number): number | null {
   const u = (x / (2 * f.half) + 0.5) * (f.n - 1);
   const v = (z / (2 * f.half) + 0.5) * (f.n - 1);
   if (u < 0 || v < 0 || u > f.n - 1 || v > f.n - 1) return null;
@@ -99,6 +108,8 @@ export class Terrain {
   readonly half: number;
   private readonly rings: TerrainMeta['rings'];
   private readonly meta: TerrainMeta;
+  /** the height fields once loaded (finest first): the ground under a visitor's feet */
+  private fields: HeightField[] = [];
 
   /**
    * @param groundY      y of the vehicle's ground level in its frame (km)
@@ -106,9 +117,10 @@ export class Terrain {
    * @param atmosphere   the parent's atmosphere, for haze and the horizon glow (as its imagery tiles)
    */
   constructor(
-    private readonly dir: string, meta: TerrainMeta, groundY: number, private readonly curvatureR: number,
+    private readonly source: TerrainSource, groundY: number, private readonly curvatureR: number,
     private readonly anisotropy: number, atmosphere: { color: Vector3; density: number; sunsetColor: Vector3 },
   ) {
+    const meta = source.meta;
     this.meta = meta;
     this.rings = meta.rings.slice(0, TERRAIN_MAX_RINGS);
     this.half = this.rings[this.rings.length - 1].size / 2;
@@ -129,6 +141,9 @@ export class Terrain {
       uAtmColor: { value: atmosphere.color }, uAtmDensity: { value: atmosphere.density }, uSunsetColor: { value: atmosphere.sunsetColor },
       uHaze: { value: 0 },
       uGlobeGain: { value: globeGain }, uNearGain: { value: nearGain }, uNear: { value: 0 },
+      uProcedural: { value: source.kind === 'generated' ? 1 : 0 }, uSeed: { value: source.kind === 'generated' ? source.seed : 0 },
+      uCamLocal: { value: new Vector3() },
+      uTime: { value: 0 }, uMistLevel: { value: -1e9 },
     };
     for (let i = 0; i < TERRAIN_MAX_RINGS; i++) uniforms[`uTex${i}`] = { value: null };
     this.mat = new ShaderMaterial({
@@ -150,12 +165,16 @@ export class Terrain {
     });
     const v = `?v=${__BUILD_ID__}`;
     const pano = this.meta.pano;
-    const [fields, texs, panoTex] = await Promise.all([
-      Promise.all(rings.map((r) => loadHeights(`${this.dir}/${r.h}${v}`, r.hmin, r.hmax, r.size / 2))),
-      Promise.all(rings.map((r) => texLoad(`${this.dir}/${r.c}${v}`))),
-      pano ? texLoad(`${this.dir}/${pano.file}${v}`).catch(() => null) : Promise.resolve(null),
-    ]);
+    const src = this.source;
+    const [fields, texs, panoTex] = src.kind === 'generated'
+      ? [src.fields.slice(0, rings.length), src.textures.slice(0, rings.length), null]
+      : await Promise.all([
+        Promise.all(rings.map((r) => loadHeights(`${src.dir}/${r.h}${v}`, r.hmin, r.hmax, r.size / 2))),
+        Promise.all(rings.map((r) => texLoad(`${src.dir}/${r.c}${v}`))),
+        pano ? texLoad(`${src.dir}/${pano.file}${v}`).catch(() => null) : Promise.resolve(null),
+      ]);
     if (this.disposed) { for (const t of texs) t.dispose(); panoTex?.dispose(); return; }
+    this.fields = fields;
     this.textures.push(...texs);
     if (panoTex) this.textures.push(panoTex);
     const u = this.mat.uniforms;
@@ -368,6 +387,12 @@ export class Terrain {
 
   get ready(): boolean { return this.meshes.length > 0; }
 
+  /** y (km, patch frame) of the ground at (x, z): what the meshes stand at, curvature included */
+  surfaceY(x: number, z: number): number {
+    if (!this.fields.length) return 0;
+    return this.height(this.fields, x, z) - this.drop(x, z);
+  }
+
   /**
    * @param sunDir unit vector toward the Sun in the vehicle frame
    * @param cam    camera position in the vehicle frame (km): haze and the ground's natural tone
@@ -382,6 +407,12 @@ export class Terrain {
     u.uFill.value = fill;
     u.uHaze.value = 1 - smooth01((cam.y - 2) / 18);
     u.uNear.value = 1 - smooth01((cam.y - NEAR_TONE_KM) / 5);
+    (u.uCamLocal.value as Vector3).copy(cam);
+    u.uTime.value = (performance.now() / 1000) % 3600;
+    // mist settles in the hollows below the visitor's own ground; seen from the air it would pool
+    // in every valley to the horizon, so it sinks away as the camera climbs
+    const ground = this.surfaceY(cam.x, cam.z);
+    u.uMistLevel.value = ground - 0.03 - Math.max(0, cam.y - ground - 0.15) * 4;
     this.group.visible = this.meshes.length > 0 && opacity > 0.002;
     if (this.pano && this.panoMat) {
       // gone once the camera is far from the vehicle or well above the mast: seen from higher up

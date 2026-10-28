@@ -117,6 +117,8 @@ export type Appearance =
       turbulence: number;
       /** Great-red-spot style storm: [lat deg, lon deg, size, r,g,b] */
       storm?: [number, number, number, number, number, number];
+      /** Saturn's north polar hexagon (the jet at 78° N) and the polar vortex inside it */
+      hexagon?: boolean;
       hazeColor?: [number, number, number];
     }
   | {
@@ -200,6 +202,25 @@ export interface Clouds {
   opacity: number;
 }
 
+/**
+ * Eruptive activity: volcanic plumes (Io's umbrellas of SO₂ and ash rising hundreds of km) or
+ * cryovolcanic jets (Enceladus' water-ice geysers, Triton's nitrogen plumes).
+ */
+export interface Activity {
+  kind: 'volcanic' | 'cryo';
+  /** vents as [latitude, east longitude] (deg); omitted → `count` seeded vents */
+  vents?: Array<[number, number]>;
+  count?: number;
+  /** plume height (km) and radius of the canopy / fallout ring (km) */
+  height: number;
+  spread: number;
+  /** 1 = fountain falling back (an umbrella), 0 = jets escaping into space */
+  fall: number;
+  color: [number, number, number];
+  /** overall brightness / density (1 = Io's Pele) */
+  intensity?: number;
+}
+
 export interface Rings {
   inner: number; // km
   outer: number; // km
@@ -233,6 +254,7 @@ export interface BodyData {
   atmosphere?: Atmosphere;
   clouds?: Clouds;
   rings?: Rings;
+  activity?: Activity;
   /** Surface temperature (K) if known; otherwise computed */
   temperature?: number;
   description?: string;

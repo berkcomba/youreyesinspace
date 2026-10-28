@@ -12,9 +12,24 @@ export interface Release {
   items: Array<{ text: string }>;
 }
 
-export const CURRENT_VERSION = '0.6';
+export const CURRENT_VERSION = '0.7';
 
 export const CHANGELOG: Release[] = [
+  {
+    version: '0.7', date: '2026-10-28', title: 'Yüzeye iniş, hacimsel galaksiler, keşfe açık bir evren',
+    items: [
+      { text: 'Katı gezegenlere iniş: yüzey ve gökyüzü inince üretiliyor; zamanla oynayıp gökyüzünü izleme, kalkış ve irtifa kontrolü' },
+      { text: 'Gezegen yüzeylerinde su, buz, volkanlar ve gaz çıkışları; kuyruklu yıldızlara gerçekçi toz ve iyon kuyrukları' },
+      { text: 'Hacimsel galaksiler ve bulutsular: toz şeritleri ve parlayan gaz ışın izlemeyle çiziliyor' },
+      { text: 'Yakındaki her yıldız ve gezegen tıklanabilir; küme yıldızları seçilebiliyor ve keşif sayacı bir sonraki keşfi gösteriyor' },
+      { text: 'Bilimsel nadirliğe uygun çift ve çoklu yıldız sistemleri; dış galaksilerde zenginleşen prosedürel nesneler' },
+      { text: 'Kümeler tek tek yıldızlara ayrışıyor; galaksi merkezlerinde parlama ve uzaktan sönük gezegenler düzeltildi' },
+      { text: 'Temiz görünüm (N) tüm işaretleri ve isimleri gizliyor; yıldız parlaması (lens flare) için ayar' },
+      { text: 'Grafik seviyeleri: en düşük, orta, en yüksek; telefonda en düşük, bilgisayarda en yüksek seviyeyle açılıyor' },
+      { text: 'Kalabalık galaksilerde ve hacimsel bulutların içinde hızlı uçarken takılmalar azaldı' },
+      { text: 'Güneş Sistemi turu: omuz çekimleri, gerçek yükseklik verisiyle Olympus Mons, Mars\'a inerken aşağı bakan kamera ve Satürn\'ün kutup altıgeni' },
+    ],
+  },
   {
     version: '0.6', date: '2026-10-24', title: 'Gökyüzü etkinlikleri, Mars yüzeyi, daha sakin bir gökyüzü',
     items: [

@@ -1,36 +1,50 @@
 import './style.css';
-import { Matrix3, Matrix4, Quaternion, Vector3 } from 'three';
+import { Matrix3, Matrix4, Quaternion, Vector2, Vector3 } from 'three';
 import { Engine } from './core/Engine';
 import { TimeSystem } from './core/TimeSystem';
-import { Universe, catalogIndexOf, type StarId } from './core/Universe';
+import { Universe, catalogIndexOf, type Landmark, type StarId } from './core/Universe';
 import type { StarSystem } from './core/StarSystem';
 import { CelestialBody } from './core/CelestialBody';
 import { StarCatalog } from './data/StarCatalog';
 import { LightPulse } from './render/TourEffects';
+import { Relief } from './render/Relief';
 import { MeteorShower } from './render/MeteorShower';
 import { raDecToScene } from './math/frames';
 import { BodyRenderer, type BodyView } from './render/BodyRenderer';
+import { generateGround, geodetic, groundRingSizes, groundSite, landable } from './render/GroundGen';
 import { BodyPoints } from './render/BodyPoints';
 import { OrbitLines } from './render/OrbitLines';
 import { StarPoints } from './render/StarPoints';
 import { ProcStarPoints } from './render/ProcStarPoints';
 import { GalaxySprites } from './render/GalaxySprites';
 import { LandmarkSprites } from './render/LandmarkSprites';
+import { ProcClouds } from './render/ProcClouds';
+import { Volumes } from './render/Volumes';
+import { ClusterStarPoints } from './render/ClusterStarPoints';
+import { hashStr, isMemberId } from './galaxy/ClusterStars';
+import { Rng } from './gen/SystemGenerator';
+import type { BodyData } from './data/types';
+import { LANDMARK_KIND_LABEL, type LandmarkKind } from './data/landmarks';
+import type { DiscoveryEntry } from './ui/UI';
 import { NebulaClouds } from './render/NebulaClouds';
 import { GalaxyCloud } from './render/GalaxyCloud';
 import { FarUniverse, localFade } from './galaxy/FarUniverse';
-import { Belts } from './render/Belts';
+import { LensFlare } from './render/LensFlare';
+import { better, type PickHit } from './render/pickHit';
+import { ADOPT_RATIO, FarCluster, RESOLVE_RATIO, farKey, farKindLabel, nearestFarPoint, type FarRef } from './galaxy/FarClusters';
+import { Belts, type BeltParticle } from './render/Belts';
+import { CometTails } from './render/CometTails';
 import { SkyGrid } from './render/SkyGrid';
 import { Overlay, type StarSelectionScreen, type SunMarkerScreen } from './render/Overlay';
 import type { NamedStarScreen } from './render/StarPoints';
 import { Input } from './input/Input';
-import { CameraController } from './camera/CameraController';
+import { CameraController, type SurfaceStand } from './camera/CameraController';
 import { UI, type UIHost } from './ui/UI';
 import { loadSettings, saveSettings, type Settings } from './ui/Settings';
-import { DAY_S, DEG, PARSEC_KM } from './core/constants';
+import { AU_KM, DAY_S, DEG, J2000_JD, PARSEC_KM } from './core/constants';
 import { starLightColor } from './astro/stellar';
 import { fmtDuration, fmtLightYears, fmtScaleDistance } from './ui/format';
-import { _, applyDom, initI18n } from './i18n';
+import { _, applyDom, fixed, initI18n } from './i18n';
 import { Missions, type ActiveMission } from './core/Missions';
 import { TrajectoryLines } from './render/TrajectoryLines';
 import { EphemerisLines } from './render/EphemerisLines';
@@ -47,6 +61,11 @@ import { LessonPlayer } from './core/LessonPlayer';
 import type { MissionPlan } from './astro/mission';
 
 const IDENTITY = new Matrix3();
+
+/** short kind labels for the discovery list (Turkish source strings) */
+const DISCOVERY_KIND: Partial<Record<LandmarkKind, string>> = {
+  nebula: 'Bulutsu', remnant: 'Kalıntı', cluster: 'Açık küme', globular: 'Küresel küme', planetary: 'Gezegenimsi bulutsu', star: 'Yıldız', pulsar: 'Magnetar',
+};
 /** Flight time of a tour cue's hop (overview and back): a slow, even glide rather than a snap */
 const TOUR_HOP_S = 2.8;
 /** Closer than this many body radii, the night side is lit (see `updateFill`) */
@@ -56,8 +75,9 @@ const BACKDROP_ORBIT = 0.03;
 /** camera distance from the Sun (pc, ≈ 200 AU: beyond the planets) from which the Sun is marked with its distance */
 const SUN_MARKER_PC = 0.001;
 /** scratch */
-const _dir = new Vector3(), _up = new Vector3(), _zero = new Vector3();
+const _dir = new Vector3(), _up = new Vector3(), _zero = new Vector3(), _v3 = new Vector3();
 const _m4 = new Matrix4();
+const smooth01 = (x: number): number => { const t = Math.min(1, Math.max(0, x)); return t * t * (3 - 2 * t); };
 
 class App implements UIHost {
   readonly universe: Universe;
@@ -71,9 +91,12 @@ class App implements UIHost {
   readonly farSprites: GalaxySprites[];
   readonly clouds = new Map<number, GalaxyCloud>();
   readonly bodies: BodyRenderer;
+  private readonly lensFlare: LensFlare;
+  private readonly flareNdc = new Vector2();
   readonly points: BodyPoints;
   readonly orbits: OrbitLines;
   readonly belts: Belts;
+  readonly cometTails: CometTails;
   readonly grid: SkyGrid;
   readonly overlay: Overlay;
   readonly input: Input;
@@ -82,10 +105,21 @@ class App implements UIHost {
   selected: CelestialBody | null = null;
   selectedStar: StarId | null = null;
   selectedGalaxy: number | null = null;
+  /** selected far-universe knot / member galaxy when nothing else is selected */
+  selectedFar: FarRef | null = null;
+  /** the far-universe knot the camera is close to, resolved into its member galaxies */
+  private farCluster: FarCluster | null = null;
+  private farClusterSprites: GalaxySprites | null = null;
+  private farCheckAcc = 1;
+  /** clusters built for info panels of selected-but-unresolved knots */
+  private readonly farCache = new Map<string, FarCluster>();
   /** selected deep-sky landmark (index into universe.landmarks) when nothing else is selected */
   selectedLandmark: number | null = null;
   readonly landmarkSprites: LandmarkSprites;
   readonly nebulaClouds: NebulaClouds;
+  readonly procClouds: ProcClouds;
+  readonly volumes: Volumes;
+  readonly clusterPoints: ClusterStarPoints;
   readonly missions: Missions;
   readonly trajectories: TrajectoryLines;
   readonly ephemLines: EphemerisLines;
@@ -100,11 +134,15 @@ class App implements UIHost {
   private tourOverrides: TourOverrides = {};
   /** labelled surface feature the overlay points at (tours) */
   private surfacePin: SurfacePin | null = null;
-  private readonly pinScreen = { dir: new Vector3(), label: '', alpha: 1, visible: false };
+  private readonly pinScreen = { dir: new Vector3(), label: '', alpha: 1, visible: false, ring: null as Array<Vector3 | null> | null };
+  private readonly ringPts = Array.from({ length: 97 }, () => new Vector3());
+  private readonly ringOut: Array<Vector3 | null> = [];
   private readonly sunScreen: SunMarkerScreen = { dir: new Vector3(), label: '', selected: false };
   /** tour size comparison: a true-scale stand-in of `ref` kept at the screen-right of `beside` */
-  private ghost: { body: CelestialBody; ref: CelestialBody; beside: CelestialBody; alpha: number; leaving: boolean } | null = null;
+  /** tour comparison copy; `side` pins it beside its anchor in space (over-the-shoulder shot) instead of beside it on screen */
+  private ghost: { body: CelestialBody; ref: CelestialBody; beside: CelestialBody; alpha: number; leaving: boolean; side: Vector3 | null } | null = null;
   private pulse: LightPulse | null = null;
+  private relief: Relief | null = null;
   private meteors: MeteorShower | null = null;
   /** camera offset from the followed vehicle, kept across frame switches */
   private readonly followOffset = new Vector3();
@@ -117,6 +155,16 @@ class App implements UIHost {
   private readonly camForward = new Vector3();
   private readonly sunColor = new Vector3(1, 1, 1);
   private starLuminosity = 1;
+  /** the current system has more than one star (per-body host lighting) */
+  private multiple = false;
+
+  /** Luminosity (solar units) of a star body of the current system */
+  private hostLuminosity(star: CelestialBody): number {
+    if (star === this.universe.star) return this.starLuminosity;
+    const a = star.data.appearance;
+    const T = a.kind === 'star' ? a.temperature : 5772;
+    return Math.pow(star.radius / 695_700, 2) * Math.pow(T / 5772, 4);
+  }
   private frameCheckAcc = 0;
   private galaxyCheckAcc = 1;
   private galaxyBoost = 0;
@@ -140,6 +188,11 @@ class App implements UIHost {
     this.landmarkSprites = new LandmarkSprites(this.universe.landmarks, scene);
     this.nebulaClouds = new NebulaClouds(this.universe.landmarks, scene, this.maxPointPx);
     this.nebulaClouds.onReady = () => this.landmarkSprites.setCloudHandover(true);
+    this.volumes = new Volumes(scene);
+    this.volumes.warm(this.engine.renderer);
+    this.procClouds = new ProcClouds(this.universe.landmarks, scene, this.maxPointPx, this.volumes);
+    this.clusterPoints = new ClusterStarPoints(this.universe.landmarks, this.universe.clusterStars, scene);
+    this.landmarkSprites.discoveries = this.discoveries;
     this.farUniverse = new FarUniverse();
     this.farSprites = this.farUniverse.tiers.map((t) => {
       const s = new GalaxySprites(t, scene, this.maxPointPx, t.spec.boostMag);
@@ -150,8 +203,10 @@ class App implements UIHost {
     this.procPoints = new ProcStarPoints(this.universe.procStars, scene);
     this.grid = new SkyGrid(scene);
     this.belts = new Belts(scene);
+    this.cometTails = new CometTails(scene);
     this.orbits = new OrbitLines(scene);
     this.bodies = new BodyRenderer(scene, this.engine.renderer.capabilities.getMaxAnisotropy());
+    this.lensFlare = new LensFlare(scene);
     this.points = new BodyPoints(scene);
     this.overlay = new Overlay(overlayCanvas);
     this.input = new Input(sceneCanvas);
@@ -202,12 +257,18 @@ class App implements UIHost {
     this.input.onClick = (x, y, dbl) => this.onClick(x, y, dbl);
     this.input.onKey = (code, e) => this.onKey(code, e);
     this.input.onLockChange = (locked) => this.onLockChange(locked);
+    let hoverAt = 0;
     sceneCanvas.addEventListener('pointermove', (e) => {
       if (e.pointerType !== 'mouse' || this.input.dragging || this.input.locked) { this.overlay.hoverId = null; return; }
+      // every layer is scanned (hundreds of thousands of points): a few checks a second suffice
+      const now = performance.now();
+      if (now - hoverAt < 60) return;
+      hoverAt = now;
       const b = this.overlay.pick(e.clientX, e.clientY, 16);
       this.overlay.hoverId = b?.id ?? null;
       // stars, landmarks and galaxies have no hover ring, but the pointer tells which dots can be clicked
-      sceneCanvas.style.cursor = b || this.overlay.hitSun(e.clientX, e.clientY) || this.hitSky(e.clientX, e.clientY) ? 'pointer' : 'default';
+      sceneCanvas.style.cursor = b || this.overlay.hitSun(e.clientX, e.clientY) || this.hitSky(e.clientX, e.clientY)
+        || this.belts.pick(e.clientX, e.clientY, this.engine.camera, this.engine.width, this.engine.height, 9) ? 'pointer' : 'default';
     });
 
     // Galaxy-scale state for the first frame
@@ -236,7 +297,7 @@ class App implements UIHost {
     const toEarth = new Vector3().copy(earth.position).sub(sun.position).normalize();
     const dir = north.clone().addScaledVector(toEarth, 0.85).normalize();
     this.select(null);
-    this.selectedStar = null; this.selectedGalaxy = null; this.selectedLandmark = null;
+    this.selectedStar = null; this.selectedGalaxy = null; this.selectedLandmark = null; this.selectedFar = null;
     if (fly) {
       this.camera.goToVantage(sun, dir, span * 2.5, 4);
       this.backdropPending = true;
@@ -261,26 +322,29 @@ class App implements UIHost {
     this.orbits.setSystem(sys);
     this.points.setViews(this.bodies.views);
     this.ephemLines.track(sys.bodies);
-    this.belts.setSystem(sys.belts, sys.star.gm, sys.catalogIndex === 0 ? IDENTITY : sys.star.poleBasis);
+    this.belts.setSystem(sys.belts, (s) => (s.centerId && sys.get(s.centerId)) || sys.star, (c) => (sys.catalogIndex === 0 ? IDENTITY : c.poleBasis));
+    this.restoreAsteroids(sys);
     const [r, g, b] = starLightColor(sys.starTemperature);
     this.sunColor.set(r, g, b);
     this.starLuminosity = sys.catalogIndex === 0 ? 1 : this.universe.starInfo(sys.starId).luminosity;
+    this.multiple = sys.bodies.some((b) => b.data.type === 'barycenter');
+    this.noteSystemDiscoveries(sys);
   }
 
   /* ---------------- UIHost ---------------- */
   select(b: CelestialBody | null): void {
     this.selected = b;
-    if (b) { this.selectedStar = null; this.selectedGalaxy = null; this.selectedLandmark = null; }
+    if (b) { this.selectedStar = null; this.selectedGalaxy = null; this.selectedLandmark = null; this.selectedFar = null; }
   }
 
   selectStar(id: StarId | null): void {
     this.selectedStar = id;
-    if (id !== null) { this.selected = null; this.selectedGalaxy = null; this.selectedLandmark = null; }
+    if (id !== null) { this.selected = null; this.selectedGalaxy = null; this.selectedLandmark = null; this.selectedFar = null; }
   }
 
   selectGalaxy(i: number | null): void {
     this.selectedGalaxy = i;
-    if (i !== null) { this.selected = null; this.selectedStar = null; this.selectedLandmark = null; }
+    if (i !== null) { this.selected = null; this.selectedStar = null; this.selectedLandmark = null; this.selectedFar = null; }
   }
 
   selectLandmark(i: number | null): void {
@@ -288,7 +352,177 @@ class App implements UIHost {
     const sysId = i !== null ? this.universe.landmarks[i].systemId : null;
     if (sysId !== null) { this.selectStar(sysId); return; }
     this.selectedLandmark = i;
-    if (i !== null) { this.selected = null; this.selectedStar = null; this.selectedGalaxy = null; }
+    if (i !== null) { this.selected = null; this.selectedStar = null; this.selectedGalaxy = null; this.selectedFar = null; }
+  }
+
+  /* ---------------- Far universe: clusters and their member galaxies ---------------- */
+  selectFar(ref: FarRef | null): void {
+    this.selectedFar = ref;
+    if (ref) { this.selected = null; this.selectedStar = null; this.selectedGalaxy = null; this.selectedLandmark = null; }
+  }
+
+  /** The resolved cluster for a far reference (the live one, or a cached build for the info panel) */
+  farClusterOf(ref: FarRef): FarCluster {
+    const live = this.farCluster;
+    if (live && live.tierIndex === ref.tier && live.index === ref.index) return live;
+    const key = `${ref.tier}:${ref.index}`;
+    let c = this.farCache.get(key);
+    if (!c) {
+      c = new FarCluster(this.farUniverse.tiers[ref.tier], ref.index, ref.tier);
+      if (this.farCache.size > 6) this.farCache.delete(this.farCache.keys().next().value!);
+      this.farCache.set(key, c);
+    }
+    return c;
+  }
+
+  /** Position (pc, scene frame) of a far knot or member galaxy */
+  farPositionPc(ref: FarRef, out = new Vector3()): Vector3 {
+    if (ref.member >= 0) {
+      const c = this.farClusterOf(ref);
+      const p = c.positions, m = Math.min(ref.member, c.count - 1);
+      return out.set(p[m * 3], p[m * 3 + 1], p[m * 3 + 2]);
+    }
+    const t = this.farUniverse.tiers[ref.tier];
+    return out.set(t.positions[ref.index * 3], t.positions[ref.index * 3 + 1], t.positions[ref.index * 3 + 2]);
+  }
+
+  farRadiusPc(ref: FarRef): number {
+    if (ref.member >= 0) { const c = this.farClusterOf(ref); return c.radius[Math.min(ref.member, c.count - 1)]; }
+    return this.farUniverse.tiers[ref.tier].radius[ref.index];
+  }
+
+  farName(ref: FarRef): string {
+    if (ref.member >= 0) { const c = this.farClusterOf(ref); return c.name(Math.min(ref.member, c.count - 1)); }
+    return this.farUniverse.tiers[ref.tier].name(ref.index);
+  }
+
+  /** Camera-relative position (km, current frame) */
+  private farRelative(ref: FarRef, localKm: Vector3, out = new Vector3()): Vector3 {
+    this.farPositionPc(ref, out).multiplyScalar(PARSEC_KM);
+    return out.sub(this.universe.current.origin).sub(localKm);
+  }
+
+  goToFar(ref: FarRef): void {
+    this.selectFar(ref);
+    const centre = this.farRelative(ref, _zero);
+    const R = this.farRadiusPc(ref) * PARSEC_KM;
+    const fromCam = new Vector3().copy(this.camera.position).sub(centre).normalize();
+    // a cluster: stop where it resolves into galaxies; a member galaxy: like any galaxy (the
+    // wheel may then descend deep into it — by then it has been adopted as a real galaxy)
+    const arrive = ref.member >= 0 ? R * 2.6 : R * 3;
+    this.camera.goToPoint(centre, arrive, fromCam, { radius: R * (ref.member >= 0 ? 0.02 : 0.05), name: this.farName(ref) });
+    const dist = new Vector3().copy(centre).sub(this.camera.position).length();
+    this.ui.showToast(_('{name} hedefine uçuluyor… ({dist})', { name: this.farName(ref), dist: fmtLightYears(dist) }), 2600);
+  }
+
+  centerFar(ref: FarRef): void {
+    this.selectFar(ref);
+    this.camera.centerOnDirection(this.farRelative(ref, this.camera.position).normalize());
+  }
+
+  /** Numbers for the info panel */
+  farInfo(ref: FarRef): { name: string; kind: string; distKm: number; distSunPc: number; radiusPc: number; absMag: number; luminosity: number; massSolar: number; richness: number; typeCode: number | null; resolved: boolean; apparentMag: number } {
+    const tier = this.farUniverse.tiers[ref.tier];
+    const pos = this.farPositionPc(ref);
+    const distKm = this.farRelative(ref, this.camera.position).length();
+    const c = this.farClusterOf(ref);
+    const live = this.farCluster === c;
+    if (ref.member >= 0) {
+      const m = Math.min(ref.member, c.count - 1);
+      const absMag = c.absMag[m];
+      return {
+        name: c.name(m), kind: _('Küme üyesi galaksi'), distKm, distSunPc: pos.length(), radiusPc: c.radius[m], absMag,
+        luminosity: Math.pow(10, (4.83 - absMag) / 2.5), massSolar: 0, richness: 0, typeCode: c.type[m], resolved: live,
+        apparentMag: absMag + 5 * Math.log10(Math.max(distKm / PARSEC_KM, 1e-3)) - 5,
+      };
+    }
+    const absMag = tier.absMag[ref.index];
+    return {
+      name: tier.name(ref.index), kind: farKindLabel(tier), distKm, distSunPc: pos.length(), radiusPc: tier.radius[ref.index], absMag,
+      luminosity: c.luminosity, massSolar: c.massSolar, richness: c.richness, typeCode: null, resolved: live,
+      apparentMag: absMag + 5 * Math.log10(Math.max(distKm / PARSEC_KM, 1e-3)) - 5,
+    };
+  }
+
+  /** Resolve the far knot the camera is close to (one at a time) into member galaxies */
+  private updateFarClusters(dt: number): void {
+    this.farCheckAcc += dt;
+    if (this.farCheckAcc < 0.25) return;
+    this.farCheckAcc = 0;
+    const dSunPc = this.camPc.length();
+    const on = this.settings.galaxies && this.settings.procedural && dSunPc > 80e6;
+    let want = on ? nearestFarPoint(this.farUniverse.tiers, this.camPc, (k) => this.farUniverse.tiers[k].fade(dSunPc) > 0.05) : null;
+    // the knot the user selected (or is flying to) wins over an overlapping neighbour
+    const sel = this.selectedFar;
+    if (on && sel) {
+      const t = this.farUniverse.tiers[sel.tier];
+      const ratio = this.farPositionPc({ ...sel, member: -1 }, _dir).distanceTo(this.camPc) / Math.max(t.radius[sel.index], 1);
+      if (ratio <= RESOLVE_RATIO && t.fade(dSunPc) > 0.05) want = { tier: sel.tier, index: sel.index, ratio };
+    }
+    const cur = this.farCluster;
+    if (!want || want.ratio > RESOLVE_RATIO) {
+      if (cur) this.disposeFarCluster();
+      return;
+    }
+    if (!cur || cur.tierIndex !== want.tier || cur.index !== want.index) {
+      if (cur) this.disposeFarCluster();
+      const c = this.farClusterOf({ tier: want.tier, index: want.index, member: -1 });
+      this.farCluster = c;
+      this.farClusterSprites = new GalaxySprites(c, this.engine.scene, this.maxPointPx, 0);
+      // member sprites hand over to the adopted galaxy's star cloud up close (same LOD as any galaxy)
+      this.farClusterSprites.setNearLod(true);
+    }
+    this.adoptNearMembers(this.farCluster!);
+    // arriving at a knot is a discovery
+    if (want.ratio < 6) this.noteDiscovery(farKey({ tier: want.tier, index: want.index, member: -1 }), this.farCluster!.clusterName, false, this.farUniverse.tiers[want.tier].spec.mode === 'web' ? 'Galaksi kümesi' : 'Süperküme düğümü');
+  }
+
+  /**
+   * Member galaxies within a few radii of the camera become real galaxies for a while (guest slots
+   * of the galaxy index): the ordinary cloud / procedural-star / "inside a galaxy" machinery takes
+   * over from the sprite, so a far-cluster galaxy can be entered like any other.
+   */
+  private adoptNearMembers(c: FarCluster): void {
+    const g = this.universe.galaxies;
+    const near: Array<{ m: number; ratio: number }> = [];
+    const p = c.positions;
+    for (let m = 0; m < c.count; m++) {
+      const ratio = Math.hypot(p[m * 3] - this.camPc.x, p[m * 3 + 1] - this.camPc.y, p[m * 3 + 2] - this.camPc.z) / Math.max(c.radius[m], 1);
+      if (ratio < ADOPT_RATIO) near.push({ m, ratio });
+    }
+    near.sort((a, b) => a.ratio - b.ratio).length = Math.min(near.length, g.guestSlots);
+    const keep = new Set(near.map((n) => farKey({ tier: c.tierIndex, index: c.index, member: n.m })));
+    // release guests we have left (hysteresis: a bit beyond the adoption distance)
+    for (let k = 0; k < g.guestSlots; k++) {
+      const slot = g.guestBase + k;
+      if (!g.isGuest(slot)) continue;
+      const ratio = Math.hypot(g.positions[slot * 3] - this.camPc.x, g.positions[slot * 3 + 1] - this.camPc.y, g.positions[slot * 3 + 2] - this.camPc.z) / g.radius[slot];
+      if (ratio > ADOPT_RATIO * 1.25) this.releaseGuest(slot);
+    }
+    for (const n of near) {
+      const ref = { tier: c.tierIndex, index: c.index, member: n.m };
+      if (g.adopt(c, n.m, farKey(ref), c.name(n.m), keep) >= 0 && n.ratio < 6) this.noteDiscovery(farKey(ref), c.name(n.m), false, 'Küme üyesi galaksi');
+    }
+  }
+
+  private releaseGuest(slot: number): void {
+    const g = this.universe.galaxies;
+    if (this.selectedGalaxy === slot) this.selectGalaxy(null);
+    const cloud = this.clouds.get(slot);
+    if (cloud) { cloud.dispose(this.engine.scene); this.clouds.delete(slot); }
+    g.release(slot);
+  }
+
+  private disposeFarCluster(): void {
+    if (this.farClusterSprites) {
+      this.engine.scene.remove(this.farClusterSprites.points);
+      this.farClusterSprites.points.geometry.dispose();
+      (this.farClusterSprites.points.material as { dispose(): void }).dispose();
+    }
+    this.farClusterSprites = null;
+    this.farCluster = null;
+    const g = this.universe.galaxies;
+    for (let k = 0; k < g.guestSlots; k++) if (g.isGuest(g.guestBase + k)) this.releaseGuest(g.guestBase + k);
   }
 
   /** Fly to a nebula / cluster / remnant (or into a landmark star's system). */
@@ -317,8 +551,166 @@ class App implements UIHost {
 
   goTo(b: CelestialBody): void {
     this.select(b);
-    this.camera.goTo(b, this.universe.star.position);
+    this.camera.goTo(b, this.universe.hostStar(b).position);
     this.ui.showToast(_('{name} hedefine uçuluyor…', { name: b.name }));
+  }
+
+  /** Solid worlds the visitor can land on */
+  canLand(b: CelestialBody | null): boolean {
+    return !!b && landable(b) && this.universe.current.bodies.includes(b);
+  }
+
+  /** The body the visitor stands on (or is descending to), if any */
+  get landedOn(): CelestialBody | null {
+    const cam = this.camera;
+    return cam.surface && (cam.mode === 'surface' || cam.autopilot?.kind === 'land') ? cam.surface.body : null;
+  }
+
+  /**
+   * Land on `b` (the selection by default): where the view meets its surface — or straight below
+   * the camera — the ground is generated and the camera descends to stand on it. From there the
+   * sky is the real one: run the clock and the Sun, the moons and the stars wheel overhead.
+   */
+  land(b: CelestialBody | null = this.selected ?? this.camera.target ?? this.camera.nearest, at?: { lat: number; lon: number }): void {
+    if (!b || !this.canLand(b)) return;
+    if (this.tours.active) this.tours.stop();
+    const view = this.bodies.byId.get(b.id);
+    if (!view?.surfaceMat) return;
+    const cam = this.camera;
+    // landing point: the view ray's hit on the body, else the point under the camera
+    const rel = new Vector3().copy(cam.position).sub(b.position);
+    const fwd = new Vector3(0, 0, -1).applyQuaternion(cam.quaternion);
+    const R = b.radius;
+    const bq = fwd.dot(rel), c = rel.lengthSq() - R * R;
+    const disc = bq * bq - c;
+    const hit = new Vector3();
+    if (disc > 0 && -bq - Math.sqrt(disc) > 0) hit.copy(rel).addScaledVector(fwd, -bq - Math.sqrt(disc));
+    else hit.copy(rel);
+    hit.applyQuaternion(new Quaternion().copy(b.rotation).invert());
+    const aim = at ?? geodetic(b, hit);
+    const half = Math.max(...groundRingSizes(b)) / 2;
+    const dLat = (half / b.radius) / DEG * 1.05;
+    const groundAt = (lat: number, lon: number) => {
+      const site = groundSite(b, lat, lon);
+      // real imagery where the globe has it: the patch must lie inside one tile
+      const real = view.tiles?.tileCovering(lat, lon, dLat, Math.min(180, dLat / Math.max(0.05, Math.cos(lat * DEG)))) ?? null;
+      return { site, ground: generateGround(this.engine.renderer, b, view.surfaceMat!.uniforms, site, this.engine.renderer.capabilities.getMaxAnisotropy(), real) };
+    };
+    // dry land wanted: when the aimed point is open sea, try a spiral of nearby spots (an ocean
+    // world finds none and lands on the water)
+    let { site, ground } = groundAt(aim.lat, aim.lon);
+    if (!at && ground.water > 0.5) {
+      const steps: Array<[number, number]> = [];
+      for (const r of [3, 8, 16, 30]) for (let k = 0; k < 6; k++) steps.push([r * Math.cos((k / 6) * Math.PI * 2 + r), r * Math.sin((k / 6) * Math.PI * 2 + r)]);
+      for (const [dlat, dlon] of steps) {
+        const lat2 = Math.max(-85, Math.min(85, aim.lat + dlat));
+        const lon2 = aim.lon + dlon / Math.max(0.2, Math.cos(lat2 * DEG));
+        const cand = groundAt(lat2, lon2);
+        if (cand.ground.water > 0.5) { cand.ground.dispose(); continue; }
+        ground.dispose();
+        ({ site, ground } = cand);
+        break;
+      }
+    }
+    const terrain = view.landAt(ground);
+    // stand on open ground: of the spots within a few hundred metres, the one least walled in by
+    // its surroundings (a crater floor or a gully would hide the whole horizon)
+    let sx = 0, sz = 0, best = -Infinity;
+    for (let zi = -15; zi <= 15; zi++) {
+      for (let xi = -15; xi <= 15; xi++) {
+        const x = xi * 0.016, z = zi * 0.016;
+        const h = terrain.surfaceY(x, z);
+        let wall = -Infinity;
+        for (let k = 0; k < 8; k++) {
+          const c = Math.cos(k * Math.PI / 4), s = Math.sin(k * Math.PI / 4);
+          wall = Math.max(wall, terrain.surfaceY(x + c * 0.04, z + s * 0.04), terrain.surfaceY(x + c * 0.09, z + s * 0.09));
+        }
+        const score = h - wall - 0.02 * Math.hypot(x, z);
+        if (score > best) { best = score; sx = x; sz = z; }
+      }
+    }
+    // face the Sun if it is anywhere near the sky, else keep the heading we arrive with
+    const siteWorld = new Vector3().copy(site.pos).applyQuaternion(b.rotation).add(b.position);
+    const sunLocal = new Vector3().copy(this.universe.hostStar(b).position).sub(siteWorld).normalize().applyQuaternion(new Quaternion().copy(b.rotation).multiply(site.quat).invert());
+    let yaw = Math.atan2(sunLocal.x, -sunLocal.z);
+    if (sunLocal.y < -0.25) {
+      const f = fwd.clone().applyQuaternion(new Quaternion().copy(b.rotation).multiply(site.quat).invert());
+      if (Math.hypot(f.x, f.z) > 0.2) yaw = Math.atan2(f.x, -f.z);
+    }
+    const stand: SurfaceStand = {
+      body: b, sitePos: site.pos, siteQuat: site.quat,
+      ground: (x, z) => terrain.surfaceY(x, z),
+      x: sx, z: sz, eye: CameraController.EYE_KM, yaw, pitch: 0.05, zoom: 1,
+    };
+    this.select(b);
+    cam.land(stand);
+    this.ui.showToast(_('{name} yüzeyine iniliyor…', { name: b.name }));
+    if (!this.landingHintShown) {
+      this.landingHintShown = true;
+      window.setTimeout(() => {
+        if (this.landedOn) this.ui.showToast(_('Yüzeydesiniz: fareyle bakın · W A S D yürü · tekerlek yakınlaştır · zamanı hızlandırıp gökyüzünü izleyin · I kalk'), 7000);
+      }, 4000);
+    }
+  }
+  private landingHintShown = false;
+  /** sky brightness at the camera this frame (see skyDaylight) */
+  daylight = 0;
+
+  /** Leave the ground: back up to the orbit view of the body. */
+  takeOff(): void {
+    const b = this.landedOn;
+    if (!b) return;
+    const cam = this.camera;
+    cam.surface = null;
+    cam.mode = 'orbit';
+    // climb straight up first so the ground falls away under us rather than sliding past
+    const up = new Vector3().copy(cam.position).sub(b.position).normalize();
+    const dur = 4.5;
+    cam.goToVantage(b, up, b.radius * 3.6, dur, new Vector3().copy(b.pole));
+    this.ui.showToast(_('Kalkış…'));
+  }
+
+  /** HUD line while on the ground: where we stand and the local solar time there. */
+  surfaceStatus(): { place: string; clock: string } | null {
+    const st = this.camera.surface;
+    if (!st || this.camera.mode !== 'surface') return null;
+    const { lat, lon } = this.camera.standLatLon(st);
+    const b = st.body;
+    const place = `${Math.abs(lat).toFixed(2)}° ${lat >= -0.005 ? _('K') : _('G')}, ${Math.abs(lon).toFixed(2)}° ${lon >= 0 ? _('D') : _('B')}`;
+    // local solar time from the sub-solar longitude: noon where the Sun crosses the meridian
+    _dir.copy(this.universe.hostStar(b).position).sub(b.position).applyQuaternion(this.tmpQ.copy(b.rotation).invert());
+    const subsolar = Math.atan2(-_dir.z, _dir.x) / DEG;
+    let h = 12 + (lon - subsolar) / 15;
+    h = ((h % 24) + 24) % 24;
+    const hh = Math.floor(h), mm = Math.floor((h - hh) * 60);
+    return { place, clock: `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}` };
+  }
+  private readonly tmpQ = new Quaternion();
+  private readonly standUp = new Vector3();
+
+  /**
+   * How bright the sky is where the camera stands (0 night / space … 1 full daylight inside a
+   * dense atmosphere): the stars, the Milky Way and the galaxies are drowned accordingly.
+   */
+  private skyDaylight(camPos: Vector3): number {
+    const b = this.camera.nearest;
+    const atm = b?.data.atmosphere;
+    if (!b || !atm || atm.density <= 0) return 0;
+    const alt = Math.max(0, this.camera.altitude);
+    const host = this.universe.hostStar(b);
+    _up.copy(camPos).sub(b.position).normalize();
+    _dir.copy(host.position).sub(camPos).normalize();
+    const sinElev = _up.dot(_dir);
+    // dusk: the Milky Way is gone before the Sun is 12° down, the last stars at about −6°
+    let day = smooth01((sinElev + 0.21) / 0.24);
+    // under a permanent overcast (Venus, Titan) the stars never show
+    if (atm.density >= 1.5) day = Math.max(day, 0.9);
+    const thin = Math.exp(-alt / Math.max(b.radius * atm.height * 0.25, 1));
+    // far from the Sun the air is lit too faintly to drown the stars (Pluto's noon is a deep dusk)
+    // (scaled by the host's luminosity: a dim red dwarf's noon is faint at 1 AU already)
+    const dAU = b.position.distanceTo(host.position) / AU_KM;
+    const faint = Math.min(1, (100 * this.hostLuminosity(host)) / Math.max(dAU * dAU, 1));
+    return Math.min(1, atm.density * 3) * day * thin * faint;
   }
 
   /** Interstellar travel: switch the reference frame to the target system, then autopilot to its star. */
@@ -371,7 +763,7 @@ class App implements UIHost {
 
   starApparentMag(id: StarId): number | null {
     const ci = catalogIndexOf(id);
-    return ci >= 0 ? this.starPoints.apparentMag(ci) : this.procPoints.apparentMag(id);
+    return ci >= 0 ? this.starPoints.apparentMag(ci) : isMemberId(id) ? this.clusterPoints.apparentMag(id) : this.procPoints.apparentMag(id);
   }
 
   get freeRoam(): boolean {
@@ -385,6 +777,11 @@ class App implements UIHost {
   toggleFreeRoam(): void {
     if (this.input.locked) {
       this.input.unlockPointer();
+      return;
+    }
+    if (this.landedOn) {
+      // on foot the pointer lock just means mouse look without holding a button
+      this.input.lockPointer();
       return;
     }
     this.camera.autopilot = null;
@@ -413,7 +810,7 @@ class App implements UIHost {
     const body = u.get(bh.entry.bodyId);
     if (!body) { this.ui.showToast(_('Kara delik bulunamadı')); return; }
     this.select(body);
-    this.camera.goTo(body, u.star.position);
+    this.camera.goTo(body, u.hostStar(body).position);
     const dist = body.position.distanceTo(this.camera.position);
     this.ui.showToast(_('{name} kara deliğine uçuluyor… ({dist})', { name: body.name, dist: fmtLightYears(dist) }), 2600);
   }
@@ -453,8 +850,8 @@ class App implements UIHost {
     if (!b) { this.ui.showToast(_('Hedef bulunamadı')); return; }
     if (b.data.orbit?.kind === 'ephemeris') void ephemeris.prioritize(b.data.orbit.table);
     this.select(b);
-    if (App.backlitKind(b)) this.camera.goToBacklit(b, u.star.position);
-    else this.camera.goTo(b, u.star.position);
+    if (App.backlitKind(b)) this.camera.goToBacklit(b, u.hostStar(b).position);
+    else this.camera.goTo(b, u.hostStar(b).position);
     this.ui.showToast(_('{name} hedefine uçuluyor…', { name: b.name }));
   }
 
@@ -470,11 +867,15 @@ class App implements UIHost {
     const toBody = new Vector3().copy(b.position).sub(p.position).normalize();
     const normal = new Vector3().copy(b.orbitNormal);
     if (normal.lengthSq() < 1e-6) normal.copy(p.pole);
-    const dir = new Vector3().copy(normal).addScaledVector(toBody, -0.35).normalize();
+    // ~70° above the plane on the body's side: the flight swings up from the body without ever
+    // passing over the pole (looking straight down the "up" axis would flip the frame mid-flight)
+    const dir = new Vector3().copy(normal).addScaledVector(toBody, 0.35).normalize();
     this.select(b);
-    // roll: the orbit normal is "up", otherwise the roll inherited from the previous shot (e.g. a
-    // retrograde comet seen from the south) can leave the frame upside down
-    this.camera.goToVantage(p, dir, Math.max(a * 2.7, p.radius * 6), seconds, normal);
+    // roll: screen-up toward the body's side of the orbit, tilted 40° below the plane so it is
+    // never parallel to the line of sight along the way; otherwise the roll inherited from the
+    // previous shot (e.g. a retrograde comet seen from the south) can leave the frame upside down
+    const up = new Vector3().copy(toBody).multiplyScalar(Math.cos(40 * DEG)).addScaledVector(normal, -Math.sin(40 * DEG));
+    this.camera.goToVantage(p, dir, Math.max(a * 2.7, p.radius * 6), seconds, up);
   }
 
   /** Hop back to `bodyId` after an overview/pin cue (quick flight, no toast). */
@@ -482,12 +883,12 @@ class App implements UIHost {
     const b = this.universe.get(bodyId);
     if (!b) return;
     this.select(b);
-    if (App.backlitKind(b)) this.camera.goToBacklit(b, this.universe.star.position, TOUR_HOP_S);
-    else this.camera.goTo(b, this.universe.star.position, TOUR_HOP_S);
+    if (App.backlitKind(b)) this.camera.goToBacklit(b, this.universe.hostStar(b).position, TOUR_HOP_S);
+    else this.camera.goTo(b, this.universe.hostStar(b).position, TOUR_HOP_S);
   }
 
   /** Camera `elev`° above the equator plane, `az`° around the pole from the noon meridian, `dist` radii out. */
-  goToVantageOf(bodyId: string, elev: number, az: number, dist: number, seconds = TOUR_HOP_S * 1.5): void {
+  goToVantageOf(bodyId: string, elev: number, az: number, dist: number, seconds = TOUR_HOP_S * 1.5, inside = false): void {
     const b = this.universe.get(bodyId);
     if (!b) return;
     const noon = this.noonDirection(b, new Vector3());
@@ -498,10 +899,25 @@ class App implements UIHost {
       .addScaledVector(east, ce * Math.sin(az * DEG))
       .addScaledVector(b.pole, Math.sin(elev * DEG))
       .normalize();
-    const minD = b.data.rings ? Math.max(b.radius * dist, b.data.rings.outer * 1.15) : b.radius * dist;
+    const minD = b.data.rings && !inside ? Math.max(b.radius * dist, b.data.rings.outer * 1.15) : b.radius * dist;
     this.select(b);
     // on a surface the horizon must end up level: roll to the local vertical
     this.camera.goToVantage(b, dir, minD, seconds, b.data.orbit?.kind === 'surface' ? b.pole : undefined);
+  }
+
+  goToLimb(bodyId: string, elev: number, az: number, dist: number, aimR: number, aimAz: number, seconds = TOUR_HOP_S * 1.5): void {
+    const b = this.universe.get(bodyId);
+    if (!b) return;
+    const noon = this.noonDirection(b, new Vector3());
+    const east = new Vector3().crossVectors(b.pole, noon).normalize();
+    const around = (deg: number, out: Vector3) => out.copy(noon).multiplyScalar(Math.cos(deg * DEG)).addScaledVector(east, Math.sin(deg * DEG));
+    const R = b.radius;
+    const pos = around(az, new Vector3()).multiplyScalar(dist * R * Math.cos(elev * DEG)).addScaledVector(b.pole, dist * R * Math.sin(elev * DEG));
+    const look = around(az + aimAz, new Vector3()).multiplyScalar(aimR * R);
+    // world → the body's object frame, frozen there (spin: false) so the shot holds while time runs
+    const inv = new Quaternion().copy(b.rotation).invert();
+    this.select(b);
+    this.camera.goToPose(b, pos.applyQuaternion(inv), look.applyQuaternion(inv), b.pole.clone().applyQuaternion(inv), seconds, { spin: false });
   }
 
   /**
@@ -541,7 +957,7 @@ class App implements UIHost {
 
   /** Unit vector from `b` toward the Sun, projected onto its equator plane (the sub-solar meridian). */
   private noonDirection(b: CelestialBody, out: Vector3): Vector3 {
-    const star = this.universe.star;
+    const star = this.universe.hostStar(b);
     if (star === b) {
       const e = this.universe.get('earth');
       out.copy(e ? e.position : new Vector3(1, 0, 0)).sub(b.position);
@@ -551,7 +967,7 @@ class App implements UIHost {
     return out.normalize();
   }
 
-  setComparison(refId: string | null, besideId?: string): void {
+  setComparison(refId: string | null, besideId?: string, shoulder = false): void {
     if (this.ghost) {
       if (!refId) {
         // fade out; the body is removed once it has gone dark (see the frame loop)
@@ -568,24 +984,66 @@ class App implements UIHost {
     const body = new CelestialBody({ ...ref.data, id: 'tour-ghost', orbit: undefined });
     body.pole.copy(ref.pole);
     body.rotation.copy(ref.rotation);
-    this.ghost = { body, ref, beside, alpha: 0, leaving: false };
+    const cam = this.camera;
+    const side = shoulder ? new Vector3(1, 0, 0).applyQuaternion(cam.quaternion) : null;
+    this.ghost = { body, ref, beside, alpha: 0, leaving: false, side };
     this.placeGhost();
     this.bodies.addBody(body, this.universe.current);
     this.points.setViews(this.bodies.views);
+    if (side) { this.shoulderOnGhost(); return; }
     // back off until both fit side by side (≈ 60 % of a ~70° horizontal field)
     const width = 2 * this.ghostAnchorRadius(beside) + 2.7 * ref.radius;
     const need = width * 1.25;
-    const ap = this.camera.autopilot;
+    const ap = cam.autopilot;
     if (ap && ap.kind === 'goto' && ap.target === beside) {
       // still on the way in: just stop the approach further out
       ap.dist1 = Math.max(ap.dist1, need);
       return;
     }
-    const cur = this.camera.position.distanceTo(beside.position);
+    const cur = cam.position.distanceTo(beside.position);
     if (need > cur * 1.05) {
-      const dir = new Vector3().copy(this.camera.position).sub(beside.position).normalize();
-      this.camera.goToVantage(beside, dir, need, TOUR_HOP_S);
+      const dir = new Vector3().copy(cam.position).sub(beside.position).normalize();
+      cam.goToVantage(beside, dir, need, TOUR_HOP_S);
     }
+  }
+
+  /**
+   * Over-the-shoulder comparison: the copy (e.g. Earth beside the Sun, where at true scale and a
+   * distance that fits the Sun it would be a speck lost in the glare) is approached to ~22 of
+   * its radii, swung round until a clear gap of sky separates it from the anchor's limb. The
+   * anchor then fills one side of the frame behind it.
+   */
+  private shoulderOnGhost(): void {
+    const g = this.ghost!;
+    const side = g.side!;
+    const P = g.body.position, S = g.beside.position;
+    const Ra = this.ghostAnchorRadius(g.beside), Rr = g.ref.radius;
+    // the side we look from: the current view direction, made perpendicular to the pair
+    const v = new Vector3().copy(this.camera.position).sub(S);
+    v.addScaledVector(side, -v.dot(side));
+    if (v.lengthSq() < 1e-6) v.set(0, 1, 0).addScaledVector(side, -side.y);
+    v.normalize();
+    const d = Rr * 22;
+    const dir = new Vector3(), C = new Vector3(), toS = new Vector3(), toP = new Vector3();
+    const ghostAng = Math.asin(Math.min(1, Rr / d));
+    // swing either way (the clear side depends on where we came from), keeping off the anchor
+    let best = -Infinity;
+    const pick = new Vector3().copy(v);
+    for (let i = 0; i <= 80; i++) {
+      const deg = (i % 2 ? -1 : 1) * Math.ceil(i / 2) * 2;
+      dir.copy(v).multiplyScalar(Math.cos(deg * DEG)).addScaledVector(side, Math.sin(deg * DEG));
+      C.copy(P).addScaledVector(dir, d);
+      toS.copy(S).sub(C);
+      toP.copy(P).sub(C).normalize();
+      const sDist = toS.length();
+      if (sDist < Ra * 1.12) continue;
+      const gap = Math.acos(Math.min(1, Math.max(-1, toS.normalize().dot(toP)))) - Math.asin(Math.min(1, Ra / sDist)) - ghostAng;
+      if (gap >= ghostAng * 5) { pick.copy(dir); break; }
+      if (gap > best) { best = gap; pick.copy(dir); }
+    }
+    dir.copy(pick);
+    const up = new Vector3(0, 1, 0).applyQuaternion(this.camera.quaternion);
+    this.camera.goToVantage(g.body, dir, d, TOUR_HOP_S * 1.4, up);
   }
 
   private ghostAnchorRadius(b: CelestialBody): number {
@@ -610,16 +1068,84 @@ class App implements UIHost {
     this.placeGhost();
   }
 
-  /** Keep the comparison body at the screen-right of its anchor, at the same depth, spinning like the original. */
+  /**
+   * Keep the comparison body at the screen-right of its anchor, at the anchor's distance from the
+   * camera and just clear of its limb (a near sphere looks wider than its radius: placing the copy
+   * one radius out would sink it into the disc), spinning like the original. In a shoulder shot
+   * it stays put in space instead, a small gap off the anchor's surface.
+   */
   private placeGhost(): void {
     const g = this.ghost;
     if (!g) return;
-    const right = new Vector3(1, 0, 0).applyQuaternion(this.camera.quaternion);
-    const gap = this.ghostAnchorRadius(g.beside) + g.ref.radius * 1.35;
-    g.body.position.copy(g.beside.position).addScaledVector(right, gap);
+    const Ra = this.ghostAnchorRadius(g.beside), Rr = g.ref.radius;
+    if (g.side) {
+      g.body.position.copy(g.beside.position).addScaledVector(g.side, Ra * 1.08 + Rr);
+    } else {
+      const cam = this.camera.position;
+      const toA = _dir.copy(g.beside.position).sub(cam);
+      const d = toA.length();
+      const right = new Vector3(1, 0, 0).applyQuaternion(this.camera.quaternion);
+      if (d <= Ra * 1.02) {
+        g.body.position.copy(g.beside.position).addScaledVector(right, Ra + Rr * 1.35);
+      } else {
+        toA.multiplyScalar(1 / d);
+        const ang = Math.asin(Ra / d) + 1.6 * Math.asin(Math.min(1, Rr / d));
+        const axis = _up.crossVectors(toA, right).normalize();
+        const q = this.tmpQ.setFromAxisAngle(axis, ang);
+        g.body.position.copy(toA.applyQuaternion(q)).multiplyScalar(d).add(cam);
+      }
+    }
     g.body.rotation.copy(g.ref.rotation);
     g.body.pole.copy(g.ref.pole);
-    g.body.distanceToStar = g.body.position.distanceTo(this.universe.star.position);
+    g.body.distanceToStar = g.body.position.distanceTo(this.universe.hostStar(g.ref).position);
+  }
+
+  /**
+   * Tour postcard: raise the shield volcano's relief and glide down to a telephoto view of it —
+   * the camera `dist` km from the summit, `alt` km above the ground, a little off the Sun's
+   * bearing so the flanks are side-lit, looking across the horizon at the upper slopes.
+   */
+  setPostcard(p: { ref: string; lat: number; lon: number; relief: string; peak: number; scale: number; dist: number; alt: number; fov?: number; seconds?: number } | null): void {
+    if (!p) { this.relief?.hide(); return; }
+    const b = this.universe.get(p.ref);
+    if (!b) return;
+    const dir = b.surfaceDirection(p.lat, p.lon, new Vector3());
+    // mid-morning: a side-lit mountain under a Sun ~35° up in the east
+    this.bringIntoDaylight(b, dir, 50);
+    this.relief ??= new Relief(this.engine.scene);
+    const ground = this.relief.show({ body: b, source: p.relief, scale: p.scale });
+    // body frame: summit, local vertical, the Sun's bearing in the tangent plane
+    const site = groundSite(b, p.lat, p.lon);
+    const up = site.up.clone();
+    const inv = new Quaternion().copy(b.rotation).invert();
+    const sun = new Vector3().copy(this.universe.hostStar(b).position).sub(b.position).applyQuaternion(inv);
+    sun.addScaledVector(up, -sun.dot(up));
+    if (sun.lengthSq() < 1e-6) sun.copy(site.east);
+    sun.normalize();
+    const across = new Vector3().crossVectors(up, sun);
+    // swing off the Sun's bearing toward the equator (Olympus: the smooth plains to the south-east,
+    // clear of the aureole's ridged lobes to the north and west)
+    const bearing = 55 * DEG * (across.y * Math.sign(p.lat || 1) > 0 ? -1 : 1);
+    const h = sun.multiplyScalar(Math.cos(bearing)).addScaledVector(across, Math.sin(bearing)).normalize();
+    // great-circle step from the summit to the viewpoint
+    const R = site.pos.length();
+    const q = new Quaternion().setFromAxisAngle(new Vector3().crossVectors(up, h).normalize(), p.dist / R);
+    const camUp = up.clone().applyQuaternion(q);
+    const camPos = camUp.clone().multiplyScalar(R + p.alt);
+    const summit = Relief.summit(b, p.lat, p.lon, p.peak, p.scale, new Vector3());
+    // aim a little below the summit: the mountain stands in the upper part of the frame
+    const look = site.pos.clone().addScaledVector(up, summit.distanceTo(site.pos) * 0.35);
+    this.select(b);
+    this.camera.goToPose(b, camPos, look, camUp, p.seconds ?? 6, { descend: true });
+    // the viewpoint stands on the relief: once its heights are in, lift the end of the flight
+    // (or the camera, if already there) onto that ground
+    const ap = this.camera.autopilot;
+    void ground.then((groundAt) => {
+      const lift = groundAt(camPos);
+      if (lift <= 0) return;
+      if (this.camera.autopilot === ap && ap?.pose) ap.pose.pos.addScaledVector(camUp, lift);
+      else if (!this.camera.autopilot && this.camera.reference === b) this.camera.position.addScaledVector(camUp.clone().applyQuaternion(b.rotation), lift);
+    }).catch(() => {});
   }
 
   setPulse(p: { from: string; to: string; seconds: number } | null): void {
@@ -665,7 +1191,7 @@ class App implements UIHost {
     const left = new Vector3().crossVectors(dir, b.pole);
     if (left.lengthSq() < 1e-4) {
       // polar feature: any tangent will do — lean toward the Sun so the area is lit
-      left.copy(this.universe.star.position).sub(b.position).normalize();
+      left.copy(this.universe.hostStar(b).position).sub(b.position).normalize();
       left.addScaledVector(dir, -left.dot(dir)).normalize();
     } else left.normalize();
     const camDir = dir.clone().addScaledVector(south, 0.18).addScaledVector(left, 0.26).normalize();
@@ -678,13 +1204,14 @@ class App implements UIHost {
    * Sun is high over it (tours already fast-forward time; a feature in the night is useless).
    * `dir` is rotated in place to where it will be after the jump.
    */
-  private bringIntoDaylight(b: CelestialBody, dir: Vector3): void {
+  private bringIntoDaylight(b: CelestialBody, dir: Vector3, morningDeg?: number): void {
     // tidally locked moons spin once per orbit (prograde about the pole): the Sun sweeps their
     // surface once per orbital period, so the same jump logic applies with that period
     const spinS = b.data.rotationPeriod === 'sync' ? b.periodDays * DAY_S : b.rotationPeriodS;
-    if (!spinS || !Number.isFinite(spinS) || this.universe.star === b) return;
-    const toSun = new Vector3().copy(this.universe.star.position).sub(b.position).normalize();
-    if (dir.dot(toSun) > 0.5) return; // Sun already more than 30° up
+    if (!spinS || !Number.isFinite(spinS) || b.data.type === 'star') return;
+    const toSun = new Vector3().copy(this.universe.hostStar(b).position).sub(b.position).normalize();
+    // `morningDeg`: always go to that hour angle before noon (the sub-solar meridian that far east)
+    if (morningDeg === undefined && dir.dot(toSun) > 0.5) return; // Sun already more than 30° up
     const sunT = toSun.clone().addScaledVector(b.pole, -toSun.dot(b.pole));
     const dirT = dir.clone().addScaledVector(b.pole, -dir.dot(b.pole));
     if (sunT.lengthSq() < 1e-6 || dirT.lengthSq() < 1e-6) return; // polar: no rotation helps
@@ -692,7 +1219,7 @@ class App implements UIHost {
     // signed angle from the feature to the sub-solar meridian about the pole (spin is +about pole)
     const phi = Math.atan2(b.pole.dot(new Vector3().crossVectors(dirT, sunT)), dirT.dot(sunT));
     const omega = (2 * Math.PI) / spinS;
-    let dt = phi / omega;
+    let dt = (phi - (morningDeg ?? 0) * DEG * Math.sign(omega)) / omega;
     const period = Math.abs(spinS);
     while (dt < 0) dt += period;
     this.time.jump(dt);
@@ -711,7 +1238,7 @@ class App implements UIHost {
     const b = this.universe.get(pin.bodyId);
     if (!b || cam.target !== b) return;
     // the feature's direction in camera space
-    const d = this.pinDirection(b, pin.lat, pin.lon, pin.storm ?? false, this.aimDir).multiplyScalar(b.radius).add(b.position).sub(cam.position).normalize();
+    const d = this.pinPoint(b, pin.lat, pin.lon, pin.storm ?? false, this.aimDir).sub(cam.position).normalize();
     d.applyQuaternion(this.aimQ.copy(cam.quaternion).invert());
     if (d.z > -0.3) return; // off to the side or behind: not ours to fix
     // where it should sit: a fixed fraction of the half-field to the right and up
@@ -739,15 +1266,26 @@ class App implements UIHost {
     const star = this.universe.star;
     const touring = this.tours.state.tour !== null || this.lessons.active;
     const skip = touring && this.tourOverrides.fill === false ? cam.target : null;
+    // (the world under our feet keeps the same lamp as from orbit: the night is dark, not black)
     for (const b of this.universe.current.bodies) {
-      if (b === star || b === skip || b.data.type === 'barycenter' || b.data.type === 'blackhole') continue;
+      if (b === star || b === skip || b.data.type === 'star' || b.data.type === 'barycenter' || b.data.type === 'blackhole') continue;
       // spacecraft and small rocks: a floor on the reach so a few hundred metres count as close
       if (cam.position.distanceTo(b.position) < Math.max(b.radius * NEAR_LIGHT_RADII, 5)) want.add(b.id);
     }
+    this.fillFull.clear();
     if (touring) {
-      if (this.ghost && !this.ghost.leaving) want.add(this.ghost.body.id);
-      if (this.surfacePin && !this.pinLeaving) want.add(this.surfacePin.bodyId);
+      if (this.ghost && !this.ghost.leaving) {
+        want.add(this.ghost.body.id); this.fillFull.add(this.ghost.body.id);
+        // the camera backs off to fit the pair: the compared world must not go dark meanwhile
+        const anchor = this.ghost.beside;
+        if (anchor.data.type !== 'star') { want.add(anchor.id); this.fillFull.add(anchor.id); }
+      }
+      if (this.surfacePin && !this.pinLeaving) { want.add(this.surfacePin.bodyId); this.fillFull.add(this.surfacePin.bodyId); }
+      // a tour's camera target keeps the full work light so its pinned features stay readable
+      if (cam.target && this.tourOverrides.fill !== false) this.fillFull.add(cam.target.id);
     }
+    // proximity lamp: the user's strength; tours and pinned features: full
+    const near = this.settings.nightLight;
     const step = dt / 2;
     for (const id of want) if (!this.fill.has(id)) this.fill.set(id, 0);
     for (const [id, v] of this.fill) {
@@ -756,13 +1294,49 @@ class App implements UIHost {
       else this.fill.set(id, nv);
     }
     this.fillOut.clear();
-    for (const [id, v] of this.fill) this.fillOut.set(id, v * v * (3 - 2 * v));
+    for (const [id, v] of this.fill) {
+      const strength = this.fillFull.has(id) ? 1 : near;
+      if (strength > 0) this.fillOut.set(id, v * v * (3 - 2 * v) * strength);
+    }
   }
   private readonly fill = new Map<string, number>();
   private readonly fillWant = new Set<string>();
+  private readonly fillFull = new Set<string>();
   private readonly fillOut = new Map<string, number>();
   private readonly aimQ = new Quaternion();
   private readonly aimEase = new Quaternion();
+
+  /**
+   * World position of a surface point on the rendered (oblate) globe: the mesh is a unit sphere
+   * squashed along the pole, so the point of the sphere at lat/lon lands at (a·x, c·y, a·z) —
+   * not one mean radius out, which on Jupiter sits ~900 km inside the clouds and swims against
+   * them as the camera moves.
+   */
+  private pinPoint(b: CelestialBody, lat: number, lon: number, storm: boolean, out: Vector3): Vector3 {
+    this.pinDirection(b, lat, lon, storm, out).applyQuaternion(this.pinQ.copy(b.rotation).invert());
+    const a = b.equatorialRadius, c = b.polarRadius;
+    out.set(out.x * a, out.y * c, out.z * a);
+    return out.applyQuaternion(b.rotation).add(b.position);
+  }
+  private readonly pinQ = new Quaternion();
+  private readonly reliefHaze = new Vector3();
+
+  /** A small circle `radiusKm` round a surface point, camera-relative; points on the far side are null. */
+  private pinRing(b: CelestialBody, lat: number, lon: number, radiusKm: number, camPos: Vector3): Array<Vector3 | null> {
+    const out = this.ringOut;
+    out.length = 0;
+    const d = radiusKm / b.radius, la = lat * DEG, lo = lon * DEG;
+    const n = this.ringPts.length - 1;
+    for (let i = 0; i <= n; i++) {
+      const brg = (i / n) * 2 * Math.PI;
+      const la2 = Math.asin(Math.sin(la) * Math.cos(d) + Math.cos(la) * Math.sin(d) * Math.cos(brg));
+      const lo2 = lo + Math.atan2(Math.sin(brg) * Math.sin(d) * Math.cos(la), Math.cos(d) - Math.sin(la) * Math.sin(la2));
+      const p = this.pinPoint(b, la2 / DEG, lo2 / DEG, false, this.ringPts[i]);
+      const facing = _dir.copy(p).sub(b.position).dot(_up.copy(camPos).sub(p)) > 0;
+      out.push(facing ? p.sub(camPos) : null);
+    }
+    return out;
+  }
 
   /** Outward unit vector of a surface point; gas-giant storms follow the shader's drifting spot. */
   private pinDirection(b: CelestialBody, lat: number, lon: number, storm: boolean, out: Vector3): Vector3 {
@@ -777,14 +1351,18 @@ class App implements UIHost {
   }
 
   /**
-   * Bodies a tour step is about: they (with their primaries and their moons / companion stars)
-   * keep their tags while everything else on the sky rests. `null` ends the scoping.
+   * Bodies a tour step is about. Only they carry a tag while the step plays (with the comparison
+   * copy and the other half of a binary); their primaries and moons / companion stars are also
+   * kept on screen by the small-body filter, while everything else on the sky rests. `null` ends
+   * the scoping.
    */
   setTourScope(ids: string[] | null): void {
-    if (!ids) { this.overlay.scope = null; return; }
+    if (!ids) { this.overlay.scope = null; this.tourScope = null; return; }
+    const tags = new Set<string>(['tour-ghost']);
     const scope = new Set<string>(['tour-ghost']);
     const u = this.universe;
     for (const id of ids) {
+      tags.add(id);
       const b = u.get(id);
       if (!b) { scope.add(id); continue; }
       // its primaries, except an (empty) barycentre, whose cross and name would sit on the star's face
@@ -796,10 +1374,14 @@ class App implements UIHost {
       // its moons (a planet), its planets (the star) — not the dwarfs, rocks and probes of the whole system
       for (const c of b.children) if (kin(c)) scope.add(c.id);
       // the other half of a binary (both circle a barycentre): the companion is part of the story
-      if (b.parent?.data.type === 'barycenter') for (const c of b.parent.children) if (kin(c) || c.data.type === 'dwarf') scope.add(c.id);
+      if (b.parent?.data.type === 'barycenter') {
+        for (const c of b.parent.children) if (kin(c) || c.data.type === 'dwarf') { scope.add(c.id); tags.add(c.id); }
+      }
     }
-    this.overlay.scope = scope;
+    this.tourScope = scope;
+    this.overlay.scope = tags;
   }
+  private tourScope: Set<string> | null = null;
 
   setTourOverrides(o: TourOverrides): void {
     this.tourOverrides = o;
@@ -894,6 +1476,7 @@ class App implements UIHost {
 
   toggleFollow(): void {
     const cam = this.camera;
+    if (this.landedOn) { this.takeOff(); return; }
     if (this.selected) {
       if (cam.mode === 'orbit' && cam.target === this.selected) {
         cam.setMode('free');
@@ -919,6 +1502,10 @@ class App implements UIHost {
       centre = u.landmarkRelative(i, new Vector3());
       radius = u.landmarks[i].def.radiusPc * PARSEC_KM * 0.3;
       name = _(u.landmarks[i].def.name);
+    } else if (this.selectedFar !== null) {
+      centre = this.farRelative(this.selectedFar, _zero);
+      radius = this.farRadiusPc(this.selectedFar) * PARSEC_KM * 0.05;
+      name = this.farName(this.selectedFar);
     }
     if (!centre) return;
     if (cam.mode === 'orbit' && cam.anchor && cam.anchor.position.distanceToSquared(centre) < 1e-6 * Math.max(1, centre.lengthSq())) {
@@ -1113,7 +1700,7 @@ class App implements UIHost {
           this.universe.update(this.time.jd, this.time.t);
           this.camera.placeAt(b, _dir.set(p.cam.dir[0], p.cam.dir[1], p.cam.dir[2]).multiplyScalar(p.cam.radii * b.radius));
           this.camera.autoOrbit = 0;
-        } else this.camera.goTo(b, this.universe.star.position);
+        } else this.camera.goTo(b, this.universe.hostStar(b).position);
       } else this.ui.showToast(_('Hedef bulunamadı'));
     }
     if (p.rate !== null) { if (p.rate === 0) { if (!this.time.paused) this.time.togglePause(); } else this.time.setRate(p.rate); }
@@ -1124,6 +1711,8 @@ class App implements UIHost {
     if (this.persistSettings) saveSettings(s);
     this.engine.setFov(s.fov);
     this.engine.bloom.enabled = s.bloom;
+    this.volumes.enabled = s.volumetrics;
+    this.volumes.scale = this.engine.mobile ? 0.35 : 0.5;
     this.engine.setRenderScale(s.renderScale * (s.autoResolution ? this.autoScale : 1));
     this.resizeOverlay();
     this.engine.renderer.toneMappingExposure = s.exposure;
@@ -1132,16 +1721,20 @@ class App implements UIHost {
     this.overlay.showStarNames = s.starNames;
     this.overlay.showGalaxyNames = s.galaxyNames;
     this.overlay.showDistances = s.distances;
+    this.overlay.clean = s.cleanView;
     const ov = this.tourOverrides;
-    this.grid.setVisible(ov.eclipticGrid ?? s.eclipticGrid, ov.equatorialGrid ?? s.equatorialGrid);
+    this.grid.setVisible(this.uiVisible && (ov.eclipticGrid ?? s.eclipticGrid), this.uiVisible && (ov.equatorialGrid ?? s.equatorialGrid));
     this.galaxySprites.setVisible(s.galaxies);
     // generated content: procedural stars, the procedural galaxy field and the far cosmic-web tiers
     this.galaxySprites.setProcedural(s.procedural);
     for (const sp of this.farSprites) sp.setVisible(s.galaxies && s.procedural);
     this.procPoints.setVisible(s.procedural);
+    this.clusterPoints.setVisible(s.procedural);
     if (!s.procedural && this.selectedGalaxy !== null && this.selectedGalaxy >= this.universe.galaxies.catalogCount) this.selectGalaxy(null);
+    if ((!s.procedural || !s.galaxies) && this.selectedFar) this.selectFar(null);
     // "what is real?" view: generated stars & galaxies in green
     this.procPoints.setHighlight(s.highlightProcedural);
+    this.clusterPoints.setHighlight(s.highlightProcedural);
     this.galaxySprites.setHighlight(s.highlightProcedural);
     for (const sp of this.farSprites) sp.setHighlight(s.highlightProcedural);
     for (const c of this.clouds.values()) c.setHighlight(s.highlightProcedural);
@@ -1158,6 +1751,7 @@ class App implements UIHost {
   toggleUI(): void {
     this.uiVisible = !this.uiVisible;
     document.getElementById('ui')?.classList.toggle('hidden', !this.uiVisible);
+    this.applySettings();   // grids follow the UI
   }
 
   /* ---------------- Input ---------------- */
@@ -1172,6 +1766,12 @@ class App implements UIHost {
       return;
     }
     const eng = this.engine;
+    // a belt rock the visitor is close to: it becomes a real (discovered) asteroid
+    const rock = this.belts.pick(x, y, eng.camera, eng.width, eng.height, 9 * tol);
+    if (rock) {
+      const nb = this.discoverAsteroid(rock);
+      if (nb) { this.select(nb); if (dbl) this.goTo(nb); return; }
+    }
     const hit = this.hitSky(x, y, tol);
     if (hit) {
       switch (hit.kind) {
@@ -1179,11 +1779,20 @@ class App implements UIHost {
         case 'blackhole': { const bh = this.universe.blackHole(hit.id); if (bh) { this.selectStar(bh.systemStarId); if (dbl) this.goToBlackHole(hit.id); } break; }
         case 'landmark': this.selectLandmark(hit.index); if (dbl) this.goToLandmark(hit.index); break;
         case 'galaxy': this.selectGalaxy(hit.index); if (dbl) this.goToGalaxy(hit.index); break;
+        case 'far': this.selectFar(hit.ref); if (dbl) this.goToFar(hit.ref); break;
       }
       return;
     }
     const fovRad = eng.camera.fov * DEG;
     const pxPerRad = eng.height / 2 / Math.tan(fovRad / 2);
+    // Inside a nebula / cluster the gas and the unresolved glow fill the view: a click on them is a
+    // click on the object itself
+    const around = this.landmarkAround();
+    if (around >= 0) {
+      this.selectLandmark(around);
+      if (dbl) this.goToLandmark(around);
+      return;
+    }
     // Inside / next to a galaxy its glow is a statistical point cloud, not stars: say so instead of
     // silently ignoring the click, and tell the visitor where the selectable stars are
     if (this.clouds.size && this.cloudUnderPointer(x, y, pxPerRad)) {
@@ -1195,22 +1804,16 @@ class App implements UIHost {
           : _('Çözümlenmemiş yıldız alanı · yakındaki tekil yıldızlar tıklanabilir (imleç değişir)'), 3200);
       return;
     }
-    // Far-universe tiers (aggregated clusters / supercluster knots): no selection, just an honest one-liner
-    if (!this.settings.galaxies) return;
-    for (let k = 0; k < this.farSprites.length; k++) {
-      const sp = this.farSprites[k];
-      if (!sp.points.visible) continue;
-      const i = sp.pick(x, y, eng.camera, eng.width, eng.height, pxPerRad, 1, -1, 10 * tol);
-      if (i === null) continue;
-      const tier = this.farUniverse.tiers[k];
-      const kind = tier.spec.mode === 'web' ? _('Prosedürel galaksi kümesi') : _('Prosedürel süperküme düğümü');
-      this.ui.showToast(`${kind} · ${_('temsilî; katalog kaydı değil')} · ~${fmtScaleDistance(sp.apparent(i).distPc * PARSEC_KM)}`, 3200);
-      return;
+    // inside a resolved far cluster a click on nothing in particular is a click on the cluster
+    if (this.farCluster && this.farCluster.ratio(this.camPc) < 1.6) {
+      const ref = { tier: this.farCluster.tierIndex, index: this.farCluster.index, member: -1 };
+      this.selectFar(ref);
+      if (dbl) this.goToFar(ref);
     }
   }
 
   /** Anything selectable on the sky at a screen point: catalogue / generated star, landmark, galaxy */
-  private hitSky(x: number, y: number, tol = 1): { kind: 'star' | 'blackhole'; id: string } | { kind: 'landmark' | 'galaxy'; index: number } | null {
+  private hitSky(x: number, y: number, tol = 1): { kind: 'star' | 'blackhole'; id: string } | { kind: 'landmark' | 'galaxy'; index: number } | { kind: 'far'; ref: FarRef } | null {
     const eng = this.engine;
     const u = this.universe;
     // the label text counts as the object: from afar the dot itself is a sub-pixel target
@@ -1222,16 +1825,47 @@ class App implements UIHost {
         default: return { kind: lbl.kind, index: lbl.index };
       }
     }
-    const star = this.starPoints.pick(x, y, eng.camera, eng.width, eng.height, u.current.catalogIndex, 14 * tol);
-    if (star !== null) return { kind: 'star', id: `c${star}` };
-    const proc = this.procPoints.pick(x, y, eng.camera, eng.width, eng.height, u.current.starId, 14 * tol);
-    if (proc !== null) return { kind: 'star', id: proc };
-    const lm = this.landmarkSprites.pick(x, y, eng.camera, eng.width, eng.height, 14 * tol);
-    if (lm !== null) return { kind: 'landmark', index: lm };
+    // every layer proposes its best candidate as drawn (size, alpha); the best score wins across
+    // layers, so a faint dot near a bright nebula / galaxy no longer steals the click
+    type SkyHit = NonNullable<ReturnType<App['hitSky']>>;
+    const slack = 5 * tol;
+    let best: PickHit<SkyHit> | null = null;
+    const offer = <T,>(h: PickHit<T> | null, wrap: (v: T) => SkyHit): void => {
+      if (h) best = better(best, { ...h, value: wrap(h.value) });
+    };
+    offer(this.starPoints.pickHit(x, y, eng.camera, eng.width, eng.height, u.current.catalogIndex, slack), (i) => ({ kind: 'star', id: `c${i}` }));
+    offer(this.procPoints.pickHit(x, y, eng.camera, eng.width, eng.height, u.current.starId, slack), (id) => ({ kind: 'star', id }));
+    offer(this.clusterPoints.pickHit(x, y, eng.camera, eng.width, eng.height, u.current.starId, slack), (id) => ({ kind: 'star', id }));
+    offer(this.landmarkSprites.pickHit(x, y, eng.camera, eng.width, eng.height, slack), (index) => ({ kind: 'landmark', index }));
     const pxPerRad = eng.height / 2 / Math.tan((eng.camera.fov * DEG) / 2);
-    const gal = this.galaxySprites.pick(x, y, eng.camera, eng.width, eng.height, pxPerRad, this.galaxyBoost, u.currentGalaxy ?? -1, 14 * tol);
-    if (gal !== null) return { kind: 'galaxy', index: gal };
-    return null;
+    offer(this.galaxySprites.pickHit(x, y, eng.camera, eng.width, eng.height, pxPerRad, this.galaxyBoost, u.currentGalaxy ?? -1, slack, this.clouds),
+      (index) => ({ kind: 'galaxy', index }));
+    // far universe: member galaxies of the resolved cluster, then the aggregated knots themselves
+    if (this.settings.galaxies && this.settings.procedural) {
+      const fc = this.farCluster, fs = this.farClusterSprites;
+      if (fc && fs) {
+        offer(fs.pickHit(x, y, eng.camera, eng.width, eng.height, pxPerRad, this.galaxyBoost, -1, slack),
+          (m) => ({ kind: 'far', ref: { tier: fc.tierIndex, index: fc.index, member: m } }));
+      }
+      for (let k = 0; k < this.farSprites.length; k++) {
+        offer(this.farSprites[k].pickHit(x, y, eng.camera, eng.width, eng.height, pxPerRad, 1, fc && fc.tierIndex === k ? fc.index : -1, slack),
+          (index) => ({ kind: 'far', ref: { tier: k, index, member: -1 } }));
+      }
+    }
+    return (best as PickHit<SkyHit> | null)?.value ?? null;
+  }
+
+  /** Index of the extended landmark (nebula, cluster, remnant) the camera is inside of, or -1 */
+  private landmarkAround(): number {
+    const u = this.universe;
+    let best = -1, bestRatio = 1.6;
+    for (let i = 0; i < u.landmarks.length; i++) {
+      const l = u.landmarks[i];
+      if (l.def.kind === 'star' || l.def.kind === 'pulsar' || l.def.radiusPc < 0.2) continue;
+      const ratio = l.positionPc.distanceTo(this.camPc) / l.def.radiusPc;
+      if (ratio < bestRatio) { bestRatio = ratio; best = i; }
+    }
+    return best;
   }
 
   /** Is the screen point on the resolved point cloud of a nearby galaxy (unresolved star light)? */
@@ -1257,14 +1891,17 @@ class App implements UIHost {
         else if (this.selectedStar !== null) this.goToStar(this.selectedStar);
         else if (this.selectedGalaxy !== null) this.goToGalaxy(this.selectedGalaxy);
         else if (this.selectedLandmark !== null) this.goToLandmark(this.selectedLandmark);
+        else if (this.selectedFar !== null) this.goToFar(this.selectedFar);
         break;
       case 'KeyC':
         if (sel) this.center(sel);
         else if (this.selectedStar !== null) this.centerStar(this.selectedStar);
         else if (this.selectedGalaxy !== null) this.centerGalaxy(this.selectedGalaxy);
         else if (this.selectedLandmark !== null) this.centerLandmark(this.selectedLandmark);
+        else if (this.selectedFar !== null) this.centerFar(this.selectedFar);
         break;
       case 'KeyT': this.toggleFollow(); break;
+      case 'KeyI': if (this.landedOn) this.takeOff(); else this.land(); break;
       case 'KeyV': this.toggleFreeRoam(); break;
       case 'KeyH': case 'Home': {
         e.preventDefault();
@@ -1291,7 +1928,7 @@ class App implements UIHost {
       case 'KeyL': this.time.forwardWarp(); break;
       case 'Backslash': this.time.setNow(); this.ui.showToast(_('Gerçek zaman')); break;
       case 'KeyO': s.orbits = !s.orbits; this.applySettings(); this.ui.showToast(`${_('Yörüngeler')}: ${s.orbits ? _('açık') : _('kapalı')}`); break;
-      case 'KeyN': s.labels = !s.labels; s.markers = s.labels; this.applySettings(); this.ui.showToast(`${_('Etiketler')}: ${s.labels ? _('açık') : _('kapalı')}`); break;
+      case 'KeyN': s.cleanView = !s.cleanView; this.applySettings(); this.ui.showToast(s.cleanView ? _('Temiz görünüm: işaretler ve isimler gizli') : _('İşaretler ve isimler görünür')); break;
       case 'Semicolon': s.eclipticGrid = !s.eclipticGrid; this.applySettings(); break;
       case 'Quote': s.equatorialGrid = !s.equatorialGrid; this.applySettings(); break;
       case 'KeyB': s.bloom = !s.bloom; this.applySettings(); break;
@@ -1367,13 +2004,24 @@ class App implements UIHost {
     for (const i of wanted) {
       if (this.clouds.has(i) || this.clouds.size >= 3) continue;
       const n = i === 0 ? 260_000 : Math.round(Math.min(160_000, 40_000 + g.radius[i] * 6));
-      const cloud = new GalaxyCloud(i, g.model(i), scene, n, this.maxPointPx);
+      const cloud = new GalaxyCloud(i, g.model(i), scene, n, this.maxPointPx, this.volumes);
       cloud.setHighlight(this.settings.highlightProcedural);
       this.clouds.set(i, cloud);
     }
 
     // procedural stars for the galaxy we're in (none at all when generated content is switched off)
     u.procStars.update(camPc, this.settings.procedural ? inside : null);
+    // generated deep-sky objects of the neighbourhood (nebulae, clusters, remnants, exotic stars)
+    const selectedId = this.selectedLandmark !== null ? u.landmarks[this.selectedLandmark]?.def.id : null;
+    if (u.procLandmarks.update(camPc, this.settings.procedural ? inside : null) || this.landmarkSprites.count !== u.landmarks.length) {
+      u.setProcLandmarks(u.procLandmarks.list);
+      if (selectedId) {
+        const idx = u.landmarks.findIndex((l) => l.def.id === selectedId);
+        this.selectedLandmark = idx >= 0 ? idx : null;
+      }
+      this.landmarkSprites.rebuild();
+    }
+    this.checkDiscoveries(camPc);
 
     // sprite exaggeration: physical inside a galaxy, boosted in intergalactic space
     let nearestRatio = Infinity;
@@ -1400,11 +2048,218 @@ class App implements UIHost {
       : Math.exp(Math.log(cur) + (Math.log(targetKm) - Math.log(cur)) * 0.4);
   }
 
+  /* ---------------- Discoveries ---------------- */
+  /* ---------------- Discovered belt asteroids ---------------- */
+  private asteroidStore: Record<string, Array<[number, number]>> | null = null;
+
+  /** per system: [belt, particle] pairs of the rocks the visitor has turned into bodies (persisted) */
+  private get asteroids(): Record<string, Array<[number, number]>> {
+    if (!this.asteroidStore) {
+      this.asteroidStore = {};
+      try { this.asteroidStore = JSON.parse(localStorage.getItem('yeits.asteroids') ?? '{}') as Record<string, Array<[number, number]>>; } catch { /* ignore */ }
+    }
+    return this.asteroidStore;
+  }
+
+  private asteroidId(starId: string, p: BeltParticle): string { return `ast~${starId}~${p.belt}~${p.index}`; }
+
+  /** BodyData for a belt particle: a small rock on exactly the particle's orbit */
+  private asteroidData(sys: StarSystem, p: BeltParticle): BodyData {
+    const id = this.asteroidId(sys.starId, p);
+    const rng = new Rng(hashStr(id) >>> 0);
+    const belt = sys.belts[p.belt];
+    const center = this.belts.centers[p.belt] ?? sys.star;
+    const outer = p.a / AU_KM > 15 * Math.sqrt(this.starLuminosity);
+    // size: mostly sub-10 km rocks, the brightest particles are the bigger ones
+    const radius = Math.exp(Math.log(0.3) + (Math.log(60) - Math.log(0.3)) * Math.pow(p.size, 2.2) * rng.range(0.7, 1)) * (outer ? 2.5 : 1);
+    const density = outer ? 900 : rng.range(1400, 3200);
+    const mass = (4 / 3) * Math.PI * Math.pow(radius * 1000, 3) * density;
+    const period = (2 * Math.PI) / p.n / DAY_S;
+    const sol = sys.catalogIndex === 0;
+    const date = TimeSystem.jdToDate(this.time.jd);
+    const letters = 'ABCDEFGHJKLMNOPQRSTUVWXYZ';
+    const code = `${letters[rng.int(0, letters.length - 1)]}${letters[rng.int(0, letters.length - 1)]}${rng.int(1, 999)}`;
+    const name = sol ? `${date.getUTCFullYear()} ${code}` : `${_(sys.star.data.name)} ${code}`;
+    const base = outer ? [0.3, 0.2, 0.15] : rng.chance(0.3) ? [0.3, 0.29, 0.27] : [0.14, 0.13, 0.12];
+    const tint = (k: number) => rng.tint([base[0] * k, base[1] * k, base[2] * k]) as [number, number, number];
+    const aAU = p.a / AU_KM;
+    return {
+      id, name, type: 'asteroid', parent: center.id,
+      radius, mass, albedo: outer ? 0.08 : base[0] > 0.2 ? 0.25 : 0.05,
+      rotationPeriod: rng.range(2.5, 40), tilt: rng.range(0, 180),
+      orbit: {
+        kind: 'simple', a: p.a, e: p.e, i: p.i / DEG, node: p.node / DEG, argPeri: p.argPeri / DEG, M0: p.M0 / DEG,
+        epoch: J2000_JD, period, frame: sol ? 'ecliptic' : 'parentEquator',
+      },
+      appearance: { kind: 'terrestrial', seed: hashStr(id) & 0xffff, landLow: tint(0.7), landMid: tint(1), landHigh: tint(1.5), craters: 1.0, roughness: 2.4, variation: 0.5 },
+      description: `${_('{belt} içinde keşfettiğiniz küçük bir cisim.', { belt: _(belt?.name ?? 'Kuşak') })} ${_('Çapı yaklaşık {d} km; yıldızını {a} AU yarı-büyük eksenli, {e} dış merkezlilikli bir yörüngede {p} yılda dolanır.', { d: fixed(radius * 2, radius < 5 ? 1 : 0), a: fixed(aAU, 2), e: fixed(p.e, 3), p: fixed(period / 365.25, 1) })} ${outer ? _('Buz ve tholinlerden oluşan koyu, kızıl bir yüzey.') : _('Kraterli, düzensiz biçimli bir kaya.')}`,
+      discovered: `${date.getUTCFullYear()}, ${_('siz')}`,
+      facts: { 'Sınıf': outer ? _('Trans-Neptün cismi') : belt?.trojan ? _('Truva asteroiti') : _('Asteroit'), 'Keşif': `${date.getUTCFullYear()}, ${_('siz')}`, 'Kaynak': _('Prosedürel (keşif)') },
+    };
+  }
+
+  /** Turn a picked belt particle into a body of the current system (remembered for this system) */
+  private discoverAsteroid(p: BeltParticle): CelestialBody | null {
+    const sys = this.universe.current;
+    const list = (this.asteroids[sys.starId] ??= []);
+    const id = this.asteroidId(sys.starId, p);
+    const existing = sys.get(id);
+    if (existing) return existing;
+    if (list.length >= 40) {
+      this.ui.showToast(_('Bu sistemde en fazla 40 asteroit keşfedebilirsiniz'), 3000);
+      return null;
+    }
+    list.push([p.belt, p.index]);
+    try { localStorage.setItem('yeits.asteroids', JSON.stringify(this.asteroids)); } catch { /* ignore */ }
+    const b = this.spawnAsteroid(sys, p);
+    this.noteDiscovery(id, b.data.name, false, b.data.facts?.['Sınıf'] ?? 'Asteroit');
+    return b;
+  }
+
+  private spawnAsteroid(sys: StarSystem, p: BeltParticle): CelestialBody {
+    const b = sys.addBody(this.asteroidData(sys, p));
+    sys.update(this.time.jd, this.time.t);
+    this.belts.hide(p.belt, p.index);
+    this.bodies.addBody(b, sys);
+    this.points.setViews(this.bodies.views);
+    return b;
+  }
+
+  /** Re-create the asteroids discovered earlier in this system */
+  private restoreAsteroids(sys: StarSystem): void {
+    const list = this.asteroids[sys.starId];
+    if (!list) return;
+    for (const [belt, index] of list) {
+      const p = this.belts.particle(belt, index);
+      if (!p) continue;
+      if (sys.get(this.asteroidId(sys.starId, p))) { this.belts.hide(belt, index); continue; }
+      this.spawnAsteroid(sys, p);
+    }
+  }
+
+  private discovered: Set<string> | null = null;
+  private lastDiscoveryToast = 0;
+
+  /** Ids of generated landmarks the visitor has already come close to (persisted) */
+  private get discoveries(): Set<string> {
+    if (!this.discovered) {
+      this.discovered = new Set();
+      try { for (const id of JSON.parse(localStorage.getItem('yeits.discoveries') ?? '[]') as string[]) this.discovered.add(id); } catch { /* ignore */ }
+    }
+    return this.discovered;
+  }
+
+  /** A generated landmark within a few radii (about where the autopilot parks) counts as discovered: toast once, remember it */
+  private checkDiscoveries(camPc: Vector3): void {
+    const u = this.universe;
+    const now = performance.now();
+    for (let i = u.realLandmarkCount; i < u.landmarks.length; i++) {
+      const l = u.landmarks[i];
+      const reach = Math.max(l.def.radiusPc * 6, 0.6);
+      if (l.positionPc.distanceToSquared(camPc) > reach * reach) continue;
+      if (this.discoveries.has(l.def.id)) continue;
+      // record stars and magnetars are the rare finds
+      const rare = l.def.kind === 'star' || l.def.kind === 'pulsar';
+      this.noteDiscovery(l.def.id, l.def.name, now - this.lastDiscoveryToast < 4000, DISCOVERY_KIND[l.def.kind] ?? LANDMARK_KIND_LABEL[l.def.kind], rare);
+    }
+    // the nearest generated object not visited yet: the "next" hint of the HUD and the toasts
+    if (((this.nextTick = (this.nextTick + 1) & 7)) === 0) {
+      let best: Landmark | null = null, bestD = Infinity;
+      for (let i = u.realLandmarkCount; i < u.landmarks.length; i++) {
+        const l = u.landmarks[i];
+        if (this.discoveries.has(l.def.id)) continue;
+        const d = l.positionPc.distanceToSquared(camPc);
+        if (d < bestD) { bestD = d; best = l; }
+      }
+      this.nextTarget = best ? { name: best.def.name, distKm: Math.sqrt(bestD) * PARSEC_KM } : null;
+    }
+  }
+
+  private nextTarget: { name: string; distKm: number } | null = null;
+  private nextTick = 0;
+  private discoveryMetaStore: Record<string, { name: string; kind: string; t: number }> | null = null;
+
+  private get discoveryMeta(): Record<string, { name: string; kind: string; t: number }> {
+    if (!this.discoveryMetaStore) {
+      this.discoveryMetaStore = {};
+      try { this.discoveryMetaStore = JSON.parse(localStorage.getItem('yeits.discoveryMeta') ?? '{}') as Record<string, { name: string; kind: string; t: number }>; } catch { /* ignore */ }
+    }
+    return this.discoveryMetaStore;
+  }
+
+  /**
+   * Entering a generated system with something rare in it counts as a discovery: a black hole or
+   * neutron star companion, a Wolf-Rayet star, a quadruple (or richer) hierarchy.
+   */
+  private noteSystemDiscoveries(sys: StarSystem): void {
+    if (sys.catalogIndex === 0 || this.universe.extraSystem(sys.starId)) return;
+    const comps = sys.bodies.filter((b) => b !== sys.star && b.data.orbit && (b.data.type === 'star' || b.data.type === 'pulsar' || b.data.type === 'blackhole'));
+    if (!comps.length) return;
+    const procedural = comps.every((b) => (b.data.facts?.['Kaynak'] ?? '').startsWith('Prosedürel'));
+    if (!procedural) return;
+    for (const b of comps) {
+      const cls = b.data.facts?.['Sınıf'];
+      const kind = b.data.type === 'blackhole' ? 'Kara delik yoldaşı' : b.data.type === 'pulsar' ? 'Nötron yıldızı yoldaşı' : cls === 'Wolf-Rayet yıldızı' ? 'Wolf-Rayet yıldızı' : null;
+      if (kind) this.noteDiscovery(`${sys.starId}:${b.id}`, b.name, false, kind, true);
+    }
+    if (comps.length >= 3) this.noteDiscovery(`${sys.starId}:multi`, sys.star.name.replace(/ A$/, ''), false, comps.length === 3 ? 'Dörtlü sistem' : 'Çoklu sistem', false);
+  }
+
+  /** Remember a discovery and announce it */
+  private noteDiscovery(id: string, name: string, quiet: boolean, kind = 'Nesne', rare = false): void {
+    const set = this.discoveries;
+    if (set.has(id)) return;
+    set.add(id);
+    const meta = this.discoveryMeta;
+    meta[id] = { name, kind, t: Date.now() };
+    for (const k of Object.keys(meta)) if (!set.has(k)) delete meta[k];
+    try {
+      localStorage.setItem('yeits.discoveries', JSON.stringify(Array.from(set).slice(-600)));
+      localStorage.setItem('yeits.discoveryMeta', JSON.stringify(meta));
+    } catch { /* ignore */ }
+    if (quiet) return;
+    this.lastDiscoveryToast = performance.now();
+    let msg = rare ? _('Nadir keşif: {name} · {n}. keşfiniz', { name, n: set.size }) : _('Yeni keşif: {name} · {n}. keşfiniz', { name, n: set.size });
+    const next = this.nextTarget;
+    if (next && next.name !== name) msg += ` · ${_('sıradaki: {name} ({dist})', { name: next.name, dist: fmtScaleDistance(next.distKm) })}`;
+    this.ui.showToast(msg, rare ? 7000 : 5500);
+  }
+
+  discoveryLog(): DiscoveryEntry[] {
+    const meta = this.discoveryMeta;
+    const out: DiscoveryEntry[] = [];
+    for (const id of this.discoveries) {
+      const m = meta[id];
+      if (m) out.push({ id, name: m.name, kind: m.kind, t: m.t });
+    }
+    return out.sort((a, b) => b.t - a.t);
+  }
+
+  nextDiscovery(): { name: string; distKm: number } | null { return this.nextTarget; }
+
+  goToDiscovery(id: string): void {
+    if (id.startsWith('ast~')) {
+      const [, starId, belt, index] = id.split('~');
+      const sys = this.universe.current;
+      if (sys.starId === starId) {
+        const b = sys.get(id) ?? (() => { const p = this.belts.particle(+belt, +index); return p ? this.spawnAsteroid(sys, p) : undefined; })();
+        if (b) { this.select(b); this.goTo(b); }
+      } else this.goToSystemBody(starId, id);
+      return;
+    }
+    if (/^f\d+:\d+$/.test(id)) {
+      const [t, i] = id.slice(1).split(':');
+      if (this.farUniverse.tiers[+t] && +i < this.farUniverse.tiers[+t].count) this.goToFar({ tier: +t, index: +i, member: -1 });
+      return;
+    }
+    const l = this.universe.landmark(id);
+    if (l) this.goToLandmark(this.universe.landmarks.indexOf(l));
+  }
+
   /* ---------------- Dynamic resolution ---------------- */
   /** multiplier the frame-rate governor applies under the user's render scale (1 = none) */
   private autoScale = 1;
   private fpsAcc = 0;
-  private fpsFrames = 0;
   /** consecutive one-second windows comfortably above the target (recovery needs several) */
   private fastWindows = 0;
   private autoToastShown = false;
@@ -1427,29 +2282,40 @@ class App implements UIHost {
       if (this.autoScale !== 1) { this.autoScale = 1; this.applyRenderScale(); }
       return;
     }
-    if (now < 6000 || rawDt > 0.5 || document.hidden) { this.fpsAcc = 0; this.fpsFrames = 0; return; }
+    if (now < 6000 || rawDt > 0.5 || document.hidden) { this.fpsAcc = 0; this.frameTimes.length = 0; return; }
     this.fpsAcc += rawDt;
-    this.fpsFrames++;
+    this.frameTimes.push(rawDt);
     if (this.fpsAcc < 1) return;
-    const fps = this.fpsFrames / this.fpsAcc;
+    // the median frame: one-off hitches (content generation, shader uploads while racing between
+    // stars) are CPU stalls that a lower resolution would not cure, and must not cost quality
+    const ts = this.frameTimes.sort((a, b) => a - b);
+    const fps = 1 / Math.max(ts[ts.length >> 1], 1e-4);
     this.fpsAcc = 0;
-    this.fpsFrames = 0;
-    if (fps < 27 && this.autoScale > 0.4) {
+    this.frameTimes.length = 0;
+    const slow = fps < 27 && this.autoScale > 0.4;
+    this.slowWindows = slow ? this.slowWindows + 1 : 0;
+    if (slow && (this.slowWindows >= 2 || fps < 15)) {
       this.autoScale = Math.max(0.4, +(this.autoScale - 0.15).toFixed(2));
+      this.slowWindows = 0;
       this.fastWindows = 0;
       this.applyRenderScale();
       if (!this.autoToastShown) {
         this.autoToastShown = true;
         this.ui.showToast(_('Akıcılık için render çözünürlüğü düşürüldü · Ayarlar'), 3200);
       }
-    } else if (fps > 55 && this.autoScale < 1) {
-      if (++this.fastWindows >= 6) {
-        this.autoScale = Math.min(1, +(this.autoScale + 0.15).toFixed(2));
+    } else if (this.autoScale < 1) {
+      // climb back once the next step up (pixel cost ∝ scale²) would still run comfortably
+      const next = Math.min(1, this.autoScale + 0.15);
+      const predicted = fps * (this.autoScale / next) ** 2;
+      if (predicted > 33 && ++this.fastWindows >= 3) {
+        this.autoScale = +next.toFixed(2);
         this.fastWindows = 0;
         this.applyRenderScale();
-      }
-    } else this.fastWindows = 0;
+      } else if (predicted <= 33) this.fastWindows = 0;
+    }
   }
+  private readonly frameTimes: number[] = [];
+  private slowWindows = 0;
 
   private applyRenderScale(): void {
     this.engine.setRenderScale(this.settings.renderScale * this.autoScale);
@@ -1475,6 +2341,12 @@ class App implements UIHost {
     const eng = this.engine;
     const fovRad = eng.camera.fov * DEG;
     this.camera.update(dt, this.input, eng.width, eng.height, fovRad);
+    // on foot the wheel zooms the view like binoculars
+    {
+      const zoom = this.camera.surface?.zoom ?? 1;
+      const wantFov = (this.tourOverrides.fov ?? this.settings.fov) / zoom;
+      if (Math.abs(eng.camera.fov - wantFov) > 1e-4) eng.setFov(wantFov);
+    }
     this.aimAtPin(dt, fovRad, eng.width / Math.max(1, eng.height));
     // backdrop bookkeeping: start circling once the return flight has arrived; any other flight
     // (or re-targeting) stops the auto-orbit, which ends the backdrop
@@ -1491,7 +2363,6 @@ class App implements UIHost {
 
     const camPos = this.camPosTmp.copy(this.camera.position);
     const star = this.universe.star;
-    const sunRel = new Vector3().copy(star.position).sub(camPos);
     const pxPerRad = eng.height / 2 / Math.tan(fovRad / 2);
     const s = this.settings;
     this.universe.toParsecs(camPos, this.camPc);
@@ -1506,6 +2377,11 @@ class App implements UIHost {
     // Renderables
     const ov = this.tourOverrides;
     this.updateGhost(dt);
+    if (this.relief?.body) {
+      const rb = this.relief.body;
+      const haze = this.reliefHaze.set(...(rb.data.atmosphere?.color ?? [0, 0, 0])).multiplyScalar(0.45 * Math.min(1, rb.data.atmosphere?.density ?? 0) * 2);
+      this.relief.update(dt, camPos, star.position, this.sunColor, this.fillOut.get(rb.id) ?? 0, haze);
+    }
     if (this.pulse?.active) this.pulse.update(dt, camPos, pxPerRad);
     if (this.meteors?.active) this.meteors.update(dt, camPos, pxPerRad);
     this.updateFill(dt);
@@ -1515,8 +2391,24 @@ class App implements UIHost {
       atmospheres: s.atmospheres, clouds: ov.clouds ?? s.clouds, rings: s.rings, ringParticles: s.ringParticles, shadows: s.shadows, imagery: s.imagery,
       fill: this.fillOut.size ? this.fillOut : null,
       ghost: g ? { id: g.body.id, alpha: g.alpha * g.alpha * (3 - 2 * g.alpha) } : null,
-    });
+    }, this.multiple ? (b) => b.hostStar : undefined);
     this.updateLensing(fovRad);
+    this.updateLensFlare(camPos, dt);
+    // ground left behind: drop the generated patch once we are well away from it
+    const stood = this.landedOn;
+    for (const v of this.bodies.views) if (v.landing && v.body !== stood && v.landing.fade <= 0 && v.distance - v.body.radius > v.landing.ground.half * 3) v.releaseLanding();
+    // daytime sky: the stars go out
+    const daylight = this.skyDaylight(camPos);
+    this.daylight = daylight;
+    this.points.setDaylight(daylight);
+    this.starPoints.setDaylight(daylight);
+    this.procPoints.setDaylight(daylight);
+    this.nebulaClouds.setDaylight(daylight);
+    this.procClouds.setDaylight(daylight);
+    this.clusterPoints.setDaylight(daylight);
+    this.landmarkSprites.setDaylight(daylight);
+    for (const c of this.clouds.values()) c.setDaylight(daylight);
+    this.volumes.setDaylight(daylight);
     this.points.setPixelRatio(eng.pixelRatio);
     this.points.update(star.position, camPos, this.starLuminosity);
     this.starPoints.setPixelRatio(eng.pixelRatio);
@@ -1526,6 +2418,8 @@ class App implements UIHost {
     this.galaxySprites.update(this.camPc, pxPerRad, eng.pixelRatio, this.galaxyBoost, this.universe.currentGalaxy ?? -1);
     this.landmarkSprites.update(this.camPc, pxPerRad, this.universe.current.starId, (gi) => this.galaxySprites.apparent(gi).ratio);
     this.nebulaClouds.update(this.camPc, pxPerRad, eng.pixelRatio, this.landmarkSprites.k, this.landmarkSprites.mesh.visible);
+    this.landmarkSprites.setCloudFlags(this.procClouds.update(this.camPc, pxPerRad, eng.pixelRatio, this.landmarkSprites.k, this.landmarkSprites.mesh.visible));
+    this.clusterPoints.update(this.camPc, pxPerRad, eng.pixelRatio, this.universe.current.starId, this.landmarkSprites.mesh.visible);
     // bottom-left credit: streamed planetary imagery first, otherwise a resolved landmark photograph
     if (this.bodies.imageryCredit) this.ui.setImageryCredit(this.bodies.imageryCredit);
     else {
@@ -1535,22 +2429,41 @@ class App implements UIHost {
     }
     // LOD hand-over between the detailed local volume and the aggregated far-universe tiers
     const dSunPc = this.camPc.length();
-    this.galaxySprites.setFade(localFade(dSunPc));
+    this.galaxySprites.setFade(localFade(dSunPc) * (1 - daylight));
+    this.updateFarClusters(dt);
+    const fc = this.farCluster;
     this.farSprites.forEach((sp, k) => {
       sp.setFade(this.farUniverse.tiers[k].fade(dSunPc));
-      sp.update(this.camPc, pxPerRad, eng.pixelRatio, this.galaxyBoost, -1);
+      // the knot we have resolved is drawn as its member galaxies instead
+      sp.update(this.camPc, pxPerRad, eng.pixelRatio, this.galaxyBoost, fc && fc.tierIndex === k ? fc.index : -1);
     });
-    this.orbits.update(camPos, ov.orbits ?? (s.orbits || this.backdrop || this.backdropPending), ov.moonOrbits ?? s.moonOrbits, pxPerRad, (id) => this.bodies.byId.get(id)?.apparentRadiusPx ?? 0, this.selected?.id ?? null);
-    this.trajectories.update(camPos, this.time.jd, this.missions.lookup, s.orbits, eng.width * eng.pixelRatio, eng.height * eng.pixelRatio);
+    if (fc && this.farClusterSprites) {
+      const ratio = fc.ratio(this.camPc);
+      this.farClusterSprites.setFade(Math.min(1, Math.max(0, (RESOLVE_RATIO - ratio) / (RESOLVE_RATIO * 0.4))) * (1 - daylight));
+      this.farClusterSprites.setVisible(s.galaxies && s.procedural);
+      this.farClusterSprites.update(this.camPc, pxPerRad, eng.pixelRatio, this.galaxyBoost, -1);
+    }
+    // on the ground the sky is the sky: no orbit lines across it (the switch comes back on take-off)
+    // Tab (UI hidden) is the clean screenshot: orbit lines, trajectories and grids go with the panels
+    // a tour draws orbit lines only where a step asks for them (overviews, `orbits` cues)
+    const touring = this.tours.active;
+    const orbitsOn = (ov.orbits ?? (touring ? false : s.orbits || this.backdrop || this.backdropPending)) && !stood && this.uiVisible;
+    const moonLines = ov.moonOrbits === true && !stood && this.uiVisible;
+    this.orbits.update(camPos, orbitsOn, ov.moonOrbits ?? (touring ? false : s.moonOrbits), pxPerRad, (id) => this.bodies.byId.get(id)?.apparentRadiusPx ?? 0, this.selected?.id ?? null, moonLines);
+    this.trajectories.update(camPos, this.time.jd, this.missions.lookup, s.orbits && !stood && this.uiVisible, eng.width * eng.pixelRatio, eng.height * eng.pixelRatio);
     // Horizons trails only inside an event scene, or for the spacecraft the visitor has selected:
     // on the everyday sky the stacked capture orbits read as clutter
     const selOrbit = this.selected?.data.orbit;
     const selTable = selOrbit?.kind === 'ephemeris' ? selOrbit.table : null;
     const inScene = this.currentEvent !== null;
-    this.ephemLines.update(camPos, this.time.jd, this.universe.current.get, (table) => (ov.orbits ?? s.orbits) && (inScene || table === selTable));
-    this.belts.update(this.time.t, sunRel, eng.pixelRatio, s.belts);
+    // an event scene's spacecraft track is its subject: drawn unless a cue turns the lines off
+    const tracksOn = (ov.orbits ?? (s.orbits || this.backdrop || this.backdropPending)) && !stood && this.uiVisible;
+    this.ephemLines.update(camPos, this.time.jd, this.universe.current.get, (table) => (inScene ? tracksOn : orbitsOn && table === selTable));
+    this.belts.update(this.time.t, camPos, eng.pixelRatio, s.belts, stood ? 1 : daylight);
+    this.cometTails.update(this.bodies.views.map((v) => v.body), this.time.jd, camPos, pxPerRad, eng.pixelRatio, Math.min(eng.width, eng.height), s.minorBodies, daylight);
 
     // Render
+    this.volumes.render(eng.renderer, eng.camera);
     eng.render();
 
     if (this.wantScreenshot) {
@@ -1583,10 +2496,20 @@ class App implements UIHost {
       this.starSel.kind = 'landmark';
       this.starSel.radiusPx = Math.min(this.landmarkSprites.angularRadius(i) * pxPerRad, eng.height);
       starSel = this.starSel;
+    } else if (this.selectedFar !== null) {
+      const ref = this.selectedFar;
+      this.starSel.name = this.farName(ref);
+      this.farRelative(ref, camPos, this.starSel.dir);
+      this.starSel.distKm = this.starSel.dir.length();
+      this.starSel.dir.normalize();
+      this.starSel.kind = 'galaxy';
+      this.starSel.radiusPx = Math.min((this.farRadiusPc(ref) * PARSEC_KM / Math.max(this.starSel.distKm, 1)) * pxPerRad, eng.height);
+      starSel = this.starSel;
     }
-    const namedStars = s.proceduralNames && this.procPoints.namedStars.length
+    let namedStars = s.proceduralNames && this.procPoints.namedStars.length
       ? this.starPoints.namedStars.concat(this.procPoints.namedStars)
       : this.starPoints.namedStars;
+    if (daylight > 0.02) { const lim = 8.5 - 13 * daylight; namedStars = namedStars.filter((n) => n.mag < lim); }
     // tour surface pin: world point on the body, hidden when it faces away from us
     const pin = this.pinScreen;
     pin.visible = false;
@@ -1600,14 +2523,17 @@ class App implements UIHost {
       if (b) {
         const sp = this.surfacePin;
         const n = this.pinDirection(b, sp.lat, sp.lon, !!sp.storm, this.camForward);
-        const toCam = new Vector3().copy(camPos).sub(b.position).addScaledVector(n, -b.radius);
-        pin.visible = n.dot(toCam) > 0;
-        pin.dir.copy(b.position).addScaledVector(n, b.radius).sub(camPos);
+        const at = this.pinPoint(b, sp.lat, sp.lon, !!sp.storm, _v3);
+        pin.visible = n.dot(_dir.copy(camPos).sub(at)) > 0;
+        pin.dir.copy(at).sub(camPos);
         pin.label = _(sp.label);
         pin.alpha = this.pinAlpha;
+        pin.ring = sp.extent ? this.pinRing(b, sp.lat, sp.lon, sp.extent, camPos) : null;
       }
     }
-    this.overlay.draw(this.bodies.views, eng.camera, this.selected, namedStars, starSel, this.uiVisible, s.galaxies ? this.galaxySprites.named : [], this.blackHoleMarkers(camPos), this.landmarkSprites.named, pin.visible ? pin : null, this.sunMarker(camPos));
+    const dim = daylight > 0.5;
+    const groundUp = stood && this.camera.surface ? { body: stood, up: this.standUp.set(0, 1, 0).applyQuaternion(this.tmpQ.copy(stood.rotation).multiply(this.camera.surface.siteQuat)) } : null;
+    this.overlay.draw(this.bodies.views, eng.camera, this.selected, namedStars, starSel, this.uiVisible, s.galaxies && !dim ? this.galaxySprites.named : [], this.blackHoleMarkers(camPos), dim ? [] : this.landmarkSprites.named, pin.visible ? pin : null, this.overlay.scope && !this.overlay.scope.has('sun') ? null : this.sunMarker(camPos), groundUp);
     const selDist = this.selected ? this.bodies.byId.get(this.selected.id)?.distance ?? 0 : 0;
     this.ui.update(now, dt, selDist);
     this.embed?.update();
@@ -1625,7 +2551,7 @@ class App implements UIHost {
     const touring = this.tours.active || this.lessons.active;
     // a tour step keeps the small fry it is about (the overlay scope) and clears the rest away:
     // comet ellipses and probe markers through an overview of the planets are noise
-    const scope = touring ? this.overlay.scope : null;
+    const scope = touring ? this.tourScope : null;
     const noDwarfs = scope ? true : !touring && !s.dwarfs;
     const noMinor = scope ? true : !touring && !s.minorBodies;
     const noCraft = scope ? true : !touring && !s.spacecraft;
@@ -1648,6 +2574,57 @@ class App implements UIHost {
   }
 
   /** Hand the most prominent black hole in the current system to the lensing pass. */
+  /** Glare of the brightest star in front of the camera, dimmed by whatever body covers it */
+  private updateLensFlare(camPos: Vector3, dt: number): void {
+    const eng = this.engine;
+    if (!this.settings.lensFlare || this.engine.blackHole.enabled) { this.lensFlare.update(null, 0, 0, this.sunColor, eng.width / eng.height, dt); return; }
+    let best: { ndc: Vector2; radius: number; intensity: number; color: Vector3 } | null = null;
+    for (const v of this.bodies.views) {
+      const star = v.body;
+      if (star.data.type !== 'star' || star.hidden || star.filtered) continue;
+      _dir.copy(star.position).sub(camPos);
+      const d = _dir.length();
+      if (d <= star.radius * 1.02) continue;
+      _up.copy(_dir).project(eng.camera);
+      if (_up.z > 1 || !Number.isFinite(_up.x)) continue;        // behind the camera
+      if (Math.abs(_up.x) > 1.6 || Math.abs(_up.y) > 1.6) continue;
+      // irradiance relative to the Sun at 1 AU, compressed: the flare is a glare, not a photometer
+      const E = this.hostLuminosity(star) / Math.pow(d / AU_KM, 2);
+      let vis = 1;
+      const sunAng = star.radius / d;
+      for (const o of this.bodies.views) {
+        const b = o.body;
+        if (b === star || b.hidden || b.filtered || b.data.type === 'star' || b.data.type === 'barycenter' || b.data.type === 'spacecraft') continue;
+        _v3.copy(b.position).sub(camPos);
+        const db = _v3.length();
+        if (db >= d || b.radius / db < 2e-4) continue;
+        const sep = _v3.angleTo(_dir);
+        // true angular radius: from the ground a world fills the whole lower hemisphere, not 57°
+        const angR = Math.asin(Math.min(1, b.radius / db));
+        vis *= smooth01((sep - (angR - sunAng)) / (2 * sunAng + 1e-9));
+        if (vis < 0.002) break;
+      }
+      const intensity = Math.min(1.1, Math.pow(Math.max(E, 1e-6), 0.3)) * vis;
+      if (!best || intensity > best.intensity) {
+        best = { ndc: this.flareNdc.set(_up.x, _up.y), radius: (star.radius / d) / Math.tan((eng.camera.fov * DEG) / 2) / (eng.width / eng.height), intensity, color: this.lightColorOf(star) };
+      }
+    }
+    this.lensFlare.update(best ? best.ndc : null, best ? best.radius : 0, best ? best.intensity : 0, best ? best.color : this.sunColor, eng.width / eng.height, dt);
+  }
+
+  private readonly flareColors = new Map<string, Vector3>();
+  private lightColorOf(star: CelestialBody): Vector3 {
+    if (star === this.universe.star) return this.sunColor;
+    let c = this.flareColors.get(star.id);
+    if (!c) {
+      const a = star.data.appearance;
+      const [r, g, b] = starLightColor(a.kind === 'star' ? a.temperature : 5772);
+      c = new Vector3(r, g, b);
+      this.flareColors.set(star.id, c);
+    }
+    return c;
+  }
+
   private updateLensing(fovRad: number): void {
     const eng = this.engine;
     let best: BodyView | null = null;

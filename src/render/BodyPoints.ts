@@ -21,7 +21,7 @@ export class BodyPoints {
     this.mat = new ShaderMaterial({
       vertexShader: Shaders.pointsVert,
       fragmentShader: Shaders.pointsFrag,
-      uniforms: { uPixelRatio: { value: 1 }, uSoftness: { value: 0.35 } },
+      uniforms: { uPixelRatio: { value: 1 }, uSoftness: { value: 0.35 }, uDaylight: { value: 0 } },
       transparent: true,
       blending: AdditiveBlending,
       depthWrite: false,
@@ -53,6 +53,9 @@ export class BodyPoints {
   setPixelRatio(pr: number): void {
     this.mat.uniforms.uPixelRatio.value = pr;
   }
+
+  /** Daytime sky (0 none … 1 full): the point-sized bodies fade with the stars */
+  setDaylight(d: number): void { this.mat.uniforms.uDaylight.value = d; }
 
   /** @param starLuminosity luminosity of the system's star in solar units (scales reflected brightness) */
   update(sunPos: Vector3, camPos: Vector3, starLuminosity = 1): void {
@@ -89,18 +92,19 @@ export class BodyPoints {
       const dSun = Math.max(b.position.distanceTo(sunPos), 1);
       const dCam = Math.max(v.distance, 1);
       const albedo = b.data.albedo ?? 0.3;
-      // pseudo magnitude
+      // apparent magnitude at full phase (km; the Sun is −26.74 at 1 AU): Jupiter seen from
+      // Earth comes out near −2.7, Saturn near +0.5
       const flux = (starLuminosity * albedo * b.radius * b.radius) / (dSun * dSun * dCam * dCam);
-      const mag = -2.5 * Math.log10(flux + 1e-40) - 63.7;
-      const size = Math.max(1.1, Math.min(7.5, 6.8 - 0.55 * mag));
-      // Fade the sprite as the actual disc grows past ~1.5 px
-      const discFade = 1 - Math.min(1, Math.max(0, (v.apparentRadiusPx - 1.0) / 3.0));
+      const mag = -2.5 * Math.log10(flux + 1e-40) - 67.6;
+      const size = Math.max(1.6, Math.min(8, 7.2 - 0.6 * mag));
+      // Fade the sprite as the actual disc grows past ~2 px
+      const discFade = 1 - Math.min(1, Math.max(0, (v.apparentRadiusPx - 1.5) / 3.0));
       this.size[i] = size;
-      // faint planets stay findable (floor 0.35) until they would be far below naked-eye
+      // faint planets stay findable (floor 0.5) until they would be far below naked-eye
       // visibility, then vanish (otherwise a whole system piles up into a blob from far away)
-      const faint = mag < 6 ? 1 : Math.max(0.35, 1 - (mag - 6) * 0.1);
-      const gone = 1 - Math.min(1, Math.max(0, (mag - 11) / 4));
-      this.alpha[i] = faint * gone * discFade;
+      const faint = mag < 6 ? 1 : Math.max(0.5, 1 - (mag - 6) * 0.1);
+      const gone = 1 - Math.min(1, Math.max(0, (mag - 9) / 4));
+      this.alpha[i] = 1.25 * faint * gone * discFade;
 
       const c = b.data.appearance;
       let r = 0.85, g = 0.85, bl = 0.85;

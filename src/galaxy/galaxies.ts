@@ -71,7 +71,9 @@ const CATALOG: CatalogGalaxy[] = [
 ];
 
 export const TYPE_CODE: Record<GalaxyType, number> = { E: 0, S0: 1, S: 2, SB: 3, Irr: 4 };
-const TYPE_BY_CODE: GalaxyType[] = ['E', 'S0', 'S', 'SB', 'Irr'];
+/** guest slots for far-cluster member galaxies the camera is close to (see GalaxyIndex.adopt) */
+const GUEST_SLOTS = 3;
+export const TYPE_BY_CODE: GalaxyType[] = ['E', 'S0', 'S', 'SB', 'Irr'];
 
 /** Anything the galaxy sprite renderer can draw (the local index and the far-universe tiers). */
 export interface GalaxySource {
@@ -117,7 +119,8 @@ export function vnoise(x: number, y: number, z: number): number {
  * cosmic web out to ~250 Mpc. Full `GalaxyModel`s are built lazily.
  */
 export class GalaxyIndex {
-  readonly count: number;
+  /** galaxies in use (grows by a few when guest slots are occupied) */
+  count: number;
   readonly catalogCount: number;
   /** pc, scene frame, relative to the Sun */
   readonly positions: Float32Array;
@@ -135,9 +138,20 @@ export class GalaxyIndex {
   /** pitch angle (deg) */
   readonly pitch: Float32Array;
   private readonly models = new Map<number, GalaxyModel>();
+  /**
+   * Guest slots: member galaxies of a far-universe cluster the camera has come close to are
+   * copied here for as long as we are near them, so that the ordinary machinery (analytic model,
+   * star cloud, procedural stars and deep-sky objects, "which galaxy am I in") treats them as
+   * real galaxies. Slots are reused; `guestKey` tells which member occupies one.
+   */
+  readonly guestSlots = GUEST_SLOTS;
+  readonly guestBase: number;
+  private readonly guestKey: (string | null)[] = new Array(GUEST_SLOTS).fill(null);
+  private readonly guestName = new Map<number, string>();
 
   constructor(proceduralCount = 110_000) {
-    const N = 1 + CATALOG.length + proceduralCount;
+    const N = 1 + CATALOG.length + proceduralCount + GUEST_SLOTS;
+    const LIMIT = N - GUEST_SLOTS;   // the generated population stops here; the rest are guest slots
     this.positions = new Float32Array(N * 3);
     this.radius = new Float32Array(N);
     this.absMag = new Float32Array(N);
@@ -190,7 +204,7 @@ export class GalaxyIndex {
       return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
     };
     const place = (x: number, y: number, z: number, env: number): void => {
-      if (i >= N) return;
+      if (i >= LIMIT) return;
       const dSun = Math.sqrt(x * x + y * y + z * z);
       // spherical local volume (a cube would be visible from outside as a box of galaxies)
       if (dSun < 2.5 * MPC || dSun > box) return;
@@ -235,7 +249,7 @@ export class GalaxyIndex {
     // 2. cluster members: roughly NFW-like (steep core, r^-2.5 wings)
     for (const n of nodes) {
       const members = Math.max(6, Math.round(clusterBudget * (0.15 + n.rich) / richSum));
-      for (let k = 0; k < members && i < N; k++) {
+      for (let k = 0; k < members && i < LIMIT; k++) {
         const u = rng.next();
         const rad = n.r * 1.4 * Math.pow(u, 0.75) * (1 + 0.5 * Math.abs(gauss()));
         const v = new Vector3(gauss(), gauss(), gauss()).normalize().multiplyScalar(rad);
@@ -273,7 +287,7 @@ export class GalaxyIndex {
       const count = Math.round(filamentBudget * L / lengthSum);
       // slight bow so filaments aren't perfectly straight
       const bow = new Vector3(gauss(), gauss(), gauss()).normalize().multiplyScalar(L * 0.08 * rng.next());
-      for (let k = 0; k < count && i < N; k++) {
+      for (let k = 0; k < count && i < LIMIT; k++) {
         const t = rng.next();
         const sig = (1.2 + 0.8 * rng.next()) * MPC;
         const bx = bow.x * 4 * t * (1 - t), by = bow.y * 4 * t * (1 - t), bz = bow.z * 4 * t * (1 - t);
@@ -288,7 +302,7 @@ export class GalaxyIndex {
 
     // 4. field galaxies (avoid the emptiest voids)
     let tries = 0;
-    while (i < N && tries < proceduralCount * 20) {
+    while (i < LIMIT && tries < proceduralCount * 20) {
       tries++;
       const x = (rng.next() * 2 - 1) * box, y = (rng.next() * 2 - 1) * box, z = (rng.next() * 2 - 1) * box;
       const s2 = 1 / (18 * MPC);
@@ -297,6 +311,9 @@ export class GalaxyIndex {
       place(x, y, z, 0.05);
     }
     this.count = i;
+    this.guestBase = i;
+    // free guest slots sit far away with no size, so no distance search ever lands on one
+    for (let k = 0; k < GUEST_SLOTS; k++) this.parkGuest(this.guestBase + k);
 
     // spiral geometry, derived from the seed exactly as the GalaxyModel always did
     this.arms = new Float32Array(N);
@@ -309,14 +326,73 @@ export class GalaxyIndex {
     }
   }
 
+  private parkGuest(slot: number): void {
+    this.positions[slot * 3] = 1e13; this.positions[slot * 3 + 1] = 0; this.positions[slot * 3 + 2] = 0;
+    this.radius[slot] = 1e-3;
+    this.absMag[slot] = 0;
+  }
+
+  /** Slot index of a guest with this key, or -1 */
+  guestOf(key: string): number {
+    const k = this.guestKey.indexOf(key);
+    return k < 0 ? -1 : this.guestBase + k;
+  }
+
+  /** Is galaxy i a (currently occupied) guest slot? */
+  isGuest(i: number): boolean { return i >= this.guestBase && this.guestKey[i - this.guestBase] !== null; }
+
+  /**
+   * Copy member `m` of `src` into a guest slot (or return the slot it already has).
+   * Returns -1 when every slot is taken by a key not in `keep`.
+   */
+  adopt(src: GalaxySource, m: number, key: string, name: string, keep: Set<string>): number {
+    const have = this.guestOf(key);
+    if (have >= 0) return have;
+    let k = this.guestKey.indexOf(null);
+    if (k < 0) k = this.guestKey.findIndex((x) => x !== null && !keep.has(x));
+    if (k < 0) return -1;
+    const slot = this.guestBase + k;
+    this.guestKey[k] = key;
+    this.guestName.set(slot, name);
+    this.models.delete(slot);
+    for (let c = 0; c < 3; c++) {
+      this.positions[slot * 3 + c] = src.positions[m * 3 + c];
+      this.normal[slot * 3 + c] = src.normal[m * 3 + c];
+      this.major[slot * 3 + c] = src.major[m * 3 + c];
+    }
+    this.radius[slot] = src.radius[m];
+    this.absMag[slot] = src.absMag[m];
+    this.type[slot] = src.type[m];
+    this.seed[slot] = src.seed[m];
+    this.axisRatio[slot] = src.axisRatio[m];
+    const t = this.typeOf(slot);
+    const r = new Rng(this.seed[slot]);
+    this.arms[slot] = src.arms ? src.arms[m] : t === 'SB' ? 2 : 2 + Math.floor(r.next() * 3);
+    this.pitch[slot] = src.pitch ? src.pitch[m] : 10 + r.next() * 14;
+    this.count = Math.max(this.count, slot + 1);
+    return slot;
+  }
+
+  /** Free a guest slot */
+  release(slot: number): void {
+    const k = slot - this.guestBase;
+    if (k < 0 || k >= GUEST_SLOTS || this.guestKey[k] === null) return;
+    this.guestKey[k] = null;
+    this.guestName.delete(slot);
+    this.models.delete(slot);
+    this.parkGuest(slot);
+  }
+
   /** untranslated (source) name — use for matching catalogue references */
   rawName(i: number): string {
+    if (this.guestName.has(i)) return this.guestName.get(i)!;
     if (i === 0) return 'Samanyolu';
     if (i < this.catalogCount) return CATALOG[i - 1].name;
     return `Galaksi YE-${(this.seed[i] % 0xffffff).toString(16).toUpperCase().padStart(6, '0')}`;
   }
 
   name(i: number): string {
+    if (this.guestName.has(i)) return this.guestName.get(i)!;
     if (i >= this.catalogCount) return _('Galaksi YE-{code}', { code: (this.seed[i] % 0xffffff).toString(16).toUpperCase().padStart(6, '0') });
     if (i === 0) return _('Samanyolu');
     return _(this.rawName(i));
@@ -355,7 +431,9 @@ export class GalaxyIndex {
       axisRatio: this.axisRatio[i],
       description: i === 0
         ? _('Ev galaksimiz: ~13 milyar yıllık, 100–400 milyar yıldızlı çubuklu sarmal. Güneş, merkezden ~8.2 kpc uzakta Orion Kolu\'nda yer alır.')
-        : i < this.catalogCount ? (CATALOG[i - 1].desc ? _(CATALOG[i - 1].desc!) : undefined) : _('Prosedürel olarak üretilmiş galaksi; konumu kozmik ağ yoğunluk modelinden, yapısı Hubble tipinden türetildi.'),
+        : i < this.catalogCount ? (CATALOG[i - 1].desc ? _(CATALOG[i - 1].desc!) : undefined)
+          : this.isGuest(i) ? _('Uzak bir galaksi kümesinin üyesi; parlaklığı ve Hubble tipi kümenin morfoloji–yoğunluk ilişkisinden, yapısı tipinden türetildi.')
+          : _('Prosedürel olarak üretilmiş galaksi; konumu kozmik ağ yoğunluk modelinden, yapısı Hubble tipinden türetildi.'),
       catalog: i < this.catalogCount,
       distancePc: this.distancePc(i),
     };

@@ -285,6 +285,8 @@ input[type=range] { width: 120px; accent-color: var(--accent); }
 .dropdown-item:hover { background: var(--surface-2); }
 .dropdown-item.active { background: var(--surface-2); box-shadow: inset 2px 0 0 var(--accent); }
 .dropdown-item .n { color: var(--text-3); font-size: 11px; text-align: right; }
+.dropdown-item.muted { color: var(--text-3); font-size: 11px; cursor: default; }
+.dropdown-item.muted:hover { background: none; }
 
 /* ---------- Info panel (object entry) ---------- */
 #info { top: 66px; left: 16px; width: 330px; max-height: calc(100vh - 210px); overflow-y: auto; }
@@ -503,6 +505,19 @@ input[type=range] { width: 120px; accent-color: var(--accent); }
 .tour-card figcaption > :empty { display: none; }
 
 /* ---------- Bottom bar: clock and navigation readout ---------- */
+/* On the ground: a small bar above the time controls — where we stand, climb / descend, take off */
+#surface-bar {
+  position: absolute; left: 50%; bottom: 74px; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 8px 6px 12px; border-radius: 8px;
+  background: var(--panel, rgba(10, 12, 18, 0.72)); border: 1px solid var(--line, rgba(255,255,255,0.08));
+  backdrop-filter: blur(8px);
+}
+#surface-bar[hidden] { display: none; }
+#surface-bar .surface-where { font-family: var(--mono); font-size: 11.5px; color: var(--text-2); white-space: nowrap; }
+#surface-bar button { min-width: 34px; height: 28px; padding: 0 10px; font-family: var(--mono); font-size: 11px; }
+#surface-bar #sf-takeoff { padding: 0 14px; }
+@media (max-width: 700px) { #surface-bar { bottom: 118px; } }
 #bottombar {
   position: absolute; bottom: 0; left: 0; right: 0;
   display: flex; justify-content: space-between; align-items: flex-end;

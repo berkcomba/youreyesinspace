@@ -159,6 +159,8 @@ export const SOLAR_SYSTEM: BodyData[] = [
     radius: 1821.6, mass: 8.9319e22, albedo: 0.63, rotationPeriod: 'sync',
     orbit: moonOrbit(421_800, 0.0041, 0.05, 1.769138, 10),
     appearance: { kind: 'terrestrial', seed: 52, landLow: [0.85, 0.75, 0.30], landMid: [0.95, 0.88, 0.55], landHigh: [0.60, 0.35, 0.15], craters: 0, roughness: 0.9, volcanic: true, variation: 1.0 },
+    // Pele, Loki, Prometheus, Tvashtar, Pillan, Amirani (USGS west longitudes → east)
+    activity: { kind: 'volcanic', vents: [[-18.7, 104.7], [13.0, 51.2], [-1.5, 207.0], [62.0, 237.0], [-12.0, 117.0], [24.5, 245.5]], height: 300, spread: 600, fall: 1, color: [0.78, 0.82, 0.92], intensity: 1 },
     description: 'Güneş Sistemi\'nin jeolojik olarak en aktif cismi: 400\'den fazla aktif yanardağ. Jüpiter\'in gelgit ısıtması sülfür bileşikleriyle rengârenk bir yüzey yaratır.',
   },
   {
@@ -191,7 +193,7 @@ export const SOLAR_SYSTEM: BodyData[] = [
     orbit: jpl(9.53667594, 0.05386179, 2.48599187, 49.95424423, 92.59887831, 113.66242448,
       -0.00125060, -0.00050991, 0.00193609, 1222.49362201, -0.41897216, -0.28867794),
     appearance: {
-      kind: 'gas', seed: 61, bandFreq: 11.0, turbulence: 0.35,
+      kind: 'gas', seed: 61, bandFreq: 11.0, turbulence: 0.35, hexagon: true,
       bands: [[0.92, 0.84, 0.62], [0.78, 0.68, 0.46], [0.96, 0.90, 0.72], [0.70, 0.60, 0.42], [0.88, 0.80, 0.60]],
     },
     atmosphere: { color: [0.95, 0.9, 0.75], height: 0.015, density: 0.45 },
@@ -212,6 +214,8 @@ export const SOLAR_SYSTEM: BodyData[] = [
     radius: 252.1, mass: 1.0802e20, albedo: 0.99, rotationPeriod: 'sync',
     orbit: moonOrbit(238_040, 0.0047, 0.01, 1.370218, 75),
     appearance: { kind: 'terrestrial', seed: 64, landLow: [0.80, 0.85, 0.90], landMid: [0.92, 0.95, 0.98], landHigh: [1.0, 1.0, 1.0], craters: 0.2, roughness: 0.5, variation: 0.3 },
+    // the tiger stripes: Alexandria, Cairo, Baghdad, Damascus
+    activity: { kind: 'cryo', vents: [[-78, 40], [-82, 110], [-80, 200], [-76, 300], [-86, 20], [-84, 250]], height: 500, spread: 60, fall: 0, color: [0.9, 0.95, 1.0], intensity: 0.8 },
     description: 'Güney kutbundan su buharı ve buz püskürten gayzerlere sahip; yüzey altı okyanusu astrobiyolojinin öncelikli hedeflerinden. Güneş Sistemi\'nin en yansıtıcı cismi.',
   },
   {
@@ -330,6 +334,8 @@ export const SOLAR_SYSTEM: BodyData[] = [
     radius: 1353.4, mass: 2.1390e22, albedo: 0.76, rotationPeriod: 'sync',
     orbit: moonOrbit(354_760, 0.000016, 156.885, 5.876854, 90),
     appearance: { kind: 'terrestrial', seed: 83, landLow: [0.60, 0.50, 0.48], landMid: [0.82, 0.78, 0.76], landHigh: [0.95, 0.94, 0.94], ice: [0.92, 0.90, 0.95], iceCaps: 0.55, craters: 0.1, roughness: 0.6, variation: 0.6 },
+    // Voyager 2's dark nitrogen geysers (Hili, Mahilani): 8 km up, trailing 100+ km downwind
+    activity: { kind: 'cryo', vents: [[-57, 35], [-50, 2], [-62, 60], [-48, 25]], height: 8, spread: 120, fall: 0.3, color: [0.25, 0.24, 0.26], intensity: 0.5 },
     atmosphere: { color: [0.7, 0.75, 0.9], height: 0.015, density: 0.15 },
     temperature: 38,
     description: 'Neptün etrafında retrograd dönen tek büyük uydu — muhtemelen yakalanmış bir Kuiper Kuşağı cismi. Azot gayzerleri ve "kavun kabuğu" arazisi ile bilinir.',

@@ -56,10 +56,11 @@ export class GalaxyModel {
   readonly scaleHeight: number;
   readonly bulgeRadius: number;
   readonly barLength: number;
-  private readonly armPhase: number[] = [];
-  private readonly armWeight: number[] = [];
+  readonly armPhase: number[] = [];
+  readonly armWeight: number[] = [];
   private readonly armCdf: number[] = [];
-  private readonly blobs: Array<{ c: Vector3; s: number; w: number }> = [];
+  readonly blobs: Array<{ c: Vector3; s: number; w: number }> = [];
+  private integralCache = 0;
 
   constructor(params: GalaxyParams) {
     this.p = params;
@@ -166,6 +167,57 @@ export class GalaxyModel {
     const rb = Math.hypot(r, local.y / 0.7) / this.bulgeRadius + 1e-3;
     const bulge = 12 / (rb * Math.pow(1 + rb, 3));
     return disc + bulge;
+  }
+
+  /**
+   * ∫ density dV (pc³) over the galaxy's extent, so that luminosity density = L · density / integral.
+   * Bulge / elliptical / irregular terms are analytic; the disc is integrated over its plane.
+   */
+  densityIntegral(): number {
+    if (this.integralCache > 0) return this.integralCache;
+    const t = this.p.type;
+    const R = this.p.radius;
+    const hernquist = (a: number, X: number) => 4 * Math.PI * a * a * a * (X * X) / (2 * (1 + X) * (1 + X));
+    let total: number;
+    if (t === 'Irr') {
+      total = this.blobs.reduce((s, b) => s + 3 * b.w * Math.pow(2 * Math.PI, 1.5) * b.s * b.s * b.s / 2, 0);
+    } else if (t === 'E') {
+      total = 6 * Math.max(0.3, this.p.axisRatio) * hernquist(this.bulgeRadius, (R * 1.4) / this.bulgeRadius);
+    } else {
+      // disc: density(x, 0, z) minus the bulge, times ∫ sech² dy = 2 hz
+      // 64² is within ~1.5 % of a 160² grid at a sixth of the cost (computed as a galaxy comes near)
+      const n = 64, ext = R * 1.4, cell = (2 * ext) / n;
+      const v = new Vector3();
+      let disc = 0;
+      for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+          v.set(-ext + (i + 0.5) * cell, 0, -ext + (j + 0.5) * cell);
+          const rb = Math.hypot(v.x, v.z) / this.bulgeRadius + 1e-3;
+          disc += this.density(v) - 12 / (rb * Math.pow(1 + rb, 3));
+        }
+      }
+      total = disc * cell * cell * 2 * this.scaleHeight + 12 * 0.7 * hernquist(this.bulgeRadius, (R * 1.4) / this.bulgeRadius);
+    }
+    this.integralCache = Math.max(total, 1e-6);
+    return this.integralCache;
+  }
+
+  /**
+   * Star-formation indicator (0 … 1) at a local point: high along the spiral arms and in the thin
+   * disc of irregulars, low in bulges, lenticulars and ellipticals. Drives where the young
+   * objects (H II regions, open clusters, supernova remnants) are generated.
+   */
+  youth(local: Vector3): number {
+    const t = this.p.type;
+    if (t === 'E') return 0.03;
+    if (t === 'S0') return 0.12;
+    if (t === 'Irr') return 0.7;
+    const r = Math.hypot(local.x, local.z);
+    const da = this.armDistance(r, Math.atan2(local.z, local.x));
+    const arm = Math.exp(-(da * da) / (2 * 0.34 * 0.34));
+    const thin = 1 / Math.cosh(local.y / (this.scaleHeight * 0.7));
+    const inner = r < this.bulgeRadius * 1.2 ? 0.3 : 1;
+    return (0.15 + 0.85 * arm) * thin * inner;
   }
 
   /** Sample one point of the far-tier cloud. Returns local pc and the population. */

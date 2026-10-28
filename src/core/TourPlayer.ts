@@ -29,6 +29,8 @@ export interface SurfacePin {
   label: string;
   /** follow the gas giant's rendered storm instead of fixed coordinates */
   storm?: boolean;
+  /** outline the feature: a ring of this radius (km) traced on the surface */
+  extent?: number;
 }
 
 /** Navigation the player needs from the app (a subset of UIHost) */
@@ -50,11 +52,15 @@ export interface TourHost {
   /** camera close above a point of a body's surface */
   goToSurface(bodyId: string, lat: number, lon: number, storm?: boolean): void;
   /** camera at `elev`° above the equator plane, `az`° around the pole from the noon side, `dist` radii */
-  goToVantageOf(bodyId: string, elev: number, az: number, dist: number, seconds?: number): void;
+  goToVantageOf(bodyId: string, elev: number, az: number, dist: number, seconds?: number, inside?: boolean): void;
+  /** over the shoulder of a ringed planet, aimed along its rings (see the `limb` cue) */
+  goToLimb(bodyId: string, elev: number, az: number, dist: number, aimR: number, aimAz: number, seconds?: number): void;
   /** over-the-shoulder: `dist` radii from `refId` on the side away from `towardId`, swung `az`/`elev`° off that axis */
   goToShot(refId: string, towardId: string, dist: number, az: number, elev: number, seconds?: number): void;
-  /** true-scale copy of `refId` beside `besideId` (null removes it) */
-  setComparison(refId: string | null, besideId?: string): void;
+  /** true-scale copy of `refId` beside `besideId` (null removes it); `shoulder`: seen over the copy's shoulder */
+  setComparison(refId: string | null, besideId?: string, shoulder?: boolean): void;
+  /** raise a shield volcano's relief on a body and glide down to a telephoto view of it (null: lower it again) */
+  setPostcard(p: Omit<Extract<TourCue, { action: 'postcard' }>, 'at' | 'action' | 'delay'> | null): void;
   /** light pulse travelling between two bodies (null stops it) */
   setPulse(p: { from: string; to: string; seconds: number } | null): void;
   /** meteor shower over a body (null stops it); with `approach` the camera flies to the viewing spot */
@@ -118,7 +124,7 @@ export interface TourState {
 }
 
 /** Cues that start a camera flight of their own */
-const FLIGHT_ACTIONS = new Set<TourCue['action']>(['overview', 'vantage', 'shot', 'pin', 'lookFrom', 'return']);
+const FLIGHT_ACTIONS = new Set<TourCue['action']>(['overview', 'vantage', 'shot', 'pin', 'lookFrom', 'return', 'postcard', 'limb']);
 const isFlightCue = (c: TourCue): boolean => FLIGHT_ACTIONS.has(c.action) && !(c.action === 'pin' && c.approach === false);
 /** A flight cue is held until the camera has rested this long after its previous flight… */
 const FLIGHT_HOLD_S = 1.4;
@@ -192,6 +198,8 @@ export class TourPlayer {
   /** cinematic drift while dwelling: auto-orbit (rad/s; null = the step's) and push-in (ln/s) */
   private driftRate: number | null = null;
   private dollyRate = 0;
+  /** field of view before a postcard's telephoto lens (eased back by the next flight) */
+  private postcardFov: number | null = null;
   /** eased field-of-view change in progress (real seconds) */
   private fovTween: { from: number; to: number; t: number; dur: number } | null = null;
   /** time-warp ramp in progress: the clock rate eases between cues instead of jumping */
@@ -455,10 +463,11 @@ export class TourPlayer {
     this.windingDown = false;
     this.setRate(step.timeRate ?? 1);
     // a flight cue in the first sentence or two would cut the approach short (zoom in, then
-    // straight back out): make it the approach instead
+    // straight back out): make it the approach instead — unless it is delayed, i.e. meant to
+    // follow a first look from the approach
     this.navigate(step.target); // selects the target and switches star systems as needed
     this.host.setTourScope(this.scopeOf(step)); // after navigate: the ids live in the step's system
-    const early = step.cues?.find((c) => isFlightCue(c) && c.action !== 'return' && c.at <= 1);
+    const early = step.cues?.find((c) => isFlightCue(c) && c.action !== 'return' && c.at <= 1 && c.delay === undefined);
     if (early) {
       this.fired.add(early);
       this.fire(step, early, null, 0); // replaces the flight just planned, same frame
@@ -531,9 +540,10 @@ export class TourPlayer {
   private cueTime(step: TourStep, cue: TourCue, timing: StepTiming | null, duration: number): number {
     const srcCount = splitSentences(step.text).length;
     const frac = srcCount > 1 ? Math.min(cue.at, srcCount - 1) / (srcCount - 1) : 0;
+    const delay = cue.delay ?? 0;
     if (timing && timing.sentences.length) {
       const i = Math.round(frac * (timing.sentences.length - 1));
-      return timing.sentences[i].start;
+      return timing.sentences[i].start + delay;
     }
     // silent: sentence starts proportional to character offsets in the displayed text
     const shown = splitSentences(_(step.text));
@@ -541,12 +551,16 @@ export class TourPlayer {
     const total = shown.reduce((n, s) => n + s.length, 0) || 1;
     let before = 0;
     for (let k = 0; k < i; k++) before += shown[k].length;
-    return (before / total) * duration;
+    return (before / total) * duration + delay;
   }
 
   private fire(step: TourStep, cue: TourCue, timing: StepTiming | null, duration: number): void {
     const h = this.host;
     const targetId = step.target.kind === 'body' ? step.target.ref : null;
+    if (this.postcardFov !== null && isFlightCue(cue) && cue.action !== 'postcard') {
+      this.fovTween = { from: this.overrides.fov ?? h.currentFov(), to: this.postcardFov, t: 0, dur: 2.5 };
+      this.postcardFov = null;
+    }
     switch (cue.action) {
       case 'card':
         this.readout = null;
@@ -560,7 +574,7 @@ export class TourPlayer {
         break;
       case 'compare':
         if (!targetId) break;
-        h.setComparison(cue.ref, targetId);
+        h.setComparison(cue.ref, targetId, cue.shoulder);
         // the host may back the camera off to fit both bodies: adopt that flight as ours
         if (h.camera.autopilot && h.camera.autopilot !== this.flight) {
           this.flight = h.camera.autopilot;
@@ -574,7 +588,16 @@ export class TourPlayer {
         const ref = cue.ref ?? targetId;
         if (!ref) break;
         this.endLook();
-        h.goToVantageOf(ref, cue.elev, cue.az, cue.dist, cue.seconds);
+        h.goToVantageOf(ref, cue.elev, cue.az, cue.dist, cue.seconds, cue.inside);
+        this.flight = h.camera.autopilot;
+        this.state.phase = 'flying';
+        break;
+      }
+      case 'limb': {
+        const ref = cue.ref ?? targetId;
+        if (!ref) break;
+        this.endLook();
+        h.goToLimb(ref, cue.elev, cue.az, cue.dist, cue.aimR, cue.aimAz, cue.seconds);
         this.flight = h.camera.autopilot;
         this.state.phase = 'flying';
         break;
@@ -585,6 +608,16 @@ export class TourPlayer {
         this.flight = h.camera.autopilot;
         this.state.phase = 'flying';
         break;
+      case 'postcard': {
+        this.endLook();
+        const { at: _at, action: _action, delay: _delay, ...p } = cue;
+        h.setPostcard(p);
+        if (p.fov !== undefined) this.postcardFov ??= this.overrides.fov ?? h.currentFov();
+        if (p.fov !== undefined) this.fovTween = { from: this.overrides.fov ?? h.currentFov(), to: p.fov, t: 0, dur: p.seconds ?? 6 };
+        this.flight = h.camera.autopilot;
+        this.state.phase = 'flying';
+        break;
+      }
       case 'dolly':
         this.dollyRate = cue.rate;
         break;
@@ -656,7 +689,7 @@ export class TourPlayer {
         break;
       }
       case 'pin':
-        h.setSurfacePin({ bodyId: cue.ref, lat: cue.lat, lon: cue.lon, label: cue.label, storm: cue.storm });
+        h.setSurfacePin({ bodyId: cue.ref, lat: cue.lat, lon: cue.lon, label: cue.label, storm: cue.storm, extent: cue.extent });
         this.pinned = true;
         h.camera.autoOrbit = PIN_ORBIT;
         if (cue.approach !== false) {
@@ -704,9 +737,11 @@ export class TourPlayer {
     this.driftRate = null;
     this.dollyRate = 0;
     this.fovTween = null;
+    this.postcardFov = null;
     this.host.setTourOverrides(this.overrides);
     this.host.setSurfacePin(null);
     this.host.setComparison(null);
+    this.host.setPostcard(null);
     this.host.setPulse(null);
     this.host.setMeteors(null);
   }
@@ -770,8 +805,8 @@ export class TourPlayer {
     if (step.show) ids.push(...step.show);
     for (const c of step.cues ?? []) {
       switch (c.action) {
-        case 'overview': case 'pin': ids.push(c.ref); break;
-        case 'vantage': if (c.ref) ids.push(c.ref); break;
+        case 'overview': case 'pin': case 'postcard': ids.push(c.ref); break;
+        case 'vantage': case 'limb': if (c.ref) ids.push(c.ref); break;
         case 'shot': ids.push(c.ref, c.toward); break;
         case 'compare': ids.push(c.ref); break;
         case 'pulse': ids.push(c.from, c.to); break;

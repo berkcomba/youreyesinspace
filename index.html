@@ -47,7 +47,7 @@
         <div class="brand">
           <img id="brand-logo" class="brand-mark" src="/logo-white.png" alt="Your Eyes In Space" role="button" tabindex="0" data-i18n-title title="Hakkında, yazar ve geri bildirim" />
           <span class="brand-name">YOUR EYES IN SPACE</span>
-          <button class="brand-version" data-changelog data-i18n-title title="Yenilikler">v 0.6</button>
+          <button class="brand-version" data-changelog data-i18n-title title="Yenilikler">v 0.7</button>
           <span id="brand-sub" class="brand-sub" data-i18n>Güneş Sistemi</span>
         </div>
         <div id="search" class="panel-inline">
@@ -86,6 +86,7 @@
           <button id="act-goto" data-i18n data-i18n-title title="Nesneye uç (G)">Git</button>
           <button id="act-center" data-i18n data-i18n-title title="Nesneye bak (C)">Ortala</button>
           <button id="act-follow" data-i18n data-i18n-title title="Yörünge/takip modu (F)">Takip</button>
+          <button id="act-land" data-i18n data-i18n-title title="Yüzeye in (I)" hidden>İn</button>
           <button id="act-share" data-i18n data-i18n-title title="Bu görünümün bağlantısını kopyala (hedef, zaman ve kamera)">Bağlantı</button>
         </div>
         <dl id="info-body" class="info-grid"></dl>
@@ -216,6 +217,14 @@
       </figure>
 
       <!-- Bottom: time & nav -->
+      <div id="surface-bar" hidden>
+        <span id="surface-where" class="surface-where">—</span>
+        <span class="seg">
+          <button id="sf-down" data-i18n-title title="Alçal (F · basılı tut)">▼</button>
+          <button id="sf-up" data-i18n-title title="Yüksel (R · basılı tut)">▲</button>
+        </span>
+        <button id="sf-takeoff" data-i18n data-i18n-title title="Yörüngeye geri çık (I)">Kalk</button>
+      </div>
       <footer id="bottombar">
         <div class="time-block">
           <div id="time-date" class="time-date">—</div>
@@ -236,6 +245,9 @@
           <div class="nav-row"><span class="k" data-i18n>Referans</span><span id="nav-ref">—</span></div>
           <div class="nav-row"><span class="k" data-i18n>Hız</span><span id="nav-speed">—</span></div>
           <div class="nav-row"><span class="k" data-i18n>Yükseklik</span><span id="nav-alt">—</span></div>
+          <div class="nav-row" title="Keşifleriniz · sıradaki: en yakın keşfedilmemiş nesne" data-i18n-title><span class="k" data-i18n>Keşif</span><span id="nav-disc">0</span></div>
+          <div class="nav-row" id="nav-place-row" hidden><span class="k" data-i18n>Konum</span><span id="nav-place">—</span></div>
+          <div class="nav-row" id="nav-clock-row" hidden><span class="k" data-i18n>Yerel güneş saati</span><span id="nav-clock">—</span></div>
           <div class="nav-row"><span class="k">FPS</span><span id="nav-fps">—</span></div>
         </div>
       </footer>
@@ -269,7 +281,7 @@
           <div class="about-head">
             <img class="about-mark" src="/logo-white.png" alt="Your Eyes In Space" />
             <div>
-              <div class="about-name">YOUR EYES IN SPACE <button class="brand-version" data-changelog data-i18n-title title="Yenilikler">v 0.6</button></div>
+              <div class="about-name">YOUR EYES IN SPACE <button class="brand-version" data-changelog data-i18n-title title="Yenilikler">v 0.7</button></div>
               <div class="about-tag" data-i18n>Dünyanın her yerinde insanları uzay ve astrofizikle buluşturmak için yapılmış açık kaynak uzay simülatörü ve astrofizik dersliği</div>
               <div id="about-stats" class="about-stats" hidden></div>
             </div>
@@ -313,7 +325,7 @@
             <div><kbd data-i18n>İki parmak aç-kapa</kbd> <span data-i18n>Yaklaş-uzaklaş (takip) · ileri-geri uç (serbest)</span></div>
             <div><kbd data-i18n>İki parmak sürükle</kbd> <span data-i18n>Yana / yukarı kay</span></div>
             <div><kbd data-i18n>Dokun</kbd> <span data-i18n>Seç</span> &nbsp; <kbd data-i18n>Çift dokun</kbd> <span data-i18n>Seç ve git</span></div>
-            <div><kbd data-i18n>Git</kbd> <span data-i18n>Seçili hedefe otopilot</span> &nbsp; <kbd data-i18n>Takip</kbd> <span data-i18n>Yörünge modu</span></div>
+            <div><kbd data-i18n>Git</kbd> <span data-i18n>Seçili hedefe otopilot</span> &nbsp; <kbd data-i18n>Takip</kbd> <span data-i18n>Yörünge modu</span> &nbsp; <kbd data-i18n>İn</kbd> <span data-i18n>Yüzeyden gökyüzünü izle</span></div>
             <div><kbd data-i18n>Ara</kbd> <span data-i18n>ve</span> <kbd data-i18n>Yerler</kbd> <span data-i18n>menüsüyle tek dokunuşla uçuş</span></div>
             <div><kbd data-i18n>Görev</kbd> <span data-i18n>Rota hesapla, fırlat, aracı canlı izle</span></div>
           </div>
@@ -325,14 +337,15 @@
             <div><kbd>Shift</kbd> <span data-i18n>10× hız</span> &nbsp; <kbd>Ctrl</kbd> <span data-i18n>0.1× hız</span></div>
             <div><kbd data-i18n>Tık</kbd> <span data-i18n>Seç</span> &nbsp; <kbd data-i18n>Çift tık</kbd> <span data-i18n>Seç ve git</span></div>
             <div><kbd>G</kbd> <span data-i18n>Git</span> &nbsp; <kbd>C</kbd> <span data-i18n>Ortala</span> &nbsp; <kbd>T</kbd> <span data-i18n>Takip modu</span></div>
+            <div><kbd>I</kbd> <span data-i18n>Katı bir gezegene / uyduya in · kalk</span> &nbsp; <kbd data-i18n>Yüzeyde</kbd> <span data-i18n>fare bak · W A S D yürü · R F yüksel/alçal · tekerlek yakınlaştır</span></div>
             <div><kbd>J</kbd> <kbd>K</kbd> <kbd>L</kbd> <span data-i18n>Zaman geri / durdur / ileri</span> &nbsp; <kbd>\</kbd> <span data-i18n>Şimdi</span></div>
-            <div><kbd>O</kbd> <span data-i18n>Yörüngeler</span> &nbsp; <kbd>N</kbd> <span data-i18n>Etiketler</span> &nbsp; <kbd>;</kbd> <span data-i18n>Izgara</span></div>
+            <div><kbd>O</kbd> <span data-i18n>Yörüngeler</span> &nbsp; <kbd>N</kbd> <span data-i18n>İşaretler ve isimler</span> &nbsp; <kbd>;</kbd> <span data-i18n>Izgara</span></div>
             <div><kbd>1–9, 0</kbd> <span data-i18n>Gezegenlere git</span> &nbsp; <kbd>H</kbd> <span data-i18n>Dünya</span></div>
             <div><kbd data-i18n>Yıldıza tık</kbd> <span data-i18n>Seç</span> &nbsp; <kbd>G</kbd> <span data-i18n>Yıldızlar arası uçuş</span> &nbsp; <kbd>Home</kbd> <span data-i18n>Güneş Sistemi</span></div>
             <div><kbd data-i18n>Galaksiye tık</kbd> <span data-i18n>Seç</span> &nbsp; <kbd>G</kbd> <span data-i18n>Galaksiler arası uçuş</span> &nbsp; <kbd>M</kbd> <span data-i18n>Samanyolu'na dışarıdan bak</span></div>
             <div><kbd data-i18n>Ara</kbd> <span data-i18n>Sirius, HIP 71683, Andromeda, M87, Sagittarius A*, Tarantula… (109 000 gerçek yıldız, 55 gerçek galaksi, 14 kara delik, 9 pulsar, 26 bulutsu/küme/rekor yıldız + prosedürel evren)</span></div>
             <div><kbd>U</kbd> <span data-i18n>Görev planlayıcı: kalkış–hedef–araç seç, Lambert/Hohmann transferi ve isteğe bağlı sapan (gravity assist) hesaplanır, Δv bütçesiyle karşılaştırılır;</span> <kbd data-i18n>Fırlat</kbd> <span data-i18n>ile aracı canlı izle. Star Trek / Star Wars / The Expanse gemileri warp, hiperuzay ve sürekli ivmeyle yıldızlararası hedeflere gider</span></div>
-            <div><kbd>Tab</kbd> <span data-i18n>Arayüzü gizle</span> &nbsp; <kbd>P</kbd> <span data-i18n>Ekran görüntüsü</span> &nbsp; <kbd>Esc</kbd> <span data-i18n>Seçimi bırak</span></div>
+            <div><kbd>Tab</kbd> <span data-i18n>Arayüzü ve yörüngeleri gizle</span> &nbsp; <kbd>P</kbd> <span data-i18n>Ekran görüntüsü</span> &nbsp; <kbd>Esc</kbd> <span data-i18n>Seçimi bırak</span></div>
             <div><kbd data-i18n>Görmeye değecek yerler</kbd> <span data-i18n>Uzay araçları (Voyager, JWST, ISS…), kara delikler (Sgr A*, Cygnus X-1…), pulsarlar (Yengeç, Vela, Hulse–Taylor…), bulutsular ve kümeler (Orion, Tarantula, Ülker…), gezegenler, yıldızlar ve galaksilere tek tıkla uçuş</span></div>
             <div><kbd data-i18n>Turlar</kbd> <span data-i18n>10 sesli rehberli ders (Güneş Sistemi, Mars ve robotları, Jüpiter, Satürn, uzay araçları, yıldızların yaşamı, kara delikler, pulsarlar, komşu yıldızlar, galaksiler): kamera her durağa uçar, anlatıcı eşzamanlı anlatır;</span> <kbd>Esc</kbd> <span data-i18n>turu bitirir</span></div>
             <div><kbd data-i18n>Olaylar</kbd> <span data-i18n>Yaklaşan gök ve uzay olayları (kavuşumlar, meteor yağmurları, BepiColombo'nun Merkür yörüngesine girişi, Europa Clipper'ın Dünya geçişi…) simülasyonda birer sahne olarak; her olayın paylaşılabilir bağlantısı ve sitenize gömebileceğiniz iframe kodu vardır. Uzay aracı yörüngeleri NASA/JPL Horizons'tan alınmıştır; simülasyondur, canlı telemetri değildir</span></div>

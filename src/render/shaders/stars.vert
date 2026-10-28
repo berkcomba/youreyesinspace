@@ -9,6 +9,7 @@ uniform float uPixelRatio;
 uniform float uSkyRadius;  // km – stars are projected onto a sphere of this radius (depth-safe)
 uniform float uHideIndex;  // index of the current system's star (rendered as a real body instead)
 uniform float uMagLimit;   // faintest apparent magnitude drawn
+uniform float uFade;       // overall alpha (LOD cross-fade), 1 = full
 varying vec3 vColor;
 varying float vAlpha;
 
@@ -22,7 +23,7 @@ void main() {
   gl_Position = projectionMatrix * mv;
   float flux = pow(10.0, -0.4 * m);
   float size = min(30.0, 1.3 + 3.0 * pow(flux, 0.4));
-  float alpha = min(1.0, 0.16 + 0.9 * pow(flux, 0.45));
+  float alpha = min(1.0, 0.16 + 0.9 * pow(flux, 0.45)) * uFade;
   if (abs(starIndex - uHideIndex) < 0.5 || m > uMagLimit) {
     size = 0.0;
     alpha = 0.0;

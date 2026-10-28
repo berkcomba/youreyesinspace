@@ -1,6 +1,6 @@
 import {
   BufferAttribute, BufferGeometry, Frustum, Group, Matrix4, Mesh, Quaternion, ShaderMaterial, Sphere, SRGBColorSpace,
-  Texture, TextureLoader, Vector3, type Camera, type IUniform,
+  Texture, TextureLoader, Vector3, Vector4, type Camera, type IUniform,
 } from 'three';
 import type { CelestialBody } from '../core/CelestialBody';
 import type { BodyImagery, TileProvider } from '../data/imagery';
@@ -99,6 +99,16 @@ class TileLoader {
 }
 
 const tileLoader = new TileLoader();
+
+/** One imagery tile and its geographic rectangle (degrees), for sampling by lat/lon */
+export interface ImageryPatch {
+  tex: Texture;
+  lon0: number;
+  latBottom: number;
+  span: number;
+  /** the imagery tells water from land by colour (Blue Marble) */
+  water: boolean;
+}
 
 // ---------------------------------------------------------------------------
 // Quadtree node
@@ -225,11 +235,14 @@ export class TileGlobe {
   private rendered = new Set<TileNode>();
   private prevRendered = new Set<TileNode>();
 
+  /** simulation time (shared uniform of every tile material): drives the cloud-shadow drift */
+  setTime(t: number): void { this.baseUniforms.uTime.value = t; }
+
   constructor(
     readonly body: CelestialBody,
     readonly imagery: BodyImagery,
     lit: Uniforms,
-    extra: { atmColor: Vector3; atmDensity: number; sunsetColor: Vector3 },
+    extra: { atmColor: Vector3; atmDensity: number; sunsetColor: Vector3; cloud: Vector4 },
     maxAnisotropy: number,
   ) {
     tileLoader.maxAnisotropy = Math.max(tileLoader.maxAnisotropy, maxAnisotropy);
@@ -243,6 +256,8 @@ export class TileGlobe {
       uAtmDensity: { value: extra.atmDensity },
       uSunsetColor: { value: extra.sunsetColor },
       uOceanSpec: { value: imagery.hasOceanSpecular ? 1 : 0 },
+      uCloud: { value: extra.cloud },
+      uTime: { value: 0 },
     };
     this.group.frustumCulled = false;
     const cols = Math.ceil(360 / imagery.day.span0);
@@ -382,6 +397,26 @@ export class TileGlobe {
   dispose(): void {
     for (const r of this.roots) r.dispose();
     this.roots.length = 0;
+  }
+
+  /**
+   * The deepest day tile already on hand whose full extent covers the box lat ± dLat, lon ± dLon
+   * (degrees): the real colours of a landing site. Null until the level-0 tiles have arrived.
+   */
+  tileCovering(lat: number, lon: number, dLat: number, dLon: number): ImageryPatch | null {
+    // only the part of a tile that lies on the globe counts (GIBS pads its level 0 past 180°)
+    const inside = (n: TileNode): boolean =>
+      lon - dLon >= n.cLon0 && lon + dLon <= n.cLon1 && lat - dLat >= n.cLat0 && lat + dLat <= n.cLat1;
+    let best: TileNode | null = null;
+    for (const r of this.roots) {
+      if (!inside(r)) continue;
+      let n: TileNode | null = r;
+      while (n) {
+        if (n.day.status === 'ready' && n.day.tex) best = n;
+        n = n.children?.find((c) => !c.empty && inside(c)) ?? null;
+      }
+    }
+    return best?.day.tex ? { tex: best.day.tex, lon0: best.lon0, latBottom: best.latTop - best.span, span: best.span, water: this.imagery.hasOceanSpecular === true } : null;
   }
 
   private request(n: TileNode, slot: 'day' | 'night'): void {

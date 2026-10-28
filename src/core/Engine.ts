@@ -1,5 +1,5 @@
 import {
-  ACESFilmicToneMapping, Color, PerspectiveCamera, SRGBColorSpace, Scene, Vector2, WebGLRenderer,
+  ACESFilmicToneMapping, Color, HalfFloatType, PerspectiveCamera, SRGBColorSpace, Scene, Vector2, WebGLRenderTarget, WebGLRenderer,
 } from 'three';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -43,7 +43,10 @@ export class Engine {
     this.camera = new PerspectiveCamera(50, 1, CAMERA_NEAR_KM, CAMERA_FAR_KM);
     this.camera.position.set(0, 0, 0);
 
-    this.composer = new EffectComposer(this.renderer);
+    // HDR scene buffer with hardware MSAA: the composer's default target is single-sampled, which
+    // left every limb and ring edge aliased however the canvas was created
+    const target = new WebGLRenderTarget(1, 1, { type: HalfFloatType, samples: this.msaaSamples(1, 1) });
+    this.composer = new EffectComposer(this.renderer, target);
     this.composer.addPass(new RenderPass(this.scene, this.camera));
     this.blackHole = new BlackHolePass();
     this.blackHole.quality = this.mobile ? 0.5 : 1;
@@ -66,8 +69,19 @@ export class Engine {
     this.renderer.setSize(this.width, this.height, false);
     this.composer.setPixelRatio(this.pixelRatio);
     this.composer.setSize(this.width, this.height);
+    const samples = this.msaaSamples(this.width * this.pixelRatio, this.height * this.pixelRatio);
+    for (const rt of [this.composer.renderTarget1, this.composer.renderTarget2]) {
+      if (rt.samples !== samples) { rt.samples = samples; rt.dispose(); }
+    }
     this.camera.aspect = this.width / this.height;
     this.camera.updateProjectionMatrix();
+  }
+
+  /** MSAA level of the scene buffer: 4× on desktop, 2× once the frame is huge (4K), none on phones */
+  private msaaSamples(w: number, h: number): number {
+    if (this.mobile) return 0;
+    // a GPU that already had its resolution cut by the governor gets the cheaper level too
+    return w * h > 5.5e6 || this.renderScale < 0.7 ? 2 : 4;
   }
 
   setRenderScale(scale: number): void {

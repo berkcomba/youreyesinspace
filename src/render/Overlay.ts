@@ -25,6 +25,8 @@ export interface SurfacePinScreen {
   label: string;
   /** fade in / out (0..1) */
   alpha: number;
+  /** the feature's outline on the surface, relative to the camera; null where it faces away */
+  ring: Array<Vector3 | null> | null;
 }
 
 /** The Sun seen from elsewhere: a marker with its distance, or a compass arrow when off-screen */
@@ -68,6 +70,8 @@ const LANDMARK_COLORS: Record<string, string> = {
   remnant: 'rgba(170, 240, 235, 0.9)',
   star: 'rgba(225, 230, 255, 0.9)',
   pulsar: 'rgba(150, 230, 255, 0.95)',
+  planetary: 'rgba(160, 245, 225, 0.9)',
+  globular: 'rgba(255, 225, 170, 0.9)',
 };
 
 /** Muted brass — the one accent colour of the interface, used only for the selected object. */
@@ -113,6 +117,8 @@ export class Overlay {
   hoverId: string | null = null;
   /** draw a centre crosshair (free roam / pointer lock) */
   crosshair = false;
+  /** clean view: no markers, labels, names or reticle at all (the crosshair stays) */
+  clean = false;
   /** event scene playing: no finder reticle around the subject the camera is composed on */
   cinematic = false;
   /**
@@ -147,6 +153,8 @@ export class Overlay {
     landmarks: LandmarkScreen[] = [],
     pin: SurfacePinScreen | null = null,
     sun: SunMarkerScreen | null = null,
+    /** standing on `body`: its ground hides everything below the local horizon (`up`) */
+    ground: { body: CelestialBody; up: Vector3 } | null = null,
   ): ScreenItem[] {
     const ctx = this.ctx;
     const W = this.width, H = this.height;
@@ -170,11 +178,29 @@ export class Overlay {
     }
 
     if (!uiVisible) return this.items;
+    ctx.font = '500 12px Inter, ui-sans-serif, system-ui, sans-serif';
+    ctx.textBaseline = 'middle';
+    if (this.clean) {
+      // clean view: only the selection keeps its reticle (and name), so a click still answers
+      if (selectedStar) this.drawStarReticle(selectedStar, camera);
+      const it = selected ? byId.get(selected.id) : undefined;
+      if (it && it.visible && it.radiusPx <= Math.max(W, H) && !(this.cinematic && it.radiusPx >= 6)) {
+        ctx.globalAlpha = it.radiusPx < 6 ? 0.85 : 0.5;
+        this.drawBodyReticle(it);
+        ctx.globalAlpha = 1;
+        const offset = Math.max(it.radiusPx, 5) + 8;
+        ctx.fillStyle = 'rgba(255,255,255,0.98)';
+        ctx.fillText(it.distance > BODY_DIST_LABEL_KM ? this.withDist(selected!.name, it.distance) : selected!.name, it.x + offset, it.y - offset * 0.35);
+      }
+      this.drawCrosshair();
+      return this.items;
+    }
 
     // Bodies large enough on screen hide the sky labels behind them (ground, planet discs)
-    const occluders = views.filter((v) => v.apparentRadiusPx > 40 && v.meshVisible);
-    const anyOccluder = occluders.length > 0;
+    const occluders = views.filter((v) => v.apparentRadiusPx > 40 && v.meshVisible && v.body !== ground?.body);
+    const anyOccluder = occluders.length > 0 || ground !== null;
     const occluded = (dir: Vector3, beyond = Infinity): boolean => {
+      if (ground && dir.dot(ground.up) < -0.01) return true;
       for (const v of occluders) {
         const d = v.distance;
         if (d >= beyond) continue; // the occluder itself, or something behind the body in question
@@ -287,9 +313,10 @@ export class Overlay {
         const color = LANDMARK_COLORS[s.kind] ?? 'white';
         if (this.showMarkers) {
           ctx.strokeStyle = color;
-          ctx.globalAlpha = 0.75;
+          ctx.globalAlpha = s.undiscovered ? 0.5 : 0.75;
           ctx.lineWidth = 1;
-          ctx.setLineDash(s.kind === 'star' || s.kind === 'pulsar' ? [] : [3, 3]);
+          // undiscovered generated objects: a sparse dotted ring, until the visitor has been there
+          ctx.setLineDash(s.undiscovered ? [1, 4] : s.kind === 'star' || s.kind === 'pulsar' ? [] : [3, 3]);
           ctx.beginPath();
           ctx.arc(x, y, r, 0, Math.PI * 2);
           ctx.stroke();
@@ -297,7 +324,7 @@ export class Overlay {
           ctx.globalAlpha = 1;
         }
         if (this.showLabels) {
-          const label = this.withDist(s.name, s.distKm);
+          const label = this.withDist(s.undiscovered ? `◇ ${s.name}` : s.name, s.distKm);
           const w = ctx.measureText(label).width + 10;
           const lx = x + r * 0.71 + 6, ly = y - r * 0.71 - 6;
           let clash = false;
@@ -308,7 +335,9 @@ export class Overlay {
           taken.push({ x: lx, y: ly, w });
           this.labelHits.push({ kind: 'landmark', index: s.index, name: s.name, x: lx, y: ly - 7, w, h: 14 });
           ctx.fillStyle = color;
+          if (s.undiscovered) ctx.globalAlpha = 0.7;
           ctx.fillText(label, lx, ly);
+          ctx.globalAlpha = 1;
         }
       }
       ctx.font = '500 12px Inter, ui-sans-serif, system-ui, sans-serif';
@@ -346,28 +375,7 @@ export class Overlay {
     if (sun && (this.showMarkers || this.showLabels)) this.drawSun(sun, camera);
 
     // Selected catalogue star / galaxy: reticle + name
-    if (selectedStar) {
-      _v.copy(selectedStar.dir).multiplyScalar(1e11).project(camera);
-      if (_v.z < 1 && _v.z > -1) {
-        const x = (_v.x * 0.5 + 0.5) * W;
-        const y = (-_v.y * 0.5 + 0.5) * H;
-        if (x > -40 && x < W + 40 && y > -40 && y < H + 40) {
-          const isGal = selectedStar.kind === 'galaxy';
-          const r = Math.min(Math.max(H, W), Math.max(12, (selectedStar.radiusPx ?? 0) + 8)), g = r * 0.45;
-          ctx.strokeStyle = isGal ? 'rgba(215, 190, 255, 0.95)' : selectedStar.kind === 'landmark' ? 'rgba(255, 170, 190, 0.95)' : 'rgba(255, 220, 150, 0.95)';
-          ctx.lineWidth = 1.5;
-          ctx.beginPath();
-          for (const [sx, sy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) {
-            ctx.moveTo(x + sx * r, y + sy * (r - g));
-            ctx.lineTo(x + sx * r, y + sy * r);
-            ctx.lineTo(x + sx * (r - g), y + sy * r);
-          }
-          ctx.stroke();
-          ctx.fillStyle = 'rgba(255,255,255,0.98)';
-          ctx.fillText(this.withDist(selectedStar.name, selectedStar.distKm), x + r + 8, y - r * 0.35);
-        }
-      }
-    }
+    if (selectedStar) this.drawStarReticle(selectedStar, camera);
 
     // Decide label visibility (declutter)
     const occupied: Array<{ x: number; y: number; w: number; h: number }> = [];
@@ -430,18 +438,7 @@ export class Overlay {
         if (isSel && this.cinematic && it.radiusPx >= 6) {
           // a composed shot: the resolved subject needs no reticle
         } else if (isSel) {
-          // finder-chart reticle: a thin circle with four short ticks, in the selection colour
-          const r = Math.max(it.radiusPx + 8, 12);
-          ctx.strokeStyle = SELECTION_COLOR;
-          ctx.lineWidth = 1;
-          const t = 5;
-          ctx.beginPath();
-          ctx.arc(it.x, it.y, r, 0, Math.PI * 2);
-          ctx.moveTo(it.x - r - t, it.y); ctx.lineTo(it.x - r, it.y);
-          ctx.moveTo(it.x + r, it.y); ctx.lineTo(it.x + r + t, it.y);
-          ctx.moveTo(it.x, it.y - r - t); ctx.lineTo(it.x, it.y - r);
-          ctx.moveTo(it.x, it.y + r); ctx.lineTo(it.x, it.y + r + t);
-          ctx.stroke();
+          this.drawBodyReticle(it);
         } else if (b.data.type === 'star') {
           // no marker on the sun
         } else if (b.data.type === 'blackhole') {
@@ -487,6 +484,24 @@ export class Overlay {
     }
 
     // Tour surface pin: a dot on the feature, a leader line and the feature's name
+    if (pin?.ring) {
+      ctx.globalAlpha = 0.85 * Math.max(0, Math.min(1, pin.alpha));
+      ctx.strokeStyle = SELECTION_COLOR;
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([6, 5]);
+      ctx.beginPath();
+      let pen = false;
+      for (const p of pin.ring) {
+        if (p) _v.copy(p).project(camera);
+        if (!p || _v.z >= 1 || _v.z <= -1) { pen = false; continue; }
+        const x = (_v.x * 0.5 + 0.5) * W, y = (-_v.y * 0.5 + 0.5) * H;
+        if (pen) ctx.lineTo(x, y); else ctx.moveTo(x, y);
+        pen = true;
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.globalAlpha = 1;
+    }
     if (pin) {
       _v.copy(pin.dir).project(camera);
       if (_v.z < 1 && _v.z > -1) {
@@ -537,21 +552,66 @@ export class Overlay {
       }
     }
 
-    // Free-roam crosshair (pointer locked: clicks pick under the centre)
-    if (this.crosshair) {
-      const cx = W / 2, cy = H / 2;
-      ctx.strokeStyle = 'rgba(240, 240, 235, 0.7)';
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(cx - 12, cy); ctx.lineTo(cx - 4, cy);
-      ctx.moveTo(cx + 4, cy); ctx.lineTo(cx + 12, cy);
-      ctx.moveTo(cx, cy - 12); ctx.lineTo(cx, cy - 4);
-      ctx.moveTo(cx, cy + 4); ctx.lineTo(cx, cy + 12);
-      ctx.stroke();
-      ctx.fillStyle = 'rgba(240, 240, 235, 0.8)';
-      ctx.fillRect(cx - 0.75, cy - 0.75, 1.5, 1.5);
-    }
+    this.drawCrosshair();
     return this.items;
+  }
+
+  /** Finder-chart reticle of the selected body: a thin circle with four short ticks */
+  private drawBodyReticle(it: ScreenItem): void {
+    const ctx = this.ctx;
+    const r = Math.max(it.radiusPx + 8, 12);
+    ctx.strokeStyle = SELECTION_COLOR;
+    ctx.lineWidth = 1;
+    const t = 5;
+    ctx.beginPath();
+    ctx.arc(it.x, it.y, r, 0, Math.PI * 2);
+    ctx.moveTo(it.x - r - t, it.y); ctx.lineTo(it.x - r, it.y);
+    ctx.moveTo(it.x + r, it.y); ctx.lineTo(it.x + r + t, it.y);
+    ctx.moveTo(it.x, it.y - r - t); ctx.lineTo(it.x, it.y - r);
+    ctx.moveTo(it.x, it.y + r); ctx.lineTo(it.x, it.y + r + t);
+    ctx.stroke();
+  }
+
+  /** Corner-bracket reticle + name of the selected sky object (star, galaxy, landmark) */
+  private drawStarReticle(sel: StarSelectionScreen, camera: PerspectiveCamera): void {
+    const ctx = this.ctx;
+    const W = this.width, H = this.height;
+    _v.copy(sel.dir).multiplyScalar(1e11).project(camera);
+    if (!(_v.z < 1 && _v.z > -1)) return;
+    const x = (_v.x * 0.5 + 0.5) * W;
+    const y = (-_v.y * 0.5 + 0.5) * H;
+    if (!(x > -40 && x < W + 40 && y > -40 && y < H + 40)) return;
+    const isGal = sel.kind === 'galaxy';
+    const r = Math.min(Math.max(H, W), Math.max(12, (sel.radiusPx ?? 0) + 8)), g = r * 0.45;
+    ctx.strokeStyle = isGal ? 'rgba(215, 190, 255, 0.95)' : sel.kind === 'landmark' ? 'rgba(255, 170, 190, 0.95)' : 'rgba(255, 220, 150, 0.95)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    for (const [sx, sy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) {
+      ctx.moveTo(x + sx * r, y + sy * (r - g));
+      ctx.lineTo(x + sx * r, y + sy * r);
+      ctx.lineTo(x + sx * (r - g), y + sy * r);
+    }
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.98)';
+    ctx.fillText(this.withDist(sel.name, sel.distKm), x + r + 8, y - r * 0.35);
+  }
+
+  /** Free-roam crosshair (pointer locked: clicks pick under the centre) */
+  private drawCrosshair(): void {
+    if (!this.crosshair) return;
+    const ctx = this.ctx;
+    const cx = this.width / 2, cy = this.height / 2;
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = 'rgba(240, 240, 235, 0.7)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(cx - 12, cy); ctx.lineTo(cx - 4, cy);
+    ctx.moveTo(cx + 4, cy); ctx.lineTo(cx + 12, cy);
+    ctx.moveTo(cx, cy - 12); ctx.lineTo(cx, cy - 4);
+    ctx.moveTo(cx, cy + 4); ctx.lineTo(cx, cy + 12);
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(240, 240, 235, 0.8)';
+    ctx.fillRect(cx - 0.75, cy - 0.75, 1.5, 1.5);
   }
 
   /** Screen position of the Sun, or null when it is off-screen */

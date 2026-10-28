@@ -31,12 +31,18 @@ void main() {
   gl_Position = projectionMatrix * mv;
   float dist = length(mv.xyz);
   // Points shrink when very close (they are km-scale rocks) and stay ~1px far away
-  float px = clamp(1.6 - dist / a * 0.6, 0.6, 1.8) * (0.7 + 0.6 * elems1.w);
+  float px = clamp(1.6 - dist / a * 0.6, 0.6, 1.8) * (0.7 + 0.6 * abs(elems1.w));
   gl_PointSize = px * uPixelRatio;
-  vBright = elems1.w;
+  vBright = abs(elems1.w);
   // fade out when the camera is far outside the belt so it doesn't become a solid disc
   float camToStar = length(uSunPos);
   vFade = 1.0 - smoothstep(a * 15.0, a * 80.0, camToStar);
-  if (vFade <= 0.0) gl_Position = vec4(2.0, 2.0, 2.0, 1.0);
+  // crowding: from far away the belt's screen area shrinks as 1/ratio² while the particle count
+  // does not, and the additive points pile up into a solid white ring; scale each one down by the
+  // same factor so the band keeps its surface brightness (a faint haze, as it should be)
+  float ratio = camToStar / a;
+  vFade *= min(1.0, pow(2.5 / max(ratio, 2.5), 2.0));
+  // negative brightness = the particle has been turned into a real body (discovered asteroid)
+  if (vFade <= 0.0 || elems1.w < 0.0) gl_Position = vec4(2.0, 2.0, 2.0, 1.0);
   #include <logdepthbuf_vertex>
 }

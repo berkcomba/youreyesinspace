@@ -58,6 +58,8 @@ export class CelestialBody {
   readonly gm: number;
   /** Distance from the system's root star (km) */
   distanceToStar = 0;
+  /** the star that lights this body (set by StarSystem; null = the system root) */
+  hostStar: CelestialBody | null = null;
   /** Sidereal rotation period in seconds (signed); 0 if synchronous */
   rotationPeriodS = 0;
   /** Not representable right now (sampled ephemeris outside its span): not drawn, not labelled */
@@ -186,7 +188,7 @@ export class CelestialBody {
     this.pole.copy(_yAxis).applyQuaternion(this.rotation);
     basisFromPole(this.pole, this.poleBasis);
     this.spinAngle = 0;
-    this.distanceToStar = this.position.distanceTo(this.root.position);
+    this.distanceToStar = this.position.distanceTo((this.hostStar ?? this.root).position);
   }
 
   /** Evaluate orbital state at Julian date jd. Parent must already be updated. */
@@ -256,7 +258,7 @@ export class CelestialBody {
     _qSpin.setFromAxisAngle(_yAxis, this.spinAngle);
     this.rotation.multiply(_qSpin);
 
-    this.distanceToStar = this.parent ? this.position.distanceTo(this.root.position) : 0;
+    this.distanceToStar = this.parent ? this.position.distanceTo((this.hostStar ?? this.root).position) : 0;
   }
 
   /**

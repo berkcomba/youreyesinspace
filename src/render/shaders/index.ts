@@ -1,6 +1,8 @@
 import common from './common.glsl?raw';
 import lighting from './lighting.glsl?raw';
 import surfaceVert from './surface.vert?raw';
+import terrestrialCommon from './terrestrial_common.glsl?raw';
+import cloudsCommon from './clouds_common.glsl?raw';
 import terrestrialFrag from './terrestrial.frag?raw';
 import gasgiantFrag from './gasgiant.frag?raw';
 import starFrag from './star.frag?raw';
@@ -13,6 +15,10 @@ import ringRockVert from './ringrock.vert?raw';
 import ringRockFrag from './ringrock.frag?raw';
 import ringDustVert from './ringdust.vert?raw';
 import ringDustFrag from './ringdust.frag?raw';
+import plumeVert from './plume.vert?raw';
+import cometVert from './comet.vert?raw';
+import cometFrag from './comet.frag?raw';
+import plumeFrag from './plume.frag?raw';
 import coronaFrag from './corona.frag?raw';
 import billboardVert from './billboard.vert?raw';
 import pointsVert from './points.vert?raw';
@@ -41,33 +47,53 @@ import depthClearFrag from './depthclear.frag?raw';
 import depthFloorVert from './depthfloor.vert?raw';
 import panoVert from './pano.vert?raw';
 import panoFrag from './pano.frag?raw';
+import groundCommon from './ground_common.glsl?raw';
+import groundHeightFrag from './groundheight.frag?raw';
+import groundAlbedoFrag from './groundalbedo.frag?raw';
+import fullscreenVert from './fullscreen.vert?raw';
+import volumeVert from './volume.vert?raw';
+import volumeCommon from './volume_common.glsl?raw';
+import volumeGalaxyFrag from './volume_galaxy.frag?raw';
+import volumeNebulaFrag from './volume_nebula.frag?raw';
+import volumeCompositeFrag from './volume_composite.frag?raw';
 
 /** Compose shader sources with shared chunks. */
 export const Shaders = {
   terrainVert,
-  terrainFrag,
+  terrainFrag: common + '\n' + terrainFrag,
   depthClearFrag,
   depthFloorVert,
   panoVert,
   panoFrag,
   surfaceVert: common + '\n' + surfaceVert,
   tileVert,
-  tileFrag: common + '\n' + lighting + '\n' + tileFrag,
+  tileFrag: common + '\n' + lighting + '\n' + cloudsCommon + '\n' + tileFrag,
   blackholeFrag: common + '\n' + blackholeFrag,
   landmarkVert,
   landmarkFrag: common + '\n' + landmarkFrag,
-  terrestrialFrag: common + '\n' + lighting + '\n' + terrestrialFrag,
+  terrestrialFrag: common + '\n' + lighting + '\n' + terrestrialCommon + '\n' + cloudsCommon + '\n' + terrestrialFrag,
+  fullscreenVert,
+  volumeVert,
+  volumeGalaxyFrag: common + '\n' + volumeCommon + '\n' + volumeGalaxyFrag,
+  volumeNebulaFrag: common + '\n' + volumeCommon + '\n' + volumeNebulaFrag,
+  volumeCompositeFrag,
+  groundHeightFrag: common + '\n' + terrestrialCommon + '\n' + groundCommon + '\n' + groundHeightFrag,
+  groundAlbedoFrag: common + '\n' + terrestrialCommon + '\n' + groundCommon + '\n' + groundAlbedoFrag,
   gasgiantFrag: common + '\n' + lighting + '\n' + gasgiantFrag,
   starFrag: common + '\n' + starFrag,
   atmosphereVert,
   atmosphereFrag: common + '\n' + atmosphereFrag,
-  cloudsFrag: common + '\n' + lighting + '\n' + cloudsFrag,
+  cloudsFrag: common + '\n' + lighting + '\n' + cloudsCommon + '\n' + cloudsFrag,
   ringsVert,
   ringsFrag: common + '\n' + lighting + '\n' + ringsFrag,
   ringRockVert: common + '\n' + ringRockVert,
   ringRockFrag: common + '\n' + lighting + '\n' + ringRockFrag,
   ringDustVert: common + '\n' + ringDustVert,
   ringDustFrag: common + '\n' + lighting + '\n' + ringDustFrag,
+  plumeVert: common + '\n' + plumeVert,
+  cometVert: common + '\n' + cometVert,
+  cometFrag: common + '\n' + cometFrag,
+  plumeFrag: common + '\n' + lighting + '\n' + plumeFrag,
   coronaFrag: common + '\n' + coronaFrag,
   billboardVert,
   pointsVert,

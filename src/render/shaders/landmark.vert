@@ -5,18 +5,20 @@
 attribute vec3 iPos;      // pc
 attribute float iRadius;  // pc
 attribute vec3 iColor;
-attribute float iKind;    // 0 nebula, 1 cluster, 2 remnant, 3 star
+attribute float iKind;    // 0 nebula, 1 cluster, 2 remnant, 3 star, 4 pulsar, 5 planetary nebula, 6 globular cluster
 attribute float iAbsMag;
 attribute float iSeed;
 attribute float iIndex;
 attribute float iImg;     // atlas slot of the photograph, −1 = procedural
 attribute float iSpan;    // half-width of the sprite in object radii
+attribute float iCloud;   // 1 when a volumetric cloud currently stands in for this object up close
 uniform vec3 uCamPc;
 uniform float uSkyRadius;
 uniform float uPxPerRad;
 uniform float uK;         // flux → alpha·px² calibration (shared with the galaxy sprites)
 uniform float uHideIndex; // instance to hide (we are inside its system)
 uniform float uCloudOn;   // 1 once the volumetric clouds exist: photographed sprites yield to them when resolved
+uniform float uDaylight;  // 0 night sky … 1 drowned in a daytime sky
 varying vec2 vUv;
 varying vec3 vColor;
 varying float vAlpha;
@@ -32,7 +34,7 @@ void main() {
   float ratio = d / iRadius;
   float ang = atan(iRadius / d);
   float px = ang * uPxPerRad;
-  bool star = iKind > 2.5;
+  bool star = iKind > 2.5 && iKind < 4.5;
   // the sprite reaches `iSpan` radii (1.6 for procedural shapes, the photo's field otherwise);
   // never smaller than a few pixels
   float halfPx = max(px * iSpan, star ? 2.6 : 3.5);
@@ -47,16 +49,22 @@ void main() {
   if (star) {
     alpha = min(1.0, 0.2 + 0.9 * pow(flux, 0.45));
   } else {
-    float pxc = max(px, 0.75);
+    // clusters spread their light over the drawn sprite: a tiny one stays a faint fuzzy point
+    // instead of a minimum-size sprite at full surface brightness
+    bool cluster = (iKind > 0.5 && iKind < 1.5) || (iKind > 5.5 && iKind < 6.5);
+    float pxc = cluster ? max(px, halfPx / iSpan) : max(px, 0.75);
     float physical = min(uK * flux / (0.61 * pxc * pxc), 1.0);
-    // navigation aid: stays clearly visible once we are within a few hundred radii
-    float near = 0.6 * smoothstep(600.0, 60.0, ratio);
+    // navigation aid: stays clearly visible once we are within a few hundred radii (generated
+    // globulars reach across the whole galaxy: theirs is tighter, farther out they are physical)
+    float nearR = iKind > 5.5 ? 150.0 : 600.0;
+    float near = (cluster ? 0.3 : 0.6) * smoothstep(nearR, nearR * 0.1, ratio);
     alpha = max(physical, near);
   }
   // fade out when flying through it (a flat sprite would otherwise fill the screen)
   alpha *= smoothstep(0.8, 2.2, ratio);
   // the photograph is only the far LOD of its 3-D cloud (same curve as NebulaClouds.handover)
-  if (iImg >= 0.0 && uCloudOn > 0.5) alpha *= 1.0 - smoothstep(8.0, 20.0, px);
+  if ((iImg >= 0.0 && uCloudOn > 0.5) || iCloud > 0.5) alpha *= 1.0 - smoothstep(8.0, 20.0, px);
+  alpha *= 1.0 - uDaylight;
   if (abs(iIndex - uHideIndex) < 0.5) alpha = 0.0;
   if (alpha < 0.002) gl_Position = vec4(2.0, 2.0, 2.0, 1.0);
 
