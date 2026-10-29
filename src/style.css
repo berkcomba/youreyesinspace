@@ -677,7 +677,8 @@ kbd {
     max-height: 42dvh; padding: 12px 14px 14px;
   }
   #mission, #tours, #events { max-height: 60dvh; }
-  .next-event { top: auto; bottom: calc(100px + env(safe-area-inset-bottom)); right: 8px; left: 8px; max-width: none; justify-content: center; }
+  /* #ui: the base .next-event rule comes later in the file and would put `top` back */
+  #ui .next-event { top: auto; bottom: calc(128px + env(safe-area-inset-bottom)); right: 8px; left: 8px; max-width: none; justify-content: center; }
   #ui:has(#info:not([hidden])) .next-event { display: none; }
   .event-actions button { height: 34px; font-size: 12.5px; }
   body.embed .tour-subtitle { font-size: 12.5px; }

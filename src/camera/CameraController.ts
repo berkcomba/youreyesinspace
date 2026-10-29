@@ -57,6 +57,18 @@ interface Autopilot {
   up1?: Vector3;
   /** 'pose': end point, aim point and screen-up in the target's body frame (object coordinates, km) */
   pose?: { pos: Vector3; look: Vector3; up: Vector3; frame: Quaternion | null; descend: boolean };
+  /**
+   * 'goto' onto something on (or just above) a planet whose path round the target would cut
+   * through the planet: flown round the planet's centre instead, with the start offset from it.
+   * Undefined until decided on the first frame.
+   */
+  around?: { body: CelestialBody; start: Vector3 } | null;
+  /**
+   * 'goto' onto a surface object: the flight is laid out in its planet's spinning frame (the
+   * planet's rotation and `r0` / `dir1` / `around.start` as they were at the start), so a fast
+   * clock cannot turn the ground into the path
+   */
+  spin?: { body: CelestialBody; q: Quaternion; r0: Vector3; dir1: Vector3; start: Vector3 | null };
 }
 
 const _v = new Vector3();
@@ -81,6 +93,45 @@ const MOVE_KEYS = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyQ', 'KeyE', 'KeyR', 'KeyF
 function smoothstep(t: number): number {
   t = Math.min(Math.max(t, 0), 1);
   return t * t * (3 - 2 * t);
+}
+
+/** slerp of two unit vectors (`out` may not alias them) */
+function slerpDir(from: Vector3, to: Vector3, s: number, out: Vector3): Vector3 {
+  const ang = Math.acos(Math.min(Math.max(from.dot(to), -1), 1));
+  if (ang < 1e-4) return out.copy(from);
+  const sa = Math.sin(ang);
+  return out.copy(from).multiplyScalar(Math.sin((1 - s) * ang) / sa).addScaledVector(to, Math.sin(s * ang) / sa);
+}
+
+const _from = new Vector3();
+const _to = new Vector3();
+
+/** 'goto' path: swung round the target, distance shrinking geometrically */
+function targetPath(ap: Autopilot, tgtPos: Vector3, s: number, out: Vector3): Vector3 {
+  const d0 = Math.max(ap.r0.length(), 1e-3);
+  const dist = Math.exp((1 - s) * Math.log(d0) + s * Math.log(ap.dist1));
+  slerpDir(_from.copy(ap.r0).normalize(), ap.dir1, s, _to);
+  return out.copy(tgtPos).addScaledVector(_to, dist);
+}
+
+/**
+ * 'goto' path round the planet a surface target sits on: direction slerped about the planet's
+ * centre, height over a sphere a little inside it shrinking geometrically, plus a climb that
+ * grows with the arc (to the far side: about a radius up), so the planet stays in frame while
+ * the camera swings round it.
+ */
+function aroundPath(ap: Autopilot, around: { body: CelestialBody; start: Vector3 }, tgtPos: Vector3, s: number, out: Vector3): Vector3 {
+  const c = around.body.position;
+  const end = _to.copy(tgtPos).addScaledVector(ap.dir1, ap.dist1).sub(c);
+  const r1 = end.length(), r0 = around.start.length();
+  const base = 0.97 * Math.min(around.body.radius, r1);
+  const h = Math.exp((1 - s) * Math.log(Math.max(r0 - base, 1e-3)) + s * Math.log(Math.max(r1 - base, 1e-3)));
+  _from.copy(around.start).normalize();
+  end.normalize();
+  const ang = Math.acos(Math.min(Math.max(_from.dot(end), -1), 1));
+  const hop = around.body.radius * 1.1 * Math.sin(Math.PI * s) * (ang / Math.PI);
+  slerpDir(_from, end, s, out);
+  return out.multiplyScalar(base + h + hop).add(c);
 }
 
 /**
@@ -254,6 +305,23 @@ export class CameraController {
    * away, ending in orbit mode around it. Used by guided tours for overviews and surface close-ups.
    * `durationS` overrides the distance-based flight time; `up1` fixes the roll at arrival.
    */
+  /** the planet a surface target ('goto') sits on, when the path round the target would dive into it */
+  private parentInTheWay(ap: Autopilot, tgt: CelestialBody): { body: CelestialBody; start: Vector3 } | null {
+    const p = tgt.parent;
+    if (!p || tgt.data.orbit?.kind !== 'surface') return null;
+    // away from the target the path must clear the ground by a few km (relief, oblateness); the
+    // last stretch onto a surface target is meant to be low
+    const clear = Math.max(p.radius, tgt.position.distanceTo(p.position)) + 5;
+    const pt = new Vector3();
+    for (let i = 1; i < 64; i++) {
+      targetPath(ap, tgt.position, i / 64, pt);
+      if (pt.distanceTo(tgt.position) > 30 && pt.distanceTo(p.position) < clear) {
+        return { body: p, start: new Vector3().copy(tgt.position).add(ap.r0).sub(p.position) };
+      }
+    }
+    return null;
+  }
+
   goToVantage(body: CelestialBody, dir1: Vector3, dist1: number, durationS?: number, up1?: Vector3): void {
     this.catchUp();
     const r0 = _v.copy(this.position).sub(body.position);
@@ -548,19 +616,22 @@ export class CameraController {
         _q.setFromRotationMatrix(_m);
         this.quaternion.copy(ap.q0).slerp(_q, s);
       } else if (ap.kind === 'goto' || ap.kind === 'gotoPoint') {
-        const d0 = Math.max(ap.r0.length(), 1e-3);
-        const dist = Math.exp((1 - s) * Math.log(d0) + s * Math.log(ap.dist1));
-        const from = _v.copy(ap.r0).normalize();
-        // slerp direction
-        const dot = Math.min(Math.max(from.dot(ap.dir1), -1), 1);
-        const ang = Math.acos(dot);
-        let dir: Vector3;
-        if (ang < 1e-4) dir = from;
-        else {
-          const sa = Math.sin(ang);
-          dir = _v2.copy(from).multiplyScalar(Math.sin((1 - s) * ang) / sa).addScaledVector(ap.dir1, Math.sin(s * ang) / sa);
+        if (ap.spin === undefined && tgt?.parent && tgt.data.orbit?.kind === 'surface' && ap.kind === 'goto') {
+          ap.spin = { body: tgt.parent, q: tgt.parent.rotation.clone(), r0: ap.r0.clone(), dir1: ap.dir1.clone(), start: null };
         }
-        this.position.copy(tgtPos).addScaledVector(dir, dist);
+        if (ap.around === undefined) {
+          ap.around = tgt && ap.kind === 'goto' ? this.parentInTheWay(ap, tgt) : null;
+          if (ap.spin && ap.around) ap.spin.start = ap.around.start.clone();
+        }
+        if (ap.spin) {
+          const sp = ap.spin;
+          _q.copy(sp.q).invert().premultiply(sp.body.rotation);
+          ap.r0.copy(sp.r0).applyQuaternion(_q);
+          ap.dir1.copy(sp.dir1).applyQuaternion(_q);
+          if (ap.around && sp.start) ap.around.start.copy(sp.start).applyQuaternion(_q);
+        }
+        if (ap.around) aroundPath(ap, ap.around, tgtPos, s, this.position);
+        else targetPath(ap, tgtPos, s, this.position);
         // orientation: blend toward looking at target
         _m.lookAt(new Vector3(), _v.copy(tgtPos).sub(this.position), ap.up1 ? _v2.copy(ap.up1) : _v2.set(0, 1, 0).applyQuaternion(ap.q0));
         _q.setFromRotationMatrix(_m);
