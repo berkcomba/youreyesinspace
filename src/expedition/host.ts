@@ -22,6 +22,12 @@ export interface Universe3D {
   hasBody(id: string): boolean;
   hasStar(name: string): boolean;
   hasLandmark(id: string): boolean;
+  hasGalaxy(ref: string): boolean;
+  hasBlackHole(id: string): boolean;
+  blackHoleBody(id: string): string | null;
+  goToBlackHole(id: string): void;
+  goToGalaxyAt(ref: string, radii: number, swing: number): boolean;
+  goToVista(distPc: number, lean: number, name: string, aim?: string): void;
   flyToStarNamed(name: string): string | null;
   starBodyIn(name: string): string | null;
   goHome(): void;
@@ -46,16 +52,42 @@ const LEG_SCALE: Record<string, number> = { voyager1: 5 };
 const STAR_LEGS: Array<[number, number, number]> = [[0, 0, 0], [18, 40, 16], [6, 95, 9], [24, 150, 5]];
 /** Nebulae and clusters: [distance in landmark radii, swing° around it] */
 const LANDMARK_LEGS: Array<[number, number]> = [[3.2, 0], [2.8, 30], [2.3, 60], [1.9, 95]];
+/** Galaxies: [distance in galaxy radii (× the node's zoom), swing°] */
+const GALAXY_LEGS: Array<[number, number]> = [[2.6, 0], [2.2, 30], [1.8, 55], [1.5, 80]];
+/** Black holes (radii of the hole); leg 0 is the flight itself, a node's overview replaces leg 3 */
+const HOLE_LEGS: Array<[number, number, number]> = [[0, 0, 0], [20, 40, 60], [10, 95, 40], [25, 150, 28]];
+/** Scale shots: [share of the node's vista distance, lean° away from the galactic centre] */
+const VISTA_LEGS: Array<[number, number]> = [[1, 0], [0.85, 20], [0.7, 40], [0.6, 60]];
 
-/** Where the camera is aimed for a node: its body, star or landmark (for label scoping). */
+/** Where the camera is aimed for a node: its body, star, landmark or black hole (for label scoping). */
 function scopeOf(app: Universe3D, n: ExpeditionNode): string | null {
+  if (n.blackhole) return app.blackHoleBody(n.blackhole);
   return n.body ?? (n.star ? app.starBodyIn(n.star) : n.landmark) ?? null;
+}
+
+/** The scene has whatever the node flies to. */
+function inScene(app: Universe3D, n: ExpeditionNode): boolean {
+  if (n.body) return app.hasBody(n.body);
+  if (n.star) return app.hasStar(n.star);
+  if (n.landmark) return app.hasLandmark(n.landmark);
+  if (n.galaxy) return app.hasGalaxy(n.galaxy);
+  if (n.blackhole) return app.hasBlackHole(n.blackhole);
+  return !!n.vista;
 }
 
 function flyLeg(app: Universe3D, n: ExpeditionNode, leg: number): Promise<void> {
   const k = Math.min(leg, 3);
   if (n.landmark) {
     app.goToLandmarkAt(n.landmark, ...LANDMARK_LEGS[k]);
+  } else if (n.galaxy) {
+    app.goToGalaxyAt(n.galaxy, GALAXY_LEGS[k][0] * (n.zoom ?? 1), GALAXY_LEGS[k][1]);
+  } else if (n.vista) {
+    app.goToVista(n.vista * VISTA_LEGS[k][0], VISTA_LEGS[k][1], n.title, n.aim);
+  } else if (n.blackhole) {
+    const here = app.blackHoleBody(n.blackhole);
+    if (leg === 0 || !here) app.goToBlackHole(n.blackhole);
+    else if (leg >= 3 && n.overview) app.goToOverview(n.overview, 7);
+    else app.goToVantageOf(here, HOLE_LEGS[k][0], HOLE_LEGS[k][1], HOLE_LEGS[k][2], 4.5);
   } else if (n.star) {
     const here = app.starBodyIn(n.star);
     if (leg === 0 || !here) app.flyToStarNamed(n.star);
@@ -575,8 +607,7 @@ class Cockpit {
     const st = nodeState(n, this.discovered, this.assisted);
     const practiceRun = n.id === ROOT;
     if (st !== 'reachable' && !practiceRun) return;
-    const inScene = n.body ? this.app.hasBody(n.body) : n.star ? this.app.hasStar(n.star) : n.landmark ? this.app.hasLandmark(n.landmark) : false;
-    if (!inScene) { this.toast('This destination is not available in the simulation yet.'); return; }
+    if (!inScene(this.app, n)) { this.toast('This destination is not available in the simulation yet.'); return; }
     this.target = n;
     if (!this.c.progress || this.c.progress.nodeId !== id) this.c.progress = { nodeId: id, gate: 0, attempt: 1, used: [], assisted: false, correct: 0, answers: 0 };
     this.logLine(`Expedition to ${n.title} started${hostPick ? ' (host selected)' : ''}`);

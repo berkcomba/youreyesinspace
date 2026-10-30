@@ -886,6 +886,80 @@ class App implements UIHost {
     return true;
   }
 
+  /** Galaxy by catalogue name fragment, or `#i` (`#0` = the Milky Way). */
+  private galaxyNamed(ref: string): number | null {
+    if (ref.startsWith('#')) return parseInt(ref.slice(1), 10);
+    const g = this.universe.galaxies;
+    for (let i = 1; i < g.catalogCount; i++) if (g.rawName(i).includes(ref)) return i;
+    return null;
+  }
+
+  hasGalaxy(ref: string): boolean {
+    return this.galaxyNamed(ref) !== null;
+  }
+
+  hasBlackHole(id: string): boolean {
+    return !!this.universe.blackHole(id);
+  }
+
+  /** The black hole's body id when we are already in its system, otherwise null. */
+  blackHoleBody(id: string): string | null {
+    const bh = this.universe.blackHole(id);
+    return bh && bh.systemStarId === this.universe.current.starId ? bh.entry.bodyId : null;
+  }
+
+  /** Stop `radii` galaxy radii from its centre, above the disc, the approach swung `swing`° around it. */
+  goToGalaxyAt(ref: string, radii: number, swing: number): boolean {
+    const i = this.galaxyNamed(ref);
+    if (i === null) return false;
+    const u = this.universe;
+    const g = u.galaxies;
+    this.selectGalaxy(i);
+    const centre = u.galaxyRelative(i, new Vector3(0, 0, 0));
+    const R = g.radius[i] * PARSEC_KM;
+    const normal = new Vector3(g.normal[i * 3], g.normal[i * 3 + 1], g.normal[i * 3 + 2]);
+    const from = new Vector3().copy(this.camera.position).sub(centre);
+    if (from.lengthSq() === 0) from.copy(normal);
+    from.normalize();
+    if (from.dot(normal) < 0) normal.negate();
+    const base = from.lerp(normal, 0.55).normalize();
+    const side = new Vector3().crossVectors(normal, base);
+    if (side.lengthSq() < 1e-6) side.crossVectors(normal, new Vector3(1, 0, 0));
+    side.normalize();
+    const dir = base.multiplyScalar(Math.cos(swing * DEG)).addScaledVector(side, Math.sin(swing * DEG)).normalize();
+    this.camera.goToPoint(centre, R * radii, dir, { radius: R * 0.02, name: g.name(i) });
+    return true;
+  }
+
+  /**
+   * Pull back `distPc` from the Sun, above the galactic plane and leaning away from the galactic
+   * centre by `lean`°, looking home: the scale shots (our arm, the Local Group, the cosmic web).
+   * With `aim` (a galaxy) the camera looks at the midpoint between home and that galaxy instead,
+   * from across the line joining them, so both are in frame.
+   */
+  goToVista(distPc: number, lean: number, name: string, aim?: string): void {
+    const u = this.universe;
+    const sun = u.starRelative('c0', new Vector3(0, 0, 0));
+    const north = raDecToScene(192.859, 27.128, new Vector3());
+    const gc = raDecToScene(266.405, -28.936, new Vector3());
+    const gi = aim ? this.galaxyNamed(aim) : null;
+    this.selectGalaxy(gi);
+    let centre = sun;
+    let dir: Vector3;
+    if (gi === null) {
+      dir = north.multiplyScalar(Math.cos(lean * DEG)).addScaledVector(gc, -Math.sin(lean * DEG)).normalize();
+    } else {
+      const g = u.galaxyRelative(gi, new Vector3(0, 0, 0));
+      const axis = new Vector3().copy(g).sub(sun).normalize();
+      const up = north.addScaledVector(axis, -north.dot(axis)).normalize();
+      const side = new Vector3().crossVectors(axis, up);
+      centre = sun.add(g).multiplyScalar(0.5);
+      dir = up.multiplyScalar(Math.cos(lean * DEG)).addScaledVector(side, Math.sin(lean * DEG)).normalize();
+    }
+    const D = distPc * PARSEC_KM;
+    this.camera.goToPoint(centre, D, dir, { radius: D * 0.02, name });
+  }
+
   /* ---------------- tour cues ---------------- */
 
   /** Planets, moons and small bodies get the backlit tour composition (Sun over the limb). */

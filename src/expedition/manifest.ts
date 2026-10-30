@@ -32,6 +32,16 @@ export interface ExpeditionNode {
   star?: string;
   /** or: a nebula / cluster landmark id */
   landmark?: string;
+  /** or: a galaxy by catalogue name ('#0' = the Milky Way) */
+  galaxy?: string;
+  /** or: a black hole by universal id (b0 = Sgr A*, cygx1, …) */
+  blackhole?: string;
+  /** or: pulled back this many parsecs from the Sun, for scales no single object shows */
+  vista?: number;
+  /** a vista framing home and this galaxy together */
+  aim?: string;
+  /** a galaxy shot this many times wider than usual */
+  zoom?: number;
   /** a region is shown from above its orbit instead of up close */
   overview?: string;
   summary?: string;
@@ -239,50 +249,250 @@ export const NODES: ExpeditionNode[] = [
   }),
 
   // ── III · Milky Way ───────────────────────────────────────────────
-  N('G01', 'milkyway', 'Milky Way Survey', 'CONCEPT', ['I15'], 'Galactic structure and scale'),
-  N('G02', 'milkyway', 'Orion Arm', 'REGION', ['G01'], 'Our place in the galaxy'),
-  N('G03', 'milkyway', 'Crab Nebula', 'OBJECT', ['G02'], 'Supernova remnant'),
-  N('G04', 'milkyway', 'Crab Pulsar', 'OBJECT', ['G03'], 'Neutron stars and pulsar beams'),
-  N('G05', 'milkyway', 'Geminga', 'OBJECT', ['G02'], 'Pulsars, gamma-ray emission'),
-  N('G06', 'milkyway', 'Vela Pulsar', 'OBJECT', ['G02'], 'Rapid rotation, beam geometry'),
-  N('G07', 'milkyway', 'Cassiopeia A', 'OBJECT', ['G02'], 'Supernova debris'),
-  N('G08', 'milkyway', 'PSR B1919+21', 'OBJECT', ['G02'], 'First discovered pulsar'),
-  N('G09', 'milkyway', 'PSR B1257+12', 'OBJECT', ['G08'], 'Pulsar planets'),
-  N('G10', 'milkyway', 'PSR J0437−4715', 'OBJECT', ['G08'], 'Millisecond pulsars'),
-  N('G11', 'milkyway', 'PSR J1748−2446ad', 'OBJECT', ['G08'], 'Extreme stellar rotation'),
-  N('G12', 'milkyway', 'Cygnus X-1', 'OBJECT', ['G02'], 'Stellar-mass black holes'),
-  N('G13', 'milkyway', 'Carina Nebula', 'REGION', ['G02'], 'Massive stars, stellar nurseries'),
-  N('G14', 'milkyway', 'Eta Carinae', 'OBJECT', ['G13'], 'Massive unstable stars'),
-  N('G15', 'milkyway', 'Omega Centauri', 'REGION', ['G14', 'G02'], 'Globular star clusters'),
-  N('G16', 'milkyway', 'Galactic Halo', 'CONCEPT', ['G15'], 'Halo and globular clusters'),
-  N('G17', 'milkyway', 'Galactic Center Survey', 'REGION', ['G12', 'G16'], 'Dense galactic centre'),
-  N('G18', 'milkyway', 'Sagittarius A*', 'OBJECT', ['G17'], 'Supermassive black hole'),
-  N('G19', 'milkyway', 'S2 Orbit', 'REGION', ['G18'], 'Stellar orbits around Sgr A*'),
-  N('G20', 'milkyway', 'Milky Way Exterior', 'CONCEPT', ['G19'], 'Galaxy-wide view, size comparison'),
+  N('G01', 'milkyway', 'Milky Way Survey', 'CONCEPT', ['I15'], 'Galactic structure and scale', {
+    available: true, galaxy: '#0',
+    summary: 'Our home galaxy: a barred spiral about 100,000 light-years across, holding hundreds of billions of stars in a thin, slowly turning disc.',
+    facts: ['Roughly 100–400 billion stars', 'The disc is only about 1,000 light-years thick', 'A bar of old stars crosses its central bulge'],
+    sources: [WIKI('Milky_Way'), NASA('universe/galaxies/')],
+  }),
+  N('G02', 'milkyway', 'Orion Arm', 'REGION', ['G01'], 'Our place in the galaxy', {
+    available: true, vista: 4000,
+    summary: 'A modest spiral arm about 26,000 light-years from the galactic centre, home to the Sun, the Orion Nebula and most stars you see at night.',
+    facts: ['Also called the Local Arm or Orion–Cygnus Arm', 'Lies between the Sagittarius and Perseus arms', 'The Sun circles the galaxy once every ~230 million years'],
+    sources: [WIKI('Orion_Arm'), WIKI('Galactic_year')],
+  }),
+  N('G03', 'milkyway', 'Crab Nebula', 'OBJECT', ['G02'], 'Supernova remnant', {
+    available: true, landmark: 'l-m1',
+    summary: 'The glowing wreck of a star whose explosion lit up the daytime sky in 1054, still expanding at about 1,500 km per second.',
+    facts: ['Number 1 in Charles Messier\'s catalogue (M1)', 'About 6,500 light-years away in Taurus', 'Roughly 11 light-years across'],
+    sources: [WIKI('Crab_Nebula'), NASA('mission/hubble/science/explore-the-night-sky/hubble-messier-catalog/messier-1/')],
+  }),
+  N('G04', 'milkyway', 'Crab Pulsar', 'OBJECT', ['G03'], 'Neutron stars and pulsar beams', {
+    available: true, landmark: 'l-crabpsr',
+    summary: 'A city-sized neutron star at the heart of the Crab Nebula, spinning about 30 times a second and powering the whole cloud around it.',
+    facts: ['Spins once every ~33 milliseconds', 'Discovered in 1968', 'First pulsar seen flashing in visible light (1969)'],
+    sources: [WIKI('Crab_Pulsar')],
+  }),
+  N('G05', 'milkyway', 'Geminga', 'OBJECT', ['G02'], 'Pulsars, gamma-ray emission', {
+    available: true, landmark: 'l-geminga',
+    summary: 'A nearby dead star that blazes in gamma rays yet is nearly silent in radio, so mysterious that its name means "it isn\'t there".',
+    facts: ['Roughly 800 light-years away, towards Gemini', 'Spins about 4 times a second', 'Found as a gamma-ray source in 1972'],
+    sources: [WIKI('Geminga')],
+  }),
+  N('G06', 'milkyway', 'Vela Pulsar', 'OBJECT', ['G02'], 'Rapid rotation, beam geometry', {
+    available: true, landmark: 'l-vela',
+    summary: 'A neutron star spinning about 11 times a second inside the shredded remains of a supernova seen by our Ice Age ancestors.',
+    facts: ['About 1,000 light-years away in Vela, the Sails', 'One of the brightest gamma-ray sources in the sky', 'Famous for sudden spin-up "glitches"'],
+    sources: [WIKI('Vela_Pulsar'), WIKI('Vela_Supernova_Remnant')],
+  }),
+  N('G07', 'milkyway', 'Cassiopeia A', 'OBJECT', ['G02'], 'Supernova debris', {
+    available: true, landmark: 'l-casa',
+    summary: 'A bubble of star guts about 11,000 light-years away, whose light reached Earth around 1680, and one of the brightest radio sources in the sky.',
+    facts: ['About 10 light-years across', 'A neutron star hides at its centre', 'Rich in silicon, sulfur and iron forged by the dead star'],
+    sources: [WIKI('Cassiopeia_A'), 'https://chandra.harvard.edu/photo/2017/casa_life/'],
+  }),
+  N('G08', 'milkyway', 'PSR B1919+21', 'OBJECT', ['G02'], 'First discovered pulsar', {
+    available: true, landmark: 'l-b1919',
+    summary: 'The first pulsar ever found: a ticking radio signal so regular in 1967 that it was jokingly nicknamed "Little Green Men 1".',
+    facts: ['Pulses every ~1.337 seconds', 'Discovered by Jocelyn Bell Burnell in 1967', 'Its pulse plot became a famous album cover'],
+    sources: [WIKI('PSR_B1919%2B21'), WIKI('Jocelyn_Bell_Burnell')],
+  }),
+  N('G09', 'milkyway', 'PSR B1257+12', 'OBJECT', ['G08'], 'Pulsar planets', {
+    available: true, landmark: 'l-lich',
+    summary: 'A dead star named Lich with three planets in tow: the first worlds ever confirmed beyond our Solar System, announced in 1992.',
+    facts: ['Planets named Draugr, Poltergeist and Phobetor', 'Spins about 160 times a second', 'Found with the Arecibo radio telescope'],
+    sources: [WIKI('PSR_B1257%2B12'), 'https://www.iau.org/public/themes/naming_exoworlds/'],
+  }),
+  N('G10', 'milkyway', 'PSR J0437−4715', 'OBJECT', ['G08'], 'Millisecond pulsars', {
+    available: true, landmark: 'l-j0437',
+    summary: 'The nearest and brightest millisecond pulsar, about 500 light-years away, spinning about 174 times a second with a white dwarf partner.',
+    facts: ['In the southern constellation Pictor', 'Its white dwarf companion orbits every ~5.7 days', 'NICER measured its radius at about 11 km'],
+    sources: [WIKI('PSR_J0437%E2%88%924715'), 'https://www.nasa.gov/mission/nicer/'],
+  }),
+  N('G11', 'milkyway', 'PSR J1748−2446ad', 'OBJECT', ['G08'], 'Extreme stellar rotation', {
+    available: true, landmark: 'l-j1748',
+    summary: 'The fastest-spinning star known: a city-sized neutron star in the globular cluster Terzan 5 that turns 716 times every second.',
+    facts: ['Spins 716 times per second', 'Lives in the crowded globular cluster Terzan 5', 'Found with the Green Bank Telescope, announced in 2006'],
+    sources: [WIKI('PSR_J1748%E2%88%922446ad'), WIKI('Terzan_5')],
+  }),
+  N('G12', 'milkyway', 'Cygnus X-1', 'OBJECT', ['G02'], 'Stellar-mass black holes', {
+    available: true, blackhole: 'cygx1',
+    summary: 'About 7,000 light-years away in Cygnus, a black hole of about 21 Suns tears gas from a blue supergiant and glows fiercely in X-rays.',
+    facts: ['The first object widely accepted as a black hole', 'Its companion star circles it every 5.6 days', 'Subject of a famous 1974 bet by Stephen Hawking'],
+    sources: [WIKI('Cygnus_X-1')],
+  }),
+  N('G13', 'milkyway', 'Carina Nebula', 'REGION', ['G02'], 'Massive stars, stellar nurseries', {
+    available: true, landmark: 'l-carina',
+    summary: 'One of the biggest, brightest stellar nurseries in our galaxy, about 7,500–8,500 light-years away, where monster stars carve towering pillars.',
+    facts: ['Catalogued as NGC 3372', 'Larger and brighter in our sky than the Orion Nebula', 'Home of Hubble\'s "Mystic Mountain" and Webb\'s "Cosmic Cliffs"'],
+    sources: [WIKI('Carina_Nebula'), NASA('missions/webb/')],
+  }),
+  N('G14', 'milkyway', 'Eta Carinae', 'OBJECT', ['G13'], 'Massive unstable stars', {
+    available: true, landmark: 'l-etacar',
+    summary: 'A restless giant pair of stars, together more than 100 times the Sun\'s mass, wrapped in the glowing double cloud it blasted out in the 1840s.',
+    facts: ['Briefly the second-brightest star in the sky in 1843', 'Hidden inside the two-lobed Homunculus Nebula', 'Two huge stars orbit each other every 5.5 years'],
+    sources: [WIKI('Eta_Carinae'), WIKI('Homunculus_Nebula')],
+  }),
+  N('G15', 'milkyway', 'Omega Centauri', 'REGION', ['G14', 'G02'], 'Globular star clusters', {
+    available: true, landmark: 'l-omegacen',
+    summary: 'The Milky Way\'s largest globular cluster: about 10 million ancient stars in a glittering ball, possibly the leftover heart of a swallowed galaxy.',
+    facts: ['About 17,000 light-years away, visible to the naked eye', 'Ptolemy catalogued it as a single star', 'Hubble found signs of a middle-weight black hole in 2024'],
+    sources: [WIKI('Omega_Centauri')],
+  }),
+  N('G16', 'milkyway', 'Galactic Halo', 'CONCEPT', ['G15'], 'Halo and globular clusters', {
+    available: true, galaxy: '#0', zoom: 1.6,
+    summary: 'A vast, faint sphere around the bright disc, scattered with ancient stars and globular clusters and filled with invisible dark matter.',
+    facts: ['Holds more than 150 globular clusters', 'Its stars are old and poor in heavy elements', 'Dark matter here outweighs all the stars'],
+    sources: [WIKI('Galactic_halo'), WIKI('Globular_cluster')],
+  }),
+  N('G17', 'milkyway', 'Galactic Center Survey', 'REGION', ['G12', 'G16'], 'Dense galactic centre', {
+    available: true, galaxy: '#0', zoom: 0.15,
+    summary: 'About 26,000 light-years away in Sagittarius, the galaxy\'s crowded core hides behind dust, revealed only in infrared, radio and X-rays.',
+    facts: ['Lies in the direction of Sagittarius', 'Dust blocks almost all of its visible light', 'Home to one of the densest star clusters known'],
+    sources: [WIKI('Galactic_Center')],
+  }),
+  N('G18', 'milkyway', 'Sagittarius A*', 'OBJECT', ['G17'], 'Supermassive black hole', {
+    available: true, blackhole: 'b0',
+    summary: 'The supermassive black hole at the heart of the Milky Way: about 4 million times the Sun\'s mass, first pictured by the Event Horizon Telescope in 2022.',
+    facts: ['About 4 million times the Sun\'s mass', 'First image released in May 2022', 'Its discovery earned a share of the 2020 Nobel Prize'],
+    sources: [WIKI('Sagittarius_A*'), NASA('resource/sagittarius-a/')],
+  }),
+  N('G19', 'milkyway', 'S2 Orbit', 'REGION', ['G18'], 'Stellar orbits around Sgr A*', {
+    available: true, blackhole: 'b0', overview: 's2',
+    summary: 'The star S2 swings around Sagittarius A* every 16 years, diving close enough to put Einstein\'s gravity to the test.',
+    facts: ['Completes one orbit in about 16 years', 'Passed about 120 AU from the black hole in 2018', 'Next closest approach expected around 2034'],
+    sources: [WIKI('S2_(star)'), 'https://www.eso.org/public/news/eso1825/'],
+  }),
+  N('G20', 'milkyway', 'Milky Way Exterior', 'CONCEPT', ['G19'], 'Galaxy-wide view, size comparison', {
+    available: true, galaxy: '#0', zoom: 3,
+    summary: 'Our home from outside: a barred spiral about 100,000 light-years wide with hundreds of billions of stars, and the Sun just one of them.',
+    facts: ['The disc is about 100,000 light-years across', 'The Sun circles the centre in about 230 million years', 'Gaia mapped nearly 2 billion of its stars'],
+    sources: [WIKI('Milky_Way'), 'https://www.esa.int/Science_Exploration/Space_Science/Gaia'],
+  }),
 
   // ── IV · Local Group ──────────────────────────────────────────────
-  N('L01', 'localgroup', 'Local Group Panorama', 'CONCEPT', ['G20'], 'Our galactic neighbourhood'),
-  N('L02', 'localgroup', 'Andromeda (M31)', 'OBJECT', ['L01'], 'Galaxy scale, approaching motion'),
-  N('L03', 'localgroup', 'M31*', 'OBJECT', ['L02'], 'Andromeda\'s central black hole'),
-  N('L04', 'localgroup', 'Triangulum (M33)', 'OBJECT', ['L01'], 'Spiral galaxies'),
-  N('L05', 'localgroup', 'M33 X-7', 'OBJECT', ['L04'], 'Massive stellar black hole'),
-  N('L06', 'localgroup', 'Large Magellanic Cloud', 'OBJECT', ['L01'], 'Satellite galaxies'),
-  N('L07', 'localgroup', 'Tarantula Nebula', 'REGION', ['L06'], 'Extreme star formation'),
-  N('L08', 'localgroup', 'R136a1', 'OBJECT', ['L07'], 'The most massive stars'),
-  N('L09', 'localgroup', 'SN 1987A', 'OBJECT', ['L06'], 'A supernova seen in our lifetime'),
-  N('L10', 'localgroup', 'Local Group Scale Finale', 'CONCEPT', ['L03', 'L05', 'L08'], 'Relative galaxy sizes and distances'),
+  N('L01', 'localgroup', 'Local Group Panorama', 'CONCEPT', ['G20'], 'Our galactic neighbourhood', {
+    available: true, vista: 1.2e6, aim: 'Andromeda',
+    summary: 'Our galactic home town: the Milky Way, Andromeda, Triangulum and dozens of small dwarf galaxies, all held together by gravity across ~10 million light-years.',
+    facts: ['More than 80 known member galaxies, most of them dwarfs', 'Andromeda and the Milky Way hold most of its mass', 'Gravity keeps it together while the universe expands around it'],
+    sources: [WIKI('Local_Group')],
+  }),
+  N('L02', 'localgroup', 'Andromeda (M31)', 'OBJECT', ['L01'], 'Galaxy scale, approaching motion', {
+    available: true, galaxy: 'Andromeda',
+    summary: 'The nearest big spiral galaxy, 2.5 million light-years away and about a trillion stars strong, falling toward the Milky Way at ~110 km/s.',
+    facts: ['The most distant thing most people can see with the naked eye', 'Edwin Hubble proved it is a separate galaxy in the 1920s', 'Spans about six full Moons across the sky in long exposures'],
+    sources: [WIKI('Andromeda_Galaxy'), NASA('mission/hubble/science/explore-the-night-sky/hubble-messier-catalog/messier-31/')],
+  }),
+  N('L03', 'localgroup', 'M31*', 'OBJECT', ['L02'], 'Andromeda\'s central black hole', {
+    available: true, blackhole: 'm31star',
+    summary: 'Andromeda\'s hidden giant: a black hole of more than 100 million Suns, sitting quietly inside a strange "double" nucleus of stars.',
+    facts: ['Tens of times heavier than the Milky Way\'s Sagittarius A*', 'Hubble saw the nucleus split into two bright lumps, P1 and P2', 'Very faint in X-rays, because it is barely feeding'],
+    sources: [WIKI('Andromeda_Galaxy'), WIKI('Supermassive_black_hole')],
+  }),
+  N('L04', 'localgroup', 'Triangulum (M33)', 'OBJECT', ['L01'], 'Spiral galaxies', {
+    available: true, galaxy: 'Üçgen',
+    summary: 'The Local Group\'s third-largest galaxy: a loose, star-forming spiral about 2.7 million light-years away, at the very edge of naked-eye vision.',
+    facts: ['Catalogued as Messier 33 in the constellation Triangulum', 'Home to NGC 604, a giant glowing nursery ~1,500 light-years wide', 'Has no detectable supermassive black hole at its centre'],
+    sources: [WIKI('Triangulum_Galaxy'), NASA('mission/hubble/science/explore-the-night-sky/hubble-messier-catalog/messier-33/')],
+  }),
+  N('L05', 'localgroup', 'M33 X-7', 'OBJECT', ['L04'], 'Massive stellar black hole', {
+    available: true, blackhole: 'm33x7',
+    summary: 'A black hole of ~16 Suns locked in a 3.45-day eclipsing dance with a monster star of ~70 Suns, 3 million light-years away.',
+    facts: ['Its weighing was announced in 2007 using Chandra and Gemini', 'The companion star passes in front of it every orbit', 'At the time, the heaviest stellar black hole known in a binary'],
+    sources: [WIKI('M33_X-7'), 'https://chandra.harvard.edu/photo/2007/m33x7/'],
+  }),
+  N('L06', 'localgroup', 'Large Magellanic Cloud', 'OBJECT', ['L01'], 'Satellite galaxies', {
+    available: true, galaxy: 'Büyük Macellan',
+    summary: 'The Milky Way\'s biggest satellite galaxy, 160,000 light-years away: a glowing cloud in the southern sky packed with nebulae and young stars.',
+    facts: ['Visible to the naked eye from the southern hemisphere', 'Named after Ferdinand Magellan\'s 1519–1522 voyage', 'Trailed by the Magellanic Stream, a long ribbon of gas'],
+    sources: [WIKI('Large_Magellanic_Cloud'), NASA('universe/galaxies/large-magellanic-cloud/')],
+  }),
+  N('L07', 'localgroup', 'Tarantula Nebula', 'REGION', ['L06'], 'Extreme star formation', {
+    available: true, landmark: 'l-30dor',
+    summary: 'The most active star factory in the Local Group: a glowing web of gas in the LMC so bright you can see it with the naked eye from 160,000 light-years.',
+    facts: ['Also called 30 Doradus', 'Its spidery filaments gave it the name Tarantula', 'Imaged in stunning detail by JWST in 2022'],
+    sources: [WIKI('Tarantula_Nebula'), 'https://esawebb.org/news/weic2212/'],
+  }),
+  N('L08', 'localgroup', 'R136a1', 'OBJECT', ['L07'], 'The most massive stars', {
+    available: true, landmark: 'l-r136a1',
+    summary: 'The heaviest star known: a blazing blue giant of roughly 200 Suns in the cluster R136, shining millions of times brighter than the Sun.',
+    facts: ['Lies in the heart of the Tarantula Nebula', 'Mass estimates were revised down from ~315 to ~200 Suns in 2022', 'Blows off its outer layers in fierce stellar winds'],
+    sources: [WIKI('R136a1'), 'https://noirlab.edu/public/news/noirlab2214/'],
+  }),
+  N('L09', 'localgroup', 'SN 1987A', 'OBJECT', ['L06'], 'A supernova seen in our lifetime', {
+    available: true, landmark: 'l-sn1987a',
+    summary: 'The closest supernova seen since 1604: a blue supergiant exploded in the LMC and lit up southern skies in February 1987.',
+    facts: ['About 168,000 light-years away', 'A burst of neutrinos arrived hours before the light', 'JWST found strong evidence of a neutron star inside in 2024'],
+    sources: [WIKI('SN_1987A'), 'https://esawebb.org/news/weic2404/'],
+  }),
+  N('L10', 'localgroup', 'Local Group Scale Finale', 'CONCEPT', ['L03', 'L05', 'L08'], 'Relative galaxy sizes and distances', {
+    available: true, vista: 2.5e6, aim: 'Andromeda',
+    summary: 'Galaxies are huge but packed close: shrink the Milky Way to a dinner plate and Andromeda is only a few metres away.',
+    facts: ['Andromeda is about 25 Milky Way widths away', 'Andromeda\'s light left it about 2.5 million years ago', 'The Local Group lies inside the Laniakea Supercluster'],
+    sources: [WIKI('Local_Group'), WIKI('Laniakea_Supercluster')],
+  }),
 
   // ── V · Cosmic Frontier ───────────────────────────────────────────
-  N('C01', 'frontier', 'Virgo Cluster', 'REGION', ['L10'], 'Clusters of galaxies'),
-  N('C02', 'frontier', 'M87 Galaxy', 'OBJECT', ['C01'], 'Giant elliptical galaxy'),
-  N('C03', 'frontier', 'M87*', 'OBJECT', ['C02'], 'Black-hole images, lensing'),
-  N('C04', 'frontier', 'Centaurus A', 'OBJECT', ['C01'], 'Active galactic nucleus'),
-  N('C05', 'frontier', 'Coma Cluster', 'REGION', ['C01'], 'Cluster mass, dark matter'),
-  N('C06', 'frontier', 'Laniakea', 'CONCEPT', ['C05'], 'Superclusters and cosmic flows'),
-  N('C07', 'frontier', 'Cosmic Filaments', 'CONCEPT', ['C06'], 'The cosmic web (illustrative)'),
-  N('C08', 'frontier', 'Cosmic Voids', 'CONCEPT', ['C07'], 'Low-density regions'),
-  N('C09', 'frontier', 'Looking Back in Time', 'CONCEPT', ['C08'], 'Redshift and lookback time'),
-  N('C10', 'frontier', 'Observable Universe Horizon', 'CONCEPT', ['C09'], 'An observational limit, not an edge'),
+  N('C01', 'frontier', 'Virgo Cluster', 'REGION', ['L10'], 'Clusters of galaxies', {
+    available: true, galaxy: 'M87', zoom: 20,
+    summary: 'The nearest big city of galaxies, about 54 million light-years away: up to 2,000 galaxies swarming around the giant M87, held together by dark matter.',
+    facts: ['Contains roughly 1,300–2,000 galaxies', 'Heart of the Virgo Supercluster, which includes the Milky Way', 'More than a dozen of its galaxies are in Messier\'s catalogue'],
+    sources: [WIKI('Virgo_Cluster'), WIKI('Virgo_Supercluster')],
+  }),
+  N('C02', 'frontier', 'M87 Galaxy', 'OBJECT', ['C01'], 'Giant elliptical galaxy', {
+    available: true, galaxy: 'M87',
+    summary: 'A colossal ball of stars at the centre of the Virgo Cluster, about 53 million light-years away, firing a jet thousands of light-years long from its black hole.',
+    facts: ['Also known as Virgo A, a powerful radio source', 'Has around 12,000 globular clusters', 'Its jet is about 5,000 light-years long'],
+    sources: [WIKI('Messier_87'), NASA('mission/hubble/science/explore-the-night-sky/hubble-messier-catalog/messier-87/')],
+  }),
+  N('C03', 'frontier', 'M87*', 'OBJECT', ['C02'], 'Black-hole images, lensing', {
+    available: true, blackhole: 'b1',
+    summary: 'The first black hole ever photographed: a monster of about 6.5 billion Suns, its shadow ringed by glowing gas, imaged by an Earth-sized virtual telescope.',
+    facts: ['Image released by the Event Horizon Telescope in April 2019', 'Observed in radio waves at a wavelength of 1.3 mm', 'Its shadow is wider than the event horizon, thanks to bent light'],
+    sources: [WIKI('Messier_87*'), 'https://eventhorizontelescope.org/press-release-april-10-2019-astronomers-capture-first-image-black-hole'],
+  }),
+  N('C04', 'frontier', 'Centaurus A', 'OBJECT', ['C01'], 'Active galactic nucleus', {
+    available: true, galaxy: 'Centaurus A',
+    summary: 'The nearest radio galaxy, about 12 million light-years away: a dusty wreck from an ancient merger, with jets and lobes that span many full Moons in our sky.',
+    facts: ['Also catalogued as NGC 5128', 'Its dark dust lane is the remains of a swallowed galaxy', 'Its radio lobes stretch across more sky than many full Moons'],
+    sources: [WIKI('Centaurus_A'), 'https://www.eso.org/public/news/eso0903/'],
+  }),
+  N('C05', 'frontier', 'Coma Cluster', 'REGION', ['C01'], 'Cluster mass, dark matter', {
+    available: true, vista: 1.2e8,
+    summary: 'A giant cluster of 1,000+ galaxies, about 320 million light-years away, where Fritz Zwicky first noticed in 1933 that most of the mass is missing from view.',
+    facts: ['Dominated by two giant ellipticals, NGC 4889 and NGC 4874', 'Filled with hot gas that glows in X-rays', 'Zwicky called the hidden mass "dunkle Materie": dark matter'],
+    sources: [WIKI('Coma_Cluster'), WIKI('Dark_matter')],
+  }),
+  N('C06', 'frontier', 'Laniakea', 'CONCEPT', ['C05'], 'Superclusters and cosmic flows', {
+    available: true, vista: 2.5e8,
+    summary: 'Our home supercluster, "immense heaven" in Hawaiian: about 100,000 galaxies spread over some 520 million light-years, all flowing toward the Great Attractor.',
+    facts: ['Defined in 2014 by Brent Tully and colleagues', 'Its borders are drawn from how galaxies move', 'The Virgo Supercluster is just one lobe of it'],
+    sources: [WIKI('Laniakea_Supercluster'), 'https://www.nature.com/articles/nature13674'],
+  }),
+  N('C07', 'frontier', 'Cosmic Filaments', 'CONCEPT', ['C06'], 'The cosmic web (illustrative)', {
+    available: true, vista: 6e8,
+    summary: 'On the grandest scales galaxies line up along threads and sheets, the cosmic web. The strands drawn in this game are illustrative, not a real map.',
+    facts: ['Clusters form where filaments meet', 'The Sloan Great Wall is over a billion light-years long', 'Thin, hot gas fills the space along the filaments'],
+    sources: [WIKI('Galaxy_filament'), WIKI('Observable_universe#Large-scale_structure')],
+  }),
+  N('C08', 'frontier', 'Cosmic Voids', 'CONCEPT', ['C07'], 'Low-density regions', {
+    available: true, vista: 1.5e9,
+    summary: 'Vast bubbles with very few galaxies. Voids fill most of the universe\'s volume; the Boötes Void alone is about 330 million light-years across.',
+    facts: ['The Boötes Void was discovered in 1981', 'Voids hold a few galaxies and very thin gas, not nothing', 'Matter drains out of voids toward the denser walls'],
+    sources: [WIKI('Void_(astronomy)'), WIKI('Boötes_Void')],
+  }),
+  N('C09', 'frontier', 'Looking Back in Time', 'CONCEPT', ['C08'], 'Redshift and lookback time', {
+    available: true, vista: 5e9,
+    summary: 'Light takes time to travel, so the deeper we look the further back we see, all the way to galaxies born a few hundred million years after the Big Bang.',
+    facts: ['Expanding space stretches light toward the red', 'Hubble showed in 1929 that distant galaxies recede faster', 'The oldest light we see left ~380,000 years after the Big Bang'],
+    sources: [WIKI('Redshift'), WIKI('Hubble\'s_law'), NASA('mission/webb/')],
+  }),
+  N('C10', 'frontier', 'Observable Universe Horizon', 'CONCEPT', ['C09'], 'An observational limit, not an edge', {
+    available: true, vista: 3.2e10,
+    summary: 'The end of the journey is not an edge: it is as far as light has had time to reach us in 13.8 billion years. The universe beyond may go on forever.',
+    facts: ['The universe is about 13.8 billion years old', 'The observable universe reaches ~46 billion light-years in every direction', 'The cosmic microwave background is the farthest light we can see'],
+    sources: [WIKI('Observable_universe'), WIKI('Cosmic_microwave_background'), 'https://www.esa.int/Science_Exploration/Space_Science/Planck'],
+  }),
 ];
 
 export const NODE = new Map(NODES.map((n) => [n.id, n]));
