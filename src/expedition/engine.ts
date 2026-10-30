@@ -13,10 +13,11 @@ export interface CrewRecord {
 }
 
 /**
- * Players by source: phones have a relay-minted hex id; `bot-…` are demo crew, `tw:…` / `kk:…`
- * Twitch / Kick chatters. Only the cockpit may speak for the last three.
+ * Players by source: phones have a relay-minted hex id; `bot-…` are demo crew, `tw:…` / `kk:…` /
+ * `yt:…` Twitch / Kick / YouTube chatters. Only the cockpit may speak for those.
  */
-export const isTrustedPid = (pid: string): boolean => /^(bot-|tw:|kk:)/.test(pid);
+export const isTrustedPid = (pid: string): boolean => /^(bot-|tw:|kk:|yt:)/.test(pid);
+const isChatPid = (pid: string): boolean => /^(tw:|kk:|yt:)/.test(pid);
 
 /** What reaches the ledger from phones (via the relay) or the cockpit (bots, chat). */
 export type CrewEvent =
@@ -225,7 +226,7 @@ export class Ledger {
   }
 
   private touch(pid: string, now: number, hello = false): void {
-    if (pid.startsWith('tw:') || pid.startsWith('kk:')) this.seen.set(pid, now + CHAT_MS);
+    if (isChatPid(pid)) this.seen.set(pid, now + CHAT_MS);
     else if (pid.startsWith('bot-') || !this.relay) this.seen.set(pid, now + HEARTBEAT_MS);
     else if (hello) this.seen.set(pid, Infinity);
   }

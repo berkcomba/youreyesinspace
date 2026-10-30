@@ -29,7 +29,7 @@ export interface Campaign {
   /** hull (0–100) and a space event's bonus or penalty for the next gate */
   ship?: { hull: number; next?: { mult?: number; time?: number } };
   log: Array<{ t: number; text: string }>;
-  settings: { practice: boolean; demoCrew: boolean; answerSeconds: number; voteSeconds: number; twitch?: string; kick?: string };
+  settings: { practice: boolean; demoCrew: boolean; answerSeconds: number; voteSeconds: number; twitch?: string; kick?: string; youtube?: string; cockpit?: boolean };
 }
 
 const KEY = 'yeits.expedition.v1';

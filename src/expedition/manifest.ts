@@ -42,6 +42,8 @@ export interface ExpeditionNode {
   aim?: string;
   /** a galaxy shot this many times wider than usual */
   zoom?: number;
+  /** or: inside a galaxy cluster, framed on these catalogued members */
+  cluster?: string[];
   /** a region is shown from above its orbit instead of up close */
   overview?: string;
   summary?: string;
@@ -434,7 +436,7 @@ export const NODES: ExpeditionNode[] = [
 
   // ── V · Cosmic Frontier ───────────────────────────────────────────
   N('C01', 'frontier', 'Virgo Cluster', 'REGION', ['L10'], 'Clusters of galaxies', {
-    available: true, galaxy: 'M87', zoom: 20,
+    available: true, cluster: ['M87', 'M86', 'M84', 'M49', 'M60', 'M100', 'M99'],
     summary: 'The nearest big city of galaxies, about 54 million light-years away: up to 2,000 galaxies swarming around the giant M87, held together by dark matter.',
     facts: ['Contains roughly 1,300–2,000 galaxies', 'Heart of the Virgo Supercluster, which includes the Milky Way', 'More than a dozen of its galaxies are in Messier\'s catalogue'],
     sources: [WIKI('Virgo_Cluster'), WIKI('Virgo_Supercluster')],

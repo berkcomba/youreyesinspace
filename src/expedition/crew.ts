@@ -3,7 +3,7 @@
  * no question bank, only the public snapshot the host broadcasts.
  */
 import './crew.css';
-import { GATE_NAMES, randomId, type GateScore, type HostToCrew, type PublicSnapshot } from './protocol';
+import { BOARD_MS, GATE_NAMES, randomId, type GateScore, type HostToCrew, type PublicSnapshot } from './protocol';
 import { openLink } from './link';
 import { sfx } from './sfx';
 
@@ -171,6 +171,10 @@ function body(): string {
             <span class="c-vbar"><i style="width:${(100 * o.votes) / total}%"></i></span>
           </button>`).join('')}</div>`;
     }
+    case 'BOARDING':
+      return `<section class="c-hero travel"><div class="c-kicker">Boarding</div><h1>${esc(t?.title ?? '')}</h1>
+        <p>Your seat is ready: look for your name in the cabin on the stream. Liftoff in moments!</p>
+        ${s.departsAt ? clockHtml(s.departsAt, BOARD_MS) : ''}</section>${progress()}${leaders()}`;
     case 'SPACE_EVENT': {
       const e = s.event;
       if (!e) return '';

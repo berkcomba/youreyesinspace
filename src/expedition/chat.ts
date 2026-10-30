@@ -1,10 +1,10 @@
 /**
- * Stream chat as a second way in: viewers type A, B, C or D in Twitch or Kick chat instead of
+ * Stream chat as a second way in: viewers type A, B, C or D in Twitch, Kick or YouTube chat instead of
  * opening the crew page. Read-only and anonymous (no login, no bot account): the cockpit just
  * listens, so nothing here can post to the chat or needs a token.
  */
 
-export type ChatSource = 'twitch' | 'kick';
+export type ChatSource = 'twitch' | 'kick' | 'youtube';
 export type ChatState = 'off' | 'connecting' | 'live' | 'error';
 export interface ChatLine { pid: string; nick: string; text: string }
 
@@ -112,6 +112,54 @@ export function kickChat(channelIn: string, onLine: (l: ChatLine) => void, onCha
     });
     return ws;
   }, onChange);
+  return feed;
+}
+
+/* ---------------- YouTube: the live chat, polled through the relay ---------------- */
+
+export function youtubeChat(refIn: string, onLine: (l: ChatLine) => void, onChange: () => void): ChatFeed {
+  const ref = refIn.trim();
+  const feed: ChatFeed = { source: 'youtube', channel: ref, state: 'off', close: () => {} };
+  if (!ref || ref.length > 200) { feed.state = 'error'; feed.error = 'Not a YouTube channel or video'; return feed; }
+  if (!RELAY_HTTP) { feed.state = 'error'; feed.error = 'YouTube chat needs the crew relay (VITE_XP_SERVER)'; return feed; }
+  let stopped = false;
+  let timer = 0;
+  let retry = 0;
+  const set = (s: ChatState, error?: string): void => { if (feed.state !== s || feed.error !== error) { feed.state = s; feed.error = error; onChange(); } };
+  const later = (ms: number, fn: () => void): void => { if (!stopped) timer = window.setTimeout(fn, ms); };
+  const start = async (): Promise<void> => {
+    set('connecting');
+    try {
+      const r = await fetch(`${RELAY_HTTP}/yt/start?ref=${encodeURIComponent(ref)}`);
+      const j = (await r.json()) as { k?: string; v?: string; c?: string; error?: string };
+      if (!r.ok || !j.k || !j.v || !j.c) throw new Error(j.error ?? 'YouTube chat is unavailable');
+      retry = 0;
+      // the first answer replays recent chat: skip it, or old "A"s would count as answers
+      void poll(j.k, j.v, j.c, true);
+    } catch (err) {
+      // a channel that is not live yet is the usual case: check again shortly
+      set('error', (err as Error).message);
+      later(30_000, () => void start());
+    }
+  };
+  const poll = async (k: string, v: string, c: string, first = false): Promise<void> => {
+    if (stopped) return;
+    try {
+      const r = await fetch(`${RELAY_HTTP}/yt/poll?k=${k}&v=${encodeURIComponent(v)}&c=${encodeURIComponent(c)}`);
+      const j = (await r.json()) as { lines?: Array<{ ch: string; nick: string; text: string }>; c?: string; wait?: number; error?: string };
+      if (r.status === 410) { set('error', j.error ?? 'The stream has ended'); later(30_000, () => void start()); return; }
+      if (!r.ok || !j.c) throw new Error(j.error ?? 'YouTube chat is unavailable');
+      retry = 0;
+      set('live');
+      if (!first) for (const l of j.lines ?? []) onLine({ pid: `yt:${l.ch}`, nick: l.nick, text: l.text });
+      later(Math.max(1500, Math.min(j.wait ?? 3000, 5000)), () => void poll(k, v, j.c!));
+    } catch {
+      set('connecting');
+      later(Math.min(30_000, 1000 * 2 ** retry++), () => void (retry > 4 ? start() : poll(k, v, c, first)));
+    }
+  };
+  void start();
+  feed.close = () => { stopped = true; clearTimeout(timer); set('off'); };
   return feed;
 }
 

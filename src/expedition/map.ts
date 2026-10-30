@@ -1,18 +1,20 @@
 import { CHAPTERS, NODES, NODE, chapterOpen, nodeState, type ChapterId, type ExpeditionNode, type NodeState } from './manifest';
 
 const COL = 150;
-const ROW = 92;
-const GAP = 90;
+const ROW = 104;
+const GAP = 44;
+const HEAD = 72;
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
 interface Placed { n: ExpeditionNode; x: number; y: number }
+interface Band { id: ChapterId; y0: number; y1: number }
 
-/** Columns by depth inside each chapter, chapters left → right (Earth → the horizon). */
-function layout(): { placed: Map<string, Placed>; bands: Array<{ id: ChapterId; x0: number; x1: number; h: number }>; height: number } {
+/** Rows by depth inside each chapter, chapters top → bottom (Earth → the horizon). */
+function layout(): { placed: Map<string, Placed>; bands: Band[]; width: number } {
   const placed = new Map<string, Placed>();
-  const bands: Array<{ id: ChapterId; x0: number; x1: number; h: number }> = [];
-  let x = 0;
-  let maxRows = 1;
+  const bands: Band[] = [];
+  let y = 0;
+  let maxCols = 1;
   for (const ch of CHAPTERS) {
     const nodes = NODES.filter((n) => n.chapter === ch.id);
     const depth = new Map<string, number>();
@@ -24,19 +26,18 @@ function layout(): { placed: Map<string, Placed>; bands: Array<{ id: ChapterId; 
       depth.set(n.id, v);
       return v;
     };
-    const cols: ExpeditionNode[][] = [];
-    for (const n of nodes) (cols[d(n)] ??= []).push(n);
-    const x0 = x;
-    const rows = Math.max(...cols.map((c) => c.length));
-    maxRows = Math.max(maxRows, rows);
-    cols.forEach((col, i) => {
-      col.forEach((n, j) => placed.set(n.id, { n, x: x + COL / 2 + i * COL, y: (j - (col.length - 1) / 2) * ROW }));
+    const rows: ExpeditionNode[][] = [];
+    for (const n of nodes) (rows[d(n)] ??= []).push(n);
+    const y0 = y;
+    maxCols = Math.max(maxCols, ...rows.map((r) => r.length));
+    rows.forEach((row, i) => {
+      row.forEach((n, j) => placed.set(n.id, { n, x: (j - (row.length - 1) / 2) * COL, y: y0 + HEAD + ROW / 2 + i * ROW }));
     });
-    x += cols.length * COL;
-    bands.push({ id: ch.id, x0, x1: x, h: rows * ROW + 110 });
-    x += GAP;
+    y += HEAD + rows.length * ROW;
+    bands.push({ id: ch.id, y0, y1: y });
+    y += GAP;
   }
-  return { placed, bands, height: maxRows * ROW + 120 };
+  return { placed, bands, width: Math.max(440, maxCols * COL + 40) };
 }
 
 const el = <K extends keyof SVGElementTagNameMap>(tag: K, attrs: Record<string, string | number>, parent?: Element): SVGElementTagNameMap[K] => {
@@ -73,18 +74,18 @@ export class CampaignMap {
     this.drawn = key;
     const g = this.world;
     g.replaceChildren();
-    const { placed, bands } = this.lay;
+    const { placed, bands, width } = this.lay;
     // chapter bands
     for (const b of bands) {
       const ch = CHAPTERS.find((c) => c.id === b.id)!;
       const open = chapterOpen(b.id, discovered);
       const band = el('g', { class: `xp-band${open ? ' open' : ' fog'}` }, g);
-      const top = -b.h / 2;
-      el('rect', { x: b.x0 - GAP / 2 + 8, y: top, width: b.x1 - b.x0 + GAP - 16, height: b.h, rx: 2 }, band);
+      const left = -width / 2;
+      el('rect', { x: left, y: b.y0, width, height: b.y1 - b.y0, rx: 2 }, band);
       const i = CHAPTERS.indexOf(ch);
-      const t = el('text', { x: b.x0 + 10, y: top + 26, class: 'xp-band-kicker' }, band);
+      const t = el('text', { x: left + 14, y: b.y0 + 26, class: 'xp-band-kicker' }, band);
       t.textContent = `CHAPTER ${['I', 'II', 'III', 'IV', 'V'][i]} · ${ch.scale.toUpperCase()}`;
-      const tt = el('text', { x: b.x0 + 10, y: top + 50, class: 'xp-band-title' }, band);
+      const tt = el('text', { x: left + 14, y: b.y0 + 50, class: 'xp-band-title' }, band);
       const total = NODES.filter((n) => n.chapter === ch.id);
       const got = total.filter((n) => discovered.has(n.id)).length;
       tt.textContent = `${ch.title}  ${got}/${total.length}`;
@@ -97,8 +98,8 @@ export class CampaignMap {
         const sa = discovered.has(a), sb = discovered.has(p.n.id);
         const st = nodeState(p.n, discovered, assisted);
         const cls = sa && sb ? 'done' : sa && st === 'reachable' ? 'frontier' : 'locked';
-        const mx = (q.x + p.x) / 2;
-        el('path', { d: `M${q.x},${q.y} C${mx},${q.y} ${mx},${p.y} ${p.x},${p.y}`, class: `xp-edge ${cls}${this.selected === p.n.id && sa ? ' sel' : ''}` }, edges);
+        const my = (q.y + p.y) / 2;
+        el('path', { d: `M${q.x},${q.y} C${q.x},${my} ${p.x},${my} ${p.x},${p.y}`, class: `xp-edge ${cls}${this.selected === p.n.id && sa ? ' sel' : ''}` }, edges);
       }
     }
     // nodes
@@ -138,10 +139,12 @@ export class CampaignMap {
   fitChapter(ch: ChapterId): void {
     const b = this.lay.bands.find((x) => x.id === ch)!;
     const r = this.root.getBoundingClientRect();
-    const k = Math.min(1.25, Math.max(0.35, (r.width - 40) / (b.x1 - b.x0 + GAP)), (r.height - 20) / b.h);
+    const h = b.y1 - b.y0;
+    // long chapters keep a readable scale and start at the top; the rest scrolls
+    const k = Math.max(0.35, Math.min(1.1, (r.width - 40) / this.lay.width, Math.max(0.7, (r.height - 20) / h)));
     this.view.k = k;
-    this.view.x = r.width / 2 - ((b.x0 + b.x1) / 2) * k;
-    this.view.y = r.height / 2;
+    this.view.x = r.width / 2;
+    this.view.y = h * k <= r.height - 20 ? r.height / 2 - ((b.y0 + b.y1) / 2) * k : 10 - b.y0 * k;
     this.apply(true);
   }
 
@@ -166,9 +169,16 @@ export class CampaignMap {
     window.addEventListener('pointerup', () => { drag = null; });
     this.svg.addEventListener('wheel', (e) => {
       e.preventDefault();
+      // plain wheel scrolls the tree; pinch (ctrlKey) or ⌘/Ctrl + wheel zooms
+      if (!e.ctrlKey && !e.metaKey) {
+        this.view.x -= e.deltaX;
+        this.view.y -= e.deltaY;
+        this.apply();
+        return;
+      }
       const r = this.root.getBoundingClientRect();
       const mx = e.clientX - r.left, my = e.clientY - r.top;
-      const k = Math.min(2.2, Math.max(0.3, this.view.k * Math.exp(-e.deltaY * 0.0015)));
+      const k = Math.min(2.2, Math.max(0.3, this.view.k * Math.exp(-e.deltaY * (Math.abs(e.deltaY) < 40 ? 0.01 : 0.0015))));
       this.view.x = mx - ((mx - this.view.x) * k) / this.view.k;
       this.view.y = my - ((my - this.view.y) * k) / this.view.k;
       this.view.k = k;

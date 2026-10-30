@@ -1,15 +1,17 @@
 import qrcode from 'qrcode-generator';
 import './expedition.css';
 import { CHAPTERS, NODES, NODE, ROOT, chapterOpen, nodeState, unlockHint, type ExpeditionNode } from './manifest';
-import { GATE_NAMES, POINTS_MAX, randomCode, randomId, type CrewToHost, type PublicSnapshot, type Stage, type Wire } from './protocol';
+import { BOARD_MS, GATE_NAMES, POINTS_MAX, randomCode, randomId, type CrewToHost, type PublicSnapshot, type Stage, type Wire } from './protocol';
 import { variantsFor, type Variant } from './questions';
 import { createCampaign, exportCampaign, importCampaign, lastCampaign, listCampaigns, saveCampaign, type Campaign, type CrewRecord } from './store';
 import { openLink, type Link, type LinkStatus } from './link';
 import { openHub, type CrewHub } from './crewhub';
-import { chatSlot, kickChat, twitchChat, type ChatFeed, type ChatLine } from './chat';
+import { chatSlot, kickChat, twitchChat, youtubeChat, type ChatFeed, type ChatLine, type ChatSource } from './chat';
 import { EVENTS, effectLabel, eventText, rollResult, type EventResult, type SpaceEvent } from './events';
 import type { BoardRow, GateResult, Tally } from './engine';
 import { CampaignMap } from './map';
+import { Cabin, addAboard, type CabinState } from './cabin';
+import { CockpitView } from './cockpitview';
 import { sfx } from './sfx';
 import { narrator } from './narrator';
 import { CALL, destinationLine, discoveredLine, gateLine } from './voicelines';
@@ -28,6 +30,8 @@ export interface Universe3D {
   goToBlackHole(id: string): void;
   goToGalaxyAt(ref: string, radii: number, swing: number): boolean;
   goToVista(distPc: number, lean: number, name: string, aim?: string): void;
+  goToCluster(members: string[], distPc: number, swing: number, name: string): boolean;
+  flightTelemetry(): { remainingKm: number; etaS: number } | null;
   flyToStarNamed(name: string): string | null;
   starBodyIn(name: string): string | null;
   goHome(): void;
@@ -58,6 +62,17 @@ const GALAXY_LEGS: Array<[number, number]> = [[2.6, 0], [2.2, 30], [1.8, 55], [1
 const HOLE_LEGS: Array<[number, number, number]> = [[0, 0, 0], [20, 40, 60], [10, 95, 40], [25, 150, 28]];
 /** Scale shots: [share of the node's vista distance, lean° away from the galactic centre] */
 const VISTA_LEGS: Array<[number, number]> = [[1, 0], [0.85, 20], [0.7, 40], [0.6, 60]];
+/** Galaxy clusters: [parsecs from the members' centroid, swing° off our line of sight] */
+const CLUSTER_LEGS: Array<[number, number]> = [[1.6e6, 0], [1.2e6, 25], [0.9e6, -30], [0.7e6, 50]];
+
+const CHAT_NAMES: Record<ChatSource, string> = { twitch: 'Twitch', kick: 'Kick', youtube: 'YouTube' };
+
+/** stages watched from the flight deck (cockpit view) */
+const FLIGHT_STAGES = new Set<Stage>(['TRANSIT', 'NODE_ARRIVAL', 'GATE_READY', 'GATE_OPEN', 'GATE_LOCKED', 'GATE_REVEAL', 'SPACE_EVENT', 'NODE_COMPLETE']);
+const STATUS: Partial<Record<Stage, string>> = {
+  GATE_READY: 'HOLDING · GATE AHEAD', GATE_OPEN: 'KNOWLEDGE GATE OPEN', GATE_LOCKED: 'ANSWERS LOCKED',
+  GATE_REVEAL: 'GATE RESULT', SPACE_EVENT: 'ALERT · CREW VOTE', NODE_COMPLETE: 'ORBIT ESTABLISHED',
+};
 
 /** Where the camera is aimed for a node: its body, star, landmark or black hole (for label scoping). */
 function scopeOf(app: Universe3D, n: ExpeditionNode): string | null {
@@ -72,6 +87,7 @@ function inScene(app: Universe3D, n: ExpeditionNode): boolean {
   if (n.landmark) return app.hasLandmark(n.landmark);
   if (n.galaxy) return app.hasGalaxy(n.galaxy);
   if (n.blackhole) return app.hasBlackHole(n.blackhole);
+  if (n.cluster) return n.cluster.every((m) => app.hasGalaxy(m));
   return !!n.vista;
 }
 
@@ -81,6 +97,8 @@ function flyLeg(app: Universe3D, n: ExpeditionNode, leg: number): Promise<void> 
     app.goToLandmarkAt(n.landmark, ...LANDMARK_LEGS[k]);
   } else if (n.galaxy) {
     app.goToGalaxyAt(n.galaxy, GALAXY_LEGS[k][0] * (n.zoom ?? 1), GALAXY_LEGS[k][1]);
+  } else if (n.cluster) {
+    app.goToCluster(n.cluster, CLUSTER_LEGS[k][0], CLUSTER_LEGS[k][1], n.title);
   } else if (n.vista) {
     app.goToVista(n.vista * VISTA_LEGS[k][0], VISTA_LEGS[k][1], n.title, n.aim);
   } else if (n.blackhole) {
@@ -247,6 +265,13 @@ class Cockpit {
   /** leaderboard of the last revealed gate, shown while flying to the next waypoint */
   private board: Board | null = null;
   private lastTick = 0;
+  /** crew names in boarding order: the cabin seats */
+  private aboard: string[] = [];
+  private departsAt = 0;
+  private lobbyView: 'map' | 'cabin' = 'map';
+  private boardCabin = new Cabin();
+  private lobbyCabin = new Cabin();
+  private cockpit: CockpitView;
 
   private root!: HTMLDivElement;
   private map!: CampaignMap;
@@ -281,6 +306,8 @@ class Cockpit {
     this.hub = openHub(this.link, () => this.saveSoon());
     this.hub.onTally((t) => this.onTally(t));
     this.hub.onResult((r, id) => this.onResult(r, id));
+    this.cockpit = new CockpitView(() => app.flightTelemetry());
+    document.body.appendChild(this.cockpit.el);
     this.build();
     void this.resolveJoinBase();
     const c = lastCampaign();
@@ -310,6 +337,7 @@ class Cockpit {
     this.link.join(c.room, c.hostKey);
     this.hub.use(c.room, c.crew);
     this.tally = null;
+    this.aboard = [];
     this.hub.cmd({ t: 'session' });
     this.hub.cmd({ t: 'clear' });
     this.bots.clear();
@@ -397,6 +425,7 @@ class Cockpit {
     const s = this.c?.settings;
     if (s?.twitch) this.chats.push(twitchChat(s.twitch, (l) => this.onChat(l), () => this.renderChat()));
     if (s?.kick) this.chats.push(kickChat(s.kick, (l) => this.onChat(l), () => this.renderChat()));
+    if (s?.youtube) this.chats.push(youtubeChat(s.youtube, (l) => this.onChat(l), () => this.renderChat()));
     this.renderChat();
   }
 
@@ -418,7 +447,7 @@ class Cockpit {
     const live = this.chatLive;
     if (el) {
       el.hidden = !live.length;
-      el.textContent = live.length ? `or type A, B, C or D in ${live.map((f) => (f.source === 'twitch' ? 'Twitch' : 'Kick')).join(' / ')} chat` : '';
+      el.textContent = live.length ? `or type A, B, C or D in ${live.map((f) => CHAT_NAMES[f.source]).join(' / ')} chat` : '';
     }
     if (!this.$('#xp-menu').hidden && this.$('#xp-menu').querySelector('.xp-chat-state')) {
       for (const f of this.chats) {
@@ -430,6 +459,8 @@ class Cockpit {
 
   private onTally(t: Tally): void {
     this.tally = t;
+    addAboard(this.aboard, t.leaders.map((l) => l.nick));
+    addAboard(this.aboard, t.joined);
     if (t.joinedN && t.joined.length) {
       this.toast(t.joinedN === 1 ? `${t.joined[0]} joined the crew` : `${t.joined[0]} and ${(t.joinedN - 1).toLocaleString('en-US')} others joined the crew`, 1800);
       sfx.play('join');
@@ -501,6 +532,7 @@ class Cockpit {
       leaders: this.tally?.leaders ?? [],
       hull: this.hull,
       next: c.ship?.next,
+      departsAt: this.stage === 'BOARDING' ? this.departsAt : undefined,
       event: this.ev ? {
         voteId: this.ev.voteId, title: this.ev.def.title, text: eventText(this.ev.def), closesAt: this.ev.closesAt, closed: this.ev.closed,
         options: this.ev.def.options.map((o, i) => ({ id: o.id, label: o.label, hint: o.hint, votes: this.ev!.counts[i] ?? 0 })),
@@ -618,6 +650,17 @@ class Cockpit {
     this.hub.cmd({ t: 'clear' });
     if (practiceRun) narrator.say(CALL.practiceStart, true);
     else if (!voted) narrator.say(destinationLine(n.title), true);   // the vote result already announced it
+    this.stage = 'BOARDING';
+    this.departsAt = Date.now() + BOARD_MS;
+    this.calledTen = false;
+    sfx.play('hatch');
+    narrator.say(CALL.boarding);
+    this.update();
+  }
+
+  private depart(): void {
+    if (this.stage !== 'BOARDING' || !this.c?.progress) return;
+    this.departsAt = 0;
     void this.fly(this.c.progress.gate);
   }
 
@@ -673,6 +716,9 @@ class Cockpit {
     this.hub.cmd({ t: 'vote', voteId: this.ev.voteId, options: def.options.map((o) => o.id) });
     this.stage = 'SPACE_EVENT';
     this.botsAct('event');
+    if (def.id === 'asteroids') this.cockpit.field('ahead');
+    else if (def.id === 'comet') this.cockpit.comet(0.25, EVENT_SECONDS);
+    else if (def.id === 'flare') this.cockpit.flare(3);
     sfx.play('fail');
     narrator.say(def.intro, true);
     this.update();
@@ -707,12 +753,30 @@ class Cockpit {
     }
     if (r.hull) this.setHull(this.hull + r.hull);
     sfx.play(r.hull && r.hull < 0 ? 'fail' : 'pass');
+    this.eventFx(e.def.id, e.def.options[e.pick].id, r);
     this.logLine(`Space event: ${e.def.title} · ${e.def.options[e.pick].label} · ${effectLabel(r) || 'no effect'}`);
     this.save();
     this.update();
   }
 
+  /** what the crew sees through the canopy once the event is decided */
+  private eventFx(event: string, option: string, r: EventResult): void {
+    const fx = this.cockpit, bad = (r.hull ?? 0) < 0;
+    if (event === 'asteroids') {
+      fx.field(option === 'gap' ? 'through' : 'around', 4.5);
+      if (bad) fx.hit(1800);
+    } else if (event === 'comet') {
+      fx.comet(option === 'through' ? 1.4 : 0.6, 5);
+      if (bad) fx.hit(1500);
+    } else if (event === 'flare') {
+      fx.flare(option === 'ride' ? 6 : 4);
+      if (bad) fx.hit(1400);
+    } else if (bad) fx.hit(500);
+    if ((r.hull ?? 0) > 0) setTimeout(() => fx.heal(), 1200);
+  }
+
   private afterEvent(): void {
+    this.cockpit.field('none');
     this.ev = null;
     this.hub.cmd({ t: 'clear' });
     if (this.breach) this.repair();
@@ -723,6 +787,7 @@ class Cockpit {
   private repair(): void {
     if (!this.resetAfterBreach()) return;
     this.toast('Emergency repairs done: hull 100%. The route restarts from the first waypoint.', 5000);
+    this.cockpit.heal();
     void this.fly(0);
   }
 
@@ -831,6 +896,7 @@ class Cockpit {
     if (g.boss && !g.passed) {
       narrator.say(CALL.bossFail);
       this.setHull(this.hull - BOSS_DAMAGE);
+      this.cockpit.hit(900);
       this.save();
     }
     narrator.say(g.variant.why);
@@ -958,6 +1024,13 @@ class Cockpit {
       this.lastTick = left;
       if (now >= this.gate.closesAt) this.lockGate();
     }
+    if (this.stage === 'BOARDING') {
+      const left = Math.ceil((this.departsAt - now) / 1000);
+      if (left <= 3 && !this.calledTen) { this.calledTen = true; narrator.say(CALL.liftoff, true); }
+      if (left <= 3 && left > 0 && left !== this.lastTick) sfx.play('count');
+      this.lastTick = left;
+      if (now >= this.departsAt) this.depart();
+    }
     if (this.stage === 'ROUTE_VOTE' && this.vote && !this.vote.closed && now >= this.vote.closesAt) this.closeVote();
     if (this.stage === 'SPACE_EVENT' && this.ev && !this.ev.closed && now >= this.ev.closesAt) this.closeEvent();
     if (this.bots.size && now - this.botHelloAt > BOT_HELLO_MS) this.helloBots();
@@ -976,6 +1049,10 @@ class Cockpit {
     r.id = 'xp';
     r.lang = 'en';   // the page may be lang="tr": CSS uppercase would turn i into İ
     r.innerHTML = `
+      <section class="xp-boarding" id="xp-boarding" hidden>
+        <div class="xp-board-head" id="xp-board-head"></div>
+        <div class="xp-board-ship" id="xp-board-ship"></div>
+      </section>
       <header class="xp-hud">
         <div class="xp-brand">
           <img src="/logo-white.png" alt="" class="xp-logo" />
@@ -993,10 +1070,12 @@ class Cockpit {
       <section class="xp-mapwrap" id="xp-mapwrap">
         <div class="xp-map-head">
           <div class="xp-map-title">Expedition map</div>
+          <div class="xp-seg xp-view-tabs" id="xp-viewtabs"><button data-act="lobby-view" data-arg="map" class="on">Map</button><button data-act="lobby-view" data-arg="cabin">Cabin</button></div>
           <div class="xp-chapter-tabs" id="xp-tabs"></div>
         </div>
         <div class="xp-map-body" id="xp-mapbody"></div>
         <div class="xp-detail" id="xp-detail"></div>
+        <div class="xp-lobby-cabin" id="xp-lobbycabin" hidden></div>
       </section>
       <nav class="xp-dock" id="xp-dock"></nav>
       <div class="xp-toasts" id="xp-toasts"></div>
@@ -1005,6 +1084,8 @@ class Cockpit {
       <input type="file" id="xp-file" accept="application/json,.json" hidden />`;
     document.body.appendChild(r);
     this.root = r;
+    this.$('#xp-board-ship').appendChild(this.boardCabin.el);
+    this.$('#xp-lobbycabin').appendChild(this.lobbyCabin.el);
     this.map = new CampaignMap(this.$('#xp-mapbody'));
     this.map.onSelect = (id) => { this.selected = id; this.render(); };
     this.$('#xp-tabs').innerHTML = CHAPTERS.map((c, i) => `<button data-ch="${c.id}" title="${esc(c.title)}">${['I', 'II', 'III', 'IV', 'V'][i]}<span>${esc(c.title)}</span></button>`).join('');
@@ -1062,6 +1143,9 @@ class Cockpit {
       case 'retry': this.retry(); break;
       case 'override': if (confirm('Emergency override skips this gate. The destination will be marked ASSISTED and will not count as a clean run. Continue?')) this.override(); break;
       case 'map': this.backToMap(); break;
+      case 'depart': this.depart(); break;
+      case 'board-more': this.departsAt += 15_000; this.calledTen = false; this.update(); break;
+      case 'lobby-view': this.lobbyView = arg === 'cabin' ? 'cabin' : 'map'; this.render(); break;
       case 'abandon': this.abandon(); break;
       case 'pause': this.togglePause(); break;
       case 'select': this.selected = arg; this.render(); this.map.focus(arg, 0.9); break;
@@ -1077,6 +1161,7 @@ class Cockpit {
         if (arg === 'voice') narrator.setEnabled(!narrator.enabled);
         if (arg === 'sfx') sfx.setEnabled(!sfx.enabled);
         if (arg === 'practice') c.settings.practice = !c.settings.practice;
+        if (arg === 'cockpit') c.settings.cockpit = c.settings.cockpit === false;
         if (arg === 'demo') { c.settings.demoCrew = !c.settings.demoCrew; if (c.settings.demoCrew) this.spawnBots(); else this.removeBots(); }
         this.save(); this.showMenu(); this.update();
         break;
@@ -1085,6 +1170,7 @@ class Cockpit {
         if (!c) return;
         c.settings.twitch = this.$<HTMLInputElement>('#xp-twitch').value.trim().slice(0, 60) || undefined;
         c.settings.kick = this.$<HTMLInputElement>('#xp-kick').value.trim().slice(0, 60) || undefined;
+        c.settings.youtube = this.$<HTMLInputElement>('#xp-youtube').value.trim().slice(0, 200) || undefined;
         this.save();
         this.connectChats();
         this.showMenu();
@@ -1178,6 +1264,8 @@ class Cockpit {
         <div class="xp-sub">Rehearsal</div>
         <button class="xp-opt" data-act="toggle" data-arg="demo">${tg(c.settings.demoCrew)}<span><b>Demo crew</b><small>14 simulated viewers join, vote and answer, for testing before you go live</small></span></button>
         <button class="xp-opt" data-act="toggle" data-arg="practice">${tg(c.settings.practice)}<span><b>Practice mode</b><small>No turnout quorum and no points. Destinations found this way are marked ASSISTED.</small></span></button>
+        <div class="xp-sub">View</div>
+        <button class="xp-opt" data-act="toggle" data-arg="cockpit">${tg(c.settings.cockpit !== false)}<span><b>Cockpit view</b><small>Fly from the flight deck: canopy frame, speed and hull consoles, asteroid and impact effects</small></span></button>
         <div class="xp-sub">Sound</div>
         <button class="xp-opt" data-act="toggle" data-arg="voice">${tg(narrator.enabled)}<span><b>Narrator voice</b><small>Reads every question and explanation aloud and calls out destinations, gates and results</small></span></button>
         <button class="xp-opt" data-act="toggle" data-arg="sfx">${tg(sfx.enabled)}<span><b>Sound effects</b><small>Launches, votes, answers, countdown and discoveries</small></span></button>
@@ -1190,6 +1278,10 @@ class Cockpit {
         <div class="xp-chat-row">
           <label class="xp-field"><span>Kick channel</span><input id="xp-kick" maxlength="60" placeholder="e.g. spacechip" value="${esc(c.settings.kick ?? '')}" autocomplete="off" spellcheck="false" /></label>
           <span class="xp-chat-state ${this.chats.find((f) => f.source === 'kick')?.state ?? 'off'}" data-src="kick">${this.chats.find((f) => f.source === 'kick')?.state ?? 'off'}</span>
+        </div>
+        <div class="xp-chat-row">
+          <label class="xp-field"><span>YouTube channel or live video</span><input id="xp-youtube" maxlength="200" placeholder="e.g. @spacechip or a youtube.com/live/… link" value="${esc(c.settings.youtube ?? '')}" autocomplete="off" spellcheck="false" /></label>
+          <span class="xp-chat-state ${this.chats.find((f) => f.source === 'youtube')?.state ?? 'off'}" data-src="youtube">${this.chats.find((f) => f.source === 'youtube')?.state ?? 'off'}</span>
         </div>
         <div class="xp-row"><button class="xp-btn" data-act="chat-save">Connect chat</button></div>
         <div class="xp-sub">Answer window</div>
@@ -1225,9 +1317,19 @@ class Cockpit {
     const lobby = this.stage === 'LOBBY';
     this.$('#xp-mapwrap').hidden = !lobby;
     if (lobby) {
-      this.map.render(disc, this.assisted, c.progress?.nodeId ?? null);
-      this.renderDetail();
+      const cabin = this.lobbyView === 'cabin';
+      this.$('#xp-mapwrap').classList.toggle('cabin', cabin);
+      this.$('#xp-lobbycabin').hidden = !cabin;
+      for (const b of this.$('#xp-viewtabs').querySelectorAll('button')) b.classList.toggle('on', b.dataset.arg === this.lobbyView);
+      this.$('.xp-map-title').textContent = cabin ? 'Crew cabin' : 'Expedition map';
+      if (cabin) this.lobbyCabin.render(this.cabinState());
+      else {
+        this.map.render(disc, this.assisted, c.progress?.nodeId ?? null);
+        this.renderDetail();
+      }
     }
+    this.renderBoarding();
+    this.renderCockpit();
     this.renderBanner();
     this.renderStage();
     this.renderDock();
@@ -1292,6 +1394,41 @@ class Cockpit {
       ${st === 'locked' || st === 'unavailable' ? `<p class="xp-hint">${esc(unlockHint(n, disc))}</p>` : ''}
       ${n.available && n.id !== ROOT ? `<div class="xp-gates">${GATE_NAMES.map((g, i) => `<span class="${(inProgress && i < p!.gate) || st === 'discovered' || st === 'assisted' ? 'done' : ''}">${i + 1} · ${g}</span>`).join('')}</div>` : ''}
       <div class="xp-row">${action}</div>`);
+  }
+
+  private renderBoarding(): void {
+    const el = this.$('#xp-boarding');
+    const n = this.target, c = this.c;
+    const on = this.stage === 'BOARDING' && !!n && !!c;
+    el.hidden = !on;
+    if (!on || !n || !c) return;
+    const g = c.progress?.gate ?? 0;
+    this.set(this.$('#xp-board-head'), `
+      <div class="xp-kicker">Now boarding · ${g === 0 ? 'departure' : `resuming at waypoint ${g + 1} of 3`}</div>
+      <div class="xp-board-title">${esc(n.title)}</div>
+      <div class="xp-board-sub">Scan the QR code to take a seat · liftoff in <span class="xp-clock" data-until="${this.departsAt}"></span></div>`);
+    this.boardCabin.render(this.cabinState());
+    this.renderClock();
+  }
+
+  private cabinState(): CabinState {
+    const c = this.c!;
+    return { aboard: this.aboard, crew: this.tally?.crew ?? 0, captain: c.host, ship: c.title, leaders: (this.tally?.leaders ?? []).map((l) => l.nick) };
+  }
+
+  private renderCockpit(): void {
+    const c = this.c;
+    const on = !!c && c.settings.cockpit !== false && FLIGHT_STAGES.has(this.stage);
+    this.cockpit.show(on);
+    if (!on || !c) return;
+    const g = c.progress?.gate ?? 3;
+    this.cockpit.setReadout({
+      target: this.target?.title ?? '',
+      waypoint: this.stage === 'NODE_COMPLETE' ? 'Arrived' : this.stage === 'NODE_ARRIVAL' ? 'Final' : `${Math.min(g, 2) + 1} / 3`,
+      hull: this.hull,
+      crew: this.tally?.crew ?? 0,
+      status: STATUS[this.stage] ?? 'CRUISE',
+    });
   }
 
   private renderBanner(): void {
@@ -1480,6 +1617,10 @@ class Cockpit {
         else if (this.vote?.winner) main = btn('launch', `Launch: ${esc(NODE.get(this.vote.winner)!.title)}`, 'primary', this.vote.winner);
         else main = '<span class="xp-dock-note">Tie: click one of the tied routes</span>';
         side = btn('cancel-vote', 'Cancel', 'ghost');
+        break;
+      case 'BOARDING':
+        main = btn('depart', 'Launch now', 'primary');
+        side = btn('board-more', '+15 s', 'ghost') + btn('abandon', 'Cancel', 'ghost');
         break;
       case 'TRANSIT': case 'NODE_ARRIVAL':
         main = '<span class="xp-dock-note"><i class="xp-spin"></i>In flight…</span>';

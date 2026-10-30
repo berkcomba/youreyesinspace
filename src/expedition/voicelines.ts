@@ -40,6 +40,8 @@ export const CALL = {
   bossFail: 'The boss gate held, and the ship took a hit!',
   hullBreach: "Hull breach! Emergency repairs. We're heading back to the start of this route!",
   eventVoteClosed: 'Decision made! Here we go!',
+  boarding: 'All aboard! Take your seats, crew. Liftoff in fifteen seconds!',
+  liftoff: 'Three, two, one. Liftoff!',
 } as const;
 
 export const destinationLine = (title: string): string => `New destination: ${spoken(title)}!`;

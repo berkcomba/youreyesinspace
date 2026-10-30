@@ -127,6 +127,7 @@ export default {
     if (url.pathname === '/health') return new Response('ok');
     const kick = url.pathname.match(/^\/kick\/([A-Za-z0-9_-]{1,40})$/);
     if (kick) return kickChatroom(env, req, kick[1]);
+    if (url.pathname === '/yt/start' || url.pathname === '/yt/poll') return youtubeChat(env, req, url);
     const m = url.pathname.match(/^\/room\/([A-Za-z0-9]{4,8})\/(host|crew)$/);
     if (!m) return new Response('Not found', { status: 404 });
     if (req.headers.get('Upgrade')?.toLowerCase() !== 'websocket') return new Response('Expected a WebSocket', { status: 426 });
@@ -178,6 +179,78 @@ async function kickChatroom(env: Env, req: Request, slug: string): Promise<Respo
   const body = JSON.stringify({ chatroomId: id, appKey, cluster });
   await cache.put(key, new Response(body, { headers: { 'Cache-Control': 'public, max-age=21600' } }));
   return new Response(body, { headers });
+}
+
+/**
+ * YouTube live chat has no public socket and its Data API quota runs out within a stream, so
+ * the cockpit polls the chat the way youtube.com's own chat frame does, through here (YouTube
+ * does not allow it cross-origin). Stateless: the cockpit carries the continuation token.
+ *   /yt/start?ref=@handle | channel URL | video URL or id → { videoId, k, v, c }
+ *   /yt/poll?k=…&v=…&c=… → { lines, c, wait }
+ */
+const YT_HEADERS = {
+  'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36',
+  'Accept-Language': 'en-US,en;q=0.9',
+  Cookie: 'SOCS=CAI; CONSENT=YES+1',
+};
+
+async function youtubeChat(env: Env, req: Request, url: URL): Promise<Response> {
+  const origin = req.headers.get('Origin');
+  if (!originAllowed(env, origin)) return new Response('Forbidden origin', { status: 403 });
+  const headers = { 'Access-Control-Allow-Origin': origin!, 'Content-Type': 'application/json', 'Cache-Control': 'no-store', Vary: 'Origin' };
+  const reply = (body: unknown, status = 200): Response => new Response(JSON.stringify(body), { status, headers });
+  try {
+    if (url.pathname === '/yt/start') {
+      const ref = (url.searchParams.get('ref') ?? '').trim().slice(0, 200);
+      let videoId = ref.match(/(?:v=|youtu\.be\/|\/live\/|\/shorts\/)([\w-]{11})/)?.[1] ?? (/^[\w-]{11}$/.test(ref) && !ref.startsWith('@') ? ref : '');
+      if (!videoId) {
+        const path = ref.match(/youtube\.com\/((?:@[\w.-]{1,100})|(?:channel\/UC[\w-]{22})|(?:c\/[\w.-]{1,100}))/)?.[1]
+          ?? (/^@[\w.-]{1,100}$/.test(ref) ? ref : /^UC[\w-]{22}$/.test(ref) ? `channel/${ref}` : /^[\w.-]{1,100}$/.test(ref) ? `@${ref}` : '');
+        if (!path) return reply({ error: 'Not a YouTube channel or video' }, 400);
+        const r = await fetch(`https://www.youtube.com/${path}/live`, { headers: YT_HEADERS });
+        if (r.status === 404) return reply({ error: 'No such YouTube channel' }, 404);
+        const html = await r.text();
+        videoId = html.match(/<link rel="canonical" href="https:\/\/www\.youtube\.com\/watch\?v=([\w-]{11})"/)?.[1] ?? '';
+        if (!videoId || !/"isLive":true/.test(html)) return reply({ error: 'Not live right now' }, 404);
+      }
+      const html = await (await fetch(`https://www.youtube.com/live_chat?v=${videoId}&is_popout=1`, { headers: YT_HEADERS })).text();
+      const k = html.match(/"INNERTUBE_API_KEY":"([\w-]{20,60})"/)?.[1];
+      const v = html.match(/"INNERTUBE_CONTEXT_CLIENT_VERSION":"([\d.]{6,30})"/)?.[1];
+      // "Live chat" (every message), not the default "Top chat" (filtered)
+      const all = html.match(/"title":"Live chat","selected":(?:true|false),"continuation":\{"reloadContinuationData":\{"continuation":"([\w%-]+)"/)?.[1]
+        ?? html.match(/"continuation":"([\w%-]{10,})"/)?.[1];
+      if (!k || !v || !all) return reply({ error: 'Live chat is off for this stream' }, 404);
+      return reply({ videoId, k, v, c: all });
+    }
+    const k = url.searchParams.get('k') ?? '', v = url.searchParams.get('v') ?? '', c = url.searchParams.get('c') ?? '';
+    if (!/^[\w-]{20,60}$/.test(k) || !/^[\d.]{6,30}$/.test(v) || !/^[\w%-]{10,3000}$/.test(c)) return reply({ error: 'Bad request' }, 400);
+    const r = await fetch(`https://www.youtube.com/youtubei/v1/live_chat/get_live_chat?key=${k}&prettyPrint=false`, {
+      method: 'POST',
+      headers: { ...YT_HEADERS, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ context: { client: { clientName: 'WEB', clientVersion: v } }, continuation: c }),
+    });
+    if (!r.ok) return reply({ error: `YouTube answered ${r.status}` }, 502);
+    type Run = { text?: string };
+    type Msg = { id?: string; authorName?: { simpleText?: string }; authorExternalChannelId?: string; message?: { runs?: Run[] } };
+    type Cont = { continuation?: string; timeoutMs?: number };
+    const j = (await r.json()) as { continuationContents?: { liveChatContinuation?: {
+      actions?: Array<{ addChatItemAction?: { item?: { liveChatTextMessageRenderer?: Msg } } }>;
+      continuations?: Array<{ invalidationContinuationData?: Cont; timedContinuationData?: Cont; reloadContinuationData?: Cont }>;
+    } } };
+    const lcc = j.continuationContents?.liveChatContinuation;
+    if (!lcc) return reply({ error: 'The stream has ended' }, 410);
+    const lines = (lcc.actions ?? []).flatMap((a) => {
+      const m = a.addChatItemAction?.item?.liveChatTextMessageRenderer;
+      if (!m?.authorExternalChannelId) return [];
+      return [{ ch: m.authorExternalChannelId, nick: cleanNick((m.authorName?.simpleText ?? '').replace(/^@/, '')) || 'YouTube viewer', text: (m.message?.runs ?? []).map((x) => x.text ?? '').join('').slice(0, 200) }];
+    });
+    const next = lcc.continuations?.[0];
+    const d = next?.invalidationContinuationData ?? next?.timedContinuationData ?? next?.reloadContinuationData;
+    if (!d?.continuation) return reply({ error: 'The stream has ended' }, 410);
+    return reply({ lines, c: d.continuation, wait: Math.max(1000, Math.min(10_000, d.timeoutMs ?? 3000)) });
+  } catch {
+    return reply({ error: 'YouTube did not answer' }, 502);
+  }
 }
 
 /* ---------------- events (shard → room) ---------------- */

@@ -6,7 +6,8 @@
 
 export type Sfx =
   | 'join' | 'vote' | 'answer' | 'tap' | 'gateOpen' | 'tick' | 'lock' | 'pass' | 'fail'
-  | 'launch' | 'arrive' | 'discovered' | 'whoosh';
+  | 'launch' | 'arrive' | 'discovered' | 'whoosh'
+  | 'impact' | 'alarm' | 'rumble' | 'repair' | 'count' | 'hatch';
 
 const STORE = 'yeis.xp.sfx';
 
@@ -77,6 +78,16 @@ class SoundBoard {
         [[523, 659, 784], [587, 740, 880], [659, 831, 988, 1319]].forEach((ch, i) => ch.forEach((f) => this.tone(f, t + i * 0.22, i === 2 ? 1.8 : 0.3, 0.09, 'triangle')));
         this.noiseBurst(t + 0.44, 1.6, 0.06, 6000, 9000);
         break;
+      case 'impact':
+        this.noiseBurst(t, 0.9, 0.7, 380, 60);
+        this.sweep(90, 32, t, 0.8, 0.35);
+        this.tone(1900, t + 0.02, 0.4, 0.05, 'square', 3000);
+        break;
+      case 'alarm': [0, 0.36, 0.72].forEach((d) => { this.tone(880, t + d, 0.16, 0.09, 'square', 2200); this.tone(660, t + d + 0.17, 0.16, 0.09, 'square', 2200); }); break;
+      case 'rumble': this.noiseBurst(t, 3.4, 0.4, 70, 260); break;
+      case 'repair': [440, 554, 659, 880].forEach((f, i) => this.tone(f, t + i * 0.09, 0.22, 0.08, 'sine')); this.noiseBurst(t, 0.6, 0.06, 4000, 7000); break;
+      case 'count': this.tone(1046, t, 0.09, 0.12, 'sine'); break;
+      case 'hatch': this.noiseBurst(t, 0.8, 0.25, 3000, 700); this.tone(196, t + 0.55, 0.3, 0.14, 'triangle'); break;
     }
   }
 

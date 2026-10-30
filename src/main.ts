@@ -960,6 +960,37 @@ class App implements UIHost {
     this.camera.goToPoint(centre, D, dir, { radius: D * 0.02, name });
   }
 
+  /** The autopilot leg in progress: km still to go to its arrival distance, seconds left. */
+  flightTelemetry(): { remainingKm: number; etaS: number } | null {
+    const ap = this.camera.autopilot;
+    if (!ap || (ap.kind !== 'goto' && ap.kind !== 'gotoPoint')) return null;
+    const at = ap.point ?? ap.target?.position;
+    if (!at) return null;
+    return { remainingKm: Math.max(0, this.camera.position.distanceTo(at) - ap.dist1), etaS: Math.max(0, ap.duration - ap.t) };
+  }
+
+  /**
+   * Inside a galaxy cluster: `distPc` from the centroid of its catalogued `members`, on our
+   * side of it, swung `swing`° around the line of sight so the members spread around the frame.
+   */
+  goToCluster(members: string[], distPc: number, swing: number, name: string): boolean {
+    const u = this.universe;
+    const idx = members.map((m) => this.galaxyNamed(m)).filter((i): i is number => i !== null);
+    if (!idx.length) return false;
+    this.selectGalaxy(null);
+    const centre = new Vector3();
+    for (const i of idx) centre.add(u.galaxyRelative(i, new Vector3(0, 0, 0)));
+    centre.divideScalar(idx.length);
+    const sun = u.starRelative('c0', new Vector3(0, 0, 0));
+    const axis = sun.sub(centre).normalize();
+    const north = raDecToScene(192.859, 27.128, new Vector3());
+    const up = north.addScaledVector(axis, -north.dot(axis)).normalize();
+    const dir = axis.multiplyScalar(Math.cos(swing * DEG)).addScaledVector(up, Math.sin(swing * DEG)).normalize();
+    const D = distPc * PARSEC_KM;
+    this.camera.goToPoint(centre, D, dir, { radius: D * 0.02, name });
+    return true;
+  }
+
   /* ---------------- tour cues ---------------- */
 
   /** Planets, moons and small bodies get the backlit tour composition (Sun over the limb). */
@@ -2129,16 +2160,20 @@ class App implements UIHost {
     const inside = g.containing(camPc, 3);
     u.currentGalaxy = inside;
 
-    // clouds for every galaxy within 18 radii (sprite ↔ cloud crossfade range)
-    const wanted = new Set<number>();
+    // clouds for the (at most 3) galaxies nearest in radii, within 18 radii (sprite ↔ cloud
+    // crossfade range): in a crowded cluster the one we're at must not lose its slot to bystanders
+    const close: Array<[number, number]> = [];
     const cloudCount = this.settings.procedural ? g.count : g.catalogCount;
     for (let i = 0; i < cloudCount; i++) {
       const dx = g.positions[i * 3] - camPc.x, dy = g.positions[i * 3 + 1] - camPc.y, dz = g.positions[i * 3 + 2] - camPc.z;
-      if (Math.sqrt(dx * dx + dy * dy + dz * dz) < g.radius[i] * 18) wanted.add(i);
+      const ratio = Math.sqrt(dx * dx + dy * dy + dz * dz) / g.radius[i];
+      if (ratio < 18) close.push([i, ratio]);
     }
+    close.sort((a, b) => a[1] - b[1]);
+    const wanted = new Set(close.slice(0, 3).map(([i]) => i));
     for (const [i, c] of this.clouds) if (!wanted.has(i)) { c.dispose(scene); this.clouds.delete(i); }
     for (const i of wanted) {
-      if (this.clouds.has(i) || this.clouds.size >= 3) continue;
+      if (this.clouds.has(i)) continue;
       const n = i === 0 ? 260_000 : Math.round(Math.min(160_000, 40_000 + g.radius[i] * 6));
       const cloud = new GalaxyCloud(i, g.model(i), scene, n, this.maxPointPx, this.volumes);
       cloud.setHighlight(this.settings.highlightProcedural);

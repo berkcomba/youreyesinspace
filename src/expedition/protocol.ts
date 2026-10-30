@@ -4,10 +4,13 @@
  */
 
 export type Stage =
-  | 'LOBBY' | 'ROUTE_VOTE' | 'TRANSIT' | 'GATE_READY' | 'GATE_OPEN' | 'GATE_LOCKED'
+  | 'LOBBY' | 'ROUTE_VOTE' | 'BOARDING' | 'TRANSIT' | 'GATE_READY' | 'GATE_OPEN' | 'GATE_LOCKED'
   | 'GATE_REVEAL' | 'NODE_ARRIVAL' | 'NODE_COMPLETE' | 'SPACE_EVENT';
 
 export const GATE_NAMES = ['Orientation', 'Science', 'Discovery'] as const;
+
+/** the crew boards for this long before every launch */
+export const BOARD_MS = 15_000;
 
 export interface PublicChoice { id: string; label: string }
 
@@ -74,6 +77,8 @@ export interface PublicSnapshot {
   hull: number;
   /** bonus or penalty waiting for the next gate */
   next?: { mult?: number; time?: number };
+  /** BOARDING: launch time, host clock */
+  departsAt?: number;
   discovered: number;
   total: number;
   chapterProgress: Array<{ id: string; title: string; discovered: number; total: number; open: boolean }>;
