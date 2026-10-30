@@ -207,11 +207,17 @@ async function youtubeChat(env: Env, req: Request, url: URL): Promise<Response> 
         const path = ref.match(/youtube\.com\/((?:@[\w.-]{1,100})|(?:channel\/UC[\w-]{22})|(?:c\/[\w.-]{1,100}))/)?.[1]
           ?? (/^@[\w.-]{1,100}$/.test(ref) ? ref : /^UC[\w-]{22}$/.test(ref) ? `channel/${ref}` : /^[\w.-]{1,100}$/.test(ref) ? `@${ref}` : '');
         if (!path) return reply({ error: 'Not a YouTube channel or video' }, 400);
-        const r = await fetch(`https://www.youtube.com/${path}/live`, { headers: YT_HEADERS });
+        // the /live page HTML differs for datacenter IPs; resolve_url answers the same everywhere
+        const r = await fetch('https://www.youtube.com/youtubei/v1/navigation/resolve_url?prettyPrint=false', {
+          method: 'POST',
+          headers: { ...YT_HEADERS, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ context: { client: { clientName: 'WEB', clientVersion: '2.20261029.01.00', hl: 'en' } }, url: `https://www.youtube.com/${path}/live` }),
+        });
         if (r.status === 404) return reply({ error: 'No such YouTube channel' }, 404);
-        const html = await r.text();
-        videoId = html.match(/<link rel="canonical" href="https:\/\/www\.youtube\.com\/watch\?v=([\w-]{11})"/)?.[1] ?? '';
-        if (!videoId || !/"isLive":true/.test(html)) return reply({ error: 'Not live right now' }, 404);
+        if (!r.ok) return reply({ error: `YouTube answered ${r.status}` }, 502);
+        const d = await r.json() as { endpoint?: { watchEndpoint?: { videoId?: string } } };
+        videoId = d.endpoint?.watchEndpoint?.videoId ?? '';
+        if (!/^[\w-]{11}$/.test(videoId)) return reply({ error: 'Not live right now' }, 404);
       }
       const html = await (await fetch(`https://www.youtube.com/live_chat?v=${videoId}&is_popout=1`, { headers: YT_HEADERS })).text();
       const k = html.match(/"INNERTUBE_API_KEY":"([\w-]{20,60})"/)?.[1];
