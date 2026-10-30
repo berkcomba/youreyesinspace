@@ -9,9 +9,11 @@ varying float vFacing;
 void main() {
   #include <logdepthbuf_fragment>
   // uv.y: 1 at the far end (wide top), 0 at the apex
-  float along = 1.0 - vUv.y;
+  // interpolation can push these a hair below 0, and pow() of a negative is NaN, which the
+  // bloom blur then spreads over the whole frame (black flashes up close)
+  float along = clamp(1.0 - vUv.y, 0.0, 1.0);
   float len = pow(along, 2.2);
-  float core = pow(vFacing, 2.2);
+  float core = pow(clamp(vFacing, 0.0, 1.0), 2.2);
   float streak = 0.9 + 0.1 * sin(vUv.y * 40.0 - uTime * 30.0);
   float a = len * core * streak * 0.6 * uIntensity;
   vec3 col = mix(uColor, vec3(1.0), along * along * 0.35);
