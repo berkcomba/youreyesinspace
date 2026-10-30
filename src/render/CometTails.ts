@@ -9,7 +9,7 @@ import { propagateState } from '../math/propagate';
 import { Shaders } from './shaders';
 
 /** dust grid: release times × grain sizes */
-const N_TAU = 40;
+const N_TAU = 56;
 const N_BETA = 26;
 const N_DUST = N_TAU * N_BETA;
 /** how far back the dust is followed (days) */
@@ -151,7 +151,7 @@ export class CometTails {
     const gm = b.parent!.gm;
     for (let k = 0; k < N_TAU; k++) {
       const f = k / (N_TAU - 1);
-      const tauDays = TMAX_DAYS * f * f;
+      const tauDays = TMAX_DAYS * Math.pow(f, 1.5);
       if (!this.stateAt(b, jd - tauDays, _p, _v)) return;
       const rAU = _p.length() / AU_KM;
       const aRel = cometActivity(rAU, sqrtLum(b.parent!));
@@ -165,10 +165,11 @@ export class CometTails {
         propagateState(_p2, _r, gm * (1 - beta), tauDays * DAY_S, _m);
         if (!Number.isFinite(_m.x + _m.y + _m.z)) _m.copy(_p);
         t.dust[i * 3] = _m.x; t.dust[i * 3 + 1] = _m.y; t.dust[i * 3 + 2] = _m.z;
-        // older dust has spread thin; the biggest grains (small β) are few but linger
+        // older dust has spread thin; the biggest grains (small β) are few but linger;
+        // the freshest dust sits inside the coma, which is drawn on its own
         const age = tauDays / TMAX_DAYS;
-        t.dustW[i] = Math.min(aRel, 1.5) * Math.pow(1 - age, 0.9) / (1 + tauDays / 25) * (0.5 + 0.5 * Math.pow(1 - m / N_BETA, 0.5));
-        t.dustSize[i] = 2.4e6 * (0.035 + 0.965 * Math.pow(age, 0.6)) * (0.6 + 0.6 * beta);
+        t.dustW[i] = Math.min(aRel, 1.5) * Math.pow(1 - age, 0.5) / (1 + tauDays / 60) * Math.min(1, 0.04 + age * 5) * (0.5 + 0.5 * Math.pow(1 - m / N_BETA, 0.5));
+        t.dustSize[i] = 3.2e6 * (0.03 + 0.97 * Math.pow(age, 0.6)) * (0.6 + 0.6 * beta);
       }
     }
     t.lastJd = jd;
@@ -202,7 +203,7 @@ export class CometTails {
       const gain = Math.min(1, A) ** 0.5;
       for (let i = 0; i < N_DUST; i++) {
         pos[i * 3] = _p.x + t.dust[i * 3]; pos[i * 3 + 1] = _p.y + t.dust[i * 3 + 1]; pos[i * 3 + 2] = _p.z + t.dust[i * 3 + 2];
-        alpha[i] = t.dustW[i] * 0.1 * gain;
+        alpha[i] = t.dustW[i] * 0.28 * gain;
         size[i] = t.dustSize[i] * (0.7 + 0.3 * gain);
       }
       // ion tail: down the solar wind (≈400 km/s radial) as seen from the moving nucleus
@@ -223,7 +224,7 @@ export class CometTails {
         pos[i * 3] = nuc.x + _dir.x * L * s + _e1.x * (jx * w + rip) + _e2.x * jy * w;
         pos[i * 3 + 1] = nuc.y + _dir.y * L * s + _e1.y * (jx * w + rip) + _e2.y * jy * w;
         pos[i * 3 + 2] = nuc.z + _dir.z * L * s + _e1.z * (jx * w + rip) + _e2.z * jy * w;
-        alpha[i] = Math.pow(1 - s, 1.3) * 0.22 * gain * (0.5 + 0.5 * t.ionJitter[k * 3 + 2]);
+        alpha[i] = Math.pow(1 - s, 1.3) * 0.15 * gain * (0.5 + 0.5 * t.ionJitter[k * 3 + 2]);
         size[i] = L * 0.035 * (0.35 + 1.0 * s);
       }
       // coma

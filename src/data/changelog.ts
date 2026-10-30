@@ -12,9 +12,20 @@ export interface Release {
   items: Array<{ text: string }>;
 }
 
-export const CURRENT_VERSION = '0.7';
+export const CURRENT_VERSION = '0.8';
 
 export const CHANGELOG: Release[] = [
+  {
+    version: '0.8', date: '2026-10-30', title: 'Yayıncı modu: izleyicilerle birlikte uzay seferi',
+    items: [
+      { text: 'Yayıncı modu (youreyesinspace.com/?stream): yayıncı rotayı seçer, izleyiciler telefonlarıyla QR koddan katılıp yol üzerindeki bilgi kapılarının sorularını birlikte cevaplar' },
+      { text: 'İzleyiciler yayın sohbetine A, B, C veya D yazarak da cevap ve oy verebilir' },
+      { text: 'Yolda rastgele uzay olayları: ekip oyla karar veriyor, sonuç gemi gövdesini, cevap süresini ya da puan çarpanını değiştiriyor; her bölümün sonunda zorlu bir final sorusu' },
+      { text: 'Puanlama, sıralama ve oylar sunucuda: tek bir yayına binlerce izleyici katılabiliyor; telefonlar bot korumasından geçerek katılıyor' },
+      { text: 'Seslendirilmiş anlatıcı, ses efektleri ve canlı liderlik tablosu' },
+      { text: 'Kuyruklu yıldızların toz kuyrukları daha yumuşak ve doğal görünüyor' },
+    ],
+  },
   {
     version: '0.7', date: '2026-10-28', title: 'Yüzeye iniş, hacimsel galaksiler, keşfe açık bir evren',
     items: [

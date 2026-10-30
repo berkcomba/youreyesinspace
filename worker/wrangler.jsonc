@@ -1,0 +1,23 @@
+{
+  // Streamer Mode realtime relay: phones ↔ room shards ↔ the streamer's cockpit.
+  // Secrets (never in the repo), set with `wrangler secret put <NAME>`:
+  //   CREW_SECRET       signs phone ids (32+ chars)
+  //   TURNSTILE_SECRET  the Turnstile widget's secret; unset = new phones are not challenged
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "yeis-expedition",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  "workers_dev": true,
+  "durable_objects": {
+    "bindings": [
+      { "name": "ROOM", "class_name": "Room" },
+      { "name": "SHARD", "class_name": "Shard" }
+    ]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Room", "Shard"] }],
+  "vars": {
+    // exact origins, or a trailing * for a prefix (dev servers on any port / LAN address)
+    "ALLOWED_ORIGINS": "https://stream.youreyesinspace.com,https://youreyesinspace.com,https://www.youreyesinspace.com,http://localhost:*,http://stream.localhost:*,http://127.0.0.1:*,http://192.168.*"
+  },
+  "observability": { "enabled": true }
+}

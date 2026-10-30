@@ -10,12 +10,19 @@ WORKDIR /app
 ENV CI=true
 COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
-COPY tsconfig.json vite.config.ts index.html ./
+COPY tsconfig.json vite.config.ts index.html crew.html ./
 COPY public ./public
 COPY src ./src
 # BUILD_ID is baked into cache-busting query strings for /data and /models
 ARG BUILD_ID
 ENV BUILD_ID=${BUILD_ID}
+# Streamer Mode realtime relay (worker/); forks deploy their own and override this.
+# Keep connect-src in deploy/nginx/security-headers.conf in step.
+ARG VITE_XP_SERVER=wss://yeis-expedition.youreyesinspace.workers.dev
+ENV VITE_XP_SERVER=${VITE_XP_SERVER}
+# public Turnstile site key for the crew page (its secret lives in the relay: TURNSTILE_SECRET)
+ARG VITE_TURNSTILE_SITEKEY=0x4AAAAAAFrzykKTTrks-ilj
+ENV VITE_TURNSTILE_SITEKEY=${VITE_TURNSTILE_SITEKEY}
 RUN npm run build
 
 # ---------------------------------------------------------------------------

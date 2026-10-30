@@ -9,11 +9,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:stream": "vite --host --port 5180",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "qrcode-generator": "^2.0.4",
     "three": "^0.186.1"
   },
   "devDependencies": {

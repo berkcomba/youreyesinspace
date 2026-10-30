@@ -27,7 +27,8 @@ function walk(dir, out = []) {
   for (const f of readdirSync(dir)) {
     const p = join(dir, f);
     if (statSync(p).isDirectory()) walk(p, out);
-    else if (p.endsWith('.ts') && !p.includes('/i18n/')) out.push(p);
+    // Streamer Mode (src/expedition) is English-only by design and keeps its own strings
+    else if (p.endsWith('.ts') && !p.includes('/i18n/') && !p.includes('/expedition/')) out.push(p);
   }
   return out;
 }

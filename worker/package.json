@@ -1,0 +1,17 @@
+{
+  "name": "yeis-expedition-relay",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "check": "tsc --noEmit",
+    "load": "node load-test.mjs"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261029.1",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.155.0",
+    "ws": "^8.22.0"
+  }
+}

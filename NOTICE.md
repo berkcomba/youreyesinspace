@@ -41,6 +41,7 @@ Loaded at runtime directly from NASA servers; see `src/data/imagery.ts`.
 ## Software dependencies
 
 * [three.js](https://threejs.org/) — MIT
+* [qrcode-generator](https://github.com/kazuhikoarase/qrcode-generator) by Kazuhiko Arase — MIT (Streamer Mode join codes; "QR Code" is a registered trademark of DENSO WAVE INCORPORATED)
 * [Vite](https://vite.dev/), [TypeScript](https://www.typescriptlang.org/) — MIT / Apache-2.0 (build-time only)
 * Production image: nginx (2-clause BSD), Node.js (MIT) — build-time only
 

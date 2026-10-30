@@ -126,6 +126,18 @@ server {
     try_files $uri =404;
   }
 
+  # Streamer Mode crew page (stream.youreyesinspace.com/join/CODE): the lightweight phone
+  # entry, no Three.js. The cockpit itself is the normal shell (main.ts switches on the stream.* host).
+  location ~ ^/join(/[A-Za-z0-9]{4,8})?/?$ {
+    include /etc/nginx/snippets/security-headers.conf;
+    add_header Cache-Control "no-cache";
+    try_files /crew.html =404;
+  }
+  location = /crew.html {
+    include /etc/nginx/snippets/security-headers.conf;
+    add_header Cache-Control "no-cache";
+  }
+
   # HTML shell: always revalidate so a new deploy is picked up immediately.
   # The app has no client-side routes, so unknown paths are real 404s (the shell is still shown,
   # but with a 404 status: scanners probing /wp-admin etc. must not see a 200).

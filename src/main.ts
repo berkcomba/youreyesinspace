@@ -831,6 +831,61 @@ class App implements UIHost {
     this.goToSystemBody('c0', id);
   }
 
+  /* ---------------- streamer-mode expedition ---------------- */
+
+  /** Catalogue index of the star named exactly `name` (search is fuzzy: "Ran" also finds Rana). */
+  private starNamed(name: string): number | null {
+    const c = this.universe.catalog;
+    const hits = c.search(name, 5);
+    return hits.find((i) => c.nameOf(i) === name) ?? hits[0] ?? null;
+  }
+
+  hasStar(name: string): boolean {
+    return this.starNamed(name) !== null;
+  }
+
+  hasLandmark(id: string): boolean {
+    return !!this.universe.landmark(id);
+  }
+
+  /** Fly into the system of the star named `name`; returns the star's body id. */
+  flyToStarNamed(name: string): string | null {
+    const i = this.starNamed(name);
+    if (i === null) return null;
+    this.goToStar(`c${i}`);
+    return this.universe.star.id;
+  }
+
+  /** The star's body id when we are already in its system, otherwise null. */
+  starBodyIn(name: string): string | null {
+    const i = this.starNamed(name);
+    return i !== null && this.universe.current.starId === `c${i}` ? this.universe.star.id : null;
+  }
+
+  /** Back to the Sun's frame (no flight) so Solar System bodies resolve again. */
+  goHome(): void {
+    const u = this.universe;
+    if (u.current.starId === 'c0') return;
+    const delta = u.switchTo('c0', this.time.jd, this.time.t);
+    this.camera.shiftFrame(delta, u.star);
+  }
+
+  /** Stop `radii` landmark radii from a nebula / cluster, the approach swung `swing`° around it. */
+  goToLandmarkAt(id: string, radii: number, swing: number): boolean {
+    const u = this.universe;
+    const l = u.landmark(id);
+    if (!l) return false;
+    const i = u.landmarks.indexOf(l);
+    this.selectLandmark(i);
+    const centre = u.landmarkRelative(i, new Vector3(0, 0, 0));
+    const R = l.def.radiusPc * PARSEC_KM;
+    const from = new Vector3().copy(this.camera.position).sub(centre).normalize();
+    const side = new Vector3().crossVectors(from, Math.abs(from.z) < 0.9 ? new Vector3(0, 0, 1) : new Vector3(1, 0, 0)).normalize();
+    const dir = from.multiplyScalar(Math.cos(swing * DEG)).addScaledVector(side, Math.sin(swing * DEG)).normalize();
+    this.camera.goToPoint(centre, R * radii, dir, { radius: R * 0.3, name: _(l.def.name) });
+    return true;
+  }
+
   /* ---------------- tour cues ---------------- */
 
   /** Planets, moons and small bodies get the backlit tour composition (Sun over the limb). */
@@ -1746,6 +1801,13 @@ class App implements UIHost {
 
   screenshot(): void {
     this.wantScreenshot = true;
+  }
+
+  /** Streamer Mode: only body labels over the sky, without saving over the visitor's settings */
+  streamView(): void {
+    this.persistSettings = false;
+    Object.assign(this.settings, { starNames: false, galaxyNames: false, markers: false, distances: false });
+    this.applySettings();
   }
 
   toggleUI(): void {
@@ -2717,6 +2779,12 @@ async function boot(): Promise<void> {
     // Expose for debugging / console experiments
     (window as unknown as { yeits: App }).yeits = app;
     app.launch(launch);
+    // Streamer Mode (The Great Expedition): stream.* host or ?stream; its UI replaces the app's
+    if (location.hostname.startsWith('stream.') || new URLSearchParams(location.search).has('stream')) {
+      const { startCockpit } = await import('./expedition/host');
+      app.streamView();
+      startCockpit(app);
+    }
   } catch (err) {
     console.error(err);
     if (loaderText) loaderText.textContent = `${_('Yükleme hatası')}: ${(err as Error).message}`;

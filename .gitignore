@@ -7,3 +7,10 @@ dist
 
 # textbook (not for the repo)
 *.pdf
+
+# design briefs (not for the repo)
+THE_GREAT_EXPEDITION_SPEC*.md
+
+# relay build state
+.wrangler
+.dev.vars
