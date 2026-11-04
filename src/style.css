@@ -536,7 +536,17 @@ input[type=range] { width: 120px; accent-color: var(--accent); }
 .time-date { font-family: var(--mono); font-size: 14px; letter-spacing: 0.02em; margin-bottom: 8px; color: var(--text); }
 .time-controls { display: flex; gap: 8px; align-items: center; }
 .time-controls button { min-width: 34px; height: 28px; padding: 0 8px; font-family: var(--mono); font-size: 11px; }
-.time-rate { font-family: var(--mono); font-size: 11.5px; color: var(--text-2); min-width: 90px; }
+.time-rate {
+  font-family: var(--mono); font-size: 11.5px; color: var(--text-2); min-width: 90px;
+  display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 8px; text-align: left;
+}
+.time-rate .caret { width: 10px; height: 10px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.4; opacity: 0.7; }
+/* the time presets open upward from the bottom bar: a compact two-column list */
+#time-menu { top: auto; bottom: 34px; left: 0; right: auto; width: 230px; max-height: min(60vh, 480px); }
+#time-menu .dropdown-item { font-family: var(--mono); font-size: 12px; padding: 4px 12px; }
+#time-menu .dropdown-item .n { font-family: var(--sans, inherit); }
+#time-menu .time-dir { display: flex; gap: 6px; padding: 8px 12px 6px; }
+#time-menu .time-dir button { flex: 1; height: 26px; font-family: var(--mono); font-size: 11px; }
 /* Navigation readout: a two-column instrument table, labels quiet, values aligned on the right */
 .nav-block { display: grid; grid-template-columns: auto auto; column-gap: 14px; row-gap: 1px; justify-content: end; }
 .nav-row { display: contents; }
@@ -607,6 +617,111 @@ kbd {
 #toast .toast-link { color: var(--text); text-decoration: underline; text-underline-offset: 2px; }
 #toast .toast-link:hover { color: var(--accent, #fff); }
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---------- Welcome (first visit) ----------
+   Five chapters set like the opening pages of a book: a small chapter mark, a serif headline,
+   a paragraph or two, and plain text controls. The panel sits left; the live scene fills the
+   rest and is flown shot by shot. Two typefaces only — the app's serif and its system sans. */
+body.welcoming #ui > :not(#welcome), body.welcoming canvas#overlay { visibility: hidden; }
+.welcome { position: absolute; inset: 0; z-index: 8; animation: fade-in 0.9s ease both; --ink: #f3f1ea; --ink-2: rgba(243, 241, 234, 0.74); --ink-3: rgba(243, 241, 234, 0.46); --hair: rgba(243, 241, 234, 0.14); }
+.welcome[hidden] { display: none; }
+.welcome::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(9, 11, 15, 0.94) 0%, rgba(9, 11, 15, 0.86) 30%, rgba(9, 11, 15, 0.45) 46%, rgba(9, 11, 15, 0) 62%),
+    linear-gradient(0deg, rgba(9, 11, 15, 0.55) 0%, rgba(9, 11, 15, 0) 28%);
+}
+.welcome-skip {
+  position: absolute; top: 22px; right: 28px; z-index: 1; height: auto; padding: 4px 0;
+  background: none; border: 0; border-radius: 0;
+  font-family: var(--font); font-size: 13px; color: var(--ink-3); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: transparent;
+}
+.welcome-skip:hover { background: none; color: var(--ink); text-decoration-color: var(--ink-3); }
+.welcome-panel {
+  position: absolute; left: clamp(28px, 6vw, 104px); top: 0; bottom: 0; width: min(540px, 44vw);
+  display: flex; flex-direction: column; justify-content: center; gap: 40px; padding: 72px 0 40px;
+}
+.welcome-pages { position: relative; min-height: 0; }
+.welcome-page { color: var(--ink-2); font-family: var(--serif); font-size: 16.5px; line-height: 1.55; }
+.welcome-page[hidden] { display: none; }
+.welcome-page.in > * { animation: welcome-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.welcome-page.in > :nth-child(2) { animation-delay: 0.08s; }
+.welcome-page.in > :nth-child(3) { animation-delay: 0.16s; }
+.welcome-page.in > :nth-child(4) { animation-delay: 0.24s; }
+.welcome-page.in > :nth-child(5) { animation-delay: 0.32s; }
+@keyframes welcome-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+/* chapter mark: roman numeral, then the chapter name in italic */
+.welcome-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 22px; font-family: var(--serif); font-size: 15px; color: var(--ink-3); }
+.welcome-num { color: var(--accent); letter-spacing: 0.06em; }
+.welcome-label { font-style: italic; }
+.welcome-title {
+  margin: 0 0 20px; font-family: var(--serif); font-weight: 400; letter-spacing: 0.005em;
+  font-size: clamp(34px, 3.9vw, 56px); line-height: 1.04; color: var(--ink); text-wrap: balance;
+}
+.welcome-text { margin: 0 0 14px; max-width: 44ch; }
+.welcome-text:last-child { margin-bottom: 0; }
+.welcome-live { font-style: italic; font-size: 14.5px; color: var(--ink-3); margin: 24px 0 0; max-width: 44ch; }
+/* figures: tall serif numerals over a plain sans caption */
+.welcome-stats { display: grid; grid-template-columns: repeat(4, auto); justify-content: start; gap: 0 36px; margin: 32px 0 0; }
+.welcome-stats dt { font-family: var(--serif); font-size: 30px; line-height: 1; color: var(--ink); white-space: nowrap; }
+.welcome-stats dd { margin: 6px 0 0; font-family: var(--font); font-size: 12.5px; color: var(--ink-3); white-space: nowrap; }
+/* features: a numbered list with hanging numerals, separated by hairlines */
+.welcome-list { margin: 24px 0 0; padding: 0; list-style: none; counter-reset: feat; font-family: var(--font); font-size: 13.5px; line-height: 1.4; }
+.welcome-list li { counter-increment: feat; display: flex; gap: 14px; align-items: baseline; padding: 8px 0; color: var(--ink-2); }
+.welcome-list li + li { border-top: 1px solid var(--hair); }
+.welcome-list li::before { content: counter(feat); font-family: var(--serif); font-size: 14px; color: var(--accent); flex: 0 0 18px; }
+.welcome-grid { display: grid; grid-template-columns: auto 1fr; gap: 9px 24px; margin-top: 26px; font-family: var(--font); font-size: 13.5px; line-height: 1.4; }
+.welcome-page a { color: var(--ink); text-decoration-color: var(--ink-3); text-underline-offset: 3px; }
+.welcome-page a:hover { text-decoration-color: var(--ink); }
+.welcome-k { color: var(--ink-3); }
+/* support: one filled call, one plain link */
+.welcome-support { display: flex; align-items: center; gap: 24px; margin-top: 30px; font-family: var(--font); font-size: 13.5px; }
+.welcome-sponsor {
+  display: inline-flex; align-items: center; height: 38px; padding: 0 20px; text-decoration: none !important;
+  color: #0b0c0f !important; background: var(--accent); border-radius: var(--radius); transition: background 0.15s;
+}
+.welcome-sponsor:hover { background: #d7b98c; }
+.welcome-link { color: var(--ink-2) !important; text-decoration: underline !important; text-decoration-color: var(--ink-3) !important; text-underline-offset: 3px; }
+.welcome-link:hover { color: var(--ink) !important; text-decoration-color: var(--ink) !important; }
+/* nav: two words and a segmented progress line between them */
+.welcome-nav { display: flex; align-items: center; gap: 24px; }
+.welcome-step {
+  height: auto; padding: 6px 0; background: none; border: 0; border-radius: 0; display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font); font-size: 13.5px; color: var(--ink-2);
+}
+.welcome-step:hover { background: none; color: var(--ink); }
+.welcome-step:disabled { opacity: 0.3; }
+.welcome-step:disabled:hover { background: none; color: var(--ink-2); }
+.welcome-step.next { color: var(--ink); }
+.welcome-arrow { display: inline-block; transition: transform 0.2s; }
+.welcome-step.next:hover .welcome-arrow { transform: translateX(4px); }
+.welcome-step.go { color: var(--accent); }
+.welcome-bars { display: flex; gap: 5px; margin: 0 auto; }
+.welcome-dot { width: 22px; height: 13px; padding: 6px 0; background: var(--hair); background-clip: content-box; cursor: pointer; transition: background-color 0.3s; }
+.welcome-dot.on { background-color: var(--accent); }
+.welcome-dot:hover { background-color: var(--ink-3); }
+@media (max-width: 900px) {
+  .welcome::before {
+    background:
+      linear-gradient(0deg, rgba(9, 11, 15, 0.95) 0%, rgba(9, 11, 15, 0.9) 42%, rgba(9, 11, 15, 0.4) 58%, rgba(9, 11, 15, 0) 72%),
+      linear-gradient(180deg, rgba(9, 11, 15, 0.5) 0%, rgba(9, 11, 15, 0) 20%);
+  }
+  .welcome-panel {
+    left: 22px; right: 22px; width: auto; top: auto; bottom: 0; justify-content: flex-end; gap: 18px;
+    padding: 0 0 max(16px, env(safe-area-inset-bottom)); max-height: 74vh;
+  }
+  .welcome-pages { overflow-y: auto; }
+  .welcome-page { font-size: 15px; line-height: 1.5; }
+  .welcome-head { margin-bottom: 12px; font-size: 14px; }
+  .welcome-title { font-size: clamp(28px, 8vw, 38px); margin-bottom: 12px; }
+  .welcome-stats { grid-template-columns: 1fr 1fr; gap: 14px 16px; margin-top: 18px; }
+  .welcome-stats dt { font-size: 26px; }
+  .welcome-list { margin-top: 14px; }
+  .welcome-list li { padding: 7px 0; }
+  .welcome-grid { margin-top: 18px; }
+  .welcome-support { gap: 18px; margin-top: 20px; }
+  .welcome-skip { top: max(12px, env(safe-area-inset-top)); right: 16px; }
+}
 
 /* ---------- Loader ---------- */
 #loader {
@@ -726,6 +841,7 @@ kbd {
   .time-controls { justify-content: center; }
   .time-controls button { min-width: 36px; padding: 0 6px; }
   .time-rate { min-width: 0; margin-left: 6px; font-size: 11px; }
+  #time-menu { left: 50%; transform: translateX(-50%); }
   .nav-block { display: flex; justify-content: center; gap: 14px; }
   .nav-row { display: flex; gap: 5px; align-items: baseline; }
   .nav-row .k { font-size: 10.5px; }

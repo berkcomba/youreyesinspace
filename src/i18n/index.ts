@@ -117,10 +117,20 @@ export function fmtNum(n: number, opts?: Intl.NumberFormatOptions): string {
   return n.toLocaleString(localeTag(), opts);
 }
 
+const fixedFormats = new Map<string, Intl.NumberFormat>();
+
 /** Locale-aware `n.toFixed(digits)` (decimal separator + grouping follow the UI language). */
 export function fixed(n: number, digits: number): string {
   if (!Number.isFinite(n)) return String(n);
-  return n.toLocaleString(localeTag(), { minimumFractionDigits: digits, maximumFractionDigits: digits });
+  // a formatter per locale and precision: building one per call costs more than the formatting
+  const tag = localeTag();
+  const key = `${tag}|${digits}`;
+  let f = fixedFormats.get(key);
+  if (!f) {
+    f = new Intl.NumberFormat(tag, { minimumFractionDigits: digits, maximumFractionDigits: digits });
+    fixedFormats.set(key, f);
+  }
+  return f.format(n);
 }
 
 /**

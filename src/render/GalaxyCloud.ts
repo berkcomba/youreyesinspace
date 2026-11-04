@@ -7,10 +7,13 @@ import { GalaxyModel, POPULATION_COLOR } from '../galaxy/GalaxyModel';
 import { PROCEDURAL_TINT } from './ProcStarPoints';
 import { Shaders } from './shaders';
 import type { Volume, Volumes } from './Volumes';
+import { presetBounds } from './Bounds';
 
 const _local = new Vector3();
 /** light left to the point cloud when a volume carries the rest (grain of the star clouds) */
 const POINT_SHARE = 0.22;
+/** share of the galaxy glow left at the very centre (see update) */
+const CORE_FLOOR = 0.05;
 /**
  * Materials of dropped clouds, kept rather than disposed: disposing the last one releases the
  * shader program, and flying back into a galaxy would stall a frame recompiling it.
@@ -49,7 +52,7 @@ export class GalaxyCloud {
     this.volume = volumes ? volumes.galaxy(model, GalaxyCloud.gain, POINT_SHARE) : null;
     const alpha = GalaxyCloud.gain * (model.luminosity / count) / (this.blobRadius * this.blobRadius);
     this.fullAlpha = alpha;
-    const geo = new BufferGeometry();
+    const geo = presetBounds(new BufferGeometry());
     geo.setAttribute('position', new BufferAttribute(pos, 3));
     geo.setAttribute('color', new BufferAttribute(col, 3));
     geo.setAttribute('weight', new BufferAttribute(w, 1));
@@ -68,6 +71,8 @@ export class GalaxyCloud {
         uDaylight: { value: 0 },
         uMaxPx: { value: 1 },
         uExtinction: { value: 0 },
+        uCoreFade: { value: 1 },
+        uBulgePc: { value: model.bulgeRadius },
         uSoftness: { value: 1.0 },
         uTint: { value: new Vector4(...PROCEDURAL_TINT, 0) },
       },
@@ -135,6 +140,12 @@ export class GalaxyCloud {
     // telescopic field of view, where the unresolved blobs would magnify into soft patches
     const fade = (1 - smoothstep(8, 18, ratio)) * smoothstep(4, 12, fovDeg);
     u.uFade.value = fade;
+    // approaching the core its glow gives way (the disc and arms stay): the camera is among the
+    // very stars that make it, and they are drawn one by one — and the real centre hides behind
+    // the dense dust of the central zone. A screen-wide white haze would be neither
+    const coreRatio = u.uCenterRel.value.length() / this.model.bulgeRadius;
+    const coreFade = CORE_FLOOR + (1 - CORE_FLOOR) * Math.pow(smoothstep(0.1, 4, coreRatio), 1.5);
+    u.uCoreFade.value = coreFade;
     if (!this.complete) this.fill(fade > 0.3 ? 12 : 4);
     // inside a disc: dust limits the view to the nearest few kpc (≈1 mag/kpc)
     let ext = 0;
@@ -154,6 +165,7 @@ export class GalaxyCloud {
     if (v) {
       v.place(camPc, this.center, this.model.radius, v.u.uToLocal.value, pxPerRad);
       v.u.uFade.value = fade;
+      v.u.uCoreFade.value = coreFade;
       v.u.uSteps.value = ratio < 1.4 ? 88 : 60;
       v.active = visible && volumetric;
     }

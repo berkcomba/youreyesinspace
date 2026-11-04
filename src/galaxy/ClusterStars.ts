@@ -32,6 +32,59 @@ export interface ClusterParams {
   count: number;
   /** [Fe/H], globulars */
   feh?: number;
+  /** centre of the member distribution relative to the landmark (pc, scene frame); the landmark centre by default */
+  centrePc?: [number, number, number];
+  /** radius of the member distribution (pc); the landmark radius by default (an H II region's exciting cluster is far smaller than the cloud) */
+  radiusPc?: number;
+  /**
+   * faintest-allowed absolute magnitude floor: no member brighter than this. Catalogue nebulae use
+   * it so the generated members only fill in below the survey's completeness limit and never
+   * duplicate the real stars already in the catalogue.
+   */
+  minAbsMag?: number;
+}
+
+/** Does this landmark carry real, selectable member stars? */
+export function hasMembers(def: LandmarkDef): boolean {
+  return def.cluster !== undefined || def.kind === 'cluster' || def.kind === 'globular';
+}
+
+/** Are the members drawn / pickable? Generated objects: always; catalogue objects: only when given explicit parameters */
+export function drawsMembers(def: LandmarkDef): boolean {
+  return def.procedural ? hasMembers(def) : def.cluster !== undefined;
+}
+
+/** apparent magnitude the star catalogue is complete to (Tycho-2) */
+const CATALOG_COMPLETE_MAG = 11.0;
+
+/**
+ * Member parameters for a catalogue emission nebula: the young exciting cluster inside the cloud.
+ * Members stay fainter than the catalogue's completeness limit at the nebula's distance, so the
+ * bright O/B stars remain the real ones (e.g. the Trapezium in M42).
+ */
+export function nebulaCluster(radiusPc: number, distancePc: number | undefined): ClusterParams {
+  return catalogueCluster(distancePc, {
+    ageMyr: 2,
+    count: Math.round(Math.min(Math.max(150 * radiusPc / 6, 60), MAX_OPEN)),
+    radiusPc: radiusPc * 0.35,
+  });
+}
+
+/**
+ * Member parameters for a catalogue cluster (MWSC open clusters, Harris globulars, the hand-picked
+ * ones): generated members below the star catalogue's completeness limit at its distance, so a
+ * nearby cluster whose bright stars the catalogue already holds (the Pleiades) only gains its faint
+ * dwarfs, while a distant one gets the whole population. Without them the cluster would resolve
+ * into nothing but the unresolved glow: the sprite's stars vanish and no real ones replace them.
+ */
+export function catalogueCluster(distancePc: number | undefined, params: Omit<ClusterParams, 'minAbsMag'>): ClusterParams {
+  const d = distancePc ?? 50_000;
+  return { ...params, minAbsMag: CATALOG_COMPLETE_MAG - 5 * Math.log10(Math.max(d, 10) / 10) };
+}
+
+/** Member count of a globular from its integrated magnitude (capped: the draw is one point per member) */
+export function globularCount(absMag: number): number {
+  return Math.round(Math.min(MAX_GLOBULAR, 2500 * Math.pow(10, -0.4 * (absMag + 7))));
 }
 
 export const MAX_OPEN = 700;
@@ -48,7 +101,8 @@ export function parseMemberId(id: string): { landmarkId: string; n: number } | n
 export function clusterMembers(def: LandmarkDef): ClusterMember[] {
   const c = def.cluster ?? { ageMyr: def.kind === 'globular' ? 12_000 : 200, count: 300 };
   const rng = new Rng(hashStr(def.id) ^ 0x5c1a);
-  const R = def.radiusPc;
+  const R = c.radiusPc ?? def.radiusPc;
+  const [cx, cy, cz] = c.centrePc ?? [0, 0, 0];
   const globular = def.kind === 'globular';
   const n = Math.min(c.count, globular ? MAX_GLOBULAR : MAX_OPEN);
   // main-sequence turn-off mass from the age (t_MS ≈ 10 Gyr · M^-2.5)
@@ -56,30 +110,48 @@ export function clusterMembers(def: LandmarkDef): ClusterMember[] {
   const out: ClusterMember[] = [];
   const p = new Vector3();
   for (let i = 0; i < n; i++) {
-    // Kroupa-like IMF between 0.3 M☉ and the turn-off (heavier stars are already remnants)
-    let m: number;
-    const u = rng.next();
-    if (u < 0.45) m = 0.3 + rng.next() * 0.5;
-    else m = Math.min(0.8 * Math.pow(1 - rng.next() * 0.999, -1 / 1.35), Math.max(mTurn * 1.08, 0.85));
-    let T: number, L: number, lumClass = 5;
-    if (m >= mTurn * 0.92 && m <= mTurn * 1.08 && rng.chance(0.55)) {
-      // at the turn-off: red giants (globulars: the red giant branch; young clusters: red supergiants)
-      lumClass = 3;
-      const ms = mainSequenceL(m);
-      // evolved stars: the giant-branch gain shrinks with mass (massive stars evolve at roughly
-      // constant luminosity); nothing brighter than the Eddington-limited ~1e6 L☉
-      L = Math.min(ms * (m > 12 ? rng.range(1.5, 4) : m > 4 ? rng.range(5, 15) : rng.range(15, 80)), 1.2e6);
-      T = rng.range(3600, 4800);
-      if (m > 8) { lumClass = 1; T = rng.range(3400, 4000); }
-    } else if (m > mTurn * 1.08) {
-      // past the turn-off and still here: horizontal branch (globulars) / blue stragglers
-      lumClass = 3;
-      L = rng.range(30, 70);
-      T = globular ? rng.range(7000, 12_000) : rng.range(9000, 15_000);
-    } else {
-      L = mainSequenceL(m);
-      T = 5772 * Math.pow(m, 0.505);
-      if (globular && c.feh !== undefined) T *= 1 + 0.025 * Math.max(0, -c.feh - 1); // metal-poor stars run bluer
+    let m = 0, T = 0, L = 0, lumClass = 5, absMag = 0;
+    // stars brighter than the floor are re-drawn (they are the catalogue's, not ours)
+    for (let attempt = 0; attempt < 12; attempt++) {
+      // Kroupa-like IMF between 0.3 M☉ and the turn-off (heavier stars are already remnants)
+      const u = rng.next();
+      if (u < 0.45) m = 0.3 + rng.next() * 0.5;
+      else m = Math.min(0.8 * Math.pow(1 - rng.next() * 0.999, -1 / 1.35), Math.max(mTurn * 1.08, 0.85));
+      lumClass = 5;
+      if (m >= mTurn * 0.92 && m <= mTurn * 1.08 && rng.chance(0.55)) {
+        // at the turn-off: red giants (globulars: the red giant branch; young clusters: red supergiants)
+        lumClass = 3;
+        const ms = mainSequenceL(m);
+        // evolved stars: the giant-branch gain shrinks with mass (massive stars evolve at roughly
+        // constant luminosity); nothing brighter than the Eddington-limited ~1e6 L☉
+        if (m > 4) {
+          L = Math.min(ms * (m > 12 ? rng.range(1.5, 4) : rng.range(5, 15)), 1.2e6);
+          T = rng.range(3600, 4800);
+        } else {
+          // low-mass stars climb a long giant branch: most sit near its foot (10–30 L☉), a few
+          // reach the tip at ~2000 L☉ (M_V ≈ −3), cooler and redder the higher they are
+          const g = Math.pow(rng.next(), 2.5);
+          L = ms * Math.pow(10, 1.0 + 2.4 * g);
+          T = 5000 - 1300 * g + rng.range(-150, 150);
+        }
+        if (m > 8) { lumClass = 1; T = rng.range(3400, 4000); }
+      } else if (m > mTurn * 1.08) {
+        // past the turn-off and still here: horizontal branch (globulars) / blue stragglers
+        lumClass = 3;
+        L = rng.range(30, 70);
+        T = globular ? rng.range(7000, 12_000) : rng.range(9000, 15_000);
+      } else {
+        L = mainSequenceL(m);
+        T = 5772 * Math.pow(m, 0.505);
+        if (globular && c.feh !== undefined) T *= 1 + 0.025 * Math.max(0, -c.feh - 1); // metal-poor stars run bluer
+      }
+      absMag = 4.74 - 2.5 * Math.log10(Math.max(L, 1e-9)) - bolometricCorrection(T);
+      if (c.minAbsMag === undefined || absMag >= c.minAbsMag) break;
+      if (attempt === 11) {
+        // give up: a dwarf just below the floor
+        lumClass = 5; absMag = c.minAbsMag + rng.range(0.2, 1.5);
+        L = Math.pow(10, (4.74 - absMag) / 2.5); m = Math.min(Math.max(Math.pow(L, 1 / 4), 0.3), 2); T = 5772 * Math.pow(m, 0.505);
+      }
     }
     // position: Plummer sphere (open) or King-like (globular), heavy stars sink to the centre
     const seg = Math.pow(Math.min(m / Math.max(mTurn, 0.9), 1), 0.5);
@@ -96,8 +168,7 @@ export function clusterMembers(def: LandmarkDef): ClusterMember[] {
     r = Math.min(r, R * 1.5);
     const zc = rng.range(-1, 1), th = rng.range(0, Math.PI * 2), rr = Math.sqrt(1 - zc * zc);
     p.set(rr * Math.cos(th), rr * Math.sin(th), zc).multiplyScalar(r);
-    const absMag = 4.74 - 2.5 * Math.log10(Math.max(L, 1e-9)) - bolometricCorrection(T);
-    out.push({ x: p.x, y: p.y, z: p.z, massSolar: m, temperature: T, luminosity: L, lumClass, absMag, color: temperatureToRgb(T) });
+    out.push({ x: p.x + cx, y: p.y + cy, z: p.z + cz, massSolar: m, temperature: T, luminosity: L, lumClass, absMag, color: temperatureToRgb(T) });
   }
   return out;
 }
@@ -194,7 +265,7 @@ export class ClusterStars {
     let best: { id: string; distPc: number } | null = null;
     for (let i = from; i < landmarks.length; i++) {
       const l = landmarks[i];
-      if (l.def.kind !== 'cluster' && l.def.kind !== 'globular') continue;
+      if (!hasMembers(l.def)) continue;
       const R = l.def.radiusPc * 2;
       if (l.positionPc.distanceToSquared(p) > R * R) continue;
       const ox = p.x - l.positionPc.x, oy = p.y - l.positionPc.y, oz = p.z - l.positionPc.z;

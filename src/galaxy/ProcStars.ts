@@ -126,7 +126,18 @@ export class ProcStars {
   /** generated cells per tier (a crossing only generates the new slab, the rest is copied) */
   private readonly cellCache: Map<string, CellData>[] = TIERS.map(() => new Map());
 
+  /** Milky Way stars the real catalogue already holds: everything within `bubblePc` of the Sun and, beyond, anything brighter than `completeMag` seen from the Sun */
+  private real = { bubblePc: HYG_RADIUS_PC, completeMag: -Infinity };
+
   constructor(private readonly galaxies: GalaxyIndex) {}
+
+  /** The real catalogue grew (Gaia / Tycho tiers loaded): drop the generated stars it now covers */
+  setRealCoverage(bubblePc: number, completeMag: number): void {
+    if (this.real.bubblePc === bubblePc && this.real.completeMag === completeMag) return;
+    this.real = { bubblePc, completeMag };
+    for (const c of this.cellCache) c.clear();
+    for (const t of this.tiers) t.cell = [NaN, NaN, NaN];
+  }
 
   /** Regenerate cells if the camera moved into another cell / galaxy. Returns changed tiers. */
   update(camPc: Vector3, galaxy: number | null): ProcTier[] {
@@ -206,10 +217,16 @@ export class ProcStars {
       for (let q = 0; q < n; q++) {
         this.sampleStar(rng, spec, model, g, i, j, k, sample);
         if (sample.luminosity <= 0) continue;
-        model.toScene(sample.local, _scene).sub(centre);
+        model.toScene(sample.local, _scene);
+        const absMag = absMagOf(sample.luminosity, sample.temperature);
+        if (g === 0) {
+          const dSun = _scene.length();
+          if (dSun < this.real.bubblePc || absMag + 5 * Math.log10(dSun) - 5 < this.real.completeMag) continue;
+        }
+        _scene.sub(centre);
         const idx = cell.count++;
         cell.positions[idx * 3] = _scene.x; cell.positions[idx * 3 + 1] = _scene.y; cell.positions[idx * 3 + 2] = _scene.z;
-        cell.absMags[idx] = absMagOf(sample.luminosity, sample.temperature);
+        cell.absMags[idx] = absMag;
         const [cr, cg, cb] = temperatureToRgb(sample.temperature);
         cell.colors[idx * 3] = cr; cell.colors[idx * 3 + 1] = cg; cell.colors[idx * 3 + 2] = cb;
         cell.qs[idx] = q;

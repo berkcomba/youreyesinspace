@@ -18,11 +18,13 @@ uniform float uWarp;      // arm-phase distortion (lopsided, irregular arms)
 uniform float uFloc;      // 0 grand design … 1 flocculent
 uniform float uRing;      // inner ring at the bar's end
 uniform float uNear;      // camera distance under which the procedural stars carry the light
+uniform float uCoreFade;  // share of the bulge glow left, from the camera's depth in the core (GalaxyCloud)
 uniform vec4 uBlobs[6];   // irregulars: centre, size
 uniform float uBlobW[6];
 uniform float uNBlobs;
 
 const float BULGE_C = 0.5;
+const float BULGE_CORE = 0.3;
 const vec3 OLD = vec3(1.0, 0.80, 0.58);
 const vec3 DISC = vec3(1.0, 0.91, 0.78);
 const vec3 YOUNG = vec3(0.62, 0.76, 1.0);
@@ -53,7 +55,7 @@ void galaxyAt(vec3 p, float t, float dt, out vec3 e, out float k) {
   float r = length(p.xz);
   if (uType < 0.5) {
     float rr = length(vec2(r, p.y / max(0.3, uAxis))) / uBulge + 1e-3;
-    e = OLD * 6.0 / (rr * pow(1.0 + rr, 3.0));
+    e = OLD * 6.0 / (rr * pow(1.0 + rr, 3.0)) * uCoreFade;
     return;
   }
   if (uType > 3.5) {
@@ -76,12 +78,14 @@ void galaxyAt(vec3 p, float t, float dt, out vec3 e, out float k) {
     return;
   }
   // a more compact bulge than the model's (same light): a bright core instead of a sky-wide haze
-  float rb = length(vec2(r, p.y / 0.6)) / (uBulge * BULGE_C) + 1e-3;
+  // the cusp is softened over a core (a few hundred pc): the column through the very centre
+  // would otherwise be hundreds of times the disc's, a flat white disc at any exposure
+  float rb = sqrt(dot(vec2(r, p.y / 0.6), vec2(r, p.y / 0.6)) / (uBulge * uBulge * BULGE_C * BULGE_C) + BULGE_CORE * BULGE_CORE);
   float bulge = 12.0 * (0.7 / 0.6) / (BULGE_C * BULGE_C * BULGE_C) / (rb * pow(1.0 + rb, 3.0));
   float base = exp(-(r - 0.5467) / uHs);
   if (r > 1.25) base *= exp(-(r - 1.25) / 0.1);
   float sy = abs(p.y) / uHz;
-  e = OLD * bulge;
+  e = OLD * bulge * uCoreFade;
   // far above the disc only the bulge / halo light matters
   if (sy > 9.0) return;
   float arm = 0.0, lane = 0.0, barMod = 1.0;
@@ -115,7 +119,8 @@ void galaxyAt(vec3 p, float t, float dt, out vec3 e, out float k) {
   // star clouds: the arms break up into clumps, the old disc only slightly
   float clumpY = clamp(0.62 + 0.45 * n1 + 0.3 * n2, 0.0, 2.0);
   float clumpO = 0.88 + 0.12 * n1;
-  e += DISC * oldDisc * clumpO + YOUNG * youngDisc * clumpY;
+  // the inner disc (and bar: several times the solar neighbourhood's density) dims with the core too, by less
+  e += (DISC * oldDisc * clumpO + YOUNG * youngDisc * clumpY) * pow(uCoreFade, 0.75);
   // H II regions: pink knots strung along the arms; nearby ones are landmarks of their own,
   // only distant ones are part of the glow
   float hiiW = youngDisc * smoothstep(uNear * 1.5, uNear * 4.0, t);

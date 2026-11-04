@@ -1,7 +1,7 @@
 import {
   AdditiveBlending, AmbientLight, BackSide, Box3, CircleGeometry, Color, CylinderGeometry, DirectionalLight, DoubleSide, FrontSide, Group, Mesh,
   MeshStandardMaterial, NormalBlending, PlaneGeometry, Quaternion, RingGeometry, Scene, ShaderMaterial, Sphere, SphereGeometry, Vector2, Vector3, Vector4,
-  type Camera, type IUniform,
+  type Camera, type IUniform, type WebGLRenderer,
 } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
@@ -14,10 +14,13 @@ import { Plumes } from './Plumes';
 import { IMAGERY } from '../data/imagery';
 import type { Clouds } from '../data/types';
 import { Shaders } from './shaders';
+import { GODRAYS_LAYER } from './GodRaysPass';
 import { TileGlobe } from './TileGlobe';
 import { buildProceduralShip, disposeGroup } from './ProceduralShips';
 import { Terrain, type TerrainMeta } from './Terrain';
 import type { GeneratedGround } from './GroundGen';
+import { BAKE_FADE_S, SurfaceBaker, type SurfaceBake } from './PlanetBake';
+import { disposeOrPin } from './ProgramPins';
 
 export interface RenderSettings {
   atmospheres: boolean;
@@ -55,6 +58,11 @@ function cloudUniform(c: Clouds | undefined): Vector4 {
   return c ? new Vector4(c.coverage, c.opacity, c.seed, c.height) : new Vector4(0, 0, 0, 0);
 }
 
+/** the baked surface maps, empty until PlanetBake has them */
+function bakeUniforms(): Uniforms {
+  return { uBakeA: { value: null }, uBakeN: { value: null }, uBaked: { value: 0 }, uBakeRes: { value: 512 } };
+}
+
 function lightingUniforms(): Uniforms {
   return {
     uSunPos: { value: new Vector3() },
@@ -70,6 +78,9 @@ function lightingUniforms(): Uniforms {
     uAlpha: { value: 1 },
   };
 }
+
+/** `uStyle` of terrestrial_common.glsl */
+const SURFACE_STYLE = { generic: 0, temperate: 1, desert: 2, ice: 3, lava: 4 } as const;
 
 function ringGapUniforms(body: CelestialBody): Vector4[] {
   const out = [new Vector4(), new Vector4(), new Vector4(), new Vector4()];
@@ -112,6 +123,25 @@ function loadModel(url: string): Promise<Group> {
   return p;
 }
 
+/** Distance (km) at which a ringed body's boulder layer is built (its far specks fade in at 400 000 km) */
+const RING_PARTICLES_BUILD_KM = 600_000;
+
+/**
+ * Ring sheets (384 × 24 segments, under a millisecond each but a frame switch builds several)
+ * are shared between bodies with the same radii and kept across system switches: the shader
+ * reads the radius off the vertex positions, so the geometry cannot simply be scaled
+ */
+const ringGeos = new Map<string, RingGeometry>();
+function ringGeometry(inner: number, outer: number): RingGeometry {
+  const key = `${inner}:${outer}`;
+  let g = ringGeos.get(key);
+  if (g) { ringGeos.delete(key); ringGeos.set(key, g); return g; }
+  g = new RingGeometry(inner, outer, 384, 24);
+  if (ringGeos.size >= 24) { const [k0, g0] = ringGeos.entries().next().value!; g0.dispose(); ringGeos.delete(k0); }
+  ringGeos.set(key, g);
+  return g;
+}
+
 export class BodyView {
   readonly body: CelestialBody;
   readonly group = new Group();
@@ -139,6 +169,8 @@ export class BodyView {
   ringsMat?: ShaderMaterial;
   /** boulder layer, populated only when the camera is close to the ring plane */
   ringParticles?: RingParticles;
+  private ringsLit?: Uniforms;
+  private scene: Scene | null = null;
   plumes?: Plumes;
   corona?: Mesh;
   coronaMat?: ShaderMaterial;
@@ -164,6 +196,11 @@ export class BodyView {
   /** streamed imagery layer, replaces the procedural surface once loaded */
   tiles: TileGlobe | null = null;
   imageryActive = false;
+  /** surface baked into cube maps (PlanetBake): which model, the maps, and their fade-in */
+  readonly bakeKind: 'terrestrial' | 'gas' | null = null;
+  bake: SurfaceBake | null = null;
+  private bakeFade = 0;
+  private bakeLast = 0;
 
   private lit: Uniforms[] = [];
 
@@ -239,7 +276,7 @@ export class BodyView {
         vertexShader: Shaders.surfaceVert,
         fragmentShader: Shaders.gasgiantFrag,
         uniforms: {
-          ...baseUniforms, ...lit,
+          ...baseUniforms, ...lit, ...bakeUniforms(),
           uBands: { value: bands },
           uBandCount: { value: Math.min(a.bands.length, 6) },
           uBandFreq: { value: a.bandFreq },
@@ -251,6 +288,7 @@ export class BodyView {
           uAtmDensity: { value: d.atmosphere ? d.atmosphere.density : 0 },
         },
       });
+      this.bakeKind = 'gas';
     } else {
       const lit = lightingUniforms();
       this.lit.push(lit);
@@ -258,7 +296,7 @@ export class BodyView {
         vertexShader: Shaders.surfaceVert,
         fragmentShader: Shaders.terrestrialFrag,
         uniforms: {
-          ...baseUniforms, ...lit,
+          ...baseUniforms, ...lit, ...bakeUniforms(),
           uOcean: { value: a.ocean ? vec3(a.ocean) : new Vector3(0, 0, 0) },
           uLandLow: { value: vec3(a.landLow) },
           uLandMid: { value: vec3(a.landMid ?? a.landLow) },
@@ -271,12 +309,17 @@ export class BodyView {
           uCityLights: { value: a.cityLights ? 1 : 0 },
           uVolcanic: { value: a.volcanic ? 1 : 0 },
           uVariation: { value: a.variation ?? 0.5 },
+          uStyle: { value: SURFACE_STYLE[a.style ?? 'generic'] },
+          uLife: { value: a.life ? 1 : 0 },
           uAtmColor: { value: d.atmosphere ? vec3(d.atmosphere.color) : new Vector3(1, 1, 1) },
           uAtmDensity: { value: d.atmosphere ? d.atmosphere.density : 0 },
           uSunsetColor: { value: d.atmosphere?.sunsetColor ? vec3(d.atmosphere.sunsetColor) : new Vector3(1, 0.6, 0.35) },
           uCloud: { value: cloudUniform(d.clouds) },
+          // a thick atmosphere is an opaque veil from orbit (Titan, Venus): the ground only shows through faintly
+          uHaze: { value: d.atmosphere ? smooth01((d.atmosphere.density - 1.0) / 0.6) : 0 },
         },
       });
+      this.bakeKind = 'terrestrial';
       const img = IMAGERY[d.id];
       if (img) {
         this.tiles = new TileGlobe(body, img, lit, {
@@ -309,15 +352,22 @@ export class BodyView {
           uColor: { value: vec3(d.clouds.color) },
           uCoverage: { value: d.clouds.coverage },
           uOpacity: { value: d.clouds.opacity },
+          uMask: { value: 0 },
+          uNear: { value: 0 },
+          uDeckKm: { value: d.clouds.height * body.radius },
         },
         transparent: true,
         blending: NormalBlending,
         depthWrite: false,
+        // seen from the ground too: the deck is the sky's weather
+        side: DoubleSide,
       });
       this.clouds = new Mesh(sphereGeo, this.cloudsMat);
       this.clouds.scale.setScalar(body.equatorialRadius * (1 + d.clouds.height));
       this.clouds.renderOrder = 2;
       this.clouds.frustumCulled = false;
+      // the deck also carves the light shafts (drawn into their mask on its own layer)
+      this.clouds.layers.enable(GODRAYS_LAYER);
       this.group.add(this.clouds);
     }
 
@@ -375,13 +425,14 @@ export class BodyView {
         side: DoubleSide,
         depthWrite: false,
       });
-      this.rings = new Mesh(new RingGeometry(d.rings.inner, d.rings.outer, 384, 24), this.ringsMat);
+      this.rings = new Mesh(ringGeometry(d.rings.inner, d.rings.outer), this.ringsMat);
       this.rings.rotation.x = -Math.PI / 2;
       this.rings.renderOrder = 4;
       this.rings.frustumCulled = false;
       this.group.add(this.rings);
-      // boulders share the lighting uniforms (sun, shadows) with the sheet
-      this.ringParticles = new RingParticles(body, lit, this.ringsMat.uniforms.uGaps.value as Vector4[]);
+      // the boulder layer (the dearest part of a ringed body to build) comes when the camera
+      // gets within its fade range: see update(); it shares the lighting uniforms with the sheet
+      this.ringsLit = lit;
     }
 
     // Eruptive activity: plumes in the body frame
@@ -394,10 +445,28 @@ export class BodyView {
   }
 
   addTo(scene: Scene): void {
+    this.scene = scene;
     scene.add(this.group);
     if (this.ringParticles) scene.add(this.ringParticles.group);
     if (this.atmosphere) scene.add(this.atmosphere);
     if (this.corona) scene.add(this.corona);
+  }
+
+  /** The baked surface maps arrived (or were released): the shader fades over to / back from them */
+  setBake(b: SurfaceBake | null): void {
+    this.bake = b;
+    const u = this.surfaceMat?.uniforms;
+    if (!u || !u.uBakeA) return;
+    if (b) {
+      u.uBakeA.value = b.a.texture;
+      u.uBakeN.value = b.n.texture;
+      u.uBakeRes.value = b.res;
+    } else {
+      u.uBakeA.value = null;
+      u.uBakeN.value = null;
+      u.uBaked.value = 0;
+      this.bakeFade = 0;
+    }
   }
 
   /** Choose occluders: parent + brightest siblings for moons; largest-angular-size children for planets */
@@ -443,6 +512,7 @@ export class BodyView {
 
   /** Take out of the scene without releasing anything (see BodyRenderer.setSystem) */
   detach(scene: Scene): void {
+    this.scene = null;
     scene.remove(this.group);
     if (this.ringParticles) scene.remove(this.ringParticles.group);
     if (this.atmosphere) scene.remove(this.atmosphere);
@@ -452,10 +522,9 @@ export class BodyView {
   dispose(scene: Scene): void {
     this.detach(scene);
     if (this.corona) this.corona.geometry.dispose();
-    if (this.rings) this.rings.geometry.dispose();
     this.ringParticles?.dispose();
     this.plumes?.dispose();
-    for (const m of [this.surfaceMat, this.cloudsMat, this.atmosphereMat, this.ringsMat, this.coronaMat, this.beamMat]) m?.dispose();
+    for (const m of [this.surfaceMat, this.cloudsMat, this.atmosphereMat, this.ringsMat, this.coronaMat, this.beamMat]) disposeOrPin(m);
     if (this.beams) for (const m of this.beams.children) (m as Mesh).geometry.dispose();
     if (this.ground) { this.ground.geometry.dispose(); (this.ground.material as MeshStandardMaterial).dispose(); }
     this.releaseTerrain();
@@ -711,10 +780,21 @@ export class BodyView {
     if (this.surfaceMat) {
       this.surfaceMat.uniforms.uTime.value = time;
       if (this.surfaceMat.uniforms.uRealTime) this.surfaceMat.uniforms.uRealTime.value = realTime;
+      if (this.bakeKind) {
+        const now = performance.now();
+        const dtReal = this.bakeLast ? Math.min(0.1, (now - this.bakeLast) / 1000) : 0;
+        this.bakeLast = now;
+        const target = this.bake ? 1 : 0;
+        this.bakeFade = this.bakeFade < target ? Math.min(target, this.bakeFade + dtReal / BAKE_FADE_S) : target;
+        this.surfaceMat.uniforms.uBaked.value = this.bakeFade;
+      }
     }
     if (this.coronaMat) this.coronaMat.uniforms.uRealTime.value = realTime;
     if (this.cloudsMat && b.data.clouds) {
       this.cloudsMat.uniforms.uTime.value = time;
+      // ground-scale detail under and just above the deck
+      const deck = b.data.clouds.height * b.radius;
+      this.cloudsMat.uniforms.uNear.value = 1 - smooth01((dist - b.radius - deck * 3) / (deck * 25));
       // smoothstep on the fade so the deck thins gently at both ends of the transition
       const f = this.cloudFade * this.cloudFade * (3 - 2 * this.cloudFade);
       this.cloudsMat.uniforms.uOpacity.value = b.data.clouds.opacity * f;
@@ -746,6 +826,10 @@ export class BodyView {
     if (this.ringsMat) {
       _n.copy(b.pole);
       this.ringsMat.uniforms.uNormal.value.copy(_n);
+      if (!this.ringParticles && this.ringsLit && this.scene && settings.ringParticles && this.relPos.lengthSq() < RING_PARTICLES_BUILD_KM * RING_PARTICLES_BUILD_KM) {
+        this.ringParticles = new RingParticles(b, this.ringsLit, this.ringsMat.uniforms.uGaps.value as Vector4[]);
+        this.scene.add(this.ringParticles.group);
+      }
       if (this.ringParticles) {
         this.ringParticles.update(this.relPos, time * 3600, pxPerRad, ringsOn && settings.ringParticles);
         // where the boulders are, thin the sheet so they do not look pasted on an opaque plane
@@ -847,14 +931,25 @@ export class BodyRenderer {
 
   /** credit line for the imagery currently dominating the view (null = none) */
   imageryCredit: string | null = null;
+  /** bakes the procedural surfaces into cube maps (null without a renderer: tests) */
+  private readonly baker: SurfaceBaker | null;
+  /** true while the planets in view are still being baked (warm-up waits for this to clear) */
+  get baking(): boolean { return this.baker?.pending(this.views) ?? false; }
 
-  constructor(private readonly scene: Scene, private readonly maxAnisotropy = 1) {
+  constructor(private readonly scene: Scene, private readonly maxAnisotropy = 1, renderer: WebGLRenderer | null = null) {
     this.sunLight.target.position.set(0, 0, 0);
     scene.add(this.sunLight, this.sunLight.target, this.fillLight);
+    this.baker = renderer ? new SurfaceBaker(renderer, maxAnisotropy) : null;
   }
 
   /** Rebuild views for a (new) system. The system must have been evaluated once so orbital elements exist. */
-  setSystem(system: StarSystem): void {
+  /**
+   * @param immediate build every view now. Otherwise the star and the primaries come at once and
+   *   the rest (moons, minor bodies: a big system is a dozen milliseconds of materials and
+   *   geometry) are built over the following frames within `buildBudgetMs` each — a frame switch
+   *   in flight happens parsecs away from them, where they are not even a pixel
+   */
+  setSystem(system: StarSystem, immediate = false): void {
     // the old views leave the scene now but are released only after the new system has been
     // drawn: disposing first would free the shared star / planet shader programs, and the new
     // system's identical materials would recompile them (a long stall at every frame switch)
@@ -864,20 +959,56 @@ export class BodyRenderer {
     this.retiredFrames = 0;
     this.views.length = 0;
     this.byId.clear();
-    const star = system.star;
-    for (const b of system.bodies) {
-      const v = new BodyView(b, this.sphereGeo, star.radius, this.maxAnisotropy);
-      v.addTo(this.scene);
-      this.views.push(v);
-      this.byId.set(b.id, v);
+    this.pending.length = 0;
+    this.starRadius = system.star.radius;
+    const bodies = [...system.bodies].sort((p, q) => p.depth - q.depth);
+    for (const b of bodies) {
+      if (immediate || b.depth <= 1) this.buildView(b);
+      else this.pending.push(b);
     }
     for (const v of this.views) v.computeOccluders();
+  }
+
+  /** bodies of the current system whose views are still to be built (setSystem) */
+  private readonly pending: CelestialBody[] = [];
+  private starRadius = 1;
+  /** time per frame (ms) spent building queued views */
+  buildBudgetMs = 1.5;
+  /** called after queued views joined `views` (the point layer sizes its buffers to the list) */
+  onViewsAdded: (() => void) | null = null;
+
+  private buildView(b: CelestialBody): BodyView {
+    const v = new BodyView(b, this.sphereGeo, this.starRadius, this.maxAnisotropy);
+    v.addTo(this.scene);
+    this.views.push(v);
+    this.byId.set(b.id, v);
+    return v;
+  }
+
+  /** The view of a body, built now if it is still queued */
+  view(id: string): BodyView | undefined {
+    const v = this.byId.get(id);
+    if (v) return v;
+    const i = this.pending.findIndex((b) => b.id === id);
+    if (i < 0) return undefined;
+    const nv = this.buildView(this.pending.splice(i, 1)[0]);
+    nv.computeOccluders();
+    this.onViewsAdded?.();
+    return nv;
+  }
+
+  private buildPending(): void {
+    if (!this.pending.length) return;
+    const t0 = performance.now();
+    let n = 0;
+    while (this.pending.length && (n === 0 || performance.now() - t0 < this.buildBudgetMs)) { this.buildView(this.pending.shift()!).computeOccluders(); n++; }
+    this.onViewsAdded?.();
   }
 
   private retired: BodyView[] = [];
   private retiredFrames = 0;
   private flushRetired(): void {
-    for (const v of this.retired) v.dispose(this.scene);
+    for (const v of this.retired) { this.baker?.release(v); v.dispose(this.scene); }
     this.retired.length = 0;
   }
 
@@ -893,8 +1024,11 @@ export class BodyRenderer {
   }
 
   removeBody(id: string): void {
+    const q = this.pending.findIndex((b) => b.id === id);
+    if (q >= 0) this.pending.splice(q, 1);
     const v = this.byId.get(id);
     if (!v) return;
+    this.baker?.release(v);
     v.dispose(this.scene);
     this.byId.delete(id);
     const i = this.views.indexOf(v);
@@ -925,6 +1059,7 @@ export class BodyRenderer {
     hostOf?: (b: CelestialBody) => CelestialBody | null,
   ): void {
     if (this.retired.length && ++this.retiredFrames > 2) this.flushRetired();
+    this.buildPending();
     // sunlight direction as seen from the camera (spacecraft are only resolvable when close)
     _v.copy(sunPos).sub(camPos);
     const d = _v.length();
@@ -950,5 +1085,6 @@ export class BodyRenderer {
       if (v.terrainActive) { const a = v.body.data.appearance; if (a.kind === 'spacecraft' && a.terrain) { credit = a.terrain.credit; best = Infinity; } }
     }
     this.imageryCredit = credit;
+    this.baker?.update(this.views, performance.now());
   }
 }

@@ -37,10 +37,10 @@ export interface PulsarParams {
 
 const EARTH_MASS_KG = 5.9722e24;
 const EPOCH = decimalYearJd(2000.0);
-const RADIO: [number, number, number] = [0.55, 0.85, 1.0];
-const GAMMA: [number, number, number] = [0.85, 0.6, 1.0];
-const MAGNETAR: [number, number, number] = [1.0, 0.55, 0.75];
-const PULSAR_SPRITE: [number, number, number] = [0.65, 0.9, 1.0];
+export const RADIO: [number, number, number] = [0.55, 0.85, 1.0];
+export const GAMMA: [number, number, number] = [0.85, 0.6, 1.0];
+export const MAGNETAR: [number, number, number] = [1.0, 0.55, 0.75];
+export const PULSAR_SPRITE: [number, number, number] = [0.65, 0.9, 1.0];
 
 function pulsarBody(def: LandmarkDef): BodyData {
   const p = def.pulsar!;

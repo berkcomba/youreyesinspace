@@ -4,15 +4,23 @@ import {
 } from 'three';
 import { SKY_RADIUS_KM } from '../core/constants';
 import type { Landmark } from '../core/Universe';
-import { memberId, type ClusterMember, type ClusterStars } from '../galaxy/ClusterStars';
+import { drawsMembers, memberId, type ClusterMember, type ClusterStars } from '../galaxy/ClusterStars';
 import { PROCEDURAL_TINT } from './ProcStarPoints';
 import { Shaders } from './shaders';
 import { better, PICK_MIN_VIS, starLook, type PickHit } from './pickHit';
+import { presetBounds } from './Bounds';
 
 /** a cluster's members fade in between these on-screen radii (px); below, the glow stands alone */
 const RESOLVE_PX = 10;
 const FULL_PX = 30;
-const MAX_ACTIVE = 4;
+/** resolved clusters drawn at once: in the disc a dozen catalogue clusters can exceed RESOLVE_PX together */
+const MAX_ACTIVE = 12;
+/**
+ * Members are drawn this many magnitudes brighter than they are. The far LOD (sprite, then the
+ * unresolved glow) carries a navigation floor well above the cluster's physical surface
+ * brightness; without a matching lift the stars that replace it look like the lights going out.
+ */
+const MAG_BOOST = 2.0;
 
 const _rel = new Vector3();
 const _proj = new Vector3();
@@ -44,12 +52,18 @@ export class ClusterStarPoints {
   setVisible(on: boolean): void { for (const v of this.views.values()) v.points.visible = on; }
 
   /** @param hideId id of the current system's star (drawn as a body) */
-  update(camPc: Vector3, pxPerRad: number, pixelRatio: number, hideId: string | null, visible: boolean): void {
+  /** @param distPc per-landmark camera distance (pc) and @param radiusPx apparent radius, from LandmarkSprites.update of this frame */
+  update(camPc: Vector3, pxPerRad: number, pixelRatio: number, hideId: string | null, visible: boolean, distPc: Float32Array, radiusPx: Float32Array): void {
     const cands: Array<{ l: Landmark; px: number }> = [];
-    for (const l of this.landmarks) {
-      if (!l.def.procedural || (l.def.kind !== 'cluster' && l.def.kind !== 'globular')) continue;
-      const d = Math.max(l.positionPc.distanceTo(camPc), 1e-6);
-      const px = Math.atan(l.def.radiusPc / d) * pxPerRad;
+    const fresh = distPc.length === this.landmarks.length;
+    for (let i = 0; i < this.landmarks.length; i++) {
+      const l = this.landmarks[i];
+      // the object as a whole must be resolved before its members can be; cheap test first
+      if (fresh && radiusPx[i] < RESOLVE_PX) continue;
+      if (!drawsMembers(l.def)) continue;
+      const d = fresh ? distPc[i] : Math.max(l.positionPc.distanceTo(camPc), 1e-6);
+      // resolution of the member distribution itself (an H II region's cluster is a small part of the cloud)
+      const px = Math.atan((l.def.cluster?.radiusPc ?? l.def.radiusPc) / d) * pxPerRad;
       if (px < RESOLVE_PX) continue;
       cands.push({ l, px });
     }
@@ -95,7 +109,7 @@ export class ClusterStarPoints {
       col[i * 3] = s.color[0]; col[i * 3 + 1] = s.color[1]; col[i * 3 + 2] = s.color[2];
       idx[i] = i;
     }
-    const geo = new BufferGeometry();
+    const geo = presetBounds(new BufferGeometry());
     geo.setAttribute('position', new BufferAttribute(pos, 3));
     geo.setAttribute('absMag', new BufferAttribute(mag, 1));
     geo.setAttribute('color', new BufferAttribute(col, 3));
@@ -104,12 +118,14 @@ export class ClusterStarPoints {
       vertexShader: Shaders.starsVert,
       fragmentShader: Shaders.pointsFrag,
       uniforms: {
+        uDrift: { value: 0 },      // shared program with StarPoints / ProcStarPoints: set every uniform
         uCamPc: { value: new Vector3() },
         uPixelRatio: { value: 1 },
         uSkyRadius: { value: SKY_RADIUS_KM },
         uHideIndex: { value: -1 },
         uMagLimit: { value: 8.5 - 13 * this.daylight },
         uFade: { value: 0 },
+        uMagBoost: { value: MAG_BOOST },
         uDaylight: { value: this.daylight * 0.6 },
         uSoftness: { value: 0.0 },
         uTint: { value: new Vector4(...PROCEDURAL_TINT, this.highlight ? 0.85 : 0) },
@@ -151,7 +167,7 @@ export class ClusterStarPoints {
         const s = v.members[i];
         _rel.set(s.x - v.camRel.x, s.y - v.camRel.y, s.z - v.camRel.z);
         const d = _rel.length();
-        const m = s.absMag + 5 * Math.log10(Math.max(d, 1e-7)) - 5;
+        const m = s.absMag + 5 * Math.log10(Math.max(d, 1e-7)) - 5 - MAG_BOOST;   // as drawn
         if (m > magLimit) continue;
         const look = starLook(m);
         const vis = look.alpha * v.fade;

@@ -5,6 +5,8 @@ import {
 import type { IUniform } from 'three';
 import { Shaders } from './shaders';
 import type { CelestialBody } from '../core/CelestialBody';
+import { disposeOrPin } from './ProgramPins';
+import { presetBounds } from './Bounds';
 
 /** Number of annulus slots in the window (must match N_ANN in ringrock.vert). */
 const N_ANN = 32;
@@ -71,6 +73,7 @@ export class RingParticles {
     const r = body.data.rings!;
     const base = new IcosahedronGeometry(1, 1);
     const geo = new InstancedBufferGeometry();
+    presetBounds(geo);
     geo.index = base.index;
     geo.setAttribute('position', base.getAttribute('position'));
     geo.setAttribute('normal', base.getAttribute('normal'));
@@ -122,7 +125,7 @@ export class RingParticles {
     for (let a = 0; a < N_ANN; a++) for (let t = 0; t < FAR_N_AZ; t++) for (let j = 0; j < FAR_PER_CELL; j++) {
       farCell[k++] = a; farCell[k++] = t; farCell[k++] = j;
     }
-    const farGeo = new BufferGeometry();
+    const farGeo = presetBounds(new BufferGeometry());
     farGeo.setAttribute('aCell', new BufferAttribute(farCell, 3));
     // Points needs a position attribute to count vertices; the real position comes from aCell
     farGeo.setAttribute('position', new BufferAttribute(new Float32Array(nFar * 3), 3));
@@ -222,9 +225,9 @@ export class RingParticles {
 
   dispose(): void {
     this.mesh.geometry.dispose();
-    this.mat.dispose();
+    disposeOrPin(this.mat);
     this.far.geometry.dispose();
-    this.farMat.dispose();
+    disposeOrPin(this.farMat);
   }
 }
 

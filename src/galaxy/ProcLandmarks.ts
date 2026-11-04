@@ -7,13 +7,15 @@ import { fmtLightYears } from '../ui/format';
 import type { GalaxyIndex } from './galaxies';
 import type { GalaxyModel } from './GalaxyModel';
 import { MAX_GLOBULAR, MAX_OPEN } from './ClusterStars';
+import { lightPositionPc, resolveNebulaProfile } from '../render/nebula/NebulaProfile';
 
 /**
  * Procedural deep-sky objects: every galaxy is seeded with nebulae, clusters, remnants and a few
  * exotic stars, generated deterministically per cell (like the procedural stars) so a traveller
  * far from the real catalogues keeps finding things. Ids `q{galaxy}:{ci}:{cj}:{ck}:{n}`.
  *
- * In the Milky Way nothing is generated within the radius covered by the real landmarks.
+ * In the Milky Way nothing is generated within the radius the real catalogues cover for each class
+ * (COVERAGE_EXCLUDE_PC).
  */
 export const PROC_LANDMARK_CELL_PC = 600;
 const REACH = 2;
@@ -26,10 +28,29 @@ const MAX_TOTAL = 480;
 export const GLOBULAR_CELL_PC = 2400;
 const GLOBULAR_REACH = 6;
 const MAX_GLOBULARS = 320;
-/** the real catalogue covers the Sun's neighbourhood (Milky Way only) */
-const SUN_EXCLUDE_PC = 2700;
-
 export type ProcKind = 'hii' | 'reflection' | 'planetary' | 'open' | 'globular' | 'snr' | 'bubble' | 'hypergiant' | 'wr' | 'magnetar';
+
+/**
+ * Coverage policy (Milky Way only): inside the radius where the real catalogues are reasonably
+ * complete for a class, nothing of that class is generated; outside, the generator fills the gap.
+ * Radii from the distance distributions of public/data/deepsky.json (scripts/build-deepsky.mjs):
+ *   open clusters  MWSC is complete to ≈1.8 kpc (median 2.0 kpc, 2047 of 2922 inside 2.7 kpc)
+ *   H II regions   WISE catalogue: 306 inside 2.7 kpc, density halves beyond → 2.7 kpc
+ *   planetaries    HASH distances: 321 inside 2.7 kpc, ≈ the expected local population → 2.7 kpc
+ *   remnants       25 known inside 2.7 kpc ≈ the ≈30 expected from the Galactic SN rate → 2.7 kpc
+ *   reflection     no reflection-nebula catalogue is loaded (a handful of hand-picked ones) → 1.2 kpc
+ *   wind bubbles   not catalogued at all → 1.5 kpc
+ *   exotic stars   hypergiants / WR stars / magnetars: the known ones are landmarks → 2.7 kpc
+ *   globulars      157 of the ≈160 known are real landmarks; the generated halo population is kept
+ *                  beyond 2.7 kpc for now (dropping it would void existing discoveries) — revisit
+ * Ids never depend on the policy (they come from the cell grid), so a version bump only changes
+ * which objects exist, never where an existing one is or what it is called.
+ */
+export const COVERAGE_POLICY_VERSION = 2;
+const COVERAGE_EXCLUDE_PC: Record<ProcKind, number> = {
+  hii: 2700, reflection: 1200, planetary: 2700, open: 2000, globular: 2700,
+  snr: 2700, bubble: 1500, hypergiant: 2700, wr: 2700, magnetar: 2700,
+};
 
 /** Visual landmark kind of each generated class */
 const KIND_OF: Record<ProcKind, LandmarkKind> = {
@@ -199,10 +220,10 @@ export class ProcLandmarks {
       local.y = Math.max(j * s, Math.min((j + 1) * s, gauss(rng) * hz));
     }
     const positionPc = model.toScene(local);
-    // inside the real catalogue's reach we leave the sky to the real objects
+    // inside the real catalogue's reach for this class we leave the sky to the real objects
     if (g === 0) {
       model.toLocal(_sunLocal.set(0, 0, 0), _sunLocal);
-      if (local.distanceTo(_sunLocal) < SUN_EXCLUDE_PC) positionPc.set(0, 0, 0);
+      if (local.distanceTo(_sunLocal) < COVERAGE_EXCLUDE_PC[kind]) positionPc.set(0, 0, 0);
     }
     const code = (hashSeed(g, i, j, k, q, 0x9e37) & 0x7fffffff).toString(36).toUpperCase().slice(0, 5);
     const adj = _(ADJ[rng.int(0, ADJ.length - 1)]);
@@ -224,7 +245,7 @@ export class ProcLandmarks {
         const mass = Math.round(R * R * rng.range(8, 30) / 10) * 10;
         const age = rng.range(0.5, 6);
         const variant = rng.int(0, 2);
-        return {
+        const def: LandmarkDef = {
           ...base, kind: 'nebula', radiusPc: R, absMag: -4 - 6.5 * Math.log10(R / 6) + rng.range(-0.6, 0.6), color: rng.pick(C.hii),
           summary: _('Genç yıldızların iyonize ettiği yıldız oluşum bölgesi'),
           description: [
@@ -234,6 +255,14 @@ export class ProcLandmarks {
           ][variant],
           facts: { 'Uzaklık': dist, 'Çap': ly(R * 2), 'Yaş': _('~{n} milyon yıl', { n: fixed(age, 1) }), 'Kütle': `~${fmtNum(mass)} M☉`, 'Uyarıcı yıldız': `${stars}`, 'Kaynak': _('Prosedürel (keşif)') },
         };
+        // the exciting cluster: real, selectable member stars (ClusterStars) sitting where the
+        // nebula's primary light is, inside the cavity they have blown
+        const profile = resolveNebulaProfile(def, 'hii');
+        const centre = lightPositionPc(profile, 0);
+        const count = Math.min(MAX_OPEN, stars * 12);
+        def.cluster = { ageMyr: age, count, centrePc: [centre.x, centre.y, centre.z], radiusPc: R * profile.cavityScale * 0.6 };
+        def.facts['Seçilebilen üye'] = fmtNum(count);
+        return def;
       }
       case 'reflection': {
         const R = rng.logRange(0.8, 5);

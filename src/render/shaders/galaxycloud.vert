@@ -14,6 +14,8 @@ uniform float uAlpha;       // per-blob alpha at unit weight when unclamped
 uniform float uFade;        // global fade (LOD crossfade with the sprite)
 uniform float uMaxPx;
 uniform float uExtinction;  // 1/pc – dust extinction along the line of sight when inside the disc
+uniform float uCoreFade;    // share of the bulge light left (camera deep in the core)
+uniform float uBulgePc;     // bulge radius (pc)
 varying vec3 vColor;
 varying float vAlpha;
 
@@ -34,6 +36,8 @@ void main() {
   // inside the blob's neighbourhood the procedural stars take over
   a *= smoothstep(uBlobRadius * 3.0, uBlobRadius * 10.0, d);
   a *= uFade * exp(-d * uExtinction);
+  // the bulge's blobs dim with the core glow (the disc's stay)
+  a *= mix(uCoreFade, pow(uCoreFade, 0.75), smoothstep(0.6, 2.0, length(position) / uBulgePc));
   // dust reddening of distant light seen through the disc
   vec3 col = color * mix(vec3(1.0), vec3(1.0, 0.82, 0.62), clamp(d * uExtinction * 0.5, 0.0, 1.0));
   if (a < 0.0005) {

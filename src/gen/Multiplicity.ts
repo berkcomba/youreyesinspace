@@ -219,8 +219,9 @@ function draftCompanion(rng: Rng, star: StarInfo): Draft {
     let m2 = star.isWhiteDwarf ? rng.logRange(0.1, 1.0) : drawQ(rng, m1, logP) * m1;
     const aAU = semiMajorAU(Math.pow(10, logP), m1 + m2);
     // brown-dwarf desert: almost no substellar companions inside ~5 AU
-    if (m2 < 0.075 && aAU < 5 && rng.chance(0.95)) m2 = rng.range(0.25, 1.0) * Math.max(m1, 0.3);
-    if (m2 < 0.013) m2 = rng.range(0.013, 0.075);
+    if (m1 >= 0.075 && m2 < 0.075 && aAU < 5 && rng.chance(0.95)) m2 = rng.range(0.25, 1.0) * Math.max(m1, 0.3);
+    // brown-dwarf pairs: the companion is the lighter one
+    if (m2 < 0.013) m2 = m1 < 0.075 ? rng.range(Math.min(0.005, m1 * 0.5), m1) : rng.range(0.013, 0.075);
     if (m2 < 0.075) spec = { kind: 'bd', massSolar: m2 };
     // a near-twin of an evolved primary left the main sequence with it (Capella, Almach …)
     else if (evolved && m2 > 0.93 * m1) spec = { kind: 'giant', massSolar: Math.min(m2, m1 * 0.999) };

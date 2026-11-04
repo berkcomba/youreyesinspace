@@ -2,18 +2,22 @@ import { Vector3 } from 'three';
 import type { StarCatalog, StarInfo } from '../data/StarCatalog';
 import { PLANET_HOTKEYS, SOLAR_BELTS, SOLAR_SYSTEM } from '../data/solarSystem';
 import { generateSystem } from '../gen/SystemGenerator';
+import { realSystem } from '../gen/RealSystem';
+import type { ExoplanetCatalog } from '../data/Exoplanets';
+import { brownDwarf, type BrownDwarf, type BrownDwarfData } from '../data/BrownDwarfs';
+import { measuredMultiple, type BinaryData } from '../data/Binaries';
 import { BLACK_HOLES, type BlackHoleEntry, type HostStarOverride } from '../data/blackholes';
 import { SUN_MASS_KG, SUN_RADIUS_KM } from '../astro/stellar';
 import { toBarycentric } from '../astro/binary';
 import { LANDMARKS, isSystemLandmark, landmarkStarBodies, landmarkStarInfo, type LandmarkDef } from '../data/landmarks';
-import { ProcLandmarks, type ProcLandmark } from '../galaxy/ProcLandmarks';
+import { ProcLandmarks, type ProcKind, type ProcLandmark } from '../galaxy/ProcLandmarks';
 import { ClusterStars, isMemberId } from '../galaxy/ClusterStars';
 import { raDecToScene } from '../math/frames';
 import type { BodyData } from '../data/types';
-import { GalaxyIndex } from '../galaxy/galaxies';
+import { GalaxyIndex, type SurveyGalaxies } from '../galaxy/galaxies';
 import { milkyWayCenterPc } from '../galaxy/frames';
 import { ProcStars } from '../galaxy/ProcStars';
-import { PARSEC_KM } from './constants';
+import { J2000_JD, PARSEC_KM } from './constants';
 import { _ } from '../i18n';
 import type { CelestialBody } from './CelestialBody';
 import { StarSystem } from './StarSystem';
@@ -70,6 +74,8 @@ export interface Landmark {
   galaxy: number;
   /** system id for star-type landmarks (`l{n}`) */
   systemId: StarId | null;
+  /** generator class of a procedural object (its nebula morphology is derived from this, not from the colour) */
+  procKind?: ProcKind;
 }
 
 /**
@@ -105,12 +111,27 @@ export class Universe {
   private readonly extraSystems = new Map<StarId, ExtraSystem>();
   /** measured parameters replacing the photometric estimates of some catalogue stars (X-ray binary hosts) */
   private readonly hostOverrides = new Map<StarId, HostStarOverride>();
+  /** catalogue stars that are UltracoolSheet L/T/Y dwarfs */
+  private readonly brownDwarfs = new Map<StarId, BrownDwarf>();
   private readonly infoCache = new Map<StarId, StarInfo>();
   private readonly cache = new Map<StarId, StarSystem>();
   private readonly listeners: Array<(sys: StarSystem, prev: StarSystem) => void> = [];
 
-  constructor(readonly catalog: StarCatalog) {
-    this.galaxies = new GalaxyIndex();
+  /** id → index of the real landmarks */
+  private readonly landmarkIndex = new Map<string, number>();
+
+  /**
+   * @param deepSky survey-catalogue landmarks (data/DeepSky.ts), appended after the hand-made ones
+   * @param surveyGalaxies real galaxies of the UNGC / 2MRS (galaxy/galaxies.ts)
+   * @param brownDwarfs L, T and Y dwarfs of the UltracoolSheet (data/BrownDwarfs.ts)
+   * @param binaries measured multiple stars of the MSC and ORB6 (data/Binaries.ts)
+   */
+  constructor(
+    readonly catalog: StarCatalog, readonly exoplanets: ExoplanetCatalog, deepSky: readonly LandmarkDef[] = [],
+    surveyGalaxies: SurveyGalaxies | null = null, brownDwarfs: BrownDwarfData | null = null,
+    private readonly binaries: BinaryData | null = null,
+  ) {
+    this.galaxies = new GalaxyIndex(undefined, surveyGalaxies);
     this.procStars = new ProcStars(this.galaxies);
     this.procLandmarks = new ProcLandmarks(this.galaxies);
     this.clusterStars = new ClusterStars((id) => this.landmark(id));
@@ -158,7 +179,38 @@ export class Universe {
       }
       this.landmarks.push({ def, positionPc: pos, galaxy: gi, systemId });
     });
+    // catalogue entries come translated, with a distance; system ids are their own (stable) ids
+    for (const def of deepSky) {
+      const gi = def.galaxy === null ? 0 : findGalaxy(def.galaxy);
+      if (gi === null) continue;
+      const pos = raDecToScene(def.ra, def.dec).multiplyScalar(def.distancePc!);
+      let systemId: StarId | null = null;
+      if (isSystemLandmark(def)) {
+        systemId = def.id;
+        this.extraSystems.set(systemId, { id: systemId, name: def.name, positionPc: pos, galaxy: gi, info: landmarkStarInfo(def, pos), bodies: () => landmarkStarBodies(def) });
+      }
+      this.landmarks.push({ def, positionPc: pos, galaxy: gi, systemId });
+    }
     this.realLandmarkCount = this.landmarks.length;
+    this.landmarks.forEach((l, i) => this.landmarkIndex.set(l.def.id, i));
+    // planet hosts: the archive's measured stellar parameters replace the photometric estimates
+    for (const h of exoplanets.hosts.values()) {
+      const id = `c${h.i}`;
+      if (this.hostOverrides.has(id)) continue;
+      this.hostOverrides.set(id, {
+        massSolar: h.mass, radiusSolar: h.rad, temperature: h.teff,
+        luminosity: h.lum !== undefined ? Math.pow(10, h.lum) : undefined, spectral: h.spect,
+      });
+    }
+    // brown dwarfs: parameters from the measured spectral type; an archive host's measured ones win
+    for (const row of brownDwarfs?.rows ?? []) {
+      const id = `c${row[0]}`;
+      if (this.brownDwarfs.has(id)) continue;
+      const bd = brownDwarf(row);
+      this.brownDwarfs.set(id, bd);
+      const ov = this.hostOverrides.get(id);
+      this.hostOverrides.set(id, ov ? { ...bd.override, ...Object.fromEntries(Object.entries(ov).filter(([, v]) => v !== undefined)) } : bd.override);
+    }
     this.current = this.system('c0');
   }
 
@@ -179,7 +231,7 @@ export class Universe {
         }
         this.procSystemIds.add(systemId);
       }
-      this.landmarks.push({ def: o.def, positionPc: o.positionPc, galaxy: o.galaxy, systemId });
+      this.landmarks.push({ def: o.def, positionPc: o.positionPc, galaxy: o.galaxy, systemId, procKind: o.procKind });
     }
     for (const id of this.procSystemIds) {
       if (keep.has(id) || id === this.current?.starId) continue;
@@ -224,7 +276,9 @@ export class Universe {
 
   /** Landmark by id */
   landmark(id: string): Landmark | undefined {
-    const hit = this.landmarks.find((l) => l.def.id === id);
+    const real = this.landmarkIndex.get(id);
+    if (real !== undefined) return this.landmarks[real];
+    const hit = this.landmarks.find((l, i) => i >= this.realLandmarkCount && l.def.id === id);
     if (hit || !ProcLandmarks.isProc(id)) return hit;
     return this.restoreProcLandmark(id);
   }
@@ -235,7 +289,8 @@ export class Universe {
     const out: number[] = [];
     for (let i = 0; i < this.landmarks.length && out.length < limit; i++) {
       const d = this.landmarks[i].def;
-      if (d.name.toLowerCase().includes(q) || d.summary.toLowerCase().includes(q)) out.push(i);
+      // catalogue entries share a handful of summaries ("Açık yıldız kümesi"): matched by name only
+      if (d.name.toLowerCase().includes(q) || (!d.catalog && d.summary.toLowerCase().includes(q))) out.push(i);
     }
     return out;
   }
@@ -312,6 +367,11 @@ export class Universe {
     return this.hostOverrides.has(id);
   }
 
+  /** The UltracoolSheet entry when the star is an L, T or Y dwarf */
+  brownDwarf(id: StarId): BrownDwarf | undefined {
+    return this.brownDwarfs.get(id);
+  }
+
   starName(id: StarId): string {
     const ex = this.extraSystems.get(id);
     if (ex) return ex.name;
@@ -360,8 +420,15 @@ export class Universe {
       // the neighbour truncates the planetary system (Holman & Wiegert: ~a fifth of the separation);
       // HYG often lists both components at the same coordinates → assume an α Cen-like ~25 AU pair
       const maxPlanetAU = neighbour ? (near.distPc * 206_265 > 1 ? near.distPc * 206_265 * 0.2 : 4) : undefined;
-      const gen = generateSystem(info, { single: bhCompanion || neighbour, maxPlanetAU });
-      const origin = info.position.clone().multiplyScalar(PARSEC_KM);
+      // confirmed exoplanet hosts get their real, measured planets instead of generated ones
+      const exo = ci > 0 ? this.exoplanets.host(ci) : undefined;
+      const binary = !bhCompanion && info.hip ? this.binaries?.systems[info.hip] : undefined;
+      const measured = binary ? measuredMultiple(binary, info, near ? near.distPc : null) : null;
+      const gen = exo
+        ? realSystem(info, exo, this.catalog.position(ci).negate().normalize())
+        : generateSystem(info, { single: bhCompanion || neighbour, maxPlanetAU, measured });
+      // generated stars (other galaxies, cluster members) have no catalogue entry: their own position
+      const origin = ci >= 0 ? this.catalog.positionKm(ci) : info.position.clone().multiplyScalar(PARSEC_KM);
       // black holes orbiting catalogue stars (X-ray binaries): both components circle their barycentre
       let bodies = gen.bodies;
       for (const b of this.blackHoles) {
@@ -399,6 +466,7 @@ export class Universe {
     const prev = this.current;
     if (prev.starId === id) return new Vector3();
     const next = this.system(id);
+    if (next.catalogIndex > 0) this.catalog.positionKm(next.catalogIndex, next.origin);
     next.update(jd, tSeconds);
     const delta = new Vector3().copy(prev.origin).sub(next.origin);
     this.current = next;
@@ -424,10 +492,24 @@ export class Universe {
   }
 
   /** Nearest star (catalogue or generated) to a local position; used to decide frame switches */
-  nearestStar(localKm: Vector3): { id: StarId; distPc: number } {
+  /** the catalogue's last nearest-star answer and where it was asked (see nearestStar) */
+  private readonly nearCache = { index: -1, distPc: 0, at: new Vector3() };
+  /**
+   * @param withinPc the caller only acts on a star closer than this: the catalogue scan (every
+   * core star, ~2 ms) is skipped while the last answer proves there is none — no star can have
+   * come nearer than (its distance then − our travel since)
+   */
+  nearestStar(localKm: Vector3, withinPc = Infinity): { id: StarId; distPc: number } {
     const p = this.toParsecs(localKm, _v);
-    const c = this.catalog.nearest(p.x, p.y, p.z);
-    let best = { id: `c${c.index}`, distPc: c.distPc };
+    const nc = this.nearCache;
+    let best: { id: StarId; distPc: number };
+    if (nc.index >= 0 && nc.distPc - nc.at.distanceTo(p) > withinPc) {
+      best = { id: `c${nc.index}`, distPc: nc.distPc - nc.at.distanceTo(p) };
+    } else {
+      const c = this.catalog.nearest(p.x, p.y, p.z);
+      nc.index = c.index; nc.distPc = c.distPc; nc.at.copy(p);
+      best = { id: `c${c.index}`, distPc: c.distPc };
+    }
     const pr = this.procStars.nearest(p);
     if (pr && pr.distPc < best.distPc) best = pr;
     const cm = this.clusterStars.nearest(p, this.landmarks, this.realLandmarkCount);
@@ -447,7 +529,20 @@ export class Universe {
   hostStar(b: CelestialBody): CelestialBody { return this.current.hostStarOf(b); }
   /** Body of the current system; `@star` names its primary star (tour cues in generated systems, whose star ids are not stable) */
   get(id: string): CelestialBody | undefined { return id === '@star' ? this.current.star : this.current.get(id); }
-  update(jd: number, tSeconds: number): void { this.current.update(jd, tSeconds); }
+  /**
+   * Advance the current system. Catalogue stars move along their measured space velocities, so the
+   * current system's origin rides with its star (the camera, local to it, comes along).
+   */
+  update(jd: number, tSeconds: number): void {
+    this.catalog.setEpoch((jd - J2000_JD) / 365.25);
+    const ci = this.current.catalogIndex;
+    if (ci > 0) this.catalog.positionKm(ci, this.current.origin);
+    for (const b of this.blackHoles) {
+      const hi = catalogIndexOf(b.systemStarId);
+      if (hi > 0) this.catalog.position(hi, b.positionPc);
+    }
+    this.current.update(jd, tSeconds);
+  }
   dominantBody(point: { x: number; y: number; z: number }): CelestialBody { return this.current.dominantBody(point); }
   nearestBody(point: { x: number; y: number; z: number }): { body: CelestialBody; altitude: number } { return this.current.nearestBody(point); }
 }

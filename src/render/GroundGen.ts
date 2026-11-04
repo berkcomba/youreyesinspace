@@ -100,7 +100,7 @@ export function geodetic(b: CelestialBody, p: Vector3): { lat: number; lon: numb
   return { lat: lat / DEG, lon: lon / DEG };
 }
 
-const PALETTE_KEYS = ['uSeed', 'uOcean', 'uLandLow', 'uLandMid', 'uLandHigh', 'uIce', 'uSeaLevel', 'uIceCaps', 'uCraters', 'uRoughness', 'uVolcanic', 'uVariation'];
+const PALETTE_KEYS = ['uSeed', 'uOcean', 'uLandLow', 'uLandMid', 'uLandHigh', 'uIce', 'uSeaLevel', 'uIceCaps', 'uCraters', 'uRoughness', 'uVolcanic', 'uVariation', 'uStyle', 'uLife'];
 
 let quadScene: Scene | null = null;
 let quadCam: OrthographicCamera | null = null;

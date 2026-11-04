@@ -1,5 +1,6 @@
 import { Matrix4, Quaternion, Vector3 } from 'three';
 import type { CelestialBody } from '../core/CelestialBody';
+import { PARSEC_KM } from '../core/constants';
 import type { Universe } from '../core/Universe';
 import type { Input } from '../input/Input';
 
@@ -178,6 +179,8 @@ export class CameraController {
 
   private readonly refLastPos = new Vector3();
   private readonly velocity = new Vector3();
+  private readonly goodPos = new Vector3();
+  private readonly goodQuat = new Quaternion();
 
   constructor(private readonly universe: Universe) {}
 
@@ -524,6 +527,8 @@ export class CameraController {
   }
 
   update(dt: number, input: Input, viewportW: number, viewportH: number, fovRad: number): void {
+    this.goodPos.copy(this.position);
+    this.goodQuat.copy(this.quaternion);
     // 1. Inherit reference-frame motion
     this.catchUp();
     // a flight or a mode switch of any kind ends the stand
@@ -739,8 +744,12 @@ export class CameraController {
           this.quaternion.multiply(_q);
         }
         if (wheel !== 0) {
-          this.speedMultiplier *= Math.exp(-wheel * 0.0015);
-          this.speedMultiplier = Math.min(Math.max(this.speedMultiplier, 1e-4), 1e6);
+          // a trackpad flick delivers thousands of delta units in a few frames: one frame counts
+          // as at most one wheel notch (×1.16), and the gear itself stays within ×0.01 … ×100 of
+          // the altitude-scaled cruise (Shift still gives ×10) — a runaway multiplier at galaxy
+          // scale used to shoot the visitor out of the universe in a second
+          this.speedMultiplier *= Math.exp(-Math.max(-100, Math.min(100, wheel)) * 0.0015);
+          this.speedMultiplier = Math.min(Math.max(this.speedMultiplier, 0.01), 100);
         }
         // Speed scales with altitude above the nearest body
         const { body, altitude } = this.universe.nearestBody(this.position);
@@ -750,6 +759,8 @@ export class CameraController {
         base *= this.speedMultiplier;
         if (input.down('ShiftLeft') || input.down('ShiftRight')) base *= 10;
         if (input.down('ControlLeft') || input.down('ControlRight')) base *= 0.1;
+        // hard ceiling: 300 Mpc/s crosses the whole observable universe in well under a minute
+        base = Math.min(base, 300e6 * PARSEC_KM);
 
         const move = _v.set(
           (input.down('KeyD') ? 1 : 0) - (input.down('KeyA') ? 1 : 0),
@@ -793,7 +804,25 @@ export class CameraController {
       this.nearest = body;
       this.altitude = altitude;
     }
+    // one NaN (a broken orbit in some catalogue system) would otherwise black out the session for good
+    const p = this.position, q = this.quaternion;
+    if (!Number.isFinite(p.x + p.y + p.z + q.x + q.y + q.z + q.w)) {
+      console.warn('camera state became non-finite; restored the last good one', this.reference?.data.id);
+      p.copy(this.goodPos);
+      q.copy(this.goodQuat);
+      this.velocity.set(0, 0, 0);
+      this.speed = 0;
+      this.autopilot = null;
+    }
     void viewportW; void viewportH; void fovRad;
+  }
+
+  /** Move the camera by `deltaKm` and stop it dead (the edge of the universe) */
+  pushBack(deltaKm: Vector3): void {
+    this.position.add(deltaKm);
+    this.velocity.set(0, 0, 0);
+    this.speed = 0;
+    this.autopilot = null;
   }
 
   /** eye height of a standing visitor (km) */

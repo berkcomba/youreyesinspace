@@ -4,22 +4,40 @@ import {
   type IUniform, PerspectiveCamera, type WebGLRenderer,
 } from 'three';
 import type { GalaxyModel } from '../galaxy/GalaxyModel';
+import { GpuTimer } from './GpuTimer';
+import { MORPHOLOGY_CODE, PALETTE_CODE, type NebulaProfile } from './nebula/NebulaProfile';
 import { Shaders } from './shaders';
 
 /** most volumes raymarched per frame (each costs a full-screen pass) */
 const MAX_GALAXIES = 2;
-const MAX_NEBULAE = 3;
+/** ProcClouds keeps 5 slots plus the clouds still fading out of one; small ones cost only their scissored rect */
+const MAX_NEBULAE = 7;
 /** inside this many radii a galaxy is the backdrop, cached in a cube map */
 const CUBE_RATIO = 1.4;
+/** leaving a galaxy, its whole-sky mean fades out of the eye adaptation between CUBE_RATIO and this (galaxy radii) */
+const ADAPT_OUT_RATIO = 2.1;
 /** camera travel (galaxy radii) after which the cached backdrop is re-rendered (≈20 pc for the Milky Way) */
 const CUBE_REFRESH = 0.0015;
 /** each cube face is raymarched in this many strips, one per frame (a whole face is a frame's worth of GPU time) */
 const FACE_STRIPS = 4;
-/** buffer resolution (linear) and step share while a galaxy is raymarched on the move: motion hides the softer image */
+/** buffer resolution (linear) and step share of the backdrop galaxy raymarched directly (on the move / while its cube is rebuilt): motion hides the softer image */
 const RACING_SCALE = 0.6;
 const RACING_STEPS = 0.5;
 /** approaching / leaving a galaxy faster than this share of its distance per frame counts as racing */
 const RACING_APPROACH = 0.01;
+/** cross-fade time (s) between the cached backdrop cube and the direct raymarch of the same galaxy */
+const CUBE_BLEND_S = 0.4;
+/** buffer shrink (linear) once the drawn volumes cover the view, the pixel budget it then aims for on large buffers, its floor (relative to the drawing buffer) and the smoothing of the coverage (s) */
+const COVER_SHRINK = 0.3;
+const COVER_BUDGET_PX = 600_000;
+const COVER_MIN_SCALE = 0.3;
+const COVER_TAU_S = 0.3;
+/** GPU budget loop: lowest resolution factor, and its rates (per second) down while over budget and back up */
+const QUALITY_MIN = 0.6;
+const QUALITY_DOWN_RATE = 0.6;
+const QUALITY_UP_RATE = 0.12;
+/** eye adaptation time constant (s): short, so a wheel step or a turn is not followed by a visible re-exposure; it only irons out single-frame glitches */
+const ADAPT_TAU_S = 0.08;
 
 /** Visible-light dust opacity of a Milky-Way-like disc at the solar circle (per pc; with the lane / filament factors ≈0.5 mag/kpc mean) */
 const DUST_PER_PC = 0.0028;
@@ -29,6 +47,15 @@ const TYPE_CODE: Record<string, number> = { E: 0, S0: 1, S: 2, SB: 3, Irr: 4 };
 export type NebulaKind = 'emission' | 'reflection' | 'planetary' | 'remnant';
 const NEBULA_CODE: Record<NebulaKind, number> = { emission: 0, reflection: 1, planetary: 2, remnant: 3 };
 const NEBULA_EMIT: Record<NebulaKind, number> = { emission: 0.2, reflection: 0.22, planetary: 0.12, remnant: 0.12 };
+/** Nebula Engine 2.0: emission calibration per morphology (peak column ≈ the sprite's brightness) */
+const PROFILE_EMIT: Record<NebulaProfile['morphology'], number> = {
+  'hii-cavity': 1.6, 'hii-pillars': 1.6, 'molecular-dark': 1.0, 'reflection-wisps': 4.0,
+  'planetary-shell': 1.2, 'planetary-bipolar': 1.2, 'snr-filaments': 1.0, 'wind-bubble': 1.0,
+};
+const PROFILE_STEPS: Record<NebulaProfile['morphology'], number> = {
+  'hii-cavity': 80, 'hii-pillars': 80, 'molecular-dark': 64, 'reflection-wisps': 56,
+  'planetary-shell': 72, 'planetary-bipolar': 72, 'snr-filaments': 80, 'wind-bubble': 64,
+};
 
 /** A raymarched object: one full-screen pass into the volume buffer */
 export class Volume {
@@ -48,6 +75,8 @@ export class Volume {
     this.mesh.visible = false;
   }
   get u(): Record<string, IUniform> { return this.mat.uniforms; }
+  /** radius (local units) of the sphere the shader actually marches: the screen rect it is drawn in */
+  get bound(): number { return this.kind === 'nebula' ? 1.3 : (this.u.uBox.value as Vector3).length(); }
   /** camera (scene pc) → object-local origin; `toLocal` is the scene → local rotation */
   place(camPc: Vector3, centrePc: Vector3, radiusPc: number, toLocal: Matrix3, pxPerRad: number): void {
     const o = this.u.uOrigin.value as Vector3;
@@ -65,11 +94,19 @@ export class Volume {
  */
 export class Volumes {
   enabled = true;
+  /** Nebula Engine 2.0 (profile-driven medium) for the nebulae; off: the original per-kind shader */
+  nebulaEngine = true;
   /** debugging: raymarch the backdrop every frame instead of using the cached cube */
   forceDirect = false;
+  /** Nebula Engine 2.0 debug view for profile nebulae: 0 off, 1 gas, 2 dust, 3 ionisation, 4 transmittance */
+  debug = 0;
   /** buffer resolution relative to the drawing buffer */
   scale = 0.5;
+  /** GPU time of the volume pass (null until the first render; unsupported drivers report NaN) */
+  gpu: GpuTimer | null = null;
   private rt: WebGLRenderTarget;
+  /** the backdrop galaxy raymarched directly, at reduced resolution (see RACING_SCALE) */
+  private rt2: WebGLRenderTarget;
   private readonly scene = new Scene();
   private readonly cam = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
   private readonly geo: BufferGeometry;
@@ -78,6 +115,27 @@ export class Volumes {
   private readonly invProj = new Matrix4();
   private readonly camRot = new Matrix3();
   private readonly list: Volume[] = [];
+  private readonly adaptRt: WebGLRenderTarget[] = [];
+  private readonly adaptMat: ShaderMaterial;
+  private readonly adaptScene = new Scene();
+  private adaptFront = 0;
+  private adaptReset = true;
+  /** share of the cached backdrop shown: cross-fades with the direct raymarch instead of switching */
+  private cubeMix = 0;
+  /**
+   * weight of the cube's whole-sky mean in the eye adaptation. Unlike cubeMix it does not follow
+   * the display path: a stale cube (racing, direct raymarch) still gives the right mean light, so
+   * setting off, stopping or the cube rebuild never shift the exposure. Ramps in once a cube exists
+   * and out again between CUBE_RATIO and ADAPT_OUT_RATIO as we leave the galaxy.
+   */
+  private adaptCube = 0;
+  private lastFrameMs = 0;
+  /** smoothed share of the view the drawn volumes cover (buffer resolution, see render) */
+  private cover = 0;
+  /** GPU time (ms) the pass may take per frame before its resolution is eased down */
+  budgetMs = 6;
+  /** resolution factor (QUALITY_MIN … 1) the GPU budget loop currently applies */
+  quality = 1;
 
   constructor(mainScene: Scene) {
     this.geo = new BufferGeometry();
@@ -85,17 +143,34 @@ export class Volumes {
     this.geo.setAttribute('uv', new BufferAttribute(new Float32Array([0, 0, 2, 0, 0, 2]), 2));
     // mipmapped: its top level is the frame's mean glow (eye adaptation in the composite)
     this.rt = new WebGLRenderTarget(4, 4, { type: HalfFloatType, depthBuffer: false, generateMipmaps: true, minFilter: LinearMipmapLinearFilter, magFilter: LinearFilter });
+    this.rt2 = new WebGLRenderTarget(4, 4, { type: HalfFloatType, depthBuffer: false, generateMipmaps: true, minFilter: LinearMipmapLinearFilter, magFilter: LinearFilter });
     this.compositeMat = new ShaderMaterial({
       vertexShader: Shaders.volumeVert,
       fragmentShader: Shaders.volumeCompositeFrag,
       uniforms: {
-        uVol: { value: this.rt.texture }, uDaylight: { value: 0 }, uTexel: { value: new Vector2(0.25, 0.25) }, uUvScale: { value: new Vector2(1, 1) },
-        uRtLod: { value: 2 }, uRtUsed: { value: 0 }, uCubeLod: { value: 9 },
-        uCube: { value: null }, uUseCube: { value: 0 }, uInvProj: { value: new Matrix4() }, uCamRot: { value: new Matrix3() },
+        uVol: { value: this.rt.texture }, uDaylight: { value: 0 }, uTexel: { value: new Vector2(0.25, 0.25) }, uView: { value: new Vector2(1, 1) },
+        uVol2: { value: this.rt2.texture }, uTexel2: { value: new Vector2(0.25, 0.25) }, uDirectMix: { value: 0 },
+        uCube: { value: null }, uCubeMix: { value: 0 }, uAdapt: { value: null }, uInvProj: { value: new Matrix4() }, uCamRot: { value: new Matrix3() },
       },
       transparent: true, depthWrite: false, depthTest: true,
       blending: CustomBlending, blendSrc: OneFactor, blendDst: SrcAlphaFactor, blendSrcAlpha: ZeroFactor, blendDstAlpha: OneFactor,
     });
+    // eye adaptation state: one texel, ping-ponged, pulled toward the frame's mean glow each frame
+    for (let i = 0; i < 2; i++) this.adaptRt.push(new WebGLRenderTarget(1, 1, { type: HalfFloatType, depthBuffer: false, generateMipmaps: false, minFilter: LinearFilter, magFilter: LinearFilter }));
+    this.adaptMat = new ShaderMaterial({
+      vertexShader: Shaders.volumeVert,
+      fragmentShader: Shaders.volumeAdaptFrag,
+      uniforms: {
+        uVol: { value: this.rt.texture }, uRtLod: { value: 2 }, uRtUsed: { value: 0 },
+        uVol2: { value: this.rt2.texture }, uRt2Lod: { value: 2 }, uDirectW: { value: 0 },
+        uCube: { value: null }, uCubeW: { value: 0 }, uCubeLod: { value: 9 },
+        uPrev: { value: null }, uBlend: { value: 1 },
+      },
+      depthWrite: false, depthTest: false,
+    });
+    const adaptMesh = new Mesh(this.geo, this.adaptMat);
+    adaptMesh.frustumCulled = false;
+    this.adaptScene.add(adaptMesh);
     this.composite = new Mesh(this.geo, this.compositeMat);
     this.composite.frustumCulled = false;
     // after the galaxy sprites (other galaxies are dimmed by this one's dust), before the point
@@ -116,8 +191,8 @@ export class Volumes {
   warm(renderer: WebGLRenderer): void {
     if (this.warmMats.length) return;
     const scene = new Scene();
-    for (const frag of [Shaders.volumeGalaxyFrag, Shaders.volumeNebulaFrag]) {
-      const m = this.material(frag, {});
+    for (const frag of [Shaders.volumeGalaxyFrag, Shaders.volumeNebulaFrag, Shaders.volumeNebula2Frag]) {
+      const m = this.material(frag, frag === Shaders.volumeNebula2Frag ? profileUniforms() : {});
       this.warmMats.push(m);
       const mesh = new Mesh(this.geo, m);
       mesh.frustumCulled = false;
@@ -164,7 +239,7 @@ export class Volumes {
       uBar: { value: model.barLength / R }, uBulge: { value: model.bulgeRadius / R },
       uHs: { value: model.scaleLength / R }, uHz: { value: model.scaleHeight / R }, uAxis: { value: p.axisRatio },
       uDust: { value: DUST_PER_PC * R * (DUST_BY_TYPE[t] ?? 0) },
-      uNear: { value: 0.07 },
+      uNear: { value: 0.07 }, uCoreFade: { value: 1 },
       // individuality: lopsided / warped arms, flocculent (patchy) discs, inner rings of barred spirals
       uWarp: { value: 0.1 + 0.5 * hash01(p.seed, 1) },
       uFloc: { value: t === 'S' && hash01(p.seed, 2) < 0.35 ? 0.5 + 0.5 * hash01(p.seed, 3) : 0.15 * hash01(p.seed, 3) },
@@ -208,10 +283,50 @@ export class Volumes {
     mat.uniforms.uSeed.value = rng01() * 100;
     // peak column ≈ the sprite's brightness (uFade carries the physical / navigation level)
     mat.uniforms.uEmit.value = NEBULA_EMIT[kind];
-    mat.uniforms.uSteps.value = 56;
+    // the thin sheets of a remnant / planetary need the finer march
+    mat.uniforms.uSteps.value = kind === 'remnant' ? 80 : kind === 'planetary' ? 64 : 56;
     mat.uniforms.uBox.value.set(1.3, 1.3, 1.3);
     // random orientation: no two nebulae seen from the same side
     const q = new Matrix4().makeRotationFromEuler(new Euler(rng01() * 6.28, rng01() * 6.28, rng01() * 6.28));
+    (mat.uniforms.uToLocal.value as Matrix3).setFromMatrix4(q);
+    const v = new Volume('nebula', mat, this.geo);
+    this.add(v);
+    return v;
+  }
+
+  /**
+   * Nebula Engine 2.0: a volume driven by a resolved profile (morphology family, salted structure
+   * seeds, local star lights, palette). The object's orientation and lights come from the profile,
+   * so the same id always renders the same nebula.
+   */
+  nebulaProfile(profile: NebulaProfile): Volume {
+    const extra = profileUniforms();
+    extra.uMorph.value = MORPHOLOGY_CODE[profile.morphology];
+    extra.uPalette.value = PALETTE_CODE[profile.paletteId];
+    (extra.uTint.value as Vector3).set(profile.tint[0], profile.tint[1], profile.tint[2]);
+    extra.uEmission.value = profile.emissionScale;
+    extra.uExtinction.value = profile.extinctionScale;
+    extra.uTurb.value = profile.turbulence;
+    extra.uFilScale.value = profile.filamentScale;
+    extra.uCavity.value = profile.cavityScale;
+    (extra.uAxis.value as Vector3).copy(profile.axis);
+    extra.uDoubleShell.value = profile.doubleShell;
+    const lights = extra.uLights.value as Vector4[];
+    const cols = extra.uLightCol.value as Vector3[];
+    const n = Math.min(4, profile.lights.length);
+    for (let i = 0; i < n; i++) {
+      const l = profile.lights[i];
+      lights[i].set(l.position.x, l.position.y, l.position.z, l.intensity);
+      cols[i].copy(l.color);
+    }
+    extra.uNLights.value = n;
+    extra.uDebug.value = this.debug;
+    const mat = this.material(Shaders.volumeNebula2Frag, extra);
+    mat.uniforms.uSeed.value = (profile.seed % 1000) * 0.173;
+    mat.uniforms.uEmit.value = PROFILE_EMIT[profile.morphology];
+    mat.uniforms.uSteps.value = PROFILE_STEPS[profile.morphology];
+    mat.uniforms.uBox.value.set(1.3, 1.3, 1.3);
+    const q = new Matrix4().makeRotationFromQuaternion(profile.orientation);
     (mat.uniforms.uToLocal.value as Matrix3).setFromMatrix4(q);
     const v = new Volume('nebula', mat, this.geo);
     this.add(v);
@@ -238,6 +353,9 @@ export class Volumes {
     const galaxies = this.enabled ? pick('galaxy', MAX_GALAXIES).sort((a, b) => b.ratio - a.ratio) : [];
     const nebulae = this.enabled ? pick('nebula', MAX_NEBULAE).sort((a, b) => b.ratio - a.ratio) : [];
     for (const v of this.list) v.mesh.visible = false;
+    for (const v of nebulae) if (v.u.uDebug) v.u.uDebug.value = this.debug;
+    this.gpu ??= new GpuTimer(renderer);
+    this.gpu.begin();
 
     const prevTarget = renderer.getRenderTarget();
     const prevAlpha = renderer.getClearAlpha();
@@ -249,68 +367,139 @@ export class Volumes {
     // a cube map (a strip of a face per frame, double-buffered) and only looked up per frame
     const inside = galaxies.find((v) => v.ratio < CUBE_RATIO) ?? null;
     if (!inside) this.racing = false;
+    const now = performance.now();
+    const dt = this.lastFrameMs ? Math.min(0.1, (now - this.lastFrameMs) / 1000) : 1 / 60;
+    this.lastFrameMs = now;
+    const ownerBefore = this.cubeOwner;
     const useCube = inside !== null && !this.forceDirect && this.backdropCube(renderer, inside);
-    const draw = [...galaxies.filter((v) => !(useCube && v === inside)), ...nebulae];
+    // the cube and the direct raymarch differ a little (resolution, steps): cross-fade between
+    // them instead of switching, so stopping, setting off or crossing the backdrop radius never
+    // changes the sky in one frame
+    if (this.cubeOwner !== ownerBefore) this.cubeMix = 0;
+    const step = dt / CUBE_BLEND_S;
+    this.cubeMix = useCube ? Math.min(1, this.cubeMix + step) : Math.max(0, this.cubeMix - step);
+    // the backdrop galaxy drawn directly (its cube missing, stale or still fading in) goes to its
+    // own smaller buffer: motion hides the softer image, and the nebulae in front keep their
+    // resolution whatever the backdrop is doing
+    const backdropVol = this.cubeMix > 0 ? this.cubeOwner : inside;
+    const direct = backdropVol !== null && this.cubeMix < 1 && galaxies.includes(backdropVol) ? backdropVol : null;
+    const draw = [...galaxies.filter((v) => v !== backdropVol), ...nebulae];
     for (const v of galaxies) {
       const o = v.u.uOrigin.value as Vector3;
       if (o.distanceTo(v.lastOrigin) > RACING_APPROACH * v.ratio) v.racing = 8;
       else if (v.racing > 0) v.racing--;
       v.lastOrigin.copy(o);
     }
-    // the backdrop drawn directly is always transient (racing, or its cube still being rebuilt)
-    const rough = (v: Volume) => v.kind === 'galaxy' && (v === inside ? !this.forceDirect : v.racing > 0);
-    const cu = this.compositeMat.uniforms;
-    cu.uUseCube.value = useCube ? 1 : 0;
-    cu.uCube.value = this.cubes[this.front]?.texture ?? null;
-    this.composite.visible = draw.length > 0 || useCube;
+    const cu = this.compositeMat.uniforms, au = this.adaptMat.uniforms;
+    cu.uCubeMix.value = this.cubeMix;
+    cu.uDirectMix.value = direct ? 1 - this.cubeMix : 0;
+    cu.uCube.value = au.uCube.value = this.cubes[this.front]?.texture ?? null;
+    // eye adaptation inputs. The cube's whole-sky mean stands for the galaxy we are in whenever a
+    // cube exists, stale or not (its mean light hardly changes over a rebuild distance); leaving,
+    // it hands over to the view mean of the galaxy now in front of us
+    const owner = this.cubeOwner;
+    const cubeOk = owner !== null && galaxies.includes(owner) && Number.isFinite(this.cubeAt.x);
+    const wantCube = !cubeOk ? 0 : inside === owner ? 1 : 1 - smoothstep(CUBE_RATIO, ADAPT_OUT_RATIO, owner.ratio);
+    this.adaptCube = wantCube > this.adaptCube ? Math.min(wantCube, this.adaptCube + step) : wantCube;
+    au.uCubeW.value = this.adaptCube;
+    // the direct raymarch only counts while no cube exists yet (entering) or once we are leaving;
+    // its view mean is scaled by the view's share of the sky so it hands over to the cube's
+    // whole-sky mean without a step (the rest of the sky around a galaxy we are in is dark)
+    const tv = Math.tan((camera.fov * Math.PI) / 360), th = tv * camera.aspect;
+    const skyShare = Math.asin(Math.sin(Math.atan(tv)) * Math.sin(Math.atan(th))) / Math.PI;
+    au.uDirectW.value = direct ? (1 - this.cubeMix) * (inside !== null ? 1 - this.adaptCube : 1) * skyShare : 0;
+    this.composite.visible = draw.length > 0 || direct !== null || this.cubeMix > 0;
 
     camera.updateMatrixWorld();
     this.invProj.copy(camera.projectionMatrixInverse);
     this.camRot.setFromMatrix4(camera.matrixWorld);
     cu.uInvProj.value.copy(this.invProj);
     cu.uCamRot.value.copy(this.camRot);
-    const size = renderer.getDrawingBufferSize(_size);
-    const w = Math.max(4, Math.round(size.x * this.scale)), h = Math.max(4, Math.round(size.y * this.scale));
-    if (this.rt.width !== w || this.rt.height !== h) { this.rt.setSize(w, h); cu.uTexel.value.set(1 / w, 1 / h); cu.uRtLod.value = Math.floor(Math.log2(Math.max(w, h))); }
-    // a galaxy raymarched on the move: a smaller part of the same buffer, no reallocation
-    const f = draw.some(rough) ? RACING_SCALE : 1;
-    const vw = Math.max(4, Math.round(w * f)), vh = Math.max(4, Math.round(h * f));
-    cu.uUvScale.value.set(vw / w, vh / h);
-    const rt = this.rt;
-    rt.viewport.set(0, 0, vw, vh);
-    rt.scissor.set(0, 0, w, h);
-    rt.scissorTest = true;
-    renderer.setRenderTarget(rt);
-    renderer.clear(true, false, false);
-    // each volume only where its bounding sphere lands on screen: small / distant ones cost a few
-    // thousand pixels instead of a full-screen pass
     const tanX = this.invProj.elements[0], tanY = this.invProj.elements[5];
-    let drawn = false;
+    // a volume filling the view (the nebula we fly through) is a full-screen raymarch of dozens of
+    // noise samples per pixel: the buffer shrinks with the drawn area. The medium is soft at that
+    // range, so the coarser grid hardly shows, while the small, distant volumes keep the full grid
+    let cover = 0;
     for (const v of draw) {
       const r = screenRect(v, this.camRot, tanX, tanY);
-      if (!r) continue;
-      const x0 = Math.max(0, Math.floor((r[0] + 1) * 0.5 * vw) - 2), x1 = Math.min(vw, Math.ceil((r[1] + 1) * 0.5 * vw) + 2);
-      const y0 = Math.max(0, Math.floor((r[2] + 1) * 0.5 * vh) - 2), y1 = Math.min(vh, Math.ceil((r[3] + 1) * 0.5 * vh) + 2);
-      if (x1 <= x0 || y1 <= y0) continue;
-      rt.scissor.set(x0, y0, x1 - x0, y1 - y0);
-      renderer.setRenderTarget(rt);
-      const steps = v.u.uSteps.value as number;
-      if (rough(v)) v.u.uSteps.value = Math.round(steps * RACING_STEPS);
-      v.mesh.visible = true;
-      renderer.render(this.scene, this.cam);
-      v.mesh.visible = false;
-      v.u.uSteps.value = steps;
-      drawn = true;
+      if (r) cover += (r[1] - r[0]) * (r[3] - r[2]) * 0.25;
     }
-    // only a render regenerates the mipmaps: after a bare clear the top level is stale
-    cu.uRtUsed.value = drawn ? 1 : 0;
-    rt.scissorTest = false;
-    rt.viewport.set(0, 0, w, h);
-    rt.scissor.set(0, 0, w, h);
+    cover = Math.min(1, cover);
+    this.cover += (cover - this.cover) * Math.min(1, dt / COVER_TAU_S);
+    const size = renderer.getDrawingBufferSize(_size);
+    // covered: a share of the base resolution, and on large (HiDPI) buffers a pixel budget, so a
+    // 3k-wide display does not march six times the samples of a laptop panel for the same haze
+    const covered = Math.min(this.scale, Math.max(Math.min(this.scale * (1 - COVER_SHRINK), Math.sqrt(COVER_BUDGET_PX / (size.x * size.y))), COVER_MIN_SCALE));
+    let scale = this.scale + (covered - this.scale) * smoothstep(0.2, 0.8, this.cover);
+    // and the pass keeps to its GPU budget whatever the machine: measured over the last frames,
+    // the resolution eases down while it runs over (cost ∝ pixels) and creeps back once well under
+    const ms = this.gpu.ms;
+    if (this.gpu.supported && Number.isFinite(ms) && this.gpu.samples > 3) {
+      if (ms > this.budgetMs) this.quality = Math.max(QUALITY_MIN, this.quality - dt * QUALITY_DOWN_RATE * Math.min(3, ms / this.budgetMs - 1));
+      else if (ms < this.budgetMs * 0.6) this.quality = Math.min(1, this.quality + dt * QUALITY_UP_RATE);
+    } else this.quality = 1;
+    scale = Math.max(scale * this.quality, Math.min(this.scale, COVER_MIN_SCALE * QUALITY_MIN));
+    // the buffer is allocated once at the base size and the frame drawn into a viewport of it:
+    // no reallocation (a hitch) and no step in the image when the resolution moves
+    const baseW = Math.max(4, Math.round(size.x * this.scale)), baseH = Math.max(4, Math.round(size.y * this.scale));
+    if (this.rt.width !== baseW || this.rt.height !== baseH) { this.rt.setSize(baseW, baseH); cu.uTexel.value.set(1 / baseW, 1 / baseH); au.uRtLod.value = Math.floor(Math.log2(Math.max(baseW, baseH))); }
+    const w = Math.max(4, Math.min(baseW, Math.round(size.x * scale))), h = Math.max(4, Math.min(baseH, Math.round((w * baseH) / baseW)));
+    this.rt.viewport.set(0, 0, w, h);
+    (cu.uView.value as Vector2).set(w / baseW, h / baseH);
+    const w2 = Math.max(4, Math.round(baseW * RACING_SCALE)), h2 = Math.max(4, Math.round(baseH * RACING_SCALE));
+    if (this.rt2.width !== w2 || this.rt2.height !== h2) { this.rt2.setSize(w2, h2); cu.uTexel2.value.set(1 / w2, 1 / h2); au.uRt2Lod.value = Math.floor(Math.log2(Math.max(w2, h2))); }
+    this.rt2.viewport.set(0, 0, w2, h2);
+    // each volume only where its bounding sphere lands on screen: small / distant ones cost a few
+    // thousand pixels instead of a full-screen pass
+    const pass = (rt: WebGLRenderTarget, list: Volume[], roughSteps: (v: Volume) => boolean): boolean => {
+      const vw = rt.viewport.z, vh = rt.viewport.w;
+      // the whole buffer is cleared, viewport or not: its top mip must stay the (scaled) frame mean
+      rt.scissor.set(0, 0, rt.width, rt.height);
+      rt.scissorTest = true;
+      renderer.setRenderTarget(rt);
+      renderer.clear(true, false, false);
+      let drawn = false;
+      for (const v of list) {
+        const r = screenRect(v, this.camRot, tanX, tanY);
+        if (!r) continue;
+        const x0 = Math.max(0, Math.floor((r[0] + 1) * 0.5 * vw) - 2), x1 = Math.min(vw, Math.ceil((r[1] + 1) * 0.5 * vw) + 2);
+        const y0 = Math.max(0, Math.floor((r[2] + 1) * 0.5 * vh) - 2), y1 = Math.min(vh, Math.ceil((r[3] + 1) * 0.5 * vh) + 2);
+        if (x1 <= x0 || y1 <= y0) continue;
+        rt.scissor.set(x0, y0, x1 - x0, y1 - y0);
+        renderer.setRenderTarget(rt);
+        const steps = v.u.uSteps.value as number;
+        if (roughSteps(v)) v.u.uSteps.value = Math.round(steps * RACING_STEPS);
+        v.mesh.visible = true;
+        renderer.render(this.scene, this.cam);
+        v.mesh.visible = false;
+        v.u.uSteps.value = steps;
+        drawn = true;
+      }
+      rt.scissorTest = false;
+      rt.scissor.set(0, 0, rt.width, rt.height);
+      return drawn;
+    };
+    // a galaxy approached fast from outside is transient too: fewer steps while it races
+    const drawn = pass(this.rt, draw, (v) => v.kind === 'galaxy' && v.racing > 0);
+    const drawn2 = direct ? pass(this.rt2, [direct], () => !this.forceDirect) : false;
+    // only a render regenerates the mipmaps: after a bare clear the top level is stale. The value
+    // is the viewport's share of the buffer: the top mip averages the cleared rest in
+    au.uRtUsed.value = drawn ? (w * h) / (baseW * baseH) : 0;
+    if (!drawn2) cu.uDirectMix.value = au.uDirectW.value = 0;
+    // eye adaptation: pull the state toward this frame's mean glow (one texel, ping-pong)
+    const back = 1 - this.adaptFront;
+    au.uPrev.value = this.adaptRt[this.adaptFront].texture;
+    au.uBlend.value = this.adaptReset ? 1 : 1 - Math.exp(-dt / ADAPT_TAU_S);
+    this.adaptReset = false;
+    renderer.setRenderTarget(this.adaptRt[back]);
+    renderer.render(this.adaptScene, this.cam);
+    this.adaptFront = back;
+    cu.uAdapt.value = this.adaptRt[back].texture;
 
     renderer.setRenderTarget(prevTarget);
     renderer.setClearAlpha(prevAlpha);
     renderer.autoClear = prevAuto;
+    this.gpu.end();
   }
 
   private readonly cubes: WebGLCubeRenderTarget[] = [];
@@ -330,7 +519,7 @@ export class Volumes {
   private backdropCube(renderer: WebGLRenderer, v: Volume): boolean {
     if (!this.cubes.length) {
       const n = this.scale < 0.45 ? 320 : 512;
-      this.compositeMat.uniforms.uCubeLod.value = Math.floor(Math.log2(n));
+      this.adaptMat.uniforms.uCubeLod.value = Math.floor(Math.log2(n));
       for (let i = 0; i < 2; i++) this.cubes.push(new WebGLCubeRenderTarget(n, { type: HalfFloatType, depthBuffer: false, generateMipmaps: true, minFilter: LinearMipmapLinearFilter, magFilter: LinearFilter }));
       const cc = new CubeCamera(1, 10, this.cubes[0]);
       cc.coordinateSystem = WebGLCoordinateSystem;
@@ -374,10 +563,32 @@ export class Volumes {
   dispose(): void {
     for (const v of [...this.list]) this.remove(v);
     this.rt.dispose();
+    this.rt2.dispose();
     for (const c of this.cubes) c.dispose();
+    for (const r of this.adaptRt) r.dispose();
+    this.adaptMat.dispose();
     this.compositeMat.dispose();
     this.geo.dispose();
+    this.gpu?.dispose();
   }
+}
+
+/** uniforms of the profile-driven nebula shader (nebula_density / nebula_lighting) */
+function profileUniforms(): Record<string, IUniform> {
+  return {
+    uMorph: { value: 0 }, uTurb: { value: 0.5 }, uFilScale: { value: 1 }, uCavity: { value: 0.3 },
+    uAxis: { value: new Vector3(0, 1, 0) }, uDoubleShell: { value: 0 },
+    uLights: { value: Array.from({ length: 4 }, () => new Vector4(0, 0, 0, 0)) },
+    uLightCol: { value: Array.from({ length: 4 }, () => new Vector3(1, 1, 1)) },
+    uNLights: { value: 1 },
+    uPalette: { value: 0 }, uTint: { value: new Vector3(1, 1, 1) }, uEmission: { value: 1 }, uExtinction: { value: 1 },
+    uDebug: { value: 0 },
+  };
+}
+
+function smoothstep(a: number, b: number, x: number): number {
+  const t = Math.min(Math.max((x - a) / (b - a), 0), 1);
+  return t * t * (3 - 2 * t);
 }
 
 const _size = new Vector2();
@@ -391,7 +602,7 @@ const HALF_PI = Math.PI / 2;
  */
 function screenRect(v: Volume, camRot: Matrix3, tanX: number, tanY: number): [number, number, number, number] | null {
   const u = v.u;
-  const r = (u.uBox.value as Vector3).length();
+  const r = v.bound;
   // centre relative to the camera, local → scene → camera (rotations: inverse = transpose)
   _c.copy(u.uOrigin.value as Vector3).negate()
     .applyMatrix3(_m.copy(u.uToLocal.value as Matrix3).transpose())

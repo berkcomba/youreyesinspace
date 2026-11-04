@@ -3,10 +3,11 @@
  * body: Solar-System body id · star: HYG proper name (resolved through the catalogue search)
  * galaxy: substring of the galaxy catalogue name · index 0 = Milky Way overview.
  * blackhole: universal black-hole id (see data/blackholes.ts) · landmark: id from data/landmarks.ts.
+ * exoplanet: planet name as in the NASA Exoplanet Archive.
  */
 export interface Place {
   label: string;
-  kind: 'body' | 'star' | 'galaxy' | 'blackhole' | 'landmark';
+  kind: 'body' | 'star' | 'galaxy' | 'blackhole' | 'landmark' | 'exoplanet';
   ref: string;
   note?: string;
 }
@@ -97,6 +98,23 @@ export const PLACES: PlaceGroup[] = [
       { label: 'Plüton', kind: 'body', ref: 'pluto' },
       { label: 'Güneş', kind: 'body', ref: 'sun' },
       { label: '1P/Halley', kind: 'body', ref: 'halley', note: 'Kuyruklu yıldız' },
+    ],
+  },
+  {
+    title: 'Ötegezegenler',
+    items: [
+      { label: 'Proxima Centauri b', kind: 'exoplanet', ref: 'Proxima Cen b', note: 'En yakın ötegezegen · yaşanabilir bölgede' },
+      { label: 'TRAPPIST-1 e', kind: 'exoplanet', ref: 'TRAPPIST-1 e', note: 'Yedi Dünya boyutlu gezegenden biri' },
+      { label: '51 Pegasi b', kind: 'exoplanet', ref: '51 Peg b', note: 'Güneş benzeri yıldızda ilk keşif, 1995' },
+      { label: 'HD 209458 b', kind: 'exoplanet', ref: 'HD 209458 b', note: 'Geçişi gözlenen ilk gezegen' },
+      { label: 'HD 189733 b', kind: 'exoplanet', ref: 'HD 189733 b', note: 'Lacivert sıcak Jüpiter' },
+      { label: '55 Cancri e', kind: 'exoplanet', ref: '55 Cnc e', note: 'Magma okyanuslu süper-Dünya' },
+      { label: 'Kepler-186 f', kind: 'exoplanet', ref: 'Kepler-186 f', note: 'Yaşanabilir bölgede Dünya boyutlu' },
+      { label: 'K2-18 b', kind: 'exoplanet', ref: 'K2-18 b', note: 'Metan ve CO₂ bulunan mini-Neptün' },
+      { label: 'LHS 3844 b', kind: 'exoplanet', ref: 'LHS 3844 b', note: 'Atmosfersiz çıplak kaya' },
+      { label: 'KELT-9 b', kind: 'exoplanet', ref: 'KELT-9 b', note: 'Bilinen en sıcak gaz devi' },
+      { label: 'Beta Pictoris b', kind: 'exoplanet', ref: 'bet Pic b', note: 'Doğrudan görüntülenen genç dev' },
+      { label: 'HR 8799 e', kind: 'exoplanet', ref: 'HR 8799 e', note: 'Fotoğraflanan dört gezegenli sistem' },
     ],
   },
   {

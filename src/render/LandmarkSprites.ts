@@ -20,6 +20,8 @@ function hashStr(s: string): number {
 const KIND_CODE = { nebula: 0, cluster: 1, remnant: 2, star: 3, pulsar: 4, planetary: 5, globular: 6 } as const;
 /** at most this many generated landmarks get labels at once (the biggest on screen) */
 const MAX_PROC_LABELS = 36;
+/** how often the label / pick lists (the walk over every landmark) are refreshed (ms) */
+const LIST_INTERVAL_MS = 40;
 
 /** Screen-space info for a landmark label/marker */
 export interface LandmarkScreen {
@@ -53,6 +55,20 @@ export class LandmarkSprites {
 
   private geo!: InstancedBufferGeometry;
   private readonly quad = new PlaneGeometry(2, 2);
+  /** per landmark, from the last update(): distance from the camera (pc) and apparent radius (px) — shared with the cloud / member-star layers so they need not walk the list again */
+  distPc = new Float32Array(0);
+  radiusPx = new Float32Array(0);
+  /** the label / pick lists are rebuilt at LIST_INTERVAL_MS, or at once after a rebuild / system change */
+  private listAt = -Infinity;
+  private listDirty = true;
+  private listSystem = '';
+  private galaxyFar = new Int8Array(0);
+  /** galaxies the landmarks belong to (size of the per-galaxy cache), from rebuild */
+  private galaxyCount = 0;
+  /** per landmark: 10^(−0.4·M), so the apparent flux is flux0·100/d² without a log per frame */
+  private flux0 = new Float32Array(0);
+  /** per landmark: d²/uK beyond which the physical sprite alpha (pxc ≥ 1.2) is under 0.03 */
+  private visD2 = new Float32Array(0);
   /** photographs: fixed by the real landmarks (loaded once) */
   private readonly files: string[] = [];
   private atlasRequested = false;
@@ -97,14 +113,23 @@ export class LandmarkSprites {
     const n = landmarks.length;
     const pos = new Float32Array(n * 3), col = new Float32Array(n * 3);
     const rad = new Float32Array(n), kind = new Float32Array(n), mag = new Float32Array(n), seed = new Float32Array(n), idx = new Float32Array(n);
-    const img = new Float32Array(n), span = new Float32Array(n), cloud = new Float32Array(n);
+    const img = new Float32Array(n), span = new Float32Array(n), cloud = new Float32Array(n), cat = new Float32Array(n);
     const files = this.files;
+    this.distPc = new Float32Array(n); this.radiusPx = new Float32Array(n);
+    this.listDirty = true;
+    let gmax = 0; for (const l of landmarks) if (l.galaxy >= gmax) gmax = l.galaxy + 1;
+    this.galaxyCount = gmax;
+    const flux0 = this.flux0 = new Float32Array(n);
+    const visD2 = this.visD2 = new Float32Array(n);
     landmarks.forEach((l, i) => {
+      flux0[i] = Math.pow(10, -0.4 * l.def.absMag);
+      visD2[i] = (flux0[i] * 100) / (0.03 * 0.61 * 1.2 * 1.2);
       pos[i * 3] = l.positionPc.x; pos[i * 3 + 1] = l.positionPc.y; pos[i * 3 + 2] = l.positionPc.z;
       col[i * 3] = l.def.color[0]; col[i * 3 + 1] = l.def.color[1]; col[i * 3 + 2] = l.def.color[2];
       rad[i] = l.def.radiusPc;
       kind[i] = KIND_CODE[l.def.kind];
       mag[i] = l.def.absMag;
+      cat[i] = l.def.catalog ? 1 : 0;
       seed[i] = l.def.procedural ? (hashStr(l.def.id) % 1000) / 77 : (i * 7.31) % 13;
       idx[i] = i;
       const photo = LANDMARK_IMAGES[l.def.id];
@@ -132,21 +157,30 @@ export class LandmarkSprites {
     geo.setAttribute('iImg', new InstancedBufferAttribute(img, 1));
     geo.setAttribute('iSpan', new InstancedBufferAttribute(span, 1));
     geo.setAttribute('iCloud', new InstancedBufferAttribute(cloud, 1));
+    geo.setAttribute('iCat', new InstancedBufferAttribute(cat, 1));
     geo.instanceCount = n;
     const old = this.geo;
     this.geo = geo;
     if (this.mesh) { this.mesh.geometry = geo; old?.dispose(); }
     this.pool.length = Math.min(this.pool.length, n);
     this.cloudFlags = cloud;
+    this.cloudSet.clear();
   }
 
   private cloudFlags = new Float32Array(0);
+  /** indices currently holding a non-zero cloud weight */
+  private readonly cloudSet = new Set<number>();
 
   /** Mark the landmarks that currently have a volumetric cloud (their sprite yields to it when resolved) */
-  setCloudFlags(indices: Iterable<number>): void {
+  /** @param weights landmark index → 0…1 share with which a volumetric cloud stands in for it right now */
+  setCloudFlags(weights: Iterable<[number, number]>): void {
     const f = this.cloudFlags;
-    f.fill(0);
-    for (const i of indices) if (i < f.length) f[i] = 1;
+    // a handful of weights among ten thousand zeros: only an actual change is worth the upload
+    let changed = false;
+    for (const i of this.cloudSet) if (f[i] !== 0) { f[i] = 0; changed = true; }
+    this.cloudSet.clear();
+    for (const [i, w] of weights) if (i < f.length) { if (f[i] !== w) { f[i] = w; changed = true; } this.cloudSet.add(i); }
+    if (!changed) return;
     const attr = this.geo.getAttribute('iCloud') as InstancedBufferAttribute;
     attr.needsUpdate = true;
   }
@@ -233,26 +267,65 @@ export class LandmarkSprites {
     u.uCamPc.value.copy(camPc);
     u.uPxPerRad.value = pxPerRad;
     u.uK.value = (0.16 * GalaxyCloud.gain * Math.PI * pxPerRad * pxPerRad) / 1.17;
+    u.uTime.value = (performance.now() * 1e-3) % 1000;
+    // the sprites themselves are the shader's (every frame, from the uniforms above); the walk over
+    // ten thousand landmarks below only serves labels, picking and the hand-over layers, and a
+    // direction a few hundredths of a second old is nothing to a label: at 120 Hz it would be a
+    // steady 1.5 ms of every frame otherwise
+    const now = performance.now();
+    if (!this.listDirty && currentSystem === this.listSystem && now - this.listAt < LIST_INTERVAL_MS) {
+      // between walks the chosen labels follow the camera every frame (they glide, not step)
+      this.track(this.named, camPc, pxPerRad);
+      this.track(this.pickable, camPc, pxPerRad);
+      return;
+    }
+    this.listDirty = false; this.listSystem = currentSystem; this.listAt = now;
     let hide = -1;
     this.named.length = 0;
     this.pickable.length = 0;
     const proc: LandmarkScreen[] = [];
+    const distPc = this.distPc, radiusPx = this.radiusPx;
+    const cx = camPc.x, cy = camPc.y, cz = camPc.z;
+    const K = u.uK.value as number;
+    // the host galaxy's resolution, per galaxy index (one call per galaxy, not per landmark):
+    // -1 unknown, 0 resolved, 1 far
+    let galaxyFar = this.galaxyFar;
+    if (galaxyFar.length < this.galaxyCount) galaxyFar = this.galaxyFar = new Int8Array(this.galaxyCount);
+    galaxyFar.fill(-1);
     for (let i = 0; i < this.landmarks.length; i++) {
       const l = this.landmarks[i];
+      const p = l.positionPc;
+      const dx = p.x - cx, dy = p.y - cy, dz = p.z - cz;
+      const d = Math.max(Math.sqrt(dx * dx + dy * dy + dz * dz), 1e-6);
+      const R = l.def.radiusPc;
+      const ratio = d / R;
+      // small angles (nearly all of them): atan(x) = x to 3e-7
+      const px = (ratio > 1000 ? 1 / ratio : Math.atan(1 / ratio)) * pxPerRad;
+      distPc[i] = d; radiusPx[i] = px;
       if (l.systemId !== null && l.systemId === currentSystem) { hide = i; continue; }
       // labels: only when the host galaxy is resolved (inside or close), so a far galaxy's
       // landmarks don't pile onto its own label
-      if (galaxyRatio(l.galaxy) > 4) continue;
+      let far = l.galaxy < galaxyFar.length ? galaxyFar[l.galaxy] : -1;
+      if (far < 0) { far = galaxyRatio(l.galaxy) > 4 ? 1 : 0; if (l.galaxy < galaxyFar.length) galaxyFar[l.galaxy] = far; }
+      if (far === 1) continue;
+      if (l.def.procedural || l.def.catalog) {
+        // generated and catalogue objects are many: label only the ones that are resolved / close;
+        // the rest only matter when their sprite is actually visible (then they are clickable).
+        // Beyond the navigation floor's reach only the physical flux counts: a bound on it in
+        // d² settles almost all of them without the full alpha
+        if (px < 1.5 && ratio > 400) {
+          if (ratio > 600 && d * d > K * this.visD2[i]) continue;
+          if (this.alphaAt(i, px, ratio, d) <= 0.03) continue;
+        }
+      }
       let m = this.pool[i];
       if (!m || m.index !== i || m.name !== l.def.name) { m = { index: i, name: l.def.name, dir: new Vector3(), radiusPx: 0, kind: l.def.kind, distKm: 0 }; this.pool[i] = m; }
-      this.direction(i, m.dir);
-      m.distKm = l.positionPc.distanceTo(camPc) * PARSEC_KM;
-      m.radiusPx = this.angularRadius(i) * pxPerRad;
-      if (l.def.procedural) {
-        // generated objects are many: label only the ones that are resolved / close
-        const ratio = m.distKm / (l.def.radiusPc * PARSEC_KM);
-        if (m.radiusPx < 1.5 && ratio > 400) { if (this.spriteAlpha(l, m.radiusPx, ratio) > 0.03) this.pickable.push(m); continue; }
-        m.undiscovered = !this.discoveries?.has(l.def.id);
+      m.dir.set(dx / d, dy / d, dz / d);
+      m.distKm = d * PARSEC_KM;
+      m.radiusPx = px;
+      if (l.def.procedural || l.def.catalog) {
+        if (px < 1.5 && ratio > 400) { this.pickable.push(m); continue; }
+        if (l.def.procedural) m.undiscovered = !this.discoveries?.has(l.def.id);
         proc.push(m);
       } else {
         this.named.push(m);
@@ -265,17 +338,51 @@ export class LandmarkSprites {
     }
     for (const m of proc) this.named.push(m);
     u.uHideIndex.value = hide;
-    u.uTime.value = (performance.now() * 1e-3) % 1000;
+  }
+
+  /** Direction, distance and apparent radius of the listed labels from the current camera */
+  private track(list: LandmarkScreen[], camPc: Vector3, pxPerRad: number): void {
+    const cx = camPc.x, cy = camPc.y, cz = camPc.z;
+    for (let k = 0; k < list.length; k++) {
+      const m = list[k];
+      const l = this.landmarks[m.index];
+      if (!l) continue;
+      const p = l.positionPc;
+      const dx = p.x - cx, dy = p.y - cy, dz = p.z - cz;
+      const d = Math.max(Math.sqrt(dx * dx + dy * dy + dz * dz), 1e-6);
+      const ratio = d / l.def.radiusPc;
+      m.dir.set(dx / d, dy / d, dz / d);
+      m.distKm = d * PARSEC_KM;
+      m.radiusPx = (ratio > 1000 ? 1 / ratio : Math.atan(1 / ratio)) * pxPerRad;
+      this.distPc[m.index] = d; this.radiusPx[m.index] = m.radiusPx;
+    }
   }
 
   /** The sprite's alpha as the vertex shader computes it (landmark.vert), for "is it on screen?" */
-  private spriteAlpha(l: Landmark, radiusPx: number, ratio: number): number {
-    const m = l.def.absMag + 5 * Math.log10(Math.max(l.positionPc.distanceTo(this.camPc), 1e-6)) - 5;
-    const flux = Math.pow(10, -0.4 * m);
-    const pxc = Math.max(radiusPx, 0.75);
-    const physical = Math.min(((this.mat.uniforms.uK.value as number) * flux) / (0.61 * pxc * pxc), 1);
-    const nearR = l.def.kind === 'globular' ? 150 : 600;
-    const near = 0.6 * (1 - smooth01((ratio - nearR * 0.1) / (nearR * 0.9)));
+  private alphaAt(i: number, radiusPx: number, ratio: number, distPc: number): number {
+    const l = this.landmarks[i];
+    const flux = (this.flux0[i] * 100) / (distPc * distPc);   // 10^(−0.4·(M + 5 log d − 5))
+    if (l.def.kind === 'star' || l.def.kind === 'pulsar') {
+      let nav = 1 - smooth01((distPc - 8000) / 32000);
+      if (l.def.catalog) nav *= 1 - smooth01((distPc - 150) / 250);
+      return Math.min(1, 0.2 * nav + 0.9 * Math.pow(flux, 0.45)) * smooth01((ratio - 0.8) / 1.4);
+    }
+    const pxc = Math.max(radiusPx, 1.2);
+    let physical = Math.min(((this.mat.uniforms.uK.value as number) * flux) / (0.61 * pxc * pxc), 1);
+    const shell = l.def.kind === 'remnant' || l.def.kind === 'planetary';
+    const nearR = l.def.kind === 'globular' ? 150 : shell ? 400 : 600;
+    const floorA = shell ? 0.4 * (0.5 + 0.5 * smooth01((radiusPx - 1.5) / 6.5)) + 0.45 * (1 - smooth01((ratio - 12) / 48)) : 0.6;
+    let near = floorA * (1 - smooth01((ratio - nearR * 0.1) / (nearR * 0.9)));
+    if (l.def.catalog) {
+      // survey objects: star-like brightness while unresolved, a short navigation floor (landmark.vert)
+      physical = Math.min(1, 0.9 * Math.pow((flux * 4) / Math.max(radiusPx * radiusPx, 4), 0.45));
+      near *= 0.5 * (1 - smooth01((ratio - 6) / 54));
+      if (l.def.kind === 'cluster' || l.def.kind === 'globular') {
+        const h = smooth01((radiusPx - 10) / 20);
+        physical *= 1 - (l.def.kind === 'globular' ? 0.65 : 0.9) * h;
+        near *= 1 - 0.9 * h;
+      }
+    }
     return Math.max(physical, near) * smooth01((ratio - 0.8) / 1.4);
   }
 
@@ -295,7 +402,7 @@ export class LandmarkSprites {
       const l = this.landmarks[m.index];
       if (!l) continue;
       const ratio = m.distKm / (l.def.radiusPc * PARSEC_KM);
-      const vis = Math.max(minVis, this.spriteAlpha(l, m.radiusPx, ratio));
+      const vis = Math.max(minVis, this.alphaAt(m.index, m.radiusPx, ratio, m.distKm / PARSEC_KM));
       if (vis < PICK_MIN_VIS) continue;
       _proj.copy(m.dir).multiplyScalar(1e11).project(camera);
       if (_proj.z > 1 || _proj.z < -1) continue;

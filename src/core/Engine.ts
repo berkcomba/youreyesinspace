@@ -1,5 +1,5 @@
 import {
-  ACESFilmicToneMapping, Color, HalfFloatType, PerspectiveCamera, SRGBColorSpace, Scene, Vector2, WebGLRenderTarget, WebGLRenderer,
+  ACESFilmicToneMapping, Color, DepthTexture, HalfFloatType, PerspectiveCamera, SRGBColorSpace, Scene, UnsignedIntType, Vector2, WebGLRenderTarget, WebGLRenderer,
 } from 'three';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -7,6 +7,9 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { CAMERA_FAR_KM, CAMERA_NEAR_KM } from './constants';
 import { BlackHolePass } from '../render/BlackHolePass';
+import { AutoExposurePass } from '../render/AutoExposurePass';
+import { GodRaysPass } from '../render/GodRaysPass';
+import { initProgramPins } from '../render/ProgramPins';
 
 /** Renderer + camera + post-processing. Camera stays at the origin (floating origin). */
 export class Engine {
@@ -17,6 +20,10 @@ export class Engine {
   readonly bloom: UnrealBloomPass;
   /** gravitational lensing (enabled only while a black hole is resolvable) */
   readonly blackHole: BlackHolePass;
+  /** eye adaptation (before the bloom, so a bright sky does not bloom into a haze) */
+  readonly autoExposure: AutoExposurePass;
+  /** crepuscular rays of the star in view (in an atmosphere) */
+  readonly godRays: GodRaysPass;
   width = 1;
   height = 1;
   pixelRatio = 1;
@@ -34,6 +41,7 @@ export class Engine {
       powerPreference: 'high-performance',
       alpha: false,
     });
+    initProgramPins(this.renderer);
     this.renderer.outputColorSpace = SRGBColorSpace;
     this.renderer.toneMapping = ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.0;
@@ -45,15 +53,23 @@ export class Engine {
 
     // HDR scene buffer with hardware MSAA: the composer's default target is single-sampled, which
     // left every limb and ring edge aliased however the canvas was created
-    const target = new WebGLRenderTarget(1, 1, { type: HalfFloatType, samples: this.msaaSamples(1, 1) });
+    // the depth is resolved into a texture as well: the light-shaft pass reads it for occlusion
+    const target = new WebGLRenderTarget(1, 1, { type: HalfFloatType, samples: this.msaaSamples(1, 1), depthTexture: new DepthTexture(1, 1, UnsignedIntType) });
     this.composer = new EffectComposer(this.renderer, target);
     this.composer.addPass(new RenderPass(this.scene, this.camera));
     this.blackHole = new BlackHolePass();
     this.blackHole.quality = this.mobile ? 0.5 : 1;
     this.composer.addPass(this.blackHole);
+    this.godRays = new GodRaysPass();
+    this.godRays.attach(this.scene, this.camera);
+    this.composer.addPass(this.godRays);
+    this.autoExposure = new AutoExposurePass();
+    this.composer.addPass(this.autoExposure);
     this.bloom = new UnrealBloomPass(new Vector2(1, 1), 0.35, 0.4, 0.92);
     this.composer.addPass(this.bloom);
-    this.composer.addPass(new OutputPass());
+    const output = new OutputPass();
+    this.autoExposure.bindOutput(output);
+    this.composer.addPass(output);
 
     this.resize();
     window.addEventListener('resize', () => this.resize());

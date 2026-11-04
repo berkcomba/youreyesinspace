@@ -7,6 +7,8 @@ import { Rng, hashSeed } from '../gen/SystemGenerator';
 import { isKeplerian, mathToScene, positionFromE, resolveElements, solveKepler } from '../math/kepler';
 import { propagateState } from '../math/propagate';
 import { Shaders } from './shaders';
+import { disposeOrPin } from './ProgramPins';
+import { presetBounds } from './Bounds';
 
 /** dust grid: release times × grain sizes */
 const N_TAU = 56;
@@ -110,7 +112,7 @@ export class CometTails {
     }
     const ionJitter = new Float32Array(N_ION * 3);
     for (let i = 0; i < N_ION; i++) { ionJitter[i * 3] = rng.range(-1, 1); ionJitter[i * 3 + 1] = rng.range(-1, 1); ionJitter[i * 3 + 2] = rng.range(0, 1); }
-    const geo = new BufferGeometry();
+    const geo = presetBounds(new BufferGeometry());
     geo.setAttribute('position', new BufferAttribute(pos, 3).setUsage(DynamicDrawUsage));
     geo.setAttribute('alpha', new BufferAttribute(alpha, 1).setUsage(DynamicDrawUsage));
     geo.setAttribute('aSize', new BufferAttribute(size, 1).setUsage(DynamicDrawUsage));
@@ -255,6 +257,6 @@ export class CometTails {
   dispose(): void {
     for (const t of this.tails.values()) t.geo.dispose();
     this.tails.clear();
-    this.mat.dispose();
+    disposeOrPin(this.mat);
   }
 }

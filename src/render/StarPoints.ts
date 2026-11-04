@@ -1,11 +1,12 @@
 import {
-  AdditiveBlending, BufferAttribute, BufferGeometry, Points, Scene, ShaderMaterial, Vector3, type PerspectiveCamera,
+  AdditiveBlending, BufferAttribute, BufferGeometry, Points, Scene, ShaderMaterial, Vector3, Vector4, type PerspectiveCamera,
 } from 'three';
 import { PARSEC_KM, SKY_RADIUS_KM } from '../core/constants';
-import type { StarCatalog } from '../data/StarCatalog';
+import type { StarCatalog, TierAttributes } from '../data/StarCatalog';
 import { bvToRgb } from '../astro/stellar';
 import { Shaders } from './shaders';
 import { better, PICK_MIN_VIS, starLook, type PickHit } from './pickHit';
+import { presetBounds } from './Bounds';
 
 export interface NamedStarScreen {
   index: number;
@@ -45,8 +46,16 @@ const _proj = new Vector3();
  * shows parallax as the camera travels between systems. Brightness follows the real
  * distance-dependent apparent magnitude; the current system's star is hidden (it is a mesh).
  */
+/** stars per upload slice of a background tier */
+const TIER_SLICE = 300_000;
+
 export class StarPoints {
+  /** the core catalogue */
   readonly points: Points;
+  /** the background-loaded tiers, one draw each */
+  private readonly tierPoints: Points[] = [];
+  private tiersVisible = true;
+  private visible = true;
   readonly namedStars: NamedStarScreen[] = [];
   /** catalogue indices of the landmark stars (Sun first) */
   readonly landmarks: number[] = [0];
@@ -58,27 +67,15 @@ export class StarPoints {
   private readonly mat: ShaderMaterial;
   private readonly camPc = new Vector3();
 
-  constructor(readonly catalog: StarCatalog, scene: Scene) {
-    const n = catalog.count;
-    const col = new Float32Array(n * 3);
-    const idx = new Float32Array(n);
-    for (let i = 0; i < n; i++) {
-      const [r, g, b] = bvToRgb(catalog.bvs[i]);
-      col[i * 3] = r;
-      col[i * 3 + 1] = g;
-      col[i * 3 + 2] = b;
-      idx[i] = i;
-    }
-    const geo = new BufferGeometry();
-    geo.setAttribute('position', new BufferAttribute(catalog.positions, 3));
-    geo.setAttribute('absMag', new BufferAttribute(catalog.absMags, 1));
-    geo.setAttribute('color', new BufferAttribute(col, 3));
-    geo.setAttribute('starIndex', new BufferAttribute(idx, 1));
-
+  constructor(readonly catalog: StarCatalog, private readonly scene: Scene) {
     this.mat = new ShaderMaterial({
       vertexShader: Shaders.starsVert,
       fragmentShader: Shaders.pointsFrag,
       uniforms: {
+        uDrift: { value: 0 },
+        // every material sharing stars.vert must set every uniform: the three materials share one
+        // GL program, and an unset uniform keeps whatever the previous draw left in it
+        uMagBoost: { value: 0 },
         uCamPc: { value: new Vector3() },
         uPixelRatio: { value: 1 },
         uSkyRadius: { value: SKY_RADIUS_KM },
@@ -87,6 +84,7 @@ export class StarPoints {
         uFade: { value: 1 },
         uDaylight: { value: 0 },
         uSoftness: { value: 0.0 },
+        uTint: { value: new Vector4(0, 0, 0, 0) },
       },
       transparent: true,
       blending: AdditiveBlending,
@@ -103,10 +101,55 @@ export class StarPoints {
       if (hit !== undefined && hit !== 0 && !this.neighbours.includes(hit)) this.neighbours.push(hit);
     }
 
-    this.points = new Points(geo, this.mat);
-    this.points.frustumCulled = false;
-    this.points.renderOrder = -10;
-    scene.add(this.points);
+    this.points = this.makePoints(0, catalog.core);
+    catalog.onTier((t, attrs) => {
+      // a tier goes to the GPU in slices, one per frame: two million stars' attributes uploaded in
+      // one go hold a frame for 50 ms or more
+      let k = 0;
+      const slice = (): void => {
+        const n = Math.min(TIER_SLICE, t.count - k);
+        const pts = this.makePoints(t.first + k, n, { colors: attrs.colors.subarray(k * 3, (k + n) * 3), indices: attrs.indices.subarray(k, k + n) });
+        pts.visible = this.visible && this.tiersVisible;
+        this.tierPoints.push(pts);
+        k += n;
+        if (k < t.count) requestAnimationFrame(slice);
+      };
+      slice();
+    });
+  }
+
+  /** One draw over catalogue indices [first, first + n) */
+  private makePoints(first: number, n: number, attrs?: TierAttributes): Points {
+    const c = this.catalog;
+    // a tier arrives with its colours and indices already computed (worker); the core does them here
+    const col = attrs?.colors ?? new Float32Array(n * 3);
+    const idx = attrs?.indices ?? new Float32Array(n);
+    if (!attrs) {
+      for (let k = 0; k < n; k++) {
+        const [r, g, b] = bvToRgb(c.bvs[first + k]);
+        col[k * 3] = r;
+        col[k * 3 + 1] = g;
+        col[k * 3 + 2] = b;
+        idx[k] = first + k;
+      }
+    }
+    const geo = presetBounds(new BufferGeometry());
+    geo.setAttribute('position', new BufferAttribute(c.positions.subarray(first * 3, (first + n) * 3), 3));
+    geo.setAttribute('velocity', new BufferAttribute(c.velocities.subarray(first * 3, (first + n) * 3), 3));
+    geo.setAttribute('absMag', new BufferAttribute(c.absMags.subarray(first, first + n), 1));
+    geo.setAttribute('color', new BufferAttribute(col, 3));
+    geo.setAttribute('starIndex', new BufferAttribute(idx, 1));
+    const pts = new Points(geo, this.mat);
+    pts.frustumCulled = false;
+    pts.renderOrder = -10;
+    this.scene.add(pts);
+    return pts;
+  }
+
+  /** Show / hide the background-loaded tiers (they stay in memory) */
+  setTiersVisible(v: boolean): void {
+    this.tiersVisible = v;
+    for (const p of this.tierPoints) p.visible = this.visible && v;
   }
 
   setPixelRatio(pr: number): void {
@@ -120,21 +163,20 @@ export class StarPoints {
   }
 
   setVisible(v: boolean): void {
+    this.visible = v;
     this.points.visible = v;
+    for (const p of this.tierPoints) p.visible = v && this.tiersVisible;
   }
 
   /** Apparent magnitude of star i as seen from the current camera position */
   apparentMag(i: number): number {
-    const p = this.catalog.positions;
-    const dx = p[i * 3] - this.camPc.x, dy = p[i * 3 + 1] - this.camPc.y, dz = p[i * 3 + 2] - this.camPc.z;
-    const d = Math.max(Math.sqrt(dx * dx + dy * dy + dz * dz), 1e-7);
+    const d = Math.max(this.catalog.position(i, _rel).distanceTo(this.camPc), 1e-7);
     return this.catalog.absMags[i] + 5 * Math.log10(d) - 5;
   }
 
   /** Unit direction from the camera to star i */
   direction(i: number, out = new Vector3()): Vector3 {
-    const p = this.catalog.positions;
-    return out.set(p[i * 3] - this.camPc.x, p[i * 3 + 1] - this.camPc.y, p[i * 3 + 2] - this.camPc.z).normalize();
+    return this.catalog.position(i, out).sub(this.camPc).normalize();
   }
 
   /**
@@ -144,6 +186,7 @@ export class StarPoints {
   update(camPc: Vector3, hideIndex: number): void {
     this.camPc.copy(camPc);
     this.mat.uniforms.uCamPc.value.copy(camPc);
+    this.mat.uniforms.uDrift.value = this.catalog.drift;
     this.mat.uniforms.uHideIndex.value = hideIndex;
 
     // Named-star label candidates (bright from here)
@@ -185,8 +228,7 @@ export class StarPoints {
 
   /** Distance (pc) from the current camera position to star i */
   distancePc(i: number): number {
-    const p = this.catalog.positions;
-    return Math.hypot(p[i * 3] - this.camPc.x, p[i * 3 + 1] - this.camPc.y, p[i * 3 + 2] - this.camPc.z);
+    return this.catalog.position(i, _rel).distanceTo(this.camPc);
   }
 
   /** Pick the star nearest to a screen point (px). Only stars brighter than `magLimit` are considered. */
@@ -196,14 +238,22 @@ export class StarPoints {
 
   /** Best candidate under a screen point, sized and weighted as the shader draws it */
   pickHit(x: number, y: number, camera: PerspectiveCamera, W: number, H: number, hideIndex: number, slackPx = 7, magLimit = this.mat.uniforms.uMagLimit.value as number): PickHit<number> | null {
-    const p = this.catalog.positions;
+    const c = this.catalog;
+    const p = c.positions, v = c.velocities, k = c.drift, f0 = c.flux0;
+    const cx = this.camPc.x, cy = this.camPc.y, cz = this.camPc.z;
     const fade = this.mat.uniforms.uFade.value as number;
+    // m ≤ magLimit ⇔ d² ≤ 10^(0.4·(magLimit + 5)) · 10^(−0.4·M): a cheap cut before the logarithm
+    const reach2 = Math.pow(10, 0.4 * (magLimit + 5));
+    const n = this.tiersVisible ? c.count : c.core;
     let best: PickHit<number> | null = null;
-    for (let i = 0; i < this.catalog.count; i++) {
+    for (let i = 0; i < n; i++) {
       if (i === hideIndex) continue;
-      _rel.set(p[i * 3] - this.camPc.x, p[i * 3 + 1] - this.camPc.y, p[i * 3 + 2] - this.camPc.z);
-      const d = _rel.length();
-      const m = this.catalog.absMags[i] + 5 * Math.log10(Math.max(d, 1e-7)) - 5;
+      const dx = p[i * 3] + v[i * 3] * k - cx, dy = p[i * 3 + 1] + v[i * 3 + 1] * k - cy, dz = p[i * 3 + 2] + v[i * 3 + 2] * k - cz;
+      const d2 = dx * dx + dy * dy + dz * dz;
+      if (d2 > reach2 * f0[i]) continue;
+      _rel.set(dx, dy, dz);
+      const d = Math.sqrt(d2);
+      const m = c.absMags[i] + 5 * Math.log10(Math.max(d, 1e-7)) - 5;
       if (m > magLimit) continue;
       const look = starLook(m);
       const vis = look.alpha * fade;
@@ -218,7 +268,7 @@ export class StarPoints {
     // marked stars (the Sun, the neighbourhood, far landmarks) carry a label: pickable regardless of brightness
     for (const i of this.marked) {
       if (i === hideIndex) continue;
-      _rel.set(p[i * 3] - this.camPc.x, p[i * 3 + 1] - this.camPc.y, p[i * 3 + 2] - this.camPc.z);
+      c.position(i, _rel).sub(this.camPc);
       _proj.copy(_rel).multiplyScalar(1e11 / _rel.length()).project(camera);
       if (_proj.z > 1 || _proj.z < -1) continue;
       const dist = Math.hypot((_proj.x * 0.5 + 0.5) * W - x, (-_proj.y * 0.5 + 0.5) * H - y);

@@ -55,7 +55,22 @@ import volumeVert from './volume.vert?raw';
 import volumeCommon from './volume_common.glsl?raw';
 import volumeGalaxyFrag from './volume_galaxy.frag?raw';
 import volumeNebulaFrag from './volume_nebula.frag?raw';
+import nebulaDensity from './nebula_density.glsl?raw';
+import nebulaLighting from './nebula_lighting.glsl?raw';
+import volumeNebula2Frag from './volume_nebula2.frag?raw';
 import volumeCompositeFrag from './volume_composite.frag?raw';
+import volumeAdaptFrag from './volume_adapt.frag?raw';
+import exposureMeterFrag from './exposure_meter.frag?raw';
+import exposureAdaptFrag from './exposure_adapt.frag?raw';
+import godraysMaskFrag from './godrays_mask.frag?raw';
+import godraysBlurFrag from './godrays_blur.frag?raw';
+import godraysAddFrag from './godrays_add.frag?raw';
+import gasCommon from './gas_common.glsl?raw';
+import bakedCommon from './baked_common.glsl?raw';
+import bakeCommon from './bake_common.glsl?raw';
+import bakeTerrestrialFrag from './bake_terrestrial.frag?raw';
+import bakeGasFrag from './bake_gas.frag?raw';
+import bakeNormalFrag from './bake_normal.frag?raw';
 
 /** Compose shader sources with shared chunks. */
 export const Shaders = {
@@ -71,15 +86,25 @@ export const Shaders = {
   blackholeFrag: common + '\n' + blackholeFrag,
   landmarkVert,
   landmarkFrag: common + '\n' + landmarkFrag,
-  terrestrialFrag: common + '\n' + lighting + '\n' + terrestrialCommon + '\n' + cloudsCommon + '\n' + terrestrialFrag,
+  terrestrialFrag: common + '\n' + lighting + '\n' + terrestrialCommon + '\n' + cloudsCommon + '\n' + bakedCommon + '\n' + terrestrialFrag,
   fullscreenVert,
   volumeVert,
   volumeGalaxyFrag: common + '\n' + volumeCommon + '\n' + volumeGalaxyFrag,
   volumeNebulaFrag: common + '\n' + volumeCommon + '\n' + volumeNebulaFrag,
+  volumeNebula2Frag: common + '\n' + volumeCommon + '\n' + nebulaDensity + '\n' + nebulaLighting + '\n' + volumeNebula2Frag,
   volumeCompositeFrag,
+  volumeAdaptFrag,
+  exposureMeterFrag,
+  exposureAdaptFrag,
+  godraysMaskFrag,
+  godraysBlurFrag,
+  godraysAddFrag,
   groundHeightFrag: common + '\n' + terrestrialCommon + '\n' + groundCommon + '\n' + groundHeightFrag,
   groundAlbedoFrag: common + '\n' + terrestrialCommon + '\n' + groundCommon + '\n' + groundAlbedoFrag,
-  gasgiantFrag: common + '\n' + lighting + '\n' + gasgiantFrag,
+  gasgiantFrag: common + '\n' + lighting + '\n' + gasCommon + '\n' + bakedCommon + '\n' + gasgiantFrag,
+  bakeTerrestrialFrag: common + '\n' + terrestrialCommon + '\n' + bakeCommon + '\n' + bakeTerrestrialFrag,
+  bakeGasFrag: common + '\n' + gasCommon + '\n' + bakeCommon + '\n' + bakeGasFrag,
+  bakeNormalFrag: common + '\n' + bakeCommon + '\n' + bakeNormalFrag,
   starFrag: common + '\n' + starFrag,
   atmosphereVert,
   atmosphereFrag: common + '\n' + atmosphereFrag,

@@ -3,8 +3,40 @@ import { _ } from '../i18n';
 
 const RATE_STEPS = [
   1, 2, 5, 10, 30, 60, 300, 900, 3600, 3600 * 6, DAY_S, DAY_S * 3, DAY_S * 7, DAY_S * 30,
-  DAY_S * 90, DAY_S * 365.25, DAY_S * 365.25 * 5, DAY_S * 365.25 * 25, DAY_S * 365.25 * 100,
+  DAY_S * 90, DAY_S * 365.25, DAY_S * 365.25 * 5, DAY_S * 365.25 * 10, DAY_S * 365.25 * 25, DAY_S * 365.25 * 100,
   DAY_S * 365.25 * 1000,
+];
+
+type RateUnit = 'dk' | 'sa' | 'gün' | 'hafta' | 'ay' | 'yıl';
+
+/** "{n} <unit>/s" (singular forms are their own keys: "1 day/s", not "1 days/s") */
+function perSecond(n: string | number, unit: RateUnit): string {
+  if (n === 1 || n === '1') {
+    switch (unit) {
+      case 'dk': return _('1 dk/s'); case 'sa': return _('1 sa/s'); case 'gün': return _('1 gün/s');
+      case 'hafta': return _('1 hafta/s'); case 'ay': return _('1 ay/s'); case 'yıl': return _('1 yıl/s');
+    }
+  }
+  switch (unit) {
+    case 'dk': return _('{n} dk/s', { n }); case 'sa': return _('{n} sa/s', { n }); case 'gün': return _('{n} gün/s', { n });
+    case 'hafta': return _('{n} hafta/s', { n }); case 'ay': return _('{n} ay/s', { n }); case 'yıl': return _('{n} yıl/s', { n });
+  }
+}
+
+/** The selectable presets (s/s) of the time menu: a Universe Sandbox-like ladder from real time to a millennium per second */
+export const RATE_PRESETS: ReadonlyArray<{ rate: number; label: () => string }> = [
+  { rate: 1, label: () => _('Gerçek zaman') },
+  { rate: 60, label: () => perSecond(1, 'dk') },
+  { rate: 600, label: () => perSecond(10, 'dk') },
+  { rate: 3600, label: () => perSecond(1, 'sa') },
+  { rate: 3600 * 6, label: () => perSecond(6, 'sa') },
+  { rate: DAY_S, label: () => perSecond(1, 'gün') },
+  { rate: DAY_S * 7, label: () => perSecond(1, 'hafta') },
+  { rate: DAY_S * 30, label: () => perSecond(1, 'ay') },
+  { rate: DAY_S * 365.25, label: () => perSecond(1, 'yıl') },
+  { rate: DAY_S * 365.25 * 10, label: () => perSecond(10, 'yıl') },
+  { rate: DAY_S * 365.25 * 100, label: () => perSecond(100, 'yıl') },
+  { rate: DAY_S * 365.25 * 1000, label: () => perSecond(1000, 'yıl') },
 ];
 
 /**
@@ -68,10 +100,22 @@ export class TimeSystem {
     this.paused = !this.paused;
   }
 
-  /** Set an arbitrary forward rate (s/s); snaps the step index to the nearest preset for +/- */
-  setRate(rate: number): void {
+  /** +1 forward, −1 backward */
+  get dir(): number { return this.direction; }
+
+  /** Run the clock forward or backward at the current rate */
+  setDirection(dir: 1 | -1): void {
+    this.direction = dir;
+    this.paused = false;
+  }
+
+  /**
+   * Set an arbitrary rate (s/s); snaps the step index to the nearest preset for +/-
+   * @param dir direction to run in (forward unless given)
+   */
+  setRate(rate: number, dir: 1 | -1 = 1): void {
     this.rate = Math.max(1e-3, rate);
-    this.direction = 1;
+    this.direction = dir;
     this.paused = false;
     let best = 0;
     for (let i = 0; i < RATE_STEPS.length; i++) if (Math.abs(Math.log(RATE_STEPS[i] / this.rate)) < Math.abs(Math.log(RATE_STEPS[best] / this.rate))) best = i;
@@ -141,10 +185,13 @@ export class TimeSystem {
     const sign = this.direction < 0 ? '−' : '';
     const f = (x: number) => (Number.isInteger(x) ? `${x}` : x.toPrecision(3));
     if (r < 60) return `${sign}${f(r)}× (${f(r)} s/s)`;
-    if (r < 3600) return sign + _('{n} dk/s', { n: f(r / 60) });
-    if (r < DAY_S) return sign + _('{n} sa/s', { n: f(r / 3600) });
-    if (r < DAY_S * 365.25) return sign + _('{n} gün/s', { n: f(r / DAY_S) });
-    return sign + _('{n} yıl/s', { n: f(r / (DAY_S * 365.25)) });
+    if (r < 3600) return sign + perSecond(f(r / 60), 'dk');
+    if (r < DAY_S) return sign + perSecond(f(r / 3600), 'sa');
+    if (r < DAY_S * 7) return sign + perSecond(f(r / DAY_S), 'gün');
+    if (r === DAY_S * 7) return sign + perSecond(1, 'hafta');
+    if (r === DAY_S * 30) return sign + perSecond(1, 'ay');
+    if (r < DAY_S * 365.25) return sign + perSecond(f(r / DAY_S), 'gün');
+    return sign + perSecond(f(r / (DAY_S * 365.25)), 'yıl');
   }
 
   static dateToJD(d: Date): number {

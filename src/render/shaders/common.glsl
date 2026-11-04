@@ -94,12 +94,12 @@ float ridged(vec3 p, int octaves) {
   return v / sum;
 }
 
-// Craters: cellular bowls with rims, three scales
+// Craters: cellular bowls with rims and a thin ejecta blanket, four scales
 float craterField(vec3 p, float seed, float density) {
   float c = 0.0;
   float amp = 1.0;
   float freq = 2.5;
-  for (int oct = 0; oct < 3; oct++) {
+  for (int oct = 0; oct < 4; oct++) {
     vec3 q = p * freq + seed * 0.37;
     vec3 cell = floor(q);
     vec3 f = fract(q);
@@ -118,10 +118,12 @@ float craterField(vec3 p, float seed, float density) {
     }
     if (best < 5.0) {
       float t = best / bestR;
+      // a flatter floor than a cosine bowl, a sharp rim, a blanket that thins out to two radii
       float bowl = (smoothstep(0.0, 1.0, t) - 1.0) * 0.7;
       float rim = exp(-pow((t - 1.0) * 5.0, 2.0)) * 0.35;
+      float blanket = exp(-(t - 1.0) * 2.2) * 0.1 * smoothstep(0.9, 1.1, t);
       float mask = 1.0 - smoothstep(1.0, 1.5, t);
-      c += amp * (bowl + rim) * mask;
+      c += amp * ((bowl + rim) * mask + blanket * (1.0 - smoothstep(1.8, 2.4, t)));
     }
     amp *= 0.5;
     freq *= 2.7;

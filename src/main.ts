@@ -1,11 +1,16 @@
 import './style.css';
-import { Matrix3, Matrix4, Quaternion, Vector2, Vector3 } from 'three';
+import { Matrix3, Matrix4, Quaternion, type ShaderMaterial, Vector2, Vector3 } from 'three';
 import { Engine } from './core/Engine';
 import { TimeSystem } from './core/TimeSystem';
 import { Universe, catalogIndexOf, type Landmark, type StarId } from './core/Universe';
 import type { StarSystem } from './core/StarSystem';
 import { CelestialBody } from './core/CelestialBody';
 import { StarCatalog } from './data/StarCatalog';
+import { ExoplanetCatalog } from './data/Exoplanets';
+import { deepSkyLandmarks, loadDeepSky, type DeepSkyData } from './data/DeepSky';
+import { loadSurveyGalaxies, type SurveyGalaxies } from './galaxy/galaxies';
+import { loadBrownDwarfs, type BrownDwarfData } from './data/BrownDwarfs';
+import { loadBinaries, type BinaryData } from './data/Binaries';
 import { LightPulse } from './render/TourEffects';
 import { Relief } from './render/Relief';
 import { MeteorShower } from './render/MeteorShower';
@@ -24,11 +29,11 @@ import { ClusterStarPoints } from './render/ClusterStarPoints';
 import { hashStr, isMemberId } from './galaxy/ClusterStars';
 import { Rng } from './gen/SystemGenerator';
 import type { BodyData } from './data/types';
-import { LANDMARK_KIND_LABEL, type LandmarkKind } from './data/landmarks';
+import { LANDMARK_KIND_LABEL, LANDMARKS, type LandmarkKind } from './data/landmarks';
 import type { DiscoveryEntry } from './ui/UI';
 import { NebulaClouds } from './render/NebulaClouds';
 import { GalaxyCloud } from './render/GalaxyCloud';
-import { FarUniverse, localFade } from './galaxy/FarUniverse';
+import { FarUniverse, localFade, UNIVERSE_RADIUS_PC } from './galaxy/FarUniverse';
 import { LensFlare } from './render/LensFlare';
 import { better, type PickHit } from './render/pickHit';
 import { ADOPT_RATIO, FarCluster, RESOLVE_RATIO, farKey, farKindLabel, nearestFarPoint, type FarRef } from './galaxy/FarClusters';
@@ -41,7 +46,7 @@ import { Input } from './input/Input';
 import { CameraController, type SurfaceStand } from './camera/CameraController';
 import { UI, type UIHost } from './ui/UI';
 import { loadSettings, saveSettings, type Settings } from './ui/Settings';
-import { AU_KM, DAY_S, DEG, J2000_JD, PARSEC_KM } from './core/constants';
+import { AU_KM, CAMERA_FAR_KM, DAY_S, DEG, J2000_JD, PARSEC_KM } from './core/constants';
 import { starLightColor } from './astro/stellar';
 import { fmtDuration, fmtLightYears, fmtScaleDistance } from './ui/format';
 import { _, applyDom, fixed, initI18n } from './i18n';
@@ -53,9 +58,11 @@ import { ephemeris } from './core/Ephemeris';
 import { fmtDistance } from './ui/format';
 import { eventById, eventTour, KIND_LABELS, type SkyEvent } from './data/events';
 import { fmtEventDate } from './ui/EventPanel';
-import { SOLAR_SYSTEM } from './data/solarSystem';
+import { SOLAR_BELTS, SOLAR_SYSTEM } from './data/solarSystem';
+import { SmallBodyCatalog } from './data/SmallBodies';
 import { applyEventMeta, beacon, eventUrl, parseLaunch, type LaunchParams } from './app/share';
 import { EmbedUI } from './ui/EmbedUI';
+import { Welcome } from './ui/Welcome';
 import { C_KM_S } from './core/constants';
 import { LessonPlayer } from './core/LessonPlayer';
 import type { MissionPlan } from './astro/mission';
@@ -102,6 +109,8 @@ class App implements UIHost {
   readonly input: Input;
   readonly camera: CameraController;
   readonly ui: UI;
+  /** first-visit introduction over live shots */
+  readonly welcome: Welcome;
   selected: CelestialBody | null = null;
   selectedStar: StarId | null = null;
   selectedGalaxy: number | null = null;
@@ -171,7 +180,7 @@ class App implements UIHost {
   private readonly maxPointPx: number;
   private readonly starSel: StarSelectionScreen = { name: '', dir: new Vector3() };
 
-  constructor(catalog: StarCatalog) {
+  constructor(catalog: StarCatalog, exoplanets: ExoplanetCatalog, deepSky: DeepSkyData | null, surveyGalaxies: SurveyGalaxies | null, brownDwarfs: BrownDwarfData | null, binaries: BinaryData | null) {
     const sceneCanvas = document.getElementById('scene') as HTMLCanvasElement;
     const overlayCanvas = document.getElementById('overlay') as HTMLCanvasElement;
     this.engine = new Engine(sceneCanvas);
@@ -180,7 +189,7 @@ class App implements UIHost {
     const range = gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE) as Float32Array | number[];
     this.maxPointPx = Math.max(32, Math.min(256, (range?.[1] ?? 64) / this.engine.pixelRatio));
 
-    this.universe = new Universe(catalog);
+    this.universe = new Universe(catalog, exoplanets, deepSky ? deepSkyLandmarks(deepSky, LANDMARKS) : [], surveyGalaxies, brownDwarfs, binaries);
     // Evaluate once so orbital elements exist before building renderers
     this.universe.update(this.time.jd, this.time.t);
 
@@ -200,12 +209,14 @@ class App implements UIHost {
       return s;
     });
     this.starPoints = new StarPoints(catalog, scene);
+    catalog.onTier(() => this.updateRealCoverage());
     this.procPoints = new ProcStarPoints(this.universe.procStars, scene);
     this.grid = new SkyGrid(scene);
     this.belts = new Belts(scene);
+    SmallBodyCatalog.load(import.meta.env.BASE_URL).then((sb) => this.useSmallBodies(sb)).catch((e) => console.warn('small bodies', e));
     this.cometTails = new CometTails(scene);
     this.orbits = new OrbitLines(scene);
-    this.bodies = new BodyRenderer(scene, this.engine.renderer.capabilities.getMaxAnisotropy());
+    this.bodies = new BodyRenderer(scene, this.engine.renderer.capabilities.getMaxAnisotropy(), this.engine.renderer);
     this.lensFlare = new LensFlare(scene);
     this.points = new BodyPoints(scene);
     this.overlay = new Overlay(overlayCanvas);
@@ -242,6 +253,7 @@ class App implements UIHost {
     };
     this.lessons = new LessonPlayer(this, this.tours);
     this.ui = new UI(this);
+    this.welcome = new Welcome(this);
 
     this.loadSystemRenderables(this.universe.current);
     this.universe.onSystemChange((sys) => this.loadSystemRenderables(sys));
@@ -277,7 +289,27 @@ class App implements UIHost {
 
     this.applySettings();
     requestAnimationFrame(this.frame);
+  }
+
+  /** Lift the loading screen (boot calls it once everything that should happen behind it has) */
+  ready(): void {
     document.getElementById('loader')?.classList.add('done');
+  }
+
+  /**
+   * Resolve after `n` rendered frames, or sooner once nothing is being baked any more (at least
+   * `min` frames): the warm-up behind the loader waits like this at each of the welcome's shots.
+   */
+  settle(n: number, min = 4): Promise<void> {
+    return new Promise((resolve) => {
+      let k = 0;
+      const tick = (): void => {
+        k++;
+        if (k >= n || (k >= min && !this.bodies.baking)) resolve();
+        else requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
   }
 
   /**
@@ -316,14 +348,19 @@ class App implements UIHost {
     this.overlay.resize(this.engine.width, this.engine.height, Math.min(window.devicePixelRatio || 1, 2));
   }
 
+  private systemsLoaded = 0;
   /** (Re)build every per-system renderable when the current frame changes. */
   private loadSystemRenderables(sys: StarSystem): void {
-    this.bodies.setSystem(sys);
+    // the first system is built whole (the page opens on it); later ones, reached in flight,
+    // fill in over a few frames (see BodyRenderer.setSystem)
+    this.bodies.setSystem(sys, !this.systemsLoaded++);
+    this.bodies.onViewsAdded ??= () => this.points.setViews(this.bodies.views);
     this.orbits.setSystem(sys);
     this.points.setViews(this.bodies.views);
     this.ephemLines.track(sys.bodies);
     this.belts.setSystem(sys.belts, (s) => (s.centerId && sys.get(s.centerId)) || sys.star, (c) => (sys.catalogIndex === 0 ? IDENTITY : c.poleBasis));
     this.restoreAsteroids(sys);
+    if (sys.catalogIndex === 0) for (const k of this.smallSpawned) this.spawnSmallBody(k);
     const [r, g, b] = starLightColor(sys.starTemperature);
     this.sunColor.set(r, g, b);
     this.starLuminosity = sys.catalogIndex === 0 ? 1 : this.universe.starInfo(sys.starId).luminosity;
@@ -574,7 +611,7 @@ class App implements UIHost {
   land(b: CelestialBody | null = this.selected ?? this.camera.target ?? this.camera.nearest, at?: { lat: number; lon: number }): void {
     if (!b || !this.canLand(b)) return;
     if (this.tours.active) this.tours.stop();
-    const view = this.bodies.byId.get(b.id);
+    const view = this.bodies.view(b.id);
     if (!view?.surfaceMat) return;
     const cam = this.camera;
     // landing point: the view ray's hit on the body, else the point under the camera
@@ -1104,6 +1141,39 @@ class App implements UIHost {
     if (ref.data.orbit?.kind === 'ephemeris') void ephemeris.prioritize(ref.data.orbit.table);
     this.select(ref);
     this.camera.goToVantage(ref, dir, ref.radius * dist, seconds, up);
+  }
+
+  /**
+   * `goToShot` with the aim swung `yaw`° left and `pitch`° below `refId`, so the subject (and
+   * `towardId` behind it) sit right of / above the centre, clear of a panel on the left or at the
+   * bottom (the welcome pages). The pose is fixed to the body (no spin), so it holds while the
+   * clock runs.
+   */
+  goToFramed(refId: string, towardId: string, dist: number, az: number, elev: number, yaw: number, pitch = 0, seconds = TOUR_HOP_S * 1.5): void {
+    const ref = this.universe.get(refId), toward = this.universe.get(towardId);
+    if (!ref || !toward) return;
+    const away = new Vector3().copy(ref.position).sub(toward.position).normalize();
+    if (away.lengthSq() < 0.5) away.set(1, 0, 0);
+    const up = new Vector3(0, 1, 0).addScaledVector(away, -away.y);
+    if (up.lengthSq() < 1e-6) up.set(1, 0, 0).addScaledVector(away, -away.x);
+    up.normalize();
+    const right = new Vector3().crossVectors(away, up).normalize();
+    const ce = Math.cos(elev * DEG);
+    const dir = new Vector3()
+      .addScaledVector(away, ce * Math.cos(az * DEG))
+      .addScaledVector(right, ce * Math.sin(az * DEG))
+      .addScaledVector(up, Math.sin(elev * DEG))
+      .normalize();
+    const d = ref.radius * dist;
+    const pos = dir.clone().multiplyScalar(d);
+    // the camera's right-hand and up axes when aimed at the centre; the aim point moves the other way
+    const camRight = new Vector3().crossVectors(up, dir).normalize();
+    const camUp = new Vector3().crossVectors(dir, camRight).normalize();
+    const look = camRight.multiplyScalar(-d * Math.tan(yaw * DEG)).addScaledVector(camUp, -d * Math.tan(pitch * DEG));
+    const inv = new Quaternion().copy(ref.rotation).invert();
+    if (ref.data.orbit?.kind === 'ephemeris') void ephemeris.prioritize(ref.data.orbit.table);
+    this.select(ref);
+    this.camera.goToPose(ref, pos.applyQuaternion(inv), look.applyQuaternion(inv), up.applyQuaternion(inv), seconds, { spin: false });
   }
 
   currentFov(): number {
@@ -1871,7 +1941,10 @@ class App implements UIHost {
     if (this.persistSettings) saveSettings(s);
     this.engine.setFov(s.fov);
     this.engine.bloom.enabled = s.bloom;
+    if (s.autoExposure && !this.engine.autoExposure.active) this.engine.autoExposure.resetAdaptation();
+    this.engine.autoExposure.active = s.autoExposure;
     this.volumes.enabled = s.volumetrics;
+    this.volumes.nebulaEngine = s.nebulaEngine;
     this.volumes.scale = this.engine.mobile ? 0.35 : 0.5;
     this.engine.setRenderScale(s.renderScale * (s.autoResolution ? this.autoScale : 1));
     this.resizeOverlay();
@@ -1890,7 +1963,7 @@ class App implements UIHost {
     for (const sp of this.farSprites) sp.setVisible(s.galaxies && s.procedural);
     this.procPoints.setVisible(s.procedural);
     this.clusterPoints.setVisible(s.procedural);
-    if (!s.procedural && this.selectedGalaxy !== null && this.selectedGalaxy >= this.universe.galaxies.catalogCount) this.selectGalaxy(null);
+    if (!s.procedural && this.selectedGalaxy !== null && !this.universe.galaxies.isReal(this.selectedGalaxy)) this.selectGalaxy(null);
     if ((!s.procedural || !s.galaxies) && this.selectedFar) this.selectFar(null);
     // "what is real?" view: generated stars & galaxies in green
     this.procPoints.setHighlight(s.highlightProcedural);
@@ -1901,7 +1974,33 @@ class App implements UIHost {
     this.overlay.highlightProcedural = s.highlightProcedural;
     this.camera.mouseSensitivity = 0.0032 * s.mouseSensitivity;
     this.camera.invertY = s.invertY;
+    this.applyDeepCatalog();
     this.ui.syncSettings();
+  }
+
+  private deepCatalogStarted = false;
+
+  /** The ~2.8 M fainter real stars: streamed once on first use, then only shown / hidden */
+  private applyDeepCatalog(): void {
+    const on = this.settings.deepCatalog;
+    const c = this.universe.catalog;
+    c.tierSearch = on;
+    this.starPoints.setTiersVisible(on);
+    if (on && !this.deepCatalogStarted) {
+      this.deepCatalogStarted = true;
+      c.loadTiers().catch((e) => console.warn('deep star catalogue', e));
+    }
+    this.updateRealCoverage();
+  }
+
+  /** Generated Milky Way stars give way wherever the loaded real catalogue is complete */
+  private updateRealCoverage(): void {
+    const c = this.universe.catalog;
+    const loaded = new Set(this.settings.deepCatalog ? c.loadedTiers.map((t) => t.file) : []);
+    // GCNS: every star within 100 pc; Tycho-2 is ~99 % complete to V 11 and ~90 % to V 11.5
+    const bubble = loaded.has('stars-gcns.bin') ? 100 : 80;
+    const mag = loaded.has('stars-tycho-c.bin') ? 11.5 : loaded.has('stars-tycho-b.bin') ? 11 : loaded.has('stars-tycho-a.bin') ? 10 : -Infinity;
+    this.universe.procStars.setRealCoverage(bubble, mag);
   }
 
   screenshot(): void {
@@ -1936,7 +2035,8 @@ class App implements UIHost {
     // a belt rock the visitor is close to: it becomes a real (discovered) asteroid
     const rock = this.belts.pick(x, y, eng.camera, eng.width, eng.height, 9 * tol);
     if (rock) {
-      const nb = this.discoverAsteroid(rock);
+      const first = this.belts.real[rock.belt];
+      const nb = first !== null && first !== undefined ? this.spawnSmallBody(first + rock.index) : this.discoverAsteroid(rock);
       if (nb) { this.select(nb); if (dbl) this.goTo(nb); return; }
     }
     const hit = this.hitSky(x, y, tol);
@@ -2131,7 +2231,7 @@ class App implements UIHost {
     const u = this.universe;
     const curDistPc = this.camera.position.length() / PARSEC_KM;
     if (curDistPc < 0.02) return; // still deep inside the current system
-    const n = u.nearestStar(this.camera.position);
+    const n = u.nearestStar(this.camera.position, 3);
     // Only re-anchor when we are actually close to another star (a few pc): switching on every
     // nearest-neighbour change while cruising through a galaxy would reset velocity constantly.
     if (n.id === u.current.starId || n.distPc > 3 || n.distPc > curDistPc * 0.7) return;
@@ -2163,8 +2263,8 @@ class App implements UIHost {
     // clouds for the (at most 3) galaxies nearest in radii, within 18 radii (sprite ↔ cloud
     // crossfade range): in a crowded cluster the one we're at must not lose its slot to bystanders
     const close: Array<[number, number]> = [];
-    const cloudCount = this.settings.procedural ? g.count : g.catalogCount;
-    for (let i = 0; i < cloudCount; i++) {
+    for (let i = 0; i < g.count; i++) {
+      if (!this.settings.procedural && !g.isReal(i)) continue;
       const dx = g.positions[i * 3] - camPc.x, dy = g.positions[i * 3 + 1] - camPc.y, dz = g.positions[i * 3 + 2] - camPc.z;
       const ratio = Math.sqrt(dx * dx + dy * dy + dz * dz) / g.radius[i];
       if (ratio < 18) close.push([i, ratio]);
@@ -2209,8 +2309,25 @@ class App implements UIHost {
     let hintPc = Infinity;
     const near = u.procStars.nearest(camPc);
     if (near && near.distPc < 1) hintPc = Math.min(hintPc, Math.max(near.distPc, 0.01));
-    if (inside !== null) hintPc = Math.min(hintPc, g.radius[inside] * 0.08);
-    else hintPc = Math.min(hintPc, Math.max(g.nearestSurfaceDistance(camPc), 1000));
+    const nearReal = u.nearestStar(this.camera.position, 1);
+    if (nearReal.distPc < 1) hintPc = Math.min(hintPc, Math.max(nearReal.distPc, 0.01));
+    // deep-sky objects set the scale of their neighbourhood: cross them in ~10 s (Shift still gives
+    // ×10), approach at the distance to their edge – otherwise the galaxy-scale cruise (hundreds of
+    // pc/s) shoots through a nebula in a frame. The limit lifts continuously (→ ∞ at 10 radii) so
+    // passing one at cruise speed does not yank the flight
+    for (const l of u.landmarks) {
+      const R = l.def.radiusPc;
+      const d = l.positionPc.distanceTo(camPc);
+      const t = 1 - d / (R * 10);
+      if (t > 0) hintPc = Math.min(hintPc, Math.max(d - R, R * 0.2) / (t * t));
+    }
+    // galaxy scale: a fixed fraction of the radius inside the disc, growing with the distance to
+    // the nearest galaxy's edge once outside it (`inside` reaches out to 3 radii for the clouds;
+    // the speed must not stay at the disc's pace out there)
+    // (capped: the cruise keeps doubling with the distance to the last galaxy, but 200 Mpc/s
+    // already crosses the whole volume of individual galaxies in a second or two)
+    const surface = g.nearestSurfaceDistance(camPc);
+    hintPc = Math.min(hintPc, Math.max(surface, inside !== null ? g.radius[inside] * 0.08 : 1000), 200e6);
     const targetKm = hintPc * PARSEC_KM;
     // smooth in log space so the free-flight speed never jumps
     const cur = this.camera.speedHintKm;
@@ -2296,11 +2413,75 @@ class App implements UIHost {
     return b;
   }
 
+  /* ---------------- Real Solar System small bodies (JPL SBDB) ---------------- */
+  smallBodies: SmallBodyCatalog | null = null;
+  /** catalogue indices turned into bodies this session (re-created when the Solar System is rebuilt) */
+  private readonly smallSpawned = new Set<number>();
+
+  /** The real small bodies replace the generated belts of the Solar System */
+  private useSmallBodies(sb: SmallBodyCatalog): void {
+    this.smallBodies = sb;
+    SOLAR_BELTS.splice(0, SOLAR_BELTS.length, ...sb.belts());
+    // hand-made bodies with approximate J2000 elements take JPL's current osculating ones (those with a recent epoch are already better)
+    for (let k = 0; k < sb.count; k++) {
+      if (!(sb.flags[k] & 4)) continue;
+      const body = SOLAR_SYSTEM.find((b) => b.id === sb.info(k).hand);
+      if (body?.parent === 'sun' && body.orbit?.kind === 'simple' && body.orbit.epoch === J2000_JD) body.orbit = sb.bodyData(k).orbit;
+    }
+    const sys = this.universe.current;
+    if (sys.catalogIndex === 0) {
+      this.orbits.setSystem(sys);
+      this.belts.setSystem(sys.belts, () => sys.star, () => IDENTITY);
+      for (const k of this.smallSpawned) this.spawnSmallBody(k);
+    }
+  }
+
+  /** Belt + particle of catalogue small body `k` in the current belts (null outside the Solar System) */
+  private smallParticle(k: number): { belt: number; index: number } | null {
+    for (let b = 0; b < this.belts.real.length; b++) {
+      const first = this.belts.real[b];
+      if (first === null || k < first) continue;
+      const count = this.universe.current.belts[b]?.count ?? 0;
+      if (k < first + count) return { belt: b, index: k - first };
+    }
+    return null;
+  }
+
+  /** Catalogue small body `k` as a body of the Solar System (the hand-made one when there is one) */
+  private spawnSmallBody(k: number): CelestialBody | null {
+    const sb = this.smallBodies, sys = this.universe.current;
+    if (!sb || sys.catalogIndex !== 0) return null;
+    const id = sb.bodyId(k);
+    const existing = sys.get(id);
+    if (existing) return existing;
+    const b = sys.addBody(sb.bodyData(k));
+    sys.update(this.time.jd, this.time.t);
+    const p = this.smallParticle(k);
+    if (p) this.belts.hide(p.belt, p.index);
+    this.bodies.addBody(b, sys);
+    this.points.setViews(this.bodies.views);
+    this.smallSpawned.add(k);
+    return b;
+  }
+
+  /** Fly to catalogue small body `k`, coming home to the Solar System first if needed */
+  goToSmallBody(k: number): void {
+    const u = this.universe;
+    if (u.current.catalogIndex !== 0) {
+      const delta = u.switchTo('c0', this.time.jd, this.time.t);
+      this.camera.shiftFrame(delta, u.star);
+    }
+    const b = this.spawnSmallBody(k);
+    if (b) { this.select(b); this.goTo(b); }
+  }
+
   /** Re-create the asteroids discovered earlier in this system */
   private restoreAsteroids(sys: StarSystem): void {
     const list = this.asteroids[sys.starId];
     if (!list) return;
     for (const [belt, index] of list) {
+      // the Solar System's belts are real bodies now: rocks found in the old generated belts are gone
+      if (this.belts.real[belt] !== null && this.belts.real[belt] !== undefined) continue;
       const p = this.belts.particle(belt, index);
       if (!p) continue;
       if (sys.get(this.asteroidId(sys.starId, p))) { this.belts.hide(belt, index); continue; }
@@ -2413,7 +2594,8 @@ class App implements UIHost {
       const [, starId, belt, index] = id.split('~');
       const sys = this.universe.current;
       if (sys.starId === starId) {
-        const b = sys.get(id) ?? (() => { const p = this.belts.particle(+belt, +index); return p ? this.spawnAsteroid(sys, p) : undefined; })();
+        const real = this.belts.real[+belt] !== null && this.belts.real[+belt] !== undefined;
+        const b = sys.get(id) ?? (() => { const p = real ? null : this.belts.particle(+belt, +index); return p ? this.spawnAsteroid(sys, p) : undefined; })();
         if (b) { this.select(b); this.goTo(b); }
       } else this.goToSystemBody(starId, id);
       return;
@@ -2537,6 +2719,17 @@ class App implements UIHost {
     const pxPerRad = eng.height / 2 / Math.tan(fovRad / 2);
     const s = this.settings;
     this.universe.toParsecs(camPos, this.camPc);
+    // the observable universe is the edge of the world: nothing to see beyond it, and the
+    // altitude-scaled speed would otherwise keep doubling for ever out there
+    {
+      const r = this.camPc.length();
+      if (r > UNIVERSE_RADIUS_PC) {
+        this.camera.pushBack(this.camPosTmp.copy(this.camPc).multiplyScalar(-((r - UNIVERSE_RADIUS_PC * 0.999) / r) * PARSEC_KM));
+        camPos.copy(this.camera.position);
+        this.universe.toParsecs(camPos, this.camPc);
+        this.ui.showToast(_('Gözlemlenebilir evrenin sınırı'), 2000);
+      }
+    }
 
     // Galaxy-scale bookkeeping
     this.galaxyCheckAcc += dt;
@@ -2589,8 +2782,9 @@ class App implements UIHost {
     this.galaxySprites.update(this.camPc, pxPerRad, eng.pixelRatio, this.galaxyBoost, this.universe.currentGalaxy ?? -1);
     this.landmarkSprites.update(this.camPc, pxPerRad, this.universe.current.starId, (gi) => this.galaxySprites.apparent(gi).ratio);
     this.nebulaClouds.update(this.camPc, pxPerRad, eng.pixelRatio, this.landmarkSprites.k, this.landmarkSprites.mesh.visible);
-    this.landmarkSprites.setCloudFlags(this.procClouds.update(this.camPc, pxPerRad, eng.pixelRatio, this.landmarkSprites.k, this.landmarkSprites.mesh.visible));
-    this.clusterPoints.update(this.camPc, pxPerRad, eng.pixelRatio, this.universe.current.starId, this.landmarkSprites.mesh.visible);
+    const ls = this.landmarkSprites;
+    this.landmarkSprites.setCloudFlags(this.procClouds.update(this.camPc, pxPerRad, eng.pixelRatio, ls.k, ls.mesh.visible, ls.distPc, ls.radiusPx));
+    this.clusterPoints.update(this.camPc, pxPerRad, eng.pixelRatio, this.universe.current.starId, ls.mesh.visible, ls.distPc, ls.radiusPx);
     // bottom-left credit: streamed planetary imagery first, otherwise a resolved landmark photograph
     if (this.bodies.imageryCredit) this.ui.setImageryCredit(this.bodies.imageryCredit);
     else {
@@ -2635,6 +2829,7 @@ class App implements UIHost {
 
     // Render
     this.volumes.render(eng.renderer, eng.camera);
+    eng.autoExposure.dt = dt;
     eng.render();
 
     if (this.wantScreenshot) {
@@ -2748,8 +2943,11 @@ class App implements UIHost {
   /** Glare of the brightest star in front of the camera, dimmed by whatever body covers it */
   private updateLensFlare(camPos: Vector3, dt: number): void {
     const eng = this.engine;
-    if (!this.settings.lensFlare || this.engine.blackHole.enabled) { this.lensFlare.update(null, 0, 0, this.sunColor, eng.width / eng.height, dt); return; }
-    let best: { ndc: Vector2; radius: number; intensity: number; color: Vector3 } | null = null;
+    const shafts = this.settings.lightShafts && !eng.blackHole.enabled ? this.shaftMedium(camPos) : 0;
+    eng.godRays.strength = 0;
+    if (!this.settings.lensFlare && shafts <= 0) { this.lensFlare.update(null, 0, 0, this.sunColor, eng.width / eng.height, dt); return; }
+    if (!this.settings.lensFlare || eng.blackHole.enabled) this.lensFlare.update(null, 0, 0, this.sunColor, eng.width / eng.height, dt);
+    let best: { ndc: Vector2; radius: number; intensity: number; color: Vector3; raw: number; depth: number } | null = null;
     for (const v of this.bodies.views) {
       const star = v.body;
       if (star.data.type !== 'star' || star.hidden || star.filtered) continue;
@@ -2775,12 +2973,47 @@ class App implements UIHost {
         vis *= smooth01((sep - (angR - sunAng)) / (2 * sunAng + 1e-9));
         if (vis < 0.002) break;
       }
-      const intensity = Math.min(1.1, Math.pow(Math.max(E, 1e-6), 0.3)) * vis;
+      const raw = Math.min(1.1, Math.pow(Math.max(E, 1e-6), 0.3));
+      const intensity = raw * vis;
       if (!best || intensity > best.intensity) {
-        best = { ndc: this.flareNdc.set(_up.x, _up.y), radius: (star.radius / d) / Math.tan((eng.camera.fov * DEG) / 2) / (eng.width / eng.height), intensity, color: this.lightColorOf(star) };
+        // the star's depth as the logarithmic depth buffer encodes it (the shaft mask compares against it)
+        // (taken at the near edge of the disc, so the disc itself always passes the test)
+        const w = -_v3.copy(_dir).applyMatrix4(eng.camera.matrixWorldInverse).z - star.radius * 2;
+        const depth = Math.log2(1 + Math.max(w, 0)) / Math.log2(CAMERA_FAR_KM + 1);
+        best = { ndc: this.flareNdc.set(_up.x, _up.y), radius: (star.radius / d) / Math.tan((eng.camera.fov * DEG) / 2) / (eng.width / eng.height), intensity, color: this.lightColorOf(star), raw, depth };
       }
     }
-    this.lensFlare.update(best ? best.ndc : null, best ? best.radius : 0, best ? best.intensity : 0, best ? best.color : this.sunColor, eng.width / eng.height, dt);
+    if (this.settings.lensFlare && !eng.blackHole.enabled) {
+      this.lensFlare.update(best ? best.ndc : null, best ? best.radius : 0, best ? best.intensity : 0, best ? best.color : this.sunColor, eng.width / eng.height, dt);
+    }
+    // light shafts: the screen-space occlusion (ground, horizon, clouds) is the pass's own; here only
+    // the medium and the star's brightness — and none once the disc is fully behind a body
+    if (best && shafts > 0 && best.intensity > 0.002) {
+      eng.godRays.cloudMaterials = this.cloudMaterials();
+      eng.godRays.target(best.ndc, best.radius, best.depth, best.color, 0.8 * shafts * Math.min(1, best.raw), eng.width / eng.height);
+    }
+  }
+
+  /**
+   * How much air there is around the camera for light shafts to scatter in (0 … 1): the
+   * atmosphere's density, fading out with altitude over its scale height.
+   */
+  private shaftMedium(camPos: Vector3): number {
+    const b = this.camera.nearest;
+    const atm = b?.data.atmosphere;
+    if (!b || !atm || atm.density <= 0) return 0;
+    const alt = Math.max(0, camPos.distanceTo(b.position) - b.radius);
+    const thin = Math.exp(-alt / Math.max(b.radius * atm.height * 0.35, 1));
+    // a permanent overcast (Venus, Titan) hides the disc: no shafts
+    const clear = 1 - smooth01((atm.density - 1.0) / 0.5);
+    return Math.min(1, atm.density * 2.5) * thin * clear;
+  }
+
+  private readonly cloudMats: ShaderMaterial[] = [];
+  private cloudMaterials(): ShaderMaterial[] {
+    this.cloudMats.length = 0;
+    for (const v of this.bodies.views) if (v.cloudsMat && v.clouds?.visible) this.cloudMats.push(v.cloudsMat);
+    return this.cloudMats;
   }
 
   private readonly flareColors = new Map<string, Vector3>();
@@ -2880,20 +3113,40 @@ async function boot(): Promise<void> {
     applyDom();
     document.title = _('Your Eyes In Space — Gözlemlenebilir evreni tarayıcıda gez');
     if (loaderText) loaderText.textContent = _('Yıldız kataloğu yükleniyor…');
-    const catalog = await StarCatalog.load(import.meta.env.BASE_URL);
+    const base = import.meta.env.BASE_URL;
+    const [catalog, exoplanets, deepSky, surveyGalaxies, brownDwarfs, binaries] = await Promise.all([
+      StarCatalog.load(base),
+      ExoplanetCatalog.load(base),
+      // optional: without them the hand-made landmarks / galaxies remain
+      loadDeepSky(base).catch((err) => { console.warn('deep-sky catalogue unavailable', err); return null; }),
+      loadSurveyGalaxies(base).catch((err) => { console.warn('galaxy surveys unavailable', err); return null; }),
+      loadBrownDwarfs(base).catch((err) => { console.warn('brown-dwarf catalogue unavailable', err); return null; }),
+      loadBinaries(base).catch((err) => { console.warn('binary-star catalogue unavailable', err); return null; }),
+    ]);
     if (loaderText) loaderText.textContent = _('Evren hazırlanıyor…');
     const launch = parseLaunch();
     if (launch.embed) document.body.classList.add('embed');
-    const app = new App(catalog);
+    const app = new App(catalog, exoplanets, deepSky, surveyGalaxies, brownDwarfs, binaries);
     // Expose for debugging / console experiments
     (window as unknown as { yeits: App }).yeits = app;
     app.launch(launch);
     // Streamer Mode (The Great Expedition): stream.* host or ?stream; its UI replaces the app's
-    if (location.hostname.startsWith('stream.') || new URLSearchParams(location.search).has('stream')) {
+    const stream = location.hostname.startsWith('stream.') || new URLSearchParams(location.search).has('stream');
+    if (stream) {
       const { startCockpit } = await import('./expedition/host');
       app.streamView();
       startCockpit(app);
     }
+    // first visit, plain entry (no deep link, embed or stream): the introduction. Its shots are
+    // visited once behind the loading screen first, so shaders compile and planets bake unseen
+    // instead of stuttering the flights.
+    const intro = !stream && !launch.embed && !launch.event && !launch.target && Welcome.due;
+    if (intro) {
+      if (loaderText) loaderText.textContent = _('Sahneler hazırlanıyor…');
+      await app.welcome.prepare();
+    }
+    app.ready();
+    if (intro) app.welcome.start();
   } catch (err) {
     console.error(err);
     if (loaderText) loaderText.textContent = `${_('Yükleme hatası')}: ${(err as Error).message}`;

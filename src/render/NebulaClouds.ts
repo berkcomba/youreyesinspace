@@ -7,6 +7,7 @@ import { LANDMARK_IMAGES, type LandmarkImage } from '../data/landmarkImages';
 import { Rng } from '../gen/SystemGenerator';
 import { raDecToScene } from '../math/frames';
 import { Shaders } from './shaders';
+import { presetBounds } from './Bounds';
 
 /** sample grid over the photograph */
 const GRID = 160;
@@ -158,7 +159,7 @@ export class NebulaClouds {
     const right = new Vector3().crossVectors(toEarth, up).negate(); // forward × up, forward = −toEarth
     const basis = new Matrix3().set(right.x, up.x, toEarth.x, right.y, up.y, toEarth.y, right.z, up.z, toEarth.z);
 
-    const geo = new BufferGeometry();
+    const geo = presetBounds(new BufferGeometry());
     geo.setAttribute('position', new BufferAttribute(pos, 3));
     geo.setAttribute('color', new BufferAttribute(col, 3));
     geo.setAttribute('weight', new BufferAttribute(w, 1));

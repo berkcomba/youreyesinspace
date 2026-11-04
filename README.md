@@ -7,26 +7,33 @@ Vite · TypeScript · Three.js. UI in English, Turkish, German, Spanish and Fren
 
 ## Features
 
-- **Solar System** — planets, dwarf planets, moons and comets from NASA/JPL Keplerian elements;
+- **Solar System** — planets, dwarf planets, moons and comets from NASA/JPL Keplerian elements, plus
+  284,000 asteroids and comets on their real orbits (JPL Small-Body Database);
   procedural surface/atmosphere/cloud/ring shaders, eclipse and ring shadows.
 - **Real surface imagery** — Earth (NASA Blue Marble NG + Black Marble night lights), Moon (LRO WAC),
   Mars (Viking MDIM 2.1); altitude-based LOD tile streaming straight from NASA servers.
 - **Humanity's spacecraft** — Voyager 1/2, Pioneer 10/11, New Horizons, Parker, ISS, Hubble, JWST (L2),
   Perseverance, Curiosity, Juno; current positions and NASA 3D models.
-- **Stars** — 109,000 real stars from the HYG catalogue; procedural planetary systems; interstellar
-  flight and a flyable Milky Way.
-- **Galaxies** — 55 real galaxies plus a procedural cosmic web out to 13.8 Gpc; LOD chain.
+- **Stars** — 2.8 million real stars (HYG, AT-HYG/Tycho-2, Gaia GCNS) and 6,400 confirmed exoplanets
+  from the NASA Exoplanet Archive; 2,750 L, T and Y brown dwarfs (UltracoolSheet); 4,700 measured
+  multiple systems (Tokovinin MSC, USNO ORB6); procedural planetary systems; interstellar flight and a
+  flyable Milky Way.
+- **Galaxies** — 44,000 real galaxies (Updated Nearby Galaxy Catalog, 2MASS Redshift Survey) and 55
+  hand-curated ones, plus a procedural cosmic web out to 13.8 Gpc; LOD chain.
 - **Black holes** — Sagittarius A* (with the S2/S38/S55 orbits), M87*, M31*, Centaurus A*, Cygnus X-1,
   Gaia BH1, V404 Cygni, A0620-00, LMC X-1/X-3, M33 X-7 and more; real-time screen-space Schwarzschild
   ray tracing (null geodesics), accretion disc with Doppler beaming and gravitational redshift, shadow
   and Einstein ring.
 - **Deep-sky landmarks** — the Orion, Carina, Tarantula and NGC 604 nebulae; the Pleiades, Omega Centauri
   and Mayall II clusters; the Crab, SN 1987A and Cas A remnants; record-holding stars such as Eta Carinae,
-  R136a1 and WOH G64 — at their real positions in the Milky Way and neighbouring galaxies, all flyable.
+  R136a1 and WOH G64 — at their real positions in the Milky Way and neighbouring galaxies, all flyable;
+  plus the survey catalogues: 2,900 open clusters (MWSC), 155 globular clusters (Harris), 775 planetary
+  nebulae (Strasbourg–ESO), 274 supernova remnants (Green) and 2,000 H II regions (WISE).
 - **Pulsars** — the Crab and Vela pulsars, the first pulsar PSR B1919+21, the first exoplanet host
   PSR B1257+12 (with Draugr, Poltergeist and Phobetor), the fastest pulsar J1748-2446ad (716 Hz), the
   Hulse–Taylor binary, Geminga, J0437-4715 and the magnetar SGR 1806-20; neutron stars spinning at their
-  real periods, sweeping beam cones along the magnetic axis that flash when they cross the line of sight.
+  real periods, sweeping beam cones along the magnetic axis that flash when they cross the line of sight;
+  plus the 4,300 ATNF pulsars with a known distance, binaries with their measured companions.
 - **Mission planner** — pick a departure body and a target in the Solar System and get a route for the
   selected simulation time: launch-window scan with a Lambert solver, Hohmann (Earth→Moon), single
   gravity-assist transfers, elliptical capture; the Δv budget is compared against real vehicles (Voyager,

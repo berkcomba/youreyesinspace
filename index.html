@@ -10,7 +10,7 @@
     <!-- Static head text is English for crawlers / link previews (no JS); applyDom() rewrites it
          per locale at runtime using the Turkish source key in data-i18n-content. -->
     <title>Your Eyes In Space — Explore the observable universe in your browser</title>
-    <meta name="description" data-i18n-content="Güneş Sistemi'nden gözlemlenebilir evrenin sınırına: 109 000 gerçek yıldız, 55 galaksi, 14 kara delik, NASA uydu görüntüleri ve uzay araçları. NASA/JPL, ESA Hipparcos, Gaia, NED ve SIMBAD verileriyle, tarayıcıda, açık kaynak." content="From the Solar System to the edge of the observable universe: 109,000 real stars, 55 galaxies, 14 black holes, NASA satellite imagery and spacecraft. Built on NASA/JPL, ESA Hipparcos, Gaia, NED and SIMBAD data — in the browser, open source." />
+    <meta name="description" data-i18n-content="Güneş Sistemi'nden gözlemlenebilir evrenin sınırına: 2,8 milyon gerçek yıldız, 6 400 ötegezegen, 284 000 asteroit ve kuyruklu yıldız, 44 000 galaksi, 14 kara delik, NASA uydu görüntüleri ve uzay araçları. NASA/JPL, ESA Hipparcos, Gaia, NED ve SIMBAD verileriyle, tarayıcıda, açık kaynak." content="From the Solar System to the edge of the observable universe: 2.8 million real stars, 6,400 exoplanets, 284,000 asteroids and comets, 44,000 galaxies, 14 black holes, NASA satellite imagery and spacecraft. Built on NASA/JPL, ESA Hipparcos, Gaia, NED and SIMBAD data — in the browser, open source." />
     <link rel="canonical" href="https://youreyesinspace.com/" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Your Eyes In Space" />
@@ -238,7 +238,10 @@
               <button id="t-fwd" data-i18n-title title="İleri hızlandır (L)">▶&#xFE0E;▶&#xFE0E;</button>
             </span>
             <button id="t-now" data-i18n data-i18n-title title="Gerçek zamana dön (\\)">Şimdi</button>
-            <span id="time-rate" class="time-rate">1×</span>
+            <div id="time-presets" class="dropdown">
+              <button id="time-rate" class="time-rate" data-i18n-title title="Zaman hızını seç" aria-haspopup="listbox" aria-expanded="false">1×<svg class="caret" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" /></svg></button>
+              <div id="time-menu" class="dropdown-menu up" role="listbox" hidden></div>
+            </div>
           </div>
         </div>
         <div class="nav-block">
@@ -344,7 +347,7 @@
             <div><kbd>1–9, 0</kbd> <span data-i18n>Gezegenlere git</span> &nbsp; <kbd>H</kbd> <span data-i18n>Dünya</span></div>
             <div><kbd data-i18n>Yıldıza tık</kbd> <span data-i18n>Seç</span> &nbsp; <kbd>G</kbd> <span data-i18n>Yıldızlar arası uçuş</span> &nbsp; <kbd>Home</kbd> <span data-i18n>Güneş Sistemi</span></div>
             <div><kbd data-i18n>Galaksiye tık</kbd> <span data-i18n>Seç</span> &nbsp; <kbd>G</kbd> <span data-i18n>Galaksiler arası uçuş</span> &nbsp; <kbd>M</kbd> <span data-i18n>Samanyolu'na dışarıdan bak</span></div>
-            <div><kbd data-i18n>Ara</kbd> <span data-i18n>Sirius, HIP 71683, Andromeda, M87, Sagittarius A*, Tarantula… (109 000 gerçek yıldız, 55 gerçek galaksi, 14 kara delik, 9 pulsar, 26 bulutsu/küme/rekor yıldız + prosedürel evren)</span></div>
+            <div><kbd data-i18n>Ara</kbd> <span data-i18n>Sirius, HIP 71683, Andromeda, M87, Sagittarius A*, Tarantula… (2,8 milyon gerçek yıldız, 6 400 ötegezegen, 284 000 asteroit ve kuyruklu yıldız, 44 000 gerçek galaksi, 14 kara delik, 4 300 pulsar, 6 000 bulutsu ve küme + prosedürel evren)</span></div>
             <div><kbd>U</kbd> <span data-i18n>Görev planlayıcı: kalkış–hedef–araç seç, Lambert/Hohmann transferi ve isteğe bağlı sapan (gravity assist) hesaplanır, Δv bütçesiyle karşılaştırılır;</span> <kbd data-i18n>Fırlat</kbd> <span data-i18n>ile aracı canlı izle. Star Trek / Star Wars / The Expanse gemileri warp, hiperuzay ve sürekli ivmeyle yıldızlararası hedeflere gider</span></div>
             <div><kbd>Tab</kbd> <span data-i18n>Arayüzü ve yörüngeleri gizle</span> &nbsp; <kbd>P</kbd> <span data-i18n>Ekran görüntüsü</span> &nbsp; <kbd>Esc</kbd> <span data-i18n>Seçimi bırak</span></div>
             <div><kbd data-i18n>Görmeye değecek yerler</kbd> <span data-i18n>Uzay araçları (Voyager, JWST, ISS…), kara delikler (Sgr A*, Cygnus X-1…), pulsarlar (Yengeç, Vela, Hulse–Taylor…), bulutsular ve kümeler (Orion, Tarantula, Ülker…), gezegenler, yıldızlar ve galaksilere tek tıkla uçuş</span></div>
@@ -353,7 +356,7 @@
           </div>
           <div class="help-credits help-about">
             <div class="panel-title small" data-i18n>Hakkında</div>
-            <p><span data-i18n>Your Eyes In Space, dünyanın her yerinde insanların uzay, astrofizik ve gökbilim konularında bilinçlenmesi ve bu alanlara ilgi duyması için yapıldı. 109 000 gerçek yıldız, gerçek galaksiler, kara delikler ve pulsarlar; görev planlayıcı, sesli turlar ve ders kitabı izleğinde interaktif dersler tek bir tarayıcı sekmesinde buluşur.</span></p>
+            <p><span data-i18n>Your Eyes In Space, dünyanın her yerinde insanların uzay, astrofizik ve gökbilim konularında bilinçlenmesi ve bu alanlara ilgi duyması için yapıldı. 2,8 milyon gerçek yıldız, 6 400 ötegezegen, 284 000 asteroit ve kuyruklu yıldız, 44 000 gerçek galaksi, binlerce pulsar, bulutsu ve küme, kara delikler; görev planlayıcı, sesli turlar ve ders kitabı izleğinde interaktif dersler tek bir tarayıcı sekmesinde buluşur.</span></p>
             <p><span data-i18n>Yazar:</span> <strong>Berk Comba</strong> — <a href="https://bigbrains.com.tr" target="_blank" rel="noopener noreferrer">BigBrains</a>.</p>
             <p><span data-i18n>Geri bildirim:</span> <span data-i18n>Bir hata gördüyseniz, bir bölüm anlaşılmaz geldiyse ya da aklınızda bir özellik varsa yazın; her mesajı okuyorum.</span> <a href="mailto:berkcomba@bigbrains.com.tr?subject=Your%20Eyes%20In%20Space">berkcomba@bigbrains.com.tr</a> · <a href="https://github.com/berkcomba/youreyesinspace/issues" target="_blank" rel="noopener noreferrer">GitHub Issues</a></p>
             <p><span data-i18n>Okullar, gökevleri, bilim merkezleri, bilim iletişimcileri ve araştırmacılarla ortak projelere, çevirilere ve katkılara açığız. Bir e-posta yeterli.</span></p>
@@ -362,15 +365,83 @@
           <div class="help-credits">
             <div class="panel-title small" data-i18n>Veri kaynakları ve lisanslar</div>
             <p>
-              <span data-i18n>Yıldız kataloğu:</span> <a href="https://github.com/astronexus/HYG-Database" target="_blank" rel="noopener noreferrer">HYG Database v3</a> (David Nash, Astronexus) —
-              <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>; <span data-i18n>Hipparcos, Yale BSC ve Gliese kataloglarından derlenmiştir.</span>
+              <span data-i18n>Yıldız kataloğu:</span> <a href="https://github.com/astronexus/HYG-Database" target="_blank" rel="noopener noreferrer">HYG v4.1</a>, <a href="https://codeberg.org/astronexus/athyg" target="_blank" rel="noopener noreferrer">AT-HYG v4.0</a> (David Nash, Astronexus) —
+              <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>; <span data-i18n>Hipparcos, Yale BSC, Gliese ve Tycho-2 kataloglarından derlenmiştir. Yakın yıldızlar: Gaia Yakın Yıldızlar Kataloğu (GCNS, Gaia EDR3). Bu çalışma, Avrupa Uzay Ajansı (ESA) Gaia görevinin Gaia DPAC tarafından işlenmiş verilerini kullanır. Ötegezegenler: NASA Exoplanet Archive (PSCompPars); arşiv, NASA Ötegezegen Keşif Programı kapsamında Caltech tarafından işletilir. Ötegezegen yüzeyleri ölçülen yarıçap, kütle ve sıcaklığa dayanan temsillerdir.</span>
               <span data-i18n>Gezegen yörünge elemanları: NASA/JPL (Standish, Keplerian Elements). Uzay aracı konumları: JPL Horizons (yaklaşık, Ekim 2026).</span>
               <span data-i18n>Uzay aracı 3B modelleri:</span> <a href="https://science.nasa.gov/3d-resources/" target="_blank" rel="noopener noreferrer">NASA 3D Resources</a> <span data-i18n>(kamu malı). Görev planlayıcı: patched-conic yaklaşımı (Lambert, Hohmann, tek sapan); bilim kurgu gemileri ilgili eserlerin hayranlık amaçlı, isimle anılan temsilleridir; modeller özgün ve şematiktir.</span>
               <span data-i18n>Yüzey görüntüleri: Dünya —</span> <a href="https://www.earthdata.nasa.gov/engage/open-data-services-software/earthdata-developer-portal/gibs-api" target="_blank" rel="noopener noreferrer">NASA GIBS</a> (Blue Marble Next Generation, VIIRS Black Marble);
               <span data-i18n>Ay —</span> <a href="https://trek.nasa.gov/moon/" target="_blank" rel="noopener noreferrer">NASA Moon Trek</a> <span data-i18n>(LRO WAC mozaiği); Mars —</span> <a href="https://trek.nasa.gov/mars/" target="_blank" rel="noopener noreferrer">NASA Mars Trek</a> (Viking MDIM 2.1); <span data-i18n>Merkür, Venüs, Jüpiter ve Satürn uyduları, Ceres ve Vesta —</span> <a href="https://trek.nasa.gov/" target="_blank" rel="noopener noreferrer">NASA Solar System Treks</a> <span data-i18n>(MESSENGER, Magellan, Galileo, Cassini ve Dawn mozaikleri; Venüs yüzeyi radar görüntüsüdür).</span> <span data-i18n>Tümü NASA kamu malıdır ve doğrudan NASA sunucularından akıtılır.</span>
               <span data-i18n>Galaksi kataloğu: NED / literatür değerleri. Kara delikler: literatür değerleri (GRAVITY, EHT, Gaia DR3 vb.); görüntüleme Schwarzschild metriğinde gerçek zamanlı ışın izlemedir. Bulutsu, küme ve kalıntı yer imleri gerçek konumlarında, NASA/ESA Hubble (kamu malı) ve ESO (CC BY 4.0) fotoğraflarından türetilmiş üç boyutlu bulutlar olarak gösterilir; fotoğrafı olmayanlar prosedürel temsildir. Pulsarlar: ATNF Pulsar Kataloğu değerleri; ışın geometrisi temsilîdir. Prosedürel yıldızlar, galaksiler ve kozmik ağ deterministik olarak üretilir; gerçek kataloglarla karıştırılmamalıdır.</span>
+              <span data-i18n>Bilimsel kataloglar: asteroit ve kuyruklu yıldızlar — NASA/JPL Small-Body Database; pulsarlar — ATNF Pulsar Kataloğu (Manchester ve ark. 2005); açık kümeler — MWSC (Kharchenko ve ark. 2013); küresel kümeler — Harris (2010 sürümü); gezegenimsi bulutsular — Strasbourg–ESO kataloğu (Acker ve ark. 1992); süpernova kalıntıları — Green (2019); H II bölgeleri — WISE H II kataloğu (Anderson ve ark. 2014); yakın galaksiler — Updated Nearby Galaxy Catalog (Karachentsev ve ark. 2013); galaksi taraması — 2MASS Redshift Survey (Huchra ve ark. 2012); kahverengi cüceler — UltracoolSheet (Best ve ark. 2024); çoklu yıldızlar — Multiple Star Catalogue (Tokovinin 2018) ve USNO Altıncı Görsel Çift Yıldız Yörüngeleri Kataloğu (ORB6). Kataloglara NASA HEASARC ve CDS VizieR üzerinden erişildi.</span>
             </p>
             <p><span data-i18n>Your Eyes In Space bir</span> <a href="https://bigbrains.com.tr" target="_blank" rel="noopener noreferrer">BigBrains</a> <span data-i18n>ürünüdür. Kod</span> <a href="https://github.com/berkcomba/youreyesinspace" target="_blank" rel="noopener noreferrer">GitHub</a><span data-i18n>'da AGPL-3.0 lisansıyla açık kaynaktır; isim ve logo BigBrains markasıdır. © 2026</span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- First visit: the product in five chapters, each over a live shot of the simulation -->
+      <div id="welcome" class="welcome" hidden>
+        <button id="welcome-skip" class="welcome-skip" data-i18n>Atla</button>
+        <div class="welcome-panel">
+          <div class="welcome-pages">
+            <section class="welcome-page" data-shot="saturn">
+              <div class="welcome-head"><span class="welcome-num">I</span><span class="welcome-label">Your Eyes In Space</span></div>
+              <h1 class="welcome-title" data-i18n>Evren, olduğu gibi.</h1>
+              <p class="welcome-text" data-i18n>Güneş Sistemi'nden gözlemlenebilir evrenin kıyısına kadar her şey gerçek verilerle, gerçek ölçekte ve şu anki hâliyle. Tarayıcınızda, ücretsiz.</p>
+              <p class="welcome-live" data-i18n>Arkadaki Satürn, bu dakikada bulunduğu yerde.</p>
+            </section>
+            <section class="welcome-page" data-shot="moon" hidden>
+              <div class="welcome-head"><span class="welcome-num">II</span><span class="welcome-label" data-i18n>Veri</span></div>
+              <h2 class="welcome-title" data-i18n>Hiçbir şey uydurma değil.</h2>
+              <p class="welcome-text" data-i18n>Gezegenler NASA/JPL efemerislerinin koyduğu yerde durur. Yıldızlar Hipparcos ve Gaia'dan, galaksiler NED ve SIMBAD'dan gelir. Saati ileri sarın; gökyüzü, gerçekte döneceği gibi döner.</p>
+              <dl class="welcome-stats">
+                <div><dt data-i18n>2,8 milyon</dt><dd data-i18n>gerçek yıldız</dd></div>
+                <div><dt data-i18n>6 400</dt><dd data-i18n>ötegezegen</dd></div>
+                <div><dt data-i18n>284 000</dt><dd data-i18n>küçük cisim</dd></div>
+                <div><dt data-i18n>44 000</dt><dd data-i18n>galaksi</dd></div>
+              </dl>
+            </section>
+            <section class="welcome-page" data-shot="io" hidden>
+              <div class="welcome-head"><span class="welcome-num">III</span><span class="welcome-label" data-i18n>Yolculuk</span></div>
+              <h2 class="welcome-title" data-i18n>Bakmak yetmez. Gidin.</h2>
+              <p class="welcome-text" data-i18n>Bir gezegene çift tıklayın, oraya uçun. Yüzeyine inin; gökyüzünü oradan izleyin. Saati hızlandırın; bir tutulmayı tam zamanında yakalayın.</p>
+              <ul class="welcome-list">
+                <li data-i18n>Anlatımlı sinematik turlar</li>
+                <li data-i18n>Akademi: adım adım astrofizik</li>
+                <li data-i18n>Görevler: rota, fırlatma, canlı izleme</li>
+                <li data-i18n>Gök olayları takvimi</li>
+                <li data-i18n>Her yıldız, galaksi ve küçük cisim bir arama uzağınızda</li>
+              </ul>
+            </section>
+            <section class="welcome-page" data-shot="sun" hidden>
+              <div class="welcome-head"><span class="welcome-num">IV</span><span class="welcome-label" data-i18n>Amaç</span></div>
+              <h2 class="welcome-title" data-i18n>Neden var?</h2>
+              <p class="welcome-text" data-i18n>Your Eyes In Space, uzaya ve astrofiziğe duyulan merakı herkes için ulaşılabilir kılmak üzere yapıldı. Bir sınıfta, bir gökevinde ya da gece yarısı bir telefonda: aynı evren, aynı veri.</p>
+              <p class="welcome-text" data-i18n>Okullar, gökevleri, bilim merkezleri ve bilim iletişimcileriyle iş birliğine açığız.</p>
+              <div class="welcome-grid">
+                <div class="welcome-k" data-i18n>Kaynak kodu</div>
+                <div><a href="https://github.com/berkcomba/youreyesinspace" target="_blank" rel="noopener noreferrer">GitHub</a></div>
+                <div class="welcome-k" data-i18n>Geri bildirim</div>
+                <div><a href="https://github.com/berkcomba/youreyesinspace/issues" target="_blank" rel="noopener noreferrer">GitHub Issues</a></div>
+                <div class="welcome-k" data-i18n>Lisans</div>
+                <div><span data-i18n>AGPL-3.0 ile açık kaynak; isim ve logo BigBrains markasıdır.</span></div>
+              </div>
+            </section>
+            <section class="welcome-page" data-shot="system" hidden>
+              <div class="welcome-head"><span class="welcome-num">V</span><span class="welcome-label" data-i18n>Destek</span></div>
+              <h2 class="welcome-title" data-i18n>Ücretsiz. Hep öyle kalacak.</h2>
+              <p class="welcome-text" data-i18n>Reklam yok, abonelik yok, kilitli içerik yok. Kodun tamamı AGPL-3.0 lisansıyla GitHub'da. Tek bir amacı var: insanları uzay hakkında bilgilendirmek.</p>
+              <p class="welcome-text" data-i18n>Sunucular, uydu görüntüsü akışı ve seslendirmenin bir maliyeti var. Paylaşmak isterseniz küçük bir destek bile fark yaratır.</p>
+              <div class="welcome-support">
+                <a class="welcome-sponsor" href="https://github.com/sponsors/berkcomba" target="_blank" rel="noopener noreferrer" data-i18n>Projeyi destekle</a>
+                <a class="welcome-link" href="https://github.com/berkcomba/youreyesinspace" target="_blank" rel="noopener noreferrer">GitHub</a>
+              </div>
+            </section>
+          </div>
+          <div class="welcome-nav">
+            <button id="welcome-back" class="welcome-step" data-i18n>Geri</button>
+            <div id="welcome-dots" class="welcome-bars" aria-hidden="true"></div>
+            <button id="welcome-next" class="welcome-step next"><span data-i18n>Devam</span><span class="welcome-arrow">→</span></button>
           </div>
         </div>
       </div>

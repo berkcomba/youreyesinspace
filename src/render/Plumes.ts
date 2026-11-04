@@ -4,6 +4,8 @@ import type { Activity } from '../data/types';
 import { Rng, hashSeed } from '../gen/SystemGenerator';
 import { groundSite } from './GroundGen';
 import { Shaders } from './shaders';
+import { disposeOrPin } from './ProgramPins';
+import { presetBounds } from './Bounds';
 
 const N_VENT = 8;
 const PER_VENT = 700;
@@ -35,7 +37,7 @@ export class Plumes {
         pos[i * 3] = p.x; pos[i * 3 + 1] = p.y; pos[i * 3 + 2] = p.z;
       }
     }
-    const geo = new BufferGeometry();
+    const geo = presetBounds(new BufferGeometry());
     geo.setAttribute('position', new BufferAttribute(pos, 3));
     geo.setAttribute('aVent', new BufferAttribute(aVent, 1));
     geo.setAttribute('aRand', new BufferAttribute(aRand, 4));
@@ -72,7 +74,7 @@ export class Plumes {
 
   dispose(): void {
     this.points.geometry.dispose();
-    this.mat.dispose();
+    disposeOrPin(this.mat);
   }
 }
 

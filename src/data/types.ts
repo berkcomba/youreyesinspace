@@ -108,6 +108,14 @@ export type Appearance =
       volcanic?: boolean;
       /** large-scale colour variation strength */
       variation?: number;
+      /**
+       * surface regime for the generated worlds: climate biomes on a temperate world, bright dust
+       * over dark basalt on a Mars-like desert, lineae on an icy crust, a glowing crack network on
+       * a lava world. Omitted → the generic palette-only look (the hand-made solar-system bodies).
+       */
+      style?: 'temperate' | 'desert' | 'ice' | 'lava';
+      /** vegetation paints the temperate biomes */
+      life?: boolean;
     }
   | {
       kind: 'gas';

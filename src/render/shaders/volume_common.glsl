@@ -29,7 +29,16 @@ vec2 boxHit(vec3 o, vec3 d, vec3 b) {
   return vec2(max(max(tmin.x, tmin.y), max(tmin.z, 0.0)), min(min(tmax.x, tmax.y), tmax.z));
 }
 
-// interleaved gradient noise: per-pixel jitter of the sample positions (no banding)
+// ray ∩ sphere of radius R about the origin: (tNear, tFar), tFar < tNear on a miss
+vec2 sphereHit(vec3 o, vec3 d, float R) {
+  float b = dot(o, d);
+  float c = dot(o, o) - R * R;
+  float h = b * b - c;
+  if (h < 0.0) return vec2(1.0, -1.0);
+  h = sqrt(h);
+  return vec2(max(-b - h, 0.0), -b + h);
+}
+
 float sq(float x) { return x * x; }
 
 float stepJitter() {

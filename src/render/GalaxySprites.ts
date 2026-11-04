@@ -1,5 +1,5 @@
 import {
-  AdditiveBlending, BufferAttribute, BufferGeometry, Points, Scene, ShaderMaterial, Vector3, Vector4, type PerspectiveCamera,
+  AdditiveBlending, BufferAttribute, BufferGeometry, Points, Scene, ShaderMaterial, Vector2, Vector3, Vector4, type PerspectiveCamera,
 } from 'three';
 import { PARSEC_KM, SKY_RADIUS_KM } from '../core/constants';
 import type { GalaxySource } from '../galaxy/galaxies';
@@ -11,6 +11,8 @@ import { better, PICK_MIN_VIS, type PickHit } from './pickHit';
 
 const _rel = new Vector3();
 const _proj = new Vector3();
+/** at most this many survey galaxies are labelled at once (the brightest on screen) */
+const SURVEY_LABELS = 30;
 
 /**
  * Every galaxy in the index as an analytic sprite (disc / ellipsoid with arms). Handles the
@@ -68,6 +70,8 @@ export class GalaxySprites {
         uNearLod: { value: 1 },
         uBoostMag: { value: boostMag },
         uCatalogCount: { value: galaxies.catalogCount },
+        uSurvey: { value: new Vector2(galaxies.surveyStart ?? 0, galaxies.surveyEnd ?? 0) },
+        uShowProc: { value: 1 },
         uTint: { value: new Vector4(...PROCEDURAL_TINT, 0) },
       },
       transparent: true,
@@ -86,10 +90,15 @@ export class GalaxySprites {
   setVisible(v: boolean): void { this.enabled = v; this.applyVisibility(); }
 
   private procVisible = true;
-  /** Show or hide the procedural galaxies (indices ≥ catalogCount); catalogue ones always draw */
+  /** Show or hide the procedural galaxies; catalogue and survey ones always draw */
   setProcedural(on: boolean): void {
     this.procVisible = on;
-    this.points.geometry.setDrawRange(0, on ? this.galaxies.count : this.galaxies.catalogCount);
+    this.mat.uniforms.uShowProc.value = on ? 1 : 0;
+  }
+
+  private isProcedural(i: number): boolean {
+    const g = this.galaxies;
+    return i >= g.catalogCount && !(i >= (g.surveyStart ?? 0) && i < (g.surveyEnd ?? 0));
   }
 
   /** Keep the sprite when the camera is close (no point cloud takes over, e.g. far-cluster members) */
@@ -106,6 +115,18 @@ export class GalaxySprites {
   }
 
   private applyVisibility(): void { this.points.visible = this.enabled && this.fade > 0.001; }
+
+  /** cache: squared distance (pc²) beyond which galaxy i is fainter than m₀, per m₀ */
+  private readonly magLimits = new Map<number, Float64Array>();
+  private magLimit(m0: number): Float64Array {
+    let a = this.magLimits.get(m0);
+    if (a && a.length === this.galaxies.count) return a;
+    const M = this.galaxies.absMag;
+    a = new Float64Array(this.galaxies.count);
+    for (let i = 0; i < a.length; i++) { const d = Math.pow(10, (m0 - M[i] + 5) / 5); a[i] = d * d; }
+    this.magLimits.set(m0, a);
+    return a;
+  }
 
   /** Apparent angular radius (rad) and distance ratio of galaxy i from the last camera position */
   apparent(i: number): { angRad: number; ratio: number; distPc: number } {
@@ -140,18 +161,48 @@ export class GalaxySprites {
     // same light calibration as the point clouds: flux (relative to M=4.83 at 10 pc) → alpha·px²
     // (0.16 = mean coverage of the soft blob sprite over its point area)
     u.uK.value = (0.16 * GalaxyCloud.gain * Math.PI * pxPerRad * pxPerRad) / 1.17;
-    // labels: catalogue galaxies that are reasonably prominent from here
+    // labels: catalogue galaxies that are reasonably prominent from here. Tens of thousands of
+    // candidates every frame: distances squared, magnitude cuts as precomputed distance limits
+    // (m > m₀ ⇔ d > 10^((m₀ − M + 5)/5)), no allocation until one passes
     this.named.length = 0;
-    for (let i = 0; i < this.galaxies.catalogCount; i++) {
+    const g = this.galaxies;
+    const P = g.positions, Rg = g.radius;
+    const cx = camPc.x, cy = camPc.y, cz = camPc.z;
+    const magLimit = this.magLimit(boost < 0.5 ? 6.5 : 14), magLimit11 = this.magLimit(11);
+    const pxLimit = boost < 0.5 ? 12 : 3;
+    for (let i = 0; i < g.catalogCount; i++) {
       if (i === hideIndex) continue;
-      const { angRad, ratio, distPc } = this.apparent(i);
-      if (ratio < 6) continue;
-      const m = this.apparentMag(i);
-      const px = angRad * pxPerRad;
+      const dx = P[i * 3] - cx, dy = P[i * 3 + 1] - cy, dz = P[i * 3 + 2] - cz;
+      const d2 = dx * dx + dy * dy + dz * dz;
+      const R = Rg[i];
+      if (d2 < 36 * R * R) continue;                       // ratio < 6: we are (nearly) inside
       // physical view: only naked-eye / conspicuous galaxies; boosted view: everything catalogued
-      if (boost < 0.5 ? (m > 6.5 && px < 12) : (m > 14 && px < 3)) continue;
-      this.named.push({ index: i, name: this.galaxies.name(i), dir: this.direction(i), mag: m, distKm: distPc * PARSEC_KM });
+      if (d2 > magLimit[i] && d2 * pxLimit * pxLimit > R * R * pxPerRad * pxPerRad) continue;
+      const d = Math.max(Math.sqrt(d2), 1e-3);
+      const m = g.absMag[i] + 5 * Math.log10(d) - 5;
+      this.named.push({ index: i, name: g.name(i), dir: new Vector3(dx / d, dy / d, dz / d), mag: m, distKm: d * PARSEC_KM });
     }
+    // the surveys' tens of thousands: only the big / bright ones on screen, at most SURVEY_LABELS
+    const s0 = g.surveyStart ?? 0, s1 = g.surveyEnd ?? 0;
+    const survey: NamedStarScreen[] = [];
+    const px12 = 144 / (pxPerRad * pxPerRad), px4 = 16 / (pxPerRad * pxPerRad);   // (px/pxPerRad)² thresholds on (R/d)²
+    for (let i = s0; i < s1; i++) {
+      if (i === hideIndex) continue;
+      const dx = P[i * 3] - cx, dy = P[i * 3 + 1] - cy, dz = P[i * 3 + 2] - cz;
+      const d2 = dx * dx + dy * dy + dz * dz;
+      const R = Rg[i];
+      const R2 = R * R;
+      if (d2 < 36 * R2) continue;
+      if (R2 < px12 * d2) {
+        if (boost < 0.5 || R2 < px4 * d2) continue;
+        if (d2 > magLimit11[i]) continue;
+      }
+      const d = Math.max(Math.sqrt(d2), 1e-3);
+      const m = g.absMag[i] + 5 * Math.log10(d) - 5;
+      survey.push({ index: i, name: g.name(i), dir: new Vector3(dx / d, dy / d, dz / d), mag: m, distKm: d * PARSEC_KM });
+    }
+    if (survey.length > SURVEY_LABELS) { survey.sort((a, b) => a.mag - b.mag); survey.length = SURVEY_LABELS; }
+    this.named.push(...survey);
   }
 
   /** Galaxy nearest to a screen point (px), or null */
@@ -170,9 +221,8 @@ export class GalaxySprites {
     const u = this.mat.uniforms;
     const K = u.uK.value as number, boostMag = u.uBoostMag.value as number, nearLod = u.uNearLod.value as number;
     let best: PickHit<number> | null = null;
-    const n = this.procVisible ? g.count : g.catalogCount;
-    for (let i = 0; i < n; i++) {
-      if (i === hideIndex) continue;
+    for (let i = 0; i < g.count; i++) {
+      if (i === hideIndex || (!this.procVisible && this.isProcedural(i))) continue;
       _rel.set(p[i * 3] - this.camPc.x, p[i * 3 + 1] - this.camPc.y, p[i * 3 + 2] - this.camPc.z);
       const d = Math.max(_rel.length(), 1e-3);
       const ratio = d / g.radius[i];

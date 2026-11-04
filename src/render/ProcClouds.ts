@@ -6,13 +6,19 @@ import type { Landmark } from '../core/Universe';
 import { LANDMARK_IMAGES } from '../data/landmarkImages';
 import { Rng } from '../gen/SystemGenerator';
 import { NebulaClouds } from './NebulaClouds';
+import { ENGINE2_FAMILIES, lightPositionPc, resolveNebulaProfile } from './nebula/NebulaProfile';
 import { Shaders } from './shaders';
 import type { NebulaKind, Volume, Volumes } from './Volumes';
+import { presetBounds } from './Bounds';
 
 /** clouds alive at once (the most resolved ones) */
-const MAX_CLOUDS = 4;
+const MAX_CLOUDS = 5;
 /** cached geometries (recently visited objects come back instantly) */
 const MAX_CACHE = 10;
+/** seconds for a cloud to fade in / out when it wins or loses one of the MAX_CLOUDS slots */
+const SLOT_FADE_S = 1.2;
+/** how often the landmark list is scanned for resolved objects (ms) */
+const SCAN_INTERVAL_MS = 40;
 
 interface Cloud {
   id: string;
@@ -23,6 +29,17 @@ interface Cloud {
   absMag: number;
   /** raymarched gas (nebulae, planetaries, remnants); the points then only carry the stars */
   volume: Volume | null;
+  /** built with the profile-driven engine (Volumes.nebulaEngine) */
+  engine2: boolean;
+  /** Volumes.nebulaEngine at build time (families the new engine does not cover keep the old shader either way) */
+  builtWithEngine: boolean;
+  /**
+   * slot weight 0…1: a cloud that wins or loses one of the MAX_CLOUDS slots fades over SLOT_FADE_S
+   * instead of popping (the sprite fades the opposite way; see setCloudFlags)
+   */
+  blend: number;
+  /** index into `landmarks` as of the last update (−1 when the object is gone) */
+  index: number;
 }
 
 /**
@@ -35,7 +52,7 @@ interface Cloud {
 export class ProcClouds {
   private readonly clouds = new Map<string, Cloud>();
   private daylight = 0;
-  private readonly active = new Set<number>();
+  private readonly active = new Map<number, number>();
 
   constructor(private readonly landmarks: Landmark[], private readonly scene: Scene, private readonly maxPointPx: number, private readonly volumes: Volumes | null = null) {}
 
@@ -44,46 +61,89 @@ export class ProcClouds {
     for (const c of this.clouds.values()) c.mat.uniforms.uDaylight.value = this.daylight;
   }
 
+  private lastTime = 0;
+  private scanAt = -Infinity;
+  private scanCount = -1;
+  private readonly cands: Array<{ i: number; px: number; d: number }> = [];
+  private readonly indexOf = new Map<string, number>();
+
   /**
-   * Pick the resolved landmarks, build their clouds if needed, fade them in. Returns the indices
-   * (into `landmarks`) that currently have a cloud, for the sprite handover.
+   * Pick the resolved landmarks, build their clouds if needed, fade them in. Returns the weight
+   * (0…1) with which a cloud currently stands in for each landmark index, for the sprite handover.
    */
-  update(camPc: Vector3, pxPerRad: number, pixelRatio: number, k: number, visible: boolean): Set<number> {
+  /** @param distPc per-landmark camera distance (pc) and @param radiusPx apparent radius, from LandmarkSprites.update of this frame */
+  update(camPc: Vector3, pxPerRad: number, pixelRatio: number, k: number, visible: boolean, distPc: Float32Array, radiusPx: Float32Array): Map<number, number> {
+    const now = performance.now();
+    const dt = this.lastTime ? Math.min((now - this.lastTime) / 1000, 0.1) : 0;
+    this.lastTime = now;
     this.active.clear();
-    const cands: Array<{ i: number; px: number; d: number }> = [];
-    for (let i = 0; i < this.landmarks.length; i++) {
-      const l = this.landmarks[i];
-      const kind = l.def.kind;
-      if (kind === 'star' || kind === 'pulsar' || LANDMARK_IMAGES[l.def.id]) continue;
-      const d = Math.max(l.positionPc.distanceTo(camPc), 1e-6);
-      const px = Math.atan(l.def.radiusPc / d) * pxPerRad;
-      if (px < 7) continue;
-      cands.push({ i, px, d });
+    // the walk over every landmark for the resolved few: at the sprite layer's cadence (its
+    // distances / radii are what we read), not every frame — the slots fade over seconds anyway
+    const cands = this.cands, indexOf = this.indexOf;
+    if (now - this.scanAt >= SCAN_INTERVAL_MS || this.scanCount !== this.landmarks.length) {
+      this.scanAt = now; this.scanCount = this.landmarks.length;
+      cands.length = 0; indexOf.clear();
+      const fresh = distPc.length === this.landmarks.length;
+      for (let i = 0; i < this.landmarks.length; i++) {
+        const l = this.landmarks[i];
+        const d = fresh ? distPc[i] : Math.max(l.positionPc.distanceTo(camPc), 1e-6);
+        const px = fresh ? radiusPx[i] : Math.atan(l.def.radiusPc / d) * pxPerRad;
+        // the cheap test first: almost every landmark is unresolved
+        if (px < 7 && !this.clouds.has(l.def.id)) continue;
+        const kind = l.def.kind;
+        if (kind === 'star' || kind === 'pulsar' || LANDMARK_IMAGES[l.def.id]) continue;
+        indexOf.set(l.def.id, i);
+        if (px < 7) continue;
+        cands.push({ i, px, d });
+      }
     }
-    cands.sort((a, b) => b.px - a.px);
+    // hysteresis: a cloud holding a slot keeps it until a newcomer is clearly larger on screen,
+    // so the slots do not churn while flying past a crowd of similar objects
+    const rank = (c: { i: number; px: number }) => c.px * ((this.clouds.get(this.landmarks[c.i].def.id)?.blend ?? 0) > 0 ? 1.6 : 1);
+    cands.sort((a, b) => rank(b) - rank(a));
     const wanted = new Set<string>();
     let built = false;   // one build per frame (20+ ms each): two newcomers arrive a frame apart
     for (const c of cands.slice(0, MAX_CLOUDS)) {
       const l = this.landmarks[c.i];
-      wanted.add(l.def.id);
       let cloud = this.clouds.get(l.def.id);
       // built for the other mode (gas as points vs raymarched): rebuild
-      if (cloud && cloud.volume !== null && !this.volumes!.enabled) { this.destroy(cloud); this.clouds.delete(l.def.id); cloud = undefined; }
+      if (cloud && cloud.volume !== null && (!this.volumes!.enabled || cloud.builtWithEngine !== this.volumes!.nebulaEngine)) { this.destroy(cloud); this.clouds.delete(l.def.id); cloud = undefined; }
       if (!cloud) {
         if (built) continue;
         cloud = this.build(l); this.clouds.set(l.def.id, cloud); built = true;
       }
+      wanted.add(l.def.id);
+    }
+    // every cloud, whether it holds a slot (fading in / full) or has lost it (fading out)
+    for (const [id, cloud] of this.clouds) {
+      const i = indexOf.get(id) ?? -1;
+      cloud.index = i;
+      const target = wanted.has(id) && i >= 0 ? 1 : 0;
+      cloud.blend = dt > 0 ? Math.max(0, Math.min(1, cloud.blend + (target ? dt : -dt) / SLOT_FADE_S)) : target;
+      if (cloud.blend <= 0 || i < 0) {
+        cloud.points.visible = false;
+        if (cloud.volume) cloud.volume.active = false;
+        if (!target && this.clouds.size > MAX_CACHE) { this.destroy(cloud); this.clouds.delete(id); }
+        continue;
+      }
+      const l = this.landmarks[i];
+      const d = Math.max(l.positionPc.distanceTo(camPc), 1e-6);
+      const px = Math.atan(l.def.radiusPc / d) * pxPerRad;
       const u = cloud.mat.uniforms;
       (u.uCenterRel.value as Vector3).copy(cloud.center).sub(camPc);
-      const t = NebulaClouds.handover(c.px);
+      const t = NebulaClouds.handover(px) * cloud.blend;
       if (!visible || t <= 0) { cloud.points.visible = false; if (cloud.volume) cloud.volume.active = false; continue; }
       // same law as the sprite: physical flux spread over the disc, navigation floor up close
-      const m = cloud.absMag + 5 * Math.log10(c.d) - 5;
+      const m = cloud.absMag + 5 * Math.log10(d) - 5;
       const flux = Math.pow(10, -0.4 * m);
-      const pxc = Math.max(c.px, 0.75);
+      const pxc = Math.max(px, 0.75);
       const physical = Math.min((k * flux) / (0.61 * pxc * pxc), 1);
-      const nearR = l.def.kind === 'globular' ? 150 : 600;   // as landmark.vert
-      const near = 0.6 * (1 - smoothstep(nearR * 0.1, nearR, c.d / cloud.radiusPc));
+      // as landmark.vert (the cloud takes over at px ≥ 8, where the sprite's floor is at full)
+      const shell = l.def.kind === 'remnant' || l.def.kind === 'planetary';
+      const nearR = l.def.kind === 'globular' ? 150 : shell ? 400 : 600;
+      const ratio = d / cloud.radiusPc;
+      const floorA = shell ? 0.4 + 0.45 * (1 - smoothstep(12, 60, ratio)) : 0.6;
+      const near = floorA * (1 - smoothstep(nearR * 0.1, nearR, ratio));
       u.uFade.value = Math.max(physical, near) * t;
       u.uPxPerRad.value = pxPerRad;
       u.uPixelRatio.value = pixelRatio;
@@ -94,14 +154,7 @@ export class ProcClouds {
         v.u.uFade.value = u.uFade.value;
         v.active = this.volumes!.enabled;
       }
-      this.active.add(c.i);
-    }
-    // hide the rest; evict the oldest unused clouds beyond the cache size
-    for (const [id, c] of this.clouds) {
-      if (wanted.has(id)) continue;
-      c.points.visible = false;
-      if (c.volume) c.volume.active = false;
-      if (this.clouds.size > MAX_CACHE) { this.destroy(c); this.clouds.delete(id); }
+      this.active.set(i, cloud.blend);
     }
     return this.active;
   }
@@ -128,7 +181,21 @@ export class ProcClouds {
     let g: Generated;
     let volume: Volume | null = null;
     const gas = !this.volumes?.enabled || kind === 'cluster' || kind === 'globular';
-    if (!gas) {
+    // Nebula Engine 2.0: the look follows the object's identity (profile), not its colour. Only the
+    // families where it has proven itself go through it (ENGINE2_FAMILIES); the rest keep the
+    // original shader until they do.
+    const profile = !gas && this.volumes!.nebulaEngine ? resolveNebulaProfile(l.def, l.procKind) : null;
+    const engine2 = profile !== null && ENGINE2_FAMILIES.has(profile.morphology);
+    let core: Vector3 | undefined;
+    // real member stars (ClusterStarPoints, selectable) replace the decorative star points: no
+    // fake stars that look clickable but are not
+    const members = l.def.cluster !== undefined;
+    if (members && l.def.cluster!.centrePc) core = new Vector3(...l.def.cluster!.centrePc);
+    if (engine2 && profile) {
+      volume = this.volumes!.nebulaProfile(profile);
+      // the ionised core sits where the profile's primary light is (object-local → scene)
+      core ??= lightPositionPc(profile, 0);
+    } else if (!gas) {
       const vk: NebulaKind = kind === 'planetary' ? 'planetary' : kind === 'remnant' ? 'remnant' : col[2] > col[0] * 1.1 ? 'reflection' : 'emission';
       const vr = new Rng(hashStr(l.def.id) ^ 0x51f3);
       volume = this.volumes!.nebula(vk, col, () => vr.next());
@@ -137,9 +204,9 @@ export class ProcClouds {
     else if (kind === 'globular') g = globular(rng, R, col);
     else if (kind === 'planetary') g = planetary(rng, R, col, gas);
     else if (kind === 'remnant') g = remnant(rng, R, col, gas);
-    else g = nebula(rng, R, col, gas);
+    else g = nebula(rng, R, col, gas, core, !members);
 
-    const geo = new BufferGeometry();
+    const geo = presetBounds(new BufferGeometry());
     geo.setAttribute('position', new BufferAttribute(g.pos, 3));
     geo.setAttribute('color', new BufferAttribute(g.col, 3));
     geo.setAttribute('weight', new BufferAttribute(g.w, 1));
@@ -170,7 +237,7 @@ export class ProcClouds {
     points.renderOrder = -11;
     points.visible = false;
     this.scene.add(points);
-    return { id: l.def.id, points, mat, center: l.positionPc.clone(), radiusPc: R, absMag: l.def.absMag, volume };
+    return { id: l.def.id, points, mat, center: l.positionPc.clone(), radiusPc: R, absMag: l.def.absMag, volume, engine2, builtWithEngine: !!this.volumes?.nebulaEngine, blend: 0, index: -1 };
   }
 }
 
@@ -247,15 +314,16 @@ class Noise3 {
 }
 
 /** Emission / reflection nebula: a few overlapping gas clumps carved by noise, with embedded young stars */
-function nebula(rng: Rng, R: number, color: RGB, gas = true): Generated {
+function nebula(rng: Rng, R: number, color: RGB, gas = true, coreAt?: Vector3, decorativeStars = true): Generated {
   const g = new Gen();
   const N = 9000;
   const noise = new Noise3(rng);
   const nClump = rng.int(4, 9);
   const clumps: Array<{ c: Vector3; s: number; w: number }> = [];
   for (let i = 0; i < nClump; i++) clumps.push({ c: ball(rng, new Vector3()).multiplyScalar(R * 0.6), s: R * rng.range(0.22, 0.5), w: rng.range(0.5, 1) });
-  // one bright ionised core where the exciting stars sit
+  // one bright ionised core where the exciting stars sit (the volume's primary light when given)
   const core = clumps[0];
+  if (coreAt) core.c.copy(coreAt);
   const p = new Vector3();
   const hot: RGB = mix3(color, WHITE, 0.55);
   const rim: RGB = mix3(color, [color[0], color[1] * 0.7, color[2] * 0.6], 0.5);
@@ -272,8 +340,8 @@ function nebula(rng: Rng, R: number, color: RGB, gas = true): Generated {
     const bright = Math.min(1.5, 0.35 + carved * 0.8 + toCore * 0.6);
     g.add(p.x, p.y, p.z, col, bright, rng.range(1.0, 2.6) * (1.2 - 0.5 * Math.min(1, carved)));
   }
-  // young stars: a loose cluster in the core, a few scattered
-  const nStars = rng.int(25, 70);
+  // young stars: a loose cluster in the core, a few scattered (only where no real members exist)
+  const nStars = decorativeStars ? rng.int(25, 70) : 0;
   for (let i = 0; i < nStars; i++) {
     const inCore = rng.chance(0.7);
     if (inCore) p.set(gauss(rng), gauss(rng), gauss(rng)).multiplyScalar(core.s * 0.45).add(core.c);

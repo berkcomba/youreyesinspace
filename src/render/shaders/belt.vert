@@ -14,9 +14,9 @@ void main() {
   float w = elems1.x, M0 = elems1.y, n = elems1.z;
   float M = M0 + n * uTime;
   M = mod(M, 6.28318530718);
-  // Kepler: 4 Newton iterations is plenty for e < 0.4
-  float E = M + e * sin(M);
-  for (int k = 0; k < 4; k++) {
+  // Kepler (Newton): starting from π converges for any e < 1 (NEOs and comets reach 0.99)
+  float E = e > 0.8 ? 3.14159265 : M + e * sin(M);
+  for (int k = 0; k < 8; k++) {
     E = E - (E - e * sin(E) - M) / (1.0 - e * cos(E));
   }
   float P = a * (cos(E) - e);

@@ -1,6 +1,7 @@
 import { AdditiveBlending, BufferAttribute, BufferGeometry, Points, Scene, ShaderMaterial, Vector3 } from 'three';
 import type { BodyView } from './BodyRenderer';
 import { Shaders } from './shaders';
+import { presetBounds } from './Bounds';
 
 /**
  * Point-sprite layer: every body is drawn as a small glow whose size follows an
@@ -14,7 +15,7 @@ export class BodyPoints {
   private col = new Float32Array(0);
   private size = new Float32Array(0);
   private alpha = new Float32Array(0);
-  private geo = new BufferGeometry();
+  private geo = presetBounds(new BufferGeometry());
   private readonly mat: ShaderMaterial;
 
   constructor(scene: Scene) {
@@ -42,7 +43,7 @@ export class BodyPoints {
     this.size = new Float32Array(n);
     this.alpha = new Float32Array(n);
     this.geo.dispose();
-    this.geo = new BufferGeometry();
+    this.geo = presetBounds(new BufferGeometry());
     this.geo.setAttribute('position', new BufferAttribute(this.pos, 3));
     this.geo.setAttribute('color', new BufferAttribute(this.col, 3));
     this.geo.setAttribute('size', new BufferAttribute(this.size, 1));

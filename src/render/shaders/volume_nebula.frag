@@ -23,40 +23,73 @@ vec3 warp(vec3 p, float amt) {
   return p + amt * vec3(snoise(p * 1.7 + uSeed), snoise(p * 1.7 + uSeed + 17.1), snoise(p * 1.7 + uSeed + 31.7));
 }
 
+// thickness of the thin sheets (object radii): no thinner than the ray step can resolve
+float gSheetW = 0.03;
+// the view ray (local frame): a thin sheet is brightest where the ray runs along it (the limb)
+vec3 gDir = vec3(0.0, 0.0, 1.0);
+
 void nebulaAt(vec3 p, out vec3 e, out float k) {
   e = vec3(0.0); k = 0.0;
   float r = length(p);
   if (r > 1.3) return;
   if (uKind > 2.5) {
-    // remnant: thin filamentary shell, lopsided toward the denser interstellar medium
-    float side = dot(normalize(p + 1e-5), uAxis);
-    float shellR = 0.95 - 0.12 * side;
-    vec3 q = warp(p * 2.2, 0.35);
-    float ridge = 1.0 - abs(snoise(q * 2.0));
-    float ridge2 = 1.0 - abs(snoise(q * 5.1 + 3.3));
-    float shell = exp(-sq((r - shellR) / 0.06));
-    float fil = pow(ridge, 7.0) * 1.3 + pow(ridge2, 9.0) * 0.6;
-    float g = shell * fil * (0.7 + 0.5 * side);
-    vec3 col = mix(mix(OIII, uColor, 0.4), mix(HALPHA, SII, 0.4), smoothstep(0.2, 0.9, ridge2 * (0.6 + 0.4 * side)));
-    e = col * g * 5.0 + mix(OIII, BLUE, 0.5) * 0.05 * (1.0 - smoothstep(0.5, 0.9, r));
+    // remnant: the shocked shell is a thin, wrinkled sheet (Hester 1987). Seen edge-on at the limb
+    // the wrinkles are the bright tangential filaments; face-on they are faint broad arcs. Three
+    // nested sheets — the outer Hα/[S II] shock, the [O III] cooling layers behind it — broken into
+    // patches where the blast ran into thin gas, squashed toward the denser side; a faint
+    // synchrotron interior
+    vec3 u = p / max(r, 1e-4);
+    float side = dot(u, uAxis);
+    float base = 0.92 - 0.1 * side;
+    // deep interior: only the faint synchrotron glow (the sheets live in 0.62 … 1.12 base)
+    if (r < 0.6 * base) { e = mix(OIII, BLUE, 0.5) * 0.02; return; }
+    if (r > 1.14 * base) return;
+    vec3 q = u * 2.6 + uSeed;
+    float rip1 = fbm(q * 1.3, 2), rip2 = snoise(q * 2.9 + 5.0);
+    float R1 = base * (1.0 + 0.07 * rip1 + 0.035 * rip2);
+    float R2 = base * (0.9 + 0.08 * fbm(q * 1.7 + 11.0, 2) + 0.03 * rip2);
+    float R3 = base * (0.8 + 0.1 * fbm(q * 2.3 + 23.0, 2));
+    float w = gSheetW;
+    float s1 = exp(-sq((r - R1) / w)), s2 = exp(-sq((r - R2) / w)), s3 = exp(-sq((r - R3) / (w * 1.3)));
+    float dense = 0.7 + 0.5 * side;
+    float p1 = smoothstep(-0.4, 0.55, snoise(u * 2.0 + uSeed)) * dense;
+    float p2 = smoothstep(-0.15, 0.6, snoise(u * 2.4 + uSeed + 7.0)) * dense;
+    float p3 = smoothstep(0.0, 0.65, snoise(u * 2.8 + uSeed + 13.0)) * dense;
+    // the sheets are far thinner than the march resolves: the limb brightening of a thin sheet
+    // (path length ∝ 1/cos) is applied explicitly
+    float tang = 0.4 / (abs(dot(gDir, u)) + 0.12);
+    // thread-like structure running along the sheets
+    float f1 = 0.35 + 1.3 * pow(1.0 - abs(snoise(u * 7.0 + uSeed * 1.3)), 3.0);
+    float f2 = 0.35 + 1.3 * pow(1.0 - abs(snoise(u * 9.0 + uSeed * 1.7 + 3.0)), 3.0);
+    float f3 = 0.5 + 0.8 * (snoise(u * 6.0 + uSeed) * 0.5 + 0.5);
+    vec3 red = mix(HALPHA, SII, 0.35), cyan = mix(OIII, BLUE, 0.45), teal = mix(OIII, uColor, 0.5);
+    e = (red * s1 * p1 * f1 + cyan * s2 * p2 * f2 * 0.8 + teal * s3 * p3 * f3 * 0.5) * 14.0 * tang;
+    e += mix(OIII, BLUE, 0.5) * 0.02 * (1.0 - smoothstep(0.45, 0.85, r));
     return;
   }
   if (uKind > 1.5) {
-    // planetary: bright shell (bipolar lobes), [O III] teal inside, H-alpha / [N II] red rim
-    float mu = abs(dot(p, uAxis)) / max(r, 1e-4);
+    // planetary: a thin bright shell (bipolar lobes), patchy with cometary knots, the [O III] teal
+    // fill inside, the low-ionisation Hα / [N II] red rim just outside, a faint older halo
+    vec3 u = p / max(r, 1e-4);
+    float mu = abs(dot(u, uAxis));
     float lobe = 1.0 + uBipolar * 0.75 * pow(mu, 4.0);
-    float shellR = 0.72 * lobe;
+    float ang = fbm(u * 3.0 + uSeed, 3);                 // the shell is not a perfect sphere
+    float shellR = 0.7 * lobe * (1.0 + 0.05 * ang);
     float x = r / shellR;
     vec3 q = warp(p * 3.0, 0.2);
     float n = fbm4(q * 2.0) * 0.5 + 0.5;
     float equator = 1.0 - uBipolar * 0.45 * mu;
-    float shell = exp(-sq((x - 1.0) / 0.1)) * (0.45 + n) * equator;
-    float inner = (1.0 - smoothstep(0.6, 1.0, x)) * 0.25;
-    float halo = exp(-sq((x - 1.25) / 0.2)) * 0.08;
-    e = mix(OIII, uColor, 0.25) * (inner + shell * 0.6) + mix(HALPHA, uColor, 0.3) * (shell * smoothstep(0.92, 1.05, x) * 1.4 + halo);
-    e *= 3.0;
-    // knots of cold gas in the shell absorb a little
-    k = uDust * 0.5 * shell * pow(max(snoise(q * 6.0), 0.0), 2.0);
+    float w = max(0.06, gSheetW / shellR);
+    float patchy = 0.35 + 0.9 * smoothstep(-0.5, 0.6, snoise(u * 4.0 + uSeed * 0.7));
+    float shell = exp(-sq((x - 1.0) / w)) * (0.45 + n) * equator * patchy;
+    float knots = pow(1.0 - abs(snoise(u * 12.0 + uSeed)), 6.0) * exp(-sq((x - 0.97) / (w * 1.5))) * equator;
+    float inner = (1.0 - smoothstep(0.45, 1.0, x)) * 0.07 * (0.7 + 0.6 * n);
+    float rim = exp(-sq((x - 1.1) / (w * 1.2))) * patchy * (0.5 + n);
+    float halo = exp(-sq((x - 1.35) / 0.2)) * 0.05;
+    float tang = 0.45 / (abs(dot(gDir, u)) + 0.15);
+    e = mix(OIII, uColor, 0.25) * (inner + (shell * 0.9 + knots * 0.6) * tang) + mix(HALPHA, uColor, 0.3) * (rim * 1.1 * tang + halo) + mix(SII, HALPHA, 0.5) * knots * 0.5 * tang;
+    e *= 3.2;
+    k = uDust * 0.5 * knots;
     return;
   }
   // emission / reflection: clumps in a warped, flattened sheet of gas, carved by noise
@@ -102,14 +135,20 @@ void nebulaAt(vec3 p, out vec3 e, out float k) {
 
 void main() {
   vec3 d = viewRay();
-  vec2 hit = boxHit(uOrigin, d, uBox);
+  // the medium ends at r = 1.3 whatever the kind: march the sphere's chord, not the box's
+  // (half the samples, and a finer step for the thin shells)
+  vec2 hit = sphereHit(uOrigin, d, 1.3);
   if (hit.y <= hit.x || uFade <= 0.0) { gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0); return; }
-  int N = int(uSteps);
-  float jit = stepJitter();
+  // uSteps is the budget of the full diameter: a constant step length, so the short chords
+  // (the limb, and every ray once the camera is inside) take only the samples they need
   float t0 = hit.x, t1 = hit.y;
+  int N = int(clamp(ceil((t1 - t0) * uSteps / 2.6), 4.0, uSteps));
+  float jit = stepJitter();
   vec3 L = vec3(0.0);
   float T = 1.0;
   float dt = (t1 - t0) / float(N);
+  gSheetW = max(0.03, dt * 0.75);
+  gDir = d;
   for (int i = 0; i < 128; i++) {
     if (i >= N) break;
     float t = t0 + (float(i) + jit) * dt;

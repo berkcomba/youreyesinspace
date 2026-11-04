@@ -3,7 +3,7 @@ import type { BodyData } from './types';
 import type { StarInfo } from './StarCatalog';
 import { starBody, syntheticInfo } from './blackholes';
 import { PULSARS, pulsarBodies, pulsarInfo, type PulsarParams } from './pulsars';
-import type { ClusterParams } from '../galaxy/ClusterStars';
+import { catalogueCluster, globularCount, nebulaCluster, type ClusterParams } from '../galaxy/ClusterStars';
 
 /**
  * Real, named deep-sky landmarks: nebulae, clusters, supernova remnants and a few record-holding
@@ -55,6 +55,8 @@ export interface LandmarkDef {
   pulsar?: PulsarParams;
   /** generated object (see galaxy/ProcLandmarks.ts); position comes with the landmark, not from ra/dec */
   procedural?: true;
+  /** survey-catalogue entry (data/DeepSky.ts): labelled only when close, like the generated ones */
+  catalog?: true;
   /** star clusters: age / population, from which the selectable member stars are generated */
   cluster?: ClusterParams;
 }
@@ -65,11 +67,11 @@ export function isSystemLandmark(def: LandmarkDef): boolean {
 }
 
 /** Sky position → sprite colour presets */
-const EMISSION: [number, number, number] = [1.0, 0.45, 0.55];   // Hα + [O III]
-const OLD_CLUSTER: [number, number, number] = [1.0, 0.9, 0.7];
-const YOUNG_CLUSTER: [number, number, number] = [0.75, 0.85, 1.0];
-const PLANETARY: [number, number, number] = [0.5, 0.95, 0.9];
-const SNR: [number, number, number] = [0.9, 0.8, 1.0];
+export const EMISSION: [number, number, number] = [1.0, 0.45, 0.55];   // Hα + [O III]
+export const OLD_CLUSTER: [number, number, number] = [1.0, 0.9, 0.7];
+export const YOUNG_CLUSTER: [number, number, number] = [0.75, 0.85, 1.0];
+export const PLANETARY: [number, number, number] = [0.5, 0.95, 0.9];
+export const SNR: [number, number, number] = [0.9, 0.8, 1.0];
 
 const KPC_M31 = 765_000;
 
@@ -245,6 +247,16 @@ export const LANDMARKS: LandmarkDef[] = [
   },
   ...PULSARS,
 ];
+
+// emission nebulae carry a generated exciting cluster inside the cloud, clusters their members:
+// selectable stars below the star catalogue's completeness limit (the bright ones are the
+// catalogue's own)
+for (const d of LANDMARKS) {
+  if (d.cluster) continue;
+  if (d.kind === 'nebula') d.cluster = nebulaCluster(d.radiusPc, d.distancePc);
+  else if (d.kind === 'globular' || (d.kind === 'cluster' && d.color === OLD_CLUSTER)) d.cluster = catalogueCluster(d.distancePc, { ageMyr: 12_000, count: globularCount(d.absMag) });
+  else if (d.kind === 'cluster') d.cluster = catalogueCluster(d.distancePc, { ageMyr: 60, count: 500 });
+}
 
 /* ---------------- helpers for star-type landmarks ---------------- */
 

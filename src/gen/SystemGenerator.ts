@@ -25,11 +25,15 @@ export class Rng {
   chance(p: number): boolean { return this.next() < p; }
   int(lo: number, hi: number): number { return Math.floor(this.range(lo, hi + 1)); }
   pick<T>(arr: T[]): T { return arr[Math.min(arr.length - 1, Math.floor(this.next() * arr.length))]; }
-  /** jittered colour */
+  /**
+   * jittered colour: mostly a lightness shift, with a small warm / green tilt — independent
+   * per-channel noise turned dark greys pink or blue (three draws, as before: sequences stay)
+   */
   tint(c: [number, number, number], amt = 0.08): [number, number, number] {
-    return [
-      clamp01(c[0] + this.range(-amt, amt)), clamp01(c[1] + this.range(-amt, amt)), clamp01(c[2] + this.range(-amt, amt)),
-    ];
+    const l = 1 + this.range(-amt, amt) * 2.2;
+    const warm = this.range(-amt, amt) * 0.4;
+    const green = this.range(-amt, amt) * 0.3;
+    return [clamp01(c[0] * l + warm), clamp01(c[1] * l + green), clamp01(c[2] * l - warm)];
   }
 }
 
@@ -65,6 +69,8 @@ export interface GeneratedBelt {
   trojan?: { aAU: number; meanLongitudeDeg: number };
   /** body the belt circles (a star or a pair's barycentre); the primary star when absent */
   centerId?: string;
+  /** catalogue bodies (Solar System small bodies): ready-made `elems0` / `elems1` and the index of the first one */
+  real?: { e0: Float32Array; e1: Float32Array; first: number };
 }
 
 export interface GeneratedSystem {
@@ -75,28 +81,52 @@ export interface GeneratedSystem {
   planetIds: string[];
 }
 
-const EARTH_MASS = 5.97237e24;
-const EARTH_RADIUS = 6371;
-const JUPITER_MASS = 1.8982e27;
-const JUPITER_RADIUS = 69_911;
+export const EARTH_MASS = 5.97237e24;
+export const EARTH_RADIUS = 6371;
+export const JUPITER_MASS = 1.8982e27;
+export const JUPITER_RADIUS = 69_911;
 
 const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
 const LETTERS = 'bcdefghijklmnop';
 
-type PlanetClass = 'lava' | 'venusian' | 'temperate' | 'ocean' | 'eyeball' | 'carbon' | 'desert' | 'ice' | 'barren' | 'gasgiant' | 'icegiant' | 'hotjupiter';
+export type PlanetClass = 'lava' | 'venusian' | 'temperate' | 'ocean' | 'eyeball' | 'carbon' | 'desert' | 'ice' | 'barren' | 'subneptune' | 'gasgiant' | 'icegiant' | 'hotjupiter';
 
-const CLASS_LABEL: Record<PlanetClass, string> = {
+export const CLASS_LABEL: Record<PlanetClass, string> = {
   lava: 'Lav gezegeni', venusian: 'Venüs benzeri (sera)', temperate: 'Ilıman (okyanuslu)', ocean: 'Okyanus dünyası',
   eyeball: 'Göz küresi gezegeni (gelgit kilitli)', carbon: 'Karbon gezegeni', desert: 'Soğuk çöl gezegeni',
-  ice: 'Buz dünyası', barren: 'Çorak kaya', gasgiant: 'Gaz devi', icegiant: 'Buz devi', hotjupiter: 'Sıcak Jüpiter',
+  ice: 'Buz dünyası', barren: 'Çorak kaya', subneptune: 'Mini-Neptün (kalın H/He zarfı)', gasgiant: 'Gaz devi', icegiant: 'Buz devi', hotjupiter: 'Sıcak Jüpiter',
+};
+
+/**
+ * Sudarsky et al. (2000): the cloud chemistry of a giant planet, hence its colour, is set by its
+ * temperature. I (< 150 K) ammonia clouds, Jupiter-like; II (150–350 K) water clouds, bright
+ * white; III (350–800 K) cloudless, deep blue from Rayleigh scattering; IV (800–1400 K) alkali
+ * metals, very dark; V (> 1400 K) silicate and iron clouds, dusty red-brown and glowing.
+ */
+export const SUDARSKY_BANDS: Record<1 | 2 | 3 | 4 | 5, Array<[number, number, number]>> = {
+  1: [[0.86, 0.78, 0.64], [0.58, 0.38, 0.26], [0.92, 0.86, 0.74], [0.42, 0.25, 0.17], [0.76, 0.62, 0.48], [0.52, 0.32, 0.22]],
+  2: [[0.93, 0.93, 0.91], [0.84, 0.86, 0.87], [0.96, 0.96, 0.94], [0.78, 0.8, 0.83], [0.9, 0.9, 0.9]],
+  3: [[0.28, 0.42, 0.72], [0.22, 0.36, 0.66], [0.34, 0.5, 0.8], [0.25, 0.4, 0.7]],
+  4: [[0.13, 0.13, 0.2], [0.09, 0.09, 0.15], [0.17, 0.16, 0.25], [0.11, 0.1, 0.17]],
+  5: [[0.62, 0.45, 0.36], [0.5, 0.34, 0.28], [0.72, 0.56, 0.44], [0.44, 0.3, 0.25]],
+};
+
+export function sudarskyClass(T: number): 1 | 2 | 3 | 4 | 5 {
+  return T < 150 ? 1 : T < 350 ? 2 : T < 800 ? 3 : T < 1400 ? 4 : 5;
+}
+
+const SUDARSKY_LABEL: Record<1 | 2 | 3 | 4 | 5, string> = {
+  1: 'Gaz devi (Sudarsky I: amonyak bulutları)', 2: 'Gaz devi (Sudarsky II: su bulutları)', 3: 'Gaz devi (Sudarsky III: bulutsuz)',
+  4: 'Sıcak Jüpiter (Sudarsky IV: alkali metal atmosfer)', 5: 'Çok sıcak Jüpiter (Sudarsky V: silikat bulutları)',
 };
 
 /** Extra flavour sentence per class (shown after the standard description) */
-const CLASS_NOTE: Partial<Record<PlanetClass, string>> = {
+export const CLASS_NOTE: Partial<Record<PlanetClass, string>> = {
   ocean: 'Yüzeyin tamamı yüzlerce kilometre derinlikte bir okyanusla kaplı; kara yok, tabanda yüksek basınç buzu.',
   eyeball: 'Yıldıza hep aynı yüzünü dönüyor: gündüz yarıküresinin ortasında sıvı bir okyanus "göz bebeği", çevresinde ve gece tarafında kalıcı buz.',
   carbon: 'Oksijenden çok karbon içeren bir diskten doğdu: grafit ve karbür kabuk, katran rengi okyanuslar; derinlerde elmas tabakaları.',
   hotjupiter: 'Yıldızına çok yakın; atmosferi kavrulup uzaya kaçıyor, gece tarafına rüzgârlar binlerce km/s hızla ısı taşıyor.',
+  subneptune: 'Kepler\'in en sık bulduğu gezegen türü: kayaç bir çekirdeğin üzerinde kalın bir hidrojen-helyum zarfı; yüzeyi yok, pus katmanları altında basınç yüzlerce bar.',
 };
 
 /* ------------------------------------------------------------------ */
@@ -108,6 +138,8 @@ export interface GenerateOptions {
   single?: boolean;
   /** outer limit for planets (AU) when a catalogue neighbour truncates the system (α Cen A/B …) */
   maxPlanetAU?: number;
+  /** measured hierarchy (MSC / ORB6, data/Binaries.ts); the curated `KNOWN_MULTIPLES` still win */
+  measured?: NodeSpec | null;
 }
 
 /** Something planets can orbit: a star, or the barycentre of a close pair (circumbinary) */
@@ -163,8 +195,11 @@ export function generateSystem(star: StarInfo, opts: GenerateOptions = {}): Gene
   bodies.push(primary);
 
   /* ---- companions: the multiplicity tree, emitted as barycentres + stars ---- */
-  const tree = multiplicityTree(new Rng(hashSeed(star.index, star.hip, 0xb1a)), star, opts.single);
-  const hosts = emitHierarchy(rng, star, tree, sysId, primary, bodies, opts.maxPlanetAU);
+  const curated = knownMultiple(star) !== null;
+  const measured = !curated && !!opts.measured;
+  const tree = measured ? opts.measured! : multiplicityTree(new Rng(hashSeed(star.index, star.hip, 0xb1a)), star, opts.single);
+  const source = curated ? 'Gözlem (literatür)' : measured ? 'Gözlem (MSC / ORB6 kataloğu)' : 'Prosedürel (tahmini)';
+  const hosts = emitHierarchy(rng, star, tree, sysId, primary, bodies, source, opts.maxPlanetAU);
 
   /* ---- planets, belts, small bodies around every host ---- */
   for (const host of hosts) populateHost(rng, star, host, sysId, bodies, belts, planetIds);
@@ -214,14 +249,14 @@ function jitterPole(rng: Rng, pole: PoleRaDec, sigmaDeg: number): PoleRaDec {
   return { ra: (pole.ra + (gauss(rng) * sigmaDeg) / Math.max(0.2, Math.cos(dec * DEG)) + 360) % 360, dec };
 }
 
-function fmtPeriod(days: number): string {
+export function fmtPeriod(days: number): string {
   if (days < 2) return _('{n} saat', { n: fixed(days * 24, 1) });
   if (days < 1000) return _('{n} gün', { n: fixed(days, days < 20 ? 2 : 1) });
   const y = days / 365.25;
   return _('{n} yıl', { n: y < 100 ? fixed(y, 1) : fixed(y, 0) });
 }
 
-function fmtAU(a: number): string {
+export function fmtAU(a: number): string {
   return a < 0.1 ? `${fixed(a, 3)} AU` : a < 10 ? `${fixed(a, 2)} AU` : `${fixed(a, 0)} AU`;
 }
 
@@ -229,29 +264,28 @@ function fmtAU(a: number): string {
  * Turn the multiplicity tree into bodies (barycentres with the components on their orbits) and
  * list the places planets may orbit, with their Holman & Wiegert stability limits.
  */
-function emitHierarchy(rng: Rng, star: StarInfo, tree: NodeSpec, sysId: string, primary: BodyData, bodies: BodyData[], maxPlanetAU?: number): Host[] {
+function emitHierarchy(rng: Rng, star: StarInfo, tree: NodeSpec, sysId: string, primary: BodyData, bodies: BodyData[], source: string, maxPlanetAU?: number): Host[] {
   const hosts: Host[] = [];
   const starRadiusAU = star.radiusKm / AU_KM;
   const evolved = star.lumClass <= 3 && !star.isWhiteDwarf;
+  const substellar = isSubstellar(star);
   if (!isPair(tree)) {
     hosts.push({
       id: primary.id, name: star.name, tag: '', massSolar: star.massSolar, gm: (G * star.massKg) / 1e9, luminosity: star.luminosity,
-      temperature: star.temperature, evolved, compact: star.isWhiteDwarf, radiusAU: starRadiusAU, aMinAU: starRadiusAU * 5,
+      temperature: star.temperature, evolved, compact: star.isWhiteDwarf || substellar, radiusAU: starRadiusAU, aMinAU: starRadiusAU * 5,
       aMaxAU: Math.min(70 * Math.sqrt(Math.max(star.luminosity, 1e-5)), maxPlanetAU ?? Infinity),
-      occurrence: maxPlanetAU !== undefined && maxPlanetAU < 20 ? 0.4 : 1, primary: true,
+      occurrence: (maxPlanetAU !== undefined && maxPlanetAU < 20 ? 0.4 : 1) * (substellar ? 0.3 : 1), primary: true,
     });
     return hosts;
   }
 
   const root = resolveTree(tree, star, rng, sysId, primary, { n: 0 }, true) as RPair;
-  const known = knownMultiple(star) !== null;
   const leaves: RLeaf[] = [];
   const pairs: RPair[] = [];
   const collect = (n: RNode) => { if (n.kind === 'leaf') leaves.push(n); else { pairs.push(n); collect(n.a); collect(n.b); } };
   collect(root);
   const order = leaves.length === 2 ? 'İkili sistem' : leaves.length === 3 ? 'Üçlü sistem' : leaves.length === 4 ? 'Dörtlü sistem' : 'Çoklu sistem';
   const hierarchy = pairs.map((p) => `${p.a.label}–${p.b.label}`).join(', ');
-  const source = known ? 'Gözlem (literatür)' : 'Prosedürel (tahmini)';
 
   // the primary is now "Name A" (or whichever component it is)
   const primaryLeaf = leaves.find((l) => l.spec === 'primary')!;
@@ -281,7 +315,7 @@ function emitHierarchy(rng: Rng, star: StarInfo, tree: NodeSpec, sysId: string, 
 
     if (node.kind === 'leaf') {
       const sLimit = parent ? parent.aAU * sTypeLimit(parent.spec.e, (first ? parent.b : parent.a).mass / parent.mass) : Infinity;
-      const kind: CompKind = node.phys?.kind ?? (star.isWhiteDwarf ? 'wd' : evolved ? 'giant' : 'ms');
+      const kind: CompKind = node.phys?.kind ?? (star.isWhiteDwarf ? 'wd' : evolved ? 'giant' : isSubstellar(star) ? 'bd' : 'ms');
       const kindFactor = kind === 'wd' ? 0.15 : kind === 'bd' ? 0.3 : kind === 'ns' ? 0.05 : kind === 'bh' ? 0 : 1;
       const rAU = node.radiusKm / AU_KM;
       // a white dwarf's inner few AU were inside its red-giant envelope: nothing survives there
@@ -511,13 +545,13 @@ function orbit(rng: Rng, aKm: number, gm: number, eMax: number, iSigma: number, 
   };
 }
 
-function gauss(rng: Rng): number {
+export function gauss(rng: Rng): number {
   const u1 = Math.max(rng.next(), 1e-9), u2 = rng.next();
   return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
 }
 
 /** Equilibrium temperature at aAU from a source of luminosity L (solar units): 278 K · ((1−A)·L)^¼ / √a */
-function equilibriumT(luminosity: number, aAU: number, albedo: number): number {
+export function equilibriumT(luminosity: number, aAU: number, albedo: number): number {
   return 278.3 * Math.pow((1 - albedo) * Math.max(luminosity, 1e-9), 0.25) / Math.sqrt(aAU);
 }
 
@@ -528,11 +562,16 @@ function makePlanet(
   const beyondFrost = aAU > frostAU;
   let cls: PlanetClass;
   const r = rng.next();
+  // Occurrence (Kepler / RV statistics, roughly): inside the frost line sub-Neptunes are the most
+  // common planet after the rocky ones, hot Jupiters are rare (~1 % of stars); outside it giants
+  // dominate but a good share of the slots are small icy worlds and Neptunes
   if (!beyondFrost) {
-    if (aAU < 0.12 * Math.sqrt(host.luminosity) && r < 0.10) cls = 'hotjupiter';
+    if (aAU < 0.12 * Math.sqrt(host.luminosity) && r < 0.04) cls = 'hotjupiter';
+    else if (r < 0.08) cls = 'gasgiant';          // a warm Jupiter that migrated inward (Sudarsky II / III)
+    else if (r < 0.36) cls = 'subneptune';
     else cls = 'barren'; // refined by temperature below
   } else {
-    cls = r < 0.5 ? 'gasgiant' : r < 0.8 ? 'icegiant' : 'ice';
+    cls = r < 0.38 ? 'gasgiant' : r < 0.66 ? 'icegiant' : r < 0.78 ? 'subneptune' : 'ice';
   }
 
   const aKm = aAU * AU_KM;
@@ -541,21 +580,26 @@ function makePlanet(
   let data: BodyData;
 
   if (cls === 'gasgiant' || cls === 'hotjupiter') {
-    const massJ = rng.logRange(0.25, 8);
+    // around a brown dwarf a giant planet is at most a few tenths of its host (2M1207 b: ~0.2)
+    const massJ = Math.min(rng.logRange(0.25, 8), host.massSolar * 1047.6 * 0.25);
     const radius = JUPITER_RADIUS * Math.min(1.35, Math.max(0.65, Math.pow(massJ, 0.12))) * (cls === 'hotjupiter' ? 1.25 : 1);
     const albedo = cls === 'hotjupiter' ? rng.range(0.05, 0.2) : rng.range(0.35, 0.55);
     const T = equilibriumT(host.luminosity, aAU, albedo);
     const flattening = rng.range(0.03, 0.09);
     const rotation = rng.range(8, 16);
-    const rings = cls === 'gasgiant' && rng.chance(0.4) ? makeRings(rng, radius) : undefined;
+    // every giant of the solar system has rings; only Saturn's are bright and broad. A hot
+    // Jupiter keeps none (its ice sublimates, the Roche zone sits inside the inflated planet).
+    const rings = cls === 'hotjupiter' || !rng.chance(0.85) ? undefined : makeRings(rng, radius, rng.chance(0.3) ? 'bright' : 'dusty');
+    const sud = sudarskyClass(T);
+    const label = cls === 'hotjupiter' ? CLASS_LABEL[cls] : SUDARSKY_LABEL[sud];
     data = {
       id, name, type: 'planet', parent, radius, flattening, mass: massJ * JUPITER_MASS, albedo, rotationPeriod: rotation,
       tilt, orbit: orbit(rng, aKm, gmStar, cls === 'hotjupiter' ? 0.05 : 0.09, 2.5, 'parentEquator'),
       appearance: gasAppearance(rng, T, false, id),
-      atmosphere: { color: T > 600 ? [0.6, 0.55, 0.7] : T > 130 ? rng.tint([0.95, 0.88, 0.75]) : rng.tint([0.7, 0.85, 1.0]), height: 0.012, density: 0.45 },
+      atmosphere: { color: sud >= 4 ? [0.6, 0.55, 0.7] : sud === 3 ? rng.tint([0.5, 0.65, 1.0]) : sud === 2 ? rng.tint([0.9, 0.92, 1.0]) : rng.tint([0.95, 0.88, 0.75]), height: 0.012, density: 0.45 },
       rings, temperature: T,
-      description: `${_(CLASS_LABEL[cls])}. ${_('{m} Jüpiter kütlesinde', { m: fixed(massJ, 2) })}; ${describeTemp(T)}.${CLASS_NOTE[cls] ? ` ${_(CLASS_NOTE[cls]!)}` : ''}`,
-      facts: { 'Sınıf': CLASS_LABEL[cls], 'Kaynak': 'Prosedürel (tahmini)' },
+      description: `${_(label)}. ${_('{m} Jüpiter kütlesinde', { m: fixed(massJ, 2) })}; ${describeTemp(T)}.${CLASS_NOTE[cls] ? ` ${_(CLASS_NOTE[cls]!)}` : ''}`,
+      facts: { 'Sınıf': label, 'Kaynak': 'Prosedürel (tahmini)' },
     };
     bodies.push(data);
     makeMoons(rng, data, beyondFrost, rng.int(2, 6), bodies, 'giant');
@@ -570,13 +614,33 @@ function makePlanet(
       tilt, orbit: orbit(rng, aKm, gmStar, 0.08, 3, 'parentEquator'),
       appearance: gasAppearance(rng, T, true, id),
       atmosphere: { color: rng.tint([0.55, 0.75, 1.0]), height: 0.02, density: 0.5 },
-      rings: rng.chance(0.3) ? makeRings(rng, radius, true) : undefined,
+      rings: rng.chance(0.8) ? makeRings(rng, radius, rng.chance(0.6) ? 'narrow' : 'dusty') : undefined,
       temperature: T,
       description: `${_(CLASS_LABEL[cls])}. ${_('{m} Dünya kütlesinde, metan katkılı hidrojen-helyum atmosferi', { m: fixed(massE, 1) })}; ${describeTemp(T)}.`,
       facts: { 'Sınıf': CLASS_LABEL[cls], 'Kaynak': 'Prosedürel (tahmini)' },
     };
     bodies.push(data);
     makeMoons(rng, data, true, rng.int(1, 4), bodies, 'giant');
+  } else if (cls === 'subneptune') {
+    // 1.7–3.5 R⊕: a rocky core under a hydrogen–helium envelope a few per cent of the mass; the
+    // top of the atmosphere is what we see — hazy, low-contrast, bluish when cold, tan when hot
+    const massE = rng.logRange(3, 12);
+    const radius = EARTH_RADIUS * rng.range(1.7, 3.5);
+    const albedo = rng.range(0.25, 0.5);
+    const T = equilibriumT(host.luminosity, aAU, albedo);
+    data = {
+      id, name, type: 'planet', parent, radius, flattening: rng.range(0.005, 0.02), mass: massE * EARTH_MASS, albedo,
+      rotationPeriod: tidallyLocked ? 'sync' : rng.range(10, 40) * (rng.chance(0.1) ? -1 : 1),
+      tilt, orbit: orbit(rng, aKm, gmStar, 0.1, 3, 'parentEquator'),
+      appearance: subNeptuneAppearance(rng, T, id),
+      atmosphere: { color: T > 700 ? rng.tint([0.85, 0.75, 0.65]) : rng.tint([0.6, 0.75, 1.0], 0.08), height: 0.035, density: 0.7 },
+      rings: rng.chance(0.12) ? makeRings(rng, radius, 'dusty') : undefined,
+      temperature: T,
+      description: `${_(CLASS_LABEL[cls])}. ${_('{m} Dünya kütlesinde', { m: fixed(massE, 1) })}; ${describeTemp(T)}${tidallyLocked ? `; ${_('yıldızına gelgitle kilitli')}` : ''}. ${_(CLASS_NOTE[cls]!)}`,
+      facts: { 'Sınıf': CLASS_LABEL[cls], 'Kaynak': 'Prosedürel (tahmini)' },
+    };
+    bodies.push(data);
+    if (!tidallyLocked && rng.chance(0.3)) makeMoons(rng, data, beyondFrost, 1, bodies, 'rocky');
   } else {
     // Rocky worlds; sub-class by equilibrium temperature
     const massE = cls === 'ice' ? rng.logRange(0.01, 1.5) : rng.logRange(0.05, 5);
@@ -584,8 +648,11 @@ function makePlanet(
     let albedo = rng.range(0.1, 0.35);
     let T = equilibriumT(host.luminosity, aAU, albedo);
     const carbonRich = rng.chance(0.06);
-    if (T > 750) cls = 'lava';
-    else if (T > 330) cls = massE > 0.3 && rng.chance(0.7) ? 'venusian' : 'barren';
+    // rock melts only on the very hottest worlds; a runaway greenhouse needs a planet massive
+    // enough to keep a thick CO₂ atmosphere and not so hot that it is lost
+    if (T > 1000) cls = 'lava';
+    else if (T > 750) cls = 'barren';
+    else if (T > 330) cls = massE > 0.3 && rng.chance(0.55) ? 'venusian' : 'barren';
     else if (T > 235) cls = massE > 0.25 && rng.chance(0.75) ? (tidallyLocked ? 'eyeball' : rng.chance(0.2) ? 'ocean' : 'temperate') : 'barren';
     else if (T > 140) cls = massE > 0.08 ? 'desert' : 'barren';
     else cls = 'ice';
@@ -611,7 +678,7 @@ function makePlanet(
       tilt, orbit: orbit(rng, aKm, gmStar, 0.18, 3.5, 'parentEquator'),
       appearance, atmosphere, clouds, temperature: T,
       // a few rocky worlds keep a thin ring of debris (a shattered moon)
-      rings: massE > 0.5 && T < 400 && rng.chance(0.05) ? makeRings(rng, radius, true) : undefined,
+      rings: massE > 0.5 && T < 400 && rng.chance(0.05) ? makeRings(rng, radius, 'dusty') : undefined,
       description: `${_(CLASS_LABEL[cls])}. ${_('{m} Dünya kütlesinde', { m: fixed(massE, 2) })}; ${describeTemp(T)}${tidallyLocked && cls !== 'eyeball' ? `; ${_('yıldızına gelgitle kilitli')}` : ''}.${CLASS_NOTE[cls] ? ` ${_(CLASS_NOTE[cls]!)}` : ''}`,
       facts: { 'Sınıf': CLASS_LABEL[cls], 'Kaynak': 'Prosedürel (tahmini)' },
     };
@@ -621,7 +688,7 @@ function makePlanet(
   return { cls, data };
 }
 
-function describeTemp(T: number): string {
+export function describeTemp(T: number): string {
   if (T > 1500) return _('yüzeyi erimiş kaya sıcaklığında');
   if (T > 700) return _('kavurucu sıcak');
   if (T > 330) return _('çok sıcak');
@@ -634,41 +701,55 @@ function describeTemp(T: number): string {
 /*  Appearance palettes                                                */
 /* ------------------------------------------------------------------ */
 
-function gasAppearance(rng: Rng, T: number, iceGiant: boolean, id: string): Appearance {
+export function gasAppearance(rng: Rng, T: number, iceGiant: boolean, id: string): Appearance {
   const seed = hashSeed(...id.split('').map((c) => c.charCodeAt(0))) % 10_000;
   let bands: Array<[number, number, number]>;
+  let turbulence = rng.range(0.3, 1.0);
   if (iceGiant) {
+    // methane absorbs red: from Uranus' pale cyan to Neptune's deep blue; a few wear a grey haze
     const hue = rng.next();
-    bands = hue < 0.5
+    bands = hue < 0.4
       ? [[0.55, 0.78, 0.9], [0.62, 0.84, 0.92], [0.5, 0.72, 0.86], [0.7, 0.88, 0.95]]
-      : [[0.2, 0.35, 0.85], [0.25, 0.45, 0.95], [0.18, 0.3, 0.75], [0.35, 0.55, 1.0]];
-  } else if (T > 900) {
-    bands = [[0.35, 0.3, 0.32], [0.25, 0.18, 0.2], [0.5, 0.42, 0.4], [0.2, 0.15, 0.18], [0.6, 0.5, 0.45]];
-  } else if (T > 250) {
-    bands = [[0.9, 0.85, 0.75], [0.8, 0.7, 0.55], [0.95, 0.92, 0.85], [0.7, 0.55, 0.4], [0.85, 0.75, 0.6]];
-  } else if (T > 120) {
-    bands = [[0.86, 0.78, 0.64], [0.58, 0.38, 0.26], [0.92, 0.86, 0.74], [0.42, 0.25, 0.17], [0.76, 0.62, 0.48], [0.52, 0.32, 0.22]];
+      : hue < 0.8
+        ? [[0.2, 0.35, 0.85], [0.25, 0.45, 0.95], [0.18, 0.3, 0.75], [0.35, 0.55, 1.0]]
+        : [[0.6, 0.68, 0.74], [0.66, 0.74, 0.8], [0.55, 0.62, 0.7], [0.7, 0.78, 0.84]];
+    turbulence = rng.range(0.2, 0.6);
   } else {
-    bands = [[0.6, 0.72, 0.85], [0.45, 0.6, 0.78], [0.7, 0.8, 0.9], [0.35, 0.5, 0.7], [0.55, 0.68, 0.82]];
+    const sud = sudarskyClass(T);
+    bands = SUDARSKY_BANDS[sud];
+    // ammonia-cloud giants are the stormy, banded ones; the bright water-cloud and the dark
+    // alkali worlds are far quieter; the cloudless blue ones show only faint zonal structure
+    turbulence = sud === 1 ? rng.range(0.6, 1.0) : sud === 2 ? rng.range(0.3, 0.6) : sud === 3 ? rng.range(0.15, 0.35) : rng.range(0.3, 0.7);
   }
   bands = bands.map((b) => rng.tint(b, 0.06));
   const storm = rng.chance(0.5)
     ? ([rng.range(-35, 35), rng.range(0, 360), rng.range(0.05, 0.13), ...rng.tint(bands[1], 0.15)] as [number, number, number, number, number, number])
     : undefined;
-  return { kind: 'gas', seed, bands, bandFreq: rng.range(5, 14), turbulence: rng.range(0.3, 1.0), storm };
+  return { kind: 'gas', seed, bands, bandFreq: rng.range(5, 14), turbulence, storm };
 }
 
-function rockyAppearance(rng: Rng, cls: PlanetClass, massE: number, id: string): { appearance: Appearance; atmosphere?: Atmosphere; clouds?: Clouds } {
+/** Sub-Neptune: a hazy, nearly featureless envelope; cold ones bluish, hot ones tan or white */
+export function subNeptuneAppearance(rng: Rng, T: number, id: string): Appearance {
+  const seed = hashSeed(...id.split('').map((c) => c.charCodeAt(0))) % 10_000;
+  const base: Array<[number, number, number]> = T > 700
+    ? [[0.78, 0.7, 0.6], [0.72, 0.64, 0.55], [0.82, 0.76, 0.68], [0.7, 0.62, 0.52]]
+    : T > 350
+      ? [[0.82, 0.82, 0.8], [0.76, 0.77, 0.76], [0.86, 0.86, 0.84], [0.72, 0.73, 0.73]]
+      : [[0.45, 0.62, 0.8], [0.5, 0.68, 0.84], [0.42, 0.58, 0.76], [0.55, 0.7, 0.86]];
+  return { kind: 'gas', seed, bands: base.map((b) => rng.tint(b, 0.05)), bandFreq: rng.range(3, 7), turbulence: rng.range(0.1, 0.35) };
+}
+
+export function rockyAppearance(rng: Rng, cls: PlanetClass, massE: number, id: string, allowLife = true): { appearance: Appearance; atmosphere?: Atmosphere; clouds?: Clouds } {
   const seed = hashSeed(...id.split('').map((c) => c.charCodeAt(0))) % 10_000;
   const canHoldAir = massE > 0.1;
   switch (cls) {
     case 'lava':
       return {
         appearance: {
-          kind: 'terrestrial', seed, landLow: rng.tint([0.12, 0.08, 0.07]), landMid: rng.tint([0.25, 0.18, 0.15]), landHigh: rng.tint([0.4, 0.32, 0.28]),
-          craters: rng.range(0.1, 0.5), roughness: 1.2, volcanic: true, variation: 0.6,
+          kind: 'terrestrial', seed, landLow: rng.tint([0.06, 0.045, 0.04]), landMid: rng.tint([0.13, 0.1, 0.09]), landHigh: rng.tint([0.24, 0.2, 0.18]),
+          craters: rng.range(0.1, 0.5), roughness: 1.2, volcanic: true, variation: 0.6, style: 'lava',
         },
-        atmosphere: canHoldAir && rng.chance(0.5) ? { color: [0.8, 0.5, 0.3], height: 0.02, density: 0.4 } : undefined,
+        atmosphere: canHoldAir && rng.chance(0.5) ? { color: [0.8, 0.5, 0.3], height: 0.015, density: 0.25 } : undefined,
       };
     case 'venusian':
       return {
@@ -680,13 +761,13 @@ function rockyAppearance(rng: Rng, cls: PlanetClass, massE: number, id: string):
         clouds: { seed: seed + 1, color: rng.tint([0.96, 0.9, 0.72], 0.05), coverage: 1.0, height: 0.012, speed: rng.range(20, 80), opacity: 0.97 },
       };
     case 'temperate': {
-      const life = rng.chance(0.35);
+      const life = rng.chance(0.35) && allowLife;
       const land = life ? rng.tint([0.14, 0.32, 0.1]) : rng.tint([0.45, 0.36, 0.25]);
       return {
         appearance: {
           kind: 'terrestrial', seed, ocean: rng.tint([0.02, 0.1, 0.3], 0.04), landLow: land, landMid: rng.tint(life ? [0.42, 0.38, 0.2] : [0.6, 0.5, 0.35]),
           landHigh: rng.tint([0.6, 0.57, 0.52]), ice: [0.92, 0.95, 1.0], seaLevel: rng.range(0.35, 0.72), iceCaps: rng.range(0.65, 0.85),
-          craters: 0, roughness: 1.0, variation: 0.4, cityLights: life && rng.chance(0.1),
+          craters: 0, roughness: 1.0, variation: 0.4, cityLights: life && rng.chance(0.1), style: 'temperate', life,
         },
         atmosphere: { color: rng.tint([0.3, 0.55, 1.0], 0.1), height: 0.025, density: rng.range(0.7, 1.3), sunsetColor: [1.0, 0.45, 0.2] },
         clouds: { seed: seed + 1, color: [1, 1, 1], coverage: rng.range(0.3, 0.65), height: 0.006, speed: rng.range(0.8, 1.6), opacity: 0.88 },
@@ -726,15 +807,15 @@ function rockyAppearance(rng: Rng, cls: PlanetClass, massE: number, id: string):
       return {
         appearance: {
           kind: 'terrestrial', seed, landLow: rng.tint([0.4, 0.16, 0.08]), landMid: rng.tint([0.72, 0.34, 0.14]), landHigh: rng.tint([0.85, 0.58, 0.38]),
-          ice: [0.95, 0.93, 0.9], iceCaps: rng.range(0.8, 0.92), craters: rng.range(0.3, 0.8), roughness: 1.1, variation: 0.6,
+          ice: [0.95, 0.93, 0.9], iceCaps: rng.range(0.86, 0.94), craters: rng.range(0.3, 0.8), roughness: 1.1, variation: 0.6, style: 'desert',
         },
         atmosphere: canHoldAir ? { color: rng.tint([0.85, 0.6, 0.45]), height: 0.02, density: rng.range(0.15, 0.5) } : undefined,
       };
     case 'ice':
       return {
         appearance: {
-          kind: 'terrestrial', seed, landLow: rng.tint([0.55, 0.6, 0.68]), landMid: rng.tint([0.78, 0.82, 0.88]), landHigh: rng.tint([0.95, 0.96, 0.98]),
-          ice: [0.97, 0.98, 1.0], iceCaps: rng.range(0.3, 0.6), craters: rng.range(0.2, 0.7), roughness: 0.9, variation: 0.5,
+          kind: 'terrestrial', seed, landLow: rng.tint([0.42, 0.46, 0.52]), landMid: rng.tint([0.6, 0.64, 0.7]), landHigh: rng.tint([0.78, 0.8, 0.84]),
+          ice: [0.84, 0.87, 0.9], iceCaps: rng.range(0.6, 0.85), craters: rng.range(0.2, 0.7), roughness: 0.9, variation: 0.5, style: 'ice',
         },
         atmosphere: canHoldAir && rng.chance(0.4) ? { color: [0.55, 0.65, 0.95], height: 0.03, density: 0.2 } : undefined,
       };
@@ -748,16 +829,37 @@ function rockyAppearance(rng: Rng, cls: PlanetClass, massE: number, id: string):
   }
 }
 
-function makeRings(rng: Rng, radius: number, faint = false): Rings {
-  const inner = radius * rng.range(1.25, 1.6);
-  const outer = inner + radius * rng.range(0.5, 1.4);
+/**
+ * Ring systems: `bright` is Saturn's — broad, icy, opaque, with a few divisions; `dusty` is
+ * Jupiter's or Neptune's — a narrow, dark, translucent sheet of dust; `narrow` is Uranus' — a
+ * dark band cut into a handful of thin ringlets by wide gaps.
+ */
+function makeRings(rng: Rng, radius: number, style: 'bright' | 'dusty' | 'narrow'): Rings {
   const gaps: Array<[number, number]> = [];
-  const n = rng.int(0, 3);
-  for (let i = 0; i < n; i++) gaps.push([rng.range(inner + (outer - inner) * 0.2, outer - (outer - inner) * 0.1), (outer - inner) * rng.range(0.01, 0.05)]);
-  return {
-    inner, outer, color: faint ? rng.tint([0.5, 0.5, 0.55]) : rng.tint([0.85, 0.8, 0.7], 0.08),
-    opacity: faint ? rng.range(0.25, 0.5) : rng.range(0.7, 0.95), seed: rng.int(1, 999), gaps,
-  };
+  let inner: number, outer: number, color: [number, number, number], opacity: number;
+  if (style === 'bright') {
+    inner = radius * rng.range(1.2, 1.5);
+    outer = inner + radius * rng.range(0.6, 1.4);
+    color = rng.tint([0.85, 0.8, 0.7], 0.08);
+    opacity = rng.range(0.75, 0.95);
+    const n = rng.int(1, 3);
+    for (let i = 0; i < n; i++) gaps.push([rng.range(inner + (outer - inner) * 0.2, outer - (outer - inner) * 0.1), (outer - inner) * rng.range(0.01, 0.05)]);
+  } else if (style === 'dusty') {
+    inner = radius * rng.range(1.3, 1.7);
+    outer = inner + radius * rng.range(0.12, 0.45);
+    color = rng.tint([0.5, 0.47, 0.44], 0.05);
+    opacity = rng.range(0.15, 0.35);
+    if (rng.chance(0.5)) gaps.push([rng.range(inner + (outer - inner) * 0.3, outer - (outer - inner) * 0.3), (outer - inner) * rng.range(0.05, 0.12)]);
+  } else {
+    inner = radius * rng.range(1.6, 2.0);
+    outer = inner + radius * rng.range(0.15, 0.35);
+    color = rng.tint([0.42, 0.42, 0.45], 0.04);
+    opacity = rng.range(0.35, 0.6);
+    // ringlets: 3–4 wide gaps leave thin bands between them
+    const n = rng.int(3, 4);
+    for (let i = 0; i < n; i++) gaps.push([inner + (outer - inner) * ((i + 0.5 + rng.range(-0.15, 0.15)) / n), (outer - inner) * rng.range(0.1, 0.16)]);
+  }
+  return { inner, outer, color, opacity, seed: rng.int(1, 999), gaps };
 }
 
 /* ------------------------------------------------------------------ */
@@ -782,7 +884,7 @@ function makeMoons(
     const appearance: Appearance = volcanic
       ? { kind: 'terrestrial', seed, landLow: [0.85, 0.75, 0.3], landMid: [0.95, 0.88, 0.55], landHigh: [0.6, 0.35, 0.15], craters: 0, roughness: 0.9, volcanic: true, variation: 1.0 }
       : icy
-        ? { kind: 'terrestrial', seed, landLow: rng.tint([0.5, 0.55, 0.62]), landMid: rng.tint([0.75, 0.78, 0.84]), landHigh: rng.tint([0.92, 0.94, 0.97]), craters: rng.range(0.4, 1.0), roughness: 1.0, variation: 0.5 }
+        ? { kind: 'terrestrial', seed, landLow: rng.tint([0.5, 0.55, 0.62]), landMid: rng.tint([0.75, 0.78, 0.84]), landHigh: rng.tint([0.92, 0.94, 0.97]), craters: rng.range(0.4, 1.0), roughness: 1.0, variation: 0.5, style: rng.chance(0.5) ? 'ice' : undefined }
         : { kind: 'terrestrial', seed, landLow: rng.tint([0.22, 0.22, 0.23]), landMid: rng.tint([0.38, 0.38, 0.38]), landHigh: rng.tint([0.58, 0.57, 0.55]), craters: 1.0, roughness: 1.0, variation: 0.6 };
     const period = (2 * Math.PI * Math.sqrt((a * a * a) / gm)) / DAY_S;
     // the inner icy moons of giants: some vent their buried oceans (Enceladus); volcanic ones erupt
@@ -836,9 +938,14 @@ function makeMoons(
 /*  Star text                                                          */
 /* ------------------------------------------------------------------ */
 
+/** Below the hydrogen-burning limit (only the brown dwarfs of the UltracoolSheet; photometric masses stop at 0.075) */
+function isSubstellar(s: StarInfo): boolean {
+  return !s.isWhiteDwarf && s.massSolar < 0.075;
+}
+
 function starDescription(s: StarInfo): string {
   const lumDesc = LUM_CLASS_DESC[s.lumClass];
-  const cls = s.isWhiteDwarf ? _('beyaz cüce') : (lumDesc ? _(lumDesc) : _('yıldız')).toLocaleLowerCase(localeTag());
+  const cls = s.isWhiteDwarf ? _('beyaz cüce') : isSubstellar(s) ? _('kahverengi cüce') : (lumDesc ? _(lumDesc) : _('yıldız')).toLocaleLowerCase(localeTag());
   const parts = [_('{sp} sınıfı {cls}', { sp: s.catalogSpectral || s.spectral, cls })];
   parts.push(_("Güneş'e uzaklığı {ly} ({km})", { ly: fmtLightYears(s.distancePc * PARSEC_KM), km: fmtDistance(s.distancePc * PARSEC_KM) }));
   if (s.names?.constellation) parts.push(_('{name} takımyıldızında', { name: s.names.constellation }));
@@ -848,7 +955,7 @@ function starDescription(s: StarInfo): string {
   return parts.join('. ') + '. ' + tail;
 }
 
-function starFacts(s: StarInfo): Record<string, string> {
+export function starFacts(s: StarInfo): Record<string, string> {
   const f: Record<string, string> = {
     'Spektral sınıf': s.catalogSpectral || s.spectral,
     'Görünür kadir': fixed(s.mag, 2),

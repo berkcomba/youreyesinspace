@@ -75,11 +75,39 @@ export const TYPE_CODE: Record<GalaxyType, number> = { E: 0, S0: 1, S: 2, SB: 3,
 const GUEST_SLOTS = 3;
 export const TYPE_BY_CODE: GalaxyType[] = ['E', 'S0', 'S', 'SB', 'Irr'];
 
+/**
+ * Real galaxies of the surveys (public/data/galaxies.json, scripts/build-galaxies.mjs):
+ * [ra, dec, distance Mpc, radius kpc, absolute magnitude, type (+8: guessed), axis ratio, name, source]
+ */
+export interface SurveyGalaxies {
+  sources: Record<string, string>;
+  h0: number;
+  rows: Array<[number, number, number, number, number, number, number, string, number]>;
+}
+
+export async function loadSurveyGalaxies(baseUrl: string): Promise<SurveyGalaxies> {
+  const res = await fetch(`${baseUrl}data/galaxies.json`);
+  if (!res.ok) throw new Error(`galaxies.json: ${res.status}`);
+  return res.json() as Promise<SurveyGalaxies>;
+}
+
+/** where a galaxy's data come from */
+export type GalaxySourceKind = 'milkyway' | 'handmade' | 'ungc' | '2mrs' | '2mrs-cluster' | 'procedural' | 'guest';
+
+/** 2MRS limit (Ks, extinction-corrected) and the mean V − Ks of its galaxies */
+const SURVEY_KS_LIMIT = 11.75;
+const SURVEY_V_K = 3.0;
+/** the survey misses galaxies behind the Milky Way's disc (|b| below ~6°) */
+const SIN_ZONE_OF_AVOIDANCE = Math.sin(6 * Math.PI / 180);
+
 /** Anything the galaxy sprite renderer can draw (the local index and the far-universe tiers). */
 export interface GalaxySource {
   readonly count: number;
   /** entries [0, catalogCount) may be labelled */
   readonly catalogCount: number;
+  /** real survey galaxies [surveyStart, surveyEnd) (after the generated ones) */
+  readonly surveyStart?: number;
+  readonly surveyEnd?: number;
   /** pc, scene frame, relative to the Sun */
   readonly positions: Float32Array;
   readonly radius: Float32Array;
@@ -94,6 +122,8 @@ export interface GalaxySource {
   readonly pitch?: Float32Array;
   name(i: number): string;
 }
+
+function fract(x: number): number { return x - Math.floor(x); }
 
 /** Cheap 3D value noise for the cosmic web */
 export function vnoise(x: number, y: number, z: number): number {
@@ -122,6 +152,14 @@ export class GalaxyIndex {
   /** galaxies in use (grows by a few when guest slots are occupied) */
   count: number;
   readonly catalogCount: number;
+  /** real survey galaxies (UNGC, 2MRS) occupy [surveyStart, surveyEnd), after the generated ones */
+  readonly surveyStart: number;
+  readonly surveyEnd: number;
+  private readonly surveyNames: string[] = [];
+  /** per survey galaxy: source row code (0 UNGC, 1 2MRS Hubble-law, 2 2MRS cluster) + 8 when the type is a guess */
+  private readonly surveyFlags: Uint8Array;
+  readonly surveyCredits: Record<string, string>;
+  readonly surveyH0: number;
   /** pc, scene frame, relative to the Sun */
   readonly positions: Float32Array;
   readonly radius: Float32Array;      // pc
@@ -149,9 +187,14 @@ export class GalaxyIndex {
   private readonly guestKey: (string | null)[] = new Array(GUEST_SLOTS).fill(null);
   private readonly guestName = new Map<number, string>();
 
-  constructor(proceduralCount = 110_000) {
-    const N = 1 + CATALOG.length + proceduralCount + GUEST_SLOTS;
-    const LIMIT = N - GUEST_SLOTS;   // the generated population stops here; the rest are guest slots
+  constructor(proceduralCount = 110_000, survey: SurveyGalaxies | null = null) {
+    const surveyRows = survey?.rows ?? [];
+    const N = 1 + CATALOG.length + proceduralCount + surveyRows.length + GUEST_SLOTS;
+    // the generated population stops here; then the survey galaxies, then the guest slots
+    const LIMIT = 1 + CATALOG.length + proceduralCount;
+    this.surveyFlags = new Uint8Array(surveyRows.length);
+    this.surveyCredits = survey?.sources ?? {};
+    this.surveyH0 = survey?.h0 ?? 70;
     this.positions = new Float32Array(N * 3);
     this.radius = new Float32Array(N);
     this.absMag = new Float32Array(N);
@@ -203,12 +246,19 @@ export class GalaxyIndex {
       const u1 = Math.max(rng.next(), 1e-9), u2 = rng.next();
       return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
     };
+    const ngp = raDecToScene(192.85948, 27.12825, new Vector3());
     const place = (x: number, y: number, z: number, env: number): void => {
       if (i >= LIMIT) return;
       const dSun = Math.sqrt(x * x + y * y + z * z);
       // spherical local volume (a cube would be visible from outside as a box of galaxies)
       if (dSun < 2.5 * MPC || dSun > box) return;
-      const M = -16.5 - 6.2 * Math.pow(rng.next(), 0.55 + 0.45 * (1 - env)) - env * 0.6;
+      let M = -16.5 - 6.2 * Math.pow(rng.next(), 0.55 + 0.45 * (1 - env)) - env * 0.6;
+      // with the real survey loaded, every galaxy above its detection limit is a real one: the
+      // generated population only fills in below it (and behind the Galactic plane, where it is blind)
+      if (survey && Math.abs(x * ngp.x + y * ngp.y + z * ngp.z) > dSun * SIN_ZONE_OF_AVOIDANCE) {
+        const limit = SURVEY_KS_LIMIT + SURVEY_V_K - 5 * Math.log10(dSun) + 5;
+        if (M < limit) M = limit + 0.2 + 1.3 * fract(Math.sin(x * 1e-5 + y * 3.1e-6 + z * 7.7e-6) * 43758.5453);
+      }
       const tr = rng.next();
       const pE = 0.1 + 0.35 * env, pS0 = pE + 0.1 + 0.2 * env, pS = pS0 + 0.36 * (1 - env * 0.6), pSB = pS + 0.24 * (1 - env * 0.6);
       const t: GalaxyType = tr < pE ? 'E' : tr < pS0 ? 'S0' : tr < pS ? 'S' : tr < pSB ? 'SB' : 'Irr';
@@ -310,6 +360,35 @@ export class GalaxyIndex {
       if (rng.next() > n2 * n2) continue;
       place(x, y, z, 0.05);
     }
+
+    // real survey galaxies (the hand-made catalogue keeps the ones it already has)
+    this.surveyStart = i;
+    const handDirs = CATALOG.map((g) => raDecToScene(g.ra, g.dec, new Vector3()));
+    for (const [ra, dec, dMpc, rKpc, M, code, q, name, src] of surveyRows) {
+      raDecToScene(ra, dec, dir);
+      const dup = CATALOG.some((g, k) => {
+        const sepRad = Math.acos(Math.min(1, dir.dot(handDirs[k])));
+        const angR = (g.diameterKpc / 2) / (g.distMpc * 1000);
+        return sepRad < Math.max(0.06 * Math.PI / 180, 0.25 * angR) && Math.abs(g.absMag - M) < 1.5;
+      });
+      if (dup) continue;
+      const t = TYPE_BY_CODE[code & 7];
+      const d = dMpc * MPC;
+      this.positions[i * 3] = dir.x * d; this.positions[i * 3 + 1] = dir.y * d; this.positions[i * 3 + 2] = dir.z * d;
+      this.radius[i] = Math.max(rKpc * 1000, 20);
+      this.absMag[i] = M;
+      this.type[i] = code & 7;
+      this.seed[i] = hashSeed(i, 0x5e1a);
+      // ellipticals: the measured b/a; discs: thin, inclined as the axis ratio says (intrinsic q₀ 0.2)
+      const elliptical = t === 'E';
+      this.axisRatio[i] = elliptical ? Math.max(q, 0.3) : t === 'Irr' ? 0.25 : 0.12;
+      const inc = elliptical ? 40 : Math.acos(Math.sqrt(Math.max(0, (q * q - 0.04) / 0.96))) * 180 / Math.PI;
+      setBasis(i, galaxyBasisFromSky(dir, this.seed[i] % 180, inc, basis));
+      this.surveyNames.push(name);
+      this.surveyFlags[i - this.surveyStart] = src + (code & 8);
+      i++;
+    }
+    this.surveyEnd = i;
     this.count = i;
     this.guestBase = i;
     // free guest slots sit far away with no size, so no distance search ever lands on one
@@ -383,16 +462,35 @@ export class GalaxyIndex {
     this.parkGuest(slot);
   }
 
+  /** a real galaxy: the Milky Way, the hand-made catalogue or the surveys */
+  isReal(i: number): boolean {
+    return i < this.catalogCount || (i >= this.surveyStart && i < this.surveyEnd);
+  }
+
+  sourceOf(i: number): GalaxySourceKind {
+    if (i === 0) return 'milkyway';
+    if (i < this.catalogCount) return 'handmade';
+    if (i >= this.surveyStart && i < this.surveyEnd) return (['ungc', '2mrs', '2mrs-cluster'] as const)[this.surveyFlags[i - this.surveyStart] & 7];
+    return this.isGuest(i) ? 'guest' : 'procedural';
+  }
+
+  /** survey galaxy whose morphology was not measured (its type is a guess) */
+  typeGuessed(i: number): boolean {
+    return i >= this.surveyStart && i < this.surveyEnd && (this.surveyFlags[i - this.surveyStart] & 8) !== 0;
+  }
+
   /** untranslated (source) name — use for matching catalogue references */
   rawName(i: number): string {
     if (this.guestName.has(i)) return this.guestName.get(i)!;
     if (i === 0) return 'Samanyolu';
     if (i < this.catalogCount) return CATALOG[i - 1].name;
+    if (i >= this.surveyStart && i < this.surveyEnd) return this.surveyNames[i - this.surveyStart];
     return `Galaksi YE-${(this.seed[i] % 0xffffff).toString(16).toUpperCase().padStart(6, '0')}`;
   }
 
   name(i: number): string {
     if (this.guestName.has(i)) return this.guestName.get(i)!;
+    if (i >= this.surveyStart && i < this.surveyEnd) return this.surveyNames[i - this.surveyStart];
     if (i >= this.catalogCount) return _('Galaksi YE-{code}', { code: (this.seed[i] % 0xffffff).toString(16).toUpperCase().padStart(6, '0') });
     if (i === 0) return _('Samanyolu');
     return _(this.rawName(i));
@@ -432,9 +530,10 @@ export class GalaxyIndex {
       description: i === 0
         ? _('Ev galaksimiz: ~13 milyar yıllık, 100–400 milyar yıldızlı çubuklu sarmal. Güneş, merkezden ~8.2 kpc uzakta Orion Kolu\'nda yer alır.')
         : i < this.catalogCount ? (CATALOG[i - 1].desc ? _(CATALOG[i - 1].desc!) : undefined)
+          : this.isReal(i) ? this.surveyDescription(i)
           : this.isGuest(i) ? _('Uzak bir galaksi kümesinin üyesi; parlaklığı ve Hubble tipi kümenin morfoloji–yoğunluk ilişkisinden, yapısı tipinden türetildi.')
           : _('Prosedürel olarak üretilmiş galaksi; konumu kozmik ağ yoğunluk modelinden, yapısı Hubble tipinden türetildi.'),
-      catalog: i < this.catalogCount,
+      catalog: this.isReal(i),
       distancePc: this.distancePc(i),
     };
     m = new GalaxyModel(params);
@@ -470,6 +569,20 @@ export class GalaxyIndex {
     return Math.max(best, 0);
   }
 
+  /** what the survey entry is and how its numbers were obtained */
+  surveyDescription(i: number): string {
+    const src = this.sourceOf(i);
+    const parts = [src === 'ungc'
+      ? _('Updated Nearby Galaxy Catalog\'daki (Karachentsev ve ark. 2013) gerçek bir yakın galaksi; uzaklığı Hubble yasasından değil, doğrudan ölçüldü (kırmızı dev kolunun ucu, Sefeidler vb.).')
+      : src === '2mrs-cluster'
+        ? _('2MASS Kırmızıya Kayma Taraması\'ndaki (Huchra ve ark. 2012) gerçek bir galaksi; ait olduğu kümenin ölçülmüş uzaklığına yerleştirildi.')
+        : _('2MASS Kırmızıya Kayma Taraması\'ndaki (Huchra ve ark. 2012) gerçek bir galaksi; uzaklığı kırmızıya kaymasından, Hubble yasasıyla (H₀ = {h} km/s/Mpc) hesaplandı.', { h: this.surveyH0 })];
+    parts.push(this.typeGuessed(i)
+      ? _('Morfolojisi ölçülmemiş: Hubble tipi tahmin, iç yapısı bu tipe göre kurulmuş bir modeldir.')
+      : _('Konum, uzaklık, boyut, parlaklık ve Hubble tipi gerçek; iç yapısı bu tipe göre kurulmuş bir modeldir.'));
+    return parts.join(' ');
+  }
+
   search(query: string, limit = 6): number[] {
     const q = query.trim().toLowerCase();
     if (!q) return [];
@@ -477,6 +590,14 @@ export class GalaxyIndex {
     for (let i = 0; i < this.catalogCount; i++) {
       if (this.name(i).toLowerCase().includes(q) || this.rawName(i).toLowerCase().includes(q)) hits.push(i);
     }
+    // survey galaxies: exact designations first, then prefixes ("NGC 1" must not list NGC 1000–1999 first)
+    const exact: number[] = [], prefix: number[] = [];
+    for (let i = this.surveyStart; i < this.surveyEnd; i++) {
+      const n = this.surveyNames[i - this.surveyStart].toLowerCase();
+      if (n === q) exact.push(i);
+      else if (prefix.length < limit && (n.startsWith(q) || (q.length >= 4 && n.includes(q)))) prefix.push(i);
+    }
+    hits.push(...exact, ...prefix);
     const m = /^ye-([0-9a-f]{6})$/i.exec(q);
     if (m) {
       const code = parseInt(m[1], 16);

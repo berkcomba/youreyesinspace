@@ -30,12 +30,18 @@ export interface Settings {
   nightLight: number;
   /** lens flare and glare of the star in view */
   lensFlare: boolean;
+  /** crepuscular rays: the star's light shafts in an atmosphere, carved by the horizon and the clouds */
+  lightShafts: boolean;
   /** NASA satellite imagery on Earth / Moon / Mars (streamed) */
   imagery: boolean;
   belts: boolean;
+  /** the ~2.8 million fainter real stars (Gaia nearby-star census + Tycho-2 / Gaia DR3), streamed after start-up */
+  deepCatalog: boolean;
   milkyWay: boolean;
   /** raymarched galaxies and nebulae (dust lanes, glowing gas); off: point clouds only */
   volumetrics: boolean;
+  /** Nebula Engine 2.0: nebulae as a gas + dust medium lit by their stars (off: the original per-kind shader) */
+  nebulaEngine: boolean;
   /** generated content beyond the catalogues: procedural stars, galaxies and the far cosmic web */
   procedural: boolean;
   /** labels on generated stars ("YE 6LCRMG"); the dots stay clickable without them */
@@ -43,6 +49,8 @@ export interface Settings {
   /** tint procedurally generated stars / galaxies green so they can be told from catalogue objects */
   highlightProcedural: boolean;
   bloom: boolean;
+  /** eye adaptation: a sky full of glow (a galaxy's heart, a nebula from inside) is exposed down to a readable scene */
+  autoExposure: boolean;
   /** render resolution relative to the (capped) device pixel ratio */
   renderScale: number;
   /** drop the render resolution on its own while the frame rate is low, and bring it back when it recovers */
@@ -76,14 +84,18 @@ export const DEFAULT_SETTINGS: Settings = {
   shadows: true,
   nightLight: 0.12,
   lensFlare: true,
+  lightShafts: true,
   imagery: true,
   belts: true,
+  deepCatalog: true,
   milkyWay: true,
   volumetrics: true,
+  nebulaEngine: true,
   procedural: true,
   proceduralNames: false,
   highlightProcedural: true,
   bloom: true,
+  autoExposure: true,
   renderScale: 1,
   autoResolution: true,
   fov: 50,
@@ -128,8 +140,11 @@ const PRESET_RENDER: Partial<Settings> = {
   shadows: true,
   nightLight: 1,
   lensFlare: true,
+  lightShafts: true,
   imagery: true,
+  deepCatalog: true,
   bloom: true,
+  autoExposure: true,
   exposure: 1,
   renderScale: 1,
   autoResolution: true,
@@ -140,7 +155,7 @@ export const GRAPHICS_PRESETS: Record<GraphicsPreset, Partial<Settings>> = {
   medium: { ...PRESET_DISPLAY, ...PRESET_RENDER, ringParticles: false, renderScale: 0.75 },
   low: {
     ...PRESET_DISPLAY, ...PRESET_RENDER,
-    volumetrics: false, ringParticles: false, shadows: false, lensFlare: false, bloom: false, imagery: false,
+    volumetrics: false, ringParticles: false, shadows: false, lensFlare: false, lightShafts: false, bloom: false, imagery: false, deepCatalog: false,
     renderScale: 0.6,
   },
 };

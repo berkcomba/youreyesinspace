@@ -7,6 +7,7 @@ import { ProcStars, type ProcTier } from '../galaxy/ProcStars';
 import type { NamedStarScreen } from './StarPoints';
 import { Shaders } from './shaders';
 import { better, PICK_MIN_VIS, starLook, type PickHit } from './pickHit';
+import { presetBounds } from './Bounds';
 
 /**
  * Tint used by the "highlight procedural content" setting: a green no real star or galaxy ever
@@ -45,7 +46,7 @@ export class ProcStarPoints {
 
   constructor(readonly proc: ProcStars, scene: Scene) {
     for (const tier of proc.tiers) {
-      const geo = new BufferGeometry();
+      const geo = presetBounds(new BufferGeometry());
       const pos = new BufferAttribute(tier.positions, 3); pos.setUsage(DynamicDrawUsage);
       const mag = new BufferAttribute(tier.absMags, 1); mag.setUsage(DynamicDrawUsage);
       const col = new BufferAttribute(tier.colors, 3); col.setUsage(DynamicDrawUsage);
@@ -60,6 +61,8 @@ export class ProcStarPoints {
         vertexShader: Shaders.starsVert,
         fragmentShader: Shaders.pointsFrag,
         uniforms: {
+          uDrift: { value: 0 },      // shared program with StarPoints / ClusterStarPoints: set every uniform
+          uMagBoost: { value: 0 },
           uCamPc: { value: new Vector3() },
           uPixelRatio: { value: 1 },
           uSkyRadius: { value: SKY_RADIUS_KM },

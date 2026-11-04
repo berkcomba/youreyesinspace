@@ -22,7 +22,9 @@ uniform float uHideIndex;
 uniform float uTierFade;    // whole-layer LOD fade (local index ↔ far-universe tiers)
 uniform float uNearLod;     // 1: fade out when close (a point cloud takes over), 0: keep the sprite
 uniform float uBoostMag;    // magnitude offset of the boosted visibility scale (aggregated tiers)
-uniform float uCatalogCount; // galaxies with index ≥ this are procedural
+uniform float uCatalogCount; // galaxies with index ≥ this are procedural …
+uniform vec2 uSurvey;        // … except the real survey ones in [x, y)
+uniform float uShowProc;     // 0: procedural galaxies hidden
 uniform vec4 uTint;         // rgb + strength: "procedural content" highlight
 varying vec3 vColor;
 varying float vAlpha;       // peak alpha
@@ -92,7 +94,8 @@ void main() {
   vType = gtype;
   vSeed = seed;
   vAlpha = peak;
-  if (peak < 0.002 || abs(gindex - uHideIndex) < 0.5) {
+  bool procedural = gindex >= uCatalogCount - 0.5 && (gindex < uSurvey.x - 0.5 || gindex >= uSurvey.y - 0.5);
+  if (peak < 0.002 || abs(gindex - uHideIndex) < 0.5 || (procedural && uShowProc < 0.5)) {
     gl_Position = vec4(2.0, 2.0, 2.0, 1.0);
     spritePx = 0.0;
   }
@@ -102,6 +105,6 @@ void main() {
   // cosmological redshift: light from Gpc distances arrives reddened (z ≈ 0.25 at 1 Gpc … ≫1 at the horizon)
   float redshift = smoothstep(8.0e8, 1.3e10, d);
   vColor = mix(vColor, vec3(1.0, 0.42, 0.22), redshift * 0.85);
-  vProc = gindex >= uCatalogCount - 0.5 ? uTint.a : 0.0;
+  vProc = procedural ? uTint.a : 0.0;
   #include <logdepthbuf_vertex>
 }
