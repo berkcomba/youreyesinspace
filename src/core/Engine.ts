@@ -1,5 +1,5 @@
 import {
-  ACESFilmicToneMapping, Color, DepthTexture, HalfFloatType, PerspectiveCamera, SRGBColorSpace, Scene, UnsignedIntType, Vector2, WebGLRenderTarget, WebGLRenderer,
+  ACESFilmicToneMapping, Color, DepthTexture, HalfFloatType, PerspectiveCamera, SRGBColorSpace, Scene, ShaderMaterial, UnsignedIntType, Vector2, WebGLRenderTarget, WebGLRenderer,
 } from 'three';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -66,6 +66,14 @@ export class Engine {
     this.autoExposure = new AutoExposurePass();
     this.composer.addPass(this.autoExposure);
     this.bloom = new UnrealBloomPass(new Vector2(1, 1), 0.35, 0.4, 0.92);
+    // one NaN texel in the scene (a shader blowing up at an extreme distance) would otherwise be
+    // smeared by the blur chain into a sharp black rectangle the size of the coarsest mip
+    const hp = this.bloom.materialHighPassFilter as ShaderMaterial;
+    hp.fragmentShader = hp.fragmentShader.replace(
+      'vec4 texel = texture2D( tDiffuse, vUv );',
+      'vec4 texel = texture2D( tDiffuse, vUv );\n\t\t\tif ( any( isnan( texel ) ) || any( isinf( texel ) ) ) texel = vec4( 0.0, 0.0, 0.0, 1.0 );',
+    );
+    hp.needsUpdate = true;
     this.composer.addPass(this.bloom);
     const output = new OutputPass();
     this.autoExposure.bindOutput(output);

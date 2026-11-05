@@ -92,7 +92,10 @@ void main() {
     vec3 sS = stretch(s - uBodyPos);
     float rs = length(sS);
     vec3 up = sS / max(rs, 1e-3);
-    float alt = (rs - R) / H;
+    // a shell seen from millions of km away loses the surface in float precision: a sample that
+    // lands below the ground must not blow up the column (exp(+S·|alt|) → inf, inf·0 = NaN, and the
+    // bloom then smears that one texel into a black rectangle over the frame)
+    float alt = max((rs - R) / H, 0.0);
     float dens = exp(-alt * S) * (1.0 - smoothstep(0.85, 1.0, alt));
     float mu = dot(up, L);
 
@@ -111,7 +114,7 @@ void main() {
       light = smoothstep(-0.06, 0.0, altT);
       odSun = X * (2.0 * tau0 * exp(-max(altT, 0.0) * S) - colAbove);
     }
-    odSun = min(odSun, 40.0);
+    odSun = clamp(odSun, 0.0, 40.0);
 
     float shadow = 1.0;
     for (int j = 0; j < 4; j++) {
@@ -133,6 +136,7 @@ void main() {
   float warm = clamp((col.r - col.b) / max(col.r + col.b, 1e-5), 0.0, 1.0);
   col *= mix(vec3(1.0), uSunsetColor / max(max(uSunsetColor.r, uSunsetColor.g), max(uSunsetColor.b, 1e-3)), warm * 0.3);
 
+  if (any(isnan(col)) || any(isinf(col))) col = vec3(0.0);
   gl_FragColor = vec4(col * uAlpha, 1.0);
   #include <tonemapping_fragment>
   #include <colorspace_fragment>

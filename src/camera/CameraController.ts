@@ -593,21 +593,39 @@ export class CameraController {
         const d0 = Math.max(ap.r0.length(), 1e-3);
         const dst = _standPos.sub(tgt.position);
         const d1 = Math.max(dst.length(), 1e-6);
-        const dist = Math.exp((1 - s) * Math.log(d0) + s * Math.log(d1));
+        // the height above the stand eases on a log scale (not the distance to the centre, which
+        // from far away would spend the whole flight on the approach and slam the last 1 000 km)
+        const a1 = Math.max(st.eye, 1e-3);
+        const a0 = Math.max(d0 - d1, 0) + a1;
+        const dist = d1 + Math.exp((1 - s) * Math.log(a0) + s * Math.log(a1)) - a1;
         const from = _v.copy(ap.r0).normalize();
         const to = dst.multiplyScalar(1 / d1);
         const dot = Math.min(Math.max(from.dot(to), -1), 1);
         const ang = Math.acos(dot);
         let dir: Vector3;
+        // the swing round to the stand's side is over by 70 %: the last stretch comes straight
+        // down onto it (still sliding sideways a few km up would sweep the ground past)
+        const sd = smoothstep(Math.min(1, s / 0.7));
         if (ang < 1e-4) dir = from;
         else {
           const sa = Math.sin(ang);
-          dir = _v2.copy(from).multiplyScalar(Math.sin((1 - s) * ang) / sa).addScaledVector(to, Math.sin(s * ang) / sa);
+          dir = _v2.copy(from).multiplyScalar(Math.sin((1 - sd) * ang) / sa).addScaledVector(to, Math.sin(sd * ang) / sa);
         }
-        // the last stretch comes straight down onto the stand (the log curve would still be
-        // sliding sideways a few metres up)
         this.position.copy(tgt.position).addScaledVector(dir, dist);
-        this.quaternion.copy(ap.q0).slerp(_standQ, smoothstep(Math.min(1, s * 1.25)));
+        // look down at the landing spot on the way (the ground is seen to grow, from however far
+        // we came), then pitch up onto the horizon over the last third
+        _end.copy(tgt.position).addScaledVector(to, d1);
+        const toEnd = _v.copy(_end).sub(this.position);
+        _hint.set(0, 0, -1).applyQuaternion(_standQ);
+        if (toEnd.lengthSq() > 1e-6) {
+          _hint.addScaledVector(toEnd, -_hint.dot(toEnd) / toEnd.lengthSq());
+          if (_hint.lengthSq() < 1e-9) _hint.set(0, 1, 0).applyQuaternion(_standQ);
+          _m.lookAt(_origin, toEnd, _hint.normalize());
+          _qDown.setFromRotationMatrix(_m);
+        } else _qDown.copy(_standQ);
+        const tNow = ap.t / ap.duration;
+        this.quaternion.copy(ap.q0).slerp(_qDown, smoothstep(Math.min(1, tNow * 4)));
+        this.quaternion.slerp(_standQ, smoothstep((tNow - 0.62) / 0.38));
         if (ap.t >= ap.duration) {
           this.autopilot = null;
           this.mode = 'surface';
