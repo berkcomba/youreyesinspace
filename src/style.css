@@ -427,6 +427,9 @@ input[type=range] { width: 120px; accent-color: var(--accent); }
 .tour-controls .tour-stop { margin-left: 6px; }
 .tour-controls .tour-music { font-size: 15px; line-height: 1; }
 .tour-controls .tour-music.off { color: var(--text-3); text-decoration: line-through; }
+/* on, but the browser waits for a click before it lets sound through: the note breathes */
+.tour-music.pending, .welcome-music.pending { animation: music-pending 1.8s ease-in-out infinite; }
+@keyframes music-pending { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
 
 /* progress: a hairline along the very bottom edge */
 .tour-progress { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: rgba(255, 255, 255, 0.1); overflow: hidden; pointer-events: auto; }

@@ -303,6 +303,8 @@ class App implements UIHost {
 
   /** Background music on / off (saved with the settings) */
   toggleMusic(): void {
+    // on, but the browser waited for a gesture: this click is it
+    if (this.music.pending) { this.music.kick(); return; }
     this.settings.music = !this.settings.music;
     this.applySettings();
     this.ui.showToast(this.settings.music ? _('Fon müziği açık') : _('Fon müziği kapalı'), 1600);

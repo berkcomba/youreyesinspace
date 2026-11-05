@@ -42,6 +42,8 @@ const FADE_IN_S = 2.5;
 const FADE_OUT_S = 1.2;
 /** scene key of the radio: the whole library shuffled, outside the tours and the welcome */
 const RADIO_KEY = 'radio';
+/** events that count as a user gesture for sound (touchend and click for Safari) */
+const GESTURES = ['pointerdown', 'touchend', 'click', 'keydown'] as const;
 
 export class Music {
   private readonly el = new Audio();
@@ -56,6 +58,7 @@ export class Music {
   private speaking = false;
   private fadeTimer = 0;
   private waitingForGesture = false;
+  private disarm: () => void = () => {};
   private on = true;
   private radioOn = false;
   /** shuffled deck of the radio (track indices still to play) */
@@ -198,18 +201,33 @@ export class Music {
     this.current = t;
     window.clearTimeout(this.fadeTimer);
     this.route();
+    // inside a user gesture this unlocks a context created without one (Safari insists on a
+    // synchronous call from the handler)
+    if (this.ctx && this.ctx.state !== 'running') void this.ctx.resume();
     this.el.src = `${this.baseUrl}music/${encodeURIComponent(t.file)}`;
     this.el.currentTime = 0;
     this.setGain(0, 0);
-    const started = this.el.play();
-    started.then(() => {
+    this.el.play().then(() => this.sounding(t)).catch(() => this.armGesture());
+  }
+
+  /**
+   * The element plays; the music is audible once the context runs too. Without a user gesture a
+   * browser may let the element play yet keep the context suspended — silence, and the next
+   * gesture has to unlock it.
+   */
+  private sounding(t: MusicTrack): void {
+    const ready = (): void => {
+      if (this.current !== t) return;
       this.waitingForGesture = false;
-      void this.ctx?.resume();
       this.setGain((this.speaking ? DUCKED : LEVEL) * this.vol, FADE_IN_S);
       this.setFilter(this.speaking ? MUFFLED_HZ : OPEN_HZ, 0);
       this.changed();
-      if (this.current === t) this.onStart?.(t);
-    }).catch(() => this.armGesture());
+      this.onStart?.(t);
+    };
+    const ctx = this.ctx;
+    if (!ctx || ctx.state === 'running') { ready(); return; }
+    void ctx.resume().then(() => { if (ctx.state === 'running') ready(); });
+    window.setTimeout(() => { if (ctx.state !== 'running' && this.current === t) this.armGesture(); }, 250);
   }
 
   /** Stop at the end of a scene (fades out; the radio, when on, takes over) */
@@ -261,18 +279,32 @@ export class Music {
     this.changed();
   }
 
+  /** music is on and a scene asked for it, but the browser waits for a gesture */
+  get pending(): boolean { return this.on && this.waitingForGesture; }
+
   /** Autoplay was refused: start at the first gesture */
   private armGesture(): void {
     if (this.waitingForGesture) return;
     this.waitingForGesture = true;
-    const retry = (): void => {
-      window.removeEventListener('pointerdown', retry, true);
-      window.removeEventListener('keydown', retry, true);
-      this.waitingForGesture = false;
-      if (this.key && this.on) { this.current = null; this.play(this.key, this.preferred); }
+    const retry = (e: Event): void => {
+      // a music button's own click handler starts it (otherwise the press would start and the
+      // click, a moment later, switch it off)
+      if ((e.target as Element | null)?.closest?.('[data-music-toggle]')) return;
+      this.kick();
     };
-    window.addEventListener('pointerdown', retry, true);
-    window.addEventListener('keydown', retry, true);
+    this.disarm = (): void => { for (const ev of GESTURES) window.removeEventListener(ev, retry, true); this.disarm = () => {}; };
+    for (const ev of GESTURES) window.addEventListener(ev, retry, true);
+    this.changed();
+  }
+
+  /** Start (or unlock) now — to be called from within a user gesture */
+  kick(): void {
+    this.disarm();
+    this.waitingForGesture = false;
+    if (this.ctx && this.ctx.state !== 'running') void this.ctx.resume();
+    if (!this.key || !this.on) return;
+    if (this.current && !this.el.paused) this.sounding(this.current);
+    else { this.current = null; this.play(this.key, this.preferred); }
   }
 
   /** Element → low-pass → gain → speakers (once) */

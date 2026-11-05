@@ -5,6 +5,8 @@ import { _ } from '../i18n';
 export interface MusicControl {
   readonly available: boolean;
   readonly enabled: boolean;
+  /** on, but waiting for a user gesture (the button pulses) */
+  readonly pending: boolean;
   toggle(): void;
   /** called whenever the library or the on/off state changes */
   onChange(fn: () => void): void;
@@ -46,7 +48,7 @@ export class TourPanel {
     this.build();
     if (music) {
       this.musicBtn.addEventListener('click', () => music.toggle());
-      const sync = (): void => { this.musicBtn.hidden = !music.available; this.musicBtn.classList.toggle('off', !music.enabled); };
+      const sync = (): void => { this.musicBtn.hidden = !music.available; this.musicBtn.classList.toggle('off', !music.enabled); this.musicBtn.classList.toggle('pending', music.pending); };
       music.onChange(sync);
       sync();
     }

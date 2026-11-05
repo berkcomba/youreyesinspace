@@ -270,6 +270,7 @@ export class UI {
     this.tourPanel = new TourPanel(host.tours, (show) => { if (show) { this.toggleSettings(false); this.missionPanel.toggle(false); this.lessonPanel.toggle(false); this.eventPanel.toggle(false); } }, {
       get available() { return host.music.available; },
       get enabled() { return host.music.enabled; },
+      get pending() { return host.music.pending; },
       toggle: () => host.toggleMusic(),
       onChange: (fn) => host.music.onChange(fn),
     });

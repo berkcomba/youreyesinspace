@@ -22,7 +22,7 @@ export interface WelcomeHost {
   setTourOverrides(o: { orbits?: boolean }): void;
   showBackdrop(fly: boolean): void;
   settle(frames: number, min?: number): Promise<void>;
-  music: { available: boolean; enabled: boolean; play(key: string): void; stop(): void; onChange(fn: () => void): void };
+  music: { available: boolean; enabled: boolean; pending: boolean; play(key: string): void; stop(): void; onChange(fn: () => void): void };
   toggleMusic(): void;
 }
 
@@ -78,6 +78,7 @@ export class Welcome {
     const m = this.host.music;
     this.musicBtn.hidden = !m.available;
     this.musicBtn.classList.toggle('off', !m.enabled);
+    this.musicBtn.classList.toggle('pending', m.pending);
   }
 
   /** true when this browser has not been through the welcome yet */
