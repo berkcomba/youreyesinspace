@@ -6,8 +6,8 @@ const KEY = 'yeits.welcomed';
 const FLIGHT_S = 5;
 /** slow sweep around the subject once the shot has arrived (rad/s) */
 const DRIFT = 0.012;
-/** clock rate on the Saturn page (s/s): the planet turns once in about a minute, the rings stream */
-const SATURN_RATE = 600;
+/** clock rate behind the pages (s/s): Saturn turns once in about a minute, the rings stream, Jupiter's bands roll past Io, the Earth turns beside the Moon */
+const WELCOME_RATE = 600;
 
 /** What the welcome needs from the app: the cinematic shot helpers of the tours and the backdrop */
 export interface WelcomeHost {
@@ -19,9 +19,13 @@ export interface WelcomeHost {
   goToLimb(bodyId: string, elev: number, az: number, dist: number, aimR: number, aimAz: number, seconds?: number): void;
   goToFramed(refId: string, towardId: string, dist: number, az: number, elev: number, yaw: number, pitch?: number, seconds?: number): void;
   setTourScope(ids: string[] | null): void;
-  setTourOverrides(o: { orbits?: boolean }): void;
+  setTourOverrides(o: { orbits?: boolean; fov?: number; exposure?: number }): void;
   showBackdrop(fly: boolean): void;
   settle(frames: number, min?: number): Promise<void>;
+  /** streamed imagery of a body: true once the tiles the current view needs have arrived (true when it has none) */
+  imageryLoaded(bodyId: string): boolean;
+  /** keep a body's loaded imagery from being released while the welcome is on */
+  pinImagery(bodyId: string, on: boolean): void;
   music: { available: boolean; enabled: boolean; pending: boolean; play(key: string): void; stop(): void; onChange(fn: () => void): void };
   toggleMusic(): void;
 }
@@ -30,6 +34,12 @@ export interface WelcomeHost {
 const SHOTS = ['saturn', 'moon', 'io', 'sun'] as const;
 /** warm-up: at most this many frames at each shot */
 const WARM_FRAMES = 40;
+/** warm-up: at most this long (ms) waiting for a shot's imagery tiles, all shots together */
+const IMAGERY_WAIT_MS = 7000;
+/** bodies whose real imagery the shots show large: fetched behind the loader and kept for the pages */
+const IMAGERY_BODIES = ['moon', 'io'] as const;
+/** the look every first visit shares, whatever this browser's settings say (restored on close) */
+const LOOK = { orbits: false, fov: 50, exposure: 1 };
 
 /**
  * First-visit introduction: five pages (the product, the data, what to do, who made it and why,
@@ -101,9 +111,15 @@ export class Welcome {
   async prepare(): Promise<void> {
     const h = this.host;
     if (!h.hasBody('saturn') || !h.hasBody('earth')) return;
+    for (const id of IMAGERY_BODIES) h.pinImagery(id, true);
+    const deadline = performance.now() + IMAGERY_WAIT_MS;
     for (const shot of SHOTS) {
       this.shoot(shot, 0.02);
       await h.settle(WARM_FRAMES);
+      // the Moon's far side and Io fill the frame: their real surfaces should be there when the
+      // page comes, not pop in over the procedural globe a few seconds after
+      const body = shot === 'moon' ? 'moon' : shot === 'io' ? 'io' : null;
+      while (body && h.hasBody(body) && !h.imageryLoaded(body) && performance.now() < deadline) await h.settle(6, 6);
     }
     h.setTourOverrides({});
     h.setTourScope(null);
@@ -119,7 +135,7 @@ export class Welcome {
     document.body.classList.add('welcoming');
     window.addEventListener('keydown', this.onKey, true);
     this.host.overlay.cinematic = true;
-    this.host.setTourOverrides({ orbits: false });
+    this.host.setTourOverrides(LOOK);
     this.host.music.play('welcome');
     this.go(0);
   }
@@ -150,8 +166,8 @@ export class Welcome {
     // wide screens: the panel is on the left, the subject sits right of centre (yaw); narrow
     // (portrait) screens: the panel is at the bottom, the subject smaller and above the centre
     const narrow = window.innerWidth < window.innerHeight;
-    // Saturn spins under a fixed camera; everywhere else the clock runs as the visitor had it
-    if (this.open) h.time.setRate(shot === 'saturn' ? SATURN_RATE : this.savedRate);
+    // the worlds turn under the fixed cameras; the circling backdrop runs as the visitor had it
+    if (this.open) h.time.setRate(shot === 'system' ? this.savedRate : WELCOME_RATE);
     const framed = (ref: string, toward: string, dist: number, az: number, elev: number, yaw: number): void =>
       h.goToFramed(ref, toward, narrow ? dist * 1.6 : dist, az, elev, narrow ? 0 : yaw, narrow ? 11 : 0, seconds);
     switch (shot) {
@@ -178,7 +194,7 @@ export class Welcome {
         h.showBackdrop(true);
         return;
     }
-    h.setTourOverrides({ orbits: false });
+    h.setTourOverrides(LOOK);
     h.setTourScope([]);
     // once there, a slow sweep keeps the picture alive while the visitor reads
     if (!this.open) return;
@@ -200,6 +216,7 @@ export class Welcome {
     h.time.setRate(this.savedRate);
     h.setTourOverrides({});
     h.setTourScope(null);
+    for (const id of IMAGERY_BODIES) h.pinImagery(id, false);
     // the last page already pulled back to the system; from any other page, fly there now
     if (this.pages[this.page]?.dataset.shot !== 'system') h.showBackdrop(true);
     this.page = -1;

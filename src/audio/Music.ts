@@ -92,8 +92,16 @@ export class Music {
     for (const fn of this.listeners) fn();
   }
 
+  /** resolves once the library has been fetched (or failed to) */
+  private loaded: Promise<void> = Promise.resolve();
+
   /** The library (empty when there is no music.json: everything then stays silent) */
-  async load(): Promise<void> {
+  load(): Promise<void> {
+    this.loaded = this.fetchLibrary();
+    return this.loaded;
+  }
+
+  private async fetchLibrary(): Promise<void> {
     try {
       const r = await fetch(`${this.baseUrl}music/music.json?v=${__BUILD_ID__}`);
       if (!r.ok) return;
@@ -281,6 +289,30 @@ export class Music {
 
   /** music is on and a scene asked for it, but the browser waits for a gesture */
   get pending(): boolean { return this.on && this.waitingForGesture; }
+
+  /**
+   * Would the browser let the music start right now, without a gesture? Tried on the actual
+   * element at zero gain (and the context, which may stay suspended on its own). True as well
+   * when music is off or there is none: nothing would be missed.
+   */
+  async probe(): Promise<boolean> {
+    await this.loaded;
+    if (!this.on || !this.tracks.length || this.current) return true;
+    const t = this.trackFor('welcome') ?? this.tracks[0];
+    this.route();
+    this.setGain(0, 0);
+    this.el.src = `${this.baseUrl}music/${encodeURIComponent(t.file)}`;
+    try {
+      await this.el.play();
+    } catch {
+      return false;
+    }
+    this.el.pause();
+    const ctx = this.ctx;
+    if (!ctx) return true;
+    if (ctx.state !== 'running') { try { await ctx.resume(); } catch { /* blocked */ } }
+    return ctx.state === 'running';
+  }
 
   /** Autoplay was refused: start at the first gesture */
   private armGesture(): void {

@@ -223,6 +223,14 @@ export class TileGlobe {
   readonly group = new Group();
   /** Ready once the level-0 tiles are on the GPU (before that the procedural globe is shown) */
   active = false;
+  /** no pruning while set (a scene that will come back to this view soon) */
+  pinned = false;
+  /** every tile the last frame drew has its day texture (nothing left to pop in) */
+  get loaded(): boolean {
+    if (!this.active) return false;
+    for (const n of this.prevRendered) if (n.day.status !== 'ready') return false;
+    return true;
+  }
   /** Tiles drawn last frame */
   drawn = 0;
 
@@ -385,7 +393,7 @@ export class TileGlobe {
     const tmp = this.prevRendered; this.prevRendered = rendered; this.rendered = tmp;
 
     tileLoader.flush(now);
-    if (this.frame % 60 === 0) this.prune(now);
+    if (this.frame % 60 === 0 && !this.pinned) this.prune(now);
   }
 
   hide(): void {
