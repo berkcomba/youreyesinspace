@@ -777,8 +777,12 @@ export class BodyView {
     // wall-clock seconds: granulation, spicules and prominences keep moving while the
     // simulation clock is paused, and do not strobe when it runs a million times faster
     const realTime = (performance.now() * 1e-3) % 86400;
+    // simulation hours wrapped on the CPU: the cloud and weather shaders wrap at the same period
+    // anyway, and a GPU that evaluates the uniform at reduced precision would otherwise see the
+    // ~235 000 h since J2000 in steps of whole hours (the decks jump about)
+    const wrapped = time % 16384;
     if (this.surfaceMat) {
-      this.surfaceMat.uniforms.uTime.value = time;
+      this.surfaceMat.uniforms.uTime.value = wrapped;
       if (this.surfaceMat.uniforms.uRealTime) this.surfaceMat.uniforms.uRealTime.value = realTime;
       if (this.bakeKind) {
         const now = performance.now();
@@ -791,7 +795,7 @@ export class BodyView {
     }
     if (this.coronaMat) this.coronaMat.uniforms.uRealTime.value = realTime;
     if (this.cloudsMat && b.data.clouds) {
-      this.cloudsMat.uniforms.uTime.value = time;
+      this.cloudsMat.uniforms.uTime.value = wrapped;
       // ground-scale detail under and just above the deck
       const deck = b.data.clouds.height * b.radius;
       this.cloudsMat.uniforms.uNear.value = 1 - smooth01((dist - b.radius - deck * 3) / (deck * 25));
@@ -799,7 +803,7 @@ export class BodyView {
       const f = this.cloudFade * this.cloudFade * (3 - 2 * this.cloudFade);
       this.cloudsMat.uniforms.uOpacity.value = b.data.clouds.opacity * f;
     }
-    if (this.tiles) this.tiles.setTime(time);
+    if (this.tiles) this.tiles.setTime(wrapped);
 
     // Imagery tiles take over from the procedural globe as soon as the base level is loaded
     if (this.tiles && this.surface) {
