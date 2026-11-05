@@ -16,12 +16,18 @@ export type TourTarget =
   | { kind: 'star'; ref: string }
   | { kind: 'blackhole'; ref: string }
   | { kind: 'landmark'; ref: string }
-  | { kind: 'galaxy'; ref: string };
+  | { kind: 'galaxy'; ref: string }
+  /** a planet of another star, by its NASA Exoplanet Archive name (e.g. 'TRAPPIST-1 e'); the step plays in that system */
+  | { kind: 'exoplanet'; ref: string };
 
 /**
  * Something that happens while a step is narrated. `at` is the index of the sentence (of the
  * source text, 0-based) at whose start the cue fires; the player maps it onto the spoken locale.
  * `delay` (seconds) holds it back further into that sentence.
+ *
+ * Body references (`ref`, `toward`, `from`, `to`, `a`, `b`) are Solar System ids; in an exoplanet
+ * step they may also be archive planet names ('TRAPPIST-1 f') or 'star' for the host star.
+ * `compare` may name a Solar System body from any system: a true-scale copy is brought along.
  */
 export type TourCue = { delay?: number } & (
   /** fade the cloud layer in/out (e.g. strip Venus to show the radar surface) */
@@ -158,6 +164,8 @@ export interface TourDef {
   audio?: string;
   /** at the end stay on the scene's date at 1× instead of restoring the visitor's clock (events) */
   keepClock?: boolean;
+  /** background music while the tour plays: a track file name under public/music (default: picked from the library by the tour id) */
+  music?: string;
 }
 
 const body = (ref: string): TourTarget => ({ kind: 'body', ref });
@@ -165,6 +173,7 @@ const star = (ref: string): TourTarget => ({ kind: 'star', ref });
 const bh = (ref: string): TourTarget => ({ kind: 'blackhole', ref });
 const lm = (ref: string): TourTarget => ({ kind: 'landmark', ref });
 const gal = (ref: string): TourTarget => ({ kind: 'galaxy', ref });
+const exo = (ref: string): TourTarget => ({ kind: 'exoplanet', ref });
 
 /* cue shorthands */
 type CardOpts = Omit<Extract<TourCue, { action: 'card' }>, 'at' | 'action'>;
@@ -184,12 +193,14 @@ const shot = (at: number, ref: string, toward: string, dist: number, o: { az?: n
 const dolly = (at: number, r: number): TourCue => ({ at, action: 'dolly', rate: r });
 const drift = (at: number, r: number): TourCue => ({ at, action: 'drift', rate: r });
 const fov = (at: number, deg: number, seconds?: number): TourCue => ({ at, action: 'fov', deg, seconds });
+const fill = (at: number, on: boolean): TourCue => ({ at, action: 'fill', on });
+const lookFrom = (at: number, ref: string, toward: string[], o: { alt?: number; fov?: number } = {}): TourCue => ({ at, action: 'lookFrom', ref, toward, ...o });
 type MeteorOpts = Omit<Extract<TourCue, { action: 'meteors'; on: true }>, 'at' | 'action' | 'on'>;
 const meteors = (at: number, m: MeteorOpts): TourCue => ({ at, action: 'meteors', on: true, ...m });
 const unmeteors = (at: number): TourCue => ({ at, action: 'meteors', on: false });
 
 /** cue shorthands shared with the Events scenes (src/data/events.ts) */
-export const cues = { body, star, bh, lm, gal, card, uncard, rate, overview, ret, pin, unpin, clouds, compare, uncompare, vantage, pulse, shot, dolly, drift, fov, meteors, unmeteors };
+export const cues = { body, star, bh, lm, gal, exo, card, uncard, rate, overview, ret, pin, unpin, clouds, compare, uncompare, vantage, pulse, shot, dolly, drift, fov, fill, lookFrom, meteors, unmeteors };
 
 /* picture credits (not translated) */
 const NASA = 'NASA';
@@ -811,6 +822,122 @@ export const TOURS: TourDef[] = [
         ], orbitRate: 0.03 },
     ],
   },
+
+  {
+    id: 'exoplanets',
+    title: 'Öte Gezegenler',
+    summary: 'Camdan yağmur, lav okyanusları, yedi dünyalı bir cüce: sekiz yıldıza uçup orada bulduklarımıza bakıyoruz.',
+    steps: [
+      { id: 'intro', target: body('earth'), text: 'Öte gezegenler turuna hoş geldiniz. Otuz yıl önce Güneş Sistemi dışında tek bir gezegen bile bilmiyorduk; bugün altı bine yakın dünya tanıyoruz. Bu turda sekiz yıldıza uçacağız ve orada bulduklarımıza bakacağız: camdan yağmur yağan bir gezegen, yıldızına değecek kadar yakın bir gaz devi, yedi kayaç dünyadan oluşan minik bir aile. Göreceğiniz her şey gerçek ölçümlere dayanıyor: yörüngeler, boyutlar ve sıcaklıklar. Yüzeyler ise bilgisayarın tahmini. Kemerlerinizi bağlayın; ilk yıldızımız elli ışık yılı uzakta.',
+        cues: [
+          card(1, { big: '~6.000', title: 'Bilinen öte gezegen', text: 'İlki bin dokuz yüz doksan beşte. Bugün her hafta yenileri ekleniyor.' }),
+          uncard(3),
+          dolly(4, 0.12),
+        ], dwell: 1 },
+      { id: '51peg', target: exo('51 Peg b'), text: 'Elli bir Pegasi b. Bin dokuz yüz doksan beşte Michel Mayor ve Didier Queloz bu Güneş benzeri yıldızın hafifçe sallandığını fark etti: görünmez bir gezegen onu çekiştiriyordu. Jüpiter\'in yarısı kadar kütleli bu dev, yıldızına Merkür\'ün Güneş\'e olduğundan yedi kat daha yakın ve bir turu yalnızca dört gün sürüyor. Kimse böyle bir şey beklemiyordu; gaz devlerinin Jüpiter gibi uzakta ve yavaş olması gerekiyordu. Sıcak Jüpiter kavramı o gece doğdu. Yirmi dört yıl sonra bu keşif Nobel Fizik Ödülü\'nü kazandı.',
+        cues: [
+          card(1, { big: '1995', title: 'İlk keşif', text: 'Haute-Provence Gözlemevi; yıldızın saniyede elli altı metrelik sallantısından.' }),
+          rate(1, 4e4),
+          overview(1, '51 Peg b', 6),
+          uncard(3),
+          ret(3),
+          rate(3, 1),
+          compare(3, 'jupiter'),
+          uncompare(5),
+          card(5, { image: 'exo-51peg.jpg', source: 'ESO/M. Kornmesser/Nick Risinger (CC BY 4.0)', title: '51 Pegasi b', text: 'Sanatçı çizimi: ilk sıcak Jüpiter, yıldızına dört günde bir tur atıyor.' }),
+        ], dwell: 3 },
+      { id: 'hd209458', target: exo('HD 209458 b'), text: 'HD iki yüz dokuz bin dört yüz elli sekiz b, takma adıyla Osiris. Bin dokuz yüz doksan dokuzda yıldızının önünden geçerken yakalanan ilk gezegen oldu: yıldızın ışığı her üç buçuk günde bir yüzde bir buçuk kararıyordu. Şu an tam o anı izliyorsunuz; gezegen bir siluet gibi yıldızının önünde. Bu küçücük kararma, Kepler ve TESS uzay teleskoplarının binlerce dünya bulmasını sağlayan yöntemin ta kendisi. Geçiş sırasında yıldız ışığı gezegenin atmosferinden süzülür ve Hubble bu ışıkta sodyum, hidrojen ve oksijen izleri buldu. Gezegen o kadar sıcak ki atmosferi bir kuyruklu yıldız gibi uzaya kaçıyor; her saniye on bin ton.',
+        cues: [
+          fill(0, false),
+          shot(0, 'HD 209458 b', 'star', 9, { az: 4, elev: 3, seconds: 7 }),
+          card(3, { big: '%1,5', title: 'Işığın kararması', text: 'Üç buçuk günde bir, üç saat süren bir gölge. Kepler aynı yöntemle iki bin yedi yüz gezegen buldu.' }),
+          uncard(4),
+          card(5, { big: '10.000 ton / s', title: 'Buharlaşan atmosfer', text: 'Hidrojen zarfı yüz binlerce kilometre uzanır; yine de gezegen trilyonlarca yıl dayanır.' }),
+        ], orbitRate: 0, dwell: 3 },
+      { id: 'hd189733', target: exo('HD 189733 b'), text: 'HD yüz seksen dokuz bin yedi yüz otuz üç b, altmış dört ışık yılı uzakta. Rengi ölçülen ilk öte gezegen: Hubble, yansıttığı ışıktan onun derin bir kobalt mavisi olduğunu buldu. Ama bu mavi okyanuslardan gelmiyor. Atmosferinde silikat tanecikleri, yani cam parçacıkları yüzüyor ve ışığı Dünya\'nın gökyüzü gibi mavi saçıyor. Sıcaklık bin dereceye yakın, rüzgârlar saatte sekiz bin kilometreye varıyor. Burada yağmur yana yağar ve camdan.',
+        cues: [
+          card(1, { image: 'exo-hd189733.jpg', source: 'NASA/ESA/M. Kornmesser', title: 'Kobalt mavisi', text: 'Sanatçı çizimi: Hubble\'ın ölçtüğü rengiyle HD 189733 b.' }),
+          uncard(3),
+          vantage(3, 8, 70, 3.2, undefined, 8),
+          card(4, { big: '8.000 km/sa', title: 'Rüzgâr', text: 'Ses hızının yedi katı; gündüz yüzünün ısısı gece yüzüne böyle taşınır.' }),
+        ], dwell: 3 },
+      { id: 'kelt9', target: exo('KELT-9 b'), text: 'KELT dokuz b: bilinen en sıcak gezegen. Yıldızı Güneş\'ten neredeyse iki kat sıcak, mavi-beyaz bir A yıldızı ve gezegen ona otuz altı saatte bir tur atacak kadar yakın. Gündüz yüzü dört bin altı yüz Kelvin\'e ulaşıyor; bu, birçok yıldızdan daha sıcak. O sıcaklıkta moleküller parçalanıyor: su ve karbondioksit var olamaz, atmosfer atomik demir ve titanyum buharıyla dolu. Yıldızın morötesi ışınımı gezegeni her saniye binlerce ton eritiyor. Üstelik yörüngesi yıldızının kutuplarının üzerinden geçiyor; sanki yanlış yöne dönen bir kuyruklu yıldız gibi.',
+        cues: [
+          shot(0, 'KELT-9 b', 'star', 7, { az: 38, elev: 14, seconds: 7 }),
+          card(2, { big: '4.600 K', title: 'Gündüz yüzü', text: 'Güneş\'in yüzeyi beş bin sekiz yüz, kırmızı cüceler üç bin Kelvin. Bu gezegen aradadır.' }),
+          uncard(4),
+          card(5, { image: 'exo-kelt9.jpg', source: JPLC, title: 'KELT-9 b', text: 'Sanatçı çizimi: mavi-beyaz yıldızının yanında buharlaşan dev.' }),
+        ], dwell: 3 },
+      { id: 'hd80606', target: exo('HD 80606 b'), text: 'HD seksen bin altı yüz altı b, Güneş Sistemi\'nde eşi olmayan bir yörüngede. Dışmerkezliği sıfır virgül doksan üç: yıldızına en uzakken neredeyse Dünya kadar uzak, en yakınken Merkür\'ün yörüngesinin onda biri kadar yakın. Yüz on bir günlük yörüngesinin büyük bölümünü soğukta geçirir, sonra yıldızının yanından bir kuyruklu yıldız gibi fırlar. Spitzer teleskobu bu geçişi izledi: atmosfer altı saatte beş yüz dereceden bin iki yüz dereceye ısındı. Geçişten sonra gezegen çapında, ses hızının birkaç katı hızda fırtınalar şekillenir. Muhtemelen uzaktaki eş yıldız HD seksen bin yedi onu bu yörüngeye itti.',
+        cues: [
+          rate(0, 4e5),
+          overview(0, 'HD 80606 b', 6),
+          card(1, { big: 'e = 0,93', title: 'Dışmerkezlik', text: 'Dünya için sıfır virgül sıfır bir yedi, Halley kuyruklu yıldızı için sıfır virgül doksan yedi.' }),
+          uncard(2),
+          card(3, { image: 'exo-hd80606.jpg', source: 'NASA/JPL-Caltech/J. Langton (UC Santa Cruz)', title: 'Altı saatlik yaz', text: 'Yakın geçiş sırasında atmosferin simülasyonu: ısı dalgası gezegeni sarıyor.' }),
+          uncard(5),
+          ret(5),
+          rate(5, 1),
+        ], dwell: 3 },
+      { id: '55cnc', target: exo('55 Cnc e'), text: 'Elli beş Cancri e, kırk bir ışık yılı uzakta; yıldızı çıplak gözle görülebiliyor. Dünya\'nın neredeyse iki katı çapında, sekiz katı kütlesinde bir süper Dünya. Ama yılı yalnızca on yedi saat sürüyor. Yıldızına o kadar yakın ki bir yüzü hep ona dönük ve gündüz tarafı iki bin dereceyle erimiş bir lav okyanusu. Dünya ile karşılaştırın: yaklaşık iki kat daha geniş, ama kayadan buharlaşmış minerallerle sarılı. Webb teleskobu iki bin yirmi dörtte burada karbondioksit ve karbonmonoksitten oluşan kalın bir atmosfer saptadı; lav okyanusunun soluduğu bir atmosfer.',
+        cues: [
+          rate(2, 8e3),
+          overview(2, '55 Cnc e', 4),
+          ret(3),
+          rate(3, 1),
+          card(3, { big: '2.000 °C', title: 'Gündüz yüzü', text: 'Bazalt bin iki yüz derecede erir; burada kayalar buharlaşır.' }),
+          uncard(4),
+          compare(4, 'earth'),
+          uncompare(5),
+          card(5, { image: 'exo-55cnc.jpg', source: JPLC, title: 'Lav dünyası', text: 'Sanatçı çizimi: gündüz yüzü akkor, gece yüzü kabuk bağlamış.' }),
+        ], dwell: 3 },
+      { id: 'kepler90', target: exo('KOI-351 h'), text: 'Kepler doksan, iki bin sekiz yüz ışık yılı uzakta; Güneş\'e benzer bir yıldız ve tam sekiz gezegen. Güneş Sistemi\'yle berabere: bilinen en kalabalık gezegen sistemi. Düzeni de bizimkine benziyor: içte küçük kayaç dünyalar, dışta gaz devleri. Fark şu ki hepsi Dünya\'nın yörüngesinin içine sığıyor; en dıştaki Kepler doksan h, yıldızına bizim Güneş\'e olduğumuz kadar uzak ve Jüpiter boyutunda. Sekizinci gezegen Kepler doksan i, iki bin on yedide Google\'ın bir sinir ağı Kepler verilerindeki zayıf bir sinyali taradığında bulundu: ilk makine öğrenmesi keşfi. Bu sıkışık sistem bize gezegenlerin doğduktan sonra içeriye göç edebildiğini söylüyor.',
+        cues: [
+          rate(0, 3e5),
+          overview(0, 'KOI-351 h', 7),
+          card(1, { big: '8', title: 'Gezegen', text: 'b, c, i, d, e, f, g, h: sekizi de geçiş yöntemiyle, Kepler teleskobuyla.' }),
+          uncard(3),
+          card(4, { big: '2017', title: 'Yapay zekâ keşfi', text: 'Kepler-90 i: Dünya\'dan biraz büyük, yüzeyi dört yüz derece; sinyali insan gözünden kaçmıştı.' }),
+          uncard(5),
+          ret(5),
+          rate(5, 1),
+        ], show: ['KOI-351 b', 'KOI-351 c', 'Kepler-90 i', 'KOI-351 d', 'KOI-351 e', 'KOI-351 f', 'KOI-351 g'], dwell: 3 },
+      { id: 'trappist', target: exo('TRAPPIST-1 e'), text: 'TRAPPIST bir: kırk ışık yılı uzakta, Jüpiter\'den çok az daha büyük, soğuk bir kırmızı cüce. Ve etrafında yedi tane Dünya boyutunda kayaç gezegen. Hepsi yıldıza Merkür\'ün Güneş\'e olduğundan daha yakın; en dıştakinin bir turu yalnızca on dokuz gün sürüyor. Üçü yaşanabilir bölgede: e, f ve g. Şimdi e\'nin üzerindesiniz; komşu gezegen f gökyüzünde Ay kadar büyük görünüyor, gezegenler birbirlerine o kadar yakın ki kıtaları seçebilirdiniz. Yıldız kıpkırmızı ve Güneş\'in gökyüzümüzde kapladığının dört katı genişlikte duruyor. Webb teleskobu bu dünyaların atmosferini tek tek ölçüyor; en içteki ikisinde kalın bir atmosfer bulamadı. Şimdi sıra e\'de.',
+        cues: [
+          card(1, { image: 'exo-trappist.jpg', source: JPLC, title: 'Yedi dünya', text: 'Sanatçı çizimi: b\'den h\'ye, ölçülen boyut ve yoğunluklarıyla.' }),
+          rate(1, 5e4),
+          overview(1, 'TRAPPIST-1 h', 6),
+          uncard(3),
+          rate(4, 1),
+          lookFrom(4, 'TRAPPIST-1 e', ['TRAPPIST-1 f'], { alt: 400, fov: 7 }),
+          lookFrom(5, 'TRAPPIST-1 e', ['star'], { alt: 400, fov: 7 }),
+          ret(6),
+          compare(7, 'earth'),
+        ], show: ['TRAPPIST-1 b', 'TRAPPIST-1 c', 'TRAPPIST-1 d', 'TRAPPIST-1 f', 'TRAPPIST-1 g', 'TRAPPIST-1 h'], dwell: 4 },
+      { id: 'proxima', target: exo('Proxima Cen b'), text: 'Ve en yakın komşumuz. Proxima Centauri b, Güneş\'e en yakın yıldızın etrafında, dört virgül iki ışık yılı uzakta. Dünya kütlesinde ve yaşanabilir bölgede; yıldızına on bir günde bir tur atıyor. Ama yıldızı huysuz bir kırmızı cüce: parlamaları Dünya\'nın gördüğünün yüzlerce katı radyasyon püskürtür ve gezegenin atmosferini çoktan sıyırmış olabilir. Yıldız gökyüzünde kıpkızıl ve devasa, ama gün ışığı Dünya\'nın yalnızca yüzde altmış beşi. Yakın zamanda aynı sistemde ikinci bir gezegen onaylandı: Proxima d, Mars\'tan daha hafif. Bugünkü en hızlı sondamızla buraya yolculuk yetmiş bin yıl sürerdi; Breakthrough Starshot\'ın lazerli yelkenleri bunu yirmi yıla indirmeyi hayal ediyor.',
+        cues: [
+          card(1, { image: 'proxima.jpg', source: ESO, title: 'Proxima b', text: 'Sanatçı çizimi: yıldızına on bir günde bir tur atan, Dünya kütlesinde bir gezegen.' }),
+          rate(2, 5e4),
+          overview(2, 'Proxima Cen b', 5),
+          uncard(3),
+          ret(4),
+          rate(4, 1),
+          lookFrom(4, 'Proxima Cen b', ['star'], { alt: 400, fov: 7 }),
+          ret(5),
+          card(6, { big: '70.000 yıl', title: 'Voyager hızıyla', text: 'Işık için dört yıl, bizim için binlerce kuşak.' }),
+        ], show: ['Proxima Cen d'], dwell: 3 },
+      { id: 'kepler452', target: exo('Kepler-452 b'), text: 'Son durağımız: Kepler dört yüz elli iki b, yaklaşık bin sekiz yüz ışık yılı uzakta. Yıldızı Güneş\'in neredeyse ikizi; biraz daha yaşlı, biraz daha parlak. Gezegen yıldızına bizim Güneş\'e olduğumuz uzaklıkta ve yılı üç yüz seksen beş gün. Dünya\'dan yüzde altmış daha geniş; kayaç mı, yoksa kalın bir gaz zarfı mı taşıyor, bilmiyoruz. Keşfedildiğinde Dünya\'nın büyük ve yaşlı kuzeni diye anıldı. Bir buçuk milyar yıl daha yaşlı bu dünyada, eğer yaşam varsa, yavaşça parlayan yıldızı onu bizden önce kavuruyor: Dünya\'nın geleceğine açılan bir pencere. Altı bin gezegen, otuz yılda. Hiçbiri henüz ikinci bir Dünya değil; ama her biri bizim ne kadar sıra dışı ya da ne kadar sıradan olduğumuzu biraz daha anlatıyor. Öte gezegenler turu sona erdi.',
+        cues: [
+          card(1, { image: 'exo-kepler452.jpg', source: 'NASA/Ames/JPL-Caltech/T. Pyle', title: 'Dünya ve kuzeni', text: 'Sanatçı çizimi: Dünya ile Kepler-452 b yan yana.' }),
+          uncard(2),
+          compare(3, 'earth'),
+          uncompare(5),
+          card(6, { big: '~6.000', title: 'Bilinen öte gezegen', text: 'Otuz yılda. PLATO ve Roman teleskopları önümüzdeki on yılda on binlercesini ekleyecek.' }),
+          uncard(7),
+          dolly(7, 0.1),
+        ], dwell: 5 },
+    ],
+  },
 ];
 
 /* ------------------------------------------------------------------------------------------ */
@@ -909,6 +1036,19 @@ const EXTRAS: Record<string, Record<string, StepExtras>> = {
     m87: { title: 'M87', kicker: 'Virgo Kümesi\'nin devi', facts: [['Uzaklık', '55 milyon ışık yılı'], ['Tip', 'Dev eliptik'], ['Küresel küme', '12 000+'], ['Kara delik', '6,5 milyar Güneş'], ['Jet', '5 000 ışık yılı']] },
     sombrero: { title: 'Sombrero Galaksisi', kicker: 'Geniş kenarlı şapka', facts: [['Uzaklık', '29 milyon ışık yılı'], ['Eğim', '~6° — neredeyse kenardan'], ['Küresel küme', '~2 000'], ['Kara delik', '~1 milyar Güneş'], ['Katalog', 'M104']] },
     antennae: { title: 'Antenler', kicker: 'Çarpışan iki galaksi', facts: [['Uzaklık', '45 milyon ışık yılı'], ['Başlangıç', '~600 milyon yıl önce'], ['Kuyruklar', 'Yüz binlerce ışık yılı'], ['Yıldız oluşumu', 'Patlama hâlinde'], ['Son', 'Tek eliptik galaksi']] },
+  },
+  exoplanets: {
+    intro: { title: 'Öte Gezegenler', kicker: 'Başka güneşlerin dünyaları', facts: [['İlk keşif', '1995'], ['Bilinen', '~6 000 gezegen'], ['Yöntem', 'Geçiş · dikine hız · görüntüleme'], ['Bu turda', '8 yıldız, 11 durak']] },
+    '51peg': { title: '51 Pegasi b', kicker: 'İlk sıcak Jüpiter', facts: [['Uzaklık', '50 ışık yılı'], ['Yörünge', '4,23 gün'], ['Kütle', 'Jüpiter\'in %46\'sı'], ['Sıcaklık', '~1 300 K'], ['Nobel', '2019, Mayor & Queloz']] },
+    hd209458: { title: 'HD 209458 b', kicker: 'Osiris: ilk geçiş', facts: [['Uzaklık', '157 ışık yılı'], ['Yörünge', '3,52 gün'], ['Kararma', '%1,5'], ['Yarıçap', 'Jüpiter\'in 1,4 katı'], ['Kayıp', '~10 000 ton / saniye']] },
+    hd189733: { title: 'HD 189733 b', kicker: 'Camdan yağmur', facts: [['Uzaklık', '64 ışık yılı'], ['Yörünge', '2,22 gün'], ['Renk', 'Kobalt mavisi, 2013'], ['Rüzgâr', '~8 000 km/sa'], ['Sıcaklık', '~1 200 K']] },
+    kelt9: { title: 'KELT-9 b', kicker: 'Bilinen en sıcak gezegen', facts: [['Uzaklık', '670 ışık yılı'], ['Yörünge', '36 saat'], ['Gündüz yüzü', '~4 600 K'], ['Yıldız', 'A sınıfı, ~10 000 K'], ['Atmosfer', 'Demir ve titanyum buharı']] },
+    hd80606: { title: 'HD 80606 b', kicker: 'Kuyruklu yıldız gibi bir gezegen', facts: [['Uzaklık', '217 ışık yılı'], ['Yörünge', '111 gün'], ['Dışmerkezlik', '0,93'], ['Yakın geçiş', '0,03 AU'], ['Isınma', '500 → 1 200 °C, 6 saat']] },
+    '55cnc': { title: '55 Cancri e', kicker: 'Lav okyanusu', facts: [['Uzaklık', '41 ışık yılı'], ['Yörünge', '17,7 saat'], ['Yarıçap', 'Dünya\'nın 1,9 katı'], ['Kütle', 'Dünya\'nın 8 katı'], ['Gündüz yüzü', '~2 000 °C']] },
+    kepler90: { title: 'Kepler-90', kicker: 'Sekiz gezegenli minyatür', facts: [['Uzaklık', '~2 800 ışık yılı'], ['Gezegen', '8'], ['Dış sınır', '0,97 AU'], ['Kepler-90 i', '2017, sinir ağı'], ['Yıldız', 'G sınıfı, Güneş\'in 1,2 katı']] },
+    trappist: { title: 'TRAPPIST-1', kicker: 'Yedi dünyalı cüce', facts: [['Uzaklık', '40 ışık yılı'], ['Yıldız', 'M8, 2 566 K'], ['Gezegen', '7, hepsi kayaç'], ['Yaşanabilir', 'e · f · g'], ['Dış yörünge', '18,8 gün']] },
+    proxima: { title: 'Proxima Centauri b', kicker: 'En yakın öte gezegen', facts: [['Uzaklık', '4,24 ışık yılı'], ['Yörünge', '11,2 gün'], ['Kütle', '≥ 1,07 Dünya'], ['Işınım', 'Dünya\'nın %65\'i'], ['Keşif', '2016, ESO']] },
+    kepler452: { title: 'Kepler-452 b', kicker: 'Dünya\'nın yaşlı kuzeni', facts: [['Uzaklık', '~1 800 ışık yılı'], ['Yörünge', '385 gün'], ['Yarıçap', 'Dünya\'nın 1,6 katı'], ['Yıldız', 'G2, 6 milyar yıl'], ['Keşif', '2015, Kepler']] },
   },
 };
 for (const t of TOURS) for (const s of t.steps) { const e = EXTRAS[t.id]?.[s.id]; if (e) Object.assign(s, e); }

@@ -1,6 +1,15 @@
 import type { TourCard, TourPlayer, TourState } from '../core/TourPlayer';
 import { _ } from '../i18n';
 
+/** what the music button needs of the player (src/audio/Music.ts) */
+export interface MusicControl {
+  readonly available: boolean;
+  readonly enabled: boolean;
+  toggle(): void;
+  /** called whenever the library or the on/off state changes */
+  onChange(fn: () => void): void;
+}
+
 function $<T extends HTMLElement>(id: string): T {
   const el = document.getElementById(id);
   if (!el) throw new Error(`Missing element #${id}`);
@@ -17,6 +26,7 @@ export class TourPanel {
   private readonly subtitle = $('tour-subtitle');
   private readonly fill = $('tour-progress-fill');
   private readonly pauseBtn = $<HTMLButtonElement>('tour-pause');
+  private readonly musicBtn = $<HTMLButtonElement>('tour-music');
   private readonly btn = $<HTMLButtonElement>('btn-tours');
   private readonly card = $('tour-card');
   private readonly cardImg = $<HTMLImageElement>('tour-card-img');
@@ -32,8 +42,14 @@ export class TourPanel {
   private cardHideTimer = 0;
   private hudTimer = 0;
 
-  constructor(private readonly player: TourPlayer, private readonly onToggle: (show: boolean) => void) {
+  constructor(private readonly player: TourPlayer, private readonly onToggle: (show: boolean) => void, music?: MusicControl) {
     this.build();
+    if (music) {
+      this.musicBtn.addEventListener('click', () => music.toggle());
+      const sync = (): void => { this.musicBtn.hidden = !music.available; this.musicBtn.classList.toggle('off', !music.enabled); };
+      music.onChange(sync);
+      sync();
+    }
     $('tours-close').addEventListener('click', () => this.toggle(false));
     $('tour-prev').addEventListener('click', () => player.prev());
     $('tour-next').addEventListener('click', () => player.next());

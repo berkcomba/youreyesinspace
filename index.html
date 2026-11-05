@@ -47,7 +47,7 @@
         <div class="brand">
           <img id="brand-logo" class="brand-mark" src="/logo-white.png" alt="Your Eyes In Space" role="button" tabindex="0" data-i18n-title title="Hakkında, yazar ve geri bildirim" />
           <span class="brand-name">YOUR EYES IN SPACE</span>
-          <button class="brand-version" data-changelog data-i18n-title title="Yenilikler">v 0.8</button>
+          <button class="brand-version" data-changelog data-i18n-title title="Yenilikler">v 0.9.1</button>
           <a class="brand-stream" href="/?stream" data-i18n-title title="Yayıncı modu: izleyicilerle birlikte uzay seferi">Stream mode</a>
           <span id="brand-sub" class="brand-sub" data-i18n>Güneş Sistemi</span>
         </div>
@@ -93,6 +93,28 @@
         <dl id="info-body" class="info-grid"></dl>
         <p id="info-desc" class="info-desc"></p>
       </aside>
+
+      <!-- Right, under the settings button: the radio (only while the radio setting is on) -->
+      <div id="radio" class="radio" hidden>
+        <button id="radio-disc" class="radio-disc" data-i18n-title title="Radyo" aria-expanded="false">
+          <span class="radio-platter"><span class="radio-vinyl"></span><span class="radio-sheen"></span></span>
+        </button>
+        <div class="radio-body">
+          <div class="radio-meta">
+            <div class="radio-kicker" data-i18n>Radyo</div>
+            <div id="radio-title" class="radio-title"></div>
+            <div id="radio-artist" class="radio-artist"></div>
+          </div>
+          <div class="radio-ctrl">
+            <button id="radio-play" class="radio-btn" data-i18n-title title="Duraklat / sürdür">
+              <svg class="ic-pause" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 2v8M8.5 2v8" /></svg>
+              <svg class="ic-play" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 2v8l6-4z" /></svg>
+            </button>
+            <button id="radio-next" class="radio-btn" data-i18n-title title="Sonraki şarkı"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 2v8l5.5-4z" /><path d="M9.5 2v8" /></svg></button>
+            <input id="radio-vol" class="radio-vol" type="range" min="0" max="1" step="0.02" data-i18n-title title="Ses düzeyi" aria-label="Volume" />
+          </div>
+        </div>
+      </div>
 
       <!-- Right: settings -->
       <aside id="settings" class="panel" hidden>
@@ -200,6 +222,7 @@
             <button id="tour-prev" data-i18n-title title="Önceki durak">◀&#xFE0E;</button>
             <button id="tour-pause" data-i18n-title title="Duraklat / sürdür">❚❚</button>
             <button id="tour-next" data-i18n-title title="Sonraki durak">▶&#xFE0E;</button>
+            <button id="tour-music" class="tour-music" data-i18n-title title="Fon müziği" hidden>♪</button>
             <button id="tour-stop" class="tour-stop" data-i18n data-i18n-title title="Turu bitir (Esc)">Bitir</button>
           </div>
         </div>
@@ -285,7 +308,7 @@
           <div class="about-head">
             <img class="about-mark" src="/logo-white.png" alt="Your Eyes In Space" />
             <div>
-              <div class="about-name">YOUR EYES IN SPACE <button class="brand-version" data-changelog data-i18n-title title="Yenilikler">v 0.8</button></div>
+              <div class="about-name">YOUR EYES IN SPACE <button class="brand-version" data-changelog data-i18n-title title="Yenilikler">v 0.9.1</button></div>
               <div class="about-tag" data-i18n>Dünyanın her yerinde insanları uzay ve astrofizikle buluşturmak için yapılmış açık kaynak uzay simülatörü ve astrofizik dersliği</div>
               <div id="about-stats" class="about-stats" hidden></div>
             </div>
@@ -440,6 +463,7 @@
           </div>
           <div class="welcome-nav">
             <button id="welcome-back" class="welcome-step" data-i18n>Geri</button>
+            <button id="welcome-music" class="welcome-step welcome-music" data-i18n-title title="Fon müziği" hidden>♪</button>
             <div id="welcome-dots" class="welcome-bars" aria-hidden="true"></div>
             <button id="welcome-next" class="welcome-step next"><span data-i18n>Devam</span><span class="welcome-arrow">→</span></button>
           </div>
@@ -452,6 +476,12 @@
     <div id="loader">
       <div class="loader-mark"></div>
       <div class="loader-text" data-i18n>Evren hazırlanıyor…</div>
+    </div>
+
+    <!-- Bottom-right: the background-music credit, shown for a few seconds when a track starts -->
+    <div id="music-now" class="music-now" hidden aria-live="polite">
+      <span class="music-now-note">♪</span>
+      <span class="music-now-text"><span id="music-now-title" class="music-now-title"></span><span id="music-now-artist" class="music-now-artist"></span></span>
     </div>
 
     <script type="module" src="/src/main.ts"></script>

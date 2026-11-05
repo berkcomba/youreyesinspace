@@ -4,6 +4,7 @@ import type { TimeSystem } from './TimeSystem';
 import { TOURS, type TourCue, type TourDef, type TourStep, type TourTarget } from '../data/tours';
 import { _, currentLocale } from '../i18n';
 import { DAY_S } from './constants';
+import { exoBodyId } from '../gen/RealSystem';
 
 /** Render settings a tour may force while it plays (undefined = the user's own setting) */
 export interface TourOverrides {
@@ -39,8 +40,8 @@ export interface TourHost {
   camera: CameraController;
   time: TimeSystem;
   goToBodyId(id: string): void;
-  /** tour step arrival: worlds framed with the Sun in the sky behind them */
-  goToTourBody(id: string): void;
+  /** tour step arrival: worlds framed with their sun in the sky behind them (`starId`: the system the body lives in) */
+  goToTourBody(id: string, starId?: StarId): void;
   goToStar(id: StarId): void;
   goToGalaxy(i: number): void;
   goToLandmark(i: number): void;
@@ -214,11 +215,17 @@ export class TourPlayer {
   private dueSince = new Map<TourCue, number>();
   /** set when the player stops itself (user navigated elsewhere / tour finished) */
   onEnd: ((reason: 'finished' | 'interrupted') => void) | null = null;
+  /** the narrator starts / stops speaking (background music ducks under the voice) */
+  onSpeech: ((speaking: boolean) => void) | null = null;
+  /** a tour (or event scene) begins */
+  onStart: ((tour: TourDef) => void) | null = null;
 
   constructor(private readonly host: TourHost) {
     this.audio.preload = 'auto';
-    this.audio.addEventListener('ended', () => { this.audioEnded = true; });
-    this.audio.addEventListener('error', () => { this.audioFailed = true; });
+    this.audio.addEventListener('ended', () => { this.audioEnded = true; this.onSpeech?.(false); });
+    this.audio.addEventListener('error', () => { this.audioFailed = true; this.onSpeech?.(false); });
+    this.audio.addEventListener('playing', () => this.onSpeech?.(true));
+    this.audio.addEventListener('pause', () => this.onSpeech?.(false));
     if (import.meta.env.DEV) (window as unknown as { __tourAudio: HTMLAudioElement }).__tourAudio = this.audio;
   }
 
@@ -272,6 +279,7 @@ export class TourPlayer {
       if (!Number.isNaN(d.getTime())) this.host.setClock(d);
     }
     this.ready = this.resolveAudio(tour);
+    this.onStart?.(tour);
     this.playStep(0);
   }
 
@@ -490,6 +498,7 @@ export class TourPlayer {
   private teardown(): void {
     this.token++;
     this.audio.pause();
+    this.onSpeech?.(false);
     this.audio.removeAttribute('src');
     this.audio.load();
     const time = this.host.time;
@@ -554,9 +563,10 @@ export class TourPlayer {
     return (before / total) * duration + delay;
   }
 
-  private fire(step: TourStep, cue: TourCue, timing: StepTiming | null, duration: number): void {
+  private fire(step: TourStep, raw: TourCue, timing: StepTiming | null, duration: number): void {
     const h = this.host;
-    const targetId = step.target.kind === 'body' ? step.target.ref : null;
+    const targetId = this.targetBodyId(step.target);
+    const cue = this.resolveCue(raw);
     if (this.postcardFov !== null && isFlightCue(cue) && cue.action !== 'postcard') {
       this.fovTween = { from: this.overrides.fov ?? h.currentFov(), to: this.postcardFov, t: 0, dur: 2.5 };
       this.postcardFov = null;
@@ -704,7 +714,7 @@ export class TourPlayer {
         break;
       case 'return':
         this.endLook();
-        if (step.target.kind === 'body') h.returnTo(step.target.ref);
+        if (targetId) h.returnTo(targetId);
         else this.navigate(step.target);
         this.flight = h.camera.autopilot;
         this.state.phase = 'flying';
@@ -797,13 +807,15 @@ export class TourPlayer {
   private scopeOf(step: TourStep): string[] {
     const ids: string[] = [];
     const t = step.target;
-    if (t.kind === 'body') ids.push(t.ref);
+    const target = this.targetBodyId(t);
+    if (target) ids.push(target);
     else if (t.kind === 'blackhole') {
       const bh = this.host.universe.blackHole(t.ref);
       if (bh) ids.push(bh.entry.bodyId);
     }
-    if (step.show) ids.push(...step.show);
-    for (const c of step.cues ?? []) {
+    if (step.show) ids.push(...step.show.map((id) => this.bodyRef(id)));
+    for (const raw of step.cues ?? []) {
+      const c = this.resolveCue(raw);
       switch (c.action) {
         case 'overview': case 'pin': case 'postcard': ids.push(c.ref); break;
         case 'vantage': case 'limb': if (c.ref) ids.push(c.ref); break;
@@ -826,6 +838,44 @@ export class TourPlayer {
       case 'blackhole': return !!u.blackHole(t.ref);
       case 'landmark': return !!u.landmark(t.ref);
       case 'galaxy': return this.resolveGalaxy(t.ref) !== null;
+      case 'exoplanet': return u.exoplanets.byName(t.ref) !== null;
+    }
+  }
+
+  /** The body a step's target is, once its system is current (null for stars, landmarks, galaxies) */
+  private targetBodyId(t: TourTarget): string | null {
+    if (t.kind === 'body') return t.ref;
+    if (t.kind === 'exoplanet') {
+      const hit = this.host.universe.exoplanets.byName(t.ref);
+      return hit ? exoBodyId(hit.host.i, hit.planet.name) : null;
+    }
+    return null;
+  }
+
+  /**
+   * A cue's body reference as an id of the current system: Solar System ids pass through, an
+   * archive planet name becomes its generated body, 'star' is the system's star.
+   */
+  private bodyRef(ref: string): string {
+    const u = this.host.universe;
+    if (u.get(ref)) return ref;
+    if (ref === 'star') return u.star.id;
+    const hit = u.exoplanets.byName(ref);
+    return hit ? exoBodyId(hit.host.i, hit.planet.name) : ref;
+  }
+
+  /** The cue with every body reference resolved (see `bodyRef`) */
+  private resolveCue(c: TourCue): TourCue {
+    const r = this.bodyRef.bind(this);
+    switch (c.action) {
+      case 'overview': case 'pin': case 'postcard': case 'compare': return { ...c, ref: r(c.ref) };
+      case 'vantage': case 'limb': return c.ref ? { ...c, ref: r(c.ref) } : c;
+      case 'shot': return { ...c, ref: r(c.ref), toward: r(c.toward) };
+      case 'pulse': return { ...c, from: r(c.from), to: r(c.to) };
+      case 'readout': return { ...c, a: r(c.a), b: r(c.b), from: c.from ? r(c.from) : undefined };
+      case 'lookFrom': return { ...c, ref: r(c.ref), toward: c.toward.map(r) };
+      case 'meteors': return c.on ? { ...c, ref: r(c.ref) } : c;
+      default: return c;
     }
   }
 
@@ -841,6 +891,11 @@ export class TourPlayer {
     const u = h.universe;
     switch (t.kind) {
       case 'body': h.goToTourBody(t.ref); break;
+      case 'exoplanet': {
+        const hit = u.exoplanets.byName(t.ref);
+        if (hit) h.goToTourBody(exoBodyId(hit.host.i, hit.planet.name), `c${hit.host.i}`);
+        break;
+      }
       case 'blackhole': h.goToBlackHole(t.ref); break;
       case 'landmark': {
         const l = u.landmark(t.ref);

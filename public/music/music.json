@@ -1,0 +1,47 @@
+{
+  "tracks": [
+    {
+      "file": "Sonican - Starlight Echoes (Ambient Loop).mp3",
+      "title": "Starlight Echoes (Ambient Loop)",
+      "artist": "Sonican",
+      "license": "Pixabay Content License",
+      "url": "https://pixabay.com/music/id-439169/"
+    },
+    {
+      "file": "Alana Jordan - Space Rock Instrumental 01.mp3",
+      "title": "Space Rock Instrumental 01",
+      "artist": "Alana Jordan",
+      "license": "Pixabay Content License",
+      "url": "https://pixabay.com/music/id-485598/"
+    },
+    {
+      "file": "Miguel Bono - Cosmic Drift.mp3",
+      "title": "Cosmic Drift",
+      "artist": "Miguel Bono",
+      "license": "Pixabay Content License",
+      "url": "https://pixabay.com/music/id-513143/",
+      "scenes": ["welcome"]
+    },
+    {
+      "file": "Nick Panek - Devotion.mp3",
+      "title": "Devotion",
+      "artist": "Nick Panek",
+      "license": "Pixabay Content License",
+      "url": "https://pixabay.com/music/id-391305/"
+    },
+    {
+      "file": "Sonican - Starlight Echoes (Space Rock Odyssey).mp3",
+      "title": "Starlight Echoes (Space Rock Odyssey)",
+      "artist": "Sonican",
+      "license": "Pixabay Content License",
+      "url": "https://pixabay.com/music/id-430323/"
+    },
+    {
+      "file": "Alana Jordan - Space Rock Instrumental 02.mp3",
+      "title": "Space Rock Instrumental 02",
+      "artist": "Alana Jordan",
+      "license": "Pixabay Content License",
+      "url": "https://pixabay.com/music/id-485597/"
+    }
+  ]
+}

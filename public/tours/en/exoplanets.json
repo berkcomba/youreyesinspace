@@ -1,0 +1,432 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "51peg": {
+   "hash": "3787e0051014",
+   "duration": 33.59,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.3,
+     "text": "51 Pegasi b."
+    },
+    {
+     "start": 2.3,
+     "end": 11.58,
+     "text": "In nineteen ninety-five Michel Mayor and Didier Queloz noticed that this Sun-like star was wobbling slightly: an invisible planet was tugging at it."
+    },
+    {
+     "start": 11.58,
+     "end": 20.69,
+     "text": "This giant, half as massive as Jupiter, is seven times closer to its star than Mercury is to the Sun, and one orbit takes only four days."
+    },
+    {
+     "start": 20.69,
+     "end": 26.95,
+     "text": "No one expected anything like this; gas giants were supposed to be far away and slow, like Jupiter."
+    },
+    {
+     "start": 26.95,
+     "end": 29.95,
+     "text": "The concept of the hot Jupiter was born that night."
+    },
+    {
+     "start": 29.95,
+     "end": 33.59,
+     "text": "Twenty-four years later this discovery won the Nobel Prize in Physics."
+    }
+   ]
+  },
+  "55cnc": {
+   "hash": "cc11529daa11",
+   "duration": 36.79,
+   "sentences": [
+    {
+     "start": 0.12,
+     "end": 6.62,
+     "text": "55 Cancri e, forty-one light-years away; its star can be seen with the naked eye."
+    },
+    {
+     "start": 6.62,
+     "end": 11.14,
+     "text": "A super-Earth nearly twice Earth's diameter and eight times its mass."
+    },
+    {
+     "start": 11.14,
+     "end": 13.9,
+     "text": "But its year lasts only seventeen hours."
+    },
+    {
+     "start": 13.9,
+     "end": 21.85,
+     "text": "It is so close to its star that one face always points toward it, and the dayside is a lava ocean molten at two thousand degrees."
+    },
+    {
+     "start": 21.85,
+     "end": 27.53,
+     "text": "Compare it with Earth: about twice as wide, but wrapped in minerals vaporized from rock."
+    },
+    {
+     "start": 27.53,
+     "end": 36.79,
+     "text": "In twenty twenty-four the Webb telescope detected a thick atmosphere here made of carbon dioxide and carbon monoxide; an atmosphere the lava ocean breathes out."
+    }
+   ]
+  },
+  "hd189733": {
+   "hash": "e86d143c6c29",
+   "duration": 32.95,
+   "sentences": [
+    {
+     "start": 0.28,
+     "end": 6.68,
+     "text": "HD 189733 b, sixty-four light-years away."
+    },
+    {
+     "start": 6.68,
+     "end": 13.9,
+     "text": "The first exoplanet whose color was measured: from the light it reflects, Hubble found that it is a deep cobalt blue."
+    },
+    {
+     "start": 13.9,
+     "end": 16.46,
+     "text": "But this blue does not come from oceans."
+    },
+    {
+     "start": 16.46,
+     "end": 23.87,
+     "text": "Silicate grains, that is, particles of glass, float in its atmosphere and scatter the light blue, like Earth's sky."
+    },
+    {
+     "start": 23.87,
+     "end": 29.49,
+     "text": "The temperature is close to a thousand degrees, and the winds reach eight thousand kilometers per hour."
+    },
+    {
+     "start": 29.49,
+     "end": 32.95,
+     "text": "Here the rain falls sideways, and it is made of glass."
+    }
+   ]
+  },
+  "hd209458": {
+   "hash": "d52db059fbd2",
+   "duration": 41.27,
+   "sentences": [
+    {
+     "start": 0.26,
+     "end": 5.2,
+     "text": "HD 209458 b, nicknamed Osiris."
+    },
+    {
+     "start": 5.2,
+     "end": 14.26,
+     "text": "In nineteen ninety-nine it became the first planet caught passing in front of its star: the star's light dimmed by one and a half percent every three and a half days."
+    },
+    {
+     "start": 14.26,
+     "end": 19.78,
+     "text": "You are watching that very moment right now; the planet is in front of its star like a silhouette."
+    },
+    {
+     "start": 19.78,
+     "end": 26.31,
+     "text": "This tiny dimming is the very method that let the Kepler and TESS space telescopes find thousands of worlds."
+    },
+    {
+     "start": 26.31,
+     "end": 34.69,
+     "text": "During a transit, starlight filters through the planet's atmosphere, and Hubble found traces of sodium, hydrogen, and oxygen in that light."
+    },
+    {
+     "start": 34.69,
+     "end": 41.27,
+     "text": "The planet is so hot that its atmosphere is escaping into space like a comet; ten thousand tons every second."
+    }
+   ]
+  },
+  "hd80606": {
+   "hash": "d9c6a0b03405",
+   "duration": 40.95,
+   "sentences": [
+    {
+     "start": 0.26,
+     "end": 6.36,
+     "text": "HD 80606 b, on an orbit with no equal in the Solar System."
+    },
+    {
+     "start": 6.36,
+     "end": 16.76,
+     "text": "Its eccentricity is zero point ninety-three: at its farthest from its star, nearly as far as Earth, at its closest, only a tenth as far as Mercury's orbit."
+    },
+    {
+     "start": 16.76,
+     "end": 22.89,
+     "text": "It spends most of its one hundred eleven day orbit in the cold, then shoots past its star like a comet."
+    },
+    {
+     "start": 22.89,
+     "end": 30.91,
+     "text": "The Spitzer telescope watched this passage: the atmosphere heated from five hundred degrees to one thousand two hundred degrees in six hours."
+    },
+    {
+     "start": 30.91,
+     "end": 35.77,
+     "text": "After the passage, planet-wide storms form at several times the speed of sound."
+    },
+    {
+     "start": 35.77,
+     "end": 40.95,
+     "text": "The distant companion star HD 80007 probably pushed it into this orbit."
+    }
+   ]
+  },
+  "intro": {
+   "hash": "83d20090bd8a",
+   "duration": 33.59,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 2.46,
+     "text": "Welcome to the exoplanet tour."
+    },
+    {
+     "start": 2.46,
+     "end": 10.04,
+     "text": "Thirty years ago we did not know of even a single planet outside the Solar System; today we know nearly six thousand worlds."
+    },
+    {
+     "start": 10.04,
+     "end": 21.61,
+     "text": "On this tour we will fly to eight stars and look at what we found there: a planet where it rains glass, a gas giant close enough to touch its star, a tiny family of seven rocky worlds."
+    },
+    {
+     "start": 21.61,
+     "end": 26.95,
+     "text": "Everything you will see is based on real measurements: orbits, sizes, and temperatures."
+    },
+    {
+     "start": 26.95,
+     "end": 29.71,
+     "text": "The surfaces, though, are the computer's estimate."
+    },
+    {
+     "start": 29.71,
+     "end": 33.59,
+     "text": "Fasten your seat belts; our first star is fifty light-years away."
+    }
+   ]
+  },
+  "kelt9": {
+   "hash": "8cbe322be622",
+   "duration": 37.75,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 3.16,
+     "text": "KELT-9 b: the hottest planet known."
+    },
+    {
+     "start": 3.16,
+     "end": 12.72,
+     "text": "Its star is nearly twice as hot as the Sun, a blue-white A-type star, and the planet is close enough to complete one orbit of it every thirty-six hours."
+    },
+    {
+     "start": 12.72,
+     "end": 18.02,
+     "text": "The dayside reaches four thousand six hundred kelvin; that is hotter than many stars."
+    },
+    {
+     "start": 18.02,
+     "end": 27.25,
+     "text": "At that temperature molecules break apart: water and carbon dioxide cannot exist, and the atmosphere is filled with atomic iron and titanium vapor."
+    },
+    {
+     "start": 27.25,
+     "end": 32.19,
+     "text": "The star's ultraviolet radiation melts thousands of tons off the planet every second."
+    },
+    {
+     "start": 32.19,
+     "end": 37.75,
+     "text": "What's more, its orbit passes over the poles of its star; like a comet turning the wrong way."
+    }
+   ]
+  },
+  "kepler452": {
+   "hash": "794b6b4c3dc1",
+   "duration": 49.91,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.88,
+     "text": "Our last stop: Kepler-452 b, about one thousand eight hundred light-years away."
+    },
+    {
+     "start": 6.88,
+     "end": 11.62,
+     "text": "Its star is nearly the Sun's twin; a little older, a little brighter."
+    },
+    {
+     "start": 11.62,
+     "end": 17.82,
+     "text": "The planet is as far from its star as we are from the Sun, and its year is three hundred eighty-five days."
+    },
+    {
+     "start": 17.82,
+     "end": 24.52,
+     "text": "Sixty percent wider than Earth; whether it is rocky, or carries a thick envelope of gas, we do not know."
+    },
+    {
+     "start": 24.52,
+     "end": 28.33,
+     "text": "When it was discovered, it was called Earth's big, old cousin."
+    },
+    {
+     "start": 28.33,
+     "end": 38.65,
+     "text": "On this world, one and a half billion years older, if there is life, its slowly brightening star is scorching it before us: a window opening onto Earth's future."
+    },
+    {
+     "start": 38.65,
+     "end": 41.19,
+     "text": "Six thousand planets, in thirty years."
+    },
+    {
+     "start": 41.19,
+     "end": 48.05,
+     "text": "None of them is yet a second Earth; but each one tells us a little more about how unusual we are, or how ordinary."
+    },
+    {
+     "start": 48.05,
+     "end": 49.91,
+     "text": "The exoplanet tour has ended."
+    }
+   ]
+  },
+  "kepler90": {
+   "hash": "023294b99ef0",
+   "duration": 43.83,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 7.88,
+     "text": "Kepler-90, two thousand eight hundred light-years away; a star similar to the Sun, and exactly eight planets."
+    },
+    {
+     "start": 7.88,
+     "end": 12.32,
+     "text": "Tied with the Solar System: the most crowded planetary system known."
+    },
+    {
+     "start": 12.32,
+     "end": 18.78,
+     "text": "Its layout resembles ours too: small rocky worlds on the inside, gas giants on the outside."
+    },
+    {
+     "start": 18.78,
+     "end": 29.11,
+     "text": "The difference is that all of them fit inside Earth's orbit; the outermost, Kepler-90 h, is as far from its star as we are from the Sun, and Jupiter-sized."
+    },
+    {
+     "start": 29.11,
+     "end": 39.77,
+     "text": "The eighth planet, Kepler-90 i, was found in twenty seventeen, when a neural network from Google scanned a faint signal in the Kepler data: the first machine-learning discovery."
+    },
+    {
+     "start": 39.77,
+     "end": 43.83,
+     "text": "This packed system tells us that planets can migrate inward after they are born."
+    }
+   ]
+  },
+  "proxima": {
+   "hash": "9f34502fa977",
+   "duration": 43.83,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 1.42,
+     "text": "And our nearest neighbor."
+    },
+    {
+     "start": 1.42,
+     "end": 7.96,
+     "text": "Proxima Centauri b, around the closest star to the Sun, four point two light-years away."
+    },
+    {
+     "start": 7.96,
+     "end": 13.86,
+     "text": "Earth-mass and in the habitable zone; it completes one orbit of its star every eleven days."
+    },
+    {
+     "start": 13.86,
+     "end": 22.89,
+     "text": "But its star is a cranky red dwarf: its flares spew hundreds of times the radiation Earth sees, and may already have stripped the planet's atmosphere."
+    },
+    {
+     "start": 22.89,
+     "end": 29.03,
+     "text": "The star is deep crimson and huge in the sky, but the daylight is only sixty-five percent of Earth's."
+    },
+    {
+     "start": 29.03,
+     "end": 34.87,
+     "text": "Recently a second planet was confirmed in the same system: Proxima d, lighter than Mars."
+    },
+    {
+     "start": 34.87,
+     "end": 43.83,
+     "text": "With our fastest probe today, the journey here would take seventy thousand years; Breakthrough Starshot's laser sails dream of bringing that down to twenty years."
+    }
+   ]
+  },
+  "trappist": {
+   "hash": "bffab0937a56",
+   "duration": 43.83,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.2,
+     "text": "TRAPPIST-1: forty light-years away, a cold red dwarf only a little larger than Jupiter."
+    },
+    {
+     "start": 6.2,
+     "end": 9.76,
+     "text": "And around it, seven Earth-sized rocky planets."
+    },
+    {
+     "start": 9.76,
+     "end": 16.86,
+     "text": "All of them are closer to the star than Mercury is to the Sun; the outermost completes one orbit in only nineteen days."
+    },
+    {
+     "start": 16.86,
+     "end": 20.66,
+     "text": "Three are in the habitable zone: e, f, and g."
+    },
+    {
+     "start": 20.66,
+     "end": 29.87,
+     "text": "You are now above e; neighboring planet f appears as large as the Moon in the sky, the planets are so close to one another that you could make out the continents."
+    },
+    {
+     "start": 29.87,
+     "end": 35.13,
+     "text": "The star stands deep red, and four times as wide as the Sun covers in our sky."
+    },
+    {
+     "start": 35.13,
+     "end": 42.31,
+     "text": "The Webb telescope is measuring these worlds' atmospheres one by one; it found no thick atmosphere on the innermost two."
+    },
+    {
+     "start": 42.31,
+     "end": 43.83,
+     "text": "Now it is e's turn."
+    }
+   ]
+  }
+ }
+}

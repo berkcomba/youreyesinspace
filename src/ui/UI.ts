@@ -1,6 +1,7 @@
 import type { CelestialBody } from '../core/CelestialBody';
 import { MissionPanel, type MissionPanelHost } from './MissionPanel';
 import { TourPanel } from './TourPanel';
+import { RadioWidget } from './RadioWidget';
 import { EventPanel } from './EventPanel';
 import type { SkyEvent } from '../data/events';
 import type { SmallBodyCatalog } from '../data/SmallBodies';
@@ -31,6 +32,7 @@ import {
 } from './format';
 import { PLACES } from './places';
 import { exoBodyId } from '../gen/RealSystem';
+import type { Music } from '../audio/Music';
 import { CHANGELOG, CURRENT_VERSION } from '../data/changelog';
 
 /** body types that act as the light source / primary of a system */
@@ -56,6 +58,9 @@ export interface UIHost extends MissionPanelHost {
   renderSize(): [number, number];
   tours: TourPlayer;
   lessons: LessonPlayer;
+  music: Music;
+  /** flip the background-music setting (saved) */
+  toggleMusic(): void;
   starPoints: StarPoints;
   galaxySprites: GalaxySprites;
   landmarkSprites: LandmarkSprites;
@@ -180,6 +185,8 @@ const SETTING_DEFS: SettingDef[] = [
   { key: 'fov', label: 'Görüş açısı', kind: 'range', min: 20, max: 110, step: 1, group: 'Kamera' },
   { key: 'mouseSensitivity', label: 'Fare hassasiyeti', kind: 'range', min: 0.2, max: 3, step: 0.1 },
   { key: 'invertY', label: 'Y eksenini ters çevir', kind: 'bool' },
+  { key: 'music', label: 'Fon müziği (turlarda ve karşılamada; anlatıcı konuşurken kısılır)', kind: 'bool', group: 'Ses' },
+  { key: 'radio', label: 'Radyo: turların dışında da şarkılar karışık sırayla çalsın', kind: 'bool' },
 ];
 
 /** Info-grid rows → HTML; labels and plain-text values are run through the dictionary */
@@ -220,6 +227,8 @@ export class UI {
   private readonly placesMenu = $('places-menu');
   readonly missionPanel: MissionPanel;
   readonly tourPanel: TourPanel;
+  /** the record under the settings button (radio setting) */
+  readonly radio: RadioWidget;
   readonly eventPanel: EventPanel;
   readonly lessonPanel: LessonPanel;
   private lastInfoUpdate = 0;
@@ -258,8 +267,14 @@ export class UI {
     $('btn-settings').addEventListener('click', () => this.toggleSettings());
     this.missionPanel = new MissionPanel(host);
     $('btn-mission').addEventListener('click', () => this.toggleMission());
-    this.tourPanel = new TourPanel(host.tours, (show) => { if (show) { this.toggleSettings(false); this.missionPanel.toggle(false); this.lessonPanel.toggle(false); this.eventPanel.toggle(false); } });
+    this.tourPanel = new TourPanel(host.tours, (show) => { if (show) { this.toggleSettings(false); this.missionPanel.toggle(false); this.lessonPanel.toggle(false); this.eventPanel.toggle(false); } }, {
+      get available() { return host.music.available; },
+      get enabled() { return host.music.enabled; },
+      toggle: () => host.toggleMusic(),
+      onChange: (fn) => host.music.onChange(fn),
+    });
     $('btn-tours').addEventListener('click', () => this.toggleTours());
+    this.radio = new RadioWidget(host);
     this.eventPanel = new EventPanel(
       { playEvent: (e) => host.playEvent(e), showToast: (m, ms) => this.showToast(m, ms), hasBody: (id) => host.hasBody(id) },
       (show) => { if (show) { this.toggleSettings(false); this.missionPanel.toggle(false); this.tourPanel.toggle(false); this.lessonPanel.toggle(false); } },
@@ -856,6 +871,21 @@ export class UI {
     this.toast.hidden = false;
     window.clearTimeout(this.toastTimer);
     this.toastTimer = window.setTimeout(() => { this.toast.hidden = true; }, ms);
+  }
+
+  private nowTimer = 0;
+  /** Bottom-right credit when a background track starts: title and artist, gone after a few seconds */
+  showNowPlaying(track: { title: string; artist?: string }): void {
+    const box = document.getElementById('music-now');
+    if (!box) return;
+    (document.getElementById('music-now-title') as HTMLElement).textContent = track.title;
+    (document.getElementById('music-now-artist') as HTMLElement).textContent = track.artist ?? '';
+    // restart the fade animation when a new track follows an old one
+    box.hidden = true;
+    void box.offsetWidth;
+    box.hidden = false;
+    window.clearTimeout(this.nowTimer);
+    this.nowTimer = window.setTimeout(() => { box.hidden = true; }, 7000);
   }
 
   /* ---------------- Per-frame ---------------- */

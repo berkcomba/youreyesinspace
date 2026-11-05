@@ -12,9 +12,23 @@ export interface Release {
   items: Array<{ text: string }>;
 }
 
-export const CURRENT_VERSION = '0.8';
+export const CURRENT_VERSION = '0.9.1';
 
 export const CHANGELOG: Release[] = [
+  {
+    version: '0.9.1', date: '2026-11-05', title: 'Gerçek kataloglar, ilk karşılama, öte gezegenler ve müzik',
+    items: [
+      { text: 'Gerçek kataloglar: JPL küçük cisim veritabanından ana kuşak, Dünya\'ya yakın asteroitler, Truvalılar, dış cisimler ve kuyruklu yıldızlar; derin uzay tarama nesneleri, ölçülmüş yörüngeleriyle öte gezegen sistemleri, kahverengi cüceler ve çift yıldızlar; UNGC ve 2MRS galaksileri' },
+      { text: 'İlk ziyaret karşılaması: canlı sahneler üzerinde beş bölüm (600 kat hızda dönen Satürn, Dünya doğuşu, Jüpiter önünde Io, Güneş); yalnızca bir kez gösterilir' },
+      { text: 'Daha akıcı açılış: karşılama sahneleri yükleme ekranının arkasında ziyaret edilip gölgelendiriciler derleniyor ve yüzeyler önceden pişiriliyor; yıldız katalogları bir arka plan iş parçacığında ayrıştırılıp parça parça yükleniyor' },
+      { text: 'Gezegen yüzeyleri küp haritalara pişiriliyor: daha zengin kayaç ve gaz devi modelleri, göz uyumu (otomatik pozlama), ışık hüzmeleri ve bulutsu profilleri' },
+      { text: 'Yeni tur: Öte Gezegenler — 51 Pegasi b\'den TRAPPIST-1\'e on bir durak, beş dilde seslendirme ve görsellerle' },
+      { text: 'Fon müziği: turlarda ve karşılamada telifsiz space rock parçaları; anlatıcı konuşurken kısılıyor, her tura farklı bir şarkı düşüyor; şarkı başlarken sağ altta adı ve sanatçısı' },
+      { text: 'Radyo: ayarlardan açınca şarkılar karışık sırayla sürekli çalıyor; ayarlar düğmesinin altındaki dönen plaktan ses düzeyi, duraklatma ve sonraki şarkı' },
+      { text: 'Asteroit ve Kuiper kuşakları varsayılan olarak kapalı; ayarlardan açılabiliyor' },
+      { text: 'Düzeltme: uzak bir kümenin üye galaksisine yaklaşınca galaksinin görünmez olması' },
+    ],
+  },
   {
     version: '0.8', date: '2026-10-30', title: 'Yayıncı modu: izleyicilerle birlikte uzay seferi',
     items: [

@@ -59,6 +59,12 @@ export interface Settings {
   exposure: number;
   mouseSensitivity: number;
   invertY: boolean;
+  /** background music under the tours and the welcome */
+  music: boolean;
+  /** radio: the library keeps playing, shuffled, outside the tours and the welcome */
+  radio: boolean;
+  /** music volume 0…1 (the radio widget's slider) */
+  musicVolume: number;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -86,7 +92,7 @@ export const DEFAULT_SETTINGS: Settings = {
   lensFlare: true,
   lightShafts: true,
   imagery: true,
-  belts: true,
+  belts: false,
   deepCatalog: true,
   milkyWay: true,
   volumetrics: true,
@@ -102,6 +108,9 @@ export const DEFAULT_SETTINGS: Settings = {
   exposure: 1.0,
   mouseSensitivity: 1.0,
   invertY: false,
+  music: true,
+  radio: false,
+  musicVolume: 0.64,
 };
 
 export type GraphicsPreset = 'low' | 'medium' | 'high';
@@ -123,7 +132,7 @@ const PRESET_DISPLAY: Partial<Settings> = {
   dwarfs: true,
   minorBodies: true,
   spacecraft: true,
-  belts: true,
+  belts: false,
   milkyWay: true,
   volumetrics: true,
   galaxies: true,

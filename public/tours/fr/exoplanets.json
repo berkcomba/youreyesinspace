@@ -1,0 +1,432 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "51peg": {
+   "hash": "28dcf27183fc",
+   "duration": 35.51,
+   "sentences": [
+    {
+     "start": 0.12,
+     "end": 1.5,
+     "text": "Cinquante et un Pegasi b."
+    },
+    {
+     "start": 1.5,
+     "end": 12.58,
+     "text": "En mille neuf cent quatre-vingt-quinze, Michel Mayor et Didier Queloz ont remarqué que cette étoile semblable au Soleil oscillait légèrement : une planète invisible la tiraillait."
+    },
+    {
+     "start": 12.58,
+     "end": 22.35,
+     "text": "Cette géante, d'une masse égale à la moitié de celle de Jupiter, est sept fois plus proche de son étoile que Mercure ne l'est du Soleil, et son tour ne dure que quatre jours."
+    },
+    {
+     "start": 22.35,
+     "end": 28.29,
+     "text": "Personne ne s'attendait à cela ; les géantes gazeuses devaient être lointaines et lentes, comme Jupiter."
+    },
+    {
+     "start": 28.29,
+     "end": 31.51,
+     "text": "Le concept de Jupiter chaude est né cette nuit-là."
+    },
+    {
+     "start": 31.51,
+     "end": 35.51,
+     "text": "Vingt-quatre ans plus tard, cette découverte a reçu le prix Nobel de physique."
+    }
+   ]
+  },
+  "55cnc": {
+   "hash": "482672c94894",
+   "duration": 39.03,
+   "sentences": [
+    {
+     "start": 0.12,
+     "end": 6.3,
+     "text": "Cinquante-cinq Cancri e, à quarante et une années-lumière ; son étoile est visible à l'œil nu."
+    },
+    {
+     "start": 6.3,
+     "end": 11.54,
+     "text": "Une super-Terre de presque deux fois le diamètre de la Terre, et de huit fois sa masse."
+    },
+    {
+     "start": 11.54,
+     "end": 13.92,
+     "text": "Mais son année ne dure que dix-sept heures."
+    },
+    {
+     "start": 13.92,
+     "end": 21.89,
+     "text": "Elle est si proche de son étoile qu'une face lui reste toujours tournée, et sa face jour est un océan de lave en fusion à deux mille degrés."
+    },
+    {
+     "start": 21.89,
+     "end": 28.75,
+     "text": "Comparez avec la Terre : environ deux fois plus large, mais enveloppée de minéraux vaporisés à partir de la roche."
+    },
+    {
+     "start": 28.75,
+     "end": 39.03,
+     "text": "En deux mille vingt-quatre, le télescope Webb y a détecté une épaisse atmosphère de dioxyde de carbone et de monoxyde de carbone ; une atmosphère que l'océan de lave exhale."
+    }
+   ]
+  },
+  "hd189733": {
+   "hash": "5ff1c8206425",
+   "duration": 31.35,
+   "sentences": [
+    {
+     "start": 0.22,
+     "end": 5.34,
+     "text": "HD cent quatre-vingt-neuf mille sept cent trente-trois b, à soixante-quatre années-lumière."
+    },
+    {
+     "start": 5.34,
+     "end": 13.62,
+     "text": "La première exoplanète dont on a mesuré la couleur : d'après la lumière qu'elle réfléchit, Hubble a découvert qu'elle est d'un bleu cobalt profond."
+    },
+    {
+     "start": 13.62,
+     "end": 15.77,
+     "text": "Mais ce bleu ne vient pas des océans."
+    },
+    {
+     "start": 15.77,
+     "end": 23.53,
+     "text": "Dans son atmosphère flottent des grains de silicate, c'est-à-dire des particules de verre, qui diffusent la lumière en bleu comme le ciel de la Terre."
+    },
+    {
+     "start": 23.53,
+     "end": 28.51,
+     "text": "La température approche les mille degrés, et les vents atteignent huit mille kilomètres à l'heure."
+    },
+    {
+     "start": 28.51,
+     "end": 31.35,
+     "text": "Ici, la pluie tombe de côté, et elle est de verre."
+    }
+   ]
+  },
+  "hd209458": {
+   "hash": "0350c0496d8e",
+   "duration": 44.79,
+   "sentences": [
+    {
+     "start": 0.24,
+     "end": 4.58,
+     "text": "HD deux cent neuf mille quatre cent cinquante-huit b, surnommée Osiris."
+    },
+    {
+     "start": 4.58,
+     "end": 15.62,
+     "text": "En mille neuf cent quatre-vingt-dix-neuf, ce fut la première planète capturée en train de passer devant son étoile : la lumière de l'étoile baissait d'un et demi pour cent tous les trois jours et demi."
+    },
+    {
+     "start": 15.62,
+     "end": 21.6,
+     "text": "Vous regardez en ce moment même cet instant précis ; la planète est devant son étoile, comme une silhouette."
+    },
+    {
+     "start": 21.6,
+     "end": 28.93,
+     "text": "Ce tout petit assombrissement est la méthode même qui a permis aux télescopes spatiaux Kepler et TESS de trouver des milliers de mondes."
+    },
+    {
+     "start": 28.93,
+     "end": 38.21,
+     "text": "Pendant le transit, la lumière de l'étoile filtre à travers l'atmosphère de la planète, et Hubble y a trouvé des traces de sodium, d'hydrogène et d'oxygène."
+    },
+    {
+     "start": 38.21,
+     "end": 44.79,
+     "text": "La planète est si chaude que son atmosphère s'échappe dans l'espace comme celle d'une comète ; dix mille tonnes chaque seconde."
+    }
+   ]
+  },
+  "hd80606": {
+   "hash": "3df0a5ae3fb6",
+   "duration": 41.27,
+   "sentences": [
+    {
+     "start": 0.22,
+     "end": 5.96,
+     "text": "HD quatre-vingt mille six cent six b, sur une orbite sans équivalent dans le Système solaire."
+    },
+    {
+     "start": 5.96,
+     "end": 16.74,
+     "text": "Son excentricité est de zéro virgule quatre-vingt-treize : au plus loin de son étoile, elle est presque aussi éloignée que la Terre ; au plus près, aussi proche que le dixième de l'orbite de Mercure."
+    },
+    {
+     "start": 16.74,
+     "end": 23.35,
+     "text": "Elle passe la plus grande partie de son orbite de cent onze jours dans le froid, puis elle file au ras de son étoile comme une comète."
+    },
+    {
+     "start": 23.35,
+     "end": 30.05,
+     "text": "Le télescope Spitzer a suivi ce passage : en six heures, l'atmosphère est passée de cinq cents à mille deux cents degrés."
+    },
+    {
+     "start": 30.05,
+     "end": 35.73,
+     "text": "Après le passage, des tempêtes à l'échelle de la planète se forment, à plusieurs fois la vitesse du son."
+    },
+    {
+     "start": 35.73,
+     "end": 41.27,
+     "text": "C'est probablement l'étoile compagne lointaine HD quatre-vingt mille sept qui l'a poussée sur cette orbite."
+    }
+   ]
+  },
+  "intro": {
+   "hash": "4ca2e556ad86",
+   "duration": 36.47,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 2.8,
+     "text": "Bienvenue dans la visite des exoplanètes."
+    },
+    {
+     "start": 2.8,
+     "end": 10.8,
+     "text": "Il y a trente ans, nous ne connaissions pas une seule planète en dehors du Système solaire ; aujourd'hui, nous connaissons près de six mille mondes."
+    },
+    {
+     "start": 10.8,
+     "end": 23.67,
+     "text": "Dans cette visite, nous volerons vers huit étoiles pour regarder ce que nous y avons trouvé : une planète où il pleut du verre, une géante gazeuse assez proche de son étoile pour la toucher, une toute petite famille de sept mondes rocheux."
+    },
+    {
+     "start": 23.67,
+     "end": 28.91,
+     "text": "Tout ce que vous verrez repose sur de vraies mesures : orbites, tailles et températures."
+    },
+    {
+     "start": 28.91,
+     "end": 32.45,
+     "text": "Les surfaces, elles, sont une estimation de l'ordinateur."
+    },
+    {
+     "start": 32.45,
+     "end": 36.47,
+     "text": "Attachez vos ceintures ; notre première étoile est à cinquante années-lumière."
+    }
+   ]
+  },
+  "kelt9": {
+   "hash": "f76024609e12",
+   "duration": 37.43,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 3.64,
+     "text": "KELT neuf b : la planète la plus chaude connue."
+    },
+    {
+     "start": 3.64,
+     "end": 12.58,
+     "text": "Son étoile est presque deux fois plus chaude que le Soleil, une étoile A blanc-bleu, et la planète en est assez proche pour en faire le tour en trente-six heures."
+    },
+    {
+     "start": 12.58,
+     "end": 17.52,
+     "text": "Sa face jour atteint quatre mille six cents kelvins ; c'est plus chaud que bien des étoiles."
+    },
+    {
+     "start": 17.52,
+     "end": 26.91,
+     "text": "À cette température, les molécules se brisent : l'eau et le dioxyde de carbone ne peuvent pas exister, et l'atmosphère est pleine de vapeur de fer et de titane atomiques."
+    },
+    {
+     "start": 26.91,
+     "end": 31.47,
+     "text": "Le rayonnement ultraviolet de l'étoile en fait fondre des milliers de tonnes chaque seconde."
+    },
+    {
+     "start": 31.47,
+     "end": 37.43,
+     "text": "De plus, son orbite passe au-dessus des pôles de son étoile ; comme une comète qui tournerait dans le mauvais sens."
+    }
+   ]
+  },
+  "kepler452": {
+   "hash": "56d743513d5d",
+   "duration": 48.31,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6,
+     "text": "Notre dernier arrêt : Kepler quatre cent cinquante-deux b, à environ mille huit cents années-lumière."
+    },
+    {
+     "start": 6,
+     "end": 10.86,
+     "text": "Son étoile est presque la jumelle du Soleil ; un peu plus vieille, un peu plus brillante."
+    },
+    {
+     "start": 10.86,
+     "end": 17.22,
+     "text": "La planète est aussi éloignée de son étoile que nous le sommes du Soleil, et son année dure trois cent quatre-vingt-cinq jours."
+    },
+    {
+     "start": 17.22,
+     "end": 23.64,
+     "text": "Soixante pour cent plus large que la Terre ; nous ne savons pas si elle est rocheuse ou si elle porte une épaisse enveloppe de gaz."
+    },
+    {
+     "start": 23.64,
+     "end": 27.73,
+     "text": "Lors de sa découverte, on l'a appelée la grande et vieille cousine de la Terre."
+    },
+    {
+     "start": 27.73,
+     "end": 37.53,
+     "text": "Sur ce monde plus vieux d'un milliard et demi d'années, s'il y a de la vie, son étoile, qui gagne peu à peu en éclat, la rôtit avant nous : une fenêtre sur l'avenir de la Terre."
+    },
+    {
+     "start": 37.53,
+     "end": 39.51,
+     "text": "Six mille planètes, en trente ans."
+    },
+    {
+     "start": 39.51,
+     "end": 46.23,
+     "text": "Aucune n'est encore une seconde Terre ; mais chacune nous en dit un peu plus sur ce que nous avons d'extraordinaire, ou d'ordinaire."
+    },
+    {
+     "start": 46.23,
+     "end": 48.31,
+     "text": "La visite des exoplanètes est terminée."
+    }
+   ]
+  },
+  "kepler90": {
+   "hash": "1f309cf55f36",
+   "duration": 50.55,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 7.66,
+     "text": "Kepler quatre-vingt-dix, à deux mille huit cents années-lumière ; une étoile semblable au Soleil, et exactement huit planètes."
+    },
+    {
+     "start": 7.66,
+     "end": 12.7,
+     "text": "À égalité avec le Système solaire : le système planétaire le plus peuplé connu."
+    },
+    {
+     "start": 12.7,
+     "end": 19.94,
+     "text": "Sa disposition ressemble aussi à la nôtre : de petits mondes rocheux à l'intérieur, des géantes gazeuses à l'extérieur."
+    },
+    {
+     "start": 19.94,
+     "end": 32.09,
+     "text": "La différence, c'est qu'elles tiennent toutes à l'intérieur de l'orbite de la Terre ; la plus externe, Kepler quatre-vingt-dix h, est aussi éloignée de son étoile que nous le sommes du Soleil, et de la taille de Jupiter."
+    },
+    {
+     "start": 32.09,
+     "end": 45.53,
+     "text": "La huitième planète, Kepler quatre-vingt-dix i, a été trouvée en deux mille dix-sept, lorsqu'un réseau de neurones de Google a scruté un faible signal dans les données de Kepler : la première découverte par apprentissage automatique."
+    },
+    {
+     "start": 45.53,
+     "end": 50.55,
+     "text": "Ce système compact nous dit que les planètes peuvent migrer vers l'intérieur après leur naissance."
+    }
+   ]
+  },
+  "proxima": {
+   "hash": "5a003765d77b",
+   "duration": 46.39,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 1.86,
+     "text": "Et notre plus proche voisine."
+    },
+    {
+     "start": 1.86,
+     "end": 8.24,
+     "text": "Proxima Centauri b, autour de l'étoile la plus proche du Soleil, à quatre virgule deux années-lumière."
+    },
+    {
+     "start": 8.24,
+     "end": 13.84,
+     "text": "De la masse de la Terre et dans la zone habitable ; elle fait le tour de son étoile tous les onze jours."
+    },
+    {
+     "start": 13.84,
+     "end": 23.75,
+     "text": "Mais son étoile est une naine rouge capricieuse : ses éruptions crachent des centaines de fois le rayonnement que voit la Terre, et elles ont peut-être déjà arraché l'atmosphère de la planète."
+    },
+    {
+     "start": 23.75,
+     "end": 30.71,
+     "text": "Dans le ciel, l'étoile est d'un rouge intense et immense, mais la lumière du jour n'est que soixante-cinq pour cent de celle de la Terre."
+    },
+    {
+     "start": 30.71,
+     "end": 37.25,
+     "text": "Récemment, une deuxième planète a été confirmée dans le même système : Proxima d, plus légère que Mars."
+    },
+    {
+     "start": 37.25,
+     "end": 46.39,
+     "text": "Avec notre sonde la plus rapide d'aujourd'hui, le voyage jusqu'ici prendrait soixante-dix mille ans ; les voiles laser de Breakthrough Starshot rêvent de le ramener à vingt ans."
+    }
+   ]
+  },
+  "trappist": {
+   "hash": "03dd50d73efa",
+   "duration": 45.43,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 5.96,
+     "text": "TRAPPIST un : à quarante années-lumière, une naine rouge froide, à peine plus grande que Jupiter."
+    },
+    {
+     "start": 5.96,
+     "end": 9.64,
+     "text": "Et autour d'elle, sept planètes rocheuses de la taille de la Terre."
+    },
+    {
+     "start": 9.64,
+     "end": 16.46,
+     "text": "Toutes sont plus proches de l'étoile que Mercure ne l'est du Soleil ; le tour de la plus externe ne dure que dix-neuf jours."
+    },
+    {
+     "start": 16.46,
+     "end": 19.98,
+     "text": "Trois sont dans la zone habitable : e, f et g."
+    },
+    {
+     "start": 19.98,
+     "end": 30.55,
+     "text": "Vous voilà maintenant sur e ; la planète voisine f apparaît dans le ciel aussi grande que la Lune, et les planètes sont si proches les unes des autres que vous pourriez en distinguer les continents."
+    },
+    {
+     "start": 30.55,
+     "end": 36.27,
+     "text": "L'étoile est d'un rouge vif, et elle couvre quatre fois la largeur que le Soleil couvre dans notre ciel."
+    },
+    {
+     "start": 36.27,
+     "end": 43.69,
+     "text": "Le télescope Webb mesure une à une l'atmosphère de ces mondes ; sur les deux plus internes, il n'a pas trouvé d'atmosphère épaisse."
+    },
+    {
+     "start": 43.69,
+     "end": 45.43,
+     "text": "Maintenant, c'est au tour de e."
+    }
+   ]
+  }
+ }
+}

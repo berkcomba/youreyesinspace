@@ -63,6 +63,8 @@ import { SmallBodyCatalog } from './data/SmallBodies';
 import { applyEventMeta, beacon, eventUrl, parseLaunch, type LaunchParams } from './app/share';
 import { EmbedUI } from './ui/EmbedUI';
 import { Welcome } from './ui/Welcome';
+import { Music } from './audio/Music';
+import { TOURS } from './data/tours';
 import { C_KM_S } from './core/constants';
 import { LessonPlayer } from './core/LessonPlayer';
 import type { MissionPlan } from './astro/mission';
@@ -111,6 +113,7 @@ class App implements UIHost {
   readonly ui: UI;
   /** first-visit introduction over live shots */
   readonly welcome: Welcome;
+  readonly music: Music;
   selected: CelestialBody | null = null;
   selectedStar: StarId | null = null;
   selectedGalaxy: number | null = null;
@@ -149,7 +152,7 @@ class App implements UIHost {
   private readonly sunScreen: SunMarkerScreen = { dir: new Vector3(), label: '', selected: false };
   /** tour size comparison: a true-scale stand-in of `ref` kept at the screen-right of `beside` */
   /** tour comparison copy; `side` pins it beside its anchor in space (over-the-shoulder shot) instead of beside it on screen */
-  private ghost: { body: CelestialBody; ref: CelestialBody; beside: CelestialBody; alpha: number; leaving: boolean; side: Vector3 | null } | null = null;
+  private ghost: { body: CelestialBody; ref: CelestialBody; beside: CelestialBody; alpha: number; leaving: boolean; side: Vector3 | null; detached: boolean } | null = null;
   private pulse: LightPulse | null = null;
   private relief: Relief | null = null;
   private meteors: MeteorShower | null = null;
@@ -231,7 +234,14 @@ class App implements UIHost {
       arrived: (m) => this.onMissionArrived(m),
     });
     this.tours = new TourPlayer(this);
+    this.music = new Music(import.meta.env.BASE_URL);
+    this.music.setKeys(['welcome', ...TOURS.map((t) => t.id)]);
+    void this.music.load();
+    this.tours.onStart = (t) => this.music.play(t.id, t.music);
+    this.music.onStart = (t) => this.ui.showNowPlaying(t);
+    this.tours.onSpeech = (speaking) => this.music.duck(speaking);
     this.tours.onEnd = (why) => {
+      this.music.stop();
       const wasEvent = this.currentEvent !== null;
       if (wasEvent) this.endEvent();
       if (why === 'finished' && !wasEvent) {
@@ -289,6 +299,13 @@ class App implements UIHost {
 
     this.applySettings();
     requestAnimationFrame(this.frame);
+  }
+
+  /** Background music on / off (saved with the settings) */
+  toggleMusic(): void {
+    this.settings.music = !this.settings.music;
+    this.applySettings();
+    this.ui.showToast(this.settings.music ? _('Fon müziği açık') : _('Fon müziği kapalı'), 1600);
   }
 
   /** Lift the loading screen (boot calls it once everything that should happen behind it has) */
@@ -497,6 +514,15 @@ class App implements UIHost {
       if (ratio <= RESOLVE_RATIO && t.fade(dSunPc) > 0.05) want = { tier: sel.tier, index: sel.index, ratio };
     }
     const cur = this.farCluster;
+    // a knot one of whose member galaxies we are approaching / at / in keeps its cluster: swapping
+    // to a neighbour that is nearer in radii (an overlapping supercluster node, the next cluster
+    // over) would drop the member sprites and release the guest slot – the galaxy around the camera
+    // would simply vanish
+    if (on && cur && this.nearMemberRatio(cur) <= ADOPT_RATIO * 1.25) {
+      const t = this.farUniverse.tiers[cur.tierIndex];
+      const ratio = this.farPositionPc({ tier: cur.tierIndex, index: cur.index, member: -1 }, _dir).distanceTo(this.camPc) / Math.max(t.radius[cur.index], 1);
+      want = { tier: cur.tierIndex, index: cur.index, ratio: Math.min(ratio, RESOLVE_RATIO) };
+    }
     if (!want || want.ratio > RESOLVE_RATIO) {
       if (cur) this.disposeFarCluster();
       return;
@@ -540,6 +566,17 @@ class App implements UIHost {
       const ref = { tier: c.tierIndex, index: c.index, member: n.m };
       if (g.adopt(c, n.m, farKey(ref), c.name(n.m), keep) >= 0 && n.ratio < 6) this.noteDiscovery(farKey(ref), c.name(n.m), false, 'Küme üyesi galaksi');
     }
+  }
+
+  /** distance to the nearest member galaxy of a resolved far cluster, in its radii */
+  private nearMemberRatio(c: FarCluster): number {
+    const p = c.positions;
+    let best = Infinity;
+    for (let m = 0; m < c.count; m++) {
+      const ratio = Math.hypot(p[m * 3] - this.camPc.x, p[m * 3 + 1] - this.camPc.y, p[m * 3 + 2] - this.camPc.z) / Math.max(c.radius[m], 1);
+      if (ratio < best) best = ratio;
+    }
+    return best;
   }
 
   private releaseGuest(slot: number): void {
@@ -1037,10 +1074,10 @@ class App implements UIHost {
   }
 
   /** Tour step arrival: like goTo, but worlds are framed with the Sun in the sky behind them. */
-  goToTourBody(id: string): void {
+  goToTourBody(id: string, starId: StarId = 'c0'): void {
     const u = this.universe;
-    if (u.current.starId !== 'c0') {
-      const delta = u.switchTo('c0', this.time.jd, this.time.t);
+    if (u.current.starId !== starId) {
+      const delta = u.switchTo(starId, this.time.jd, this.time.t);
       this.camera.shiftFrame(delta, u.star);
     }
     const b = u.get(id);
@@ -1207,16 +1244,25 @@ class App implements UIHost {
       this.dropGhost();
     }
     if (!refId || !besideId) return;
-    const ref = this.universe.get(refId);
     const beside = this.universe.get(besideId);
-    if (!ref || !beside || ref === beside) return;
+    // a Solar System body shown beside a world of another star: a stand-in built from its data
+    let ref = this.universe.get(refId);
+    let detached = false;
+    if (!ref) {
+      const d = SOLAR_SYSTEM.find((x) => x.id === refId);
+      if (!d) return;
+      ref = new CelestialBody({ ...d, id: `tour-ref-${refId}`, parent: undefined, orbit: undefined });
+      ref.update(this.time.jd, this.time.t);
+      detached = true;
+    }
+    if (!beside || ref === beside) return;
     // a detached copy: same appearance and radius, no orbit, positioned by hand every frame
     const body = new CelestialBody({ ...ref.data, id: 'tour-ghost', orbit: undefined });
     body.pole.copy(ref.pole);
     body.rotation.copy(ref.rotation);
     const cam = this.camera;
     const side = shoulder ? new Vector3(1, 0, 0).applyQuaternion(cam.quaternion) : null;
-    this.ghost = { body, ref, beside, alpha: 0, leaving: false, side };
+    this.ghost = { body, ref, beside, alpha: 0, leaving: false, side, detached };
     this.placeGhost();
     this.bodies.addBody(body, this.universe.current);
     this.points.setViews(this.bodies.views);
@@ -1295,6 +1341,7 @@ class App implements UIHost {
       g.alpha -= dt / 0.8;
       if (g.alpha <= 0) { this.dropGhost(); return; }
     } else g.alpha = Math.min(1, g.alpha + dt / 1.2);
+    if (g.detached) g.ref.update(this.time.jd, this.time.t); // keeps a stand-in spinning
     this.placeGhost();
   }
 
@@ -1939,6 +1986,10 @@ class App implements UIHost {
   applySettings(): void {
     const s = this.settings;
     if (this.persistSettings) saveSettings(s);
+    this.music.enabled = s.music;
+    this.music.radio = s.radio;
+    this.music.volume = s.musicVolume;
+    this.ui?.radio.sync();
     this.engine.setFov(s.fov);
     this.engine.bloom.enabled = s.bloom;
     if (s.autoExposure && !this.engine.autoExposure.active) this.engine.autoExposure.resetAdaptation();

@@ -425,6 +425,8 @@ input[type=range] { width: 120px; accent-color: var(--accent); }
 .tour-controls button { min-width: 36px; height: 30px; padding: 0 10px; background: rgba(12, 14, 20, 0.6); backdrop-filter: blur(6px); border-color: rgba(255, 255, 255, 0.14); }
 .tour-controls button:hover { background: rgba(30, 34, 44, 0.8); }
 .tour-controls .tour-stop { margin-left: 6px; }
+.tour-controls .tour-music { font-size: 15px; line-height: 1; }
+.tour-controls .tour-music.off { color: var(--text-3); text-decoration: line-through; }
 
 /* progress: a hairline along the very bottom edge */
 .tour-progress { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: rgba(255, 255, 255, 0.1); overflow: hidden; pointer-events: auto; }
@@ -618,6 +620,89 @@ kbd {
 #toast .toast-link:hover { color: var(--accent, #fff); }
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 
+/* ---------- Now playing (background music credit, bottom right) ---------- */
+.music-now {
+  position: fixed; right: calc(18px + env(safe-area-inset-right)); bottom: calc(64px + env(safe-area-inset-bottom)); z-index: 9;
+  display: flex; align-items: baseline; gap: 10px; max-width: min(360px, 70vw);
+  color: rgba(243, 241, 234, 0.9); pointer-events: none;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 1), 0 0 12px rgba(0, 0, 0, 0.9);
+  animation: music-now 7s ease both;
+}
+.music-now[hidden] { display: none; }
+.music-now-note { font-size: 15px; color: var(--accent); }
+.music-now-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.music-now-title { font-family: var(--serif); font-size: 15px; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.music-now-artist { font-family: var(--serif); font-style: italic; font-size: 12.5px; color: rgba(243, 241, 234, 0.62); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.music-now-artist:empty { display: none; }
+@keyframes music-now { 0% { opacity: 0; transform: translateY(6px); } 8% { opacity: 1; transform: none; } 82% { opacity: 1; } 100% { opacity: 0; } }
+body.welcoming .music-now { bottom: calc(26px + env(safe-area-inset-bottom)); }
+
+/* ---------- Radio ----------
+   A small record under the settings button, shown only while the radio setting is on. The grooves
+   turn at 33⅓ rpm while a song plays (the light on the platter stays put); a click opens the card
+   with the song, pause / next and the volume. */
+#ui { --radio-right: 16px; }
+#radio {
+  position: absolute; top: 66px; right: var(--radio-right); z-index: 5;
+  display: grid; grid-template-columns: 44px 0fr; align-items: center;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 23px;
+  transition: grid-template-columns 0.34s cubic-bezier(0.2, 0.7, 0.2, 1), border-radius 0.34s, right 0.2s;
+}
+#radio[hidden] { display: none; }
+#radio.open { grid-template-columns: 44px 1fr; border-radius: var(--radius); }
+.radio-disc { width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: transparent; display: grid; place-items: center; }
+.radio-disc:hover { background: transparent; }
+.radio-platter { position: relative; width: 34px; height: 34px; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.5); transition: transform 0.12s; }
+.radio-disc:hover .radio-platter { transform: scale(1.05); }
+.radio-vinyl {
+  position: absolute; inset: 0; border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 29%, rgba(255, 255, 255, 0.6) 0 0.8px, transparent 1.6px),
+    radial-gradient(circle, #0b0c0e 0 1.6px, var(--accent) 2.2px 8px, #2a2420 8.4px 9px, transparent 9.6px),
+    repeating-radial-gradient(circle, #121417 0 1px, #1e2126 1px 2px);
+  animation: radio-spin 1.8s linear infinite; animation-play-state: paused;
+}
+#radio.playing .radio-vinyl { animation-play-state: running; }
+.radio-sheen {
+  position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+  background: conic-gradient(from 210deg, transparent 0 18%, rgba(255, 255, 255, 0.1) 27%, transparent 36%, transparent 58%, rgba(255, 255, 255, 0.06) 68%, transparent 78%);
+}
+@keyframes radio-spin { to { transform: rotate(360deg); } }
+.radio-body { min-width: 0; height: 44px; overflow: hidden; opacity: 0; transition: opacity 0.18s; }
+#radio.open .radio-body { height: auto; opacity: 1; transition-delay: 0.12s; }
+.radio-body > div { width: 224px; }
+.radio-meta { padding: 7px 12px 0 2px; }
+.radio-kicker { font-size: 10.5px; color: var(--text-3); line-height: 1.2; }
+.radio-title { font-family: var(--serif); font-size: 14px; line-height: 1.25; color: var(--text); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.radio-artist { font-family: var(--serif); font-style: italic; font-size: 12px; line-height: 1.25; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.radio-artist:empty { display: none; }
+.radio-title:empty::before { content: '—'; color: var(--text-3); }
+.radio-ctrl { display: flex; align-items: center; gap: 2px; padding: 4px 12px 7px 0; }
+.radio-btn { width: 24px; height: 24px; padding: 0; border: 0; background: transparent; display: inline-grid; place-items: center; color: var(--text-2); border-radius: 50%; }
+.radio-btn:hover { background: var(--surface-2); color: var(--text); }
+.radio-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: currentColor; stroke-width: 1.2; stroke-linejoin: round; }
+.radio-btn .ic-pause { fill: none; stroke-width: 1.6; }
+#radio.playing .ic-play, #radio:not(.playing) .ic-pause { display: none; }
+#radio:not(.on-air) #radio-next { display: none; }
+.radio-vol { -webkit-appearance: none; appearance: none; flex: 1; min-width: 60px; height: 14px; margin: 0 2px 0 8px; background: transparent; cursor: pointer; }
+.radio-vol::-webkit-slider-runnable-track { height: 2px; border-radius: 1px; background: linear-gradient(var(--accent), var(--accent)) 0 0 / var(--fill, 64%) 100% no-repeat var(--border-strong); }
+.radio-vol::-webkit-slider-thumb { -webkit-appearance: none; width: 10px; height: 10px; margin-top: -4px; border-radius: 50%; border: 0; background: var(--text); }
+.radio-vol::-moz-range-track { height: 2px; border-radius: 1px; background: var(--border-strong); }
+.radio-vol::-moz-range-progress { height: 2px; background: var(--accent); }
+.radio-vol::-moz-range-thumb { width: 10px; height: 10px; border-radius: 50%; border: 0; background: var(--text); }
+/* the right-hand panels open at the same corner: the record steps aside; the next-event chip too */
+#ui:has(#settings:not([hidden])) { --radio-right: 316px; }
+#ui:has(#mission:not([hidden])), #ui:has(#tours:not([hidden])) { --radio-right: 386px; }
+#ui:has(#events:not([hidden])) { --radio-right: 406px; }
+#ui:has(#academy:not([hidden])) { --radio-right: 526px; }
+@media (min-width: 701px) {
+  #ui:has(#radio:not([hidden])) .next-event { right: calc(var(--radio-right) + 54px); }
+  #ui:has(#radio.open) .next-event { right: calc(var(--radio-right) + 274px); }
+}
+@media (max-width: 700px) {
+  #ui:has(#settings:not([hidden])) #radio, #ui:has(#mission:not([hidden])) #radio, #ui:has(#tours:not([hidden])) #radio, #ui:has(#events:not([hidden])) #radio, #ui:has(#academy:not([hidden])) #radio { display: none; }
+}
+
 /* ---------- Welcome (first visit) ----------
    Five chapters set like the opening pages of a book: a small chapter mark, a serif headline,
    a paragraph or two, and plain text controls. The panel sits left; the live scene fills the
@@ -696,6 +781,8 @@ body.welcoming #ui > :not(#welcome), body.welcoming canvas#overlay { visibility:
 .welcome-arrow { display: inline-block; transition: transform 0.2s; }
 .welcome-step.next:hover .welcome-arrow { transform: translateX(4px); }
 .welcome-step.go { color: var(--accent); }
+.welcome-music { font-size: 16px; line-height: 1; padding: 6px 4px; }
+.welcome-music.off { color: var(--ink-3); text-decoration: line-through; }
 .welcome-bars { display: flex; gap: 5px; margin: 0 auto; }
 .welcome-dot { width: 22px; height: 13px; padding: 6px 0; background: var(--hair); background-clip: content-box; cursor: pointer; transition: background-color 0.3s; }
 .welcome-dot.on { background-color: var(--accent); }

@@ -1,0 +1,432 @@
+{
+ "voice": "altair",
+ "locale": "de",
+ "steps": {
+  "51peg": {
+   "hash": "2ec3c279d177",
+   "duration": 35.83,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 1.58,
+     "text": "51 Pegasi b."
+    },
+    {
+     "start": 1.58,
+     "end": 13.16,
+     "text": "Neunzehnhundertfünfundneunzig bemerkten Michel Mayor und Didier Queloz, dass dieser sonnenähnliche Stern leicht schwankte: Ein unsichtbarer Planet zerrte an ihm."
+    },
+    {
+     "start": 13.16,
+     "end": 22.09,
+     "text": "Dieser Riese mit der halben Masse des Jupiter ist seinem Stern siebenmal näher, als Merkur der Sonne ist, und ein Umlauf dauert nur vier Tage."
+    },
+    {
+     "start": 22.09,
+     "end": 28.13,
+     "text": "Niemand hatte so etwas erwartet; Gasriesen sollten wie Jupiter weit draußen und langsam sein."
+    },
+    {
+     "start": 28.13,
+     "end": 31.77,
+     "text": "In jener Nacht wurde das Konzept des heißen Jupiter geboren."
+    },
+    {
+     "start": 31.77,
+     "end": 35.83,
+     "text": "Vierundzwanzig Jahre später gewann diese Entdeckung den Nobelpreis für Physik."
+    }
+   ]
+  },
+  "55cnc": {
+   "hash": "d15aa7aed373",
+   "duration": 42.87,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 7.2,
+     "text": "55 Cancri e, einundvierzig Lichtjahre entfernt; sein Stern ist mit bloßem Auge zu sehen."
+    },
+    {
+     "start": 7.2,
+     "end": 13.3,
+     "text": "Eine Supererde, im Durchmesser fast doppelt so groß wie die Erde und mit der achtfachen Masse."
+    },
+    {
+     "start": 13.3,
+     "end": 16.08,
+     "text": "Doch ihr Jahr dauert nur siebzehn Stunden."
+    },
+    {
+     "start": 16.08,
+     "end": 25.35,
+     "text": "Sie ist ihrem Stern so nah, dass ihr immer dieselbe Seite zugewandt ist, und die Tagseite ist ein geschmolzenes Lavameer bei zweitausend Grad."
+    },
+    {
+     "start": 25.35,
+     "end": 32.63,
+     "text": "Vergleichen Sie sie mit der Erde: etwa doppelt so breit, aber umhüllt von Mineralen, die aus Gestein verdampft sind."
+    },
+    {
+     "start": 32.63,
+     "end": 42.87,
+     "text": "Das Webb-Teleskop wies zweitausendvierundzwanzig hier eine dicke Atmosphäre aus Kohlendioxid und Kohlenmonoxid nach; eine Atmosphäre, die das Lavameer ausatmet."
+    }
+   ]
+  },
+  "hd189733": {
+   "hash": "5a3360351a4c",
+   "duration": 34.55,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.54,
+     "text": "HD 189733 b, vierundsechzig Lichtjahre entfernt."
+    },
+    {
+     "start": 5.54,
+     "end": 14.4,
+     "text": "Der erste Exoplanet, dessen Farbe gemessen wurde: Hubble stellte anhand des reflektierten Lichts fest, dass er ein tiefes Kobaltblau ist."
+    },
+    {
+     "start": 14.4,
+     "end": 17.24,
+     "text": "Doch dieses Blau stammt nicht von Ozeanen."
+    },
+    {
+     "start": 17.24,
+     "end": 24.91,
+     "text": "In seiner Atmosphäre schweben Silikatkörnchen, also Glaspartikel, und streuen das Licht blau wie der Himmel der Erde."
+    },
+    {
+     "start": 24.91,
+     "end": 30.99,
+     "text": "Die Temperatur liegt nahe bei tausend Grad, die Winde erreichen achttausend Kilometer pro Stunde."
+    },
+    {
+     "start": 30.99,
+     "end": 34.55,
+     "text": "Hier fällt der Regen seitwärts, und er besteht aus Glas."
+    }
+   ]
+  },
+  "hd209458": {
+   "hash": "88089b0a0bc6",
+   "duration": 47.67,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.62,
+     "text": "HD 209458 b, mit dem Spitznamen Osiris."
+    },
+    {
+     "start": 5.62,
+     "end": 17.16,
+     "text": "Neunzehnhundertneunundneunzig wurde er als erster Planet ertappt, während er vor seinem Stern vorbeizog: Das Licht des Sterns verdunkelte sich alle dreieinhalb Tage um eineinhalb Prozent."
+    },
+    {
+     "start": 17.16,
+     "end": 23,
+     "text": "Genau diesen Augenblick sehen Sie gerade; der Planet steht wie eine Silhouette vor seinem Stern."
+    },
+    {
+     "start": 23,
+     "end": 31.27,
+     "text": "Diese winzige Verdunkelung ist genau die Methode, mit der die Weltraumteleskope Kepler und TESS Tausende von Welten gefunden haben."
+    },
+    {
+     "start": 31.27,
+     "end": 40.71,
+     "text": "Während des Transits sickert das Sternenlicht durch die Atmosphäre des Planeten, und Hubble fand in diesem Licht Spuren von Natrium, Wasserstoff und Sauerstoff."
+    },
+    {
+     "start": 40.71,
+     "end": 47.67,
+     "text": "Der Planet ist so heiß, dass seine Atmosphäre wie ein Komet ins All entweicht; zehntausend Tonnen pro Sekunde."
+    }
+   ]
+  },
+  "hd80606": {
+   "hash": "3e103f2e63ae",
+   "duration": 44.47,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 6.2,
+     "text": "HD 80606 b, auf einer Umlaufbahn ohnegleichen im Sonnensystem."
+    },
+    {
+     "start": 6.2,
+     "end": 16.66,
+     "text": "Seine Exzentrizität beträgt null Komma dreiundneunzig: Am weitesten entfernt ist er von seinem Stern fast so weit wie die Erde, am nächsten nur ein Zehntel der Merkurbahn."
+    },
+    {
+     "start": 16.66,
+     "end": 24.51,
+     "text": "Den größten Teil seiner einhundertelf Tage langen Bahn verbringt er in der Kälte, dann schießt er wie ein Komet an seinem Stern vorbei."
+    },
+    {
+     "start": 24.51,
+     "end": 33.37,
+     "text": "Das Spitzer-Teleskop beobachtete diesen Vorbeiflug: Die Atmosphäre erhitzte sich in sechs Stunden von fünfhundert auf eintausendzweihundert Grad."
+    },
+    {
+     "start": 33.37,
+     "end": 38.83,
+     "text": "Nach dem Vorbeiflug entstehen planetenumspannende Stürme mit mehrfacher Schallgeschwindigkeit."
+    },
+    {
+     "start": 38.83,
+     "end": 44.47,
+     "text": "Wahrscheinlich hat der ferne Begleitstern HD 80607 ihn auf diese Bahn gestoßen."
+    }
+   ]
+  },
+  "intro": {
+   "hash": "6cddda5d002a",
+   "duration": 39.35,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.68,
+     "text": "Willkommen zur Tour der Exoplaneten."
+    },
+    {
+     "start": 2.68,
+     "end": 10.64,
+     "text": "Vor dreißig Jahren kannten wir keinen einzigen Planeten außerhalb des Sonnensystems; heute kennen wir fast sechstausend Welten."
+    },
+    {
+     "start": 10.64,
+     "end": 25.77,
+     "text": "Auf dieser Tour fliegen wir zu acht Sternen und schauen uns an, was wir dort gefunden haben: einen Planeten, auf dem es Glas regnet, einen Gasriesen, nahe genug, um seinen Stern zu berühren, und eine winzige Familie aus sieben Gesteinswelten."
+    },
+    {
+     "start": 25.77,
+     "end": 31.73,
+     "text": "Alles, was Sie sehen, beruht auf echten Messungen: Umlaufbahnen, Größen und Temperaturen."
+    },
+    {
+     "start": 31.73,
+     "end": 35.03,
+     "text": "Die Oberflächen dagegen sind eine Schätzung des Computers."
+    },
+    {
+     "start": 35.03,
+     "end": 39.35,
+     "text": "Schnallen Sie sich an; unser erster Stern ist fünfzig Lichtjahre entfernt."
+    }
+   ]
+  },
+  "kelt9": {
+   "hash": "8edd6f0021ec",
+   "duration": 41.59,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 3.94,
+     "text": "KELT-9 b: der heißeste bekannte Planet."
+    },
+    {
+     "start": 3.94,
+     "end": 13.72,
+     "text": "Sein Stern ist fast doppelt so heiß wie die Sonne, ein blauweißer A-Stern, und der Planet ist ihm so nah, dass er ihn alle sechsunddreißig Stunden umrundet."
+    },
+    {
+     "start": 13.72,
+     "end": 19.3,
+     "text": "Die Tagseite erreicht viertausendsechshundert Kelvin; das ist heißer als viele Sterne."
+    },
+    {
+     "start": 19.3,
+     "end": 29.57,
+     "text": "Bei dieser Temperatur zerfallen die Moleküle: Wasser und Kohlendioxid können nicht existieren, die Atmosphäre ist voll von atomarem Eisendampf und Titandampf."
+    },
+    {
+     "start": 29.57,
+     "end": 35.07,
+     "text": "Die ultraviolette Strahlung des Sterns schmilzt jede Sekunde Tausende Tonnen des Planeten."
+    },
+    {
+     "start": 35.07,
+     "end": 41.59,
+     "text": "Obendrein führt seine Umlaufbahn über die Pole seines Sterns; wie ein Komet, der in die falsche Richtung umläuft."
+    }
+   ]
+  },
+  "kepler452": {
+   "hash": "501618058070",
+   "duration": 53.43,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.98,
+     "text": "Unsere letzte Station: Kepler-452 b, etwa eintausendachthundert Lichtjahre entfernt."
+    },
+    {
+     "start": 6.98,
+     "end": 11.92,
+     "text": "Sein Stern ist fast ein Zwilling der Sonne; etwas älter, etwas heller."
+    },
+    {
+     "start": 11.92,
+     "end": 19.4,
+     "text": "Der Planet ist von seinem Stern so weit entfernt wie wir von der Sonne, und sein Jahr dauert dreihundertfünfundachtzig Tage."
+    },
+    {
+     "start": 19.4,
+     "end": 26.58,
+     "text": "Er ist um sechzig Prozent breiter als die Erde; ob er aus Gestein besteht oder eine dicke Gashülle trägt, wissen wir nicht."
+    },
+    {
+     "start": 26.58,
+     "end": 30.71,
+     "text": "Bei seiner Entdeckung nannte man ihn den großen, alten Cousin der Erde."
+    },
+    {
+     "start": 30.71,
+     "end": 40.81,
+     "text": "Auf dieser Welt, eineinhalb Milliarden Jahre älter, verbrennt ihr langsam heller werdender Stern sie vor uns, falls es Leben gibt: ein Fenster in die Zukunft der Erde."
+    },
+    {
+     "start": 40.81,
+     "end": 43.65,
+     "text": "Sechstausend Planeten, in dreißig Jahren."
+    },
+    {
+     "start": 43.65,
+     "end": 51.31,
+     "text": "Noch ist keiner eine zweite Erde; doch jeder erzählt uns ein wenig mehr darüber, wie außergewöhnlich oder wie gewöhnlich wir sind."
+    },
+    {
+     "start": 51.31,
+     "end": 53.43,
+     "text": "Die Tour der Exoplaneten ist zu Ende."
+    }
+   ]
+  },
+  "kepler90": {
+   "hash": "21653008f261",
+   "duration": 46.71,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 7.46,
+     "text": "Kepler-90, zweitausendachthundert Lichtjahre entfernt; ein sonnenähnlicher Stern und ganze acht Planeten."
+    },
+    {
+     "start": 7.46,
+     "end": 12.36,
+     "text": "Gleichauf mit dem Sonnensystem: das an Planeten reichste bekannte System."
+    },
+    {
+     "start": 12.36,
+     "end": 17.94,
+     "text": "Auch die Anordnung ähnelt der unseren: innen kleine Gesteinswelten, außen Gasriesen."
+    },
+    {
+     "start": 17.94,
+     "end": 28.93,
+     "text": "Der Unterschied: Sie alle passen in die Erdbahn hinein; der äußerste, Kepler-90 h, ist von seinem Stern so weit entfernt wie wir von der Sonne und so groß wie Jupiter."
+    },
+    {
+     "start": 28.93,
+     "end": 41.43,
+     "text": "Der achte Planet, Kepler-90 i, wurde zweitausendsiebzehn gefunden, als ein neuronales Netz von Google ein schwaches Signal in den Kepler-Daten durchmusterte: die erste Entdeckung durch maschinelles Lernen."
+    },
+    {
+     "start": 41.43,
+     "end": 46.71,
+     "text": "Dieses gedrängte System sagt uns, dass Planeten nach ihrer Entstehung nach innen wandern können."
+    }
+   ]
+  },
+  "proxima": {
+   "hash": "b8d91494af01",
+   "duration": 49.27,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 1.72,
+     "text": "Und unser nächster Nachbar."
+    },
+    {
+     "start": 1.72,
+     "end": 8,
+     "text": "Proxima Centauri b, um den sonnennächsten Stern, vier Komma zwei Lichtjahre entfernt."
+    },
+    {
+     "start": 8,
+     "end": 13.54,
+     "text": "Mit Erdmasse und in der habitablen Zone; er umrundet seinen Stern alle elf Tage."
+    },
+    {
+     "start": 13.54,
+     "end": 25.11,
+     "text": "Doch sein Stern ist ein launischer roter Zwerg: Seine Ausbrüche schleudern hunderte Male so viel Strahlung aus, wie die Erde empfängt, und könnten die Atmosphäre des Planeten längst abgestreift haben."
+    },
+    {
+     "start": 25.11,
+     "end": 32.27,
+     "text": "Der Stern steht blutrot und riesig am Himmel, doch das Tageslicht beträgt nur fünfundsechzig Prozent dessen der Erde."
+    },
+    {
+     "start": 32.27,
+     "end": 38.87,
+     "text": "Kürzlich wurde im selben System ein zweiter Planet bestätigt: Proxima d, leichter als der Mars."
+    },
+    {
+     "start": 38.87,
+     "end": 49.27,
+     "text": "Mit unserer heute schnellsten Sonde würde die Reise hierher siebzigtausend Jahre dauern; die Lasersegel von Breakthrough Starshot träumen davon, das auf zwanzig Jahre zu verkürzen."
+    }
+   ]
+  },
+  "trappist": {
+   "hash": "f45ada291375",
+   "duration": 46.71,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 7.74,
+     "text": "TRAPPIST-1: vierzig Lichtjahre entfernt, ein kalter roter Zwerg, nur ganz wenig größer als Jupiter."
+    },
+    {
+     "start": 7.74,
+     "end": 10.98,
+     "text": "Und um ihn sieben erdgroße Gesteinsplaneten."
+    },
+    {
+     "start": 10.98,
+     "end": 17.78,
+     "text": "Alle sind ihrem Stern näher, als Merkur der Sonne ist; der äußerste braucht für einen Umlauf nur neunzehn Tage."
+    },
+    {
+     "start": 17.78,
+     "end": 21.9,
+     "text": "Drei liegen in der habitablen Zone: e, f und g."
+    },
+    {
+     "start": 21.9,
+     "end": 31.61,
+     "text": "Sie stehen jetzt auf e; der Nachbarplanet f erscheint am Himmel so groß wie der Mond, die Planeten sind einander so nah, dass Sie die Kontinente ausmachen könnten."
+    },
+    {
+     "start": 31.61,
+     "end": 37.33,
+     "text": "Der Stern steht tiefrot am Himmel und viermal so breit, wie die Sonne an unserem Himmel erscheint."
+    },
+    {
+     "start": 37.33,
+     "end": 45.23,
+     "text": "Das Webb-Teleskop misst die Atmosphären dieser Welten eine nach der anderen; bei den beiden innersten fand es keine dicke Atmosphäre."
+    },
+    {
+     "start": 45.23,
+     "end": 46.71,
+     "text": "Jetzt ist e an der Reihe."
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,432 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "51peg": {
+   "hash": "11d91e466436",
+   "duration": 40.95,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 1.32,
+     "text": "Cincuenta y uno Pegasi b."
+    },
+    {
+     "start": 1.32,
+     "end": 14.52,
+     "text": "En mil novecientos noventa y cinco, Michel Mayor y Didier Queloz notaron que esta estrella similar al Sol se bamboleaba ligeramente: un planeta invisible tiraba de ella."
+    },
+    {
+     "start": 14.52,
+     "end": 25.23,
+     "text": "Este gigante, con una masa de la mitad de Júpiter, está siete veces más cerca de su estrella de lo que Mercurio lo está del Sol, y una vuelta le dura solo cuatro días."
+    },
+    {
+     "start": 25.23,
+     "end": 32.79,
+     "text": "Nadie esperaba algo así; se suponía que los gigantes gaseosos tenían que estar lejos y ser lentos, como Júpiter."
+    },
+    {
+     "start": 32.79,
+     "end": 36.23,
+     "text": "El concepto de Júpiter caliente nació aquella noche."
+    },
+    {
+     "start": 36.23,
+     "end": 40.95,
+     "text": "Veinticuatro años después, este descubrimiento ganó el Premio Nobel de Física."
+    }
+   ]
+  },
+  "55cnc": {
+   "hash": "62de4cf3af54",
+   "duration": 39.35,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 6.3,
+     "text": "Cincuenta y cinco Cancri e, a cuarenta y un años luz; su estrella se ve a simple vista."
+    },
+    {
+     "start": 6.3,
+     "end": 11.44,
+     "text": "Una supertierra de casi el doble de diámetro que la Tierra y ocho veces su masa."
+    },
+    {
+     "start": 11.44,
+     "end": 14.16,
+     "text": "Pero su año dura solo diecisiete horas."
+    },
+    {
+     "start": 14.16,
+     "end": 22.89,
+     "text": "Está tan cerca de su estrella que una cara está siempre vuelta hacia ella, y el lado diurno es un océano de lava fundida a dos mil grados."
+    },
+    {
+     "start": 22.89,
+     "end": 29.71,
+     "text": "Comparadla con la Tierra: aproximadamente el doble de ancha, pero envuelta en minerales evaporados de la roca."
+    },
+    {
+     "start": 29.71,
+     "end": 39.35,
+     "text": "El telescopio Webb detectó aquí en dos mil veinticuatro una atmósfera espesa de dióxido de carbono y monóxido de carbono; una atmósfera que el océano de lava respira."
+    }
+   ]
+  },
+  "hd189733": {
+   "hash": "2cf8aa533df0",
+   "duration": 33.27,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 6.16,
+     "text": "HD ciento ochenta y nueve mil setecientos treinta y tres b, a sesenta y cuatro años luz."
+    },
+    {
+     "start": 6.16,
+     "end": 14.24,
+     "text": "El primer exoplaneta cuyo color se midió: el Hubble descubrió, por la luz que refleja, que es de un azul cobalto profundo."
+    },
+    {
+     "start": 14.24,
+     "end": 16.58,
+     "text": "Pero ese azul no viene de océanos."
+    },
+    {
+     "start": 16.58,
+     "end": 24.75,
+     "text": "En su atmósfera flotan granos de silicato, es decir, partículas de vidrio, y dispersan la luz en azul como el cielo de la Tierra."
+    },
+    {
+     "start": 24.75,
+     "end": 30.61,
+     "text": "La temperatura está cerca de los mil grados, y los vientos alcanzan los ocho mil kilómetros por hora."
+    },
+    {
+     "start": 30.61,
+     "end": 33.27,
+     "text": "Aquí la lluvia cae de lado, y es de vidrio."
+    }
+   ]
+  },
+  "hd209458": {
+   "hash": "5ed83fe73dd5",
+   "duration": 48.95,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 5.7,
+     "text": "HD doscientos nueve mil cuatrocientos cincuenta y ocho b, apodado Osiris."
+    },
+    {
+     "start": 5.7,
+     "end": 17.34,
+     "text": "En mil novecientos noventa y nueve se convirtió en el primer planeta captado al pasar por delante de su estrella: la luz de la estrella se oscurecía en un uno y medio por ciento cada tres días y medio."
+    },
+    {
+     "start": 17.34,
+     "end": 24,
+     "text": "Ahora mismo estáis viendo justo ese instante; el planeta, como una silueta, delante de su estrella."
+    },
+    {
+     "start": 24,
+     "end": 32.47,
+     "text": "Ese minúsculo oscurecimiento es precisamente el método que permitió a los telescopios espaciales Kepler y TESS encontrar miles de mundos."
+    },
+    {
+     "start": 32.47,
+     "end": 41.95,
+     "text": "Durante el tránsito, la luz de la estrella se filtra por la atmósfera del planeta, y el Hubble encontró en esa luz rastros de sodio, hidrógeno y oxígeno."
+    },
+    {
+     "start": 41.95,
+     "end": 48.95,
+     "text": "El planeta está tan caliente que su atmósfera escapa al espacio como la de un cometa; diez mil toneladas cada segundo."
+    }
+   ]
+  },
+  "hd80606": {
+   "hash": "b74e8afe4061",
+   "duration": 44.47,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.88,
+     "text": "HD ochenta mil seiscientos seis b, en una órbita sin igual en el Sistema Solar."
+    },
+    {
+     "start": 5.88,
+     "end": 18.08,
+     "text": "Su excentricidad es cero coma noventa y tres: cuando más se aleja de su estrella está casi tan lejos como la Tierra, y cuando más se acerca, tan cerca como una décima parte de la órbita de Mercurio."
+    },
+    {
+     "start": 18.08,
+     "end": 25.47,
+     "text": "Pasa en el frío la mayor parte de su órbita de ciento once días, y luego pasa disparado junto a su estrella como un cometa."
+    },
+    {
+     "start": 25.47,
+     "end": 32.69,
+     "text": "El telescopio Spitzer observó ese paso: la atmósfera se calentó en seis horas de quinientos a mil doscientos grados."
+    },
+    {
+     "start": 32.69,
+     "end": 38.85,
+     "text": "Después del paso se forman tormentas del tamaño del planeta, a unas pocas veces la velocidad del sonido."
+    },
+    {
+     "start": 38.85,
+     "end": 44.47,
+     "text": "Probablemente la estrella compañera lejana HD ochenta mil siete lo empujó a esta órbita."
+    }
+   ]
+  },
+  "intro": {
+   "hash": "6507b8b451d4",
+   "duration": 39.35,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 3.16,
+     "text": "Bienvenidos al recorrido de los exoplanetas."
+    },
+    {
+     "start": 3.16,
+     "end": 10.8,
+     "text": "Hace treinta años no conocíamos ni un solo planeta fuera del Sistema Solar; hoy conocemos cerca de seis mil mundos."
+    },
+    {
+     "start": 10.8,
+     "end": 25.37,
+     "text": "En este recorrido volaremos a ocho estrellas y miraremos lo que hemos encontrado allí: un planeta donde llueve vidrio, un gigante gaseoso tan cerca de su estrella que casi la toca, una pequeña familia de siete mundos rocosos."
+    },
+    {
+     "start": 25.37,
+     "end": 30.93,
+     "text": "Todo lo que veréis se basa en mediciones reales: órbitas, tamaños y temperaturas."
+    },
+    {
+     "start": 30.93,
+     "end": 34.57,
+     "text": "Las superficies, en cambio, son la estimación del ordenador."
+    },
+    {
+     "start": 34.57,
+     "end": 39.35,
+     "text": "Abrochaos los cinturones; nuestra primera estrella está a cincuenta años luz."
+    }
+   ]
+  },
+  "kelt9": {
+   "hash": "895c877a113f",
+   "duration": 41.91,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 3.96,
+     "text": "KELT nueve b: el planeta más caliente conocido."
+    },
+    {
+     "start": 3.96,
+     "end": 13.84,
+     "text": "Su estrella es casi el doble de caliente que el Sol, una estrella A azul-blanca, y el planeta está tan cerca que le da una vuelta cada treinta y seis horas."
+    },
+    {
+     "start": 13.84,
+     "end": 20.02,
+     "text": "La cara diurna alcanza los cuatro mil seiscientos kelvin; eso es más caliente que muchas estrellas."
+    },
+    {
+     "start": 20.02,
+     "end": 29.73,
+     "text": "A esa temperatura las moléculas se rompen: el agua y el dióxido de carbono no pueden existir, y la atmósfera está llena de vapor de hierro y titanio atómicos."
+    },
+    {
+     "start": 29.73,
+     "end": 35.05,
+     "text": "La radiación ultravioleta de la estrella funde miles de toneladas del planeta cada segundo."
+    },
+    {
+     "start": 35.05,
+     "end": 41.91,
+     "text": "Además, su órbita pasa por encima de los polos de su estrella; como si fuera un cometa que gira en la dirección equivocada."
+    }
+   ]
+  },
+  "kepler452": {
+   "hash": "6fa2272b9683",
+   "duration": 55.99,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 7.16,
+     "text": "Nuestra última parada: Kepler cuatrocientos cincuenta y dos b, a unos mil ochocientos años luz."
+    },
+    {
+     "start": 7.16,
+     "end": 12.76,
+     "text": "Su estrella es casi la gemela del Sol; un poco más vieja, un poco más brillante."
+    },
+    {
+     "start": 12.76,
+     "end": 20.28,
+     "text": "El planeta está a la misma distancia de su estrella que nosotros del Sol, y su año dura trescientos ochenta y cinco días."
+    },
+    {
+     "start": 20.28,
+     "end": 27.62,
+     "text": "Es un sesenta por ciento más ancho que la Tierra; no sabemos si es rocoso o si lleva una envoltura de gas espesa."
+    },
+    {
+     "start": 27.62,
+     "end": 31.79,
+     "text": "Cuando se descubrió, se le llamó el primo grande y viejo de la Tierra."
+    },
+    {
+     "start": 31.79,
+     "end": 43.11,
+     "text": "En este mundo, mil quinientos millones de años más viejo, si hay vida, su estrella, que brilla lentamente, lo está abrasando antes que a nosotros: una ventana al futuro de la Tierra."
+    },
+    {
+     "start": 43.11,
+     "end": 45.67,
+     "text": "Seis mil planetas, en treinta años."
+    },
+    {
+     "start": 45.67,
+     "end": 53.43,
+     "text": "Ninguno es todavía una segunda Tierra; pero cada uno nos cuenta un poco más cuán extraordinarios o cuán ordinarios somos."
+    },
+    {
+     "start": 53.43,
+     "end": 55.99,
+     "text": "El recorrido de los exoplanetas ha terminado."
+    }
+   ]
+  },
+  "kepler90": {
+   "hash": "fee85168269b",
+   "duration": 50.23,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 7.48,
+     "text": "Kepler noventa, a dos mil ochocientos años luz; una estrella similar al Sol y exactamente ocho planetas."
+    },
+    {
+     "start": 7.48,
+     "end": 12.74,
+     "text": "Empata con el Sistema Solar: el sistema planetario más poblado que se conoce."
+    },
+    {
+     "start": 12.74,
+     "end": 20.2,
+     "text": "Su orden también se parece al nuestro: mundos rocosos pequeños en el interior, gigantes gaseosos en el exterior."
+    },
+    {
+     "start": 20.2,
+     "end": 32.03,
+     "text": "La diferencia es que todos caben dentro de la órbita de la Tierra; el más exterior, Kepler noventa h, está tan lejos de su estrella como nosotros del Sol, y es del tamaño de Júpiter."
+    },
+    {
+     "start": 32.03,
+     "end": 45.11,
+     "text": "El octavo planeta, Kepler noventa i, se encontró en dos mil diecisiete, cuando una red neuronal de Google escaneó una señal débil en los datos de Kepler: el primer descubrimiento por aprendizaje automático."
+    },
+    {
+     "start": 45.11,
+     "end": 50.23,
+     "text": "Este sistema apretado nos dice que los planetas pueden migrar hacia el interior después de nacer."
+    }
+   ]
+  },
+  "proxima": {
+   "hash": "4d13759364e7",
+   "duration": 49.27,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 2.08,
+     "text": "Y nuestro vecino más cercano."
+    },
+    {
+     "start": 2.08,
+     "end": 8.76,
+     "text": "Proxima Centauri b, alrededor de la estrella más cercana al Sol, a cuatro coma dos años luz."
+    },
+    {
+     "start": 8.76,
+     "end": 14.5,
+     "text": "De masa terrestre y en la zona habitable; da una vuelta a su estrella cada once días."
+    },
+    {
+     "start": 14.5,
+     "end": 25.25,
+     "text": "Pero su estrella es una enana roja de mal genio: sus llamaradas expulsan cientos de veces la radiación que ve la Tierra, y puede que ya hayan arrancado la atmósfera del planeta."
+    },
+    {
+     "start": 25.25,
+     "end": 33.13,
+     "text": "La estrella se ve en el cielo de un rojo profundo y enorme, pero la luz del día es solo el sesenta y cinco por ciento de la de la Tierra."
+    },
+    {
+     "start": 33.13,
+     "end": 39.57,
+     "text": "Hace poco se confirmó un segundo planeta en el mismo sistema: Proxima d, más ligero que Marte."
+    },
+    {
+     "start": 39.57,
+     "end": 49.27,
+     "text": "Con la sonda más rápida que tenemos hoy, el viaje hasta aquí duraría setenta mil años; las velas láser de Breakthrough Starshot sueñan con reducirlo a veinte años."
+    }
+   ]
+  },
+  "trappist": {
+   "hash": "ed14e056786e",
+   "duration": 48.31,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 7.08,
+     "text": "TRAPPIST uno: a cuarenta años luz, una enana roja fría, muy poco más grande que Júpiter."
+    },
+    {
+     "start": 7.08,
+     "end": 11.44,
+     "text": "Y a su alrededor, siete planetas rocosos del tamaño de la Tierra."
+    },
+    {
+     "start": 11.44,
+     "end": 19.06,
+     "text": "Todos están más cerca de la estrella de lo que Mercurio lo está del Sol; la vuelta del más exterior dura solo diecinueve días."
+    },
+    {
+     "start": 19.06,
+     "end": 23,
+     "text": "Tres están en la zona habitable: e, f y g."
+    },
+    {
+     "start": 23,
+     "end": 33.59,
+     "text": "Ahora estáis sobre e; el planeta vecino f se ve en el cielo tan grande como la Luna, y los planetas están tan cerca entre sí que podríais distinguir los continentes."
+    },
+    {
+     "start": 33.59,
+     "end": 39.43,
+     "text": "La estrella está de un rojo vivo y abarca cuatro veces la anchura que el Sol ocupa en nuestro cielo."
+    },
+    {
+     "start": 39.43,
+     "end": 47.15,
+     "text": "El telescopio Webb mide una por una la atmósfera de estos mundos; en los dos más interiores no encontró una atmósfera espesa."
+    },
+    {
+     "start": 47.15,
+     "end": 48.31,
+     "text": "Ahora le toca a e."
+    }
+   ]
+  }
+ }
+}
