@@ -54,6 +54,12 @@ canvas#scene, canvas#overlay {
   display: block;
 }
 canvas#scene { touch-action: none; }
+/* An opaque, axis-aligned, full-screen canvas is promoted to a hardware overlay plane by
+   Chromium on Windows; under Opera GX's Skia Graphite compositor that path loses frames
+   (ProduceOverlay on a dead mailbox: stale frames shown between live ones — clouds and
+   star clusters "flicker between two shapes", black flashes). A quad that needs blending
+   is never promoted; 0.999 over a black page is indistinguishable from 1. */
+canvas#scene { opacity: 0.999; }
 canvas#overlay { pointer-events: none; }
 
 /* letterbox for event scenes: two bars sliding in from the edges, under the UI chrome */
@@ -826,6 +832,13 @@ body.welcoming #ui > :not(#welcome), body.welcoming canvas#overlay { visibility:
 }
 .loader-text { font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--text-2); }
 @keyframes sweep { to { left: 160px; } }
+#loader.ready .loader-mark::after { animation: none; left: 0; width: 160px; }
+.loader-enter {
+  margin-top: 6px; padding: 0 26px; height: 38px; border: 1px solid var(--border-strong); background: transparent;
+  color: var(--text); font-family: var(--font); font-size: 14px; letter-spacing: 0; cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.loader-enter:hover, .loader-enter:focus-visible { border-color: var(--accent); background: rgba(255, 255, 255, 0.04); outline: none; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
