@@ -15,6 +15,8 @@ export interface TourOverrides {
   equatorialGrid?: boolean;
   /** field of view, degrees */
   fov?: number;
+  /** tone-mapping exposure (the welcome shows every first visit the same picture) */
+  exposure?: number;
   /** false: no night-side work light even when close */
   fill?: boolean;
 }
@@ -72,6 +74,14 @@ export interface TourHost {
   setSurfacePin(pin: SurfacePin | null): void;
   /** camera `alt` km above `refId` on the side facing the `toward` bodies, aimed at their midpoint (called every frame) */
   lookFrom(refId: string, toward: string[], alt: number): void;
+  /**
+   * Stand on `refId` where the `toward` bodies hang `elev`° over the horizon, descending over
+   * `seconds` (with `sep` the clock first runs to the moment the first of them is that many degrees
+   * from the star); already standing there, only the gaze turns to them. See the `land` cue.
+   */
+  landFor(refId: string, toward: string[], o: { elev: number; sep?: number; starElev?: number; seconds?: number }): void;
+  /** on the ground: ease the gaze onto the `toward` bodies (called every frame while a `land` cue holds) */
+  aimOnSurface(toward: string[], dt: number): void;
   /** formatted live measurement between two bodies ('' when one is missing) */
   measure(kind: ReadoutKind, a: string, b: string, from?: string): string;
   /** field of view in effect right now (degrees) — start value of eased `fov` cues */
@@ -125,7 +135,7 @@ export interface TourState {
 }
 
 /** Cues that start a camera flight of their own */
-const FLIGHT_ACTIONS = new Set<TourCue['action']>(['overview', 'vantage', 'shot', 'pin', 'lookFrom', 'return', 'postcard', 'limb']);
+const FLIGHT_ACTIONS = new Set<TourCue['action']>(['overview', 'vantage', 'shot', 'pin', 'lookFrom', 'land', 'return', 'postcard', 'limb']);
 const isFlightCue = (c: TourCue): boolean => FLIGHT_ACTIONS.has(c.action) && !(c.action === 'pin' && c.approach === false);
 /** A flight cue is held until the camera has rested this long after its previous flight… */
 const FLIGHT_HOLD_S = 1.4;
@@ -196,6 +206,8 @@ export class TourPlayer {
   private readoutText = '';
   /** sky-view lock, if any */
   private look: Extract<TourCue, { action: 'lookFrom' }> | null = null;
+  /** `land` cue in effect: the bodies the gaze follows from the ground */
+  private stand: string[] | null = null;
   /** cinematic drift while dwelling: auto-orbit (rad/s; null = the step's) and push-in (ln/s) */
   private driftRate: number | null = null;
   private dollyRate = 0;
@@ -380,6 +392,7 @@ export class TourPlayer {
       }
     }
     if (this.look) this.host.lookFrom(this.look.ref, this.look.toward, this.look.alt ?? 300);
+    if (this.stand) this.host.aimOnSurface(this.stand, dt);
     if (this.fovTween) {
       const f = this.fovTween;
       f.t += dt;
@@ -653,10 +666,22 @@ export class TourPlayer {
         break;
       case 'lookFrom':
         this.look = cue;
+        this.stand = null;
         this.pinned = true; // no drift
         if (cue.fov !== undefined) { this.overrides = { ...this.overrides, fov: cue.fov }; h.setTourOverrides(this.overrides); }
         h.lookFrom(cue.ref, cue.toward, cue.alt ?? 300);
         this.flight = h.camera.autopilot;
+        break;
+      case 'land':
+        this.look = null;
+        this.pinned = true;
+        if (cue.fov !== undefined) { this.overrides = { ...this.overrides, fov: cue.fov }; h.setTourOverrides(this.overrides); }
+        // the sky must hold still on the ground: a rate ramp still running is cut to real time
+        if (h.time.rate !== 1) { this.rateTween = null; this.rateGoal = 1; h.time.setRate(1); }
+        h.landFor(cue.ref, cue.toward, { elev: cue.elev ?? 9, sep: cue.sep, starElev: cue.starElev, seconds: cue.seconds });
+        this.stand = cue.toward;
+        this.flight = h.camera.autopilot;
+        if (this.flight) this.state.phase = 'flying';
         break;
       case 'fov':
         if (cue.seconds && cue.seconds > 0) {
@@ -725,8 +750,9 @@ export class TourPlayer {
   /** Undo everything cues may have changed (called on step change and teardown) */
   /** Leave a `lookFrom` shot: the camera gets its own fov and drift back. */
   private endLook(): void {
-    if (!this.look) return;
+    if (!this.look && !this.stand) return;
     this.look = null;
+    this.stand = null;
     this.pinned = false;
     this.fovTween = null;
     if (this.overrides.fov !== undefined) {
@@ -744,6 +770,7 @@ export class TourPlayer {
     this.readout = null;
     this.readoutText = '';
     this.look = null;
+    this.stand = null;
     this.driftRate = null;
     this.dollyRate = 0;
     this.fovTween = null;
@@ -823,7 +850,7 @@ export class TourPlayer {
         case 'compare': ids.push(c.ref); break;
         case 'pulse': ids.push(c.from, c.to); break;
         case 'readout': ids.push(c.a, c.b); if (c.from) ids.push(c.from); break;
-        case 'lookFrom': ids.push(c.ref, ...c.toward); break;
+        case 'lookFrom': case 'land': ids.push(c.ref, ...c.toward); break;
         case 'meteors': if (c.on) ids.push(c.ref); break;
       }
     }
@@ -873,7 +900,7 @@ export class TourPlayer {
       case 'shot': return { ...c, ref: r(c.ref), toward: r(c.toward) };
       case 'pulse': return { ...c, from: r(c.from), to: r(c.to) };
       case 'readout': return { ...c, a: r(c.a), b: r(c.b), from: c.from ? r(c.from) : undefined };
-      case 'lookFrom': return { ...c, ref: r(c.ref), toward: c.toward.map(r) };
+      case 'lookFrom': case 'land': return { ...c, ref: r(c.ref), toward: c.toward.map(r) };
       case 'meteors': return c.on ? { ...c, ref: r(c.ref) } : c;
       default: return c;
     }

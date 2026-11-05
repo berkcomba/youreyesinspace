@@ -105,6 +105,15 @@ export type TourCue = { delay?: number } & (
    * Earth" shot for conjunctions and oppositions). `fov` narrows the field of view (degrees).
    */
   | { at: number; action: 'lookFrom'; ref: string; toward: string[]; alt?: number; fov?: number }
+  /**
+   * Stand on `ref`: the ground is generated and the camera descends to it (over `seconds`), on the
+   * spot where the `toward` bodies hang `elev`° over the horizon (default 9); the gaze then follows
+   * them, turning smoothly when a later `land` cue on the same body names other bodies. `sep`
+   * first runs the clock to the next moment the first `toward` body stands that many degrees from
+   * the star on `ref`'s sky (a conjunction staged on purpose) and picks the spot where the star
+   * is `starElev`° up as well (default `elev`). `fov` as in `lookFrom`.
+   */
+  | { at: number; action: 'land'; ref: string; toward: string[]; elev?: number; sep?: number; starElev?: number; fov?: number; seconds?: number }
   /** field of view (degrees) from this sentence on, eased over `seconds` (slow zoom); restored at step end */
   | { at: number; action: 'fov'; deg: number; seconds?: number }
   /** set the simulation clock to an instant (ISO 8601 UTC) */
@@ -195,12 +204,13 @@ const drift = (at: number, r: number): TourCue => ({ at, action: 'drift', rate: 
 const fov = (at: number, deg: number, seconds?: number): TourCue => ({ at, action: 'fov', deg, seconds });
 const fill = (at: number, on: boolean): TourCue => ({ at, action: 'fill', on });
 const lookFrom = (at: number, ref: string, toward: string[], o: { alt?: number; fov?: number } = {}): TourCue => ({ at, action: 'lookFrom', ref, toward, ...o });
+const land = (at: number, ref: string, toward: string[], o: { elev?: number; sep?: number; starElev?: number; fov?: number; seconds?: number } = {}): TourCue => ({ at, action: 'land', ref, toward, ...o });
 type MeteorOpts = Omit<Extract<TourCue, { action: 'meteors'; on: true }>, 'at' | 'action' | 'on'>;
 const meteors = (at: number, m: MeteorOpts): TourCue => ({ at, action: 'meteors', on: true, ...m });
 const unmeteors = (at: number): TourCue => ({ at, action: 'meteors', on: false });
 
 /** cue shorthands shared with the Events scenes (src/data/events.ts) */
-export const cues = { body, star, bh, lm, gal, exo, card, uncard, rate, overview, ret, pin, unpin, clouds, compare, uncompare, vantage, pulse, shot, dolly, drift, fov, fill, lookFrom, meteors, unmeteors };
+export const cues = { body, star, bh, lm, gal, exo, card, uncard, rate, overview, ret, pin, unpin, clouds, compare, uncompare, vantage, pulse, shot, dolly, drift, fov, fill, lookFrom, land, meteors, unmeteors };
 
 /* picture credits (not translated) */
 const NASA = 'NASA';
@@ -217,6 +227,7 @@ const EHT = 'EHT Collaboration (CC BY 4.0)';
 export const TOURS: TourDef[] = [
   {
     id: 'solar-system',
+    music: 'Alana Jordan - Space Rock Instrumental 01.mp3',
     title: 'Güneş Sistemi Turu',
     summary: 'Güneş\'ten Plüton\'a: gerçek ölçekli karşılaştırmalar, hızlandırılmış yörüngeler, yüzey işaretleri ve fotoğraflarla sekiz gezegen, bir ay ve bir cüce gezegen.',
     steps: [
@@ -361,6 +372,7 @@ export const TOURS: TourDef[] = [
 
   {
     id: 'exoplanets',
+    music: 'Alana Jordan - Space Rock Instrumental 01.mp3',
     title: 'Öte Gezegenler',
     summary: 'Camdan yağmur, lav okyanusları, yedi dünyalı bir cüce: sekiz yıldıza uçup orada bulduklarımıza bakıyoruz.',
     steps: [
@@ -445,8 +457,9 @@ export const TOURS: TourDef[] = [
           overview(1, 'TRAPPIST-1 h', 6),
           uncard(3),
           rate(4, 1),
-          lookFrom(4, 'TRAPPIST-1 e', ['TRAPPIST-1 f'], { alt: 400, fov: 7 }),
-          lookFrom(5, 'TRAPPIST-1 e', ['star'], { alt: 400, fov: 7 }),
+          // staged: f 142° from the star on e's sky stands 1.6 million km off — a Moon-sized gibbous disc
+          land(4, 'TRAPPIST-1 e', ['TRAPPIST-1 f'], { sep: 142, elev: 6, starElev: 14, fov: 14, seconds: 5 }),
+          land(5, 'TRAPPIST-1 e', ['star'], { fov: 20 }),
           ret(6),
           compare(7, 'earth'),
         ], show: ['TRAPPIST-1 b', 'TRAPPIST-1 c', 'TRAPPIST-1 d', 'TRAPPIST-1 f', 'TRAPPIST-1 g', 'TRAPPIST-1 h'], dwell: 4 },
@@ -456,9 +469,8 @@ export const TOURS: TourDef[] = [
           rate(2, 5e4),
           overview(2, 'Proxima Cen b', 5),
           uncard(3),
-          ret(4),
-          rate(4, 1),
-          lookFrom(4, 'Proxima Cen b', ['star'], { alt: 400, fov: 7 }),
+          rate(3, 1),
+          land(3, 'Proxima Cen b', ['star'], { elev: 8, fov: 20, seconds: 5 }),
           ret(5),
           card(6, { big: '70.000 yıl', title: 'Voyager hızıyla', text: 'Işık için dört yıl, bizim için binlerce kuşak.' }),
         ], show: ['Proxima Cen d'], dwell: 3 },
@@ -476,6 +488,7 @@ export const TOURS: TourDef[] = [
   },
   {
     id: 'mars',
+    music: 'Nick Panek - Devotion.mp3',
     title: 'Mars ve Robotları',
     summary: 'Kızıl Gezegen, iki küçük ayı ve yüzeyinde dolaşan keşif araçları; işaretli yüzey şekilleri ve robotların fotoğraflarıyla.',
     steps: [
@@ -536,6 +549,7 @@ export const TOURS: TourDef[] = [
 
   {
     id: 'jupiter',
+    music: 'Sonican - Starlight Echoes (Space Rock Odyssey).mp3',
     title: 'Jüpiter ve Ayları',
     summary: 'Dev gezegen, dört Galileo ayı ve kutuplarının üzerinde dönen Juno; yörüngeler yukarıdan, aylar gerçek ölçekte.',
     steps: [
@@ -598,6 +612,7 @@ export const TOURS: TourDef[] = [
 
   {
     id: 'saturn',
+    music: 'Alana Jordan - Space Rock Instrumental 02.mp3',
     title: 'Satürn: Halkaların Efendisi',
     summary: 'Halkalar kenardan ve yukarıdan, kalın atmosferli Titan, gayzerleriyle Enceladus ve iki tuhaf ay.',
     steps: [
@@ -663,6 +678,7 @@ export const TOURS: TourDef[] = [
 
   {
     id: 'explorers',
+    music: 'Sonican - Starlight Echoes (Ambient Loop).mp3',
     title: 'İnsanlığın Elçileri',
     summary: 'Dünya yörüngesinden yıldızlararası uzaya: ISS, Hubble, JWST, Parker, New Horizons ve Voyager\'lar; yörüngeleri ve fotoğraflarıyla.',
     steps: [
@@ -729,6 +745,7 @@ export const TOURS: TourDef[] = [
 
   {
     id: 'stellar-life',
+    music: 'Alana Jordan - Space Rock Instrumental 01.mp3',
     title: 'Bir Yıldızın Yaşamı',
     summary: 'Gaz bulutundan kara deliğe: yıldızların doğumu, yaşamı ve ölümü.',
     steps: [
@@ -778,6 +795,7 @@ export const TOURS: TourDef[] = [
 
   {
     id: 'black-holes',
+    music: 'Nick Panek - Devotion.mp3',
     title: 'Kara Delikler',
     summary: 'En yakın uyuyan kara delikten galaksilerin merkezindeki devlere.',
     steps: [
@@ -822,6 +840,7 @@ export const TOURS: TourDef[] = [
 
   {
     id: 'pulsars',
+    music: 'Sonican - Starlight Echoes (Space Rock Odyssey).mp3',
     title: 'Pulsarlar: Kozmik Fenerler',
     summary: 'Saniyede yüzlerce kez dönen nötron yıldızları ve değiştirdikleri fizik.',
     steps: [
@@ -862,6 +881,7 @@ export const TOURS: TourDef[] = [
 
   {
     id: 'neighbours',
+    music: 'Alana Jordan - Space Rock Instrumental 02.mp3',
     title: 'Komşu Yıldızlar',
     summary: 'En yakın yıldızlardan gökyüzünün en parlaklarına: altı yıldız, altı öykü.',
     steps: [
@@ -897,6 +917,7 @@ export const TOURS: TourDef[] = [
 
   {
     id: 'galaxies',
+    music: 'Sonican - Starlight Echoes (Ambient Loop).mp3',
     title: 'Galaksiler: Evin Ötesi',
     summary: 'Samanyolu\'nun dışına çıkıp uydu galaksilerimizi, Andromeda\'yı ve çarpışan galaksileri ziyaret edin.',
     steps: [

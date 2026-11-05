@@ -650,8 +650,6 @@ class App implements UIHost {
   land(b: CelestialBody | null = this.selected ?? this.camera.target ?? this.camera.nearest, at?: { lat: number; lon: number }): void {
     if (!b || !this.canLand(b)) return;
     if (this.tours.active) this.tours.stop();
-    const view = this.bodies.view(b.id);
-    if (!view?.surfaceMat) return;
     const cam = this.camera;
     // landing point: the view ray's hit on the body, else the point under the camera
     const rel = new Vector3().copy(cam.position).sub(b.position);
@@ -664,6 +662,27 @@ class App implements UIHost {
     else hit.copy(rel);
     hit.applyQuaternion(new Quaternion().copy(b.rotation).invert());
     const aim = at ?? geodetic(b, hit);
+    if (!this.standOn(b, aim, !at)) return;
+    this.ui.showToast(_('{name} yüzeyine iniliyor…', { name: b.name }));
+    if (!this.landingHintShown) {
+      this.landingHintShown = true;
+      window.setTimeout(() => {
+        if (this.landedOn) this.ui.showToast(_('Yüzeydesiniz: fareyle bakın · W A S D yürü · tekerlek yakınlaştır · zamanı hızlandırıp gökyüzünü izleyin · I kalk'), 7000);
+      }, 4000);
+    }
+  }
+
+  /**
+   * Generate the ground at `aim` on `b` and start the descent onto it (`dryLand`: open sea there
+   * is traded for the nearest shore). The gaze arrives on `heading` (rad: yaw from north toward
+   * east, pitch up) or, by default, toward the star. Returns the stand, null when `b` cannot be
+   * stood on.
+   */
+  private standOn(b: CelestialBody, aim: { lat: number; lon: number }, dryLand: boolean, heading?: { yaw: number; pitch: number }, seconds?: number): SurfaceStand | null {
+    const view = this.bodies.view(b.id);
+    if (!view?.surfaceMat) return null;
+    const cam = this.camera;
+    const fwd = new Vector3(0, 0, -1).applyQuaternion(cam.quaternion);
     const half = Math.max(...groundRingSizes(b)) / 2;
     const dLat = (half / b.radius) / DEG * 1.05;
     const groundAt = (lat: number, lon: number) => {
@@ -675,7 +694,7 @@ class App implements UIHost {
     // dry land wanted: when the aimed point is open sea, try a spiral of nearby spots (an ocean
     // world finds none and lands on the water)
     let { site, ground } = groundAt(aim.lat, aim.lon);
-    if (!at && ground.water > 0.5) {
+    if (dryLand && ground.water > 0.5) {
       const steps: Array<[number, number]> = [];
       for (const r of [3, 8, 16, 30]) for (let k = 0; k < 6; k++) steps.push([r * Math.cos((k / 6) * Math.PI * 2 + r), r * Math.sin((k / 6) * Math.PI * 2 + r)]);
       for (const [dlat, dlon] of steps) {
@@ -716,19 +735,137 @@ class App implements UIHost {
     const stand: SurfaceStand = {
       body: b, sitePos: site.pos, siteQuat: site.quat,
       ground: (x, z) => terrain.surfaceY(x, z),
-      x: sx, z: sz, eye: CameraController.EYE_KM, yaw, pitch: 0.05, zoom: 1,
+      x: sx, z: sz, eye: CameraController.EYE_KM, yaw: heading?.yaw ?? yaw, pitch: heading?.pitch ?? 0.05, zoom: 1,
     };
     this.select(b);
-    cam.land(stand);
-    this.ui.showToast(_('{name} yüzeyine iniliyor…', { name: b.name }));
-    if (!this.landingHintShown) {
-      this.landingHintShown = true;
-      window.setTimeout(() => {
-        if (this.landedOn) this.ui.showToast(_('Yüzeydesiniz: fareyle bakın · W A S D yürü · tekerlek yakınlaştır · zamanı hızlandırıp gökyüzünü izleyin · I kalk'), 7000);
-      }, 4000);
-    }
+    cam.land(stand, seconds);
+    return stand;
   }
   private landingHintShown = false;
+
+  /**
+   * Tour `land` cue: stand on `refId` where the `toward` bodies hang `elev`° over the horizon
+   * (with two of them, both at that height, the midpoint of their separation due south). `sep`
+   * first runs the clock to the next moment the first of them is that many degrees from the star
+   * on `refId`'s sky. Already standing on `refId`, only the gaze turns (see `aimOnSurface`).
+   */
+  landFor(refId: string, toward: string[], o: { elev: number; sep?: number; starElev?: number; seconds?: number }): void {
+    const ref = this.universe.get(refId);
+    if (!ref || !this.canLand(ref)) { this.lookFrom(refId, toward, 400); return; }
+    if (this.landedOn === ref) return;
+    const star = this.universe.hostStar(ref);
+    const first = this.universe.get(toward[0]);
+    const staged = o.sep !== undefined && !!first && first !== star;
+    if (staged) this.alignSky(ref, first, star, o.sep!);
+    // a staged pair is framed together: the body and the star both `elev` over the horizon
+    const siteBodies = staged ? [first, star] : toward.map((id) => this.universe.get(id)).filter((b): b is CelestialBody => !!b);
+    const dirs = siteBodies.map((b) => new Vector3().copy(b.position).sub(ref.position).normalize());
+    if (!dirs.length) return;
+    // the point on the sky both bodies are equally far from, and the plane they span
+    const mid = new Vector3();
+    for (const d of dirs) mid.add(d);
+    const plane = dirs.length > 1 ? new Vector3().crossVectors(dirs[0], dirs[dirs.length - 1]) : new Vector3();
+    if (mid.lengthSq() < 1e-6) mid.copy(dirs[0]); // exactly opposite: stand under the first
+    mid.normalize();
+    if (plane.lengthSq() < 1e-6) plane.copy(ref.pole).addScaledVector(mid, -ref.pole.dot(mid));
+    if (plane.lengthSq() < 1e-6) plane.set(0, 1, 0).addScaledVector(mid, -mid.y);
+    plane.normalize();
+    if (plane.dot(ref.pole) < 0) plane.negate(); // walk toward the north pole, the bodies to the south
+    const n = new Vector3();
+    const s1 = Math.sin(o.elev * DEG), s2 = Math.sin((o.starElev ?? o.elev) * DEG);
+    const c = dirs.length > 1 ? dirs[0].dot(dirs[1]) : 1;
+    if (dirs.length > 1 && Math.abs(c) < 0.999) {
+      // the stand n with n·d0 = sin e0 and n·d1 = sin e1: n = α d0 + β d1 + γ (d0 × d1)
+      const det = 1 - c * c;
+      const al = (s1 - c * s2) / det, be = (s2 - c * s1) / det;
+      const ga = Math.sqrt(Math.max(0, 1 - al * al - be * be - 2 * al * be * c));
+      n.addScaledVector(dirs[0], al).addScaledVector(dirs[1], be).addScaledVector(plane, ga).normalize();
+    } else {
+      // the stand tilted away from the body until it sits `elev` over the horizon
+      const tilt = Math.acos(Math.min(1, s1));
+      n.copy(mid).multiplyScalar(Math.cos(tilt)).addScaledVector(plane, Math.sin(tilt)).normalize();
+    }
+    const obj = n.multiplyScalar(ref.radius).applyQuaternion(new Quaternion().copy(ref.rotation).invert());
+    const at = geodetic(ref, obj);
+    at.lat = Math.max(-85, Math.min(85, at.lat));
+    const stand = this.standOn(ref, at, false, { yaw: 0, pitch: 0 }, o.seconds);
+    if (!stand) return;
+    const h = this.surfaceHeading(stand, toward);
+    if (h) { stand.yaw = h.yaw; stand.pitch = h.pitch; }
+  }
+
+  /** On the ground: turn the gaze onto the `toward` bodies, eased (a tour's head turn). */
+  aimOnSurface(toward: string[], dt: number): void {
+    const cam = this.camera;
+    const st = cam.surface;
+    if (!st) return;
+    const h = this.surfaceHeading(st, toward);
+    if (!h) return;
+    if (cam.autopilot?.kind === 'land') { st.yaw = h.yaw; st.pitch = h.pitch; return; }
+    const k = 1 - Math.exp(-dt * 1.6);
+    let dYaw = h.yaw - st.yaw;
+    dYaw = Math.atan2(Math.sin(dYaw), Math.cos(dYaw));
+    st.yaw += dYaw * k;
+    st.pitch += (h.pitch - st.pitch) * k;
+  }
+
+  /** Heading (yaw from north toward east, pitch) that frames the `toward` bodies from a stand: they sit above the centre, the horizon in the lower third. */
+  private surfaceHeading(st: SurfaceStand, toward: string[]): { yaw: number; pitch: number } | null {
+    const b = st.body;
+    const eye = new Vector3();
+    this.camera.standPose(st, eye, this.tmpQ);
+    const inv = new Quaternion().copy(b.rotation).multiply(st.siteQuat).invert();
+    const dir = new Vector3();
+    let n = 0;
+    for (const id of toward) {
+      const t = this.universe.get(id);
+      if (!t) continue;
+      dir.add(_dir.copy(t.position).sub(eye).normalize().applyQuaternion(inv));
+      n++;
+    }
+    if (!n) return null;
+    dir.normalize();
+    const yaw = Math.atan2(dir.x, -dir.z);
+    const el = Math.asin(Math.max(-1, Math.min(1, dir.y)));
+    const fov = this.engine.camera.fov * DEG;
+    return { yaw, pitch: Math.max(-0.02, el - fov * 0.28) };
+  }
+
+  /**
+   * Run the clock forward to the next moment `tgt` stands `sepDeg` from `star` on `ref`'s sky
+   * (within two synodic periods; the bodies are moved to that instant).
+   */
+  private alignSky(ref: CelestialBody, tgt: CelestialBody, star: CelestialBody, sepDeg: number): void {
+    const pRef = ref.periodDays || 0, pTgt = tgt.periodDays || 0;
+    if (!(pRef > 0) || !(pTgt > 0)) return;
+    const synodic = Math.abs(pRef - pTgt) < 1e-6 ? pRef : 1 / Math.abs(1 / pRef - 1 / pTgt);
+    const span = Math.min(2 * synodic, 400);
+    const sep = (jd: number): number => {
+      this.universe.update(jd, (jd - J2000_JD) * DAY_S);
+      const a = _dir.copy(tgt.position).sub(ref.position).normalize();
+      const s = _up.copy(star.position).sub(ref.position).normalize();
+      return Math.acos(Math.max(-1, Math.min(1, a.dot(s)))) / DEG - sepDeg;
+    };
+    const jd0 = this.time.jd;
+    const N = 720;
+    let prev = sep(jd0), found: number | null = null;
+    for (let i = 1; i <= N && found === null; i++) {
+      const jd = jd0 + (span * i) / N;
+      const cur = sep(jd);
+      if ((prev <= 0 && cur >= 0) || (prev >= 0 && cur <= 0)) {
+        let lo = jd0 + (span * (i - 1)) / N, hi = jd, fLo = prev;
+        for (let k = 0; k < 30; k++) {
+          const m = (lo + hi) / 2, fm = sep(m);
+          if ((fLo <= 0 && fm <= 0) || (fLo >= 0 && fm >= 0)) { lo = m; fLo = fm; } else hi = m;
+        }
+        found = (lo + hi) / 2;
+      }
+      prev = cur;
+    }
+    const jd = found ?? jd0;
+    this.time.jd = jd;
+    this.universe.update(jd, (jd - J2000_JD) * DAY_S);
+  }
   /** sky brightness at the camera this frame (see skyDaylight) */
   daylight = 0;
 
@@ -1667,6 +1804,17 @@ class App implements UIHost {
     const s = this.settings;
     this.grid.setVisible(o.eclipticGrid ?? s.eclipticGrid, o.equatorialGrid ?? s.equatorialGrid);
     this.engine.setFov(o.fov ?? s.fov);
+    this.engine.renderer.toneMappingExposure = o.exposure ?? s.exposure;
+  }
+
+  imageryLoaded(bodyId: string): boolean {
+    const t = this.bodies.view(bodyId)?.tiles;
+    return !t || !this.settings.imagery || t.loaded;
+  }
+
+  pinImagery(bodyId: string, on: boolean): void {
+    const t = this.bodies.view(bodyId)?.tiles;
+    if (t) t.pinned = on;
   }
 
   /** Sky view: camera `alt` km above `refId`, on the side facing the `toward` bodies, aimed at their midpoint. */
@@ -2001,7 +2149,7 @@ class App implements UIHost {
     this.volumes.scale = this.engine.mobile ? 0.35 : 0.5;
     this.engine.setRenderScale(s.renderScale * (s.autoResolution ? this.autoScale : 1));
     this.resizeOverlay();
-    this.engine.renderer.toneMappingExposure = s.exposure;
+    this.engine.renderer.toneMappingExposure = this.tourOverrides.exposure ?? s.exposure;
     this.overlay.showLabels = s.labels;
     this.overlay.showMarkers = s.markers;
     this.overlay.showStarNames = s.starNames;
@@ -3161,6 +3309,19 @@ class App implements UIHost {
 
 async function boot(): Promise<void> {
   const loaderText = document.querySelector('#loader .loader-text');
+  /** the loader's sweep stops, a button appears; resolves inside its click */
+  const enterOnClick = (text: Element | null): Promise<void> => new Promise((resolve) => {
+    const loader = document.getElementById('loader');
+    if (!loader) { resolve(); return; }
+    if (text) text.textContent = _('Hazır');
+    const btn = document.createElement('button');
+    btn.className = 'loader-enter';
+    btn.textContent = _('Başla');
+    btn.addEventListener('click', () => { btn.disabled = true; resolve(); }, { once: true });
+    loader.classList.add('ready');
+    loader.appendChild(btn);
+    btn.focus();
+  });
   try {
     await initI18n();
     applyDom();
@@ -3196,7 +3357,10 @@ async function boot(): Promise<void> {
     const intro = !stream && !launch.embed && !launch.event && !launch.target && Welcome.due;
     if (intro) {
       if (loaderText) loaderText.textContent = _('Sahneler hazırlanıyor…');
-      await app.welcome.prepare();
+      // the browser may refuse sound before a click: then the loader ends on a button, and the
+      // welcome (and its music) start from that click
+      const [allowed] = await Promise.all([app.music.probe(), app.welcome.prepare()]);
+      if (!allowed) await enterOnClick(loaderText);
     }
     app.ready();
     if (intro) app.welcome.start();
