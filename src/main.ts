@@ -16,7 +16,7 @@ import { Relief } from './render/Relief';
 import { MeteorShower } from './render/MeteorShower';
 import { raDecToScene } from './math/frames';
 import { BodyRenderer, type BodyView } from './render/BodyRenderer';
-import { generateGround, geodetic, groundRingSizes, groundSite, landable } from './render/GroundGen';
+import { generateGround, geodetic, groundRingSizes, groundSite, landable, warmGround } from './render/GroundGen';
 import { BodyPoints } from './render/BodyPoints';
 import { OrbitLines } from './render/OrbitLines';
 import { StarPoints } from './render/StarPoints';
@@ -83,6 +83,10 @@ const NEAR_LIGHT_RADII = 9;
 const BACKDROP_ORBIT = 0.03;
 /** camera distance from the Sun (pc, ≈ 200 AU: beyond the planets) from which the Sun is marked with its distance */
 const SUN_MARKER_PC = 0.001;
+/** longest a warm-up step behind the loader waits for programs still compiling before it moves on */
+const SETTLE_COMPILE_MS = 120_000;
+/** after the loader lifts, when the landing programs start compiling in the background */
+const GROUND_WARM_DELAY_MS = 10_000;
 /** scratch */
 const _dir = new Vector3(), _up = new Vector3(), _zero = new Vector3(), _v3 = new Vector3();
 const _m4 = new Matrix4();
@@ -312,18 +316,48 @@ class App implements UIHost {
 
   /** Lift the loading screen (boot calls it once everything that should happen behind it has) */
   ready(): void {
+    this.warmingUp = false;
     document.getElementById('loader')?.classList.add('done');
+    // the landing programs link in the background a little after the start, while nothing else does
+    window.setTimeout(() => { void warmGround(this.engine.renderer).then(() => { this.groundReady = true; }); }, GROUND_WARM_DELAY_MS);
+  }
+
+  /** behind the loader a frame only draws once every program the scene needs has linked (shadersReady) */
+  private warmingUp = true;
+  /** the last frame skipped its draw: programs were still compiling */
+  private shadersPending = false;
+
+  /**
+   * Hand every material of the scene to the driver and report whether all of their programs have
+   * linked. With KHR_parallel_shader_compile the linking runs in the background; the first draw
+   * would instead wait for it on the main thread — on D3D (ANGLE) a cold cache takes tens of
+   * seconds for the planet shaders, with the whole page frozen.
+   */
+  private shadersReady(): boolean {
+    const eng = this.engine, r = eng.renderer;
+    const prev = r.getRenderTarget();
+    // same target type as the RenderPass: the program cache key depends on it
+    r.setRenderTarget(eng.composer.readBuffer);
+    const mats = r.compile(eng.scene, eng.camera);
+    r.setRenderTarget(prev);
+    for (const m of mats) {
+      const p = (r.properties.get(m) as { currentProgram?: { isReady(): boolean } }).currentProgram;
+      if (p && !p.isReady()) return false;
+    }
+    return true;
   }
 
   /**
    * Resolve after `n` rendered frames, or sooner once nothing is being baked any more (at least
    * `min` frames): the warm-up behind the loader waits like this at each of the welcome's shots.
+   * Frames that skipped their draw for compiling programs don't count, up to SETTLE_COMPILE_MS.
    */
   settle(n: number, min = 4): Promise<void> {
+    const giveUp = performance.now() + SETTLE_COMPILE_MS;
     return new Promise((resolve) => {
       let k = 0;
       const tick = (): void => {
-        k++;
+        if (!this.shadersPending || performance.now() > giveUp) k++;
         if (k >= n || (k >= min && !this.bodies.baking)) resolve();
         else requestAnimationFrame(tick);
       };
@@ -649,6 +683,11 @@ class App implements UIHost {
    */
   land(b: CelestialBody | null = this.selected ?? this.camera.target ?? this.camera.nearest, at?: { lat: number; lon: number }): void {
     if (!b || !this.canLand(b)) return;
+    if (!this.groundReady) {
+      this.ui.showToast(_('{name} yüzeyine iniliyor…', { name: b.name }));
+      this.whenGroundReady(() => this.land(b, at));
+      return;
+    }
     if (this.tours.active) this.tours.stop();
     const cam = this.camera;
     // landing point: the view ray's hit on the body, else the point under the camera
@@ -743,6 +782,23 @@ class App implements UIHost {
   }
   private landingHintShown = false;
 
+  /** the ground programs have linked (warmGround): until then a landing waits for them instead of freezing the page */
+  private groundReady = false;
+  /** the landing that waits for them (only the latest request counts) */
+  private groundWaiter: (() => void) | null = null;
+
+  private whenGroundReady(fn: () => void): void {
+    const first = !this.groundWaiter;
+    this.groundWaiter = fn;
+    if (!first) return;
+    void warmGround(this.engine.renderer).then(() => {
+      this.groundReady = true;
+      const f = this.groundWaiter;
+      this.groundWaiter = null;
+      f?.();
+    });
+  }
+
   /**
    * Tour `land` cue: stand on `refId` where the `toward` bodies hang `elev`° over the horizon
    * (with two of them, both at that height, the midpoint of their separation due south). `sep`
@@ -753,6 +809,7 @@ class App implements UIHost {
     const ref = this.universe.get(refId);
     if (!ref || !this.canLand(ref)) { this.lookFrom(refId, toward, 400); return; }
     if (this.landedOn === ref) return;
+    if (!this.groundReady) { this.whenGroundReady(() => this.landFor(refId, toward, o)); return; }
     const star = this.universe.hostStar(ref);
     const first = this.universe.get(toward[0]);
     const staged = o.sep !== undefined && !!first && first !== star;
@@ -3029,9 +3086,12 @@ class App implements UIHost {
     this.cometTails.update(this.bodies.views.map((v) => v.body), this.time.jd, camPos, pxPerRad, eng.pixelRatio, Math.min(eng.width, eng.height), s.minorBodies, daylight);
 
     // Render
-    this.volumes.render(eng.renderer, eng.camera);
-    eng.autoExposure.dt = dt;
-    eng.render();
+    this.shadersPending = this.warmingUp && !this.shadersReady();
+    if (!this.shadersPending) {
+      this.volumes.render(eng.renderer, eng.camera);
+      eng.autoExposure.dt = dt;
+      eng.render();
+    }
 
     if (this.wantScreenshot) {
       this.wantScreenshot = false;
@@ -3338,6 +3398,8 @@ async function boot(): Promise<void> {
       loadBinaries(base).catch((err) => { console.warn('binary-star catalogue unavailable', err); return null; }),
     ]);
     if (loaderText) loaderText.textContent = _('Evren hazırlanıyor…');
+    // building the App is one long task: let the new line reach the screen first
+    await new Promise((r) => requestAnimationFrame(() => setTimeout(r, 0)));
     const launch = parseLaunch();
     if (launch.embed) document.body.classList.add('embed');
     const app = new App(catalog, exoplanets, deepSky, surveyGalaxies, brownDwarfs, binaries);
@@ -3361,6 +3423,9 @@ async function boot(): Promise<void> {
       // welcome (and its music) start from that click
       const [allowed] = await Promise.all([app.music.probe(), app.welcome.prepare()]);
       if (!allowed) await enterOnClick(loaderText);
+    } else {
+      // the first view's programs compile behind the loader instead of freezing its first frame
+      await app.settle(2, 2);
     }
     app.ready();
     if (intro) app.welcome.start();

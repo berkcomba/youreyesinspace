@@ -37,6 +37,8 @@ interface Job {
   height: ShaderMaterial;
   surface: ShaderMaterial;
   normal: ShaderMaterial;
+  /** the three programs have linked (programsReady) */
+  linked: boolean;
 }
 
 /** texels per face edge: the base tier, and the close-up tier */
@@ -139,7 +141,29 @@ export class SurfaceBaker {
       uniforms: { uFace: { value: 0 }, uRes: { value: res }, uPass: { value: 2 }, uHeightMap: { value: scratch.texture }, uCavityScale: { value: kind === 'gas' ? 3 : 9 } },
       depthTest: false, depthWrite: false,
     });
-    this.job = { view, kind, res, pass: 0, face: 0, a, n, height, surface, normal };
+    this.job = { view, kind, res, pass: 0, face: 0, a, n, height, surface, normal, linked: false };
+  }
+
+  /**
+   * Hand the job's programs to the driver and report whether they have linked. With
+   * KHR_parallel_shader_compile that happens in the background; the first bake draw would wait for
+   * it on the main thread instead — the terrestrial noise stack takes tens of seconds on D3D
+   * (ANGLE) with a cold cache, the page frozen meanwhile.
+   */
+  private programsReady(j: Job): boolean {
+    if (j.linked) return true;
+    const r = this.renderer;
+    const prevTarget = r.getRenderTarget();
+    r.setRenderTarget(this.scratchFor(j.res), 0);
+    let linked = true;
+    for (const m of [j.height, j.surface, j.normal]) {
+      this.quad.material = m;
+      r.compile(this.scene, this.cam);
+      const p = (r.properties.get(m) as { currentProgram?: { isReady(): boolean } }).currentProgram;
+      if (p && !p.isReady()) linked = false;
+    }
+    r.setRenderTarget(prevTarget);
+    return (j.linked = linked);
   }
 
   private scratchFor(res: number): WebGLCubeRenderTarget {
@@ -172,6 +196,7 @@ export class SurfaceBaker {
 
   private step(): void {
     const j = this.job!;
+    if (!this.programsReady(j)) return;
     const r = this.renderer;
     const prevTarget = r.getRenderTarget();
     const prevAuto = r.autoClear;

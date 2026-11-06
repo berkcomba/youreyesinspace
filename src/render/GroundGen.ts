@@ -124,9 +124,35 @@ function fullscreen(renderer: WebGLRenderer, mat: ShaderMaterial, rt: WebGLRende
   renderer.autoClear = prevClear;
 }
 
+let warming: Promise<void> | null = null;
+
+/**
+ * Link the two ground programs in the background (KHR_parallel_shader_compile) and keep them: on
+ * first use the link would freeze the page instead — seconds, tens of them on D3D (ANGLE) with a
+ * cold cache. The materials stay alive so the programs survive between landings.
+ */
+export function warmGround(renderer: WebGLRenderer): Promise<void> {
+  if (!warming) {
+    const scene = new Scene();
+    for (const frag of [Shaders.groundHeightFrag, Shaders.groundAlbedoFrag]) {
+      const mesh = new Mesh(new PlaneGeometry(2, 2), new ShaderMaterial({ vertexShader: Shaders.fullscreenVert, fragmentShader: frag, depthTest: false, depthWrite: false }));
+      mesh.frustumCulled = false;
+      scene.add(mesh);
+    }
+    // a render target like generateGround's: the program cache key depends on it
+    const rt = new WebGLRenderTarget(1, 1, { depthBuffer: false, stencilBuffer: false });
+    const prev = renderer.getRenderTarget();
+    renderer.setRenderTarget(rt);
+    warming = renderer.compileAsync(scene, new OrthographicCamera(-1, 1, 1, -1, 0, 1)).then(() => undefined, () => undefined);
+    renderer.setRenderTarget(prev);
+    rt.dispose();
+  }
+  return warming;
+}
+
 /**
  * Render the maps for a landing at `site`. Synchronous: a few GPU passes and one read-back —
- * a fraction of a second once, at the moment the descent begins.
+ * a fraction of a second once, at the moment the descent begins (with warmGround done first).
  * @param palette the body's surface-shader uniforms (the palette is shared by reference)
  */
 export function generateGround(

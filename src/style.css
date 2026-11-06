@@ -826,13 +826,14 @@ body.welcoming #ui > :not(#welcome), body.welcoming canvas#overlay { visibility:
 }
 #loader.done { opacity: 0; pointer-events: none; }
 .loader-mark { position: relative; width: 160px; height: 1px; background: var(--border); overflow: hidden; }
+/* a transform sweep runs on the compositor: it keeps moving through the long tasks of the start */
 .loader-mark::after {
-  content: ''; position: absolute; top: 0; left: -40px; width: 40px; height: 1px;
+  content: ''; position: absolute; top: 0; left: 0; width: 40px; height: 1px; transform: translateX(-40px);
   background: var(--text-2); animation: sweep 1.4s ease-in-out infinite;
 }
 .loader-text { font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--text-2); }
-@keyframes sweep { to { left: 160px; } }
-#loader.ready .loader-mark::after { animation: none; left: 0; width: 160px; }
+@keyframes sweep { to { transform: translateX(160px); } }
+#loader.ready .loader-mark::after { animation: none; transform: none; width: 160px; }
 .loader-enter {
   margin-top: 6px; padding: 0 26px; height: 38px; border: 1px solid var(--border-strong); background: transparent;
   color: var(--text); font-family: var(--font); font-size: 14px; letter-spacing: 0; cursor: pointer;
@@ -842,7 +843,7 @@ body.welcoming #ui > :not(#welcome), body.welcoming canvas#overlay { visibility:
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-  .loader-mark::after { left: 60px; }
+  .loader-mark::after { transform: translateX(60px); }
 }
 
 ::-webkit-scrollbar { width: 6px; }
