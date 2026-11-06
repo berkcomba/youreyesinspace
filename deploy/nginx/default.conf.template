@@ -119,8 +119,8 @@ server {
     try_files $uri =404;
   }
 
-  # robots / sitemap: a day
-  location ~ ^/(robots\.txt|sitemap\.xml)$ {
+  # robots / sitemaps: a day
+  location ~ ^/(robots\.txt|sitemap\.xml|sitemaps/[a-z0-9-]+\.xml)$ {
     include /etc/nginx/snippets/security-headers.conf;
     add_header Cache-Control "public, max-age=86400";
     try_files $uri =404;
@@ -139,7 +139,8 @@ server {
   }
 
   # HTML shell: always revalidate so a new deploy is picked up immediately.
-  # The app has no client-side routes, so unknown paths are real 404s (the shell is still shown,
+  # The app has no client-side routes (the encyclopedia is static: /<lang>/<section>/<slug>/index.html),
+  # so unknown paths are real 404s (the shell is still shown,
   # but with a 404 status: scanners probing /wp-admin etc. must not see a 200).
   error_page 404 /index.html;
   location = /index.html {
@@ -151,9 +152,21 @@ server {
     add_header Cache-Control "no-cache";
     try_files /index.html =404;
   }
+  # Encyclopedia (scripts/ssg): stylesheet carries ?v=<BUILD_ID>
+  location ^~ /wiki/ {
+    include /etc/nginx/snippets/security-headers.conf;
+    add_header Cache-Control "public, max-age=31536000, immutable";
+    try_files $uri =404;
+  }
+  # catalogue stars without a page of their own: the shared noindex page, filled in by /wiki/star.js
+  location ~ "^(/(?:tr|de|es|fr))?/stars/[^/]+/?$" {
+    include /etc/nginx/snippets/security-headers.conf;
+    add_header Cache-Control "public, max-age=3600";
+    try_files $uri/index.html $1/stars/_/index.html;
+  }
   location / {
     include /etc/nginx/snippets/security-headers.conf;
     add_header Cache-Control "no-cache";
-    try_files $uri =404;
+    try_files $uri $uri/index.html =404;
   }
 }

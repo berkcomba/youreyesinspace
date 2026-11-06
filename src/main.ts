@@ -3,6 +3,7 @@ import { Matrix3, Matrix4, Quaternion, type ShaderMaterial, Vector2, Vector3 } f
 import { Engine } from './core/Engine';
 import { TimeSystem } from './core/TimeSystem';
 import { Universe, catalogIndexOf, type Landmark, type StarId } from './core/Universe';
+import { exoBodyId } from './gen/RealSystem';
 import type { StarSystem } from './core/StarSystem';
 import { CelestialBody } from './core/CelestialBody';
 import { StarCatalog } from './data/StarCatalog';
@@ -2187,7 +2188,39 @@ class App implements UIHost {
         } else this.camera.goTo(b, this.universe.hostStar(b).position);
       } else this.ui.showToast(_('Hedef bulunamadı'));
     }
+    if (p.open) void this.openRef(p.open);
     if (p.rate !== null) { if (p.rate === 0) { if (!this.time.paused) this.time.togglePause(); } else this.time.setRate(p.rate); }
+  }
+
+  /** `?open=` from the encyclopedia pages: fly to a star, an exoplanet, a landmark, a black hole or a galaxy */
+  private async openRef(ref: string): Promise<void> {
+    const u = this.universe;
+    const sep = ref.indexOf(':');
+    const kind = ref.slice(0, sep), id = ref.slice(sep + 1);
+    if (kind === 'star' && /^c\d+$/.test(id) && catalogIndexOf(id) < u.catalog.core) { this.goToStar(id); return; }
+    if (kind === 'planet') {
+      const slash = id.indexOf('/');
+      const star = id.slice(0, slash), planet = id.slice(slash + 1);
+      const i = catalogIndexOf(star);
+      if (/^c\d+$/.test(star) && u.exoplanets.hosts.get(i)?.planets.some((pl) => pl.name === planet)) { this.goToSystemBody(star, exoBodyId(i, planet)); return; }
+    }
+    if (kind === 'landmark') {
+      const k = u.landmarks.findIndex((l) => l.def.id === id);
+      if (k >= 0) { this.selectLandmark(k); this.goToLandmark(k); return; }
+    }
+    if (kind === 'bh' && u.blackHole(id)) { this.goToBlackHole(id); return; }
+    if (kind === 'galaxy') {
+      const hits = u.galaxies.search(id, 12);
+      const k = hits.find((h) => u.galaxies.name(h) === id) ?? hits[0];
+      if (k !== undefined) { this.goToGalaxy(k); return; }
+    }
+    if (kind === 'find') {
+      // the deep catalogue (Tycho-2, Gaia) arrives in the background
+      await u.catalog.loadTiers();
+      const i = u.catalog.search(id, 1)[0];
+      if (i !== undefined) { this.goToStar(`c${i}`); return; }
+    }
+    this.ui.showToast(_('Hedef bulunamadı'));
   }
 
   applySettings(): void {
@@ -3416,7 +3449,7 @@ async function boot(): Promise<void> {
     // first visit, plain entry (no deep link, embed or stream): the introduction. Its shots are
     // visited once behind the loading screen first, so shaders compile and planets bake unseen
     // instead of stuttering the flights.
-    const intro = !stream && !launch.embed && !launch.event && !launch.target && Welcome.due;
+    const intro = !stream && !launch.embed && !launch.event && !launch.target && !launch.open && Welcome.due;
     if (intro) {
       if (loaderText) loaderText.textContent = _('Sahneler hazırlanıyor…');
       // the browser may refuse sound before a click: then the loader ends on a button, and the

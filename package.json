@@ -10,7 +10,9 @@
   "scripts": {
     "dev": "vite",
     "dev:stream": "vite --host --port 5180",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && vite build && node scripts/ssg/build.mjs",
+    "build:app": "tsc --noEmit && vite build",
+    "ssg": "node scripts/ssg/build.mjs",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },

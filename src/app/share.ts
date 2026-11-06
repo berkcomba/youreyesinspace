@@ -27,6 +27,11 @@ export interface LaunchParams {
   embed: boolean;
   /** how the visitor got here (utm_source), for the beacon */
   utm: string | null;
+  /**
+   * any object of the universe, from the encyclopedia pages: `star:c<index>`,
+   * `planet:c<index>/<planet name>`, `landmark:<id>`, `bh:<id>`, `galaxy:<name>`, `find:<designation>`
+   */
+  open: string | null;
 }
 
 export function parseLaunch(search = location.search): LaunchParams {
@@ -59,6 +64,7 @@ export function parseLaunch(search = location.search): LaunchParams {
     time, rate, cam,
     embed: q.get('embed') === '1',
     utm: q.get('utm_source'),
+    open: ((s) => (s && s.length <= 160 && /^(star|planet|landmark|bh|galaxy|find):[^<>"'`]+$/.test(s) ? s : null))(q.get('open')),
   };
 }
 

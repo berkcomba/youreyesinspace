@@ -13,6 +13,8 @@ RUN npm ci --no-audit --no-fund
 COPY tsconfig.json vite.config.ts index.html crew.html ./
 COPY public ./public
 COPY src ./src
+# static encyclopedia pages, generated into dist/ after the app build
+COPY scripts/ssg ./scripts/ssg
 # BUILD_ID is baked into cache-busting query strings for /data and /models
 ARG BUILD_ID
 ENV BUILD_ID=${BUILD_ID}

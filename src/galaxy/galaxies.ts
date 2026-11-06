@@ -7,13 +7,13 @@ import { galaxyBasisFromSky, milkyWayBasis, milkyWayCenterPc } from './frames';
 
 const MPC = 1e6;
 
-interface CatalogGalaxy {
+export interface CatalogGalaxy {
   name: string; ra: number; dec: number; distMpc: number; type: GalaxyType;
   diameterKpc: number; absMag: number; pa?: number; inc?: number; axis?: number; desc?: string;
 }
 
 /** Real galaxies: Local Group + bright Messier/NGC objects (approximate parameters). */
-const CATALOG: CatalogGalaxy[] = [
+export const CATALOG: CatalogGalaxy[] = [
   { name: 'Andromeda (M31)', ra: 10.685, dec: 41.269, distMpc: 0.78, type: 'S', diameterKpc: 46, absMag: -21.5, pa: 35, inc: 77, desc: 'Yerel Grup\'un en büyük galaksisi; Samanyolu ile ~4.5 milyar yıl sonra birleşecek.' },
   { name: 'Üçgen (M33)', ra: 23.462, dec: 30.660, distMpc: 0.84, type: 'S', diameterKpc: 18, absMag: -18.9, pa: 23, inc: 54, desc: 'Yerel Grup\'un üçüncü büyük üyesi; çıplak gözle görülebilen en uzak cisimlerden biri.' },
   { name: 'Büyük Macellan Bulutu', ra: 80.894, dec: -69.756, distMpc: 0.050, type: 'Irr', diameterKpc: 9.9, absMag: -18.1, pa: 170, inc: 35, desc: 'Samanyolu\'nun en parlak uydu galaksisi. Tarantula Bulutsusu gibi dev yıldız oluşum bölgeleri barındırır.' },
