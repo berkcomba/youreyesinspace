@@ -6,6 +6,7 @@ import { EventPanel } from './EventPanel';
 import type { SkyEvent } from '../data/events';
 import type { SmallBodyCatalog } from '../data/SmallBodies';
 import { copyText, viewUrl } from '../app/share';
+import { wikiHome, wikiPage } from '../app/wiki';
 import { LessonPanel } from './LessonPanel';
 import type { TourPlayer } from '../core/TourPlayer';
 import type { LessonPlayer } from '../core/LessonPlayer';
@@ -211,6 +212,7 @@ export class UI {
   private readonly infoParent = $('info-parent');
   private readonly infoBody = $('info-body');
   private readonly infoDesc = $('info-desc');
+  private readonly infoWiki = $<HTMLAnchorElement>('info-wiki');
   private readonly settingsPanel = $('settings');
   private readonly help = $('help');
   private readonly about = $('about');
@@ -247,6 +249,8 @@ export class UI {
     this.buildSettings();
     this.buildPlaces();
     this.roamBtn.addEventListener('click', () => host.toggleFreeRoam());
+    $('btn-wiki').addEventListener('click', () => window.open(wikiHome(), '_blank', 'noopener'));
+    $('about-wiki').addEventListener('click', (e) => { e.preventDefault(); window.open(wikiHome(), '_blank', 'noopener'); });
     $('btn-help').addEventListener('click', () => this.toggleHelp());
     $('help-close').addEventListener('click', () => this.toggleHelp(false));
     this.help.addEventListener('click', (e) => { if (e.target === this.help) this.toggleHelp(false); });
@@ -1009,6 +1013,30 @@ export class UI {
     } else {
       this.info.hidden = true;
     }
+    if (!this.info.hidden) {
+      const page = wikiPage(this.wikiKey(selected));
+      if (page) { if (this.infoWiki.getAttribute('href') !== page) this.infoWiki.href = page; }
+      if (this.infoWiki.hidden !== !page) this.infoWiki.hidden = !page;
+    }
+  }
+
+  /** the `?open=` key of the selection, which the encyclopedia index maps to a page */
+  private wikiKey(selected: CelestialBody | null): string | null {
+    const u = this.host.universe;
+    if (selected) {
+      const sys = u.current;
+      if (sys.catalogIndex === 0) return `target:${selected.id}`;
+      if (selected === sys.star) return `star:c${sys.catalogIndex}`;
+      return `planet:c${sys.catalogIndex}/${selected.name}`;
+    }
+    const star = this.host.selectedStar;
+    if (star !== null) {
+      const bh = u.blackHoles.find((b) => b.systemStarId === star);
+      return bh ? `bh:${bh.entry.id}` : `star:${star}`;
+    }
+    if (this.host.selectedGalaxy !== null) return `galaxy:${u.galaxies.name(this.host.selectedGalaxy)}`;
+    if (this.host.selectedLandmark !== null) return `landmark:${u.landmarks[this.host.selectedLandmark].def.id}`;
+    return null;
   }
 
   private renderGalaxyInfo(i: number): void {

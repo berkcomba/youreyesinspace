@@ -65,6 +65,7 @@
           <button id="btn-mission" class="text-btn" data-i18n data-i18n-title title="Görev planlayıcı: gerçek ya da hayali bir araçla rota hesapla, fırlat, canlı izle (U)">Görev</button>
           <button id="btn-events" class="text-btn" data-i18n data-i18n-title title="Olaylar: yaklaşan gök ve uzay olaylarını simülasyonda izleyin, paylaşın, sitenize gömün">Olaylar</button>
           <button id="btn-roam" class="text-btn" data-i18n data-i18n-title title="Serbest dolaşım: fare ile bak, WASD ile uç (V)">Serbest dolaşım</button>
+          <button id="btn-wiki" class="icon-btn" data-i18n-title title="Ansiklopedi (yeni sekmede açılır)" aria-label="Encyclopedia"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 4C6.6 3 4.3 2.7 1.5 3.2v9.6C4.3 12.3 6.6 12.6 8 13.6c1.4-1 3.7-1.3 6.5-.8V3.2C11.7 2.7 9.4 3 8 4zM8 4v9.6" /></svg></button>
           <button id="btn-help" class="icon-btn" data-i18n-title title="Yardım (F1)">?</button>
           <button id="btn-settings" class="icon-btn" data-i18n-title title="Ayarlar" aria-label="Settings"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1 4h14M1 8h14M1 12h14" /><path d="M10 2.5v3M5 6.5v3M11 10.5v3" /></svg></button>
         </div>
@@ -92,6 +93,7 @@
         </div>
         <dl id="info-body" class="info-grid"></dl>
         <p id="info-desc" class="info-desc"></p>
+        <a id="info-wiki" class="info-wiki" target="_blank" rel="noopener" data-i18n hidden>Ansiklopedide oku →</a>
       </aside>
 
       <!-- Right, under the settings button: the radio (only while the radio setting is on) -->
@@ -326,6 +328,7 @@
           </div>
           <div class="about-actions">
             <a class="text-btn" href="mailto:berkcomba@bigbrains.com.tr?subject=Your%20Eyes%20In%20Space" data-i18n>E-posta gönder</a>
+            <a id="about-wiki" class="text-btn" href="/encyclopedia" target="_blank" rel="noopener" data-i18n>Ansiklopedi</a>
             <a class="text-btn" href="https://github.com/berkcomba/youreyesinspace" target="_blank" rel="noopener noreferrer">GitHub</a>
             <a class="text-btn" href="https://github.com/sponsors/berkcomba" data-sponsor data-i18n>♥ Destekle</a>
             <button id="about-help" class="text-btn" data-i18n>Kontroller ve kaynaklar</button>

@@ -197,6 +197,16 @@ export async function generate({ root, args, buildId }: { root: string; args: st
     console.log(`ssg: ${lang} done (${pages} pages so far)`);
   }
   sitemaps(opt.out, urls);
+  // `?open=` key → page path, so the simulation's info panel can link a selection to its page
+  const index: Record<string, string> = {};
+  for (const s of lim(site.stars)) index[`star:c${s.i}`] = `/stars/${s.slug}`;
+  for (const p of lim(site.planets)) index[`planet:c${p.host.i}/${p.planet.name}`] = `/exoplanets/${p.slug}`;
+  for (const d of lim(site.dsos)) index[`landmark:${d.id}`] = `/deep-sky/${d.slug}`;
+  for (const g of lim(site.galaxies)) index[`galaxy:${g.name}`] = `/galaxies/${g.slug}`;
+  for (const b of site.blackHoles) index[`bh:${b.entry.id}`] = `/black-holes/${b.slug}`;
+  for (const s of site.solar) index[`target:${s.body.id}`] = `/solar-system/${s.slug}`;
+  fs.mkdirSync(path.join(opt.out, 'encyclopedia'), { recursive: true });
+  fs.writeFileSync(path.join(opt.out, 'encyclopedia/index.json'), JSON.stringify(index));
   if (opt.out !== path.join(root, 'dist')) fs.cpSync(path.join(root, 'public/wiki'), path.join(opt.out, 'wiki'), { recursive: true });
 
   const counts = { stars: site.stars.length, exoplanets: site.planets.length, constellations: site.constellations.size, deepSky: site.dsos.length, galaxies: site.galaxies.length, blackHoles: site.blackHoles.length, solar: site.solar.length, events: site.events.length };
