@@ -254,7 +254,7 @@ class App implements UIHost {
         const last = Number(localStorage.getItem(KEY) ?? 0);
         if (Date.now() - last > 7 * 86400_000) {
           localStorage.setItem(KEY, String(Date.now()));
-          this.ui.showToast(_('Tur tamamlandı'), 7000, { label: _('Beğendiyseniz projeyi destekleyin'), href: 'https://github.com/sponsors/berkcomba' });
+          this.ui.showToast(_('Tur tamamlandı'), 7000, { label: _('Beğendiyseniz projeyi destekleyin'), href: 'https://github.com/sponsors/berkcomba', action: () => this.ui.toggleSponsor(true) });
         } else {
           this.ui.showToast(_('Tur tamamlandı'), 2400);
         }

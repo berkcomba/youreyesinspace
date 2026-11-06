@@ -264,6 +264,14 @@ export class UI {
     });
     $('changelog-close').addEventListener('click', () => this.toggleChangelog(false));
     this.changelog.addEventListener('click', (e) => { if (e.target === this.changelog) this.toggleChangelog(false); });
+    // every "support the project" link opens the chooser (GitHub Sponsors / Buy Me a Coffee); the
+    // href stays as the no-script fallback
+    document.querySelectorAll<HTMLElement>('[data-sponsor]').forEach((el) => {
+      el.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); this.toggleSponsor(true); });
+    });
+    $('sponsor-close').addEventListener('click', () => this.toggleSponsor(false));
+    this.sponsor.addEventListener('click', (e) => { if (e.target === this.sponsor) this.toggleSponsor(false); });
+    this.sponsor.querySelectorAll<HTMLAnchorElement>('.sponsor-option').forEach((a) => a.addEventListener('click', () => this.toggleSponsor(false)));
     $('btn-settings').addEventListener('click', () => this.toggleSettings());
     this.missionPanel = new MissionPanel(host);
     $('btn-mission').addEventListener('click', () => this.toggleMission());
@@ -800,6 +808,14 @@ export class UI {
     if (show) { this.help.hidden = true; this.changelog.hidden = true; void this.loadAboutStats(); }
   }
 
+  private readonly sponsor = $('sponsor');
+
+  /** Where to give: GitHub Sponsors or Buy Me a Coffee, side by side */
+  toggleSponsor(force?: boolean): void {
+    const show = force ?? this.sponsor.hidden === true;
+    this.sponsor.hidden = !show;
+  }
+
   private readonly changelog = $('changelog');
   private changelogBuilt = false;
 
@@ -858,7 +874,7 @@ export class UI {
     } catch { /* offline or blocked: the line simply stays hidden */ }
   }
 
-  showToast(msg: string, ms = 1800, link?: { label: string; href: string }): void {
+  showToast(msg: string, ms = 1800, link?: { label: string; href: string; action?: () => void }): void {
     this.toast.textContent = msg;
     if (link) {
       const a = document.createElement('a');
@@ -867,6 +883,7 @@ export class UI {
       a.target = '_blank';
       a.rel = 'noopener noreferrer';
       a.textContent = link.label;
+      if (link.action) a.addEventListener('click', (e) => { e.preventDefault(); link.action!(); });
       this.toast.append(' · ', a);
     }
     this.toast.hidden = false;
