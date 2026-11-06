@@ -104,11 +104,16 @@ export interface Page {
   crumbs: Array<[string, string]>;
   jsonld?: Array<Record<string, unknown>>;
   noindex?: boolean;
+  /** full-width body instead of text column + data sheet */
+  wide?: boolean;
+  /** scripts under /wiki (versioned with the build) */
+  scripts?: string[];
 }
 
 const NAV: Array<[string, string]> = [
   ['/stars', 'Yıldızlar'], ['/exoplanets', 'Ötegezegenler'], ['/constellations', 'Takımyıldızlar'], ['/solar-system', 'Güneş Sistemi'],
   ['/deep-sky', 'Derin gökyüzü'], ['/galaxies', 'Galaksiler'], ['/black-holes', 'Kara delikler'], ['/sky-events', 'Gök olayları'],
+  ['/encyclopedia/a-z', 'A\'dan Z\'ye'],
 ];
 
 export function render(p: Page, buildId: string, available: Locale[] = LANGS): string {
@@ -158,7 +163,7 @@ export function render(p: Page, buildId: string, available: Locale[] = LANGS): s
     </header>
     <main class="w-main">
       <nav class="w-crumbs" aria-label="breadcrumb">${crumbs.map(([n, cp]) => `<a href="${url(cp)}">${esc(n)}</a>`).join('<span aria-hidden="true">/</span>')}</nav>
-      <article>
+      <article${p.wide ? ' class="w-wide"' : ''}>
         ${p.eyebrow ? `<p class="w-eyebrow">${esc(p.eyebrow)}</p>` : ''}
         <h1>${esc(p.h1)}</h1>
         ${p.lede ? `<p class="w-lede">${p.lede}</p>` : ''}
@@ -169,7 +174,7 @@ export function render(p: Page, buildId: string, available: Locale[] = LANGS): s
       <div class="w-langs">${langLinks}</div>
       <p>${esc(w('Your Eyes In Space, gözlemlenebilir evreni gerçek verilerle tarayıcıda gezdiren ücretsiz ve açık kaynaklı bir simülasyondur. Bu sayfadaki değerler simülasyonun kullandığı kataloglardan hesaplanmıştır.'))}</p>
       <p>${esc(w('Kaynaklar'))}: HYG / AT-HYG (David Nash, CC BY-SA 4.0) · ESA Gaia · NASA Exoplanet Archive · NASA/JPL · ATNF Pulsar Catalogue · HEASARC · NED · IAU. <a href="https://github.com/berkcomba/youreyesinspace">${esc(w('Kaynak kodu'))}</a> (AGPL-3.0)</p>
-    </footer>
+    </footer>${(p.scripts ?? []).map((s) => `\n    <script src="${s}?v=${buildId}" defer></script>`).join('')}
   </body>
 </html>
 `;

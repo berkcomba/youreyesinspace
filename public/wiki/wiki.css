@@ -105,6 +105,32 @@ article > .w-facts:first-of-type th { width: 46%; }
 .w-cols li { break-inside: avoid; }
 .w-note { color: var(--text-3); font-size: 13px; font-variant-numeric: tabular-nums; }
 
+/* search and the A–Z index */
+[hidden] { display: none !important; }
+.w-search { margin: 28px 0 8px; max-width: 560px; }
+.w-search input {
+  width: 100%;
+  height: 46px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: var(--surface);
+  color: var(--text);
+  font: 400 17px var(--font);
+  -webkit-appearance: none;
+  appearance: none;
+}
+.w-search input::placeholder { color: var(--text-3); }
+.w-search input:focus { outline: none; border-color: var(--accent); }
+article.w-wide { display: block; }
+.w-az { display: flex; flex-wrap: wrap; gap: 2px 4px; margin: 20px 0 8px; padding: 10px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.w-az a, .w-az span { min-width: 30px; padding: 4px 6px; text-align: center; font: 400 19px/1.2 var(--serif); }
+.w-az a { text-decoration: none; }
+.w-az a[aria-current] { color: var(--accent); }
+.w-az span { color: var(--text-3); opacity: 0.45; }
+.w-az-body h2, .w-az-results h2 { margin-top: 28px; }
+.w-wide .w-cols { columns: 4 220px; }
+
 /* the one action of the page */
 .w-open { margin: 36px 0 0; }
 .w-btn {

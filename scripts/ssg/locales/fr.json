@@ -216,5 +216,16 @@
   "İlgili cisimler": "Corps concernés",
   "Katalog yıldızı": "Étoile de catalogue",
   "Gaia ve Tycho-2 kataloglarındaki 2,8 milyon yıldızdan biri.": "L'une des 2,8 millions d'étoiles des catalogues Gaia et Tycho-2.",
-  "Gaia ve Tycho-2 kataloglarındaki 2,8 milyon yıldızdan biri. Bu yıldızın ayrıntılı sayfası henüz yok; simülasyonda açıp konumunu, parlaklığını ve çevresini görebilirsiniz.": "L'une des 2,8 millions d'étoiles des catalogues Gaia et Tycho-2. Cette étoile n'a pas encore de page détaillée ; ouvrez-la dans la simulation pour voir sa position, son éclat et ses environs."
+  "Gaia ve Tycho-2 kataloglarındaki 2,8 milyon yıldızdan biri. Bu yıldızın ayrıntılı sayfası henüz yok; simülasyonda açıp konumunu, parlaklığını ve çevresini görebilirsiniz.": "L'une des 2,8 millions d'étoiles des catalogues Gaia et Tycho-2. Cette étoile n'a pas encore de page détaillée ; ouvrez-la dans la simulation pour voir sa position, son éclat et ses environs.",
+  "Gök olayı": "Événement céleste",
+  "Sonuç yok": "Aucun résultat",
+  "{n} sonuç": "{n} résultats",
+  "Ara: Sirius, TRAPPIST-1 e, Andromeda, Orion…": "Rechercher : Sirius, TRAPPIST-1 e, Andromède, Orion…",
+  "Ansiklopedide ara": "Rechercher dans l’encyclopédie",
+  "Harfler": "Lettres",
+  "A'dan Z'ye ansiklopedi: {l} harfi": "Encyclopédie de A à Z : {l}",
+  "A'dan Z'ye": "De A à Z",
+  "{n} madde": "{n} entrées",
+  "A'dan Z'ye tüm maddeler": "Toutes les entrées de A à Z",
+  "Ansiklopedideki {n} maddenin tamamı, harf sırasıyla. Arama kutusu hepsini birden tarar.": "Les {n} entrées de l’encyclopédie par ordre alphabétique. Le champ de recherche les parcourt toutes à la fois."
 }

@@ -9,6 +9,7 @@ import { LANDMARKS, type LandmarkDef } from '../../src/data/landmarks';
 import { SOLAR_SYSTEM } from '../../src/data/solarSystem';
 import { CATALOG, TYPE_BY_CODE, type SurveyGalaxies } from '../../src/galaxy/galaxies';
 import { CONSTELLATIONS, constellationAt, setBoundaries, setReferenceStars, slugify, unitRaDec } from './astro';
+import { SEARCH_PATH, azEntries, azPages, searchJson } from './az';
 import { CoreCatalog } from './catalog';
 import { LANGS, SITE, missing, render, setWikiLocale, t, url, type Page } from './html';
 import type { ConstellationEntry, DsoEntry, GalaxyEntry, PlanetEntry, Site, StarEntry } from './model';
@@ -170,8 +171,14 @@ export async function generate({ root, args, buildId }: { root: string; args: st
     setWikiLocale(root, lang);
     const defs = new Map([...LANDMARKS.filter((d) => !d.procedural), ...deepSkyLandmarks(json<DeepSkyData>(path.join(root, 'public/data/deepsky.json')), LANDMARKS)].map((d) => [d.id, d]));
     site.dsoDefs = new Map(dsoIds.map((id) => [id, defs.get(id)!]));
+    const entries = azEntries(site);
+    const search = searchJson(entries);
+    fs.mkdirSync(path.join(opt.out, url('/encyclopedia', lang)), { recursive: true });
+    fs.writeFileSync(path.join(opt.out, url(SEARCH_PATH, lang)), search);
+    bytes += search.length;
     const list: Array<[string, () => Page]> = [
       ...hubPages(site).map((p) => ['hubs', () => p] as [string, () => Page]),
+      ...azPages(entries).map((p) => ['hubs', () => p] as [string, () => Page]),
       ...lim(site.stars).map((s) => ['stars', () => starPage(s, site)] as [string, () => Page]),
       ...lim(site.planets).map((p) => ['exoplanets', () => planetPage(p, site)] as [string, () => Page]),
       ...[...site.constellations.values()].map((c) => ['constellations', () => constellationPage(c, site)] as [string, () => Page]),

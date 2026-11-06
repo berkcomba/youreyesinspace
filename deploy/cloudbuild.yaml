@@ -1,6 +1,7 @@
 # Cloud Build config used by deploy/cloudrun-deploy.sh (passes BUILD_ID into the Docker build).
 steps:
   - name: gcr.io/cloud-builders/docker
+    env: ['DOCKER_BUILDKIT=1']
     args:
       - build
       - --build-arg
@@ -15,3 +16,6 @@ substitutions:
   _BUILD_ID: dev
 options:
   logging: CLOUD_LOGGING_ONLY
+  # the encyclopedia (≈176k pages in 5 languages) is generated inside the image build
+  machineType: E2_HIGHCPU_8
+timeout: 3600s

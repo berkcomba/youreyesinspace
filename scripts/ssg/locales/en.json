@@ -216,5 +216,16 @@
   "İlgili cisimler": "Bodies involved",
   "Katalog yıldızı": "Catalogue star",
   "Gaia ve Tycho-2 kataloglarındaki 2,8 milyon yıldızdan biri.": "One of the 2.8 million stars of the Gaia and Tycho-2 catalogues.",
-  "Gaia ve Tycho-2 kataloglarındaki 2,8 milyon yıldızdan biri. Bu yıldızın ayrıntılı sayfası henüz yok; simülasyonda açıp konumunu, parlaklığını ve çevresini görebilirsiniz.": "One of the 2.8 million stars of the Gaia and Tycho-2 catalogues. This star has no detailed page yet; open it in the simulation to see its position, brightness and surroundings."
+  "Gaia ve Tycho-2 kataloglarındaki 2,8 milyon yıldızdan biri. Bu yıldızın ayrıntılı sayfası henüz yok; simülasyonda açıp konumunu, parlaklığını ve çevresini görebilirsiniz.": "One of the 2.8 million stars of the Gaia and Tycho-2 catalogues. This star has no detailed page yet; open it in the simulation to see its position, brightness and surroundings.",
+  "Gök olayı": "Sky event",
+  "Sonuç yok": "No results",
+  "{n} sonuç": "{n} results",
+  "Ara: Sirius, TRAPPIST-1 e, Andromeda, Orion…": "Search: Sirius, TRAPPIST-1 e, Andromeda, Orion…",
+  "Ansiklopedide ara": "Search the encyclopedia",
+  "Harfler": "Letters",
+  "A'dan Z'ye ansiklopedi: {l} harfi": "Encyclopedia A to Z: {l}",
+  "A'dan Z'ye": "A to Z",
+  "{n} madde": "{n} entries",
+  "A'dan Z'ye tüm maddeler": "All entries, A to Z",
+  "Ansiklopedideki {n} maddenin tamamı, harf sırasıyla. Arama kutusu hepsini birden tarar.": "All {n} entries of the encyclopedia in alphabetical order. The search box covers all of them at once."
 }

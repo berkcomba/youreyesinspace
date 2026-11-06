@@ -9,6 +9,7 @@ import { typeLabel } from '../../src/ui/format';
 import { CONSTELLATIONS, PC_LY, constellationAt, epochFor, fmtDec, fmtRa, midnightMonth, sceneToRaDec, visibility } from './astro';
 import { a, appUrl, currentLang, esc, factTable, linkList, openButton, section, t, url, w, type Page } from './html';
 import { tidyBayer } from './catalog';
+import { AZ_PATH, searchForm } from './az';
 import { dateLong, lat, ly, mag, monthName, pc, plain, sig, years } from './format';
 import type { ConstellationEntry, DsoEntry, GalaxyEntry, PlanetEntry, Site, StarEntry } from './model';
 
@@ -549,7 +550,8 @@ export function hubPages(site: Site): Page[] {
   out.push(hub({
     path: '/encyclopedia', title: w('Gökyüzü ansiklopedisi: yıldızlar, ötegezegenler, takımyıldızlar ve galaksiler'), description: plain(lede),
     h1: w('Gökyüzü ansiklopedisi'), lede, crumbs: [],
-    body: `<ol class="w-index">${([
+    body: searchForm(false) + `<ol class="w-index">${([
+      [AZ_PATH, w('A\'dan Z\'ye tüm maddeler'), site.stars.length + site.planets.length + site.constellations.size + site.solar.length + site.dsos.length + site.galaxies.length + site.blackHoles.length + site.events.length],
       ['/stars', w('Yıldızlar'), site.stars.length],
       ['/exoplanets', w('Ötegezegenler'), site.planets.length],
       ['/constellations', w('Takımyıldızlar'), site.constellations.size],
