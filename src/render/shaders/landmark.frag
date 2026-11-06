@@ -1,13 +1,13 @@
 #include <logdepthbuf_pars_fragment>
 // Deep-sky landmark sprite: procedural shape by kind, additive.
 varying vec2 vUv;
-varying vec3 vColor;
-varying float vAlpha;
-varying float vKind;
-varying float vSeed;
-varying float vImg;
-varying float vSpan;
-varying float vPx;
+flat varying vec3 vColor;
+flat varying float vAlpha;
+flat varying float vKind;
+flat varying float vSeed;
+flat varying float vImg;
+flat varying float vSpan;
+flat varying float vPx;
 uniform float uTime;
 uniform sampler2D uAtlas;
 uniform float uAtlasReady;

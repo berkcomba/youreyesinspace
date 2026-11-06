@@ -3,7 +3,7 @@ import {
   Texture, TextureLoader, Vector3, Vector4, type Camera, type IUniform,
 } from 'three';
 import type { CelestialBody } from '../core/CelestialBody';
-import type { BodyImagery, TileProvider } from '../data/imagery';
+import { imageryFallback, type BodyImagery, type TileProvider } from '../data/imagery';
 import { DEG } from '../core/constants';
 import { Shaders } from './shaders';
 
@@ -13,6 +13,8 @@ type TexStatus = 'idle' | 'queued' | 'loading' | 'ready' | 'error';
 interface TexSlot {
   status: TexStatus;
   tex: Texture | null;
+  /** failed downloads so far (retried with backoff, see RETRY_MS) */
+  fails?: number;
 }
 
 /** Texel magnification (screen px per texel) above which a tile is split */
@@ -25,6 +27,8 @@ const STALE_REQUEST_MS = 150;
 const TEXTURE_BUDGET = 320;
 /** Parallel tile downloads */
 const MAX_CONCURRENT = 8;
+/** Delay (ms) before a failed tile may be requested again, per failure; then it stays failed */
+const RETRY_MS = [1500, 6000];
 
 // ---------------------------------------------------------------------------
 // Shared loader with a small priority queue (low levels first, then most recent)
@@ -86,7 +90,14 @@ class TileLoader {
       undefined,
       () => {
         this.inFlight--;
+        if (job.node.disposed) return;
+        const alt = imageryFallback(job.url);
+        if (alt) { this.start({ ...job, url: alt }); return; }
         slot.status = 'error';
+        const fails = (slot.fails = (slot.fails ?? 0) + 1);
+        const wait = RETRY_MS[fails - 1];
+        // back to idle: requested again only if the tile is still wanted by then
+        if (wait !== undefined) setTimeout(() => { if (slot.status === 'error' && !job.node.disposed) slot.status = 'idle'; }, wait);
       },
     );
   }

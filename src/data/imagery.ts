@@ -30,6 +30,26 @@ export interface BodyImagery {
 
 const GIBS = 'https://gibs.earthdata.nasa.gov/wmts/epsg4326/best';
 const TREK = 'https://trek.nasa.gov/tiles';
+/**
+ * The same Trek tiles through the relay worker (worker/, /trek/…). Some networks cannot reach
+ * trek.nasa.gov at all (the TLS handshake is reset), so once a direct tile fails the rest of the
+ * session asks the worker instead.
+ */
+const TREK_PROXY = (() => {
+  const relay = ((import.meta.env.VITE_XP_SERVER as string | undefined) ?? '').replace(/^ws/, 'http').replace(/\/$/, '');
+  return relay ? `${relay}/trek` : '';
+})();
+let trekBase = TREK;
+
+/**
+ * URL to try instead of one that failed to load, or null. A failed direct Trek tile switches all
+ * later Trek requests to the relay.
+ */
+export function imageryFallback(url: string): string | null {
+  if (!TREK_PROXY || !url.startsWith(`${TREK}/`)) return null;
+  trekBase = TREK_PROXY;
+  return TREK_PROXY + url.slice(TREK.length);
+}
 
 function gibs(layer: string, ext: string, maxLevel: number): TileProvider {
   return {
@@ -46,7 +66,7 @@ function gibs(layer: string, ext: string, maxLevel: number): TileProvider {
  */
 function trek(body: string, layer: string, maxLevel: number, ext: 'jpg' | 'png' = 'jpg'): TileProvider {
   return {
-    url: (z, x, y) => `${TREK}/${body}/EQ/${layer}/1.0.0//default/default028mm/${z}/${y}/${x}.${ext}`,
+    url: (z, x, y) => `${trekBase}/${body}/EQ/${layer}/1.0.0//default/default028mm/${z}/${y}/${x}.${ext}`,
     tileSize: 256,
     span0: 180,
     maxLevel,
@@ -133,5 +153,5 @@ export const IMAGERY: Record<string, BodyImagery> = {
   },
 };
 
-/** Hosts that must be allowed by the CSP img-src directive */
+/** Hosts that must be allowed by the CSP img-src directive (plus the relay, see TREK_PROXY) */
 export const IMAGERY_HOSTS = ['https://gibs.earthdata.nasa.gov', 'https://trek.nasa.gov'];

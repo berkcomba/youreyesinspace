@@ -128,6 +128,7 @@ export default {
     const kick = url.pathname.match(/^\/kick\/([A-Za-z0-9_-]{1,40})$/);
     if (kick) return kickChatroom(env, req, kick[1]);
     if (url.pathname === '/yt/start' || url.pathname === '/yt/poll') return youtubeChat(env, req, url);
+    if (url.pathname.startsWith('/trek/')) return trekTile(env, req, url);
     const m = url.pathname.match(/^\/room\/([A-Za-z0-9]{4,8})\/(host|crew)$/);
     if (!m) return new Response('Not found', { status: 404 });
     if (req.headers.get('Upgrade')?.toLowerCase() !== 'websocket') return new Response('Expected a WebSocket', { status: 426 });
@@ -179,6 +180,28 @@ async function kickChatroom(env: Env, req: Request, slug: string): Promise<Respo
   const body = JSON.stringify({ chatroomId: id, appKey, cluster });
   await cache.put(key, new Response(body, { headers: { 'Cache-Control': 'public, max-age=21600' } }));
   return new Response(body, { headers });
+}
+
+/**
+ * NASA Trek imagery tiles for visitors whose network cannot reach trek.nasa.gov (the TLS
+ * handshake is reset on some ISPs): the app retries a failed tile here (src/data/imagery.ts).
+ * Tiles only, for the app's own origins, cached at the edge.
+ */
+const TREK_PATH_RE = /^\/trek\/((?:[A-Za-z0-9_.-]+\/+)+[0-9]+\.(?:jpg|png))$/;
+
+async function trekTile(env: Env, req: Request, url: URL): Promise<Response> {
+  const origin = req.headers.get('Origin');
+  if (!originAllowed(env, origin)) return new Response('Forbidden origin', { status: 403 });
+  const m = url.pathname.match(TREK_PATH_RE);
+  if (req.method !== 'GET' || !m || m[1].includes('..')) return new Response('Not found', { status: 404 });
+  const headers = { 'Access-Control-Allow-Origin': origin!, Vary: 'Origin' };
+  try {
+    const r = await fetch(`https://trek.nasa.gov/tiles/${m[1]}`, { cf: { cacheEverything: true, cacheTtl: 30 * 86400 } });
+    if (!r.ok) return new Response(null, { status: r.status === 404 ? 404 : 502, headers });
+    return new Response(r.body, { headers: { ...headers, 'Content-Type': r.headers.get('Content-Type') ?? 'image/jpeg', 'Cache-Control': 'public, max-age=604800' } });
+  } catch {
+    return new Response(null, { status: 502, headers });
+  }
 }
 
 /**

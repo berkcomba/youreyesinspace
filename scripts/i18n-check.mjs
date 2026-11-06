@@ -16,8 +16,9 @@
  */
 import { readdirSync, readFileSync, statSync, existsSync } from 'node:fs';
 import { join, relative } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const ROOT = new URL('..', import.meta.url).pathname;
+const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const SRC = join(ROOT, 'src');
 const LOCALES = ['en', 'de', 'es', 'fr'];
 
@@ -28,7 +29,7 @@ function walk(dir, out = []) {
     const p = join(dir, f);
     if (statSync(p).isDirectory()) walk(p, out);
     // Streamer Mode (src/expedition) is English-only by design and keeps its own strings
-    else if (p.endsWith('.ts') && !p.includes('/i18n/') && !p.includes('/expedition/')) out.push(p);
+    else if (p.endsWith('.ts') && !/[\\/](i18n|expedition)[\\/]/.test(p)) out.push(p);
   }
   return out;
 }

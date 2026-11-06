@@ -13,7 +13,7 @@ varying vec3 vSpiral;
 varying float vProc;
 uniform vec4 uTint;
 
-float hash1(float n) { return fract(sin(n * 12.9898 + 78.233) * 43758.5453); }
+float hash1(float n) { n = fract(n * 0.1031); n *= n + 33.33; n *= n + n; return fract(n); }
 
 // Angular distance (rad, weighted) to the nearest arm ridge — mirrors GalaxyModel.armDistance so
 // the sprite fades into a point cloud with the very same arms. rho in galaxy radii.

@@ -2,11 +2,13 @@
 // Shared GLSL: hashing, simplex noise, fbm, craters, shadows, ring density
 // ---------------------------------------------------------------------------
 
+// No sin(): fract(sin(x) * 43758) turns the last bit of a GPU's sin into a different random
+// number, and D3D11 drivers evaluate sin at different precision in different builds of the same
+// shader, so hashed structure (cyclones, crater fields, cluster stars) flipped between two layouts
 vec3 hash33(vec3 p) {
-  p = vec3(dot(p, vec3(127.1, 311.7, 74.7)),
-           dot(p, vec3(269.5, 183.3, 246.1)),
-           dot(p, vec3(113.5, 271.9, 124.6)));
-  return fract(sin(p) * 43758.5453123);
+  p = fract(p * vec3(0.1031, 0.1030, 0.0973));
+  p += dot(p, p.yxz + 33.33);
+  return fract((p.xxy + p.yxx) * p.zyx);
 }
 
 float hash13(vec3 p) {

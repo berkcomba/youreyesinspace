@@ -21,13 +21,15 @@ uniform float uHideIndex; // instance to hide (we are inside its system)
 uniform float uCloudOn;   // 1 once the volumetric clouds exist: photographed sprites yield to them when resolved
 uniform float uDaylight;  // 0 night sky … 1 drowned in a daytime sky
 varying vec2 vUv;
-varying vec3 vColor;
-varying float vAlpha;
-varying float vKind;
-varying float vSeed;
-varying float vImg;
-varying float vSpan;
-varying float vPx;        // the object's radius on screen (px): the shape resolves with it
+// per-instance values: flat, since D3D11 (ANGLE) interpolates even a constant inexactly across
+// the quad (2.9999 instead of 3) — enough to pick the wrong atlas slot or reseed the member stars
+flat varying vec3 vColor;
+flat varying float vAlpha;
+flat varying float vKind;
+flat varying float vSeed;
+flat varying float vImg;
+flat varying float vSpan;
+flat varying float vPx;   // the object's radius on screen (px): the shape resolves with it
 
 void main() {
   vec3 rel = iPos - uCamPc;
