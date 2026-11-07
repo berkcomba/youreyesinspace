@@ -12,6 +12,8 @@
     accent: '#bd9b6c', sun: '#f2c45a', band: 'rgba(185, 194, 201, 0.06)',
   };
   const sky = fetch(`${base}/encyclopedia/sky.json`).then((r) => r.json());
+  /** star pages: in an iframe on another site they open in a new tab of ours */
+  const go = (fig, href) => { if (fig.dataset.embed) window.open(location.origin + href, '_blank', 'noopener'); else location.href = href; };
 
   const num = (x, d = 0) => x.toLocaleString(lang, { minimumFractionDigits: d, maximumFractionDigits: d });
   const wrap360 = (a) => ((a % 360) + 360) % 360;
@@ -69,6 +71,7 @@
       this.con = d.con || '';
       this.name = d.name || '';
       this.area = d.area === '1';
+      this.embed = d.embed === '1';
       this.fov0 = d.fov ? +d.fov : this.mag !== null && this.mag > 6 ? 30 : 50;
       this.view = 'sky';
       this.c0 = [this.ra, this.dec];
@@ -122,6 +125,8 @@
       this.caption.className = 'w-loc-cap';
       this.controls.append(seg, this.slider, reset);
       this.fig.replaceChildren(this.canvas, this.readout, this.controls, this.caption);
+      if (this.embed) this.fig.append(this.brand());
+      else this.controls.append(this.embedButton());
       this.ctx = this.canvas.getContext('2d');
 
       let drag = null;
@@ -148,7 +153,7 @@
         drag = null;
         if (moved) return;
         const r = this.canvas.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
-        if (this.hover?.slug) { location.href = `${base}/stars/${this.hover.slug}`; return; }
+        if (this.hover?.slug) { go(this.fig, `${base}/stars/${this.hover.slug}`); return; }
         if (this.view === 'all') {
           const p = this.hammerInverse(x, y);
           if (p) { this.c0 = p; this.fov = 40; this.setView('sky'); }
@@ -158,7 +163,66 @@
       this.canvas.addEventListener('pointercancel', () => { drag = null; });
       this.canvas.addEventListener('pointerleave', () => { if (this.hover) { this.hover = null; this.draw(); } });
       new ResizeObserver(() => this.resize()).observe(this.fig);
+      if (this.embed) window.addEventListener('resize', () => this.resize());
       this.setView('sky');
+    }
+
+    /** under an embedded map: our name and logo, a link to the object's page */
+    brand() {
+      const a = document.createElement('a');
+      a.className = 'w-loc-brand';
+      a.href = location.origin + this.fig.dataset.page;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      const logo = document.createElement('img');
+      logo.src = '/logo-white.png';
+      logo.alt = '';
+      const name = document.createElement('span');
+      name.className = 'n';
+      name.textContent = 'Your Eyes In Space';
+      const more = document.createElement('span');
+      more.className = 'more';
+      more.textContent = `${this.name} · ${this.T.more} →`;
+      a.append(logo, name, more);
+      return a;
+    }
+
+    /** "Embed": the iframe code for this page's map, ready to copy */
+    embedButton() {
+      const T = this.T;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = T.embed;
+      const box = document.createElement('div');
+      box.className = 'w-loc-embed';
+      box.hidden = true;
+      const hint = document.createElement('p');
+      hint.textContent = T.embedHint;
+      const code = document.createElement('textarea');
+      code.readOnly = true;
+      code.rows = 3;
+      code.spellcheck = false;
+      const page = location.pathname.split('/').map(encodeURIComponent).join('/');
+      const title = `${this.name} · Your Eyes In Space`.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+      code.value = `<iframe src="${location.origin}/embed/locator/?embed=1&p=${page}" title="${title}" width="100%" height="560" style="border:0;max-width:760px" loading="lazy"></iframe>`;
+      code.addEventListener('focus', () => code.select());
+      const copy = document.createElement('button');
+      copy.type = 'button';
+      copy.textContent = T.copy;
+      copy.addEventListener('click', () => {
+        code.select();
+        const done = () => { copy.textContent = T.copied; setTimeout(() => { copy.textContent = T.copy; }, 1600); };
+        if (navigator.clipboard) navigator.clipboard.writeText(code.value).then(done, () => document.execCommand('copy') && done());
+        else if (document.execCommand('copy')) done();
+      });
+      box.append(hint, code, copy);
+      btn.addEventListener('click', () => {
+        box.hidden = !box.hidden;
+        btn.classList.toggle('active', !box.hidden);
+        if (!box.hidden) code.focus();
+      });
+      this.fig.append(box);
+      return btn;
     }
 
     setView(v) {
@@ -206,7 +270,9 @@
     resize() {
       const w = this.fig.clientWidth;
       if (!w) return;
-      const h = Math.round(Math.min(w / 1.6, 460));
+      let h = Math.round(Math.min(w / 1.6, 460));
+      // embedded: the map takes whatever height the iframe leaves after the panels
+      if (this.embed) h = Math.max(160, document.documentElement.clientHeight - (this.fig.offsetHeight - this.canvas.offsetHeight));
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       this.canvas.style.height = `${h}px`;
       this.canvas.width = Math.round(w * dpr);
@@ -478,5 +544,5 @@
     }
   }
 
-  sky.then((data) => { for (const f of figs) new Locator(f, data); }).catch(() => { for (const f of figs) f.hidden = true; });
+  Promise.all([sky, window.yeisEmbed]).then(([data]) => { for (const f of figs) new Locator(f, data); }).catch(() => { for (const f of figs) f.hidden = true; });
 })();

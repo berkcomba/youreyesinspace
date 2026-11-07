@@ -11,7 +11,7 @@ import { CATALOG, TYPE_BY_CODE, type SurveyGalaxies } from '../../src/galaxy/gal
 import { CONSTELLATIONS, constellationAt, setBoundaries, setReferenceStars, slugify, unitRaDec } from './astro';
 import { SEARCH_PATH, azEntries, azPages, searchJson } from './az';
 import { CoreCatalog } from './catalog';
-import { LANGS, SITE, locatorStrings, missing, render, setWikiLocale, t, url, type Page } from './html';
+import { LANGS, SITE, locatorStrings, missing, render, renderEmbed, setWikiLocale, t, url, type Page } from './html';
 import type { ConstellationEntry, DsoEntry, GalaxyEntry, PlanetEntry, Site, StarEntry } from './model';
 import { skyData } from './sky';
 import {
@@ -208,6 +208,7 @@ export async function generate({ root, args, buildId }: { root: string; args: st
     console.log(`ssg: ${lang} done (${pages} pages so far)`);
   }
   sitemaps(opt.out, urls);
+  writePage(opt.out, renderEmbed(buildId), '/embed/locator');
   // `?open=` key → page path, so the simulation's info panel can link a selection to its page
   const index: Record<string, string> = {};
   for (const s of lim(site.stars)) index[`star:c${s.i}`] = `/stars/${s.slug}`;

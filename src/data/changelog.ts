@@ -12,9 +12,25 @@ export interface Release {
   items: Array<{ text: string }>;
 }
 
-export const CURRENT_VERSION = '0.9.1';
+export const CURRENT_VERSION = '0.9.2';
 
 export const CHANGELOG: Release[] = [
+  {
+    version: '0.9.2', date: '2026-11-07', title: 'Ansiklopedi ve sinematik turlar',
+    items: [
+      { text: 'Ansiklopedi: yıldızlar, öte gezegenler, takımyıldızlar, derin gökyüzü, galaksiler, kara delikler, Güneş Sistemi ve gök olayları için beş dilde on binlerce sayfa; her sayfadan simülasyonda açma' },
+      { text: 'A\'dan Z\'ye dizin ve bütün ansiklopedide arama' },
+      { text: 'Simülasyondan ansiklopediye: üst çubukta kitap düğmesi, Hakkında kartında bağlantı ve sayfası olan her seçimin altında "Ansiklopedide oku"' },
+      { text: 'Gökyüzü konum haritası: her cismin gökyüzündeki yeri, tüm gökyüzü ve galaksiye tepeden bakış; Yerleştir düğmesiyle başka sitelere gömülebiliyor' },
+      { text: 'Turlar: her tura Carl Sagan tadında giriş ve kapanış anlatımları, sinematik kamera hareketleri ve tarih kartları; beş dilde yeniden seslendirildi' },
+      { text: 'Güneş Sistemi turunun finali: Plüton\'dan Güneş\'e ve Dünya\'ya geriye bakış, ardından müzik eşliğinde gezegenlerin yanından geçen kesintisiz bir uçuşla açılış ekranına dönüş' },
+      { text: 'Turlarda yüzeye iniş: bazı sahneler artık bir dünyanın üzerinde durup gökyüzüne bakıyor' },
+      { text: 'Karşılama: her ilk ziyarette aynı sahne, müzik ilk tıklamayla başlıyor; gerçek Ay ve Io dokuları' },
+      { text: 'Destek: GitHub Sponsors ile Buy Me a Coffee arasında seçim' },
+      { text: 'Windows: gölgelendiriciler arka planda derleniyor, açılışta ve inişte sayfa donmuyor; sürüklerken yanıp sönen işaretler ve Opera GX\'teki titreme düzeltildi' },
+      { text: 'Düzeltme: Öte Gezegenler turundaki siyah dikdörtgen' },
+    ],
+  },
   {
     version: '0.9.1', date: '2026-11-05', title: 'Gerçek kataloglar, ilk karşılama, öte gezegenler ve müzik',
     items: [

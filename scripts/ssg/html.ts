@@ -105,7 +105,33 @@ export function locatorStrings(): Record<string, string> {
     hintAll: w('Tüm gökyüzü: bir noktaya tıklayınca o bölgeye yakınlaşır. Kesikli çizgi Samanyolu\'nun düzlemi, noktalı çizgi ekliptik.'),
     hintTop: w('Galaksiye tepeden bakış: Güneş ortada, Samanyolu\'nun merkezi yukarıda. Kollar şematiktir; cismin konumu galaksi düzlemine izdüşürülmüştür.'),
     north: w('K'), east: w('D'), gc: w('Samanyolu merkezi'), ecl: w('Ekliptik'), mw: w('Samanyolu'), sun: w('Güneş'),
+    embed: w('Yerleştir'), embedHint: w('Bu haritayı kendi sitenizde göstermek için kodu sayfanıza yapıştırın.'), copy: w('Kopyala'), copied: w('Kopyalandı'),
+    more: w('Ansiklopedide aç'),
   };
+}
+
+/**
+ * /embed/locator/?embed=1&p=<page path>: the locator of an encyclopedia page alone, for an iframe
+ * on another site (nginx allows framing only with `embed=1`). Language-free: the page path says
+ * which page (and language) to take the widget from.
+ */
+export function renderEmbed(buildId: string): string {
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Your Eyes In Space</title>
+    <link rel="stylesheet" href="/wiki/wiki.css?v=${buildId}" />
+  </head>
+  <body class="w-embed">
+    <figure class="w-loc" data-embed="1"></figure>
+    <script src="/wiki/embed.js?v=${buildId}"></script>
+    <script src="/wiki/locator.js?v=${buildId}" defer></script>
+  </body>
+</html>
+`;
 }
 
 export function openButton(href: string, label = w('Simülasyonda aç')): string {

@@ -90,9 +90,9 @@ interface Autopilot {
 }
 
 /** e-folding rate of the distance from a flyby waypoint while passing it (1/s): low, so each pass lingers */
-const PASS_RATE = 1;
+const PASS_RATE = 0.75;
 /** seconds on either side of a flyby waypoint flown at that steady rate */
-const PASS_S = 0.8;
+const PASS_S = 1.25;
 
 function nodePos(n: PathNode, out: Vector3): Vector3 {
   return n.body ? out.copy(n.body.position).add(n.off) : out.copy(n.off);
@@ -535,7 +535,7 @@ export class CameraController {
         const tilt = rings > 0 ? 0.5 : i % 2 ? 0.3 : -0.2;
         off = side.clone().multiplyScalar(Math.cos(tilt)).addScaledVector(b.pole, Math.sin(tilt));
         off.addScaledVector(tan, -off.dot(tan)).setLength(q);
-        speed = 1.5 * q;
+        speed = 1.1 * q;
       } else off = pts[i].clone();
       nodes.push({ body: b, off, tan, speed, time, look: i === 0 ? null : b ?? endLook });
       if (i < weights.length) time += (durationS * weights[i]) / total;
@@ -682,7 +682,7 @@ export class CameraController {
         legPos(n0, n1, t, this.position);
         // the gaze stays on this node's subject until just past it, then swings onto the next
         const T = n1.time - n0.time;
-        const from = k === 0 ? 0 : 0.3, span = k === 0 ? 0.7 * T : k === nodes.length - 2 ? 0.6 * T : Math.min(1.3, 0.6 * T);
+        const from = k === 0 ? 0 : 0.4, span = k === 0 ? 0.7 * T : k === nodes.length - 2 ? 0.6 * T : Math.min(2.2, 0.65 * T);
         const w = smoothstep((t - n0.time - from) / Math.max(span, 1e-3));
         this.pathLook(ap, n0.look, up, _q);
         this.pathLook(ap, n1.look, up, _q2);

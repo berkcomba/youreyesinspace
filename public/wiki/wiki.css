@@ -152,6 +152,19 @@ article.w-wide { display: block; }
 .w-loc-reset { margin-left: auto; }
 .w-loc-cap { margin: 0; padding: 0 12px 10px; color: var(--text-3); font-size: 12px; }
 @media (max-width: 560px) { .w-loc-ro { grid-template-columns: 1fr; } .w-loc { min-height: 200px; } }
+.w-loc-ctl button.active { color: var(--text); border-color: var(--accent); }
+.w-loc-embed { padding: 0 12px 12px; font-size: 12.5px; color: var(--text-3); }
+.w-loc-embed p { margin: 0 0 6px; }
+.w-loc-embed textarea { display: block; box-sizing: border-box; width: 100%; margin: 0 0 8px; padding: 8px 10px; resize: vertical; font: 12px ui-monospace, Menlo, Consolas, monospace; color: var(--text-2); background: var(--bg); border: 1px solid var(--border); border-radius: 2px; }
+
+/* the locator alone in an iframe on another site (/embed/locator/) */
+html:has(.w-embed), .w-embed { height: 100%; margin: 0; padding: 0; overflow: hidden; background: #0b0e13; }
+.w-embed .w-loc { margin: 0; min-height: 0; }
+.w-loc-brand { display: flex; align-items: center; gap: 9px; padding: 9px 12px; border-top: 1px solid var(--border); color: var(--text-2); text-decoration: none; font-size: 12.5px; }
+.w-loc-brand img { display: block; height: 18px; width: auto; opacity: 0.92; }
+.w-loc-brand .n { color: var(--text); font-family: var(--serif); font-size: 14px; white-space: nowrap; }
+.w-loc-brand .more { margin-left: auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--accent); }
+.w-loc-brand:hover .more { color: #cdae82; }
 
 /* the one action of the page */
 .w-open { margin: 36px 0 0; }

@@ -1254,5 +1254,17 @@
   "GitHub hesabınız yoksa": "Si vous n'avez pas de compte GitHub",
   "Ansiklopedi": "Encyclopédie",
   "Ansiklopedi (yeni sekmede açılır)": "Encyclopédie (s’ouvre dans un nouvel onglet)",
-  "Ansiklopedide oku →": "Lire dans l’encyclopédie →"
+  "Ansiklopedide oku →": "Lire dans l’encyclopédie →",
+  "Ansiklopedi ve sinematik turlar": "L'encyclopédie et des visites cinématographiques",
+  "Ansiklopedi: yıldızlar, öte gezegenler, takımyıldızlar, derin gökyüzü, galaksiler, kara delikler, Güneş Sistemi ve gök olayları için beş dilde on binlerce sayfa; her sayfadan simülasyonda açma": "Encyclopédie : des dizaines de milliers de pages en cinq langues sur les étoiles, les exoplanètes, les constellations, le ciel profond, les galaxies, les trous noirs, le Système solaire et les événements célestes ; chaque page s'ouvre dans la simulation",
+  "A'dan Z'ye dizin ve bütün ansiklopedide arama": "Un index de A à Z et une recherche dans toute l'encyclopédie",
+  "Simülasyondan ansiklopediye: üst çubukta kitap düğmesi, Hakkında kartında bağlantı ve sayfası olan her seçimin altında \"Ansiklopedide oku\"": "De la simulation à l'encyclopédie : un bouton livre dans la barre du haut, un lien dans la carte À propos et « Lire dans l'encyclopédie » sous chaque sélection qui a sa page",
+  "Gökyüzü konum haritası: her cismin gökyüzündeki yeri, tüm gökyüzü ve galaksiye tepeden bakış; Yerleştir düğmesiyle başka sitelere gömülebiliyor": "Carte de localisation : la place de chaque objet dans le ciel, le ciel entier et la galaxie vue d'en haut ; le bouton Intégrer permet de l'afficher sur d'autres sites",
+  "Turlar: her tura Carl Sagan tadında giriş ve kapanış anlatımları, sinematik kamera hareketleri ve tarih kartları; beş dilde yeniden seslendirildi": "Visites : des ouvertures et des conclusions à la Carl Sagan pour chaque visite, des mouvements de caméra cinématographiques et des cartes de dates ; à nouveau narrées en cinq langues",
+  "Güneş Sistemi turunun finali: Plüton'dan Güneş'e ve Dünya'ya geriye bakış, ardından müzik eşliğinde gezegenlerin yanından geçen kesintisiz bir uçuşla açılış ekranına dönüş": "Le final de la visite du Système solaire : un regard en arrière depuis Pluton vers le Soleil et la Terre, puis un vol ininterrompu le long des planètes en musique, jusqu'à la vue d'accueil",
+  "Turlarda yüzeye iniş: bazı sahneler artık bir dünyanın üzerinde durup gökyüzüne bakıyor": "Atterrissages dans les visites : certaines scènes se posent désormais sur un monde et regardent son ciel",
+  "Karşılama: her ilk ziyarette aynı sahne, müzik ilk tıklamayla başlıyor; gerçek Ay ve Io dokuları": "Accueil : la même scène à chaque première visite, la musique dès le premier clic ; vraies textures de la Lune et d'Io",
+  "Destek: GitHub Sponsors ile Buy Me a Coffee arasında seçim": "Soutien : au choix GitHub Sponsors ou Buy Me a Coffee",
+  "Windows: gölgelendiriciler arka planda derleniyor, açılışta ve inişte sayfa donmuyor; sürüklerken yanıp sönen işaretler ve Opera GX'teki titreme düzeltildi": "Windows : les shaders se compilent en arrière-plan, la page ne se fige plus au démarrage ni à l'atterrissage ; marqueurs qui clignotaient pendant le glisser et scintillement dans Opera GX corrigés",
+  "Düzeltme: Öte Gezegenler turundaki siyah dikdörtgen": "Correction : le rectangle noir de la visite des exoplanètes"
 }

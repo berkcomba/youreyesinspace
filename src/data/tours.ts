@@ -396,12 +396,12 @@ export const TOURS: TourDef[] = [
         ], show: ['earth'], dwell: 1.5 },
 
       // closing credits without a voice: one flyby after another, inward to home, under the music
-      // past Earth (about 15 s in) it pulls out to the opening view, where the orbits come back
-      { id: 'flyby', target: body('earth'), text: '', seconds: 19,
+      // past Earth (about 23.5 s in) it pulls out to the opening view, where the orbits come back
+      { id: 'flyby', target: body('earth'), text: '', seconds: 30,
         cues: [
           fill(0, false),
-          { at: 0, action: 'flyby', refs: ['neptune', 'uranus', 'saturn', 'jupiter', 'mars', 'earth'], seconds: 19 },
-          { at: 0, action: 'orbits', on: true, delay: 16.5 },
+          { at: 0, action: 'flyby', refs: ['neptune', 'uranus', 'saturn', 'jupiter', 'mars', 'earth'], seconds: 30 },
+          { at: 0, action: 'orbits', on: true, delay: 26 },
         ], orbitRate: 0.03, dwell: 0.5 },
     ],
   },

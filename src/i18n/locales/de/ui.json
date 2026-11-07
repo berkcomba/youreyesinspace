@@ -1254,5 +1254,17 @@
   "GitHub hesabınız yoksa": "Wenn Sie kein GitHub-Konto haben",
   "Ansiklopedi": "Enzyklopädie",
   "Ansiklopedi (yeni sekmede açılır)": "Enzyklopädie (öffnet in neuem Tab)",
-  "Ansiklopedide oku →": "In der Enzyklopädie lesen →"
+  "Ansiklopedide oku →": "In der Enzyklopädie lesen →",
+  "Ansiklopedi ve sinematik turlar": "Die Enzyklopädie und filmische Touren",
+  "Ansiklopedi: yıldızlar, öte gezegenler, takımyıldızlar, derin gökyüzü, galaksiler, kara delikler, Güneş Sistemi ve gök olayları için beş dilde on binlerce sayfa; her sayfadan simülasyonda açma": "Enzyklopädie: Zehntausende Seiten in fünf Sprachen über Sterne, Exoplaneten, Sternbilder, Deep-Sky-Objekte, Galaxien, Schwarze Löcher, das Sonnensystem und Himmelsereignisse; jede Seite öffnet sich in der Simulation",
+  "A'dan Z'ye dizin ve bütün ansiklopedide arama": "Ein A–Z-Verzeichnis und eine Suche über die ganze Enzyklopädie",
+  "Simülasyondan ansiklopediye: üst çubukta kitap düğmesi, Hakkında kartında bağlantı ve sayfası olan her seçimin altında \"Ansiklopedide oku\"": "Von der Simulation zur Enzyklopädie: ein Buch-Button in der oberen Leiste, ein Link in der Info-Karte und „In der Enzyklopädie lesen“ unter jeder Auswahl mit eigener Seite",
+  "Gökyüzü konum haritası: her cismin gökyüzündeki yeri, tüm gökyüzü ve galaksiye tepeden bakış; Yerleştir düğmesiyle başka sitelere gömülebiliyor": "Himmelskarte: wo jedes Objekt am Himmel steht, der ganze Himmel und die Galaxie von oben; mit dem Einbetten-Button lässt sie sich auf anderen Websites zeigen",
+  "Turlar: her tura Carl Sagan tadında giriş ve kapanış anlatımları, sinematik kamera hareketleri ve tarih kartları; beş dilde yeniden seslendirildi": "Touren: Ein- und Ausklänge im Stil von Carl Sagan für jede Tour, filmische Kamerafahrten und Datumskarten; in fünf Sprachen neu vertont",
+  "Güneş Sistemi turunun finali: Plüton'dan Güneş'e ve Dünya'ya geriye bakış, ardından müzik eşliğinde gezegenlerin yanından geçen kesintisiz bir uçuşla açılış ekranına dönüş": "Das Finale der Sonnensystem-Tour: ein Blick von Pluto zurück auf Sonne und Erde, dann ein ununterbrochener Flug an den Planeten vorbei zur Musik, zurück zur Startansicht",
+  "Turlarda yüzeye iniş: bazı sahneler artık bir dünyanın üzerinde durup gökyüzüne bakıyor": "Landungen in den Touren: manche Szenen stehen jetzt auf einer Welt und blicken in ihren Himmel",
+  "Karşılama: her ilk ziyarette aynı sahne, müzik ilk tıklamayla başlıyor; gerçek Ay ve Io dokuları": "Begrüßung: bei jedem ersten Besuch dieselbe Szene, Musik ab dem ersten Klick; echte Mond- und Io-Texturen",
+  "Destek: GitHub Sponsors ile Buy Me a Coffee arasında seçim": "Unterstützung: Auswahl zwischen GitHub Sponsors und Buy Me a Coffee",
+  "Windows: gölgelendiriciler arka planda derleniyor, açılışta ve inişte sayfa donmuyor; sürüklerken yanıp sönen işaretler ve Opera GX'teki titreme düzeltildi": "Windows: Shader werden im Hintergrund kompiliert, die Seite friert beim Start und bei der Landung nicht mehr ein; blinkende Markierungen beim Ziehen und das Flackern in Opera GX behoben",
+  "Düzeltme: Öte Gezegenler turundaki siyah dikdörtgen": "Behoben: das schwarze Rechteck in der Exoplaneten-Tour"
 }
