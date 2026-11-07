@@ -7,7 +7,7 @@ import type { BodyData } from '../../src/data/types';
 import { GALAXY_TYPE_LABEL } from '../../src/galaxy/GalaxyModel';
 import { typeLabel } from '../../src/ui/format';
 import { CONSTELLATIONS, PC_LY, constellationAt, epochFor, fmtDec, fmtRa, midnightMonth, sceneToRaDec, visibility } from './astro';
-import { a, appUrl, currentLang, esc, factTable, linkList, openButton, section, t, url, w, type Page } from './html';
+import { a, appUrl, currentLang, esc, factTable, linkList, locator, openButton, section, t, url, w, type Page } from './html';
 import { tidyBayer } from './catalog';
 import { AZ_PATH, searchForm } from './az';
 import { dateLong, lat, ly, mag, monthName, pc, plain, sig, years } from './format';
@@ -140,7 +140,7 @@ export function starPage(s: StarEntry, site: Site): Page {
 
   const body = [
     facts,
-    section(w('Gökyüzünde'), skyParagraph(s.ra, s.dec, s.mag)),
+    section(w('Gökyüzünde'), locator({ ra: s.ra, dec: s.dec, ly: lyDist, mag: s.mag, con: s.con, name: s.name }) + skyParagraph(s.ra, s.dec, s.mag)),
     section(w('Işığın yolculuğu'), lightParagraph(lyDist, buildYear)),
     section(w('Oradan bakınca Güneş'), fromThere),
     planets.length ? section(w('Gezegenleri'), planetList) : '',
@@ -244,11 +244,14 @@ export function planetPage(pl: PlanetEntry, site: Site): Page {
     sky = `<p>${esc(w('Gezegenin gökyüzünde yıldızı {deg}° genişliğinde bir disk olarak görünür: Dünya\'dan gördüğümüz Güneş\'in {x} katı.', { deg: sig(angDeg, 2), x: sig(ratio, 2) }))}</p>`;
   }
 
+  const hostPos = pl.star ?? site.cat.raDec(h.i);
+  const hostCon = pl.star?.con ?? constellationAt(hostPos.ra, hostPos.dec);
   const siblings = (site.planetsByHost.get(h.i) ?? []).filter((x) => x !== pl);
   const body = [
     facts,
     hz ? section(w('Yaşanabilir bölge'), hz) : '',
     sky ? section(w('Gökyüzünde yıldızı'), sky) : '',
+    section(w('Gökyüzünde'), locator({ ra: hostPos.ra, dec: hostPos.dec, ly: dist * PC_LY, mag: pl.star?.mag ?? site.cat.mag[h.i], con: hostCon, name: hostName }) + skyParagraph(hostPos.ra, hostPos.dec, pl.star?.mag ?? site.cat.mag[h.i])),
     section(w('Işığın yolculuğu'), lightParagraph(dist * PC_LY, +site.buildDate.slice(0, 4))),
     siblings.length ? section(w('Aynı sistemdeki gezegenler'), linkList(siblings.map((x) => ({ href: url(`/exoplanets/${x.slug}`), label: x.planet.name, note: planetNote(x) })))) : '',
     openButton(appUrl({ open: `planet:c${h.i}/${p.name}` })),
@@ -293,7 +296,7 @@ export function constellationPage(c: ConstellationEntry, site: Site): Page {
       [w('Derin gökyüzü cisimleri'), esc(fmtNum(c.dsos.length))],
       [w('Galaksiler'), esc(fmtNum(c.galaxies.length))],
     ]),
-    section(w('Gökyüzünde'), skyParagraph(ra, dec, null)),
+    section(w('Gökyüzünde'), locator({ ra, dec, con: c.abbr, name, fov: 70, area: true }) + skyParagraph(ra, dec, null)),
     section(w('En parlak yıldızları'), linkList(byMag.slice(0, 25).map((s) => ({ href: starHref(s), label: s.name, note: `${mag(s.mag)} · ${ly(s.dist * PC_LY)}` })))),
     hosts.length ? section(w('Ötegezegenli yıldızları'), linkList(hosts.map((s) => ({ href: starHref(s), label: s.name, note: w('{n} gezegen', { n: s.host!.planets.length }) })), 'w-list w-cols')) : '',
     c.dsos.length ? section(w('Derin gökyüzü cisimleri'), linkList(c.dsos.map((d) => {
@@ -335,7 +338,7 @@ export function dsoPage(d: DsoEntry, site: Site): Page {
       ...factRows,
       ...coordRows(def.ra, def.dec),
     ]),
-    section(w('Gökyüzünde'), skyParagraph(def.ra, def.dec, null)),
+    section(w('Gökyüzünde'), locator({ ra: def.ra, dec: def.dec, ly: def.distancePc !== undefined ? def.distancePc * PC_LY : undefined, con: d.con, name }) + skyParagraph(def.ra, def.dec, null)),
     def.distancePc !== undefined ? section(w('Işığın yolculuğu'), lightParagraph(def.distancePc * PC_LY, +site.buildDate.slice(0, 4))) : '',
     openButton(appUrl({ open: `landmark:${def.id}` })),
   ].join('\n');
@@ -375,7 +378,7 @@ export function galaxyPage(g: GalaxyEntry, site: Site): Page {
       ...coordRows(g.ra, g.dec),
       [w('Kaynak'), esc(g.source === 'curated' ? w('Derlenmiş katalog (NED, yaklaşık değerler)') : g.source === 'ungc' ? 'Updated Nearby Galaxy Catalog (Karachentsev et al. 2013)' : '2MASS Redshift Survey (Huchra et al. 2012)')],
     ]),
-    section(w('Gökyüzünde'), skyParagraph(g.ra, g.dec, appMag)),
+    section(w('Gökyüzünde'), locator({ ra: g.ra, dec: g.dec, ly: lyDist, mag: appMag, con: g.con, name }) + skyParagraph(g.ra, g.dec, appMag)),
     section(w('Işığın yolculuğu'), lightParagraph(lyDist, +site.buildDate.slice(0, 4))),
     openButton(appUrl({ open: `galaxy:${g.name}` })),
   ].join('\n');

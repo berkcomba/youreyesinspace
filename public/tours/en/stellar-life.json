@@ -70,73 +70,98 @@
    ]
   },
   "cygx1": {
-   "hash": "279bccabdb6a",
-   "duration": 36.07,
+   "hash": "cdb6ce0f0da3",
+   "duration": 48.63,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 4.84,
+     "start": 0.06,
+     "end": 4.72,
      "text": "And for the most massive stars, the final stop: a black hole."
     },
     {
-     "start": 4.84,
-     "end": 8.76,
+     "start": 4.72,
+     "end": 8.2,
      "text": "Cygnus X-1 is the first black hole to be discovered."
     },
     {
-     "start": 8.76,
-     "end": 19.93,
+     "start": 8.2,
+     "end": 18.02,
      "text": "This object of 21 solar masses draws gas from its blue supergiant companion; the gas heats to millions of degrees in the accretion disk and emits X-rays."
     },
     {
-     "start": 19.93,
-     "end": 24.99,
+     "start": 18.02,
+     "end": 22.52,
      "text": "The two orbit their common center of mass once every 5. 5 days."
     },
     {
-     "start": 24.99,
-     "end": 28.51,
+     "start": 22.52,
+     "end": 25.77,
      "text": "Not even light can escape from inside the event horizon."
     },
     {
-     "start": 28.51,
-     "end": 33.91,
+     "start": 25.77,
+     "end": 30.63,
      "text": "A journey that begins in a gas cloud ends in a hole opened in spacetime itself."
     },
     {
-     "start": 33.91,
-     "end": 36.07,
+     "start": 30.63,
+     "end": 39.41,
+     "text": "But the story does not end there: the gas scattered by dying stars mixes into new clouds and one day gives birth to new stars and new planets."
+    },
+    {
+     "start": 39.41,
+     "end": 46.63,
+     "text": "The Sun is one of these later-generation stars; we too are part of that cycle, a way for the universe to know itself."
+    },
+    {
+     "start": 46.63,
+     "end": 48.63,
      "text": "The life of stars tour ends here."
     }
    ]
   },
   "orion": {
-   "hash": "f7c7968553e0",
-   "duration": 31.82,
+   "hash": "c099e3fb9ef6",
+   "duration": 45.75,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 5.76,
+     "start": 0.08,
+     "end": 8.98,
+     "text": "The iron in your blood, the calcium in your bones, the oxygen you are breathing right now: none of it existed in the first moments of the universe."
+    },
+    {
+     "start": 8.98,
+     "end": 13.92,
+     "text": "All of it was cooked inside stars and scattered into space as those stars died."
+    },
+    {
+     "start": 13.92,
+     "end": 17.48,
+     "text": "We are made of star stuff, and that is not a metaphor."
+    },
+    {
+     "start": 17.48,
+     "end": 22.44,
      "text": "On this tour we will follow the life story of a star, from its birth to its death."
     },
     {
-     "start": 5.76,
-     "end": 15.05,
+     "start": 22.44,
+     "end": 30.79,
      "text": "The story begins in places like this: the Orion Nebula, a giant star factory 1,350 light-years away from us."
     },
     {
-     "start": 15.05,
-     "end": 20.49,
+     "start": 30.79,
+     "end": 35.69,
      "text": "Cold gas and dust collapse under their own weight, forming hundreds of new stars."
     },
     {
-     "start": 20.49,
-     "end": 27.14,
+     "start": 35.69,
+     "end": 41.75,
      "text": "The four bright Trapezium stars at the center illuminate the nebula from within with their ultraviolet light."
     },
     {
-     "start": 27.14,
-     "end": 31.82,
+     "start": 41.75,
+     "end": 45.75,
      "text": "In the sky it is seen with the naked eye as the fuzzy patch in Orion's sword."
     }
    ]

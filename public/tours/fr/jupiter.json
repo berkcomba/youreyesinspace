@@ -117,68 +117,93 @@
    ]
   },
   "juno": {
-   "hash": "b83ebf6f5458",
-   "duration": 37.11,
+   "hash": "e5303c9353a1",
+   "duration": 51.51,
    "sentences": [
     {
      "start": 0.02,
-     "end": 7.28,
+     "end": 6.96,
      "text": "Pour finir, regardons Juno : cette sonde de la NASA est entrée en orbite autour de Jupiter en juillet deux mille seize."
     },
     {
-     "start": 7.28,
-     "end": 15.22,
+     "start": 6.96,
+     "end": 14.86,
      "text": "C'est le premier engin à fonctionner à l'énergie solaire aussi loin du Soleil ; ses trois panneaux géants occupent autant de place qu'un terrain de basket."
     },
     {
-     "start": 15.22,
-     "end": 23.25,
+     "start": 14.86,
+     "end": 22.54,
      "text": "Pour se protéger des radiations, elle suit une orbite longue et elliptique passant au-dessus des pôles ; voici cette orbite, en accéléré."
     },
     {
-     "start": 23.25,
-     "end": 30.53,
+     "start": 22.54,
+     "end": 29.53,
      "text": "À chaque passage, elle survole les nuages à quelques milliers de kilomètres et a découvert des cyclones géants aux pôles de Jupiter."
     },
     {
-     "start": 30.53,
-     "end": 37.11,
-     "text": "Elle a montré que le noyau de Jupiter est plus grand et plus diffus qu'on ne le pensait ; notre tour de Jupiter s'achève ici."
+     "start": 29.53,
+     "end": 34.09,
+     "text": "Elle a montré que le noyau de Jupiter est plus grand et plus diffus qu'on ne le pensait."
+    },
+    {
+     "start": 34.09,
+     "end": 40.73,
+     "text": "Ce fut un voyage depuis les quatre minuscules points lumineux de Galilée jusqu'à des mondes qui cachent des océans sous leur glace."
+    },
+    {
+     "start": 40.73,
+     "end": 49.53,
+     "text": "Peut-être faut-il chercher la vie dans le Système solaire non pas près d'un soleil qui réchauffe, mais sur ces lunes froides et sombres, pétries par la gravité d'un géant."
+    },
+    {
+     "start": 49.53,
+     "end": 51.51,
+     "text": "Notre tour de Jupiter s'achève ici."
     }
    ]
   },
   "jupiter": {
-   "hash": "e03dfbb07bfe",
-   "duration": 45.75,
+   "hash": "a8066a9db8f1",
+   "duration": 64.31,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 5.84,
+     "start": 0.1,
+     "end": 6.94,
+     "text": "Une lumière vive et immobile dans le ciel nocturne : à l'œil nu, rien ne la distingue d'une étoile ordinaire."
+    },
+    {
+     "start": 6.94,
+     "end": 21.2,
+     "text": "Pourtant, cette lumière appartient à un géant deux fois et demie plus massif que toutes les autres planètes réunies ; un architecte qui courbe par sa gravité la trajectoire des comètes et façonne depuis des milliards d'années l'ordre du Système solaire."
+    },
+    {
+     "start": 21.2,
+     "end": 26.5,
      "text": "Bienvenue dans le système de Jupiter ; ce géant est presque comme un petit système solaire."
     },
     {
-     "start": 5.84,
-     "end": 11.9,
+     "start": 26.5,
+     "end": 32.37,
      "text": "Plus de quatre-vingt-quinze lunes tournent autour de lui ; suivons d'en haut les orbites de ses quatre plus grandes."
     },
     {
-     "start": 11.9,
-     "end": 26.67,
+     "start": 32.37,
+     "end": 46.23,
      "text": "Io fait le tour en deux jours, Europe en trois jours et demi, Ganymède en sept jours, et Callisto en dix-sept jours ; les trois intérieures sont verrouillées entre elles : quand Io fait quatre tours, Europe en fait deux et Ganymède un."
     },
     {
-     "start": 26.67,
-     "end": 34.03,
+     "start": 46.23,
+     "end": 53.23,
      "text": "La planète est si grande qu'elle peut contenir mille trois cents Terres, et son champ magnétique est la plus grande structure du Système solaire."
     },
     {
-     "start": 34.03,
-     "end": 42.49,
+     "start": 53.23,
+     "end": 61.37,
      "text": "En mille six cent dix, Galilée a découvert ces quatre lunes avec son petit télescope ; c'était la première preuve que tout ne tournait pas autour de la Terre."
     },
     {
-     "start": 42.49,
-     "end": 45.75,
+     "start": 61.37,
+     "end": 64.31,
      "text": "Nous allons maintenant visiter ces quatre lunes l'une après l'autre."
     }
    ]

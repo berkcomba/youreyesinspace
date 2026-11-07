@@ -70,32 +70,42 @@
    ]
   },
   "deneb": {
-   "hash": "dee814652939",
-   "duration": 36.23,
+   "hash": "3157fc3390b3",
+   "duration": 54.07,
    "sentences": [
     {
      "start": 0.08,
-     "end": 9.08,
+     "end": 9.46,
      "text": "Notre dernière étape, Deneb, la queue de la constellation du Cygne et l'étoile la plus lointaine de cette visite : environ deux mille six cents années-lumière."
     },
     {
-     "start": 9.08,
-     "end": 19.67,
+     "start": 9.46,
+     "end": 19.8,
      "text": "Malgré cela, elle est l'une des vingt étoiles les plus brillantes du ciel ; car c'est l'une des étoiles connues les plus brillantes, qui émet environ deux cent mille fois plus de lumière que le Soleil."
     },
     {
-     "start": 19.67,
-     "end": 24.81,
+     "start": 19.8,
+     "end": 25.06,
      "text": "La lumière que vous voyez aujourd'hui est partie à l'époque de la fondation de la République romaine."
     },
     {
-     "start": 24.81,
-     "end": 33.91,
+     "start": 25.06,
+     "end": 33.83,
      "text": "C'est une supergéante bleu-blanc, et dans quelques millions d'années, soit elle deviendra une supernova, soit elle se transformera en supergéante rouge."
     },
     {
-     "start": 33.91,
-     "end": 36.23,
+     "start": 33.83,
+     "end": 43.85,
+     "text": "Si vous sortez ce soir regarder Véga, vous verrez une lumière partie il y a vingt-cinq ans ; regardez Deneb, et vous verrez une lumière partie quand Rome n'était encore qu'un royaume."
+    },
+    {
+     "start": 43.85,
+     "end": 51.63,
+     "text": "Le ciel n'est pas la photographie d'un seul instant ; c'est un collage du temps, où des lettres venues d'époques différentes se rencontrent la même nuit."
+    },
+    {
+     "start": 51.63,
+     "end": 54.07,
      "text": "Notre visite des étoiles voisines est terminée."
     }
    ]
@@ -132,37 +142,47 @@
    ]
   },
   "proxima": {
-   "hash": "e0aace08fa6d",
-   "duration": 39.73,
+   "hash": "bbf78dec80b8",
+   "duration": 57.27,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 2.9,
+     "start": 0.06,
+     "end": 11.08,
+     "text": "Presque toutes les étoiles visibles à l'œil nu dans le ciel nocturne sont des voisines du Soleil, à quelques milliers d'années-lumière tout au plus ; le reste de la galaxie se fond en une brume commune."
+    },
+    {
+     "start": 11.08,
+     "end": 19.6,
+     "text": "Chacune est un soleil, autour de certaines tournent des mondes, et leur lumière nous parvient au terme de voyages qui durent des années, voire des siècles."
+    },
+    {
+     "start": 19.6,
+     "end": 22.16,
      "text": "Bienvenue dans la visite des étoiles voisines."
     },
     {
-     "start": 2.9,
-     "end": 10.04,
+     "start": 22.16,
+     "end": 28.93,
      "text": "Notre première étape est l'étoile la plus proche du Soleil : Proxima Centauri, à quatre virgule deux années-lumière."
     },
     {
-     "start": 10.04,
-     "end": 17.47,
+     "start": 28.93,
+     "end": 36.07,
      "text": "C'est une petite naine rouge froide ; elle n'a que douze pour cent de la masse du Soleil, et elle est trop faible pour être vue à l'œil nu."
     },
     {
-     "start": 17.47,
-     "end": 22.73,
+     "start": 36.07,
+     "end": 41.15,
      "text": "Mais, par de brusques éruptions, elle projette depuis sa surface un rayonnement violent."
     },
     {
-     "start": 22.73,
-     "end": 34.71,
+     "start": 41.15,
+     "end": 52.43,
      "text": "En deux mille seize, on a découvert autour d'elle une planète de la taille de la Terre : Proxima b, qui orbite dans la zone habitable, c'est-à-dire à une distance où de l'eau liquide pourrait se trouver à sa surface."
     },
     {
-     "start": 34.71,
-     "end": 39.73,
+     "start": 52.43,
+     "end": 57.27,
      "text": "Avec nos véhicules les plus rapides d'aujourd'hui, il faudrait soixante-dix mille ans pour y parvenir."
     }
    ]

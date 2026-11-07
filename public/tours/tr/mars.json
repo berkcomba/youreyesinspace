@@ -65,68 +65,93 @@
    ]
   },
   "finale": {
-   "hash": "4d45fa1af4d1",
-   "duration": 29.43,
+   "hash": "843240dffc4c",
+   "duration": 43.19,
    "sentences": [
     {
      "start": 0.08,
-     "end": 3.76,
+     "end": 3.66,
      "text": "Mars'tan ayrılmadan önce bir kez daha geriye bakalım."
     },
     {
-     "start": 3.76,
+     "start": 3.66,
      "end": 8.56,
      "text": "Bugün yörüngesinde ve yüzeyinde bir düzineye yakın aktif araç çalışıyor."
     },
     {
      "start": 8.56,
-     "end": 14.97,
+     "end": 15.3,
      "text": "Bulgular tutarlı: Mars bir zamanlar ılık, nemli ve belki de yaşanabilir bir dünyaydı."
     },
     {
-     "start": 14.97,
-     "end": 22.15,
+     "start": 15.3,
+     "end": 22.45,
      "text": "Manyetik alanını kaybedince Güneş rüzgârı atmosferini uzaya süpürdü ve gezegen soğuk bir çöle dönüştü."
     },
     {
-     "start": 22.15,
-     "end": 29.43,
-     "text": "Yine de insanlığın bir gün ayak basacağı ilk gezegen büyük olasılıkla burası olacak; Mars turumuz sona erdi."
+     "start": 22.45,
+     "end": 27.95,
+     "text": "Yine de insanlığın bir gün ayak basacağı ilk gezegen büyük olasılıkla burası olacak."
+    },
+    {
+     "start": 27.95,
+     "end": 36.69,
+     "text": "O gün Mars'ın tozlu bir ovasında duran ilk insan, akşam gökyüzünde parlak, mavimsi bir yıldız görecek: doğduğu gezegeni."
+    },
+    {
+     "start": 36.69,
+     "end": 41.77,
+     "text": "Belki de o an, iki dünyanın öyküsünü birlikte yazmaya başladığımız an olacak."
+    },
+    {
+     "start": 41.77,
+     "end": 43.19,
+     "text": "Mars turumuz sona erdi."
     }
    ]
   },
   "mars": {
-   "hash": "984d1512ec64",
-   "duration": 43.19,
+   "hash": "fd4bf28da496",
+   "duration": 61.43,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 6.1,
+     "start": 0.1,
+     "end": 9.64,
+     "text": "Binlerce yıl boyunca insanlar, gece gökyüzünde yıldızların arasında gezinen kızıl bir ışığı izledi ve ona savaş tanrısının adını verdi."
+    },
+    {
+     "start": 9.64,
+     "end": 18.72,
+     "text": "Teleskoplar o ışığı bir diske, uzay araçları ise kanyonları, yanardağları ve toz fırtınalarıyla gerçek bir dünyaya dönüştürdü."
+    },
+    {
+     "start": 18.72,
+     "end": 24.52,
      "text": "Mars turuna hoş geldiniz; Kızıl Gezegen, insanlığın en çok araç gönderdiği dünya."
     },
     {
-     "start": 6.1,
-     "end": 13.8,
+     "start": 24.52,
+     "end": 32.21,
      "text": "Günü Dünya'nınkine çok benzer, yirmi dört saat otuz yedi dakika; şu anda bir Mars gününü hızlandırılmış izliyorsunuz."
     },
     {
-     "start": 13.8,
-     "end": 21.46,
+     "start": 32.21,
+     "end": 39.75,
      "text": "Atmosferi çok incedir ve neredeyse tamamen karbondioksitten oluşur; ortalama sıcaklık eksi altmış derecedir."
     },
     {
-     "start": 21.46,
-     "end": 29.83,
+     "start": 39.75,
+     "end": 48.45,
      "text": "Güney yarım küredeki Hellas Havzası, iki bin üç yüz kilometre genişliğinde ve dokuz kilometre derinliğindeki en büyük çarpma izidir."
     },
     {
-     "start": 29.83,
-     "end": 36.31,
+     "start": 48.45,
+     "end": 54.71,
      "text": "Kutuplarında su buzu ve kuru buzdan başlıklar vardır; kışın atmosferin dörtte biri kutupta donar."
     },
     {
-     "start": 36.31,
-     "end": 43.19,
+     "start": 54.71,
+     "end": 61.43,
      "text": "Yüzeyindeki kurumuş nehir yatakları ve eski göl tabanları, Mars'ın bir zamanlar çok farklı olduğunu fısıldar."
     }
    ]

@@ -117,68 +117,93 @@
    ]
   },
   "juno": {
-   "hash": "b97347ae0912",
-   "duration": 36.15,
+   "hash": "b68e288c642d",
+   "duration": 52.47,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 6.84,
+     "start": 0.1,
+     "end": 6.96,
      "text": "Son olarak Juno'ya bakalım: bu NASA aracı iki bin on altı Temmuz'unda Jüpiter'in yörüngesine girdi."
     },
     {
-     "start": 6.84,
-     "end": 15,
+     "start": 6.96,
+     "end": 14.9,
      "text": "Güneş'ten bu kadar uzakta güneş enerjisiyle çalışan ilk araçtır; üç dev paneli bir basketbol sahası kadar yer kaplar."
     },
     {
-     "start": 15,
-     "end": 23.05,
+     "start": 14.9,
+     "end": 22.66,
      "text": "Radyasyondan korunmak için kutuplar üzerinden geçen uzun, eliptik bir yörüngede döner; işte o yörünge, hızlandırılmış."
     },
     {
-     "start": 23.05,
-     "end": 30.07,
+     "start": 22.66,
+     "end": 29.73,
      "text": "Her geçişte bulutların birkaç bin kilometre üzerinden geçer ve Jüpiter'in kutuplarında dev siklonlar keşfetti."
     },
     {
-     "start": 30.07,
-     "end": 36.15,
-     "text": "Çekirdeğinin sanıldığından daha büyük ve dağınık olduğunu gösterdi; Jüpiter turumuz burada sona eriyor."
+     "start": 29.73,
+     "end": 33.79,
+     "text": "Çekirdeğinin sanıldığından daha büyük ve dağınık olduğunu gösterdi."
+    },
+    {
+     "start": 33.79,
+     "end": 40.81,
+     "text": "Galileo'nun dört küçük ışık noktasından, buzun altında okyanuslar saklayan dünyalara uzanan bir yolculuktu bu."
+    },
+    {
+     "start": 40.81,
+     "end": 50.47,
+     "text": "Belki de Güneş Sistemi'nde yaşamı aramamız gereken yer, ısıtan bir güneşin yakını değil; bir devin kütle çekiminin yoğurduğu bu soğuk, karanlık aylardır."
+    },
+    {
+     "start": 50.47,
+     "end": 52.47,
+     "text": "Jüpiter turumuz burada sona eriyor."
     }
    ]
   },
   "jupiter": {
-   "hash": "512534db04fc",
-   "duration": 44.15,
+   "hash": "df44fae67efb",
+   "duration": 65.27,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 5.98,
+     "start": 0.08,
+     "end": 7.26,
+     "text": "Gece gökyüzünde parlak, titremeyen bir ışık: çıplak gözle bakınca sıradan bir yıldızdan farkı yok."
+    },
+    {
+     "start": 7.26,
+     "end": 21.7,
+     "text": "Oysa o ışığın sahibi, diğer bütün gezegenlerin toplamından iki buçuk kat ağır bir dev; kütle çekimiyle kuyruklu yıldızların yollarını büken ve Güneş Sistemi'nin düzenini milyarlarca yıldır şekillendiren bir mimar."
+    },
+    {
+     "start": 21.7,
+     "end": 27.4,
      "text": "Jüpiter sistemine hoş geldiniz; bu dev, neredeyse küçük bir güneş sistemi gibidir."
     },
     {
-     "start": 5.98,
-     "end": 12,
+     "start": 27.4,
+     "end": 33.29,
      "text": "Etrafında doksan beşten fazla ay döner; dört büyüğünün yörüngelerini yukarıdan izleyelim."
     },
     {
-     "start": 12,
-     "end": 25.89,
+     "start": 33.29,
+     "end": 47.17,
      "text": "Io iki günde, Europa üç buçuk günde, Ganymede yedi günde, Callisto ise on yedi günde bir tur atar; iç üçü birbirine kilitlidir, Io dört tur attığında Europa iki, Ganymede bir tur atar."
     },
     {
-     "start": 25.89,
-     "end": 33.39,
+     "start": 47.17,
+     "end": 54.73,
      "text": "Gezegen o kadar büyüktür ki içine bin üç yüz Dünya sığar ve manyetik alanı Güneş Sistemi'ndeki en büyük yapıdır."
     },
     {
-     "start": 33.39,
-     "end": 41.39,
+     "start": 54.73,
+     "end": 62.71,
      "text": "Bin altı yüz onda Galileo bu dört ayı küçük teleskobuyla keşfetti; her şeyin Dünya'nın etrafında dönmediğinin ilk kanıtıydı."
     },
     {
-     "start": 41.39,
-     "end": 44.15,
+     "start": 62.71,
+     "end": 65.27,
      "text": "Şimdi o dört ayı sırayla ziyaret edeceğiz."
     }
    ]

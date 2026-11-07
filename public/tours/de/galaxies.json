@@ -29,47 +29,62 @@
    ]
   },
   "antennae": {
-   "hash": "b1de28fc8d7e",
-   "duration": 49.66,
+   "hash": "bdb174776fe2",
+   "duration": 71.03,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 5.16,
+     "start": 0.08,
+     "end": 5,
      "text": "An unserem letzten Halt werden wir sehen, dass auch Galaxien kollidieren können."
     },
     {
-     "start": 5.16,
-     "end": 14.29,
+     "start": 5,
+     "end": 13.78,
      "text": "Die Antennengalaxien sind zwei Spiralgalaxien in 45 Millionen Lichtjahren Entfernung, die gerade durcheinander hindurchgehen."
     },
     {
-     "start": 14.29,
-     "end": 18.05,
+     "start": 13.78,
+     "end": 17.32,
      "text": "Die Begegnung begann vor etwa 600 Millionen Jahren."
     },
     {
-     "start": 18.05,
-     "end": 25.91,
+     "start": 17.32,
+     "end": 25,
      "text": "Die Schwerkraft schleuderte zwei lange Schweife aus Sternen ins All; das sind die Insektenantennen, die ihnen den Namen geben."
     },
     {
-     "start": 25.91,
-     "end": 36.72,
+     "start": 25,
+     "end": 35.55,
      "text": "Die Sterne stoßen nicht zusammen, die Abstände zwischen ihnen sind sehr groß; aber die Gaswolken kollidieren, werden zusammengedrückt und gebären Milliarden neuer Sterne."
     },
     {
-     "start": 36.72,
-     "end": 42.98,
+     "start": 35.55,
+     "end": 41.41,
      "text": "In ein paar hundert Millionen Jahren werden sich die beiden in eine einzige elliptische Galaxie verwandeln."
     },
     {
-     "start": 42.98,
-     "end": 47.56,
+     "start": 41.41,
+     "end": 45.73,
      "text": "Auch die Zukunft der Milchstraße und Andromedas wird genauso aussehen."
     },
     {
-     "start": 47.56,
-     "end": 49.66,
+     "start": 45.73,
+     "end": 52.83,
+     "text": "Diese Kollision werden höchstwahrscheinlich nicht wir beobachten; die Erde wird bis dahin längst unbewohnbar geworden sein."
+    },
+    {
+     "start": 52.83,
+     "end": 63.25,
+     "text": "Vorerst sind wir neugierige Geschöpfe, die in einem ruhigen Arm einer von Hunderten Milliarden Galaxien einen gewöhnlichen Stern umkreisen und versuchen, all das zu verstehen."
+    },
+    {
+     "start": 63.25,
+     "end": 68.95,
+     "text": "Die Weite des Universums macht uns nicht klein; dass wir sie begreifen können, macht uns groß."
+    },
+    {
+     "start": 68.95,
+     "end": 71.03,
      "text": "Unsere Galaxientour ist zu Ende."
     }
    ]
@@ -142,37 +157,47 @@
    ]
   },
   "milkyway": {
-   "hash": "f4bf778b6122",
-   "duration": 40.79,
+   "hash": "03ad055513a8",
+   "duration": 56.31,
    "sentences": [
     {
      "start": 0,
-     "end": 1.979,
+     "end": 5.83,
+     "text": "Vor etwa hundert Jahren hielten viele Astronomen die Milchstraße für das gesamte Universum."
+    },
+    {
+     "start": 5.83,
+     "end": 19.347,
+     "text": "Dann zeigte sich, dass die blassen Spiralnebel am Himmel in Wahrheit andere Galaxien sind; heute wissen wir, dass das beobachtbare Universum Hunderte Milliarden Galaxien enthält, jede mit Milliarden von Sternen."
+    },
+    {
+     "start": 19.347,
+     "end": 21.14,
      "text": "Willkommen zur Galaxientour."
     },
     {
-     "start": 1.979,
-     "end": 5.655,
+     "start": 21.14,
+     "end": 24.471,
      "text": "Schauen wir uns zunächst unser Zuhause von außen an."
     },
     {
-     "start": 5.655,
-     "end": 15.906,
+     "start": 24.471,
+     "end": 33.76,
      "text": "Die Milchstraße ist eine 100. 000 Lichtjahre breite Spiralgalaxie mit einem Balken im Zentrum und enthält zwischen 200 und 400 Milliarden Sterne."
     },
     {
-     "start": 15.906,
-     "end": 27.924,
+     "start": 33.76,
+     "end": 44.651,
      "text": "Die Sonne liegt 26. 000 Lichtjahre vom Zentrum entfernt in einem kleinen Arm, dem sogenannten Orionarm, und vollendet in 230 Millionen Jahren einen Umlauf um die Galaxie."
     },
     {
-     "start": 27.924,
-     "end": 34.569,
+     "start": 44.651,
+     "end": 50.673,
      "text": "Seit dem Aussterben der Dinosaurier hat die Sonne nur ein Viertel dieses Umlaufs zurückgelegt."
     },
     {
-     "start": 34.569,
-     "end": 40.79,
+     "start": 50.673,
+     "end": 56.31,
      "text": "Im hellen zentralen Wulst verbirgt sich ein Schwarzes Loch von 4 Millionen Sonnenmassen."
     }
    ]

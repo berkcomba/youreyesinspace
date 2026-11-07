@@ -69,6 +69,32 @@
     }
    ]
   },
+  "lookback": {
+   "hash": "36e5bdad0c3d",
+   "duration": 28.47,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 9.12,
+     "text": "Looking back from here, the Sun is nothing more than the brightest star in the sky; the Earth is a speck too small to make out, lost in its glare."
+    },
+    {
+     "start": 9.12,
+     "end": 16.45,
+     "text": "Everyone we love, everyone we know, every story ever lived and every river that ever flowed is on that speck."
+    },
+    {
+     "start": 16.45,
+     "end": 24.87,
+     "text": "We have visited every planet one by one, yet found a second home on none of them; for now, that speck is the only home we have."
+    },
+    {
+     "start": 24.87,
+     "end": 28.47,
+     "text": "Our Solar System tour ends here; have a good journey."
+    }
+   ]
+  },
   "mars": {
    "hash": "f8a288bf490e",
    "duration": 44.15,
@@ -214,38 +240,33 @@
    ]
   },
   "pluto": {
-   "hash": "643609d8637d",
-   "duration": 39.35,
+   "hash": "dd9cc7e42007",
+   "duration": 35.51,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 7.56,
+     "start": 0.08,
+     "end": 7.58,
      "text": "Our last stop is Pluto; it was discovered in 1930 and was considered the ninth planet until 2006."
     },
     {
-     "start": 7.56,
-     "end": 14.14,
+     "start": 7.58,
+     "end": 14.02,
      "text": "In fact it is even smaller than our Moon: when we place them side by side, this is clearly visible."
     },
     {
-     "start": 14.14,
-     "end": 19.54,
+     "start": 14.02,
+     "end": 19.57,
      "text": "Until New Horizons flew past in 2015, it was nothing more than a blurry dot."
     },
     {
-     "start": 19.54,
-     "end": 29.07,
+     "start": 19.57,
+     "end": 28.79,
      "text": "The spacecraft found a giant heart shape on the surface, nitrogen glaciers and mountains of water ice; the surface temperature is minus 230 degrees."
     },
     {
-     "start": 29.07,
-     "end": 36.39,
+     "start": 28.79,
+     "end": 35.51,
      "text": "Its moon Charon is so large that the two of them orbit together around a shared center of mass that lies in the space between them."
-    },
-    {
-     "start": 36.39,
-     "end": 39.35,
-     "text": "Our Solar System tour ends here; have a good journey."
     }
    ]
   },
@@ -286,37 +307,52 @@
    ]
   },
   "sun": {
-   "hash": "9b28b75bc59d",
-   "duration": 46.39,
+   "hash": "3bbeb5d445a0",
+   "duration": 65.27,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 6.26,
+     "start": 0.1,
+     "end": 8.24,
+     "text": "Four and a half billion years ago, in a quiet arm of the Milky Way, a spinning cloud of gas and dust collapsed under its own weight."
+    },
+    {
+     "start": 8.24,
+     "end": 15.18,
+     "text": "At its center a star ignited; the crumbs left around it became planets, moons and, eventually, us."
+    },
+    {
+     "start": 15.18,
+     "end": 21.36,
+     "text": "On this tour we will visit every member of that family, one by one, from the largest to the smallest."
+    },
+    {
+     "start": 21.36,
+     "end": 26.88,
      "text": "Welcome to the Solar System tour; our journey begins at the center of everything, the Sun."
     },
     {
-     "start": 6.26,
-     "end": 13.74,
+     "start": 26.88,
+     "end": 33.99,
      "text": "This star, four and a half billion years old, alone holds 99. 8 percent of the system's total mass."
     },
     {
-     "start": 13.74,
-     "end": 24.89,
+     "start": 33.99,
+     "end": 44.69,
      "text": "To see how big it is, let's place a true-scale Earth beside it: 109 Earths line up side by side across its diameter, and 1. 3 million of them fit inside."
     },
     {
-     "start": 24.89,
-     "end": 34.79,
+     "start": 44.69,
+     "end": 54.25,
      "text": "Its surface is 5,500 degrees, its core 15 million degrees; every second it converts 600 million tons of hydrogen into helium."
     },
     {
-     "start": 34.79,
-     "end": 41.43,
+     "start": 54.25,
+     "end": 60.69,
      "text": "Now let's pull back and follow the journey of light: light leaving the Sun reaches Earth in 8 minutes and 20 seconds."
     },
     {
-     "start": 41.43,
-     "end": 46.39,
+     "start": 60.69,
+     "end": 65.27,
      "text": "So every time you look at the Sun, you are actually seeing it as it was 8 minutes ago."
     }
    ]

@@ -117,68 +117,93 @@
    ]
   },
   "juno": {
-   "hash": "cadc18d6dc91",
-   "duration": 38.71,
+   "hash": "bd1c1eaab92d",
+   "duration": 54.71,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 7.76,
+     "start": 0.08,
+     "end": 7.82,
      "text": "Schauen wir uns zum Schluss Juno an: Diese NASA-Sonde trat im Juli zweitausendsechzehn in die Umlaufbahn um Jupiter ein."
     },
     {
-     "start": 7.76,
-     "end": 18.16,
+     "start": 7.82,
+     "end": 17.74,
      "text": "Sie ist das erste Raumfahrzeug, das so weit von der Sonne entfernt mit Sonnenenergie arbeitet; ihre drei riesigen Paneele nehmen so viel Platz ein wie ein Basketballfeld."
     },
     {
-     "start": 18.16,
-     "end": 25.37,
+     "start": 17.74,
+     "end": 24.7,
      "text": "Zum Schutz vor der Strahlung kreist sie auf einer langen, elliptischen Bahn über die Pole; hier ist diese Bahn, beschleunigt."
     },
     {
-     "start": 25.37,
-     "end": 32.91,
+     "start": 24.7,
+     "end": 32.19,
      "text": "Bei jedem Vorbeiflug fliegt sie einige tausend Kilometer über den Wolken und entdeckte an Jupiters Polen riesige Zyklone."
     },
     {
-     "start": 32.91,
-     "end": 38.71,
-     "text": "Sie zeigte, dass sein Kern größer und diffuser ist als angenommen; unsere Jupitertour endet hier."
+     "start": 32.19,
+     "end": 36.01,
+     "text": "Sie zeigte, dass sein Kern größer und diffuser ist als angenommen."
+    },
+    {
+     "start": 36.01,
+     "end": 42.65,
+     "text": "Es war eine Reise von Galileis vier winzigen Lichtpunkten zu Welten, die unter ihrem Eis Ozeane verbergen."
+    },
+    {
+     "start": 42.65,
+     "end": 52.91,
+     "text": "Vielleicht sollten wir Leben im Sonnensystem nicht in der Nähe einer wärmenden Sonne suchen, sondern auf diesen kalten, dunklen Monden, die von der Schwerkraft eines Riesen geknetet werden."
+    },
+    {
+     "start": 52.91,
+     "end": 54.71,
+     "text": "Unsere Jupitertour endet hier."
     }
    ]
   },
   "jupiter": {
-   "hash": "b0ce6d5659b6",
-   "duration": 48.95,
+   "hash": "82c99a8e0aa1",
+   "duration": 71.35,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 5.64,
+     "start": 0.1,
+     "end": 6.9,
+     "text": "Ein helles, ruhiges Licht am Nachthimmel: mit bloßem Auge kaum von einem gewöhnlichen Stern zu unterscheiden."
+    },
+    {
+     "start": 6.9,
+     "end": 21.58,
+     "text": "Doch dieses Licht gehört einem Riesen, der zweieinhalbmal so schwer ist wie alle anderen Planeten zusammen; einem Baumeister, der mit seiner Schwerkraft die Bahnen von Kometen beugt und seit Milliarden Jahren die Ordnung des Sonnensystems formt."
+    },
+    {
+     "start": 21.58,
+     "end": 27.06,
      "text": "Willkommen im Jupitersystem; dieser Riese ist beinahe wie ein kleines Sonnensystem."
     },
     {
-     "start": 5.64,
-     "end": 11.94,
+     "start": 27.06,
+     "end": 33.38,
      "text": "Mehr als fünfundneunzig Monde kreisen um ihn; schauen wir uns die Bahnen der vier größten von oben an."
     },
     {
-     "start": 11.94,
-     "end": 27.91,
+     "start": 33.38,
+     "end": 49.75,
      "text": "Io umrundet ihn in zwei Tagen, Europa in dreieinhalb Tagen, Ganymed in sieben Tagen und Kallisto in siebzehn Tagen; die inneren drei sind miteinander gekoppelt, und wenn Io vier Umläufe vollendet, vollendet Europa zwei und Ganymed einen."
     },
     {
-     "start": 27.91,
-     "end": 36.17,
+     "start": 49.75,
+     "end": 58.25,
      "text": "Der Planet ist so groß, dass eintausenddreihundert Erden in ihn hineinpassen, und sein Magnetfeld ist die größte Struktur im Sonnensystem."
     },
     {
-     "start": 36.17,
-     "end": 46.03,
+     "start": 58.25,
+     "end": 68.43,
      "text": "Im Jahr eintausendsechshundertzehn entdeckte Galileo diese vier Monde mit seinem kleinen Teleskop; es war der erste Beweis dafür, dass sich nicht alles um die Erde dreht."
     },
     {
-     "start": 46.03,
-     "end": 48.95,
+     "start": 68.43,
+     "end": 71.35,
      "text": "Jetzt werden wir diese vier Monde der Reihe nach besuchen."
     }
    ]

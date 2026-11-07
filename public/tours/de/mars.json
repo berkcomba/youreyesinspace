@@ -65,68 +65,93 @@
    ]
   },
   "finale": {
-   "hash": "a4becaca5e24",
-   "duration": 32.31,
+   "hash": "ebb57a64c736",
+   "duration": 47.67,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 3.74,
+     "start": 0.1,
+     "end": 3.72,
      "text": "Bevor wir den Mars verlassen, blicken wir noch einmal zurück."
     },
     {
-     "start": 3.74,
-     "end": 10.22,
+     "start": 3.72,
+     "end": 9.9,
      "text": "Heute arbeiten in seiner Umlaufbahn und auf seiner Oberfläche fast ein Dutzend aktive Raumfahrzeuge."
     },
     {
-     "start": 10.22,
-     "end": 16.49,
+     "start": 9.9,
+     "end": 16.1,
      "text": "Die Befunde sind stimmig: Der Mars war einst eine milde, feuchte und vielleicht bewohnbare Welt."
     },
     {
-     "start": 16.49,
-     "end": 24.17,
+     "start": 16.1,
+     "end": 23.87,
      "text": "Als er sein Magnetfeld verlor, fegte der Sonnenwind seine Atmosphäre ins All, und der Planet wurde zu einer kalten Wüste."
     },
     {
-     "start": 24.17,
-     "end": 32.31,
-     "text": "Dennoch wird dies höchstwahrscheinlich der erste Planet sein, auf den die Menschheit eines Tages den Fuß setzt; unsere Mars-Tour ist zu Ende."
+     "start": 23.87,
+     "end": 30.05,
+     "text": "Dennoch wird dies höchstwahrscheinlich der erste Planet sein, auf den die Menschheit eines Tages den Fuß setzt."
+    },
+    {
+     "start": 30.05,
+     "end": 40.13,
+     "text": "An jenem Tag wird der erste Mensch, der auf einer staubigen Ebene des Mars steht, am Abendhimmel einen hellen, bläulichen Stern sehen: den Planeten, auf dem er geboren wurde."
+    },
+    {
+     "start": 40.13,
+     "end": 45.95,
+     "text": "Vielleicht wird das der Augenblick sein, in dem wir beginnen, die Geschichte zweier Welten gemeinsam zu schreiben."
+    },
+    {
+     "start": 45.95,
+     "end": 47.67,
+     "text": "Unsere Mars-Tour ist zu Ende."
     }
    ]
   },
   "mars": {
-   "hash": "bdd55eb39436",
-   "duration": 45.43,
+   "hash": "29a405a02cc0",
+   "duration": 63.67,
    "sentences": [
     {
      "start": 0.08,
-     "end": 6.94,
+     "end": 9.2,
+     "text": "Jahrtausendelang beobachteten die Menschen ein rotes Licht, das am Nachthimmel zwischen den Sternen wanderte, und benannten es nach dem Gott des Krieges."
+    },
+    {
+     "start": 9.2,
+     "end": 18.08,
+     "text": "Teleskope machten aus diesem Licht eine Scheibe, Raumsonden machten daraus eine echte Welt, mit Schluchten, Vulkanen und Staubstürmen."
+    },
+    {
+     "start": 18.08,
+     "end": 25.04,
      "text": "Willkommen zur Mars-Tour; der Rote Planet ist die Welt, zu der die Menschheit die meisten Raumfahrzeuge geschickt hat."
     },
     {
-     "start": 6.94,
-     "end": 15.58,
+     "start": 25.04,
+     "end": 33.73,
      "text": "Sein Tag ähnelt dem der Erde sehr, vierundzwanzig Stunden und siebenunddreißig Minuten; gerade sehen Sie einen Marstag im Zeitraffer."
     },
     {
-     "start": 15.58,
-     "end": 23.79,
+     "start": 33.73,
+     "end": 41.75,
      "text": "Seine Atmosphäre ist sehr dünn und besteht fast vollständig aus Kohlendioxid; die Durchschnittstemperatur beträgt minus sechzig Grad."
     },
     {
-     "start": 23.79,
-     "end": 32.09,
+     "start": 41.75,
+     "end": 49.93,
      "text": "Das Hellas-Becken auf der Südhalbkugel ist die größte Einschlagsspur, zweitausenddreihundert Kilometer breit und neun Kilometer tief."
     },
     {
-     "start": 32.09,
-     "end": 38.83,
+     "start": 49.93,
+     "end": 56.91,
      "text": "An seinen Polen gibt es Kappen aus Wassereis und Trockeneis; im Winter gefriert ein Viertel der Atmosphäre am Pol."
     },
     {
-     "start": 38.83,
-     "end": 45.43,
+     "start": 56.91,
+     "end": 63.67,
      "text": "Die ausgetrockneten Flussbetten und alten Seeböden auf seiner Oberfläche flüstern, dass der Mars einst ganz anders war."
     }
    ]

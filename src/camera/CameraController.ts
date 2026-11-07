@@ -41,8 +41,23 @@ export interface SurfaceStand {
   zoom: number;
 }
 
+/** A waypoint of a flyby: the closest-approach point beside a body (or a fixed point) and the pace there */
+interface PathNode {
+  body: CelestialBody | null;
+  /** closest-approach offset from the body, or the fixed point itself (body null) */
+  off: Vector3;
+  /** heading through the node (unit) */
+  tan: Vector3;
+  /** speed through the node (km/s); 0 = start / stop at rest */
+  speed: number;
+  /** flight time at which the node is passed (s) */
+  time: number;
+  /** what the camera looks at from here until it turns to the next node's (null: the start orientation) */
+  look: CelestialBody | null;
+}
+
 interface Autopilot {
-  kind: 'goto' | 'center' | 'centerDir' | 'gotoPoint' | 'land' | 'pose';
+  kind: 'goto' | 'center' | 'centerDir' | 'gotoPoint' | 'land' | 'pose' | 'path';
   target: CelestialBody | null;
   /** fixed destination (current frame, km) for 'gotoPoint' */
   point: Vector3 | null;
@@ -70,6 +85,62 @@ interface Autopilot {
    * clock cannot turn the ground into the path
    */
   spin?: { body: CelestialBody; q: Quaternion; r0: Vector3; dir1: Vector3; start: Vector3 | null };
+  /** 'path': the flyby's waypoints (first: the start, last: the stop) and the frame's north */
+  path?: { nodes: PathNode[]; up: Vector3 };
+}
+
+/** e-folding rate of the distance from a flyby waypoint while passing it (1/s): low, so each pass lingers */
+const PASS_RATE = 1;
+/** seconds on either side of a flyby waypoint flown at that steady rate */
+const PASS_S = 0.8;
+
+function nodePos(n: PathNode, out: Vector3): Vector3 {
+  return n.body ? out.copy(n.body.position).add(n.off) : out.copy(n.off);
+}
+
+/** cubic Hermite easing from 0 to 1 with end slopes `s0`, `s1` */
+function easeSlopes(u: number, s0: number, s1: number): number {
+  const u2 = u * u, u3 = u2 * u;
+  return (u3 - 2 * u2 + u) * s0 + (3 * u2 - 2 * u3) + (u3 - u2) * s1;
+}
+
+const _p0 = new Vector3();
+const _p1 = new Vector3();
+
+/**
+ * Position on a flyby leg at time `t`. The leg is a Hermite curve between the two waypoints,
+ * leaving and entering them along their headings; it is paced on f = ln((x + a) / (D − x + b))
+ * (x the way gone): for PASS_S on either side of a waypoint f runs at PASS_RATE — the camera
+ * glides by at the waypoint's own speed (a = speed / rate) — and in between it eases across the
+ * rest, so the void, a billion kilometres, goes by in a rush of a second or so.
+ */
+function legPos(n0: PathNode, n1: PathNode, t: number, out: Vector3): Vector3 {
+  const p0 = nodePos(n0, _p0), p1 = nodePos(n1, _p1);
+  const T = Math.max(n1.time - n0.time, 1e-3);
+  const tl = Math.min(Math.max(t - n0.time, 0), T);
+  const D = Math.max(p0.distanceTo(p1), 1e-3);
+  const m = 0.5 * D;
+  const a = (n0.speed > 0 ? n0.speed / PASS_RATE : 0.05 * D) / m;
+  const b = (n1.speed > 0 ? n1.speed / PASS_RATE : 0.05 * D) / m;
+  const f0 = Math.log(a / (1 + b)), f1 = Math.log((1 + a) / b);
+  // steady stretches by the waypoints (none at a start or stop at rest), eased in between
+  const r0 = n0.speed > 0 ? PASS_RATE : 0, r1 = n1.speed > 0 ? PASS_RATE : 0;
+  const q0 = r0 ? Math.min(PASS_S, 0.35 * T) : 0, q1 = r1 ? Math.min(PASS_S, 0.35 * T) : 0;
+  const g0 = f0 + r0 * q0, g1 = f1 - r1 * q1;
+  let f: number;
+  if (tl < q0) f = f0 + r0 * tl;
+  else if (tl > T - q1) f = f1 - r1 * (T - tl);
+  else {
+    const L = T - q0 - q1, G = Math.max(g1 - g0, 1e-6);
+    f = g0 + G * easeSlopes((tl - q0) / L, Math.min(2, (r0 * L) / G), Math.min(2, (r1 * L) / G));
+  }
+  const K = Math.exp(f);
+  const s = Math.min(Math.max((K * (1 + b) - a) / (1 + K), 0), 1);
+  const s2 = s * s, s3 = s2 * s;
+  return out.copy(p0).multiplyScalar(2 * s3 - 3 * s2 + 1)
+    .addScaledVector(n0.tan, m * (s3 - 2 * s2 + s))
+    .addScaledVector(p1, 3 * s2 - 2 * s3)
+    .addScaledVector(n1.tan, m * (s3 - s2));
 }
 
 const _v = new Vector3();
@@ -434,6 +505,63 @@ export class CameraController {
     this.mode = 'orbit';
   }
 
+  /**
+   * Cinematic flyby: one unbroken flight past each of `bodies` in turn — closing in, sweeping
+   * by its sunlit side a few radii out with the gaze on it, swinging round onto the next — and on
+   * to rest at `end` (a fixed point), aimed at `endLook`. `up`: the frame's north.
+   */
+  flyBy(bodies: CelestialBody[], sun: CelestialBody, end: Vector3, endLook: CelestialBody, up: Vector3, durationS: number): void {
+    this.catchUp();
+    const north = up.clone().normalize();
+    const pts = [this.position.clone(), ...bodies.map((b) => b.position.clone()), end.clone()];
+    // the first leg starts from rest and the last one settles into the view: both get more time
+    const weights = pts.slice(1).map((_, i) => (i === 0 ? 1.15 : i === bodies.length ? 1.7 : 1));
+    const total = weights.reduce((x, y) => x + y, 0);
+    const nodes: PathNode[] = [];
+    let time = 0;
+    for (let i = 0; i < pts.length; i++) {
+      const b = i > 0 && i <= bodies.length ? bodies[i - 1] : null;
+      const tan = new Vector3().copy(pts[Math.min(i + 1, pts.length - 1)]).sub(pts[Math.max(i - 1, 0)]).normalize();
+      let off: Vector3, speed = 0;
+      if (b) {
+        // pass on the sunward side (the dayside grows as the camera goes by), tilted off the
+        // equator plane — over a ringed planet's rings, alternately above and below the rest
+        const rings = b.data.rings?.outer ?? 0;
+        const q = Math.max(b.radius * 3, rings * 1.35);
+        const side = _v.copy(sun.position).sub(b.position).normalize();
+        side.addScaledVector(tan, -side.dot(tan));
+        if (side.lengthSq() < 0.04) side.crossVectors(tan, north);
+        side.normalize();
+        const tilt = rings > 0 ? 0.5 : i % 2 ? 0.3 : -0.2;
+        off = side.clone().multiplyScalar(Math.cos(tilt)).addScaledVector(b.pole, Math.sin(tilt));
+        off.addScaledVector(tan, -off.dot(tan)).setLength(q);
+        speed = 1.5 * q;
+      } else off = pts[i].clone();
+      nodes.push({ body: b, off, tan, speed, time, look: i === 0 ? null : b ?? endLook });
+      if (i < weights.length) time += (durationS * weights[i]) / total;
+    }
+    this.autopilot = {
+      kind: 'path', target: endLook, point: null, t: 0, duration: durationS,
+      r0: new Vector3(), dir1: new Vector3(), dist1: 0, q0: this.quaternion.clone(),
+      path: { nodes, up: north },
+    };
+    this.autoOrbit = 0;
+    this.autoDolly = 0;
+    this.setReference(endLook);
+    this.target = endLook;
+    this.anchor = null;
+    this.mode = 'orbit';
+  }
+
+  /** Orientation looking from the camera at a flyby node's subject (null: the start orientation) */
+  private pathLook(ap: Autopilot, look: CelestialBody | null, up: Vector3, out: Quaternion): Quaternion {
+    if (!look) return out.copy(ap.q0);
+    _v.copy(look.position).sub(this.position);
+    if (_v.lengthSq() < 1e-9) return out.copy(this.quaternion);
+    _m.lookAt(_origin, _v, up);
+    return out.setFromRotationMatrix(_m);
+  }
+
   /** World pose of a 'pose' flight's end point (the body's current rotation applied). */
   private posePose(body: CelestialBody, pose: NonNullable<Autopilot['pose']>, outPos: Vector3, outQuat: Quaternion): void {
     const rot = pose.frame ?? body.rotation;
@@ -545,7 +673,33 @@ export class CameraController {
       const s = smoothstep(ap.t / ap.duration);
       const tgt = ap.target;
       const tgtPos = tgt ? tgt.position : ap.point;
-      if (ap.kind === 'pose' && ap.pose && tgt) {
+      if (ap.kind === 'path' && ap.path) {
+        const { nodes, up } = ap.path;
+        const t = Math.min(ap.t, ap.duration);
+        let k = 0;
+        while (k < nodes.length - 2 && t >= nodes[k + 1].time) k++;
+        const n0 = nodes[k], n1 = nodes[k + 1];
+        legPos(n0, n1, t, this.position);
+        // the gaze stays on this node's subject until just past it, then swings onto the next
+        const T = n1.time - n0.time;
+        const from = k === 0 ? 0 : 0.3, span = k === 0 ? 0.7 * T : k === nodes.length - 2 ? 0.6 * T : Math.min(1.3, 0.6 * T);
+        const w = smoothstep((t - n0.time - from) / Math.max(span, 1e-3));
+        this.pathLook(ap, n0.look, up, _q);
+        this.pathLook(ap, n1.look, up, _q2);
+        this.quaternion.copy(_q).slerp(_q2, w);
+        if (ap.t >= ap.duration || dx !== 0 || dy !== 0 || touching) {
+          this.autopilot = null;
+          if (ap.t >= ap.duration && tgt) {
+            this.mode = 'orbit';
+            this.target = tgt;
+            this.setReference(tgt);
+          } else {
+            this.mode = 'free';
+            this.target = null;
+          }
+        }
+        this.velocity.set(0, 0, 0);
+      } else if (ap.kind === 'pose' && ap.pose && tgt) {
         this.posePose(tgt, ap.pose, _standPos, _standQ);
         _end.copy(_standPos);
         // screen-up on the way down: toward the view's aim, so the frame tilts up onto it at the end
@@ -664,7 +818,7 @@ export class CameraController {
         _q.setFromRotationMatrix(_m);
         this.quaternion.copy(ap.q0).slerp(_q, s);
       }
-      if (ap.kind !== 'land' && ap.kind !== 'pose' && (ap.t >= ap.duration || dx !== 0 || dy !== 0 || touching || input.down('KeyW') || input.down('KeyS'))) {
+      if (ap.kind !== 'land' && ap.kind !== 'pose' && ap.kind !== 'path' && (ap.t >= ap.duration || dx !== 0 || dy !== 0 || touching || input.down('KeyW') || input.down('KeyS'))) {
         if (ap.kind === 'goto' && tgt) {
           this.mode = 'orbit';
           this.setReference(tgt);

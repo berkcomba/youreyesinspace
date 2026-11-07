@@ -34,47 +34,62 @@
    ]
   },
   "antennae": {
-   "hash": "59dd3b9cecef",
-   "duration": 47.27,
+   "hash": "08c0be1ac11f",
+   "duration": 64.63,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 5.28,
+     "start": 0.08,
+     "end": 5.08,
      "text": "À notre dernier arrêt, nous verrons que les galaxies peuvent elles aussi entrer en collision."
     },
     {
-     "start": 5.28,
-     "end": 12.68,
+     "start": 5.08,
+     "end": 11.7,
      "text": "Les Antennes sont deux galaxies spirales, à quarante-cinq millions d'années-lumière, qui sont en train de passer l'une à travers l'autre."
     },
     {
-     "start": 12.68,
-     "end": 16.42,
+     "start": 11.7,
+     "end": 15.02,
      "text": "La rencontre a commencé il y a environ six cents millions d'années."
     },
     {
-     "start": 16.42,
-     "end": 23.58,
+     "start": 15.02,
+     "end": 21.5,
      "text": "La gravité a projeté dans l'espace deux longues queues formées d'étoiles ; ce sont les antennes d'insecte qui leur donnent leur nom."
     },
     {
-     "start": 23.58,
-     "end": 34.85,
+     "start": 21.5,
+     "end": 31.52,
      "text": "Les étoiles ne se percutent pas, les distances qui les séparent sont très grandes ; mais les nuages de gaz entrent en collision et, en se comprimant, donnent naissance à des milliards de nouvelles étoiles."
     },
     {
-     "start": 34.85,
-     "end": 40.49,
+     "start": 31.52,
+     "end": 36.67,
      "text": "Dans quelques centaines de millions d'années, les deux se transformeront en une seule galaxie elliptique."
     },
     {
-     "start": 40.49,
-     "end": 45.13,
+     "start": 36.67,
+     "end": 41.19,
      "text": "L'avenir de la Voie lactée et d'Andromède aura lui aussi exactement cet aspect."
     },
     {
-     "start": 45.13,
-     "end": 47.27,
+     "start": 41.19,
+     "end": 47.51,
+     "text": "Ce ne sera très probablement pas nous qui assisterons à cette collision ; la Terre sera depuis longtemps devenue inhabitable."
+    },
+    {
+     "start": 47.51,
+     "end": 57.57,
+     "text": "Pour l'instant, nous sommes des créatures curieuses, dans un bras tranquille d'une galaxie parmi des centaines de milliards, tournant autour d'une étoile ordinaire et cherchant à comprendre tout cela."
+    },
+    {
+     "start": 57.57,
+     "end": 62.65,
+     "text": "L'immensité de l'univers ne nous rend pas petits ; notre capacité à la saisir nous rend grands."
+    },
+    {
+     "start": 62.65,
+     "end": 64.63,
      "text": "Notre visite des galaxies est terminée."
     }
    ]
@@ -147,37 +162,47 @@
    ]
   },
   "milkyway": {
-   "hash": "9f7e59441030",
-   "duration": 35.27,
+   "hash": "9b77a31328a4",
+   "duration": 52.15,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 2.56,
+     "start": 0.08,
+     "end": 5.7,
+     "text": "Il y a une centaine d'années, beaucoup d'astronomes pensaient que la Voie lactée était l'univers tout entier."
+    },
+    {
+     "start": 5.7,
+     "end": 18.88,
+     "text": "Puis on a compris que les pâles nébuleuses spirales du ciel étaient en réalité d'autres galaxies ; aujourd'hui, nous savons que l'univers observable contient des centaines de milliards de galaxies, chacune abritant des milliards d'étoiles."
+    },
+    {
+     "start": 18.88,
+     "end": 21.26,
      "text": "Bienvenue dans la visite des galaxies."
     },
     {
-     "start": 2.56,
-     "end": 5.38,
+     "start": 21.26,
+     "end": 23.96,
      "text": "Regardons d'abord notre maison de l'extérieur."
     },
     {
-     "start": 5.38,
-     "end": 15.34,
+     "start": 23.96,
+     "end": 33.25,
      "text": "La Voie lactée est une galaxie spirale de cent mille années-lumière de large, avec une barre en son centre, et elle contient entre deux cents et quatre cents milliards d'étoiles."
     },
     {
-     "start": 15.34,
-     "end": 25.73,
+     "start": 33.25,
+     "end": 42.91,
      "text": "Le Soleil se trouve à vingt-six mille années-lumière du centre, dans un petit bras appelé le bras d'Orion, et il accomplit un tour autour de la galaxie en deux cent trente millions d'années."
     },
     {
-     "start": 25.73,
-     "end": 30.85,
+     "start": 42.91,
+     "end": 47.71,
      "text": "Depuis la disparition des dinosaures, le Soleil n'a parcouru qu'un quart de ce tour."
     },
     {
-     "start": 30.85,
-     "end": 35.27,
+     "start": 47.71,
+     "end": 52.15,
      "text": "Dans le bulbe brillant du centre se cache un trou noir de quatre millions de masses solaires."
     }
    ]

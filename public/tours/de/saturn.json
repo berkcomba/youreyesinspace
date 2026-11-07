@@ -34,32 +34,42 @@
    ]
   },
   "iapetus": {
-   "hash": "d795051fc9de",
-   "duration": 46.39,
+   "hash": "b7e7fa001fec",
+   "duration": 68.15,
    "sentences": [
     {
      "start": 0.08,
-     "end": 10.2,
+     "end": 9.96,
      "text": "Unsere letzte Station ist Iapetus, einer der seltsamsten Monde des Sonnensystems: Eine Hälfte ist weiß wie Schnee, die andere schwarz wie Kohle."
     },
     {
-     "start": 10.2,
-     "end": 23.57,
+     "start": 9.96,
+     "end": 23.64,
      "text": "Weil auf seiner Umlaufbahn immer dieselbe Seite nach vorn blickt, fegt er den dunklen Staub auf, der von den äußeren Ringen kommt; aus den sich erwärmenden dunklen Gebieten verdampft das Eis und regnet auf die helle Seite herab."
     },
     {
-     "start": 23.57,
-     "end": 34.29,
+     "start": 23.64,
+     "end": 34.61,
      "text": "Genau in der Mitte seines Äquators erstreckt sich ein Gebirgsrücken, dreizehn Kilometer hoch und eintausenddreihundert Kilometer lang; das verleiht ihm das Aussehen einer Walnuss."
     },
     {
-     "start": 34.29,
-     "end": 44.41,
+     "start": 34.61,
+     "end": 45.25,
      "text": "Dreieinhalb Millionen Kilometer von Saturn entfernt, umrundet er ihn einmal in neunundsiebzig Tagen; er ist der einzige große Mond, der die Ringe von oben sehen kann."
     },
     {
-     "start": 44.41,
-     "end": 46.39,
+     "start": 45.25,
+     "end": 53.91,
+     "text": "Im Jahr 2013 blickte Cassini aus dem Schatten Saturns zurück und erfasste unter den Ringen einen blassblauen Punkt: die Erde."
+    },
+    {
+     "start": 53.91,
+     "end": 66.09,
+     "text": "An jenem Tag gingen Menschen in aller Welt, die wussten, dass das Bild aufgenommen wurde, nach draußen und winkten einer Maschine zu, die aus anderthalb Milliarden Kilometern Entfernung auf sie zurückblickte."
+    },
+    {
+     "start": 66.09,
+     "end": 68.15,
      "text": "Unsere Saturn-Tour ist zu Ende."
     }
    ]
@@ -122,32 +132,42 @@
    ]
   },
   "saturn": {
-   "hash": "c9f52641661e",
-   "duration": 38.07,
+   "hash": "dc02ca7e9b7b",
+   "duration": 58.55,
    "sentences": [
     {
      "start": 0.08,
-     "end": 8.32,
+     "end": 11.86,
+     "text": "Als Galilei 1610 sein Fernrohr auf Saturn richtete, sah er zu beiden Seiten des Planeten seltsame Ausbuchtungen, die er sich nicht erklären konnte, und nannte sie Ohren."
+    },
+    {
+     "start": 11.86,
+     "end": 20.94,
+     "text": "Es dauerte ein halbes Jahrhundert, bis man verstand, dass es Ringe sind; noch heute rauben sie uns als der eleganteste Anblick des Sonnensystems den Atem."
+    },
+    {
+     "start": 20.94,
+     "end": 29.08,
      "text": "Willkommen zur Saturn-Tour: der sechste Planet von der Sonne, ein Gasriese, im Durchmesser neunmal so groß wie die Erde."
     },
     {
-     "start": 8.32,
-     "end": 14.18,
+     "start": 29.08,
+     "end": 34.99,
      "text": "Wenn wir eine maßstabsgetreue Erde danebenstellen, wird deutlich, wie breit selbst die Ringe sind."
     },
     {
-     "start": 14.18,
-     "end": 19.41,
+     "start": 34.99,
+     "end": 40.15,
      "text": "Seine Dichte ist geringer als die von Wasser; das ist für einen Planeten einzigartig."
     },
     {
-     "start": 19.41,
-     "end": 27.11,
+     "start": 40.15,
+     "end": 47.71,
      "text": "An seinem Äquator erreichen die Winde eintausendachthundert Kilometer pro Stunde, und sein Tag dauert nur zehneinhalb Stunden."
     },
     {
-     "start": 27.11,
-     "end": 38.07,
+     "start": 47.71,
+     "end": 58.55,
      "text": "Die Sonde Cassini untersuchte dieses System dreizehn Jahre lang, von zweitausendvier bis zweitausendsiebzehn, und beendete ihre Mission, indem sie in die Atmosphäre des Planeten eintauchte."
     }
    ]

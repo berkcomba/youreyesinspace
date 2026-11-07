@@ -70,73 +70,98 @@
    ]
   },
   "cygx1": {
-   "hash": "3251f0448acd",
-   "duration": 33.92,
+   "hash": "3d816faedadf",
+   "duration": 50.87,
    "sentences": [
     {
      "start": 0.08,
-     "end": 3.8,
+     "end": 3.76,
      "text": "Ve en ağır yıldızlar için son durak: kara delik."
     },
     {
-     "start": 3.8,
-     "end": 7.52,
+     "start": 3.76,
+     "end": 7.38,
      "text": "Cygnus X-Bir, keşfedilen ilk kara deliktir."
     },
     {
-     "start": 7.52,
-     "end": 17.93,
+     "start": 7.38,
+     "end": 18.06,
      "text": "Yirmi bir güneş kütlesindeki bu nesne, mavi süperdev yoldaşından gaz çeker; gaz akreasyon diskinde milyonlarca dereceye ısınarak X-ışını yayar."
     },
     {
-     "start": 17.93,
-     "end": 22.73,
+     "start": 18.06,
+     "end": 23.16,
      "text": "İkisi ortak kütle merkezlerinin etrafında beş buçuk günde bir dönerler."
     },
     {
-     "start": 22.73,
-     "end": 25.55,
+     "start": 23.16,
+     "end": 25.97,
      "text": "Olay ufkunun içinden ışık bile kaçamaz."
     },
     {
-     "start": 25.55,
-     "end": 31.64,
+     "start": 25.97,
+     "end": 31.95,
      "text": "Bir gaz bulutunda başlayan yolculuk, uzay-zamanın kendisinde açılmış bir delikle sona erer."
     },
     {
-     "start": 31.64,
-     "end": 33.92,
+     "start": 31.95,
+     "end": 40.71,
+     "text": "Ama hikâye orada bitmez: ölen yıldızların saçtığı gaz yeni bulutlara karışır ve bir gün yeni yıldızlar, yeni gezegenler doğurur."
+    },
+    {
+     "start": 40.71,
+     "end": 48.73,
+     "text": "Güneş de böyle sonraki kuşaklardan bir yıldız; bizler de o döngünün bir parçasıyız, evrenin kendini tanımasının bir yolu."
+    },
+    {
+     "start": 48.73,
+     "end": 50.87,
      "text": "Yıldızların yaşamı turu burada bitiyor."
     }
    ]
   },
   "orion": {
-   "hash": "a0f7a15b5abd",
-   "duration": 30.33,
+   "hash": "892de8c5370a",
+   "duration": 47.03,
    "sentences": [
     {
-     "start": 0.04,
-     "end": 5.5,
+     "start": 0.06,
+     "end": 8.5,
+     "text": "Kanınızdaki demir, kemiklerinizdeki kalsiyum, şu anda soluduğunuz oksijen: bunların hiçbiri evrenin ilk anlarında yoktu."
+    },
+    {
+     "start": 8.5,
+     "end": 13.54,
+     "text": "Hepsi yıldızların içinde pişirildi ve ölen yıldızlarla uzaya saçıldı."
+    },
+    {
+     "start": 13.54,
+     "end": 17.58,
+     "text": "Biz yıldız tozundan yapılmışız ve bu bir benzetme değil."
+    },
+    {
+     "start": 17.58,
+     "end": 22.54,
      "text": "Bu turda bir yıldızın yaşam öyküsünü, doğumundan ölümüne kadar izleyeceğiz."
     },
     {
-     "start": 5.5,
-     "end": 13.48,
+     "start": 22.54,
+     "end": 30.69,
      "text": "Hikâye böyle yerlerde başlar: Orion Bulutsusu, bize bin üç yüz elli ışık yılı uzaklıktaki dev bir yıldız fabrikası."
     },
     {
-     "start": 13.48,
-     "end": 19.56,
+     "start": 30.69,
+     "end": 36.65,
      "text": "Soğuk gaz ve toz, kendi ağırlığı altında çökerek yüzlerce yeni yıldız oluşturuyor."
     },
     {
-     "start": 19.56,
-     "end": 25.87,
+     "start": 36.65,
+     "end": 42.77,
      "text": "Merkezdeki dört parlak Trapezium yıldızı, morötesi ışığıyla bulutsuyu içten aydınlatır."
     },
     {
-     "start": 25.87,
-     "end": 30.33,
+     "start": 42.77,
+     "end": 47.03,
      "text": "Gökyüzünde çıplak gözle Orion'un kılıcındaki bulanık leke olarak görülür."
     }
    ]

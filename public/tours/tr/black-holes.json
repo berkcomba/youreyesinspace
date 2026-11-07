@@ -3,37 +3,47 @@
  "locale": "tr",
  "steps": {
   "cygx1": {
-   "hash": "770da7b7ca58",
-   "duration": 40.54,
+   "hash": "5b9bd2e6b203",
+   "duration": 59.19,
    "sentences": [
     {
-     "start": 0.04,
-     "end": 2.54,
+     "start": 0.08,
+     "end": 10.76,
+     "text": "Bin yedi yüz seksen üçte İngiliz bir papaz, John Michell, cesur bir soru sordu: bir yıldız, ışığın bile ondan kaçamayacağı kadar ağır olabilir mi?"
+    },
+    {
+     "start": 10.76,
+     "end": 21.3,
+     "text": "İki yüz yıl boyunca bu fikir kâğıt üzerinde bir merak olarak kaldı; Einstein'ın denklemleri bile fizikçileri böyle nesnelerin gerçekten var olduğuna uzun süre inandıramadı."
+    },
+    {
+     "start": 21.3,
+     "end": 23.56,
      "text": "Kara delikler turuna hoş geldiniz."
     },
     {
-     "start": 2.54,
-     "end": 6.72,
+     "start": 23.56,
+     "end": 27.38,
      "text": "Başlangıç noktamız bir klasik: Cygnus X-Bir."
     },
     {
-     "start": 6.72,
-     "end": 16.29,
+     "start": 27.38,
+     "end": 36.41,
      "text": "Bin dokuz yüz altmış dörtte bir roketle keşfedilen bu X-ışını kaynağı, bin dokuz yüz yetmiş birde bir kara delik olarak tanımlanan ilk nesne oldu."
     },
     {
-     "start": 16.29,
-     "end": 28.56,
+     "start": 36.41,
+     "end": 47.79,
      "text": "Yirmi bir güneş kütlesindedir ve mavi süperdev yoldaşı HDE iki yüz yirmi altı bin sekiz yüz altmış sekiz ile beş buçuk günde bir ortak kütle merkezlerinin etrafında döner."
     },
     {
-     "start": 28.56,
-     "end": 33.7,
+     "start": 47.79,
+     "end": 52.67,
      "text": "Yoldaşından çektiği gaz, parlak bir diskte milyonlarca dereceye ısınır."
     },
     {
-     "start": 33.7,
-     "end": 40.54,
+     "start": 52.67,
+     "end": 59.19,
      "text": "Stephen Hawking bu nesnenin kara delik olmadığına bahse girmişti; bin dokuz yüz doksanda yenilgisini kabul etti."
     }
    ]
@@ -75,37 +85,47 @@
    ]
   },
   "m87": {
-   "hash": "545e4aa221f1",
-   "duration": 31.67,
+   "hash": "4bfda52dd488",
+   "duration": 52.47,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 5.62,
+     "start": 0.12,
+     "end": 5.64,
      "text": "Son durağımız, fotoğrafı çekilen ilk kara delik: M Seksen Yedi yıldız."
     },
     {
-     "start": 5.62,
-     "end": 11.58,
+     "start": 5.64,
+     "end": 11.52,
      "text": "Elli beş milyon ışık yılı uzaktaki dev eliptik galaksi Virgo A'nın merkezinde oturur."
     },
     {
-     "start": 11.58,
-     "end": 17.91,
+     "start": 11.52,
+     "end": 17.9,
      "text": "Altı buçuk milyar güneş kütlesindedir; olay ufku Plüton'un yörüngesinden altı kat geniştir."
     },
     {
-     "start": 17.91,
-     "end": 24.61,
+     "start": 17.9,
+     "end": 24.66,
      "text": "İki bin on dokuzda yayımlanan ünlü turuncu halka görüntüsü, gölgesini çevreleyen sıcak gazın ışığıdır."
     },
     {
-     "start": 24.61,
+     "start": 24.66,
      "end": 29.73,
      "text": "Buradan ışık hızına yakın bir jet fırlar ve beş bin ışık yılı boyunca uzanır."
     },
     {
      "start": 29.73,
-     "end": 31.67,
+     "end": 40.19,
+     "text": "Michell'in kâğıt üzerindeki karanlık yıldızlarından iki yüz otuz yılı aşkın bir süre sonra, Dünya büyüklüğünde bir teleskop kurduk ve birinin gölgesini fotoğrafladık."
+    },
+    {
+     "start": 40.19,
+     "end": 50.39,
+     "text": "Evrenin en karanlık nesneleri aynı zamanda en parlak ateşlerini yakıyor: kuasarlar, jetler ve galaksileri şekillendiren rüzgârlar onların eseri."
+    },
+    {
+     "start": 50.39,
+     "end": 52.47,
      "text": "Kara delikler turumuz sona erdi."
     }
    ]

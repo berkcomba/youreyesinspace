@@ -74,6 +74,32 @@
     }
    ]
   },
+  "lookback": {
+   "hash": "e8bb8bd94887",
+   "duration": 29.75,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 11.54,
+     "text": "Buradan geriye baktığımızda Güneş, gökyüzündeki en parlak yıldızdan ibaret; Dünya ise onun parıltısında kaybolmuş, gözle seçilemeyecek kadar küçük bir nokta."
+    },
+    {
+     "start": 11.54,
+     "end": 18.39,
+     "text": "Sevdiğimiz, tanıdığımız herkes, yaşanmış her öykü ve akmış her nehir o noktanın üzerinde."
+    },
+    {
+     "start": 18.39,
+     "end": 26.29,
+     "text": "Bütün gezegenleri tek tek gezdik ama hiçbirinde ikinci bir yuva bulamadık; şimdilik o nokta, sahip olduğumuz tek ev."
+    },
+    {
+     "start": 26.29,
+     "end": 29.75,
+     "text": "Güneş Sistemi turumuz burada bitiyor; iyi yolculuklar."
+    }
+   ]
+  },
   "mars": {
    "hash": "8404b6febc66",
    "duration": 43.83,
@@ -219,38 +245,33 @@
    ]
   },
   "pluto": {
-   "hash": "4504c4147e10",
-   "duration": 37.75,
+   "hash": "4936f7f78454",
+   "duration": 32.95,
    "sentences": [
     {
      "start": 0.1,
-     "end": 7.18,
+     "end": 7.2,
      "text": "Son durağımız Plüton; bin dokuz yüz otuzda keşfedildi ve iki bin altıya kadar dokuzuncu gezegen sayıldı."
     },
     {
-     "start": 7.18,
-     "end": 12.24,
+     "start": 7.2,
+     "end": 12.14,
      "text": "Aslında Ay'ımızdan bile küçüktür: yan yana koyduğumuzda bu açıkça görülür."
     },
     {
-     "start": 12.24,
-     "end": 17.64,
+     "start": 12.14,
+     "end": 17.27,
      "text": "İki bin on beşte New Horizons yanından geçene kadar bulanık bir noktadan ibaretti."
     },
     {
-     "start": 17.64,
-     "end": 26.33,
+     "start": 17.27,
+     "end": 25.79,
      "text": "Araç, yüzeyinde dev bir kalp şekli, azot buzulları ve su buzundan dağlar buldu; yüzey sıcaklığı eksi iki yüz otuz derecedir."
     },
     {
-     "start": 26.33,
-     "end": 34.29,
+     "start": 25.79,
+     "end": 32.95,
      "text": "Uydusu Charon o kadar büyüktür ki ikisi birlikte, aralarındaki boşlukta kalan ortak bir kütle merkezi etrafında döner."
-    },
-    {
-     "start": 34.29,
-     "end": 37.75,
-     "text": "Güneş Sistemi turumuz burada bitiyor; iyi yolculuklar."
     }
    ]
   },
@@ -291,37 +312,52 @@
    ]
   },
   "sun": {
-   "hash": "be92bbf8617f",
-   "duration": 47.03,
+   "hash": "05adf6d9ed57",
+   "duration": 71.03,
    "sentences": [
     {
      "start": 0.08,
-     "end": 6.28,
+     "end": 9.14,
+     "text": "Dört buçuk milyar yıl önce, Samanyolu'nun sakin bir kolunda, dönen bir gaz ve toz bulutu kendi ağırlığı altında çöktü."
+    },
+    {
+     "start": 9.14,
+     "end": 16.82,
+     "text": "Merkezinde bir yıldız tutuştu; çevresinde kalan kırıntılar gezegenlere, aylara ve sonunda bizlere dönüştü."
+    },
+    {
+     "start": 16.82,
+     "end": 23.52,
+     "text": "Bu turda o ailenin bütün üyelerini, en büyüğünden en küçüğüne, tek tek ziyaret edeceğiz."
+    },
+    {
+     "start": 23.52,
+     "end": 29.74,
      "text": "Güneş Sistemi turuna hoş geldiniz; yolculuğumuz her şeyin merkezinden, Güneş'ten başlıyor."
     },
     {
-     "start": 6.28,
-     "end": 13.76,
+     "start": 29.74,
+     "end": 37.89,
      "text": "Dört buçuk milyar yaşındaki bu yıldız, sistemdeki toplam kütlenin yüzde doksan dokuz virgül sekizini tek başına taşır."
     },
     {
-     "start": 13.76,
-     "end": 25.11,
+     "start": 37.89,
+     "end": 49.39,
      "text": "Ne kadar büyük olduğunu görmek için yanına gerçek ölçekli bir Dünya koyalım: çapı boyunca yan yana yüz dokuz Dünya dizilir, içine ise bir milyon üç yüz bin tanesi sığar."
     },
     {
-     "start": 25.11,
-     "end": 33.81,
+     "start": 49.39,
+     "end": 58.05,
      "text": "Yüzeyi beş bin beş yüz derece, çekirdeği on beş milyon derecedir; her saniye altı yüz milyon ton hidrojeni helyuma dönüştürür."
     },
     {
-     "start": 33.81,
-     "end": 41.93,
+     "start": 58.05,
+     "end": 66.17,
      "text": "Şimdi geri çekilelim ve ışığın yolculuğunu izleyelim: Güneş'ten çıkan ışık, Dünya'ya sekiz dakika yirmi saniyede ulaşır."
     },
     {
-     "start": 41.93,
-     "end": 47.03,
+     "start": 66.17,
+     "end": 71.03,
      "text": "Yani Güneş'e her baktığınızda, aslında sekiz dakika önceki hâlini görürsünüz."
     }
    ]

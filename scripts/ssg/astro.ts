@@ -67,8 +67,12 @@ export function setBoundaries(text: string): void {
   BOUNDS = rows.length > 300 ? rows : null;
 }
 
+export function boundaryTable(): Boundary[] {
+  return BOUNDS ?? [];
+}
+
 /** J2000 → B1875 (IAU 1976 precession) */
-function toB1875(ra: number, dec: number): [number, number] {
+export function toB1875(ra: number, dec: number): [number, number] {
   const T = (2405889.258550475 - 2451545.0) / 36525;
   const as = Math.PI / 180 / 3600;
   const zeta = (2306.2181 * T + 0.30188 * T * T + 0.017998 * T ** 3) * as;

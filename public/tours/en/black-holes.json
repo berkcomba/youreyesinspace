@@ -3,37 +3,47 @@
  "locale": "en",
  "steps": {
   "cygx1": {
-   "hash": "9205d443c05c",
-   "duration": 41.27,
+   "hash": "e97e2e281986",
+   "duration": 55.35,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 2.34,
+     "start": 0.06,
+     "end": 9.6,
+     "text": "In 1783 an English clergyman, John Michell, asked a bold question: could a star be so heavy that not even light could escape from it?"
+    },
+    {
+     "start": 9.6,
+     "end": 18.92,
+     "text": "For two hundred years the idea remained a curiosity on paper; even Einstein's equations long failed to convince physicists that such objects really exist."
+    },
+    {
+     "start": 18.92,
+     "end": 20.94,
      "text": "Welcome to the black holes tour."
     },
     {
-     "start": 2.34,
-     "end": 6.52,
+     "start": 20.94,
+     "end": 24.54,
      "text": "Our starting point is a classic: Cygnus X-1."
     },
     {
-     "start": 6.52,
-     "end": 16,
+     "start": 24.54,
+     "end": 32.91,
      "text": "This X-ray source, discovered with a rocket in 1964, became the first object identified as a black hole in 1971."
     },
     {
-     "start": 16,
-     "end": 29.97,
+     "start": 32.91,
+     "end": 44.33,
      "text": "It is 21 solar masses, and once every five and a half days it orbits their common center of mass together with its blue supergiant companion HDE 226868."
     },
     {
-     "start": 29.97,
-     "end": 34.97,
+     "start": 44.33,
+     "end": 48.79,
      "text": "Gas drawn from its companion heats to millions of degrees in a bright disk."
     },
     {
-     "start": 34.97,
-     "end": 41.27,
+     "start": 48.79,
+     "end": 55.35,
      "text": "Stephen Hawking had bet that this object was not a black hole; in 1990 he conceded his defeat."
     }
    ]
@@ -70,37 +80,47 @@
    ]
   },
   "m87": {
-   "hash": "d0fdd142a3ef",
-   "duration": 36.21,
+   "hash": "740a9430da51",
+   "duration": 48.63,
    "sentences": [
     {
      "start": 0.08,
-     "end": 6.24,
+     "end": 5.62,
      "text": "Our last stop, the first black hole to be photographed: M87 star."
     },
     {
-     "start": 6.24,
-     "end": 13.36,
+     "start": 5.62,
+     "end": 11.88,
      "text": "It sits at the center of the giant elliptical galaxy Virgo A, 55 million light-years away."
     },
     {
-     "start": 13.36,
-     "end": 20.57,
+     "start": 11.88,
+     "end": 18.18,
      "text": "It is six and a half billion solar masses; its event horizon is six times wider than Pluto's orbit."
     },
     {
-     "start": 20.57,
-     "end": 27.89,
+     "start": 18.18,
+     "end": 24.75,
      "text": "The famous orange ring image published in 2019 is the light of the hot gas surrounding its shadow."
     },
     {
-     "start": 27.89,
-     "end": 33.91,
+     "start": 24.75,
+     "end": 30.35,
      "text": "From here a jet shoots out at nearly the speed of light and extends for 5,000 light-years."
     },
     {
-     "start": 33.91,
-     "end": 36.21,
+     "start": 30.35,
+     "end": 38.53,
+     "text": "More than two hundred and thirty years after Michell's dark stars on paper, we built a telescope the size of the Earth and photographed the shadow of one."
+    },
+    {
+     "start": 38.53,
+     "end": 46.39,
+     "text": "The darkest objects in the universe also light its brightest fires: quasars, jets and the winds that shape galaxies are their work."
+    },
+    {
+     "start": 46.39,
+     "end": 48.63,
      "text": "Our black holes tour has come to an end."
     }
    ]

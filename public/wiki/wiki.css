@@ -131,6 +131,28 @@ article.w-wide { display: block; }
 .w-az-body h2, .w-az-results h2 { margin-top: 28px; }
 .w-wide .w-cols { columns: 4 220px; }
 
+/* locator widget (/wiki/locator.js), in the Academy's instrument style */
+.w-loc { margin: 16px 0 18px; border: 1px solid var(--border); background: #0b0e13; min-height: 300px; }
+.w-loc canvas { display: block; width: 100%; touch-action: pan-y; }
+.w-loc-ro { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 18px; padding: 9px 12px; border-top: 1px solid var(--border); font-size: 12.5px; }
+.w-loc-ro div { display: flex; justify-content: space-between; gap: 10px; min-width: 0; }
+.w-loc-ro span:first-child { color: var(--text-3); white-space: nowrap; }
+.w-loc-ro .v { color: var(--text); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.w-loc-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 9px 12px; border-top: 1px solid var(--border); }
+.w-loc button { font: inherit; font-size: 12.5px; color: var(--text-2); background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 4px 10px; cursor: pointer; }
+.w-loc button:hover { color: var(--text); }
+.w-loc-seg { display: inline-flex; }
+.w-loc-seg button { margin-left: -1px; border-radius: 0; }
+.w-loc-seg button:first-child { margin-left: 0; border-radius: 2px 0 0 2px; }
+.w-loc-seg button:last-child { border-radius: 0 2px 2px 0; }
+.w-loc-seg button.active { position: relative; z-index: 1; color: var(--text); border-color: var(--accent); }
+.w-loc-slider { display: flex; align-items: center; gap: 8px; flex: 1 1 200px; min-width: 0; font-size: 12.5px; color: var(--text-3); }
+.w-loc-slider input { flex: 1; min-width: 60px; accent-color: var(--accent); }
+.w-loc-slider .v { min-width: 0; }
+.w-loc-reset { margin-left: auto; }
+.w-loc-cap { margin: 0; padding: 0 12px 10px; color: var(--text-3); font-size: 12px; }
+@media (max-width: 560px) { .w-loc-ro { grid-template-columns: 1fr; } .w-loc { min-height: 200px; } }
+
 /* the one action of the page */
 .w-open { margin: 36px 0 0; }
 .w-btn {

@@ -117,68 +117,93 @@
    ]
   },
   "juno": {
-   "hash": "c1ada23f1f36",
-   "duration": 36.47,
+   "hash": "5cb13136b732",
+   "duration": 49.59,
    "sentences": [
     {
      "start": 0.08,
-     "end": 7.24,
+     "end": 7.14,
      "text": "Finally, let's look at Juno: this NASA spacecraft entered orbit around Jupiter in July 2016."
     },
     {
-     "start": 7.24,
-     "end": 15.56,
+     "start": 7.14,
+     "end": 15.54,
      "text": "It is the first spacecraft to operate on solar power this far from the Sun; its three giant panels take up as much space as a basketball court."
     },
     {
-     "start": 15.56,
-     "end": 23.99,
+     "start": 15.54,
+     "end": 23.46,
      "text": "To protect itself from radiation, it travels in a long, elliptical orbit passing over the poles; here is that orbit, sped up."
     },
     {
-     "start": 23.99,
-     "end": 30.85,
+     "start": 23.46,
+     "end": 29.85,
      "text": "On each pass it flies a few thousand kilometers above the clouds and discovered giant cyclones at Jupiter's poles."
     },
     {
-     "start": 30.85,
-     "end": 36.47,
-     "text": "It showed that the core is larger and more diffuse than had been thought; our tour of Jupiter ends here."
+     "start": 29.85,
+     "end": 33.59,
+     "text": "It showed that the core is larger and more diffuse than had been thought."
+    },
+    {
+     "start": 33.59,
+     "end": 39.71,
+     "text": "It has been a journey from Galileo's four tiny points of light to worlds hiding oceans beneath their ice."
+    },
+    {
+     "start": 39.71,
+     "end": 47.81,
+     "text": "Perhaps the place to look for life in the Solar System is not near a warming sun, but on these cold, dark moons kneaded by a giant's gravity."
+    },
+    {
+     "start": 47.81,
+     "end": 49.59,
+     "text": "Our tour of Jupiter ends here."
     }
    ]
   },
   "jupiter": {
-   "hash": "cf7ae06035c2",
-   "duration": 47.03,
+   "hash": "5f8c34c1ca71",
+   "duration": 67.19,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 5.04,
+     "start": 0.08,
+     "end": 6.6,
+     "text": "A bright, steady light in the night sky: to the naked eye, no different from an ordinary star."
+    },
+    {
+     "start": 6.6,
+     "end": 20.06,
+     "text": "Yet the owner of that light is a giant two and a half times heavier than all the other planets combined; an architect that bends the paths of comets with its gravity and has shaped the order of the Solar System for billions of years."
+    },
+    {
+     "start": 20.06,
+     "end": 25.2,
      "text": "Welcome to the Jupiter system; this giant is almost like a small solar system."
     },
     {
-     "start": 5.04,
-     "end": 11.08,
+     "start": 25.2,
+     "end": 31.32,
      "text": "More than 95 moons orbit around it; let's watch the orbits of the four largest from above."
     },
     {
-     "start": 11.08,
-     "end": 27.91,
+     "start": 31.32,
+     "end": 47.67,
      "text": "Io completes one orbit in 2 days, Europa in three and a half days, Ganymede in 7 days, and Callisto in 17 days; the inner three are locked together, and when Io completes 4 orbits, Europa completes 2 and Ganymede 1."
     },
     {
-     "start": 27.91,
-     "end": 36.19,
+     "start": 47.67,
+     "end": 55.99,
      "text": "The planet is so large that 1,300 Earths would fit inside it, and its magnetic field is the largest structure in the Solar System."
     },
     {
-     "start": 36.19,
-     "end": 44.85,
+     "start": 55.99,
+     "end": 64.73,
      "text": "In 1610, Galileo discovered these four moons with his small telescope; it was the first evidence that not everything revolves around Earth."
     },
     {
-     "start": 44.85,
-     "end": 47.03,
+     "start": 64.73,
+     "end": 67.19,
      "text": "Now we will visit those four moons in turn."
     }
    ]

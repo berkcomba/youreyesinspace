@@ -70,32 +70,42 @@
    ]
   },
   "deneb": {
-   "hash": "a03f4935987d",
-   "duration": 37.58,
+   "hash": "369554f7a2a1",
+   "duration": 59.51,
    "sentences": [
     {
      "start": 0.06,
-     "end": 9.57,
+     "end": 10.08,
      "text": "Unsere letzte Station ist Deneb, der Schwanz des Sternbilds Schwan und der fernste Stern dieser Tour: etwa zweitausendsechshundert Lichtjahre entfernt."
     },
     {
-     "start": 9.57,
-     "end": 19.75,
+     "start": 10.08,
+     "end": 20.3,
      "text": "Trotzdem ist er einer der zwanzig hellsten Sterne am Himmel; denn er ist einer der hellsten bekannten Sterne, der etwa zweihunderttausendmal mehr Licht aussendet als die Sonne."
     },
     {
-     "start": 19.75,
-     "end": 26.12,
+     "start": 20.3,
+     "end": 26.54,
      "text": "Das Licht, das Sie heute sehen, machte sich in der Zeit auf den Weg, als die Römische Republik gegründet wurde."
     },
     {
-     "start": 26.12,
-     "end": 35.28,
+     "start": 26.54,
+     "end": 35.93,
      "text": "Er ist ein blauweißer Überriese und wird innerhalb einiger Millionen Jahre entweder zur Supernova werden oder sich in einen roten Überriesen verwandeln."
     },
     {
-     "start": 35.28,
-     "end": 37.58,
+     "start": 35.93,
+     "end": 48.07,
+     "text": "Wenn Sie heute Nacht hinausgehen und Vega betrachten, sehen Sie Licht, das vor fünfundzwanzig Jahren aufgebrochen ist; blicken Sie zu Deneb, sehen Sie Licht, das aufbrach, als Rom noch ein Königreich war."
+    },
+    {
+     "start": 48.07,
+     "end": 57.11,
+     "text": "Der Himmel ist kein Foto eines einzigen Augenblicks; er ist eine Collage der Zeit, in der sich Briefe aus verschiedenen Epochen in derselben Nacht begegnen."
+    },
+    {
+     "start": 57.11,
+     "end": 59.51,
      "text": "Unsere Tour der Nachbarsterne ist zu Ende."
     }
    ]
@@ -132,37 +142,47 @@
    ]
   },
   "proxima": {
-   "hash": "15010c31a77f",
-   "duration": 44.55,
+   "hash": "633758cb618e",
+   "duration": 62.71,
    "sentences": [
     {
      "start": 0.08,
-     "end": 2.74,
+     "end": 12.14,
+     "text": "Fast alle Sterne, die Sie mit bloßem Auge am Nachthimmel sehen, sind Nachbarn der Sonne, nur wenige tausend Lichtjahre entfernt; der Rest der Galaxie verschwimmt zu einem gemeinsamen Schimmer."
+    },
+    {
+     "start": 12.14,
+     "end": 20.54,
+     "text": "Jeder von ihnen ist eine Sonne, um manche kreisen Welten, und ihr Licht erreicht uns nach Reisen, die Jahre, ja Jahrhunderte dauern."
+    },
+    {
+     "start": 20.54,
+     "end": 22.98,
      "text": "Willkommen zur Tour der Nachbarsterne."
     },
     {
-     "start": 2.74,
-     "end": 10.16,
+     "start": 22.98,
+     "end": 30.4,
      "text": "Unsere erste Station ist der sonnennächste Stern: Proxima Centauri, vier Komma zwei Lichtjahre entfernt."
     },
     {
-     "start": 10.16,
-     "end": 19.54,
+     "start": 30.4,
+     "end": 39.75,
      "text": "Er ist ein kleiner, kühler roter Zwerg; er hat nur zwölf Prozent der Masse der Sonne und ist so lichtschwach, dass man ihn mit bloßem Auge nicht sehen kann."
     },
     {
-     "start": 19.54,
-     "end": 24.67,
+     "start": 39.75,
+     "end": 44.47,
      "text": "Doch mit plötzlichen Ausbrüchen schleudert er heftige Strahlung von seiner Oberfläche."
     },
     {
-     "start": 24.67,
-     "end": 38.81,
+     "start": 44.47,
+     "end": 57.67,
      "text": "Im Jahr zweitausendsechzehn wurde um ihn ein Planet von der Größe der Erde entdeckt: Proxima b umkreist ihn in der habitablen Zone, also in einer Entfernung, in der auf seiner Oberfläche flüssiges Wasser vorhanden sein könnte."
     },
     {
-     "start": 38.81,
-     "end": 44.55,
+     "start": 57.67,
+     "end": 62.71,
      "text": "Mit unseren heutigen schnellsten Fahrzeugen würde es siebzigtausend Jahre dauern, hierher zu gelangen."
     }
    ]

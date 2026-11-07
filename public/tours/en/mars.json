@@ -65,68 +65,93 @@
    ]
   },
   "finale": {
-   "hash": "a9719e0768d9",
-   "duration": 29.75,
+   "hash": "e9975562788b",
+   "duration": 41.59,
    "sentences": [
     {
      "start": 0.06,
-     "end": 3.66,
+     "end": 3.36,
      "text": "Before we leave Mars, let's look back once more."
     },
     {
-     "start": 3.66,
-     "end": 8.48,
+     "start": 3.36,
+     "end": 8.06,
      "text": "Today nearly a dozen active vehicles are at work in its orbit and on its surface."
     },
     {
-     "start": 8.48,
-     "end": 14.5,
+     "start": 8.06,
+     "end": 13.86,
      "text": "The findings are consistent: Mars was once a warm, moist, and perhaps habitable world."
     },
     {
-     "start": 14.5,
-     "end": 21.87,
+     "start": 13.86,
+     "end": 21.11,
      "text": "When it lost its magnetic field, the solar wind swept its atmosphere into space, and the planet turned into a cold desert."
     },
     {
-     "start": 21.87,
-     "end": 29.75,
-     "text": "Even so, the first planet humanity will one day set foot on will most likely be this one; our Mars tour has come to an end."
+     "start": 21.11,
+     "end": 26.67,
+     "text": "Even so, the first planet humanity will one day set foot on will most likely be this one."
+    },
+    {
+     "start": 26.67,
+     "end": 35.39,
+     "text": "On that day, the first person standing on a dusty Martian plain will see a bright, bluish star in the evening sky: the planet they were born on."
+    },
+    {
+     "start": 35.39,
+     "end": 39.65,
+     "text": "Perhaps that will be the moment we begin to write the story of two worlds together."
+    },
+    {
+     "start": 39.65,
+     "end": 41.59,
+     "text": "Our Mars tour has come to an end."
     }
    ]
   },
   "mars": {
-   "hash": "405fb20468a3",
-   "duration": 41.27,
+   "hash": "047f3b03aa57",
+   "duration": 58.23,
    "sentences": [
     {
-     "start": 0.12,
-     "end": 5.8,
+     "start": 0.08,
+     "end": 7.74,
+     "text": "For thousands of years people watched a red light wandering among the stars of the night sky and named it after the god of war."
+    },
+    {
+     "start": 7.74,
+     "end": 16.18,
+     "text": "Telescopes turned that light into a disk, and spacecraft turned it into a real world, with canyons, volcanoes and dust storms."
+    },
+    {
+     "start": 16.18,
+     "end": 22.18,
      "text": "Welcome to the Mars tour; the Red Planet is the world humanity has sent the most spacecraft to."
     },
     {
-     "start": 5.8,
-     "end": 13.3,
+     "start": 22.18,
+     "end": 30.13,
      "text": "Its day is very similar to Earth's, twenty-four hours and thirty-seven minutes; right now you are watching a Martian day sped up."
     },
     {
-     "start": 13.3,
-     "end": 21.21,
+     "start": 30.13,
+     "end": 37.93,
      "text": "Its atmosphere is very thin and consists almost entirely of carbon dioxide; the average temperature is minus sixty degrees."
     },
     {
-     "start": 21.21,
-     "end": 29.27,
+     "start": 37.93,
+     "end": 46.17,
      "text": "Hellas Basin in the southern hemisphere is the largest impact scar, two thousand three hundred kilometers wide and nine kilometers deep."
     },
     {
-     "start": 29.27,
-     "end": 35.97,
+     "start": 46.17,
+     "end": 52.99,
      "text": "At its poles there are caps of water ice and dry ice; in winter a quarter of the atmosphere freezes at the pole."
     },
     {
-     "start": 35.97,
-     "end": 41.27,
+     "start": 52.99,
+     "end": 58.23,
      "text": "The dried-up riverbeds and ancient lake beds on its surface whisper that Mars was once very different."
     }
    ]

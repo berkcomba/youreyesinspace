@@ -117,68 +117,93 @@
    ]
   },
   "juno": {
-   "hash": "0f2cb9922783",
-   "duration": 41.59,
+   "hash": "ecaedf44c044",
+   "duration": 60.47,
    "sentences": [
     {
-     "start": 0.04,
-     "end": 8.22,
+     "start": 0.02,
+     "end": 8.24,
      "text": "Por último, miremos a Juno: esta sonda de la NASA entró en órbita alrededor de Júpiter en julio de dos mil dieciséis."
     },
     {
-     "start": 8.22,
-     "end": 17.38,
+     "start": 8.24,
+     "end": 17.62,
      "text": "Es la primera sonda que funciona con energía solar tan lejos del Sol; sus tres paneles gigantes ocupan tanto espacio como una pista de baloncesto."
     },
     {
-     "start": 17.38,
-     "end": 26.41,
+     "start": 17.62,
+     "end": 26.84,
      "text": "Para protegerse de la radiación, gira en una órbita larga y elíptica que pasa por encima de los polos; aquí tenéis esa órbita, acelerada."
     },
     {
-     "start": 26.41,
-     "end": 34.39,
+     "start": 26.84,
+     "end": 35.01,
      "text": "En cada paso pasa a unos pocos miles de kilómetros por encima de las nubes y descubrió ciclones gigantes en los polos de Júpiter."
     },
     {
-     "start": 34.39,
-     "end": 41.59,
-     "text": "Demostró que el núcleo de Júpiter es más grande y más difuso de lo que se pensaba; aquí termina nuestro recorrido por Júpiter."
+     "start": 35.01,
+     "end": 40.09,
+     "text": "Demostró que el núcleo de Júpiter es más grande y más difuso de lo que se pensaba."
+    },
+    {
+     "start": 40.09,
+     "end": 47.27,
+     "text": "Ha sido un viaje desde los cuatro diminutos puntos de luz de Galileo hasta mundos que esconden océanos bajo su hielo."
+    },
+    {
+     "start": 47.27,
+     "end": 57.91,
+     "text": "Quizá el lugar donde buscar vida en el Sistema Solar no esté junto a un sol que calienta, sino en estas lunas frías y oscuras, amasadas por la gravedad de un gigante."
+    },
+    {
+     "start": 57.91,
+     "end": 60.47,
+     "text": "Aquí termina nuestro recorrido por Júpiter."
     }
    ]
   },
   "jupiter": {
-   "hash": "57d17d84c8a7",
-   "duration": 49.91,
+   "hash": "d9194392e6ac",
+   "duration": 72.95,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 5.88,
+     "start": 0.1,
+     "end": 6.86,
+     "text": "Una luz brillante y serena en el cielo nocturno: a simple vista, no se distingue de una estrella cualquiera."
+    },
+    {
+     "start": 6.86,
+     "end": 23.12,
+     "text": "Sin embargo, esa luz pertenece a un gigante dos veces y media más pesado que todos los demás planetas juntos; un arquitecto que curva con su gravedad las trayectorias de los cometas y lleva miles de millones de años dando forma al orden del Sistema Solar."
+    },
+    {
+     "start": 23.12,
+     "end": 28.92,
      "text": "Bienvenidos al sistema de Júpiter; este gigante es casi como un pequeño sistema solar."
     },
     {
-     "start": 5.88,
-     "end": 12.76,
+     "start": 28.92,
+     "end": 35.92,
      "text": "A su alrededor giran más de noventa y cinco lunas; veamos desde arriba las órbitas de las cuatro más grandes."
     },
     {
-     "start": 12.76,
-     "end": 29.35,
+     "start": 35.92,
+     "end": 52.61,
      "text": "Ío da una vuelta en dos días, Europa en tres días y medio, Ganímedes en siete días y Calisto en diecisiete días; las tres interiores están acopladas entre sí: cuando Ío completa cuatro vueltas, Europa completa dos y Ganímedes una."
     },
     {
-     "start": 29.35,
-     "end": 37.77,
+     "start": 52.61,
+     "end": 60.97,
      "text": "El planeta es tan grande que en su interior caben mil trescientas Tierras, y su campo magnético es la estructura más grande del Sistema Solar."
     },
     {
-     "start": 37.77,
-     "end": 47.05,
+     "start": 60.97,
+     "end": 70.35,
      "text": "En mil seiscientos diez, Galileo descubrió estas cuatro lunas con su pequeño telescopio; fue la primera prueba de que no todo gira alrededor de la Tierra."
     },
     {
-     "start": 47.05,
-     "end": 49.91,
+     "start": 70.35,
+     "end": 72.95,
      "text": "Ahora visitaremos esas cuatro lunas por orden."
     }
    ]

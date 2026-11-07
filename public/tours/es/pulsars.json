@@ -3,32 +3,42 @@
  "locale": "es",
  "steps": {
   "b1919": {
-   "hash": "3e567133a258",
-   "duration": 38.31,
+   "hash": "4bf295907082",
+   "duration": 55.99,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 2.94,
+     "start": 0.04,
+     "end": 8,
+     "text": "Cuando muere una estrella masiva, a veces deja tras de sí un corazón del tamaño de una ciudad pero más pesado que el Sol."
+    },
+    {
+     "start": 8,
+     "end": 17.92,
+     "text": "Ese corazón gira decenas, incluso cientos de veces por segundo, y sigue latiendo durante millones de años como uno de los relojes más precisos del universo."
+    },
+    {
+     "start": 17.92,
+     "end": 20.56,
      "text": "Bienvenidos al recorrido de los púlsares."
     },
     {
-     "start": 2.94,
-     "end": 15.23,
+     "start": 20.56,
+     "end": 32.83,
      "text": "Todo empezó en mil novecientos sesenta y siete, cuando Jocelyn Bell, estudiante de doctorado en Cambridge, advirtió en los datos de radio una extraña señal que se repetía cada uno coma tres segundos."
     },
     {
-     "start": 15.23,
-     "end": 24.25,
+     "start": 32.83,
+     "end": 41.63,
      "text": "La señal era tan regular que su equipo le puso, medio en broma, el nombre de LGM uno, que significa hombrecillos verdes."
     },
     {
-     "start": 24.25,
-     "end": 32.05,
+     "start": 41.63,
+     "end": 49.43,
      "text": "El que tenéis delante, PSR B 1919 más 21, es precisamente ese primer púlsar."
     },
     {
-     "start": 32.05,
-     "end": 38.31,
+     "start": 49.43,
+     "end": 55.99,
      "text": "En realidad era una estrella de neutrones que giraba como un faro y dirigía su haz hacia nosotros en cada vuelta."
     }
    ]
@@ -163,37 +173,47 @@
    ]
   },
   "sgr1806": {
-   "hash": "5056ac36f7cb",
-   "duration": 47.91,
+   "hash": "6999051520e3",
+   "duration": 67.83,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 6.48,
+     "start": 0.06,
+     "end": 6.28,
      "text": "Nuestra última parada es un magnetar: SGR 1806 menos 20."
     },
     {
-     "start": 6.48,
-     "end": 19.7,
+     "start": 6.28,
+     "end": 19.62,
      "text": "Los magnetares son estrellas de neutrones con los campos magnéticos más fuertes del universo; este campo es mil billones de veces más fuerte que el de la Tierra y borra una tarjeta de crédito desde mil kilómetros de distancia."
     },
     {
-     "start": 19.7,
-     "end": 29.77,
+     "start": 19.62,
+     "end": 29.64,
      "text": "El veintisiete de diciembre de dos mil cuatro, su corteza se agrietó y, en una décima de segundo, liberó tanta energía como la que el Sol emite en cien mil años."
     },
     {
-     "start": 29.77,
-     "end": 40.23,
+     "start": 29.64,
+     "end": 39.99,
      "text": "Esta explosión, llegada desde cincuenta mil años luz de distancia, ionizó de forma medible la atmósfera superior de la Tierra y cegó los detectores de los satélites."
     },
     {
-     "start": 40.23,
-     "end": 45.19,
+     "start": 39.99,
+     "end": 44.59,
      "text": "Es el suceso más brillante observado hasta hoy desde fuera del Sistema Solar."
     },
     {
-     "start": 45.19,
-     "end": 47.91,
+     "start": 44.59,
+     "end": 56.63,
+     "text": "Desde un pequeño temblor que una estudiante advirtió en unas tiras de papel, hemos recorrido un camino que lleva a las ondas gravitacionales, a los primeros exoplanetas y a los estados más extremos de la materia."
+    },
+    {
+     "start": 56.63,
+     "end": 65.11,
+     "text": "En nuestra galaxia siguen girando decenas de miles de faros cósmicos que aún no hemos oído; para oírlos, solo tenemos que seguir escuchando."
+    },
+    {
+     "start": 65.11,
+     "end": 67.83,
      "text": "Nuestro recorrido por los púlsares ha terminado."
     }
    ]

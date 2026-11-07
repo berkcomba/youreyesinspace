@@ -34,32 +34,42 @@
    ]
   },
   "iapetus": {
-   "hash": "bb595e635a50",
-   "duration": 39.67,
+   "hash": "9fe29a79849f",
+   "duration": 57.91,
    "sentences": [
     {
      "start": 0.1,
-     "end": 9.16,
+     "end": 9.42,
      "text": "Our final stop is Iapetus, one of the strangest moons in the Solar System: one half as white as snow, the other half as black as coal."
     },
     {
-     "start": 9.16,
-     "end": 19.72,
+     "start": 9.42,
+     "end": 20.12,
      "text": "Because the same face always points forward in its orbit, it sweeps up dark dust from the outer rings; ice evaporates from the warmed dark regions and falls onto the bright side."
     },
     {
-     "start": 19.72,
-     "end": 29.03,
+     "start": 20.12,
+     "end": 29.57,
      "text": "Right in the middle of its equator runs a mountain ridge 13 kilometers high and 1,300 kilometers long; this gives it the appearance of a walnut."
     },
     {
-     "start": 29.03,
-     "end": 37.77,
+     "start": 29.57,
+     "end": 38.51,
      "text": "Three and a half million kilometers from Saturn, it completes one orbit in 79 days; it is the only large moon that can see the rings from above."
     },
     {
-     "start": 37.77,
-     "end": 39.67,
+     "start": 38.51,
+     "end": 46.21,
+     "text": "In 2013, Cassini looked back from Saturn's shadow and caught a pale blue dot beneath the rings: Earth."
+    },
+    {
+     "start": 46.21,
+     "end": 56.01,
+     "text": "That day, people all over the world who knew the picture was being taken stepped outside and waved at a machine looking back at them from one and a half billion kilometers away."
+    },
+    {
+     "start": 56.01,
+     "end": 57.91,
      "text": "Our tour of Saturn has come to an end."
     }
    ]
@@ -122,32 +132,42 @@
    ]
   },
   "saturn": {
-   "hash": "6c5643b9e900",
-   "duration": 34.87,
+   "hash": "3166921d8a79",
+   "duration": 51.83,
    "sentences": [
     {
      "start": 0.08,
-     "end": 7.88,
+     "end": 10.12,
+     "text": "When Galileo turned his telescope to Saturn in 1610, he saw strange bulges on either side of the planet that he could not explain, and called them ears."
+    },
+    {
+     "start": 10.12,
+     "end": 17.94,
+     "text": "It took half a century to understand that they were a ring; even today they take our breath away as the most elegant sight in the Solar System."
+    },
+    {
+     "start": 17.94,
+     "end": 25.32,
      "text": "Welcome to the tour of Saturn: the sixth planet from the Sun, a gas giant 9 times the size of Earth in diameter."
     },
     {
-     "start": 7.88,
-     "end": 13.52,
+     "start": 25.32,
+     "end": 30.87,
      "text": "When we place a true-to-scale Earth beside it, even how wide the rings are becomes clear."
     },
     {
-     "start": 13.52,
-     "end": 17.97,
+     "start": 30.87,
+     "end": 35.15,
      "text": "Its density is lower than that of water; this is unique for a planet."
     },
     {
-     "start": 17.97,
-     "end": 25.15,
+     "start": 35.15,
+     "end": 42.21,
      "text": "At its equator, winds reach 1,800 kilometers per hour, and its day lasts only ten and a half hours."
     },
     {
-     "start": 25.15,
-     "end": 34.87,
+     "start": 42.21,
+     "end": 51.83,
      "text": "The Cassini spacecraft studied this system for 13 years, from 2004 to 2017, and completed its mission by diving into the planet's atmosphere."
     }
    ]

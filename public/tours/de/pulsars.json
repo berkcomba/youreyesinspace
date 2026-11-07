@@ -3,32 +3,42 @@
  "locale": "de",
  "steps": {
   "b1919": {
-   "hash": "5f238bec3182",
-   "duration": 37.43,
+   "hash": "6f9e515b3057",
+   "duration": 54.07,
    "sentences": [
     {
      "start": 0.08,
-     "end": 2.24,
+     "end": 8.02,
+     "text": "Wenn ein massereicher Stern stirbt, hinterlässt er manchmal ein Herz von der Größe einer Stadt, aber schwerer als die Sonne."
+    },
+    {
+     "start": 8.02,
+     "end": 17.72,
+     "text": "Dieses Herz dreht sich Dutzende, ja Hunderte Male pro Sekunde und tickt Millionen Jahre lang weiter, als eine der genauesten Uhren des Universums."
+    },
+    {
+     "start": 17.72,
+     "end": 19.82,
      "text": "Willkommen zur Pulsar-Tour."
     },
     {
-     "start": 2.24,
-     "end": 14.34,
+     "start": 19.82,
+     "end": 31.57,
      "text": "Alles begann 1967, als die Doktorandin Jocelyn Bell in Cambridge in den Radiodaten ein seltsames Signal bemerkte, das sich alle 1,3 Sekunden wiederholte."
     },
     {
-     "start": 14.34,
-     "end": 23.07,
+     "start": 31.57,
+     "end": 40.11,
      "text": "Das Signal war so regelmäßig, dass ihr Team ihm halb im Scherz den Namen LGM Eins gab, was Kleine Grüne Männchen bedeutet."
     },
     {
-     "start": 23.07,
-     "end": 30.05,
+     "start": 40.11,
+     "end": 46.53,
      "text": "Vor Ihnen: PSR B 1919 plus 21, eben jener erste Pulsar."
     },
     {
-     "start": 30.05,
-     "end": 37.43,
+     "start": 46.53,
+     "end": 54.07,
      "text": "In Wirklichkeit war es ein Neutronenstern, der sich wie ein Leuchtturm drehte und bei jeder Umdrehung seinen Strahl auf uns richtete."
     }
    ]
@@ -158,37 +168,47 @@
    ]
   },
   "sgr1806": {
-   "hash": "a2aa490ba0f1",
-   "duration": 48.86,
+   "hash": "02c4ee98a8b8",
+   "duration": 65.91,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 6.42,
+     "start": 0.08,
+     "end": 6.26,
      "text": "Unser letzter Halt ist ein Magnetar: SGR 1806 minus 20."
     },
     {
-     "start": 6.42,
-     "end": 20.51,
+     "start": 6.26,
+     "end": 19.4,
      "text": "Magnetare sind Neutronensterne mit den stärksten Magnetfeldern im Universum; dieses Feld ist eine Billiarde Mal stärker als das der Erde und löscht aus tausend Kilometern Entfernung eine Kreditkarte. Am 27."
     },
     {
-     "start": 20.51,
-     "end": 30.73,
+     "start": 19.4,
+     "end": 28.58,
      "text": "Dezember 2004 riss seine Kruste und schleuderte in einer Zehntelsekunde so viel Energie hinaus, wie die Sonne in hunderttausend Jahren abstrahlt."
     },
     {
-     "start": 30.73,
-     "end": 40.96,
+     "start": 28.58,
+     "end": 38.07,
      "text": "Diese Explosion aus fünfzigtausend Lichtjahren Entfernung ionisierte die obere Atmosphäre der Erde messbar und machte die Detektoren der Satelliten blind."
     },
     {
-     "start": 40.96,
-     "end": 46.84,
+     "start": 38.07,
+     "end": 43.31,
      "text": "Es ist bis heute das hellste Ereignis, das von außerhalb des Sonnensystems beobachtet wurde."
     },
     {
-     "start": 46.84,
-     "end": 48.86,
+     "start": 43.31,
+     "end": 55.51,
+     "text": "Von einem winzigen Zucken, das eine Studentin auf Papierstreifen bemerkte, sind wir einen Weg gegangen, der zu Gravitationswellen, zu den ersten Exoplaneten und zu den extremsten Zuständen der Materie führte."
+    },
+    {
+     "start": 55.51,
+     "end": 64.03,
+     "text": "In unserer Galaxie drehen sich noch Zehntausende kosmischer Leuchttürme, die wir noch nicht gehört haben; um sie zu hören, müssen wir nur weiter lauschen."
+    },
+    {
+     "start": 64.03,
+     "end": 65.91,
      "text": "Unsere Pulsar-Tour ist zu Ende."
     }
    ]

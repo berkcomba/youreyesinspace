@@ -29,32 +29,42 @@
    ]
   },
   "iss": {
-   "hash": "de9a16e88adc",
-   "duration": 37.11,
+   "hash": "da588d9f658a",
+   "duration": 60.15,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 10.82,
+     "start": 0.08,
+     "end": 7.96,
+     "text": "Nuestros antepasados se sentaban junto al fuego, miraban las estrellas y pensaban que nunca podrían alcanzarlas."
+    },
+    {
+     "start": 7.96,
+     "end": 23.46,
+     "text": "En 1957, el Sputnik empezó a girar alrededor de la Tierra; desde entonces enviamos máquinas que llevan nuestros ojos, nuestros oídos y nuestra curiosidad a todos los rincones del Sistema Solar, e incluso más allá."
+    },
+    {
+     "start": 23.46,
+     "end": 34.05,
      "text": "Empezamos este recorrido, en el que visitaremos a los emisarios de la humanidad en el espacio, desde la órbita terrestre: ante ustedes, la Estación Espacial Internacional."
     },
     {
-     "start": 10.82,
-     "end": 21.43,
+     "start": 34.05,
+     "end": 44.65,
      "text": "Gira a cuatrocientos kilómetros de altitud, a veintiocho mil kilómetros por hora, y completa una vuelta a la Tierra en noventa minutos; aquí está esa vuelta, acelerada."
     },
     {
-     "start": 21.43,
-     "end": 24.69,
+     "start": 44.65,
+     "end": 47.89,
      "text": "Los astronautas ven dieciséis amaneceres al día."
     },
     {
-     "start": 24.69,
-     "end": 29.29,
+     "start": 47.89,
+     "end": 52.43,
      "text": "Tiene el tamaño de un campo de fútbol y pesa cuatrocientas veinte toneladas."
     },
     {
-     "start": 29.29,
-     "end": 37.11,
+     "start": 52.43,
+     "end": 60.15,
      "text": "Desde noviembre de dos mil hay personas viviendo en ella sin interrupción; es la presencia continua más larga de la humanidad en el espacio."
     }
    ]
@@ -174,33 +184,48 @@
    ]
   },
   "voyager2": {
-   "hash": "5ec7ab4b4203",
-   "duration": 37.75,
+   "hash": "f5f3dc95801e",
+   "duration": 58.87,
    "sentences": [
     {
      "start": 0.08,
-     "end": 5,
+     "end": 5.04,
      "text": "Y la Voyager Dos es la única nave que visitó los cuatro planetas exteriores."
     },
     {
-     "start": 5,
-     "end": 13.26,
+     "start": 5.04,
+     "end": 13.28,
      "text": "Se lanzó dieciséis días antes que su hermana, pero con una ruta más lenta pasó junto a Júpiter, Saturno, Urano y Neptuno."
     },
     {
-     "start": 13.26,
-     "end": 21.51,
+     "start": 13.28,
+     "end": 21.26,
      "text": "La mayor parte de lo que sabemos sobre Urano y Neptuno procede todavía de sus sobrevuelos de mil novecientos ochenta y seis y ochenta y nueve."
     },
     {
-     "start": 21.51,
-     "end": 24.97,
+     "start": 21.26,
+     "end": 24.82,
      "text": "En dos mil dieciocho alcanzó el espacio interestelar."
     },
     {
-     "start": 24.97,
-     "end": 37.75,
-     "text": "Las pilas de plutonio de ambas Voyager se están debilitando; en la década de dos mil treinta enmudecerán, pero seguirán deslizándose entre las estrellas durante miles de millones de años; aquí termina nuestro recorrido."
+     "start": 24.82,
+     "end": 36.05,
+     "text": "Las pilas de plutonio de ambas Voyager se están debilitando; en la década de dos mil treinta enmudecerán, pero seguirán deslizándose entre las estrellas durante miles de millones de años."
+    },
+    {
+     "start": 36.05,
+     "end": 44.25,
+     "text": "Incluso cuando las montañas de la Tierra se hayan desgastado y los continentes se hayan desplazado, los discos de oro seguirán ahí fuera."
+    },
+    {
+     "start": 44.25,
+     "end": 57.11,
+     "text": "Como un mensaje en una botella arrojada al océano cósmico, dirán una sola cosa: una vez, aquí, en el tercer planeta de una estrella llamada Sol, vivió una especie que se maravillaba ante las estrellas."
+    },
+    {
+     "start": 57.11,
+     "end": 58.87,
+     "text": "Aquí termina nuestro recorrido."
     }
    ]
   }

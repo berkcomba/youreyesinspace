@@ -3,37 +3,47 @@
  "locale": "de",
  "steps": {
   "cygx1": {
-   "hash": "fedc27a8cf51",
-   "duration": 43.36,
+   "hash": "87130a0ae587",
+   "duration": 67.83,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 2.46,
+     "start": 0.12,
+     "end": 11.94,
+     "text": "Im Jahr 1783 stellte ein englischer Geistlicher, John Michell, eine kühne Frage: Kann ein Stern so schwer sein, dass nicht einmal Licht ihm entkommt?"
+    },
+    {
+     "start": 11.94,
+     "end": 23.42,
+     "text": "Zweihundert Jahre lang blieb die Idee eine Kuriosität auf dem Papier; selbst Einsteins Gleichungen konnten die Physiker lange nicht davon überzeugen, dass es solche Objekte wirklich gibt."
+    },
+    {
+     "start": 23.42,
+     "end": 26.06,
      "text": "Willkommen zur Tour der schwarzen Löcher."
     },
     {
-     "start": 2.46,
-     "end": 6.76,
+     "start": 26.06,
+     "end": 30.44,
      "text": "Unser Ausgangspunkt ist ein Klassiker: Cygnus X-1."
     },
     {
-     "start": 6.76,
-     "end": 17.31,
+     "start": 30.44,
+     "end": 41.35,
      "text": "Diese Röntgenquelle, die 1964 mit einer Rakete entdeckt wurde, war 1971 das erste Objekt, das als schwarzes Loch identifiziert wurde."
     },
     {
-     "start": 17.31,
-     "end": 29.77,
+     "start": 41.35,
+     "end": 54.17,
      "text": "Sie hat 21 Sonnenmassen und umkreist mit ihrem blauen Überriesen-Begleiter HDE 226868 alle fünfeinhalb Tage den gemeinsamen Massenschwerpunkt."
     },
     {
-     "start": 29.77,
-     "end": 36.01,
+     "start": 54.17,
+     "end": 60.43,
      "text": "Das Gas, das sie ihrem Begleiter entzieht, erhitzt sich in einer hellen Scheibe auf Millionen von Grad."
     },
     {
-     "start": 36.01,
-     "end": 43.36,
+     "start": 60.43,
+     "end": 67.83,
      "text": "Stephen Hawking hatte gewettet, dass dieses Objekt kein schwarzes Loch sei; 1990 gab er seine Niederlage zu."
     }
    ]
@@ -70,37 +80,47 @@
    ]
   },
   "m87": {
-   "hash": "353416f924c3",
-   "duration": 38.87,
+   "hash": "c1e242082ef4",
+   "duration": 56.95,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 6.88,
+     "start": 0.08,
+     "end": 6.58,
      "text": "Unsere letzte Station, das erste schwarze Loch, das fotografiert wurde: M87 star."
     },
     {
-     "start": 6.88,
-     "end": 14.12,
+     "start": 6.58,
+     "end": 13.4,
      "text": "Es sitzt im Zentrum der riesigen elliptischen Galaxie Virgo A, 55 Millionen Lichtjahre entfernt."
     },
     {
-     "start": 14.12,
-     "end": 21.39,
+     "start": 13.4,
+     "end": 20.24,
      "text": "Es hat sechseinhalb Milliarden Sonnenmassen; sein Ereignishorizont ist sechsmal so breit wie Plutos Umlaufbahn."
     },
     {
-     "start": 21.39,
-     "end": 29.99,
+     "start": 20.24,
+     "end": 28.73,
      "text": "Das berühmte Bild des orangefarbenen Rings, das 2019 veröffentlicht wurde, ist das Licht des heißen Gases, das seinen Schatten umgibt."
     },
     {
-     "start": 29.99,
-     "end": 36.45,
+     "start": 28.73,
+     "end": 34.97,
      "text": "Von hier schießt ein Jet mit nahezu Lichtgeschwindigkeit heraus und erstreckt sich über 5. 000 Lichtjahre."
     },
     {
-     "start": 36.45,
-     "end": 38.87,
+     "start": 34.97,
+     "end": 45.11,
+     "text": "Mehr als zweihundertdreißig Jahre nach Michells dunklen Sternen auf dem Papier bauten wir ein Teleskop von der Größe der Erde und fotografierten den Schatten eines solchen Objekts."
+    },
+    {
+     "start": 45.11,
+     "end": 54.41,
+     "text": "Die dunkelsten Objekte des Universums entzünden zugleich seine hellsten Feuer: Quasare, Jets und die Winde, die Galaxien formen, sind ihr Werk."
+    },
+    {
+     "start": 54.41,
+     "end": 56.95,
      "text": "Unsere Tour der schwarzen Löcher ist zu Ende."
     }
    ]

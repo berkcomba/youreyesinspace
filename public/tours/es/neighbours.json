@@ -70,32 +70,42 @@
    ]
   },
   "deneb": {
-   "hash": "f30dbeb03035",
-   "duration": 39.91,
+   "hash": "340863abe429",
+   "duration": 58.87,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 10.74,
+     "start": 0.08,
+     "end": 10.42,
      "text": "Nuestra última parada es Deneb, la cola de la constelación del Cisne y la estrella más lejana de este recorrido: aproximadamente dos mil seiscientos años luz."
     },
     {
-     "start": 10.74,
-     "end": 22.57,
+     "start": 10.42,
+     "end": 22.22,
      "text": "Aun así, es una de las veinte estrellas más brillantes del cielo, porque es una de las estrellas más luminosas conocidas, que emite aproximadamente doscientas mil veces más luz que el Sol."
     },
     {
-     "start": 22.57,
-     "end": 26.85,
+     "start": 22.22,
+     "end": 26.76,
      "text": "La luz que veis hoy partió en la época en que se fundó la República romana."
     },
     {
-     "start": 26.85,
-     "end": 36.93,
+     "start": 26.76,
+     "end": 37.27,
      "text": "Es una supergigante blanco-azulada y, dentro de unos pocos millones de años, o bien se convertirá en supernova o bien se transformará en una supergigante roja."
     },
     {
-     "start": 36.93,
-     "end": 39.91,
+     "start": 37.27,
+     "end": 47.19,
+     "text": "Si esta noche sale y mira a Vega, verá una luz que partió hace veinticinco años; si mira a Deneb, verá una luz que partió cuando Roma aún era un reino."
+    },
+    {
+     "start": 47.19,
+     "end": 55.83,
+     "text": "El cielo no es la fotografía de un solo instante; es un collage del tiempo, donde cartas de épocas distintas se encuentran en la misma noche."
+    },
+    {
+     "start": 55.83,
+     "end": 58.87,
      "text": "Nuestro recorrido de las estrellas vecinas ha terminado."
     }
    ]
@@ -132,37 +142,47 @@
    ]
   },
   "proxima": {
-   "hash": "7c681bce7479",
-   "duration": 42.63,
+   "hash": "2fc66e4a268d",
+   "duration": 62.07,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 3.14,
+     "start": 0.06,
+     "end": 11.56,
+     "text": "Casi todas las estrellas que se ven a simple vista en el cielo nocturno son vecinas del Sol, a unos pocos miles de años luz; el resto de la galaxia se funde en una bruma común."
+    },
+    {
+     "start": 11.56,
+     "end": 19.84,
+     "text": "Cada una es un sol, alrededor de algunas giran mundos, y su luz nos llega tras viajes que duran años, incluso siglos."
+    },
+    {
+     "start": 19.84,
+     "end": 23,
      "text": "Bienvenidos al recorrido de las estrellas vecinas."
     },
     {
-     "start": 3.14,
-     "end": 10.92,
+     "start": 23,
+     "end": 30.52,
      "text": "Nuestra primera parada es la estrella más cercana al Sol: Próxima Centauri, a cuatro coma dos años luz de distancia."
     },
     {
-     "start": 10.92,
-     "end": 19.14,
+     "start": 30.52,
+     "end": 38.83,
      "text": "Es una enana roja pequeña y fría; tiene solo el doce por ciento de la masa del Sol y es demasiado tenue para verse a simple vista."
     },
     {
-     "start": 19.14,
-     "end": 24.57,
+     "start": 38.83,
+     "end": 44.25,
      "text": "Pero, con llamaradas repentinas, expulsa radiación violenta desde su superficie."
     },
     {
-     "start": 24.57,
-     "end": 37.55,
+     "start": 44.25,
+     "end": 56.99,
      "text": "En dos mil dieciséis se descubrió a su alrededor un planeta del tamaño de la Tierra: Próxima b, que orbita en la zona habitable, es decir, a una distancia en la que podría haber agua líquida en su superficie."
     },
     {
-     "start": 37.55,
-     "end": 42.63,
+     "start": 56.99,
+     "end": 62.07,
      "text": "Con nuestros vehículos más rápidos de hoy, llegar hasta aquí llevaría setenta mil años."
     }
    ]

@@ -34,47 +34,62 @@
    ]
   },
   "antennae": {
-   "hash": "77582172acb8",
-   "duration": 49.51,
+   "hash": "683fa9741c98",
+   "duration": 72.31,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 4.68,
+     "start": 0.08,
+     "end": 4.26,
      "text": "En nuestra última parada veremos que las galaxias también pueden chocar."
     },
     {
-     "start": 4.68,
-     "end": 12.58,
+     "start": 4.26,
+     "end": 11.92,
      "text": "Las Antenas son dos galaxias espirales a 45 millones de años luz que están pasando la una a través de la otra."
     },
     {
-     "start": 12.58,
-     "end": 16.5,
+     "start": 11.92,
+     "end": 15.64,
      "text": "El encuentro comenzó hace unos 600 millones de años."
     },
     {
-     "start": 16.5,
-     "end": 23.89,
+     "start": 15.64,
+     "end": 23,
      "text": "La gravedad lanzó al espacio dos largas colas formadas por estrellas; son las antenas de insecto que les dan nombre."
     },
     {
-     "start": 23.89,
-     "end": 35.53,
+     "start": 23,
+     "end": 34.16,
      "text": "Las estrellas no chocan entre sí, las distancias entre ellas son enormes; pero las nubes de gas sí chocan y, al comprimirse, dan a luz miles de millones de estrellas nuevas."
     },
     {
-     "start": 35.53,
-     "end": 41.85,
+     "start": 34.16,
+     "end": 40.21,
      "text": "Dentro de unos pocos cientos de millones de años, las dos se convertirán en una sola galaxia elíptica."
     },
     {
-     "start": 41.85,
-     "end": 46.69,
+     "start": 40.21,
+     "end": 44.85,
      "text": "El futuro de la Vía Láctea y de Andrómeda también se verá exactamente así."
     },
     {
-     "start": 46.69,
-     "end": 49.51,
+     "start": 44.85,
+     "end": 53.17,
+     "text": "Lo más probable es que no seamos nosotros quienes presenciemos ese choque; para entonces, la Tierra llevará mucho tiempo siendo inhabitable."
+    },
+    {
+     "start": 53.17,
+     "end": 63.85,
+     "text": "Por ahora somos criaturas curiosas en un brazo tranquilo de una entre cientos de miles de millones de galaxias, girando alrededor de una estrella corriente e intentando comprenderlo todo."
+    },
+    {
+     "start": 63.85,
+     "end": 69.69,
+     "text": "La inmensidad del universo no nos empequeñece; nuestra capacidad de comprenderla nos engrandece."
+    },
+    {
+     "start": 69.69,
+     "end": 72.31,
      "text": "Nuestro recorrido por las galaxias ha terminado."
     }
    ]
@@ -142,37 +157,47 @@
    ]
   },
   "milkyway": {
-   "hash": "f53193ad2147",
-   "duration": 39.43,
+   "hash": "7060bf890c0a",
+   "duration": 56.95,
    "sentences": [
     {
      "start": 0.06,
-     "end": 2.84,
+     "end": 5.76,
+     "text": "Hace unos cien años, muchos astrónomos creían que la Vía Láctea era todo el universo."
+    },
+    {
+     "start": 5.76,
+     "end": 19.86,
+     "text": "Luego quedó claro que las tenues nebulosas espirales del cielo eran en realidad otras galaxias; hoy sabemos que el universo observable contiene cientos de miles de millones de galaxias, cada una con miles de millones de estrellas."
+    },
+    {
+     "start": 19.86,
+     "end": 22.48,
      "text": "Bienvenidos al recorrido por las galaxias."
     },
     {
-     "start": 2.84,
-     "end": 5.72,
+     "start": 22.48,
+     "end": 25.32,
      "text": "Primero, miremos nuestro hogar desde fuera."
     },
     {
-     "start": 5.72,
-     "end": 16.34,
+     "start": 25.32,
+     "end": 35.35,
      "text": "La Vía Láctea es una galaxia espiral de 100. 000 años luz de ancho, con una barra en el centro, y contiene entre 200 y 400 mil millones de estrellas."
     },
     {
-     "start": 16.34,
-     "end": 28.29,
+     "start": 35.35,
+     "end": 46.27,
      "text": "El Sol se encuentra a 26. 000 años luz del centro, en un brazo pequeño llamado brazo de Orión, y completa una vuelta alrededor de la galaxia en 230 millones de años."
     },
     {
-     "start": 28.29,
-     "end": 34.19,
+     "start": 46.27,
+     "end": 51.93,
      "text": "Desde que los dinosaurios se extinguieron, el Sol solo ha recorrido una cuarta parte de esta vuelta."
     },
     {
-     "start": 34.19,
-     "end": 39.43,
+     "start": 51.93,
+     "end": 56.95,
      "text": "En el brillante bulbo central se esconde un agujero negro de 4 millones de masas solares."
     }
    ]

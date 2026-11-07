@@ -90,6 +90,8 @@ export interface TourHost {
   setClock(d: Date): void;
   /** the slowly circling planetary-system view used when nothing is selected */
   showBackdrop(fly: boolean): void;
+  /** one unbroken flyby past the bodies in turn, ending on the backdrop (see the `flyby` cue) */
+  flyByTo(ids: string[], seconds: number): void;
 }
 
 /** Inset shown in the corner during a step (see the `card` cue) */
@@ -135,7 +137,7 @@ export interface TourState {
 }
 
 /** Cues that start a camera flight of their own */
-const FLIGHT_ACTIONS = new Set<TourCue['action']>(['overview', 'vantage', 'shot', 'pin', 'lookFrom', 'land', 'return', 'postcard', 'limb']);
+const FLIGHT_ACTIONS = new Set<TourCue['action']>(['overview', 'vantage', 'shot', 'pin', 'lookFrom', 'land', 'return', 'postcard', 'limb', 'flyby']);
 const isFlightCue = (c: TourCue): boolean => FLIGHT_ACTIONS.has(c.action) && !(c.action === 'pin' && c.approach === false);
 /** A flight cue is held until the camera has rested this long after its previous flight… */
 const FLIGHT_HOLD_S = 1.4;
@@ -197,6 +199,8 @@ export class TourPlayer {
   /** cues of the current step already fired */
   private fired = new Set<TourCue>();
   private cueTimes = new Map<TourCue, number>();
+  /** seconds left before the step's narration starts (`lead`) */
+  private leadLeft = 0;
   private overrides: TourOverrides = {};
   private pinned = false;
   /** narration time at which the current card hides itself (Infinity = end of step) */
@@ -307,7 +311,7 @@ export class TourPlayer {
     if (!this.active) return;
     this.state.paused = !this.state.paused;
     if (this.state.paused) this.audio.pause();
-    else if (!this.audioEnded && !this.audioFailed && this.audio.src) void this.audio.play().catch(() => { this.audioFailed = true; });
+    else if (this.leadLeft <= 0 && !this.audioEnded && !this.audioFailed && this.audio.src) void this.audio.play().catch(() => { this.audioFailed = true; });
     this.emit();
   }
 
@@ -336,6 +340,11 @@ export class TourPlayer {
       return;
     }
     this.elapsed += dt;
+    if (this.leadLeft > 0) {
+      this.leadLeft -= dt;
+      if (this.leadLeft <= 0 && this.audio.src && !this.audioFailed) void this.audio.play().catch(() => { this.audioFailed = true; });
+    }
+    const lead = step.lead ?? 0;
     const s = this.state;
     s.stepTime += dt;
     const timing = this.timing(step);
@@ -345,7 +354,7 @@ export class TourPlayer {
 
     // narration progress & subtitle
     const useAudio = !this.audioFailed && this.audio.src !== '';
-    const t = useAudio ? this.audio.currentTime : this.elapsed;
+    const t = useAudio ? this.audio.currentTime : Math.max(0, this.elapsed - lead);
     s.progress = duration > 0 ? Math.min(1, t / duration) : 1;
     if (timing && timing.sentences.length) {
       const cur = timing.sentences.find((x) => t >= x.start && t < x.end) ?? (t >= duration ? timing.sentences[timing.sentences.length - 1] : timing.sentences[0]);
@@ -368,7 +377,8 @@ export class TourPlayer {
         if (t < at) continue;
         // a new flight right on the heels of the last one reads as a nervous zoom-in-zoom-out:
         // let the camera settle first (bounded, so the picture never lags the voice for long)
-        if (isFlightCue(cue)) {
+        // (an interlude without narration times its flights in seconds: they chain as written)
+        if (isFlightCue(cue) && step.text) {
           const since = this.dueSince.get(cue);
           if (since === undefined) this.dueSince.set(cue, t);
           const late = t - (since ?? t);
@@ -404,7 +414,7 @@ export class TourPlayer {
     }
     this.updateRate(dt, step, t, duration);
 
-    const narrationDone = useAudio ? this.audioEnded : this.elapsed >= duration;
+    const narrationDone = useAudio ? this.audioEnded : this.elapsed >= duration + lead;
     if (narrationDone) {
       this.sinceEnd = this.sinceEnd < 0 ? 0 : this.sinceEnd + dt;
     }
@@ -466,6 +476,7 @@ export class TourPlayer {
     this.state.progress = 0;
     this.state.subtitle = _(step.text);
     this.elapsed = 0;
+    this.leadLeft = step.lead ?? 0;
     this.sinceEnd = -1;
     this.audioEnded = false;
     this.audioFailed = false;
@@ -500,10 +511,10 @@ export class TourPlayer {
     this.audio.pause();
     void this.ready.then(() => {
       if (myToken !== this.token) return;
-      if (this.state.silent) { this.audioFailed = true; return; }
+      if (this.state.silent || !step.text) { this.audioFailed = true; return; }
       this.audio.src = this.audioUrl(this.audioLocale, tour.audio ?? tour.id, step.id, this.timing(step)?.hash);
       this.audio.currentTime = 0;
-      void this.audio.play().catch(() => { if (myToken === this.token) this.audioFailed = true; });
+      if (this.leadLeft <= 0) void this.audio.play().catch(() => { if (myToken === this.token) this.audioFailed = true; });
     });
     this.emit();
   }
@@ -628,6 +639,12 @@ export class TourPlayer {
       case 'shot':
         this.endLook();
         h.goToShot(cue.ref, cue.toward, cue.dist, cue.az ?? 0, cue.elev ?? 0, cue.seconds);
+        this.flight = h.camera.autopilot;
+        this.state.phase = 'flying';
+        break;
+      case 'flyby':
+        this.endLook();
+        h.flyByTo(cue.refs, cue.seconds);
         this.flight = h.camera.autopilot;
         this.state.phase = 'flying';
         break;
@@ -784,6 +801,7 @@ export class TourPlayer {
   }
 
   private silentDuration(step: TourStep): number {
+    if (!step.text) return step.seconds ?? 4;
     return Math.max(4, _(step.text).length / SILENT_CPS);
   }
 
@@ -847,6 +865,7 @@ export class TourPlayer {
         case 'overview': case 'pin': case 'postcard': ids.push(c.ref); break;
         case 'vantage': case 'limb': if (c.ref) ids.push(c.ref); break;
         case 'shot': ids.push(c.ref, c.toward); break;
+        case 'flyby': ids.push(...c.refs); break;
         case 'compare': ids.push(c.ref); break;
         case 'pulse': ids.push(c.from, c.to); break;
         case 'readout': ids.push(c.a, c.b); if (c.from) ids.push(c.from); break;
@@ -898,6 +917,7 @@ export class TourPlayer {
       case 'overview': case 'pin': case 'postcard': case 'compare': return { ...c, ref: r(c.ref) };
       case 'vantage': case 'limb': return c.ref ? { ...c, ref: r(c.ref) } : c;
       case 'shot': return { ...c, ref: r(c.ref), toward: r(c.toward) };
+      case 'flyby': return { ...c, refs: c.refs.map(r) };
       case 'pulse': return { ...c, from: r(c.from), to: r(c.to) };
       case 'readout': return { ...c, a: r(c.a), b: r(c.b), from: c.from ? r(c.from) : undefined };
       case 'lookFrom': case 'land': return { ...c, ref: r(c.ref), toward: c.toward.map(r) };

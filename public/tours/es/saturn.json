@@ -34,32 +34,42 @@
    ]
   },
   "iapetus": {
-   "hash": "6eab819f7044",
-   "duration": 44.47,
+   "hash": "6a53231ad7f1",
+   "duration": 65.91,
    "sentences": [
     {
      "start": 0.06,
-     "end": 9.74,
+     "end": 10.26,
      "text": "Nuestra última parada es Jápeto, una de las lunas más extrañas del Sistema Solar: una mitad blanca como la nieve y la otra negra como el carbón."
     },
     {
-     "start": 9.74,
-     "end": 22.51,
+     "start": 10.26,
+     "end": 23.72,
      "text": "Como en su órbita siempre presenta la misma cara hacia delante, barre el polvo oscuro que llega de los anillos exteriores; el hielo de las zonas oscuras, al calentarse, se evapora y cae sobre el lado brillante."
     },
     {
-     "start": 22.51,
-     "end": 32.47,
+     "start": 23.72,
+     "end": 34.21,
      "text": "Justo en el centro de su ecuador se extiende una cresta montañosa de 13 kilómetros de altura y 1. 300 kilómetros de longitud; eso le da un aspecto de nuez."
     },
     {
-     "start": 32.47,
-     "end": 41.75,
+     "start": 34.21,
+     "end": 43.79,
      "text": "A 3,5 millones de kilómetros de Saturno, da una vuelta cada 79 días; es la única luna grande que puede ver los anillos desde arriba."
     },
     {
-     "start": 41.75,
-     "end": 44.47,
+     "start": 43.79,
+     "end": 52.51,
+     "text": "En 2013, Cassini miró hacia atrás desde la sombra de Saturno y captó bajo los anillos un punto azul pálido: la Tierra."
+    },
+    {
+     "start": 52.51,
+     "end": 63.49,
+     "text": "Ese día, personas de todo el mundo que sabían que se iba a tomar la foto salieron a la calle y saludaron con la mano a una máquina que las miraba desde mil quinientos millones de kilómetros."
+    },
+    {
+     "start": 63.49,
+     "end": 65.91,
      "text": "Nuestro recorrido por Saturno ha terminado."
     }
    ]
@@ -122,32 +132,42 @@
    ]
   },
   "saturn": {
-   "hash": "92160749e55d",
-   "duration": 37.11,
+   "hash": "67dc4ca355f4",
+   "duration": 57.59,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 8.92,
+     "start": 0.04,
+     "end": 11.72,
+     "text": "Cuando Galileo apuntó su telescopio a Saturno en 1610, vio a ambos lados del planeta unos extraños abultamientos que no supo explicar y los llamó orejas."
+    },
+    {
+     "start": 11.72,
+     "end": 20.46,
+     "text": "Hizo falta medio siglo para comprender que eran anillos; aún hoy nos cortan el aliento como el paisaje más elegante del Sistema Solar."
+    },
+    {
+     "start": 20.46,
+     "end": 29.21,
      "text": "Bienvenidos al recorrido por Saturno: el sexto planeta desde el Sol, un gigante gaseoso con un diámetro 9 veces el de la Tierra."
     },
     {
-     "start": 8.92,
-     "end": 15.78,
+     "start": 29.21,
+     "end": 35.95,
      "text": "Cuando colocamos a su lado una Tierra a escala real, se hace evidente lo anchos que son incluso los anillos."
     },
     {
-     "start": 15.78,
-     "end": 20.35,
+     "start": 35.95,
+     "end": 40.51,
      "text": "Su densidad es inferior a la del agua; esto es único para un planeta."
     },
     {
-     "start": 20.35,
-     "end": 27.75,
+     "start": 40.51,
+     "end": 47.91,
      "text": "En su ecuador los vientos alcanzan los 1. 800 kilómetros por hora y su día dura solo 10,5 horas."
     },
     {
-     "start": 27.75,
-     "end": 37.11,
+     "start": 47.91,
+     "end": 57.59,
      "text": "La nave Cassini estudió este sistema de 2004 a 2017, durante 13 años, y completó su misión zambulléndose en la atmósfera del planeta."
     }
    ]

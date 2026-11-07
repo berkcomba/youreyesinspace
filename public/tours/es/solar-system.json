@@ -74,6 +74,32 @@
     }
    ]
   },
+  "lookback": {
+   "hash": "96dba97a3e48",
+   "duration": 32.63,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 10.36,
+     "text": "Vista desde aquí, el Sol no es más que la estrella más brillante del cielo; la Tierra es un punto demasiado pequeño para distinguirlo, perdido en su resplandor."
+    },
+    {
+     "start": 10.36,
+     "end": 19.05,
+     "text": "Todos a quienes amamos, todos a quienes conocemos, cada historia vivida y cada río que alguna vez fluyó están en ese punto."
+    },
+    {
+     "start": 19.05,
+     "end": 28.63,
+     "text": "Hemos visitado uno a uno todos los planetas y en ninguno hemos encontrado un segundo hogar; por ahora, ese punto es el único hogar que tenemos."
+    },
+    {
+     "start": 28.63,
+     "end": 32.63,
+     "text": "Aquí termina nuestro recorrido por el Sistema Solar; buen viaje."
+    }
+   ]
+  },
   "mars": {
    "hash": "3ef6f0373eb8",
    "duration": 52.15,
@@ -219,38 +245,33 @@
    ]
   },
   "pluto": {
-   "hash": "1c8d9210d91a",
-   "duration": 45.43,
+   "hash": "46162f77843c",
+   "duration": 40.63,
    "sentences": [
     {
      "start": 0.06,
-     "end": 8.16,
+     "end": 8.14,
      "text": "Nuestra última parada es Plutón; se descubrió en mil novecientos treinta y hasta dos mil seis se consideró el noveno planeta."
     },
     {
-     "start": 8.16,
-     "end": 15.38,
+     "start": 8.14,
+     "end": 15.18,
      "text": "En realidad es incluso más pequeño que nuestra Luna: al ponerlos uno junto al otro, se aprecia con claridad."
     },
     {
-     "start": 15.38,
-     "end": 21.26,
+     "start": 15.18,
+     "end": 21.13,
      "text": "Hasta que la New Horizons pasó a su lado en dos mil quince, no era más que un punto borroso."
     },
     {
-     "start": 21.26,
-     "end": 33.29,
+     "start": 21.13,
+     "end": 32.97,
      "text": "La sonda encontró en su superficie una gigantesca forma de corazón, glaciares de nitrógeno y montañas de hielo de agua; la temperatura superficial es de menos doscientos treinta grados."
     },
     {
-     "start": 33.29,
-     "end": 41.51,
+     "start": 32.97,
+     "end": 40.63,
      "text": "Su satélite Caronte es tan grande que los dos giran juntos alrededor de un centro de masas común situado en el vacío que los separa."
-    },
-    {
-     "start": 41.51,
-     "end": 45.43,
-     "text": "Aquí termina nuestro recorrido por el Sistema Solar; buen viaje."
     }
    ]
   },
@@ -291,37 +312,52 @@
    ]
   },
   "sun": {
-   "hash": "6d1a31d0b263",
-   "duration": 52.15,
+   "hash": "6ba5f8830367",
+   "duration": 77.11,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 6.96,
+     "start": 0.06,
+     "end": 9.44,
+     "text": "Hace cuatro mil quinientos millones de años, en un brazo tranquilo de la Vía Láctea, una nube giratoria de gas y polvo se desplomó bajo su propio peso."
+    },
+    {
+     "start": 9.44,
+     "end": 18.72,
+     "text": "En su centro se encendió una estrella; las migajas que quedaron a su alrededor se convirtieron en planetas, en lunas y, finalmente, en nosotros."
+    },
+    {
+     "start": 18.72,
+     "end": 25.74,
+     "text": "En este recorrido visitaremos uno a uno a todos los miembros de esa familia, del más grande al más pequeño."
+    },
+    {
+     "start": 25.74,
+     "end": 32.42,
      "text": "Bienvenidos al recorrido por el Sistema Solar; nuestro viaje comienza en el centro de todo, el Sol."
     },
     {
-     "start": 6.96,
-     "end": 15.98,
+     "start": 32.42,
+     "end": 41.31,
      "text": "Esta estrella, de cuatro mil quinientos millones de años, concentra ella sola el noventa y nueve coma ocho por ciento de la masa total del sistema."
     },
     {
-     "start": 15.98,
-     "end": 28.89,
+     "start": 41.31,
+     "end": 53.85,
      "text": "Para ver lo enorme que es, pongamos a su lado una Tierra a escala real: a lo largo de su diámetro se alinean ciento nueve Tierras una junto a otra, y en su interior caben un millón trescientas mil."
     },
     {
-     "start": 28.89,
-     "end": 39.41,
+     "start": 53.85,
+     "end": 64.29,
      "text": "Su superficie está a cinco mil quinientos grados y su núcleo, a quince millones de grados; cada segundo convierte seiscientos millones de toneladas de hidrógeno en helio."
     },
     {
-     "start": 39.41,
-     "end": 47.19,
+     "start": 64.29,
+     "end": 71.95,
      "text": "Ahora alejémonos y sigamos el viaje de la luz: la luz que sale del Sol llega a la Tierra en ocho minutos y veinte segundos."
     },
     {
-     "start": 47.19,
-     "end": 52.15,
+     "start": 71.95,
+     "end": 77.11,
      "text": "Así que, cada vez que miráis al Sol, en realidad veis cómo era hace ocho minutos."
     }
    ]

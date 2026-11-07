@@ -3,37 +3,47 @@
  "locale": "fr",
  "steps": {
   "cygx1": {
-   "hash": "7e4aa69d6b64",
-   "duration": 39.67,
+   "hash": "2bcbc1a96d6e",
+   "duration": 60.79,
    "sentences": [
     {
      "start": 0.08,
-     "end": 2.48,
+     "end": 11.72,
+     "text": "En 1783, un ecclésiastique anglais, John Michell, posa une question audacieuse : une étoile pourrait-elle être si lourde que même la lumière ne puisse s'en échapper ?"
+    },
+    {
+     "start": 11.72,
+     "end": 21.94,
+     "text": "Pendant deux cents ans, l'idée resta une curiosité sur le papier ; même les équations d'Einstein ont longtemps échoué à convaincre les physiciens que de tels objets existent vraiment."
+    },
+    {
+     "start": 21.94,
+     "end": 24.24,
      "text": "Bienvenue dans la visite des trous noirs."
     },
     {
-     "start": 2.48,
-     "end": 6.36,
+     "start": 24.24,
+     "end": 28.08,
      "text": "Notre point de départ est un classique : Cygnus X-1."
     },
     {
-     "start": 6.36,
-     "end": 15.88,
+     "start": 28.08,
+     "end": 37.53,
      "text": "Cette source de rayons X, découverte en 1964 par une fusée, est devenue en 1971 le premier objet identifié comme un trou noir."
     },
     {
-     "start": 15.88,
-     "end": 28.07,
+     "start": 37.53,
+     "end": 49.15,
      "text": "Elle a une masse de 21 masses solaires et tourne avec sa compagne, la supergéante bleue HDE 226868, autour de leur centre de masse commun tous les cinq jours et demi."
     },
     {
-     "start": 28.07,
-     "end": 33.37,
+     "start": 49.15,
+     "end": 53.97,
      "text": "Le gaz qu'elle arrache à sa compagne s'échauffe à des millions de degrés dans un disque brillant."
     },
     {
-     "start": 33.37,
-     "end": 39.67,
+     "start": 53.97,
+     "end": 60.79,
      "text": "Stephen Hawking avait parié que cet objet n'était pas un trou noir ; en 1990, il a accepté sa défaite."
     }
    ]
@@ -75,37 +85,47 @@
    ]
   },
   "m87": {
-   "hash": "492ccce21872",
-   "duration": 34.79,
+   "hash": "638516b86f8e",
+   "duration": 49.59,
    "sentences": [
     {
      "start": 0.08,
-     "end": 6.08,
+     "end": 5.58,
      "text": "Notre dernier arrêt, le premier trou noir photographié : M87 star."
     },
     {
-     "start": 6.08,
-     "end": 12.8,
+     "start": 5.58,
+     "end": 11.78,
      "text": "Il se trouve au centre de la galaxie elliptique géante Virgo A, à 55 millions d'années-lumière."
     },
     {
-     "start": 12.8,
-     "end": 20.29,
+     "start": 11.78,
+     "end": 18.84,
      "text": "Il a une masse de six milliards et demi de masses solaires ; son horizon des événements est 6 fois plus large que l'orbite de Pluton."
     },
     {
-     "start": 20.29,
-     "end": 27.19,
+     "start": 18.84,
+     "end": 25.43,
      "text": "La célèbre image de l'anneau orange, publiée en 2019, est la lumière du gaz chaud qui entoure son ombre."
     },
     {
-     "start": 27.19,
-     "end": 32.73,
+     "start": 25.43,
+     "end": 30.79,
      "text": "De là jaillit un jet proche de la vitesse de la lumière, qui s'étend sur 5 000 années-lumière."
     },
     {
-     "start": 32.73,
-     "end": 34.79,
+     "start": 30.79,
+     "end": 39.67,
+     "text": "Plus de deux cent trente ans après les étoiles sombres de Michell sur le papier, nous avons construit un télescope de la taille de la Terre et photographié l'ombre de l'un d'eux."
+    },
+    {
+     "start": 39.67,
+     "end": 47.51,
+     "text": "Les objets les plus sombres de l'univers allument aussi ses feux les plus brillants : quasars, jets et vents qui façonnent les galaxies sont leur œuvre."
+    },
+    {
+     "start": 47.51,
+     "end": 49.59,
      "text": "Notre visite des trous noirs est terminée."
     }
    ]

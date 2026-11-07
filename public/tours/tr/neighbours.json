@@ -70,32 +70,42 @@
    ]
   },
   "deneb": {
-   "hash": "715358eed7b7",
-   "duration": 33.59,
+   "hash": "131dfb3f8b96",
+   "duration": 51.83,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 7.78,
+     "start": 0.08,
+     "end": 8.4,
      "text": "Son durağımız Deneb, Kuğu takımyıldızının kuyruğu ve bu turdaki en uzak yıldız: yaklaşık iki bin altı yüz ışık yılı."
     },
     {
-     "start": 7.78,
-     "end": 18.53,
+     "start": 8.4,
+     "end": 19.1,
      "text": "Buna rağmen gökyüzünün en parlak yirmi yıldızından biridir; çünkü Güneş'ten yaklaşık iki yüz bin kat daha fazla ışık saçan, bilinen en parlak yıldızlardan biridir."
     },
     {
-     "start": 18.53,
-     "end": 23.43,
+     "start": 19.1,
+     "end": 23.82,
      "text": "Bugün gördüğünüz ışığı, Roma Cumhuriyeti'nin kurulduğu dönemde yola çıktı."
     },
     {
-     "start": 23.43,
-     "end": 31.39,
+     "start": 23.82,
+     "end": 31.47,
      "text": "Mavi-beyaz bir süperdevdir ve birkaç milyon yıl içinde ya süpernova olacak ya da kırmızı bir süperdeve dönüşecek."
     },
     {
-     "start": 31.39,
-     "end": 33.59,
+     "start": 31.47,
+     "end": 42.11,
+     "text": "Bu gece dışarı çıkıp Vega'ya baktığınızda yirmi beş yıl önce yola çıkmış bir ışık göreceksiniz; Deneb'e baktığınızda ise Roma henüz bir krallıkken yola çıkmış bir ışık."
+    },
+    {
+     "start": 42.11,
+     "end": 49.71,
+     "text": "Gökyüzü tek bir anın fotoğrafı değil; farklı çağlardan gelen mektupların aynı gecede buluştuğu bir zaman kolajıdır."
+    },
+    {
+     "start": 49.71,
+     "end": 51.83,
      "text": "Komşu yıldızlar turumuz sona erdi."
     }
    ]
@@ -132,37 +142,47 @@
    ]
   },
   "proxima": {
-   "hash": "883c5cf6a5d2",
-   "duration": 39.03,
+   "hash": "d80b6903d7a1",
+   "duration": 58.23,
    "sentences": [
     {
-     "start": 0.04,
-     "end": 2.66,
+     "start": 0.1,
+     "end": 11.34,
+     "text": "Gece gökyüzünde çıplak gözle gördüğünüz yıldızların neredeyse hepsi, Güneş'in birkaç bin ışık yılı içindeki komşularıdır; galaksinin geri kalanı ortak bir pusa karışır."
+    },
+    {
+     "start": 11.34,
+     "end": 20.46,
+     "text": "Her biri bir güneştir, bazılarının çevresinde dünyalar döner ve ışıkları bize yıllar, hatta yüzyıllar süren yolculuklarla ulaşır."
+    },
+    {
+     "start": 20.46,
+     "end": 23.02,
      "text": "Komşu yıldızlar turuna hoş geldiniz."
     },
     {
-     "start": 2.66,
-     "end": 10.06,
+     "start": 23.02,
+     "end": 30.17,
      "text": "İlk durağımız, Güneş'e en yakın yıldız: dört virgül iki ışık yılı uzaklıktaki Proxima Centauri."
     },
     {
-     "start": 10.06,
-     "end": 18.96,
+     "start": 30.17,
+     "end": 38.81,
      "text": "Küçük ve soğuk bir kırmızı cücedir; Güneş'in yalnızca yüzde on ikisi kadar kütlesi vardır ve çıplak gözle görülemeyecek kadar sönüktür."
     },
     {
-     "start": 18.96,
-     "end": 23.61,
+     "start": 38.81,
+     "end": 43.03,
      "text": "Ama ani parlamalarla yüzeyinden şiddetli radyasyon püskürtür."
     },
     {
-     "start": 23.61,
-     "end": 34.51,
+     "start": 43.03,
+     "end": 53.63,
      "text": "İki bin on altıda etrafında Dünya büyüklüğünde bir gezegen keşfedildi: Proxima b, yaşanabilir bölgede, yani yüzeyinde sıvı suyun bulunabileceği uzaklıkta döner."
     },
     {
-     "start": 34.51,
-     "end": 39.03,
+     "start": 53.63,
+     "end": 58.23,
      "text": "Bugünkü en hızlı araçlarımızla buraya ulaşmak yetmiş bin yıl sürerdi."
     }
    ]

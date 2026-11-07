@@ -70,73 +70,98 @@
    ]
   },
   "cygx1": {
-   "hash": "a2608d3e5d56",
-   "duration": 38.39,
+   "hash": "4596a98d4ab4",
+   "duration": 59.83,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 4.62,
+     "start": 0.08,
+     "end": 5.02,
      "text": "Und für die schwersten Sterne ist die letzte Station: das Schwarze Loch."
     },
     {
-     "start": 4.62,
-     "end": 8.28,
+     "start": 5.02,
+     "end": 8.86,
      "text": "Cygnus X-1 ist das erste entdeckte Schwarze Loch."
     },
     {
-     "start": 8.28,
-     "end": 20.25,
+     "start": 8.86,
+     "end": 21.28,
      "text": "Dieses Objekt mit 21 Sonnenmassen zieht Gas von seinem blauen Überriesenbegleiter; das Gas erhitzt sich in der Akkretionsscheibe auf Millionen von Grad und sendet Röntgenstrahlung aus."
     },
     {
-     "start": 20.25,
-     "end": 25.53,
+     "start": 21.28,
+     "end": 26.56,
      "text": "Die beiden umkreisen ihren gemeinsamen Massenschwerpunkt einmal alle fünfeinhalb Tage."
     },
     {
-     "start": 25.53,
-     "end": 29.45,
+     "start": 26.56,
+     "end": 30.55,
      "text": "Nicht einmal Licht kann aus dem Inneren des Ereignishorizonts entkommen."
     },
     {
-     "start": 29.45,
-     "end": 35.91,
+     "start": 30.55,
+     "end": 37.27,
      "text": "Die Reise, die in einer Gaswolke begann, endet mit einem Loch, das in die Raumzeit selbst aufgerissen wurde."
     },
     {
-     "start": 35.91,
-     "end": 38.39,
+     "start": 37.27,
+     "end": 47.91,
+     "text": "Doch die Geschichte endet dort nicht: Das Gas, das sterbende Sterne verstreuen, vermischt sich mit neuen Wolken und bringt eines Tages neue Sterne und neue Planeten hervor."
+    },
+    {
+     "start": 47.91,
+     "end": 57.37,
+     "text": "Auch die Sonne ist ein solcher Stern einer späteren Generation; auch wir sind Teil dieses Kreislaufs, eine Möglichkeit für das Universum, sich selbst zu erkennen."
+    },
+    {
+     "start": 57.37,
+     "end": 59.83,
      "text": "Die Tour über das Leben der Sterne endet hier."
     }
    ]
   },
   "orion": {
-   "hash": "b062bf8ce698",
-   "duration": 34.63,
+   "hash": "ca4b81c2dc98",
+   "duration": 52.79,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 6.74,
+     "start": 0.06,
+     "end": 10.06,
+     "text": "Das Eisen in Ihrem Blut, das Kalzium in Ihren Knochen, der Sauerstoff, den Sie gerade einatmen: nichts davon gab es in den ersten Augenblicken des Universums."
+    },
+    {
+     "start": 10.06,
+     "end": 16.16,
+     "text": "All das wurde im Inneren von Sternen erbrütet und beim Tod dieser Sterne in den Weltraum verstreut."
+    },
+    {
+     "start": 16.16,
+     "end": 20.12,
+     "text": "Wir sind aus Sternenstaub gemacht, und das ist keine Metapher."
+    },
+    {
+     "start": 20.12,
+     "end": 26.32,
      "text": "Auf dieser Tour werden wir die Lebensgeschichte eines Sterns verfolgen, von seiner Geburt bis zu seinem Tod."
     },
     {
-     "start": 6.74,
-     "end": 16.42,
+     "start": 26.32,
+     "end": 35.69,
      "text": "Die Geschichte beginnt an Orten wie diesem: dem Orionnebel, einer riesigen Sternenfabrik in 1. 350 Lichtjahren Entfernung von uns."
     },
     {
-     "start": 16.42,
-     "end": 23.15,
+     "start": 35.69,
+     "end": 42.17,
      "text": "Kaltes Gas und Staub fallen unter ihrem eigenen Gewicht in sich zusammen und bilden Hunderte neuer Sterne."
     },
     {
-     "start": 23.15,
-     "end": 29.99,
+     "start": 42.17,
+     "end": 48.27,
      "text": "Die vier hellen Trapezium-Sterne im Zentrum erleuchten den Nebel von innen mit ihrem ultravioletten Licht."
     },
     {
-     "start": 29.99,
-     "end": 34.63,
+     "start": 48.27,
+     "end": 52.79,
      "text": "Am Himmel ist er mit bloßem Auge als verschwommener Fleck im Schwert des Orion zu sehen."
     }
    ]

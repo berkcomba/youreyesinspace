@@ -11,10 +11,11 @@ import { CATALOG, TYPE_BY_CODE, type SurveyGalaxies } from '../../src/galaxy/gal
 import { CONSTELLATIONS, constellationAt, setBoundaries, setReferenceStars, slugify, unitRaDec } from './astro';
 import { SEARCH_PATH, azEntries, azPages, searchJson } from './az';
 import { CoreCatalog } from './catalog';
-import { LANGS, SITE, missing, render, setWikiLocale, t, url, type Page } from './html';
+import { LANGS, SITE, locatorStrings, missing, render, setWikiLocale, t, url, type Page } from './html';
 import type { ConstellationEntry, DsoEntry, GalaxyEntry, PlanetEntry, Site, StarEntry } from './model';
+import { skyData } from './sky';
 import {
-  blackHolePage, constellationPage, dsoPage, eventPage, fallbackStarPage, galaxyPage, hubPages, planetPage, solarPage, starPage,
+  blackHolePage, conName, constellationPage, dsoPage, eventPage, fallbackStarPage, galaxyPage, hubPages, planetPage, solarPage, starPage,
 } from './pages';
 
 interface Options { langs: Locale[]; limit: number; out: string; strict: boolean }
@@ -165,6 +166,7 @@ export async function generate({ root, args, buildId }: { root: string; args: st
   const lim = <T>(l: T[]) => (Number.isFinite(opt.limit) ? l.slice(0, opt.limit) : l);
   const urls = new Map<string, string[]>();
   let pages = 0, bytes = 0;
+  const sky = skyData(site.cat, (i) => site.starByIndex.get(i)?.slug);
 
   for (const lang of opt.langs) {
     await initI18n(lang);
@@ -176,6 +178,8 @@ export async function generate({ root, args, buildId }: { root: string; args: st
     fs.mkdirSync(path.join(opt.out, url('/encyclopedia', lang)), { recursive: true });
     fs.writeFileSync(path.join(opt.out, url(SEARCH_PATH, lang)), search);
     bytes += search.length;
+    const skyJson = JSON.stringify({ ...sky, t: locatorStrings(), n: Object.fromEntries(Object.keys(CONSTELLATIONS).map((k) => [k, conName(k)])) });
+    fs.writeFileSync(path.join(opt.out, url('/encyclopedia/sky.json', lang)), skyJson);
     const list: Array<[string, () => Page]> = [
       ...hubPages(site).map((p) => ['hubs', () => p] as [string, () => Page]),
       ...azPages(entries).map((p) => ['hubs', () => p] as [string, () => Page]),

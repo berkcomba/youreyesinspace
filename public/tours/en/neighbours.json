@@ -70,32 +70,42 @@
    ]
   },
   "deneb": {
-   "hash": "bf09ab6ec395",
-   "duration": 36.56,
+   "hash": "40f2e999f42a",
+   "duration": 50.55,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 10.32,
+     "start": 0.08,
+     "end": 9.24,
      "text": "Our last stop is Deneb, the tail of the constellation Cygnus and the most distant star on this tour: about 2,600 light-years."
     },
     {
-     "start": 10.32,
-     "end": 20.63,
+     "start": 9.24,
+     "end": 19.26,
      "text": "Even so, it is one of the 20 brightest stars in the sky, because it is one of the brightest stars known, giving off about 200,000 times more light than the Sun."
     },
     {
-     "start": 20.63,
-     "end": 25.23,
+     "start": 19.26,
+     "end": 23.58,
      "text": "The light you see today set out in the era when the Roman Republic was founded."
     },
     {
-     "start": 25.23,
-     "end": 33.92,
+     "start": 23.58,
+     "end": 31.23,
      "text": "Deneb is a blue-white supergiant, and within a few million years it will either become a supernova or turn into a red supergiant."
     },
     {
-     "start": 33.92,
-     "end": 36.56,
+     "start": 31.23,
+     "end": 40.85,
+     "text": "If you step outside tonight and look at Vega, you will see light that set out twenty-five years ago; look at Deneb, and you will see light that set out when Rome was still a kingdom."
+    },
+    {
+     "start": 40.85,
+     "end": 48.23,
+     "text": "The sky is not a photograph of a single moment; it is a collage of time, where letters from different ages meet on the same night."
+    },
+    {
+     "start": 48.23,
+     "end": 50.55,
      "text": "Our Nearby Stars tour has come to an end."
     }
    ]
@@ -132,37 +142,47 @@
    ]
   },
   "proxima": {
-   "hash": "d1a09107343b",
-   "duration": 39.27,
+   "hash": "6cdaebd77381",
+   "duration": 53.43,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 2.66,
+     "start": 0.08,
+     "end": 10.36,
+     "text": "Almost every star you can see with the naked eye in the night sky is a neighbor of the Sun, within a few thousand light-years; the rest of the galaxy blends into a shared haze."
+    },
+    {
+     "start": 10.36,
+     "end": 18.04,
+     "text": "Each one is a sun, some have worlds circling them, and their light reaches us after journeys lasting years, even centuries."
+    },
+    {
+     "start": 18.04,
+     "end": 20.32,
      "text": "Welcome to the Nearby Stars tour."
     },
     {
-     "start": 2.66,
-     "end": 9.84,
+     "start": 20.32,
+     "end": 26.75,
      "text": "Our first stop is the closest star to the Sun: Proxima Centauri, 4. 2 light-years away."
     },
     {
-     "start": 9.84,
-     "end": 17.9,
+     "start": 26.75,
+     "end": 34.07,
      "text": "It is a small, cool red dwarf; it has only 12 percent of the Sun's mass and is too faint to be seen with the naked eye."
     },
     {
-     "start": 17.9,
-     "end": 22.25,
+     "start": 34.07,
+     "end": 37.95,
      "text": "But with sudden flares it spews violent radiation from its surface."
     },
     {
-     "start": 22.25,
-     "end": 34.59,
+     "start": 37.95,
+     "end": 49.07,
      "text": "In 2016, a planet the size of Earth was discovered around it: Proxima b orbits in the habitable zone, that is, at a distance where liquid water could be found on its surface."
     },
     {
-     "start": 34.59,
-     "end": 39.27,
+     "start": 49.07,
+     "end": 53.43,
      "text": "With our fastest vehicles today, it would take 70,000 years to get there."
     }
    ]

@@ -34,47 +34,62 @@
    ]
   },
   "antennae": {
-   "hash": "f15eb5c519c7",
-   "duration": 41.67,
+   "hash": "5c2feec81b65",
+   "duration": 64.31,
    "sentences": [
     {
      "start": 0.1,
-     "end": 4.08,
+     "end": 3.92,
      "text": "Son durağımızda galaksilerin de çarpışabildiğini göreceğiz."
     },
     {
-     "start": 4.08,
-     "end": 11.16,
+     "start": 3.92,
+     "end": 11.48,
      "text": "Antenler, kırk beş milyon ışık yılı uzaklıkta birbirinin içinden geçmekte olan iki sarmal galaksidir."
     },
     {
-     "start": 11.16,
-     "end": 14.84,
+     "start": 11.48,
+     "end": 15.16,
      "text": "Karşılaşma yaklaşık altı yüz milyon yıl önce başladı."
     },
     {
-     "start": 14.84,
-     "end": 22.01,
+     "start": 15.16,
+     "end": 22.24,
      "text": "Kütle çekimi yıldızlardan oluşan iki uzun kuyruğu uzaya savurdu; adını veren böcek antenleri bunlardır."
     },
     {
-     "start": 22.01,
-     "end": 31.09,
+     "start": 22.24,
+     "end": 31.38,
      "text": "Yıldızlar birbirine çarpmaz, aralarındaki uzaklıklar çok büyüktür; ama gaz bulutları çarpışır ve sıkışarak milyarlarca yeni yıldız doğurur."
     },
     {
-     "start": 31.09,
-     "end": 36.01,
+     "start": 31.38,
+     "end": 36.25,
      "text": "Birkaç yüz milyon yıl içinde ikisi tek bir eliptik galaksiye dönüşecek."
     },
     {
-     "start": 36.01,
-     "end": 39.79,
+     "start": 36.25,
+     "end": 40.13,
      "text": "Samanyolu ile Andromeda'nın geleceği de aynen böyle görünecek."
     },
     {
-     "start": 39.79,
-     "end": 41.67,
+     "start": 40.13,
+     "end": 47.63,
+     "text": "O çarpışmayı izleyecek olan büyük olasılıkla biz olmayacağız; Dünya o zamana kadar çoktan yaşanmaz hâle gelmiş olacak."
+    },
+    {
+     "start": 47.63,
+     "end": 57.43,
+     "text": "Şimdilik bizler, yüz milyarlarca galaksiden birinin sakin bir kolunda, sıradan bir yıldızın çevresinde bütün bunları anlamaya çalışan meraklı canlılarız."
+    },
+    {
+     "start": 57.43,
+     "end": 62.39,
+     "text": "Evrenin büyüklüğü bizi küçültmüyor; onu kavrayabiliyor olmamız bizi büyütüyor."
+    },
+    {
+     "start": 62.39,
+     "end": 64.31,
      "text": "Galaksiler turumuz sona erdi."
     }
    ]
@@ -147,37 +162,47 @@
    ]
   },
   "milkyway": {
-   "hash": "9ee0146da1d4",
-   "duration": 36.07,
+   "hash": "a3287f69373b",
+   "duration": 54.07,
    "sentences": [
     {
-     "start": 0.04,
-     "end": 2.42,
+     "start": 0.1,
+     "end": 6.5,
+     "text": "Yüz yıl kadar önce pek çok gökbilimci, Samanyolu'nun evrenin tamamı olduğunu düşünüyordu."
+    },
+    {
+     "start": 6.5,
+     "end": 19.38,
+     "text": "Sonra gökyüzündeki soluk sarmal bulutsuların aslında başka galaksiler olduğu anlaşıldı; bugün gözlemlenebilir evrende yüz milyarlarca galaksi olduğunu biliyoruz ve her biri milyarlarca yıldız barındırıyor."
+    },
+    {
+     "start": 19.38,
+     "end": 21.72,
      "text": "Galaksiler turuna hoş geldiniz."
     },
     {
-     "start": 2.42,
-     "end": 4.7,
+     "start": 21.72,
+     "end": 23.9,
      "text": "Önce evimize dışarıdan bakalım."
     },
     {
-     "start": 4.7,
-     "end": 14.9,
+     "start": 23.9,
+     "end": 33.43,
      "text": "Samanyolu, yüz bin ışık yılı genişliğinde, merkezinde bir çubuk bulunan sarmal bir galaksidir ve iki yüz ile dört yüz milyar arasında yıldız içerir."
     },
     {
-     "start": 14.9,
-     "end": 25.93,
+     "start": 33.43,
+     "end": 44.21,
      "text": "Güneş, merkezden yirmi altı bin ışık yılı uzakta, Orion Kolu denilen küçük bir kolda yer alır ve galaksinin etrafındaki bir turunu iki yüz otuz milyon yılda tamamlar."
     },
     {
-     "start": 25.93,
-     "end": 30.95,
+     "start": 44.21,
+     "end": 49.11,
      "text": "Dinozorlar yok olduğundan beri Güneş bu turun yalnızca dörtte birini aldı."
     },
     {
-     "start": 30.95,
-     "end": 36.07,
+     "start": 49.11,
+     "end": 54.07,
      "text": "Merkezdeki parlak şişkinlikte dört milyon güneş kütleli bir kara delik gizlidir."
     }
    ]

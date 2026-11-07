@@ -85,6 +85,29 @@ export function linkList(items: Array<{ href: string | null; label: string; note
   return `<ul class="${cls}">${items.map((i) => `<li>${i.href ? a(i.href, i.label) : esc(i.label)}${i.note ? ` <span class="w-note">${esc(i.note)}</span>` : ''}</li>`).join('')}</ul>`;
 }
 
+/** the locator widget (/wiki/locator.js): every parameter comes from the page, the sky from /encyclopedia/sky.json */
+export function locator(o: { ra: number; dec: number; ly?: number; mag?: number | null; con: string; name: string; fov?: number; area?: boolean }): string {
+  const attrs = [`data-ra="${o.ra.toFixed(3)}"`, `data-dec="${o.dec.toFixed(3)}"`, `data-con="${esc(o.con)}"`, `data-name="${esc(o.name)}"`];
+  if (o.ly !== undefined && o.ly > 0) attrs.push(`data-ly="${Number(o.ly.toPrecision(4))}"`);
+  if (o.mag !== undefined && o.mag !== null && Number.isFinite(o.mag)) attrs.push(`data-mag="${o.mag.toFixed(2)}"`);
+  if (o.fov) attrs.push(`data-fov="${o.fov}"`);
+  if (o.area) attrs.push('data-area="1"');
+  return `<figure class="w-loc" ${attrs.join(' ')}></figure>`;
+}
+
+export function locatorStrings(): Record<string, string> {
+  return {
+    sky: w('Gökyüzünde'), all: w('Tüm gökyüzü'), top: w('Yukarıdan'), fov: w('Görüş alanı'), scale: w('Ölçek'), reset: w('Ortala'),
+    ra: w('Sağ açıklık'), dec: w('Dik açıklık'), con: w('Takımyıldız'), mag: w('Görünür parlaklık'), dist: w('Uzaklık'),
+    l: w('Galaktik boylam'), b: w('Galaktik enlem'),
+    ly: w('ışık yılı'), kly: w('bin ışık yılı'), Mly: w('milyon ışık yılı'), Gly: w('milyar ışık yılı'),
+    hintSky: w('Sürükleyerek gezinin; bir yıldıza tıklayınca sayfası açılır.'),
+    hintAll: w('Tüm gökyüzü: bir noktaya tıklayınca o bölgeye yakınlaşır. Kesikli çizgi Samanyolu\'nun düzlemi, noktalı çizgi ekliptik.'),
+    hintTop: w('Galaksiye tepeden bakış: Güneş ortada, Samanyolu\'nun merkezi yukarıda. Kollar şematiktir; cismin konumu galaksi düzlemine izdüşürülmüştür.'),
+    north: w('K'), east: w('D'), gc: w('Samanyolu merkezi'), ecl: w('Ekliptik'), mw: w('Samanyolu'), sun: w('Güneş'),
+  };
+}
+
 export function openButton(href: string, label = w('Simülasyonda aç')): string {
   return `<p class="w-open"><a class="w-btn" href="${esc(href)}">${esc(label)} <span aria-hidden="true">→</span></a></p>`;
 }
@@ -174,7 +197,7 @@ export function render(p: Page, buildId: string, available: Locale[] = LANGS): s
       <div class="w-langs">${langLinks}</div>
       <p>${esc(w('Your Eyes In Space, gözlemlenebilir evreni gerçek verilerle tarayıcıda gezdiren ücretsiz ve açık kaynaklı bir simülasyondur. Bu sayfadaki değerler simülasyonun kullandığı kataloglardan hesaplanmıştır.'))}</p>
       <p>${esc(w('Kaynaklar'))}: HYG / AT-HYG (David Nash, CC BY-SA 4.0) · ESA Gaia · NASA Exoplanet Archive · NASA/JPL · ATNF Pulsar Catalogue · HEASARC · NED · IAU. <a href="https://github.com/berkcomba/youreyesinspace">${esc(w('Kaynak kodu'))}</a> (AGPL-3.0)</p>
-    </footer>${(p.scripts ?? []).map((s) => `\n    <script src="${s}?v=${buildId}" defer></script>`).join('')}
+    </footer>${[...(p.scripts ?? []), ...(p.body.includes('class="w-loc"') ? ['/wiki/locator.js'] : [])].map((s) => `\n    <script src="${s}?v=${buildId}" defer></script>`).join('')}
   </body>
 </html>
 `;

@@ -87,6 +87,11 @@ export type TourCue = { delay?: number } & (
    * `az`/`elev` (degrees) swing the camera off that axis so both stay in frame; `seconds` = flight time.
    */
   | { at: number; action: 'shot'; ref: string; toward: string; dist: number; az?: number; elev?: number; seconds?: number }
+  /**
+   * Closing credits: one unbroken flight past each of `refs` in turn (sweeping by its sunlit side
+   * a few radii out), then out to the opening view of the Solar System, in `seconds`
+   */
+  | { at: number; action: 'flyby'; refs: string[]; seconds: number }
   /** continuous push-in (negative) / pull-out (positive) while dwelling: ln(distance) per second */
   | { at: number; action: 'dolly'; rate: number }
   /** auto-orbit drift speed (rad/s) from this sentence on */
@@ -145,6 +150,10 @@ export interface TourStep {
   dollyRate?: number;
   /** extra seconds to linger after the narration ends; default 1.5 */
   dwell?: number;
+  /** seconds of silence before the narration starts, so the opening flight can settle first */
+  lead?: number;
+  /** length of a step without narration (`text: ''`): an interlude carried by the music, its cues timed by `delay` */
+  seconds?: number;
   /** timed events during the narration (see TourCue) */
   cues?: TourCue[];
   /**
@@ -232,13 +241,19 @@ export const TOURS: TourDef[] = [
     summary: 'Güneş\'ten Plüton\'a: gerçek ölçekli karşılaştırmalar, hızlandırılmış yörüngeler, yüzey işaretleri ve fotoğraflarla sekiz gezegen, bir ay ve bir cüce gezegen.',
     steps: [
       { id: 'sun', target: body('sun'),
-        // 0 welcome · 1 mass · 2 Earth comparison · 3 temperatures · 4 light pulse · 5 eight minutes ago
-        text: 'Güneş Sistemi turuna hoş geldiniz; yolculuğumuz her şeyin merkezinden, Güneş\'ten başlıyor. Dört buçuk milyar yaşındaki bu yıldız, sistemdeki toplam kütlenin yüzde doksan dokuz virgül sekizini tek başına taşır. Ne kadar büyük olduğunu görmek için yanına gerçek ölçekli bir Dünya koyalım: çapı boyunca yan yana yüz dokuz Dünya dizilir, içine ise bir milyon üç yüz bin tanesi sığar. Yüzeyi beş bin beş yüz derece, çekirdeği on beş milyon derecedir; her saniye altı yüz milyon ton hidrojeni helyuma dönüştürür. Şimdi geri çekilelim ve ışığın yolculuğunu izleyelim: Güneş\'ten çıkan ışık, Dünya\'ya sekiz dakika yirmi saniyede ulaşır. Yani Güneş\'e her baktığınızda, aslında sekiz dakika önceki hâlini görürsünüz.',
+        // 0–2 opening · 3 welcome · 4 mass · 5 Earth comparison · 6 temperatures · 7 light pulse · 8 eight minutes ago
+        text: 'Dört buçuk milyar yıl önce, Samanyolu\'nun sakin bir kolunda, dönen bir gaz ve toz bulutu kendi ağırlığı altında çöktü. Merkezinde bir yıldız tutuştu; çevresinde kalan kırıntılar gezegenlere, aylara ve sonunda bizlere dönüştü. Bu turda o ailenin bütün üyelerini, en büyüğünden en küçüğüne, tek tek ziyaret edeceğiz. Güneş Sistemi turuna hoş geldiniz; yolculuğumuz her şeyin merkezinden, Güneş\'ten başlıyor. Dört buçuk milyar yaşındaki bu yıldız, sistemdeki toplam kütlenin yüzde doksan dokuz virgül sekizini tek başına taşır. Ne kadar büyük olduğunu görmek için yanına gerçek ölçekli bir Dünya koyalım: çapı boyunca yan yana yüz dokuz Dünya dizilir, içine ise bir milyon üç yüz bin tanesi sığar. Yüzeyi beş bin beş yüz derece, çekirdeği on beş milyon derecedir; her saniye altı yüz milyon ton hidrojeni helyuma dönüştürür. Şimdi geri çekilelim ve ışığın yolculuğunu izleyelim: Güneş\'ten çıkan ışık, Dünya\'ya sekiz dakika yirmi saniyede ulaşır. Yani Güneş\'e her baktığınızda, aslında sekiz dakika önceki hâlini görürsünüz.',
         cues: [
-          compare(2, 'earth', { shoulder: true }),
-          card(2, { big: '109 Dünya', title: 'Güneş\'in çapı boyunca', text: 'Hacmine bir milyon üç yüz bin Dünya sığar.' }),
-          card(3, { image: 'sun.jpg', source: 'NASA/SDO', title: 'Güneş patlaması', text: 'Dinamik Güneş Gözlemevi\'nin görüntülediği bir X sınıfı patlama.' }),
-          uncompare(4), uncard(4), overview(4, 'earth'), pulse(4, 'sun', 'earth', 7),
+          // the opening: a slow glide in from afar, a push toward the newborn star, then the whole family's orbits
+          vantage(0, 18, 50, 30, undefined, 9),
+          card(1, { big: '4,6 milyar yıl', title: 'Güneş Sistemi\'nin yaşı', text: 'En eski göktaşı tanelerinden ölçüldü: 4,567 milyar yıl.' }),
+          dolly(1, -0.05),
+          dolly(2, 0), overview(2, 'jupiter', 7),
+          uncard(3), { at: 3, action: 'orbits', on: false }, ret(3),
+          compare(5, 'earth', { shoulder: true }),
+          card(5, { big: '109 Dünya', title: 'Güneş\'in çapı boyunca', text: 'Hacmine bir milyon üç yüz bin Dünya sığar.' }),
+          card(6, { image: 'sun.jpg', source: 'NASA/SDO', title: 'Güneş patlaması', text: 'Dinamik Güneş Gözlemevi\'nin görüntülediği bir X sınıfı patlama.' }),
+          uncompare(7), uncard(7), overview(7, 'earth'), pulse(7, 'sun', 'earth', 7),
         ], dwell: 1 },
 
       { id: 'mercury', target: body('mercury'),
@@ -358,15 +373,36 @@ export const TOURS: TourDef[] = [
         ], dwell: 6 },
 
       { id: 'pluto', target: body('pluto'),
-        // 0 intro · 1 Moon comparison · 2 New Horizons · 3 heart & mountains · 4 Charon barycentre (overview) · 5 farewell
-        text: 'Son durağımız Plüton; bin dokuz yüz otuzda keşfedildi ve iki bin altıya kadar dokuzuncu gezegen sayıldı. Aslında Ay\'ımızdan bile küçüktür: yan yana koyduğumuzda bu açıkça görülür. İki bin on beşte New Horizons yanından geçene kadar bulanık bir noktadan ibaretti. Araç, yüzeyinde dev bir kalp şekli, azot buzulları ve su buzundan dağlar buldu; yüzey sıcaklığı eksi iki yüz otuz derecedir. Uydusu Charon o kadar büyüktür ki ikisi birlikte, aralarındaki boşlukta kalan ortak bir kütle merkezi etrafında döner. Güneş Sistemi turumuz burada bitiyor; iyi yolculuklar.',
+        // 0 intro · 1 Moon comparison · 2 New Horizons · 3 heart & mountains · 4 Charon barycentre (overview)
+        text: 'Son durağımız Plüton; bin dokuz yüz otuzda keşfedildi ve iki bin altıya kadar dokuzuncu gezegen sayıldı. Aslında Ay\'ımızdan bile küçüktür: yan yana koyduğumuzda bu açıkça görülür. İki bin on beşte New Horizons yanından geçene kadar bulanık bir noktadan ibaretti. Araç, yüzeyinde dev bir kalp şekli, azot buzulları ve su buzundan dağlar buldu; yüzey sıcaklığı eksi iki yüz otuz derecedir. Uydusu Charon o kadar büyüktür ki ikisi birlikte, aralarındaki boşlukta kalan ortak bir kütle merkezi etrafında döner.',
         cues: [
           compare(1, 'moon'),
           uncompare(2),
           card(2, { image: 'pluto.jpg', source: NH, title: 'Plüton, 14 Temmuz 2015', text: 'Kalp biçimli Tombaugh Regio, azot buzuyla kaplı bir ova.' }),
           card(4, { image: 'charon.jpg', source: NH, title: 'Plüton ve Charon', text: 'İkili bir gezegen: Charon, Plüton\'un yarısı çapında.' }),
           overview(4, 'charon'), rate(4, 6e4),
-        ], dwell: 6 },
+        ], dwell: 1 },
+
+      { id: 'lookback', target: body('pluto'), lead: 5,
+        // the approach turns the camera past Pluto's night side to the Sun before the voice starts
+        // 0 the Sun and the speck · 1 everyone we know · 2 every planet (system overview) · 3 farewell
+        text: 'Buradan geriye baktığımızda Güneş, gökyüzündeki en parlak yıldızdan ibaret; Dünya ise onun parıltısında kaybolmuş, gözle seçilemeyecek kadar küçük bir nokta. Sevdiğimiz, tanıdığımız herkes, yaşanmış her öykü ve akmış her nehir o noktanın üzerinde. Bütün gezegenleri tek tek gezdik ama hiçbirinde ikinci bir yuva bulamadık; şimdilik o nokta, sahip olduğumuz tek ev. Güneş Sistemi turumuz burada bitiyor; iyi yolculuklar.',
+        cues: [
+          fill(0, false),
+          shot(0, 'pluto', 'sun', 6, { az: 20, elev: 5, seconds: 5 }),
+          dolly(1, 0.05),
+          dolly(2, 0), overview(2, 'pluto', 10),
+          dolly(3, 0.04),
+        ], show: ['earth'], dwell: 1.5 },
+
+      // closing credits without a voice: one flyby after another, inward to home, under the music
+      // past Earth (about 15 s in) it pulls out to the opening view, where the orbits come back
+      { id: 'flyby', target: body('earth'), text: '', seconds: 19,
+        cues: [
+          fill(0, false),
+          { at: 0, action: 'flyby', refs: ['neptune', 'uranus', 'saturn', 'jupiter', 'mars', 'earth'], seconds: 19 },
+          { at: 0, action: 'orbits', on: true, delay: 16.5 },
+        ], orbitRate: 0.03, dwell: 0.5 },
     ],
   },
 
@@ -493,13 +529,16 @@ export const TOURS: TourDef[] = [
     summary: 'Kızıl Gezegen, iki küçük ayı ve yüzeyinde dolaşan keşif araçları; işaretli yüzey şekilleri ve robotların fotoğraflarıyla.',
     steps: [
       { id: 'mars', target: body('mars'),
-        // 0 welcome · 1 day (fast spin) · 2 atmosphere · 3 Hellas pin · 4 polar cap pin · 5 rivers
-        text: 'Mars turuna hoş geldiniz; Kızıl Gezegen, insanlığın en çok araç gönderdiği dünya. Günü Dünya\'nınkine çok benzer, yirmi dört saat otuz yedi dakika; şu anda bir Mars gününü hızlandırılmış izliyorsunuz. Atmosferi çok incedir ve neredeyse tamamen karbondioksitten oluşur; ortalama sıcaklık eksi altmış derecedir. Güney yarım küredeki Hellas Havzası, iki bin üç yüz kilometre genişliğinde ve dokuz kilometre derinliğindeki en büyük çarpma izidir. Kutuplarında su buzu ve kuru buzdan başlıklar vardır; kışın atmosferin dörtte biri kutupta donar. Yüzeyindeki kurumuş nehir yatakları ve eski göl tabanları, Mars\'ın bir zamanlar çok farklı olduğunu fısıldar.',
+        // 0–1 opening · 2 welcome · 3 day (fast spin) · 4 atmosphere · 5 Hellas pin · 6 polar cap pin · 7 rivers
+        text: 'Binlerce yıl boyunca insanlar, gece gökyüzünde yıldızların arasında gezinen kızıl bir ışığı izledi ve ona savaş tanrısının adını verdi. Teleskoplar o ışığı bir diske, uzay araçları ise kanyonları, yanardağları ve toz fırtınalarıyla gerçek bir dünyaya dönüştürdü. Mars turuna hoş geldiniz; Kızıl Gezegen, insanlığın en çok araç gönderdiği dünya. Günü Dünya\'nınkine çok benzer, yirmi dört saat otuz yedi dakika; şu anda bir Mars gününü hızlandırılmış izliyorsunuz. Atmosferi çok incedir ve neredeyse tamamen karbondioksitten oluşur; ortalama sıcaklık eksi altmış derecedir. Güney yarım küredeki Hellas Havzası, iki bin üç yüz kilometre genişliğinde ve dokuz kilometre derinliğindeki en büyük çarpma izidir. Kutuplarında su buzu ve kuru buzdan başlıklar vardır; kışın atmosferin dörtte biri kutupta donar. Yüzeyindeki kurumuş nehir yatakları ve eski göl tabanları, Mars\'ın bir zamanlar çok farklı olduğunu fısıldar.',
         cues: [
-          rate(1, 3600),
-          rate(3, 1), pin(3, 'mars', -42.4, 70.5, 'Hellas Havzası'),
-          pin(4, 'mars', 86, 0, 'Kuzey kutup başlığı'),
-          unpin(5), ret(5),
+          // a red light among the stars, seen from Earth; then the flight that made it a world
+          lookFrom(0, 'earth', ['mars'], { fov: 40 }),
+          ret(1),
+          rate(3, 3600),
+          rate(5, 1), pin(5, 'mars', -42.4, 70.5, 'Hellas Havzası'),
+          pin(6, 'mars', 86, 0, 'Kuzey kutup başlığı'),
+          unpin(7), ret(7),
         ], dwell: 2 },
 
       { id: 'phobos', target: body('phobos'),
@@ -539,10 +578,14 @@ export const TOURS: TourDef[] = [
 
       { id: 'finale', target: body('mars'),
         // 0 look back · 1 fleet (moons overview) · 2 findings · 3 lost field (back) · 4 farewell
-        text: 'Mars\'tan ayrılmadan önce bir kez daha geriye bakalım. Bugün yörüngesinde ve yüzeyinde bir düzineye yakın aktif araç çalışıyor. Bulgular tutarlı: Mars bir zamanlar ılık, nemli ve belki de yaşanabilir bir dünyaydı. Manyetik alanını kaybedince Güneş rüzgârı atmosferini uzaya süpürdü ve gezegen soğuk bir çöle dönüştü. Yine de insanlığın bir gün ayak basacağı ilk gezegen büyük olasılıkla burası olacak; Mars turumuz sona erdi.',
+        text: 'Mars\'tan ayrılmadan önce bir kez daha geriye bakalım. Bugün yörüngesinde ve yüzeyinde bir düzineye yakın aktif araç çalışıyor. Bulgular tutarlı: Mars bir zamanlar ılık, nemli ve belki de yaşanabilir bir dünyaydı. Manyetik alanını kaybedince Güneş rüzgârı atmosferini uzaya süpürdü ve gezegen soğuk bir çöle dönüştü. Yine de insanlığın bir gün ayak basacağı ilk gezegen büyük olasılıkla burası olacak. O gün Mars\'ın tozlu bir ovasında duran ilk insan, akşam gökyüzünde parlak, mavimsi bir yıldız görecek: doğduğu gezegeni. Belki de o an, iki dünyanın öyküsünü birlikte yazmaya başladığımız an olacak. Mars turumuz sona erdi.',
         cues: [
           overview(1, 'deimos'), rate(1, 1.2e4),
           ret(3), rate(3, 1),
+          // standing on a Martian plain, the Earth a bluish star over the horizon
+          land(5, 'mars', ['earth'], { elev: 12, fov: 30, seconds: 6 }),
+          fov(6, 14, 8),
+          ret(7), dolly(7, 0.08),
         ], dwell: 3 },
     ],
   },
@@ -554,14 +597,17 @@ export const TOURS: TourDef[] = [
     summary: 'Dev gezegen, dört Galileo ayı ve kutuplarının üzerinde dönen Juno; yörüngeler yukarıdan, aylar gerçek ölçekte.',
     steps: [
       { id: 'jupiter', target: body('jupiter'),
-        // 0 welcome · 1 moons (overview) · 2 resonance · 3 size (Earth beside) · 4 Galileo · 5 onwards
-        text: 'Jüpiter sistemine hoş geldiniz; bu dev, neredeyse küçük bir güneş sistemi gibidir. Etrafında doksan beşten fazla ay döner; dört büyüğünün yörüngelerini yukarıdan izleyelim. Io iki günde, Europa üç buçuk günde, Ganymede yedi günde, Callisto ise on yedi günde bir tur atar; iç üçü birbirine kilitlidir, Io dört tur attığında Europa iki, Ganymede bir tur atar. Gezegen o kadar büyüktür ki içine bin üç yüz Dünya sığar ve manyetik alanı Güneş Sistemi\'ndeki en büyük yapıdır. Bin altı yüz onda Galileo bu dört ayı küçük teleskobuyla keşfetti; her şeyin Dünya\'nın etrafında dönmediğinin ilk kanıtıydı. Şimdi o dört ayı sırayla ziyaret edeceğiz.',
+        // 0–1 opening · 2 welcome · 3 moons (overview) · 4 resonance · 5 size (Earth beside) · 6 Galileo · 7 onwards
+        text: 'Gece gökyüzünde parlak, titremeyen bir ışık: çıplak gözle bakınca sıradan bir yıldızdan farkı yok. Oysa o ışığın sahibi, diğer bütün gezegenlerin toplamından iki buçuk kat ağır bir dev; kütle çekimiyle kuyruklu yıldızların yollarını büken ve Güneş Sistemi\'nin düzenini milyarlarca yıldır şekillendiren bir mimar. Jüpiter sistemine hoş geldiniz; bu dev, neredeyse küçük bir güneş sistemi gibidir. Etrafında doksan beşten fazla ay döner; dört büyüğünün yörüngelerini yukarıdan izleyelim. Io iki günde, Europa üç buçuk günde, Ganymede yedi günde, Callisto ise on yedi günde bir tur atar; iç üçü birbirine kilitlidir, Io dört tur attığında Europa iki, Ganymede bir tur atar. Gezegen o kadar büyüktür ki içine bin üç yüz Dünya sığar ve manyetik alanı Güneş Sistemi\'ndeki en büyük yapıdır. Bin altı yüz onda Galileo bu dört ayı küçük teleskobuyla keşfetti; her şeyin Dünya\'nın etrafında dönmediğinin ilk kanıtıydı. Şimdi o dört ayı sırayla ziyaret edeceğiz.',
         cues: [
-          overview(1, 'callisto'), rate(1, 2e5),
-          ret(3), rate(3, 1200), compare(3, 'earth'),
-          card(3, { big: '1.300 Dünya', title: 'Jüpiter\'in hacmine sığar', text: 'Manyetik alanı gökyüzünde görülebilseydi dolunaydan büyük görünürdü.' }),
-          uncompare(4),
-          card(4, { image: 'galileo.jpg', source: 'Justus Sustermans, 1636', title: 'Galileo Galilei', text: 'Ocak 1610: Jüpiter\'in yanında dört küçük yıldız, her gece farklı yerde.' }),
+          // a steady light in Earth's night sky; then the giant itself, a crescent against the Sun
+          lookFrom(0, 'earth', ['jupiter'], { fov: 30 }),
+          shot(1, 'jupiter', 'sun', 12, { az: 35, elev: 10, seconds: 8 }),
+          overview(3, 'callisto'), rate(3, 2e5),
+          ret(5), rate(5, 1200), compare(5, 'earth'),
+          card(5, { big: '1.300 Dünya', title: 'Jüpiter\'in hacmine sığar', text: 'Manyetik alanı gökyüzünde görülebilseydi dolunaydan büyük görünürdü.' }),
+          uncompare(6),
+          card(6, { image: 'galileo.jpg', source: 'Justus Sustermans, 1636', title: 'Galileo Galilei', text: 'Ocak 1610: Jüpiter\'in yanında dört küçük yıldız, her gece farklı yerde.' }),
         ], timeRate: 1200, dwell: 3 },
 
       { id: 'io', target: body('io'),
@@ -601,11 +647,15 @@ export const TOURS: TourDef[] = [
 
       { id: 'juno', target: body('juno'),
         // 0 arrival (photo) · 1 solar panels · 2 polar orbit (overview) · 3 cyclones · 4 core (back)
-        text: 'Son olarak Juno\'ya bakalım: bu NASA aracı iki bin on altı Temmuz\'unda Jüpiter\'in yörüngesine girdi. Güneş\'ten bu kadar uzakta güneş enerjisiyle çalışan ilk araçtır; üç dev paneli bir basketbol sahası kadar yer kaplar. Radyasyondan korunmak için kutuplar üzerinden geçen uzun, eliptik bir yörüngede döner; işte o yörünge, hızlandırılmış. Her geçişte bulutların birkaç bin kilometre üzerinden geçer ve Jüpiter\'in kutuplarında dev siklonlar keşfetti. Çekirdeğinin sanıldığından daha büyük ve dağınık olduğunu gösterdi; Jüpiter turumuz burada sona eriyor.',
+        text: 'Son olarak Juno\'ya bakalım: bu NASA aracı iki bin on altı Temmuz\'unda Jüpiter\'in yörüngesine girdi. Güneş\'ten bu kadar uzakta güneş enerjisiyle çalışan ilk araçtır; üç dev paneli bir basketbol sahası kadar yer kaplar. Radyasyondan korunmak için kutuplar üzerinden geçen uzun, eliptik bir yörüngede döner; işte o yörünge, hızlandırılmış. Her geçişte bulutların birkaç bin kilometre üzerinden geçer ve Jüpiter\'in kutuplarında dev siklonlar keşfetti. Çekirdeğinin sanıldığından daha büyük ve dağınık olduğunu gösterdi. Galileo\'nun dört küçük ışık noktasından, buzun altında okyanuslar saklayan dünyalara uzanan bir yolculuktu bu. Belki de Güneş Sistemi\'nde yaşamı aramamız gereken yer, ısıtan bir güneşin yakını değil; bir devin kütle çekiminin yoğurduğu bu soğuk, karanlık aylardır. Jüpiter turumuz burada sona eriyor.',
         cues: [
           card(0, { image: 'juno.jpg', source: JPLC, title: 'Juno', text: 'Sanatçı çizimi: Juno, Jüpiter\'in kutbunun üzerinde.' }),
           uncard(2), overview(2, 'juno'), rate(2, 5e5),
           ret(4), rate(4, 1),
+          // Galileo's four points of light circling; then Europa's ice with the giant behind it
+          overview(5, 'callisto'), rate(5, 2e5),
+          rate(6, 1), shot(6, 'europa', 'jupiter', 5, { az: 25, elev: 8, seconds: 7 }),
+          dolly(7, 0.1),
         ], dwell: 3 },
     ],
   },
@@ -617,13 +667,16 @@ export const TOURS: TourDef[] = [
     summary: 'Halkalar kenardan ve yukarıdan, kalın atmosferli Titan, gayzerleriyle Enceladus ve iki tuhaf ay.',
     steps: [
       { id: 'saturn', target: body('saturn'),
-        // 0 welcome · 1 Earth comparison · 2 density · 3 winds & day (fast spin) · 4 Cassini
-        text: 'Satürn turuna hoş geldiniz: Güneş\'ten altıncı gezegen, çapıyla Dünya\'nın dokuz katı büyüklüğünde bir gaz devi. Yanına gerçek ölçekli bir Dünya koyduğumuzda, halkaların bile ne kadar geniş olduğu ortaya çıkar. Yoğunluğu sudan düşüktür; bu, bir gezegen için benzersizdir. Ekvatorunda rüzgârlar saatte bin sekiz yüz kilometreye ulaşır ve günü yalnızca on buçuk saat sürer. Cassini aracı iki bin dörtten iki bin on yediye kadar on üç yıl boyunca bu sistemi inceledi ve görevini gezegenin atmosferine dalarak tamamladı.',
+        // 0–1 opening · 2 welcome · 3 Earth comparison · 4 density · 5 winds & day (fast spin) · 6 Cassini
+        text: 'Bin altı yüz onda Galileo teleskobunu Satürn\'e çevirdiğinde, gezegenin iki yanında anlam veremediği tuhaf çıkıntılar gördü ve onlara kulak dedi. Bunların bir halka olduğunu anlamamız yarım yüzyıl sürdü; bugün bile Güneş Sistemi\'nin en zarif manzarası olarak nefesimizi kesiyorlar. Satürn turuna hoş geldiniz: Güneş\'ten altıncı gezegen, çapıyla Dünya\'nın dokuz katı büyüklüğünde bir gaz devi. Yanına gerçek ölçekli bir Dünya koyduğumuzda, halkaların bile ne kadar geniş olduğu ortaya çıkar. Yoğunluğu sudan düşüktür; bu, bir gezegen için benzersizdir. Ekvatorunda rüzgârlar saatte bin sekiz yüz kilometreye ulaşır ve günü yalnızca on buçuk saat sürer. Cassini aracı iki bin dörtten iki bin on yediye kadar on üç yıl boyunca bu sistemi inceledi ve görevini gezegenin atmosferine dalarak tamamladı.',
         cues: [
-          compare(1, 'earth'),
-          uncompare(3), rate(3, 3600),
-          rate(4, 600),
-          card(4, { image: 'cassini.jpg', source: SSI, title: 'Dünya\'nın gülümsediği gün', text: 'Cassini, Satürn\'ün gölgesinden geriye baktı; halkaların altındaki mavi nokta Dünya. 19 Temmuz 2013.' }),
+          // edge-on, the rings are two odd bulges — Galileo's "ears"; then the rise above the ring plane
+          vantage(0, 0.5, 90, 30, undefined, 7),
+          vantage(1, 28, 40, 7, undefined, 9),
+          compare(3, 'earth'),
+          uncompare(5), rate(5, 3600),
+          rate(6, 600),
+          card(6, { image: 'cassini.jpg', source: SSI, title: 'Dünya\'nın gülümsediği gün', text: 'Cassini, Satürn\'ün gölgesinden geriye baktı; halkaların altındaki mavi nokta Dünya. 19 Temmuz 2013.' }),
         ], timeRate: 600, dwell: 4 },
 
       { id: 'rings', target: body('saturn'),
@@ -667,11 +720,17 @@ export const TOURS: TourDef[] = [
 
       { id: 'iapetus', target: body('iapetus'),
         // 0 two-tone (photo) · 1 dust sweeping · 2 ridge pin · 3 distant orbit (overview) · 4 farewell
-        text: 'Son durağımız Iapetus, Güneş Sistemi\'nin en tuhaf aylarından biri: bir yarısı kar kadar beyaz, diğer yarısı kömür kadar kara. Yörüngesinde hep aynı yüzü öne baktığı için dış halkalardan gelen koyu tozu süpürür; ısınan koyu bölgelerden buz buharlaşıp parlak tarafa yağar. Ekvatorunun tam ortasında on üç kilometre yüksekliğinde, bin üç yüz kilometre uzunluğunda bir dağ sırtı uzanır; bu da ona ceviz görünümü verir. Satürn\'den üç buçuk milyon kilometre uzakta, yetmiş dokuz günde bir tur atar; halkaları yukarıdan görebilen tek büyük ay odur. Satürn turumuz sona erdi.',
+        text: 'Son durağımız Iapetus, Güneş Sistemi\'nin en tuhaf aylarından biri: bir yarısı kar kadar beyaz, diğer yarısı kömür kadar kara. Yörüngesinde hep aynı yüzü öne baktığı için dış halkalardan gelen koyu tozu süpürür; ısınan koyu bölgelerden buz buharlaşıp parlak tarafa yağar. Ekvatorunun tam ortasında on üç kilometre yüksekliğinde, bin üç yüz kilometre uzunluğunda bir dağ sırtı uzanır; bu da ona ceviz görünümü verir. Satürn\'den üç buçuk milyon kilometre uzakta, yetmiş dokuz günde bir tur atar; halkaları yukarıdan görebilen tek büyük ay odur. İki bin on üçte Cassini, Satürn\'ün gölgesinden geriye dönüp bakmış ve halkaların altında soluk mavi bir nokta yakalamıştı: Dünya. O gün, fotoğrafın çekileceğini bilen dünyanın dört bir yanındaki insanlar dışarı çıkıp bir buçuk milyar kilometre öteden kendilerine bakan bir makineye el salladı. Satürn turumuz sona erdi.',
         cues: [
           card(0, { image: 'iapetus.jpg', source: SSI, title: 'Iapetus', text: 'Cassini, Eylül 2007: iki renkli yüzey ve ekvator sırtı.' }),
           uncard(2), pin(2, 'iapetus', 0, -90, 'Ekvator sırtı'),
           unpin(3), overview(3, 'iapetus'), rate(3, 8e5),
+          // Cassini's 2013 frame: from Saturn's shadow, the planet backlit and the Earth a dot below the rings
+          rate(4, 1), { at: 4, action: 'orbits', on: false, moons: true }, fill(4, false),
+          shot(4, 'saturn', 'sun', 7, { elev: 10, seconds: 9 }),
+          card(4, { image: 'cassini.jpg', source: SSI, title: 'Dünya\'nın gülümsediği gün', text: 'Cassini, Satürn\'ün gölgesinden geriye baktı; halkaların altındaki mavi nokta Dünya. 19 Temmuz 2013.' }),
+          dolly(5, -0.02),
+          uncard(6), dolly(6, 0.1),
         ], timeRate: 600, dwell: 4 },
     ],
   },
@@ -683,12 +742,16 @@ export const TOURS: TourDef[] = [
     summary: 'Dünya yörüngesinden yıldızlararası uzaya: ISS, Hubble, JWST, Parker, New Horizons ve Voyager\'lar; yörüngeleri ve fotoğraflarıyla.',
     steps: [
       { id: 'iss', target: body('iss'),
-        // 0 welcome · 1 90-minute orbit (overview) · 2 sixteen sunrises · 3 size (back, photo) · 4 since 2000
-        text: 'İnsanlığın uzaydaki elçilerini ziyaret edeceğimiz bu tura Dünya yörüngesinden başlıyoruz: karşınızda Uluslararası Uzay İstasyonu. Dört yüz kilometre yükseklikte, saatte yirmi sekiz bin kilometre hızla döner ve Dünya\'nın etrafını doksan dakikada tamamlar; işte o tur, hızlandırılmış. Astronotlar günde on altı gün doğumu görür. Bir futbol sahası büyüklüğünde ve dört yüz yirmi ton ağırlığındadır. İki bin Kasım\'ından beri üzerinde kesintisiz insan yaşıyor; bu, insanlığın uzaydaki en uzun sürekli varlığıdır.',
+        // 0–1 opening · 2 welcome · 3 90-minute orbit (overview) · 4 sixteen sunrises · 5 size (back, photo) · 6 since 2000
+        text: 'Atalarımız ateşin başında oturup yıldızlara baktı ve oraya hiçbir zaman ulaşamayacaklarını düşündü. Bin dokuz yüz elli yedide Sputnik Dünya\'nın etrafında dönmeye başladı; o günden beri gözlerimizi, kulaklarımızı ve merakımızı taşıyan makineleri Güneş Sistemi\'nin dört bir yanına, hatta ötesine gönderiyoruz. İnsanlığın uzaydaki elçilerini ziyaret edeceğimiz bu tura Dünya yörüngesinden başlıyoruz: karşınızda Uluslararası Uzay İstasyonu. Dört yüz kilometre yükseklikte, saatte yirmi sekiz bin kilometre hızla döner ve Dünya\'nın etrafını doksan dakikada tamamlar; işte o tur, hızlandırılmış. Astronotlar günde on altı gün doğumu görür. Bir futbol sahası büyüklüğünde ve dört yüz yirmi ton ağırlığındadır. İki bin Kasım\'ından beri üzerinde kesintisiz insan yaşıyor; bu, insanlığın uzaydaki en uzun sürekli varlığıdır.',
         cues: [
-          overview(1, 'iss'), rate(1, 600),
-          ret(3), rate(3, 30),
-          card(3, { image: 'iss.jpg', source: NASA, title: 'Uluslararası Uzay İstasyonu', text: 'Crew Dragon\'dan çekilen fotoğraf, Kasım 2021.' }),
+          // the night side of the Earth, where people still look up; Sputnik; then the station
+          vantage(0, 12, 165, 1.8, 'earth', 8),
+          card(1, { big: '4 Ekim 1957', title: 'Sputnik 1', text: 'Elli sekiz santimetrelik bir küre; doksan altı dakikada bir tur attı ve bip sesini bütün dünya dinledi.' }),
+          uncard(2), ret(2),
+          overview(3, 'iss'), rate(3, 600),
+          ret(5), rate(5, 30),
+          card(5, { image: 'iss.jpg', source: NASA, title: 'Uluslararası Uzay İstasyonu', text: 'Crew Dragon\'dan çekilen fotoğraf, Kasım 2021.' }),
         ], timeRate: 30, dwell: 3 },
 
       { id: 'hubble', target: body('hubble'),
@@ -735,10 +798,14 @@ export const TOURS: TourDef[] = [
 
       { id: 'voyager2', target: body('voyager2'),
         // 0 only grand tour · 1 route · 2 Uranus & Neptune (photo) · 3 interstellar 2018 (heliopause art) · 4 farewell
-        text: 'Ve Voyager İki, dört dış gezegenin hepsini ziyaret eden tek araç. Kardeşinden on altı gün önce fırlatıldı ama daha yavaş bir rotayla Jüpiter, Satürn, Uranüs ve Neptün\'ün yanından geçti. Uranüs ve Neptün\'e dair bildiklerimizin çoğu hâlâ onun bin dokuz yüz seksen altı ve seksen dokuzdaki geçişlerinden gelir. İki bin on sekizde yıldızlararası uzaya ulaştı. Her iki Voyager\'ın plütonyum pilleri zayıflıyor; iki bin otuzlu yıllarda sessizleşecekler ama milyarlarca yıl boyunca yıldızların arasında süzülmeye devam edecekler; turumuz burada sona eriyor.',
+        text: 'Ve Voyager İki, dört dış gezegenin hepsini ziyaret eden tek araç. Kardeşinden on altı gün önce fırlatıldı ama daha yavaş bir rotayla Jüpiter, Satürn, Uranüs ve Neptün\'ün yanından geçti. Uranüs ve Neptün\'e dair bildiklerimizin çoğu hâlâ onun bin dokuz yüz seksen altı ve seksen dokuzdaki geçişlerinden gelir. İki bin on sekizde yıldızlararası uzaya ulaştı. Her iki Voyager\'ın plütonyum pilleri zayıflıyor; iki bin otuzlu yıllarda sessizleşecekler ama milyarlarca yıl boyunca yıldızların arasında süzülmeye devam edecekler. Dünya\'daki dağlar aşınıp kıtalar yer değiştirdiğinde bile altın plaklar hâlâ orada olacak. Kozmik okyanusa bırakılmış bir şişedeki mektup gibi tek bir şey söyleyecekler: bir zamanlar burada, Güneş adlı bir yıldızın üçüncü gezegeninde, yıldızları merak eden bir tür yaşadı. Turumuz burada sona eriyor.',
         cues: [
           card(2, { image: 'triton.jpg', source: JPL, title: 'Triton, Ağustos 1989', text: 'Voyager 2\'nin son durağı: Neptün\'ün en büyük ayı, azot gayzerleriyle.' }),
           card(3, { image: 'heliopause.jpg', source: JPLC, title: 'Güneş\'in sınırında', text: 'Sanatçı çizimi: iki Voyager heliosferin dışında, yıldızlararası uzayda.' }),
+          // the record, then the craft left alone in the dark as the camera drifts away
+          card(5, { image: 'goldenrecord.jpg', source: JPL, title: 'Altın Plak', text: 'Yüz on beş görüntü, doksan dakika müzik, elli beş dilde selam.', until: 7 }),
+          dolly(6, 0.18),
+          drift(7, 0.02),
         ], dwell: 3 },
     ],
   },
@@ -749,9 +816,12 @@ export const TOURS: TourDef[] = [
     title: 'Bir Yıldızın Yaşamı',
     summary: 'Gaz bulutundan kara deliğe: yıldızların doğumu, yaşamı ve ölümü.',
     steps: [
-      { id: 'orion', target: lm('l-m42'), text: 'Bu turda bir yıldızın yaşam öyküsünü, doğumundan ölümüne kadar izleyeceğiz. Hikâye böyle yerlerde başlar: Orion Bulutsusu, bize bin üç yüz elli ışık yılı uzaklıktaki dev bir yıldız fabrikası. Soğuk gaz ve toz, kendi ağırlığı altında çökerek yüzlerce yeni yıldız oluşturuyor. Merkezdeki dört parlak Trapezium yıldızı, morötesi ışığıyla bulutsuyu içten aydınlatır. Gökyüzünde çıplak gözle Orion\'un kılıcındaki bulanık leke olarak görülür.',
+      { id: 'orion', target: lm('l-m42'), text: 'Kanınızdaki demir, kemiklerinizdeki kalsiyum, şu anda soluduğunuz oksijen: bunların hiçbiri evrenin ilk anlarında yoktu. Hepsi yıldızların içinde pişirildi ve ölen yıldızlarla uzaya saçıldı. Biz yıldız tozundan yapılmışız ve bu bir benzetme değil. Bu turda bir yıldızın yaşam öyküsünü, doğumundan ölümüne kadar izleyeceğiz. Hikâye böyle yerlerde başlar: Orion Bulutsusu, bize bin üç yüz elli ışık yılı uzaklıktaki dev bir yıldız fabrikası. Soğuk gaz ve toz, kendi ağırlığı altında çökerek yüzlerce yeni yıldız oluşturuyor. Merkezdeki dört parlak Trapezium yıldızı, morötesi ışığıyla bulutsuyu içten aydınlatır. Gökyüzünde çıplak gözle Orion\'un kılıcındaki bulanık leke olarak görülür.',
         cues: [
-          card(2, { big: '24 ışık yılı', title: 'Bulutsunun genişliği', text: 'İçinde yaklaşık iki bin genç yıldız; en gençleri yüz bin yaşında.' }),
+          // wide, slowly turning sky while we talk of star stuff; the lens closes on the nebula as the story starts
+          fov(0, 80), drift(0, 0.02),
+          fov(4, 45, 10), dolly(4, -0.03),
+          card(5, { big: '24 ışık yılı', title: 'Bulutsunun genişliği', text: 'İçinde yaklaşık iki bin genç yıldız; en gençleri yüz bin yaşında.' }),
         ] },
       { id: 'pleiades', target: lm('l-pleiades'), text: 'Yıldızlar yalnız doğmaz; kardeşleriyle birlikte doğar. Ülker, yani Pleiades, böyle genç bir aile. Yaklaşık yüz milyon yaşındadır; Güneş\'e kıyasla bir bebek sayılır. Binden fazla yıldız içerir ama çıplak gözle genellikle altı ya da yedisi görülür; bu yüzden pek çok kültürde Yedi Kız Kardeş adıyla bilinir. Parlak mavi yıldızlarının etrafındaki pus, kümenin içinden geçtiği bir toz bulutunun yansımasıdır. Birkaç yüz milyon yıl içinde bu kardeşler dağılıp galaksiye karışacak.',
         cues: [
@@ -780,7 +850,7 @@ export const TOURS: TourDef[] = [
           card(1, { image: 'crab.jpg', source: 'NASA/ESA/J. Hester & A. Loll (ASU)', title: 'Yengeç Bulutsusu', text: 'Hubble mozaiği: turuncu lifler hidrojen, mavi parıltı pulsarın rüzgârı.' }),
           card(4, { big: '30 tur/saniye', title: 'Yengeç Pulsarı', text: 'Yirmi kilometrelik bir nötron yıldızı; bütün bulutsuyu aydınlatır.' }),
         ] },
-      { id: 'cygx1', target: bh('cygx1'), text: 'Ve en ağır yıldızlar için son durak: kara delik. Cygnus X-Bir, keşfedilen ilk kara deliktir. Yirmi bir güneş kütlesindeki bu nesne, mavi süperdev yoldaşından gaz çeker; gaz akreasyon diskinde milyonlarca dereceye ısınarak X-ışını yayar. İkisi ortak kütle merkezlerinin etrafında beş buçuk günde bir dönerler. Olay ufkunun içinden ışık bile kaçamaz. Bir gaz bulutunda başlayan yolculuk, uzay-zamanın kendisinde açılmış bir delikle sona erer. Yıldızların yaşamı turu burada bitiyor.',
+      { id: 'cygx1', target: bh('cygx1'), text: 'Ve en ağır yıldızlar için son durak: kara delik. Cygnus X-Bir, keşfedilen ilk kara deliktir. Yirmi bir güneş kütlesindeki bu nesne, mavi süperdev yoldaşından gaz çeker; gaz akreasyon diskinde milyonlarca dereceye ısınarak X-ışını yayar. İkisi ortak kütle merkezlerinin etrafında beş buçuk günde bir dönerler. Olay ufkunun içinden ışık bile kaçamaz. Bir gaz bulutunda başlayan yolculuk, uzay-zamanın kendisinde açılmış bir delikle sona erer. Ama hikâye orada bitmez: ölen yıldızların saçtığı gaz yeni bulutlara karışır ve bir gün yeni yıldızlar, yeni gezegenler doğurur. Güneş de böyle sonraki kuşaklardan bir yıldız; bizler de o döngünün bir parçasıyız, evrenin kendini tanımasının bir yolu. Yıldızların yaşamı turu burada bitiyor.',
         cues: [
           // "draws gas from its blue supergiant companion": the disc with the star looming behind
           shot(2, 'cygx1', '@star', 110, { az: 28, elev: 6 }),
@@ -789,6 +859,9 @@ export const TOURS: TourDef[] = [
           rate(3, 5e4), uncard(3), overview(3, 'cygx1'),
           // "not even light escapes": back to the lensed hole
           rate(4, 1), ret(4),
+          // the gas going back to new clouds: pull away; the lens opens onto the sky
+          dolly(6, 0.12),
+          fov(7, 70, 10), drift(7, 0.03),
         ] },
     ],
   },
@@ -799,14 +872,18 @@ export const TOURS: TourDef[] = [
     title: 'Kara Delikler',
     summary: 'En yakın uyuyan kara delikten galaksilerin merkezindeki devlere.',
     steps: [
-      { id: 'cygx1', target: bh('cygx1'), text: 'Kara delikler turuna hoş geldiniz. Başlangıç noktamız bir klasik: Cygnus X-Bir. Bin dokuz yüz altmış dörtte bir roketle keşfedilen bu X-ışını kaynağı, bin dokuz yüz yetmiş birde bir kara delik olarak tanımlanan ilk nesne oldu. Yirmi bir güneş kütlesindedir ve mavi süperdev yoldaşı HDE iki yüz yirmi altı bin sekiz yüz altmış sekiz ile beş buçuk günde bir ortak kütle merkezlerinin etrafında döner. Yoldaşından çektiği gaz, parlak bir diskte milyonlarca dereceye ısınır. Stephen Hawking bu nesnenin kara delik olmadığına bahse girmişti; bin dokuz yüz doksanda yenilgisini kabul etti.',
+      { id: 'cygx1', target: bh('cygx1'), text: 'Bin yedi yüz seksen üçte İngiliz bir papaz, John Michell, cesur bir soru sordu: bir yıldız, ışığın bile ondan kaçamayacağı kadar ağır olabilir mi? İki yüz yıl boyunca bu fikir kâğıt üzerinde bir merak olarak kaldı; Einstein\'ın denklemleri bile fizikçileri böyle nesnelerin gerçekten var olduğuna uzun süre inandıramadı. Kara delikler turuna hoş geldiniz. Başlangıç noktamız bir klasik: Cygnus X-Bir. Bin dokuz yüz altmış dörtte bir roketle keşfedilen bu X-ışını kaynağı, bin dokuz yüz yetmiş birde bir kara delik olarak tanımlanan ilk nesne oldu. Yirmi bir güneş kütlesindedir ve mavi süperdev yoldaşı HDE iki yüz yirmi altı bin sekiz yüz altmış sekiz ile beş buçuk günde bir ortak kütle merkezlerinin etrafında döner. Yoldaşından çektiği gaz, parlak bir diskte milyonlarca dereceye ısınır. Stephen Hawking bu nesnenin kara delik olmadığına bahse girmişti; bin dokuz yüz doksanda yenilgisini kabul etti.',
         cues: [
-          card(2, { image: 'cygx1.jpg', source: 'ESA/Hubble (CC BY 4.0)', title: 'Cygnus X-1', text: 'Sanatçı çizimi: mavi süperdevden kara deliğe akan gaz.' }),
+          // Michell's question: a slow push toward the lensed dark
+          dolly(0, -0.05),
+          card(1, { big: '1783', title: 'Karanlık yıldızlar', text: 'John Michell, Royal Society\'de okunan mektubunda: yeterince büyük bir yıldızın ışığı ona geri düşer.' }),
+          dolly(2, 0),
+          card(4, { image: 'cygx1.jpg', source: 'ESA/Hubble (CC BY 4.0)', title: 'Cygnus X-1', text: 'Sanatçı çizimi: mavi süperdevden kara deliğe akan gaz.' }),
           // the pair: above the orbit while the clock runs at 50 000× (one 5.6-day orbit ≈ 10 s)
-          uncard(3), rate(3, 5e4), overview(3, 'cygx1'),
+          uncard(5), rate(5, 5e4), overview(5, 'cygx1'),
           // back to the disc, the blue supergiant looming behind it (its disc spans ~25° from the hole)
-          rate(4, 1), shot(4, 'cygx1', '@star', 110, { az: 28, elev: 6 }),
-          card(5, { big: '1 yıllık Penthouse', title: 'Hawking\'in bahsi', text: 'Kip Thorne\'a karşı girdiği bahsi kaybetti; kaybetmekten memnundu: kara delikler üzerine çalışmaları boşa gitmemişti.' }),
+          rate(6, 1), shot(6, 'cygx1', '@star', 110, { az: 28, elev: 6 }),
+          card(7, { big: '1 yıllık Penthouse', title: 'Hawking\'in bahsi', text: 'Kip Thorne\'a karşı girdiği bahsi kaybetti; kaybetmekten memnundu: kara delikler üzerine çalışmaları boşa gitmemişti.' }),
         ] },
       { id: 'gaiabh1', target: bh('b2'), text: 'Gaia BH Bir, bize en yakın bilinen kara delik: bin beş yüz altmış ışık yılı. Ne diski var ne de X-ışını yayar; tamamen sessiz. Varlığı yalnızca Güneş benzeri bir yıldızın görünmez bir eşin etrafında yüz seksen altı günde bir sallanmasından anlaşıldı. Bu sallantıyı iki bin yirmi ikide Gaia uydusunun hassas konum ölçümleri ortaya çıkardı. Dokuz virgül altı güneş kütlesindedir ve olay ufkunun çapı yalnızca elli altı kilometredir. Burada onu yalnızca arka plandaki yıldızları büken kütle çekimsel merceklemeyle görebilirsiniz.',
         cues: [
@@ -830,10 +907,14 @@ export const TOURS: TourDef[] = [
           rate(4, 1), ret(4),
           card(4, { image: 'sgra.jpg', source: EHT, title: 'Sagittarius A*', text: 'Olay Ufku Teleskobu, Mayıs 2022: gölgenin etrafındaki sıcak gaz halkası.' }),
         ] },
-      { id: 'm87', target: bh('b1'), text: 'Son durağımız, fotoğrafı çekilen ilk kara delik: M Seksen Yedi yıldız. Elli beş milyon ışık yılı uzaktaki dev eliptik galaksi Virgo A\'nın merkezinde oturur. Altı buçuk milyar güneş kütlesindedir; olay ufku Plüton\'un yörüngesinden altı kat geniştir. İki bin on dokuzda yayımlanan ünlü turuncu halka görüntüsü, gölgesini çevreleyen sıcak gazın ışığıdır. Buradan ışık hızına yakın bir jet fırlar ve beş bin ışık yılı boyunca uzanır. Kara delikler turumuz sona erdi.',
+      { id: 'm87', target: bh('b1'), text: 'Son durağımız, fotoğrafı çekilen ilk kara delik: M Seksen Yedi yıldız. Elli beş milyon ışık yılı uzaktaki dev eliptik galaksi Virgo A\'nın merkezinde oturur. Altı buçuk milyar güneş kütlesindedir; olay ufku Plüton\'un yörüngesinden altı kat geniştir. İki bin on dokuzda yayımlanan ünlü turuncu halka görüntüsü, gölgesini çevreleyen sıcak gazın ışığıdır. Buradan ışık hızına yakın bir jet fırlar ve beş bin ışık yılı boyunca uzanır. Michell\'in kâğıt üzerindeki karanlık yıldızlarından iki yüz otuz yılı aşkın bir süre sonra, Dünya büyüklüğünde bir teleskop kurduk ve birinin gölgesini fotoğrafladık. Evrenin en karanlık nesneleri aynı zamanda en parlak ateşlerini yakıyor: kuasarlar, jetler ve galaksileri şekillendiren rüzgârlar onların eseri. Kara delikler turumuz sona erdi.',
         cues: [
           card(3, { image: 'm87eht.jpg', source: EHT, title: 'M87*', text: 'İlk kara delik fotoğrafı, 10 Nisan 2019; sekiz teleskop, Dünya büyüklüğünde bir dizi.' }),
           card(4, { image: 'm87jet.jpg', source: HUBBLE, title: 'M87 jeti', text: 'Beş bin ışık yılı uzunluğunda plazma jeti; Hubble.' }),
+          // telephoto on the shadow, then the pull-back to its fires
+          fov(5, 22, 8), dolly(5, -0.03),
+          fov(6, 60, 8), dolly(6, 0.15),
+          drift(7, 0.03),
         ] },
     ],
   },
@@ -844,9 +925,13 @@ export const TOURS: TourDef[] = [
     title: 'Pulsarlar: Kozmik Fenerler',
     summary: 'Saniyede yüzlerce kez dönen nötron yıldızları ve değiştirdikleri fizik.',
     steps: [
-      { id: 'b1919', target: lm('l-b1919'), text: 'Pulsarlar turuna hoş geldiniz. Her şey bin dokuz yüz altmış yedide, Cambridge\'de doktora öğrencisi Jocelyn Bell\'in radyo verilerinde her bir virgül üç saniyede bir tekrarlayan tuhaf bir sinyal fark etmesiyle başladı. Sinyal o kadar düzenliydi ki ekibi ona yarı şaka Küçük Yeşil Adamlar anlamına gelen LGM Bir adını verdi. Karşınızdaki PSR B Bin Dokuz Yüz On Dokuz artı Yirmi Bir, işte o ilk pulsar. Aslında bir deniz feneri gibi dönen ve ışın demetini her turda bize doğrultan bir nötron yıldızıydı.',
+      { id: 'b1919', target: lm('l-b1919'), text: 'Dev bir yıldız öldüğünde geride bazen bir şehir büyüklüğünde ama Güneş\'ten ağır bir kalp kalır. Bu kalp saniyede onlarca, hatta yüzlerce kez döner ve milyonlarca yıl boyunca evrenin en hassas saatlerinden biri olarak tıklamaya devam eder. Pulsarlar turuna hoş geldiniz. Her şey bin dokuz yüz altmış yedide, Cambridge\'de doktora öğrencisi Jocelyn Bell\'in radyo verilerinde her bir virgül üç saniyede bir tekrarlayan tuhaf bir sinyal fark etmesiyle başladı. Sinyal o kadar düzenliydi ki ekibi ona yarı şaka Küçük Yeşil Adamlar anlamına gelen LGM Bir adını verdi. Karşınızdaki PSR B Bin Dokuz Yüz On Dokuz artı Yirmi Bir, işte o ilk pulsar. Aslında bir deniz feneri gibi dönen ve ışın demetini her turda bize doğrultan bir nötron yıldızıydı.',
         cues: [
-          card(1, { big: '1,337 saniye', title: 'LGM-1', text: 'Jocelyn Bell\'in 1967\'de kâğıt şeritlerde fark ettiği sinyalin periyodu.' }),
+          // closing in on the heart a star left behind
+          dolly(0, -0.06),
+          fov(1, 35, 8),
+          dolly(2, 0),
+          card(3, { big: '1,337 saniye', title: 'LGM-1', text: 'Jocelyn Bell\'in 1967\'de kâğıt şeritlerde fark ettiği sinyalin periyodu.' }),
         ] },
       { id: 'crab', target: lm('l-crabpsr'), text: 'Yengeç Pulsarı, bin elli dört yılındaki süpernovanın geride bıraktığı nötron yıldızı. Saniyede otuz kez döner ve Yengeç Bulutsusu\'nun tamamını enerjisiyle aydınlatır. Yalnızca yirmi kilometre çapındadır ama Güneş\'ten daha ağırdır; bir şeker küpü büyüklüğündeki maddesi bir dağ kadar çeker. Radyo dalgalarından gama ışınlarına kadar her dalga boyunda nabız atar. Gözlemlenebilir bir süpernovayla kesin olarak eşleştirilen ilk pulsardır ve pulsarların patlayan yıldızlardan doğduğunu kanıtlamıştır.',
         cues: [
@@ -872,9 +957,12 @@ export const TOURS: TourDef[] = [
         cues: [
           card(2, { big: 'Draugr · Poltergeist · Phobetor', title: 'İlk ötegezegenler, 1992', text: 'Adlarını hayaletlerden ve yaşayan ölülerden aldılar.' }),
         ] },
-      { id: 'sgr1806', target: lm('l-sgr1806'), text: 'Son durağımız bir magnetar: SGR Bin Sekiz Yüz Altı eksi Yirmi. Magnetarlar, evrendeki en güçlü manyetik alanlara sahip nötron yıldızlarıdır; bu alan Dünya\'nınkinden bin trilyon kat güçlüdür ve bin kilometre öteden bir kredi kartını siler. İki bin dört Aralık\'ının yirmi yedisinde kabuğu çatladı ve onda bir saniyede Güneş\'in yüz bin yılda yaydığı kadar enerji saçtı. Elli bin ışık yılı uzaktan gelen bu patlama Dünya\'nın üst atmosferini ölçülebilir biçimde iyonlaştırdı ve uyduların dedektörlerini kör etti. Bugüne kadar Güneş Sistemi dışından gözlenen en parlak olaydır. Pulsarlar turumuz sona erdi.',
+      { id: 'sgr1806', target: lm('l-sgr1806'), text: 'Son durağımız bir magnetar: SGR Bin Sekiz Yüz Altı eksi Yirmi. Magnetarlar, evrendeki en güçlü manyetik alanlara sahip nötron yıldızlarıdır; bu alan Dünya\'nınkinden bin trilyon kat güçlüdür ve bin kilometre öteden bir kredi kartını siler. İki bin dört Aralık\'ının yirmi yedisinde kabuğu çatladı ve onda bir saniyede Güneş\'in yüz bin yılda yaydığı kadar enerji saçtı. Elli bin ışık yılı uzaktan gelen bu patlama Dünya\'nın üst atmosferini ölçülebilir biçimde iyonlaştırdı ve uyduların dedektörlerini kör etti. Bugüne kadar Güneş Sistemi dışından gözlenen en parlak olaydır. Bir öğrencinin kâğıt şeritlerde fark ettiği küçük bir kıpırtıdan kütle çekim dalgalarına, ilk ötegezegenlere ve maddenin en uç hâllerine uzanan bir yol yürüdük. Galaksimizde hâlâ duymadığımız on binlerce kozmik fener dönüyor; onları duymak için yalnızca kulak vermeye devam etmemiz gerekiyor. Pulsarlar turumuz sona erdi.',
         cues: [
           card(2, { big: '0,1 saniye', title: '27 Aralık 2004', text: 'Güneş\'in yüz bin yılda yaydığı kadar enerji, bir göz kırpışında.' }),
+          // back to where it began, then out into a galaxy full of unheard beacons
+          card(5, { big: '1,337 saniye', title: 'LGM-1', text: 'Jocelyn Bell\'in 1967\'de kâğıt şeritlerde fark ettiği sinyalin periyodu.' }),
+          uncard(6), dolly(6, 0.12), fov(6, 75, 10),
         ] },
     ],
   },
@@ -885,10 +973,13 @@ export const TOURS: TourDef[] = [
     title: 'Komşu Yıldızlar',
     summary: 'En yakın yıldızlardan gökyüzünün en parlaklarına: altı yıldız, altı öykü.',
     steps: [
-      { id: 'proxima', target: star('Proxima Centauri'), text: 'Komşu yıldızlar turuna hoş geldiniz. İlk durağımız, Güneş\'e en yakın yıldız: dört virgül iki ışık yılı uzaklıktaki Proxima Centauri. Küçük ve soğuk bir kırmızı cücedir; Güneş\'in yalnızca yüzde on ikisi kadar kütlesi vardır ve çıplak gözle görülemeyecek kadar sönüktür. Ama ani parlamalarla yüzeyinden şiddetli radyasyon püskürtür. İki bin on altıda etrafında Dünya büyüklüğünde bir gezegen keşfedildi: Proxima b, yaşanabilir bölgede, yani yüzeyinde sıvı suyun bulunabileceği uzaklıkta döner. Bugünkü en hızlı araçlarımızla buraya ulaşmak yetmiş bin yıl sürerdi.',
+      { id: 'proxima', target: star('Proxima Centauri'), text: 'Gece gökyüzünde çıplak gözle gördüğünüz yıldızların neredeyse hepsi, Güneş\'in birkaç bin ışık yılı içindeki komşularıdır; galaksinin geri kalanı ortak bir pusa karışır. Her biri bir güneştir, bazılarının çevresinde dünyalar döner ve ışıkları bize yıllar, hatta yüzyıllar süren yolculuklarla ulaşır. Komşu yıldızlar turuna hoş geldiniz. İlk durağımız, Güneş\'e en yakın yıldız: dört virgül iki ışık yılı uzaklıktaki Proxima Centauri. Küçük ve soğuk bir kırmızı cücedir; Güneş\'in yalnızca yüzde on ikisi kadar kütlesi vardır ve çıplak gözle görülemeyecek kadar sönüktür. Ama ani parlamalarla yüzeyinden şiddetli radyasyon püskürtür. İki bin on altıda etrafında Dünya büyüklüğünde bir gezegen keşfedildi: Proxima b, yaşanabilir bölgede, yani yüzeyinde sıvı suyun bulunabileceği uzaklıkta döner. Bugünkü en hızlı araçlarımızla buraya ulaşmak yetmiş bin yıl sürerdi.',
         cues: [
-          card(4, { image: 'proxima.jpg', source: ESO, title: 'Proxima b', text: 'Sanatçı çizimi: yıldızına on bir günde bir tur atan, Dünya kütlesinde bir gezegen.' }),
-          card(5, { big: '70.000 yıl', title: 'Voyager hızıyla', text: 'Dört virgül iki ışık yılı: ışık için dört yıl, bizim için binlerce kuşak.' }),
+          // a wide sky streaming past on the way out; the lens settles as we arrive
+          fov(0, 85), drift(0, 0.03),
+          fov(2, 50, 6),
+          card(6, { image: 'proxima.jpg', source: ESO, title: 'Proxima b', text: 'Sanatçı çizimi: yıldızına on bir günde bir tur atan, Dünya kütlesinde bir gezegen.' }),
+          card(7, { big: '70.000 yıl', title: 'Voyager hızıyla', text: 'Dört virgül iki ışık yılı: ışık için dört yıl, bizim için binlerce kuşak.' }),
         ] },
       { id: 'alphacen', target: star('Rigil Kentaurus'), text: 'Proxima aslında büyük bir ailenin uzak üyesi. Alpha Centauri A ve B, dört virgül dört ışık yılı uzaklıkta birbirlerinin etrafında seksen yılda bir dönen iki yıldızdır. A, Güneş\'e şaşırtıcı ölçüde benzer: biraz daha büyük, biraz daha parlak. B ise biraz daha küçük ve turuncudur. Birlikte gökyüzünün üçüncü en parlak yıldızı olarak görünürler. Breakthrough Starshot projesi, lazerle itilen pul büyüklüğünde sondaları ışık hızının beşte biriyle buraya göndermeyi ve yirmi yılda ulaşmayı hayal ediyor.',
         cues: [
@@ -908,9 +999,13 @@ export const TOURS: TourDef[] = [
         cues: [
           card(2, { big: '×700', title: 'Güneş\'in çapının', text: 'Güneş\'in yerine konsa Merkür, Venüs, Dünya ve Mars onun içinde kalırdı.' }),
         ] },
-      { id: 'deneb', target: star('Deneb'), text: 'Son durağımız Deneb, Kuğu takımyıldızının kuyruğu ve bu turdaki en uzak yıldız: yaklaşık iki bin altı yüz ışık yılı. Buna rağmen gökyüzünün en parlak yirmi yıldızından biridir; çünkü Güneş\'ten yaklaşık iki yüz bin kat daha fazla ışık saçan, bilinen en parlak yıldızlardan biridir. Bugün gördüğünüz ışığı, Roma Cumhuriyeti\'nin kurulduğu dönemde yola çıktı. Mavi-beyaz bir süperdevdir ve birkaç milyon yıl içinde ya süpernova olacak ya da kırmızı bir süperdeve dönüşecek. Komşu yıldızlar turumuz sona erdi.',
+      { id: 'deneb', target: star('Deneb'), text: 'Son durağımız Deneb, Kuğu takımyıldızının kuyruğu ve bu turdaki en uzak yıldız: yaklaşık iki bin altı yüz ışık yılı. Buna rağmen gökyüzünün en parlak yirmi yıldızından biridir; çünkü Güneş\'ten yaklaşık iki yüz bin kat daha fazla ışık saçan, bilinen en parlak yıldızlardan biridir. Bugün gördüğünüz ışığı, Roma Cumhuriyeti\'nin kurulduğu dönemde yola çıktı. Mavi-beyaz bir süperdevdir ve birkaç milyon yıl içinde ya süpernova olacak ya da kırmızı bir süperdeve dönüşecek. Bu gece dışarı çıkıp Vega\'ya baktığınızda yirmi beş yıl önce yola çıkmış bir ışık göreceksiniz; Deneb\'e baktığınızda ise Roma henüz bir krallıkken yola çıkmış bir ışık. Gökyüzü tek bir anın fotoğrafı değil; farklı çağlardan gelen mektupların aynı gecede buluştuğu bir zaman kolajıdır. Komşu yıldızlar turumuz sona erdi.',
         cues: [
           card(2, { big: '2.600 yıl', title: 'Işığın yolculuğu', text: 'Gördüğünüz ışık yola çıktığında Roma henüz bir krallıktı.' }),
+          // stepping back from Deneb into the sky as a collage of times
+          card(4, { big: '25 yıl · 2.600 yıl', title: 'Vega ve Deneb: ışığın yaşı', text: 'Aynı gece, aynı gökyüzünde; biri dünkü bir mektup, öteki antik çağdan.', until: 6 }),
+          dolly(4, 0.12),
+          fov(5, 80, 10), drift(5, 0.03),
         ] },
     ],
   },
@@ -921,10 +1016,15 @@ export const TOURS: TourDef[] = [
     title: 'Galaksiler: Evin Ötesi',
     summary: 'Samanyolu\'nun dışına çıkıp uydu galaksilerimizi, Andromeda\'yı ve çarpışan galaksileri ziyaret edin.',
     steps: [
-      { id: 'milkyway', target: gal('#0'), text: 'Galaksiler turuna hoş geldiniz. Önce evimize dışarıdan bakalım. Samanyolu, yüz bin ışık yılı genişliğinde, merkezinde bir çubuk bulunan sarmal bir galaksidir ve iki yüz ile dört yüz milyar arasında yıldız içerir. Güneş, merkezden yirmi altı bin ışık yılı uzakta, Orion Kolu denilen küçük bir kolda yer alır ve galaksinin etrafındaki bir turunu iki yüz otuz milyon yılda tamamlar. Dinozorlar yok olduğundan beri Güneş bu turun yalnızca dörtte birini aldı. Merkezdeki parlak şişkinlikte dört milyon güneş kütleli bir kara delik gizlidir.',
+      { id: 'milkyway', target: gal('#0'), text: 'Yüz yıl kadar önce pek çok gökbilimci, Samanyolu\'nun evrenin tamamı olduğunu düşünüyordu. Sonra gökyüzündeki soluk sarmal bulutsuların aslında başka galaksiler olduğu anlaşıldı; bugün gözlemlenebilir evrende yüz milyarlarca galaksi olduğunu biliyoruz ve her biri milyarlarca yıldız barındırıyor. Galaksiler turuna hoş geldiniz. Önce evimize dışarıdan bakalım. Samanyolu, yüz bin ışık yılı genişliğinde, merkezinde bir çubuk bulunan sarmal bir galaksidir ve iki yüz ile dört yüz milyar arasında yıldız içerir. Güneş, merkezden yirmi altı bin ışık yılı uzakta, Orion Kolu denilen küçük bir kolda yer alır ve galaksinin etrafındaki bir turunu iki yüz otuz milyon yılda tamamlar. Dinozorlar yok olduğundan beri Güneş bu turun yalnızca dörtte birini aldı. Merkezdeki parlak şişkinlikte dört milyon güneş kütleli bir kara delik gizlidir.',
         cues: [
-          card(3, { big: '230 milyon yıl', title: 'Bir galaktik yıl', text: 'Güneş bugüne kadar galaksinin etrafında yalnızca yirmi tur attı.' }),
-          card(5, { image: 'sgra.jpg', source: EHT, title: 'Sagittarius A*', text: 'Merkezdeki kara deliğin gölgesi; Olay Ufku Teleskobu, 2022.' }),
+          // the universe outgrowing the Milky Way: the lens opens and the camera backs away, then returns home
+          card(1, { big: '1920', title: 'Büyük Tartışma', text: 'Shapley ile Curtis sarmal bulutsuların ne olduğunu tartıştı; yanıtı üç yıl sonra Hubble verdi.' }),
+          fov(1, 80, 10), dolly(1, 0.04),
+          uncard(3), fov(3, 50, 6), dolly(3, -0.04),
+          dolly(5, 0),
+          card(5, { big: '230 milyon yıl', title: 'Bir galaktik yıl', text: 'Güneş bugüne kadar galaksinin etrafında yalnızca yirmi tur attı.' }),
+          card(7, { image: 'sgra.jpg', source: EHT, title: 'Sagittarius A*', text: 'Merkezdeki kara deliğin gölgesi; Olay Ufku Teleskobu, 2022.' }),
         ], orbitRate: 0.03 },
       { id: 'lmc', target: gal('Büyük Macellan'), text: 'Büyük Macellan Bulutu, Samanyolu\'nun en büyük uydu galaksisi. Yüz altmış bin ışık yılı uzaklıktadır ve güney yarım küreden çıplak gözle gökyüzünde kopmuş bir bulut parçası gibi görünür. Kütlesi bizimkinin yaklaşık yüzde biridir. İçinde, Yerel Grup\'un en büyük yıldız doğumevi olan Tarantula Bulutsusu ve bilinen en ağır yıldızlardan R Yüz Otuz Altı a Bir bulunur. Bin dokuz yüz seksen yedide burada patlayan süpernova, dört yüz yıldır çıplak gözle görülen ilk süpernovaydı. Birkaç milyar yıl içinde Samanyolu onu yutacak.',
         cues: [
@@ -952,9 +1052,13 @@ export const TOURS: TourDef[] = [
         cues: [
           card(1, { image: 'sombrero.jpg', source: 'NASA/ESA/Hubble Heritage Team', title: 'Sombrero Galaksisi', text: 'Hubble, 2003: altı derecelik bir eğimle görülen toz şeridi.' }),
         ], orbitRate: 0.03 },
-      { id: 'antennae', target: gal('Antenler'), text: 'Son durağımızda galaksilerin de çarpışabildiğini göreceğiz. Antenler, kırk beş milyon ışık yılı uzaklıkta birbirinin içinden geçmekte olan iki sarmal galaksidir. Karşılaşma yaklaşık altı yüz milyon yıl önce başladı. Kütle çekimi yıldızlardan oluşan iki uzun kuyruğu uzaya savurdu; adını veren böcek antenleri bunlardır. Yıldızlar birbirine çarpmaz, aralarındaki uzaklıklar çok büyüktür; ama gaz bulutları çarpışır ve sıkışarak milyarlarca yeni yıldız doğurur. Birkaç yüz milyon yıl içinde ikisi tek bir eliptik galaksiye dönüşecek. Samanyolu ile Andromeda\'nın geleceği de aynen böyle görünecek. Galaksiler turumuz sona erdi.',
+      { id: 'antennae', target: gal('Antenler'), text: 'Son durağımızda galaksilerin de çarpışabildiğini göreceğiz. Antenler, kırk beş milyon ışık yılı uzaklıkta birbirinin içinden geçmekte olan iki sarmal galaksidir. Karşılaşma yaklaşık altı yüz milyon yıl önce başladı. Kütle çekimi yıldızlardan oluşan iki uzun kuyruğu uzaya savurdu; adını veren böcek antenleri bunlardır. Yıldızlar birbirine çarpmaz, aralarındaki uzaklıklar çok büyüktür; ama gaz bulutları çarpışır ve sıkışarak milyarlarca yeni yıldız doğurur. Birkaç yüz milyon yıl içinde ikisi tek bir eliptik galaksiye dönüşecek. Samanyolu ile Andromeda\'nın geleceği de aynen böyle görünecek. O çarpışmayı izleyecek olan büyük olasılıkla biz olmayacağız; Dünya o zamana kadar çoktan yaşanmaz hâle gelmiş olacak. Şimdilik bizler, yüz milyarlarca galaksiden birinin sakin bir kolunda, sıradan bir yıldızın çevresinde bütün bunları anlamaya çalışan meraklı canlılarız. Evrenin büyüklüğü bizi küçültmüyor; onu kavrayabiliyor olmamız bizi büyütüyor. Galaksiler turumuz sona erdi.',
         cues: [
           card(1, { image: 'antennae.jpg', source: 'NASA/ESA/CXC/JPL-Caltech', title: 'Antenler', text: 'Hubble, Chandra ve Spitzer\'in birleşik görüntüsü: pembe gaz, mavi X-ışını, kırmızı toz.' }),
+          // the farewell: the collision shrinks into a sky of galaxies
+          uncard(7),
+          dolly(8, 0.1), fov(8, 80, 12),
+          drift(9, 0.04),
         ], orbitRate: 0.03 },
     ],
   },

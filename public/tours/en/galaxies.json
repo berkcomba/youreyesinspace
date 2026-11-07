@@ -24,47 +24,62 @@
    ]
   },
   "antennae": {
-   "hash": "d2f31b024525",
-   "duration": 43.91,
+   "hash": "8fc908721d12",
+   "duration": 62.39,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 4.34,
+     "start": 0.1,
+     "end": 4.02,
      "text": "At our final stop we will see that galaxies can collide too."
     },
     {
-     "start": 4.34,
-     "end": 11.08,
+     "start": 4.02,
+     "end": 10.46,
      "text": "The Antennae are two spiral galaxies 45 million light-years away, passing through each other."
     },
     {
-     "start": 11.08,
-     "end": 14.62,
+     "start": 10.46,
+     "end": 13.92,
      "text": "The encounter began about 600 million years ago."
     },
     {
-     "start": 14.62,
-     "end": 22.13,
+     "start": 13.92,
+     "end": 20.7,
      "text": "Gravity flung two long tails of stars out into space; these are the insect antennae that give them their name."
     },
     {
-     "start": 22.13,
-     "end": 32.25,
+     "start": 20.7,
+     "end": 30.36,
      "text": "Stars do not collide with each other, the distances between them are very large; but the gas clouds collide and compress, giving birth to billions of new stars."
     },
     {
-     "start": 32.25,
-     "end": 37.25,
+     "start": 30.36,
+     "end": 35.03,
      "text": "Within a few hundred million years the two will turn into a single elliptical galaxy."
     },
     {
-     "start": 37.25,
-     "end": 41.77,
+     "start": 35.03,
+     "end": 39.25,
      "text": "The future of the Milky Way and Andromeda will look exactly like this too."
     },
     {
-     "start": 41.77,
-     "end": 43.91,
+     "start": 39.25,
+     "end": 46.01,
+     "text": "Whoever watches that collision will most likely not be us; by then the Earth will long since have become uninhabitable."
+    },
+    {
+     "start": 46.01,
+     "end": 54.53,
+     "text": "For now, we are curious creatures on a quiet arm of one of hundreds of billions of galaxies, circling an ordinary star and trying to make sense of it all."
+    },
+    {
+     "start": 54.53,
+     "end": 60.35,
+     "text": "The vastness of the universe does not make us small; our ability to grasp it makes us great."
+    },
+    {
+     "start": 60.35,
+     "end": 62.39,
      "text": "Our galaxies tour has come to an end."
     }
    ]
@@ -137,37 +152,47 @@
    ]
   },
   "milkyway": {
-   "hash": "9aca70d1895e",
-   "duration": 37.83,
+   "hash": "2ef4ab6ba122",
+   "duration": 52.15,
    "sentences": [
     {
      "start": 0.1,
-     "end": 2.58,
+     "end": 5.96,
+     "text": "About a hundred years ago, many astronomers believed that the Milky Way was the entire universe."
+    },
+    {
+     "start": 5.96,
+     "end": 18.78,
+     "text": "Then it became clear that the faint spiral nebulae in the sky were in fact other galaxies; today we know that the observable universe contains hundreds of billions of galaxies, each home to billions of stars."
+    },
+    {
+     "start": 18.78,
+     "end": 20.7,
      "text": "Welcome to the galaxies tour."
     },
     {
-     "start": 2.58,
-     "end": 5.68,
+     "start": 20.7,
+     "end": 23.46,
      "text": "First, let's look at our home from the outside."
     },
     {
-     "start": 5.68,
-     "end": 16.8,
+     "start": 23.46,
+     "end": 33.21,
      "text": "The Milky Way is a spiral galaxy 100,000 light-years across, with a bar at its center, and it contains between 200 and 400 billion stars."
     },
     {
-     "start": 16.8,
-     "end": 27.84,
+     "start": 33.21,
+     "end": 43.15,
      "text": "The Sun lies 26,000 light-years from the center, in a small arm called the Orion Arm, and completes one orbit around the galaxy in 230 million years."
     },
     {
-     "start": 27.84,
-     "end": 33.02,
+     "start": 43.15,
+     "end": 47.83,
      "text": "Since the dinosaurs vanished, the Sun has completed only a quarter of this orbit."
     },
     {
-     "start": 33.02,
-     "end": 37.83,
+     "start": 47.83,
+     "end": 52.15,
      "text": "Hidden in the bright central bulge is a black hole of 4 million solar masses."
     }
    ]

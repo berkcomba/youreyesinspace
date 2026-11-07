@@ -34,32 +34,42 @@
    ]
   },
   "iapetus": {
-   "hash": "95e6260b67af",
-   "duration": 39.67,
+   "hash": "5c15eb40b6f6",
+   "duration": 59.83,
    "sentences": [
     {
      "start": 0.08,
-     "end": 9.04,
+     "end": 9.42,
      "text": "Notre dernière étape est Japet, l'une des lunes les plus étranges du Système solaire : une moitié est blanche comme la neige, l'autre noire comme le charbon."
     },
     {
-     "start": 9.04,
-     "end": 20.73,
+     "start": 9.42,
+     "end": 21.6,
      "text": "Comme elle présente toujours la même face vers l'avant sur son orbite, elle balaie la poussière sombre venue des anneaux extérieurs ; la glace s'évapore des régions sombres qui se réchauffent et retombe sur le côté brillant."
     },
     {
-     "start": 20.73,
-     "end": 29.39,
+     "start": 21.6,
+     "end": 30.87,
      "text": "En plein milieu de son équateur s'étend une crête montagneuse de 13 kilomètres de haut et de 1 300 kilomètres de long ; cela lui donne l'aspect d'une noix."
     },
     {
-     "start": 29.39,
-     "end": 37.57,
+     "start": 30.87,
+     "end": 39.59,
      "text": "À 3,5 millions de kilomètres de Saturne, elle en fait le tour en 79 jours ; c'est la seule grande lune qui puisse voir les anneaux d'en haut."
     },
     {
-     "start": 37.57,
-     "end": 39.67,
+     "start": 39.59,
+     "end": 47.43,
+     "text": "En 2013, Cassini s'est retournée depuis l'ombre de Saturne et a saisi sous les anneaux un point bleu pâle : la Terre."
+    },
+    {
+     "start": 47.43,
+     "end": 57.81,
+     "text": "Ce jour-là, partout dans le monde, des gens qui savaient que la photo allait être prise sont sortis et ont salué de la main une machine qui les regardait depuis un milliard et demi de kilomètres."
+    },
+    {
+     "start": 57.81,
+     "end": 59.83,
      "text": "Notre visite de Saturne est terminée."
     }
    ]
@@ -122,32 +132,42 @@
    ]
   },
   "saturn": {
-   "hash": "4012bd441108",
-   "duration": 32.63,
+   "hash": "6126f4c88afa",
+   "duration": 51.19,
    "sentences": [
     {
      "start": 0.08,
-     "end": 8.3,
+     "end": 10.22,
+     "text": "Lorsque Galilée pointa sa lunette vers Saturne en 1610, il vit de part et d'autre de la planète d'étranges renflements qu'il ne sut expliquer, et les appela des oreilles."
+    },
+    {
+     "start": 10.22,
+     "end": 19.22,
+     "text": "Il fallut un demi-siècle pour comprendre qu'il s'agissait d'anneaux ; aujourd'hui encore, ils nous coupent le souffle : c'est le plus élégant spectacle du Système solaire."
+    },
+    {
+     "start": 19.22,
+     "end": 27.13,
      "text": "Bienvenue dans la visite de Saturne : sixième planète depuis le Soleil, une géante gazeuse dont le diamètre est 9 fois celui de la Terre."
     },
     {
-     "start": 8.3,
-     "end": 14.22,
+     "start": 27.13,
+     "end": 33.07,
      "text": "Lorsque nous plaçons à côté d'elle une Terre à l'échelle réelle, on découvre à quel point même les anneaux sont vastes."
     },
     {
-     "start": 14.22,
-     "end": 18.37,
+     "start": 33.07,
+     "end": 36.99,
      "text": "Sa densité est inférieure à celle de l'eau ; c'est unique pour une planète."
     },
     {
-     "start": 18.37,
-     "end": 24.23,
+     "start": 36.99,
+     "end": 42.75,
      "text": "À l'équateur, les vents atteignent 1 800 kilomètres à l'heure, et son jour ne dure que 10 heures et demie."
     },
     {
-     "start": 24.23,
-     "end": 32.63,
+     "start": 42.75,
+     "end": 51.19,
      "text": "La sonde Cassini a étudié ce système de 2004 à 2017, pendant 13 ans, et a achevé sa mission en plongeant dans l'atmosphère de la planète."
     }
    ]

@@ -29,32 +29,42 @@
    ]
   },
   "iss": {
-   "hash": "c9e1bb1ed466",
-   "duration": 34.55,
+   "hash": "9171943f1595",
+   "duration": 55.67,
    "sentences": [
     {
      "start": 0.08,
-     "end": 8.3,
+     "end": 7.12,
+     "text": "Unsere Vorfahren saßen am Feuer, blickten zu den Sternen hinauf und dachten, sie würden sie niemals erreichen."
+    },
+    {
+     "start": 7.12,
+     "end": 21.86,
+     "text": "Im Jahr 1957 begann Sputnik, die Erde zu umkreisen; seitdem schicken wir Maschinen, die unsere Augen, unsere Ohren und unsere Neugier tragen, in jeden Winkel des Sonnensystems und sogar darüber hinaus."
+    },
+    {
+     "start": 21.86,
+     "end": 30.21,
      "text": "Wir beginnen diese Tour zu den Botschaftern der Menschheit im Weltraum in der Erdumlaufbahn: Vor Ihnen die Internationale Raumstation."
     },
     {
-     "start": 8.3,
-     "end": 18.95,
+     "start": 30.21,
+     "end": 40.43,
      "text": "In vierhundert Kilometern Höhe kreist sie mit achtundzwanzigtausend Kilometern pro Stunde und umrundet die Erde in neunzig Minuten; hier ist diese Umrundung, beschleunigt."
     },
     {
-     "start": 18.95,
-     "end": 22.49,
+     "start": 40.43,
+     "end": 43.75,
      "text": "Die Astronauten sehen sechzehn Sonnenaufgänge am Tag."
     },
     {
-     "start": 22.49,
-     "end": 27.25,
+     "start": 43.75,
+     "end": 48.25,
      "text": "Sie ist so groß wie ein Fußballfeld und vierhundertzwanzig Tonnen schwer."
     },
     {
-     "start": 27.25,
-     "end": 34.55,
+     "start": 48.25,
+     "end": 55.67,
      "text": "Seit November zweitausend leben ununterbrochen Menschen an Bord; das ist die längste kontinuierliche Präsenz der Menschheit im Weltraum."
     }
    ]
@@ -164,33 +174,48 @@
    ]
   },
   "voyager2": {
-   "hash": "6d30991a9b72",
-   "duration": 38.39,
+   "hash": "6b6e12fbd8b1",
+   "duration": 57.27,
    "sentences": [
     {
      "start": 0.06,
-     "end": 5.86,
+     "end": 5.88,
      "text": "Und Voyager Zwei ist das einzige Raumfahrzeug, das alle vier äußeren Planeten besucht hat."
     },
     {
-     "start": 5.86,
+     "start": 5.88,
      "end": 14.9,
      "text": "Sie wurde sechzehn Tage vor ihrer Schwestersonde gestartet, flog aber auf einer langsameren Route an Jupiter, Saturn, Uranus und Neptun vorbei."
     },
     {
      "start": 14.9,
-     "end": 23.17,
+     "end": 23.14,
      "text": "Das meiste, was wir über Uranus und Neptun wissen, stammt noch immer von ihren Vorbeiflügen tausendneunhundertsechsundachtzig und neunundachtzig."
     },
     {
-     "start": 23.17,
-     "end": 26.67,
+     "start": 23.14,
+     "end": 26.66,
      "text": "Zweitausendachtzehn erreichte sie den interstellaren Raum."
     },
     {
-     "start": 26.67,
-     "end": 38.39,
-     "text": "Die Plutoniumbatterien beider Voyager werden schwächer; in den zweitausenddreißiger Jahren werden sie verstummen, doch sie werden noch Milliarden Jahre lang zwischen den Sternen weitergleiten; hier endet unsere Tour."
+     "start": 26.66,
+     "end": 37.31,
+     "text": "Die Plutoniumbatterien beider Voyager werden schwächer; in den zweitausenddreißiger Jahren werden sie verstummen, doch sie werden noch Milliarden Jahre lang zwischen den Sternen weitergleiten."
+    },
+    {
+     "start": 37.31,
+     "end": 44.29,
+     "text": "Selbst wenn die Berge der Erde abgetragen und die Kontinente gewandert sind, werden die goldenen Schallplatten noch dort draußen sein."
+    },
+    {
+     "start": 44.29,
+     "end": 55.75,
+     "text": "Wie eine Flaschenpost im kosmischen Ozean werden sie nur eines sagen: Einst lebte hier, auf dem dritten Planeten eines Sterns namens Sonne, eine Art, die sich über die Sterne wunderte."
+    },
+    {
+     "start": 55.75,
+     "end": 57.27,
+     "text": "Hier endet unsere Tour."
     }
    ]
   }

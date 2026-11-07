@@ -74,6 +74,32 @@
     }
    ]
   },
+  "lookback": {
+   "hash": "d1a185b7ba48",
+   "duration": 31.67,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 9.54,
+     "text": "Von hier aus gesehen ist die Sonne nur noch der hellste Stern am Himmel; die Erde ist ein Pünktchen, zu klein, um es zu erkennen, verloren in ihrem Glanz."
+    },
+    {
+     "start": 9.54,
+     "end": 17.89,
+     "text": "Alle, die wir lieben, alle, die wir kennen, jede gelebte Geschichte und jeder Fluss, der je geflossen ist, befinden sich auf diesem Pünktchen."
+    },
+    {
+     "start": 17.89,
+     "end": 28.03,
+     "text": "Wir haben alle Planeten einen nach dem anderen besucht und doch auf keinem ein zweites Zuhause gefunden; vorerst ist dieses Pünktchen das einzige Zuhause, das wir haben."
+    },
+    {
+     "start": 28.03,
+     "end": 31.67,
+     "text": "Hier endet unsere Tour durch das Sonnensystem; gute Reise."
+    }
+   ]
+  },
   "mars": {
    "hash": "b2d55518f703",
    "duration": 49.91,
@@ -219,38 +245,33 @@
    ]
   },
   "pluto": {
-   "hash": "772e0682af51",
-   "duration": 44.47,
+   "hash": "119e331b6fb1",
+   "duration": 40.63,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 8.62,
+     "start": 0.08,
+     "end": 8.6,
      "text": "Unsere letzte Station ist Pluto; er wurde im Jahr neunzehnhundertdreißig entdeckt und galt bis zweitausendsechs als neunter Planet."
     },
     {
-     "start": 8.62,
-     "end": 14.66,
+     "start": 8.6,
+     "end": 14.36,
      "text": "Eigentlich ist er sogar kleiner als unser Mond: Stellen wir sie nebeneinander, wird das deutlich."
     },
     {
-     "start": 14.66,
-     "end": 21.5,
+     "start": 14.36,
+     "end": 21.19,
      "text": "Bis New Horizons im Jahr zweitausendfünfzehn an ihm vorbeiflog, war er nichts weiter als ein verschwommener Punkt."
     },
     {
-     "start": 21.5,
-     "end": 32.27,
+     "start": 21.19,
+     "end": 32.05,
      "text": "Die Sonde fand auf seiner Oberfläche eine riesige Herzform, Stickstoffgletscher und Berge aus Wassereis; die Oberflächentemperatur beträgt minus zweihundertdreißig Grad."
     },
     {
-     "start": 32.27,
-     "end": 40.85,
+     "start": 32.05,
+     "end": 40.63,
      "text": "Sein Mond Charon ist so groß, dass die beiden gemeinsam um einen gemeinsamen Massenschwerpunkt kreisen, der im Zwischenraum zwischen ihnen liegt."
-    },
-    {
-     "start": 40.85,
-     "end": 44.47,
-     "text": "Hier endet unsere Tour durch das Sonnensystem; gute Reise."
     }
    ]
   },
@@ -291,37 +312,52 @@
    ]
   },
   "sun": {
-   "hash": "bf2c5334b4ab",
-   "duration": 51.19,
+   "hash": "e9b912c32aa7",
+   "duration": 76.15,
    "sentences": [
     {
      "start": 0.08,
-     "end": 6.74,
+     "end": 9.74,
+     "text": "Vor viereinhalb Milliarden Jahren stürzte in einem ruhigen Arm der Milchstraße eine rotierende Wolke aus Gas und Staub unter ihrem eigenen Gewicht in sich zusammen."
+    },
+    {
+     "start": 9.74,
+     "end": 19.04,
+     "text": "In ihrem Zentrum entzündete sich ein Stern; die Krümel, die um ihn herum übrig blieben, wurden zu Planeten, zu Monden und schließlich zu uns."
+    },
+    {
+     "start": 19.04,
+     "end": 26.14,
+     "text": "Auf dieser Tour besuchen wir alle Mitglieder dieser Familie, eines nach dem anderen, vom größten bis zum kleinsten."
+    },
+    {
+     "start": 26.14,
+     "end": 32.6,
      "text": "Willkommen zur Tour durch das Sonnensystem; unsere Reise beginnt im Zentrum von allem, bei der Sonne."
     },
     {
-     "start": 6.74,
-     "end": 14.48,
+     "start": 32.6,
+     "end": 40.19,
      "text": "Dieser viereinhalb Milliarden Jahre alte Stern trägt allein neunundneunzig Komma acht Prozent der Gesamtmasse des Systems."
     },
     {
-     "start": 14.48,
-     "end": 27.79,
+     "start": 40.19,
+     "end": 53.07,
      "text": "Um zu sehen, wie groß sie ist, stellen wir eine maßstabsgetreue Erde daneben: Entlang ihres Durchmessers reihen sich hundertneun Erden nebeneinander, und in ihr finden eine Million dreihunderttausend Erden Platz."
     },
     {
-     "start": 27.79,
-     "end": 38.27,
+     "start": 53.07,
+     "end": 63.21,
      "text": "Ihre Oberfläche hat fünftausendfünfhundert Grad, ihr Kern fünfzehn Millionen Grad; jede Sekunde wandelt sie sechshundert Millionen Tonnen Wasserstoff in Helium um."
     },
     {
-     "start": 38.27,
-     "end": 46.81,
+     "start": 63.21,
+     "end": 71.79,
      "text": "Ziehen wir uns nun zurück und verfolgen wir die Reise des Lichts: Das Licht, das die Sonne verlässt, erreicht die Erde in acht Minuten und zwanzig Sekunden."
     },
     {
-     "start": 46.81,
-     "end": 51.19,
+     "start": 71.79,
+     "end": 76.15,
      "text": "Wenn Sie also zur Sonne blicken, sehen Sie in Wahrheit, wie sie vor acht Minuten war."
     }
    ]

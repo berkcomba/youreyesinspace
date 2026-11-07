@@ -70,73 +70,98 @@
    ]
   },
   "cygx1": {
-   "hash": "43785e443b33",
-   "duration": 38.49,
+   "hash": "5c3a495e3150",
+   "duration": 57.91,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 4.92,
+     "start": 0.08,
+     "end": 5.02,
      "text": "Y para las estrellas más masivas, la última parada: el agujero negro."
     },
     {
-     "start": 4.92,
-     "end": 8.82,
+     "start": 5.02,
+     "end": 8.88,
      "text": "Cygnus X-1 es el primer agujero negro descubierto."
     },
     {
-     "start": 8.82,
-     "end": 20.07,
+     "start": 8.88,
+     "end": 20.28,
      "text": "Este objeto, de veintiuna masas solares, atrae gas de su compañera supergigante azul; el gas se calienta hasta millones de grados en el disco de acreción y emite rayos X."
     },
     {
-     "start": 20.07,
-     "end": 25.57,
+     "start": 20.28,
+     "end": 25.7,
      "text": "Los dos giran alrededor de su centro de masas común una vez cada cinco días y medio."
     },
     {
-     "start": 25.57,
-     "end": 29.61,
+     "start": 25.7,
+     "end": 29.85,
      "text": "Ni siquiera la luz puede escapar del interior del horizonte de sucesos."
     },
     {
-     "start": 29.61,
-     "end": 35.59,
+     "start": 29.85,
+     "end": 35.77,
      "text": "El viaje que comenzó en una nube de gas termina en un agujero abierto en el propio espacio-tiempo."
     },
     {
-     "start": 35.59,
-     "end": 38.49,
+     "start": 35.77,
+     "end": 45.41,
+     "text": "Pero la historia no termina ahí: el gas que esparcen las estrellas moribundas se mezcla con nuevas nubes y un día da a luz nuevas estrellas y nuevos planetas."
+    },
+    {
+     "start": 45.41,
+     "end": 55.05,
+     "text": "El Sol es una de esas estrellas de una generación posterior; también nosotros formamos parte de ese ciclo, una forma que tiene el universo de conocerse a sí mismo."
+    },
+    {
+     "start": 55.05,
+     "end": 57.91,
      "text": "El recorrido de la vida de las estrellas termina aquí."
     }
    ]
   },
   "orion": {
-   "hash": "4e2d01f3f83e",
-   "duration": 34.07,
+   "hash": "81e8ad42a074",
+   "duration": 53.43,
    "sentences": [
     {
      "start": 0.08,
-     "end": 6.68,
+     "end": 9.28,
+     "text": "El hierro de su sangre, el calcio de sus huesos, el oxígeno que respira en este momento: nada de eso existía en los primeros instantes del universo."
+    },
+    {
+     "start": 9.28,
+     "end": 15.74,
+     "text": "Todo se cocinó en el interior de las estrellas y se esparció por el espacio cuando esas estrellas murieron."
+    },
+    {
+     "start": 15.74,
+     "end": 19.52,
+     "text": "Estamos hechos de polvo de estrellas, y no es una metáfora."
+    },
+    {
+     "start": 19.52,
+     "end": 25.76,
      "text": "En este recorrido seguiremos la historia de la vida de una estrella, desde su nacimiento hasta su muerte."
     },
     {
-     "start": 6.68,
-     "end": 16.41,
+     "start": 25.76,
+     "end": 35.39,
      "text": "La historia comienza en lugares como este: la nebulosa de Orión, una gigantesca fábrica de estrellas a mil trescientos cincuenta años luz de nosotros."
     },
     {
-     "start": 16.41,
-     "end": 22.51,
+     "start": 35.39,
+     "end": 41.41,
      "text": "El gas frío y el polvo se colapsan bajo su propio peso y forman cientos de estrellas nuevas."
     },
     {
-     "start": 22.51,
-     "end": 29.77,
+     "start": 41.41,
+     "end": 48.95,
      "text": "Las cuatro brillantes estrellas del Trapecio, en el centro, iluminan la nebulosa desde dentro con su luz ultravioleta."
     },
     {
-     "start": 29.77,
-     "end": 34.07,
+     "start": 48.95,
+     "end": 53.43,
      "text": "En el cielo se ve a simple vista como una mancha borrosa en la espada de Orión."
     }
    ]

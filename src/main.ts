@@ -372,26 +372,44 @@ class App implements UIHost {
    * it shows (the backdrop is meaningless without them). `fly` eases there instead of cutting.
    */
   showBackdrop(fly: boolean): void {
+    const pose = this.backdropPose();
+    if (!pose) return;
+    const { sun, dir, dist } = pose;
+    this.select(null);
+    this.selectedStar = null; this.selectedGalaxy = null; this.selectedLandmark = null; this.selectedFar = null;
+    if (fly) {
+      this.camera.goToVantage(sun, dir, dist, 4);
+      this.backdropPending = true;
+    } else {
+      this.camera.placeAt(sun, dir.multiplyScalar(dist));
+      this.camera.autoOrbit = BACKDROP_ORBIT;
+      this.backdrop = true;
+    }
+  }
+
+  /** Where the backdrop's camera stands: `dist` km from the Sun along `dir` (null outside the home system) */
+  private backdropPose(): { sun: CelestialBody; dir: Vector3; dist: number; north: Vector3 } | null {
     const u = this.universe;
-    if (u.current.catalogIndex !== 0) return; // only meaningful in the home system
+    if (u.current.catalogIndex !== 0) return null; // only meaningful in the home system
     const sun = u.star;
     const earth = u.get('earth');
-    if (!earth) return;
+    if (!earth) return null;
     const outer = u.get('jupiter') ?? earth;
     const span = outer.resolved?.a ?? outer.localPosition.length();
     const north = earth.orbitNormal.lengthSq() > 1e-6 ? earth.orbitNormal : sun.pole;
     const toEarth = new Vector3().copy(earth.position).sub(sun.position).normalize();
     const dir = north.clone().addScaledVector(toEarth, 0.85).normalize();
+    return { sun, dir, dist: span * 2.5, north };
+  }
+
+  /** Tour credits: one unbroken flyby past `ids` in turn, pulling out to the backdrop at the end */
+  flyByTo(ids: string[], seconds: number): void {
+    const pose = this.backdropPose();
+    if (!pose) return;
+    const bodies = ids.map((id) => this.universe.get(id)).filter((b): b is CelestialBody => !!b);
     this.select(null);
-    this.selectedStar = null; this.selectedGalaxy = null; this.selectedLandmark = null; this.selectedFar = null;
-    if (fly) {
-      this.camera.goToVantage(sun, dir, span * 2.5, 4);
-      this.backdropPending = true;
-    } else {
-      this.camera.placeAt(sun, dir.multiplyScalar(span * 2.5));
-      this.camera.autoOrbit = BACKDROP_ORBIT;
-      this.backdrop = true;
-    }
+    const end = pose.dir.clone().multiplyScalar(pose.dist).add(pose.sun.position);
+    this.camera.flyBy(bodies, pose.sun, end, pose.sun, pose.north, seconds);
   }
   /** the backdrop is on screen (cleared by any new flight, which also stops the auto-orbit) */
   private backdrop = false;

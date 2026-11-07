@@ -3,32 +3,42 @@
  "locale": "tr",
  "steps": {
   "b1919": {
-   "hash": "163a0510f74d",
-   "duration": 35.68,
+   "hash": "6fd60767e5c3",
+   "duration": 49.27,
    "sentences": [
     {
-     "start": 0.04,
-     "end": 2.3,
+     "start": 0.1,
+     "end": 6.18,
+     "text": "Dev bir yıldız öldüğünde geride bazen bir şehir büyüklüğünde ama Güneş'ten ağır bir kalp kalır."
+    },
+    {
+     "start": 6.18,
+     "end": 15.62,
+     "text": "Bu kalp saniyede onlarca, hatta yüzlerce kez döner ve milyonlarca yıl boyunca evrenin en hassas saatlerinden biri olarak tıklamaya devam eder."
+    },
+    {
+     "start": 15.62,
+     "end": 17.76,
      "text": "Pulsarlar turuna hoş geldiniz."
     },
     {
-     "start": 2.3,
-     "end": 14.69,
+     "start": 17.76,
+     "end": 29.21,
      "text": "Her şey bin dokuz yüz altmış yedide, Cambridge'de doktora öğrencisi Jocelyn Bell'in radyo verilerinde her bir virgül üç saniyede bir tekrarlayan tuhaf bir sinyal fark etmesiyle başladı."
     },
     {
-     "start": 14.69,
-     "end": 22.99,
+     "start": 29.21,
+     "end": 37.19,
      "text": "Sinyal o kadar düzenliydi ki ekibi ona yarı şaka Küçük Yeşil Adamlar anlamına gelen LGM Bir adını verdi."
     },
     {
-     "start": 22.99,
-     "end": 29.68,
+     "start": 37.19,
+     "end": 43.51,
      "text": "Karşınızdaki PSR B Bin Dokuz Yüz On Dokuz artı Yirmi Bir, işte o ilk pulsar."
     },
     {
-     "start": 29.68,
-     "end": 35.68,
+     "start": 43.51,
+     "end": 49.27,
      "text": "Aslında bir deniz feneri gibi dönen ve ışın demetini her turda bize doğrultan bir nötron yıldızıydı."
     }
    ]
@@ -163,37 +173,47 @@
    ]
   },
   "sgr1806": {
-   "hash": "a6d119057b70",
-   "duration": 41.35,
+   "hash": "ee7ae122db13",
+   "duration": 60.47,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 5.56,
+     "start": 0.1,
+     "end": 5.74,
      "text": "Son durağımız bir magnetar: SGR Bin Sekiz Yüz Altı eksi Yirmi."
     },
     {
-     "start": 5.56,
-     "end": 17.46,
+     "start": 5.74,
+     "end": 18.18,
      "text": "Magnetarlar, evrendeki en güçlü manyetik alanlara sahip nötron yıldızlarıdır; bu alan Dünya'nınkinden bin trilyon kat güçlüdür ve bin kilometre öteden bir kredi kartını siler."
     },
     {
-     "start": 17.46,
-     "end": 25.84,
+     "start": 18.18,
+     "end": 26.38,
      "text": "İki bin dört Aralık'ının yirmi yedisinde kabuğu çatladı ve onda bir saniyede Güneş'in yüz bin yılda yaydığı kadar enerji saçtı."
     },
     {
-     "start": 25.84,
-     "end": 35.12,
+     "start": 26.38,
+     "end": 35.71,
      "text": "Elli bin ışık yılı uzaktan gelen bu patlama Dünya'nın üst atmosferini ölçülebilir biçimde iyonlaştırdı ve uyduların dedektörlerini kör etti."
     },
     {
-     "start": 35.12,
-     "end": 39.43,
+     "start": 35.71,
+     "end": 39.77,
      "text": "Bugüne kadar Güneş Sistemi dışından gözlenen en parlak olaydır."
     },
     {
-     "start": 39.43,
-     "end": 41.35,
+     "start": 39.77,
+     "end": 50.25,
+     "text": "Bir öğrencinin kâğıt şeritlerde fark ettiği küçük bir kıpırtıdan kütle çekim dalgalarına, ilk ötegezegenlere ve maddenin en uç hâllerine uzanan bir yol yürüdük."
+    },
+    {
+     "start": 50.25,
+     "end": 58.59,
+     "text": "Galaksimizde hâlâ duymadığımız on binlerce kozmik fener dönüyor; onları duymak için yalnızca kulak vermeye devam etmemiz gerekiyor."
+    },
+    {
+     "start": 58.59,
+     "end": 60.47,
      "text": "Pulsarlar turumuz sona erdi."
     }
    ]

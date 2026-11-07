@@ -3,32 +3,42 @@
  "locale": "fr",
  "steps": {
   "b1919": {
-   "hash": "a2c3af1ae519",
-   "duration": 35.59,
+   "hash": "83d2af745531",
+   "duration": 49.91,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 2.46,
+     "start": 0.04,
+     "end": 7.28,
+     "text": "Quand une étoile massive meurt, elle laisse parfois derrière elle un cœur de la taille d'une ville, mais plus lourd que le Soleil."
+    },
+    {
+     "start": 7.28,
+     "end": 16.82,
+     "text": "Ce cœur tourne des dizaines, voire des centaines de fois par seconde, et continue de battre pendant des millions d'années, comme l'une des horloges les plus précises de l'univers."
+    },
+    {
+     "start": 16.82,
+     "end": 19.12,
      "text": "Bienvenue dans la visite des pulsars."
     },
     {
-     "start": 2.46,
-     "end": 14.2,
+     "start": 19.12,
+     "end": 30.33,
      "text": "Tout a commencé en 1967, lorsque Jocelyn Bell, doctorante à Cambridge, a remarqué dans des données radio un étrange signal qui se répétait toutes les 1,3 secondes."
     },
     {
-     "start": 14.2,
-     "end": 23.47,
+     "start": 30.33,
+     "end": 38.69,
      "text": "Le signal était si régulier que son équipe lui a donné, à moitié pour plaisanter, le nom de LGM 1, qui signifie petits hommes verts."
     },
     {
-     "start": 23.47,
-     "end": 29.55,
+     "start": 38.69,
+     "end": 44.25,
      "text": "Devant vous, PSR B 1919 plus 21, c'est ce premier pulsar."
     },
     {
-     "start": 29.55,
-     "end": 35.59,
+     "start": 44.25,
+     "end": 49.91,
      "text": "C'était en réalité une étoile à neutrons qui tournait comme un phare et dirigeait son faisceau vers nous à chaque tour."
     }
    ]
@@ -163,37 +173,47 @@
    ]
   },
   "sgr1806": {
-   "hash": "cd46989e0585",
-   "duration": 45.57,
+   "hash": "4b2c7d84f0af",
+   "duration": 63.67,
    "sentences": [
     {
      "start": 0.08,
-     "end": 5.82,
+     "end": 5.58,
      "text": "Notre dernier arrêt est un magnétar : SGR 1806 moins 20."
     },
     {
-     "start": 5.82,
-     "end": 19.02,
+     "start": 5.58,
+     "end": 18.66,
      "text": "Les magnétars sont des étoiles à neutrons qui possèdent les champs magnétiques les plus puissants de l'univers ; ce champ est un million de milliards de fois plus fort que celui de la Terre et efface une carte de crédit à 1 000 km de distance."
     },
     {
-     "start": 19.02,
-     "end": 28.57,
+     "start": 18.66,
+     "end": 27.72,
      "text": "Le 27 décembre 2004, sa croûte s'est fissurée et, en un dixième de seconde, il a libéré autant d'énergie que le Soleil en émet en 100 000 ans."
     },
     {
-     "start": 28.57,
-     "end": 37.73,
+     "start": 27.72,
+     "end": 36.47,
      "text": "Venue de 50 000 années-lumière, cette explosion a ionisé de façon mesurable la haute atmosphère de la Terre et a aveuglé les détecteurs des satellites."
     },
     {
-     "start": 37.73,
-     "end": 43.69,
+     "start": 36.47,
+     "end": 41.77,
      "text": "C'est, à ce jour, l'événement le plus brillant observé en provenance de l'extérieur du Système solaire."
     },
     {
-     "start": 43.69,
-     "end": 45.57,
+     "start": 41.77,
+     "end": 52.99,
+     "text": "D'un minuscule tressaillement remarqué par une étudiante sur des bandes de papier, nous avons suivi un chemin qui mène aux ondes gravitationnelles, aux premières exoplanètes et aux états les plus extrêmes de la matière."
+    },
+    {
+     "start": 52.99,
+     "end": 61.77,
+     "text": "Des dizaines de milliers de phares cosmiques que nous n'avons pas encore entendus tournent toujours dans notre galaxie ; pour les entendre, il suffit de continuer à écouter."
+    },
+    {
+     "start": 61.77,
+     "end": 63.67,
      "text": "Notre visite des pulsars est terminée."
     }
    ]

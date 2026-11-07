@@ -3,37 +3,47 @@
  "locale": "es",
  "steps": {
   "cygx1": {
-   "hash": "694c088dba31",
-   "duration": 44.47,
+   "hash": "2fa6b09499f4",
+   "duration": 68.47,
    "sentences": [
     {
      "start": 0.08,
-     "end": 3.3,
+     "end": 11.9,
+     "text": "En 1783, un clérigo inglés, John Michell, planteó una pregunta audaz: ¿podría una estrella ser tan pesada que ni siquiera la luz escapara de ella?"
+    },
+    {
+     "start": 11.9,
+     "end": 24.26,
+     "text": "Durante doscientos años, la idea fue solo una curiosidad sobre el papel; ni siquiera las ecuaciones de Einstein lograron convencer durante mucho tiempo a los físicos de que tales objetos existen de verdad."
+    },
+    {
+     "start": 24.26,
+     "end": 27.32,
      "text": "Bienvenidos al recorrido por los agujeros negros."
     },
     {
-     "start": 3.3,
-     "end": 7.82,
+     "start": 27.32,
+     "end": 31.7,
      "text": "Nuestro punto de partida es un clásico: Cygnus X-1."
     },
     {
-     "start": 7.82,
-     "end": 19.26,
+     "start": 31.7,
+     "end": 43.35,
      "text": "Esta fuente de rayos X, descubierta con un cohete en 1964, se convirtió en 1971 en el primer objeto identificado como un agujero negro."
     },
     {
-     "start": 19.26,
-     "end": 31.17,
+     "start": 43.35,
+     "end": 55.51,
      "text": "Tiene 21 masas solares y gira con su compañera supergigante azul HDE 226868 cada cinco días y medio alrededor de su centro de masas común."
     },
     {
-     "start": 31.17,
-     "end": 36.87,
+     "start": 55.51,
+     "end": 61.13,
      "text": "El gas que le arranca a su compañera se calienta hasta millones de grados en un disco brillante."
     },
     {
-     "start": 36.87,
-     "end": 44.47,
+     "start": 61.13,
+     "end": 68.47,
      "text": "Stephen Hawking había apostado a que este objeto no era un agujero negro; en 1990 aceptó su derrota."
     }
    ]
@@ -75,37 +85,47 @@
    ]
   },
   "m87": {
-   "hash": "df24ac2c42ca",
-   "duration": 38.31,
+   "hash": "ec1653ff5f97",
+   "duration": 57.91,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 6.3,
+     "start": 0.08,
+     "end": 6.34,
      "text": "Nuestra última parada, el primer agujero negro fotografiado: M87 star."
     },
     {
-     "start": 6.3,
-     "end": 13.08,
+     "start": 6.34,
+     "end": 13.06,
      "text": "Se encuentra en el centro de la galaxia elíptica gigante Virgo A, a 55 millones de años luz."
     },
     {
-     "start": 13.08,
-     "end": 21.55,
+     "start": 13.06,
+     "end": 20.88,
      "text": "Tiene 6,5 mil millones de masas solares; su horizonte de sucesos es 6 veces más ancho que la órbita de Plutón."
     },
     {
-     "start": 21.55,
-     "end": 28.47,
+     "start": 20.88,
+     "end": 27.86,
      "text": "La famosa imagen del anillo naranja publicada en 2019 es la luz del gas caliente que rodea su sombra."
     },
     {
-     "start": 28.47,
-     "end": 35.15,
+     "start": 27.86,
+     "end": 34.61,
      "text": "De aquí surge un chorro a una velocidad cercana a la de la luz y se extiende a lo largo de 5. 000 años luz."
     },
     {
-     "start": 35.15,
-     "end": 38.31,
+     "start": 34.61,
+     "end": 44.85,
+     "text": "Más de doscientos treinta años después de las estrellas oscuras de Michell sobre el papel, construimos un telescopio del tamaño de la Tierra y fotografiamos la sombra de uno de ellos."
+    },
+    {
+     "start": 44.85,
+     "end": 55.05,
+     "text": "Los objetos más oscuros del universo encienden también sus fuegos más brillantes: los cuásares, los chorros y los vientos que dan forma a las galaxias son obra suya."
+    },
+    {
+     "start": 55.05,
+     "end": 57.91,
      "text": "Nuestro recorrido por los agujeros negros ha terminado."
     }
    ]

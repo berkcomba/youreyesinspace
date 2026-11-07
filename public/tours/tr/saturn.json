@@ -34,32 +34,42 @@
    ]
   },
   "iapetus": {
-   "hash": "f1d0a8f00e8f",
-   "duration": 38.39,
+   "hash": "6da85004e579",
+   "duration": 56.95,
    "sentences": [
     {
      "start": 0.1,
-     "end": 9.48,
+     "end": 9.5,
      "text": "Son durağımız Iapetus, Güneş Sistemi'nin en tuhaf aylarından biri: bir yarısı kar kadar beyaz, diğer yarısı kömür kadar kara."
     },
     {
-     "start": 9.48,
-     "end": 19.35,
+     "start": 9.5,
+     "end": 19.3,
      "text": "Yörüngesinde hep aynı yüzü öne baktığı için dış halkalardan gelen koyu tozu süpürür; ısınan koyu bölgelerden buz buharlaşıp parlak tarafa yağar."
     },
     {
-     "start": 19.35,
-     "end": 28.53,
+     "start": 19.3,
+     "end": 28.4,
      "text": "Ekvatorunun tam ortasında on üç kilometre yüksekliğinde, bin üç yüz kilometre uzunluğunda bir dağ sırtı uzanır; bu da ona ceviz görünümü verir."
     },
     {
-     "start": 28.53,
-     "end": 36.95,
+     "start": 28.4,
+     "end": 36.63,
      "text": "Satürn'den üç buçuk milyon kilometre uzakta, yetmiş dokuz günde bir tur atar; halkaları yukarıdan görebilen tek büyük ay odur."
     },
     {
-     "start": 36.95,
-     "end": 38.39,
+     "start": 36.63,
+     "end": 45.27,
+     "text": "İki bin on üçte Cassini, Satürn'ün gölgesinden geriye dönüp bakmış ve halkaların altında soluk mavi bir nokta yakalamıştı: Dünya."
+    },
+    {
+     "start": 45.27,
+     "end": 55.45,
+     "text": "O gün, fotoğrafın çekileceğini bilen dünyanın dört bir yanındaki insanlar dışarı çıkıp bir buçuk milyar kilometre öteden kendilerine bakan bir makineye el salladı."
+    },
+    {
+     "start": 55.45,
+     "end": 56.95,
      "text": "Satürn turumuz sona erdi."
     }
    ]
@@ -122,32 +132,42 @@
    ]
   },
   "saturn": {
-   "hash": "023fbbd3fe02",
-   "duration": 34.23,
+   "hash": "51b4888f827f",
+   "duration": 51.19,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 7.66,
+     "start": 0.08,
+     "end": 9.68,
+     "text": "Bin altı yüz onda Galileo teleskobunu Satürn'e çevirdiğinde, gezegenin iki yanında anlam veremediği tuhaf çıkıntılar gördü ve onlara kulak dedi."
+    },
+    {
+     "start": 9.68,
+     "end": 18.06,
+     "text": "Bunların bir halka olduğunu anlamamız yarım yüzyıl sürdü; bugün bile Güneş Sistemi'nin en zarif manzarası olarak nefesimizi kesiyorlar."
+    },
+    {
+     "start": 18.06,
+     "end": 25.42,
      "text": "Satürn turuna hoş geldiniz: Güneş'ten altıncı gezegen, çapıyla Dünya'nın dokuz katı büyüklüğünde bir gaz devi."
     },
     {
-     "start": 7.66,
-     "end": 13.9,
+     "start": 25.42,
+     "end": 31.49,
      "text": "Yanına gerçek ölçekli bir Dünya koyduğumuzda, halkaların bile ne kadar geniş olduğu ortaya çıkar."
     },
     {
-     "start": 13.9,
-     "end": 18.69,
+     "start": 31.49,
+     "end": 36.13,
      "text": "Yoğunluğu sudan düşüktür; bu, bir gezegen için benzersizdir."
     },
     {
-     "start": 18.69,
-     "end": 25.37,
+     "start": 36.13,
+     "end": 42.71,
      "text": "Ekvatorunda rüzgârlar saatte bin sekiz yüz kilometreye ulaşır ve günü yalnızca on buçuk saat sürer."
     },
     {
-     "start": 25.37,
-     "end": 34.23,
+     "start": 42.71,
+     "end": 51.19,
      "text": "Cassini aracı iki bin dörtten iki bin on yediye kadar on üç yıl boyunca bu sistemi inceledi ve görevini gezegenin atmosferine dalarak tamamladı."
     }
    ]

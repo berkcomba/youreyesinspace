@@ -65,68 +65,93 @@
    ]
   },
   "finale": {
-   "hash": "5b3ee05e87c1",
-   "duration": 32.31,
+   "hash": "049824ae6a43",
+   "duration": 48.95,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 3.72,
+     "start": 0.08,
+     "end": 3.98,
      "text": "Antes de partir de Marte, miremos atrás una vez más."
     },
     {
-     "start": 3.72,
-     "end": 9.14,
+     "start": 3.98,
+     "end": 9.46,
      "text": "Hoy operan cerca de una docena de vehículos activos en su órbita y en su superficie."
     },
     {
-     "start": 9.14,
-     "end": 15.78,
+     "start": 9.46,
+     "end": 16.4,
      "text": "Los hallazgos son coherentes: Marte fue en otro tiempo un mundo tibio, húmedo y quizá habitable."
     },
     {
-     "start": 15.78,
-     "end": 23.99,
+     "start": 16.4,
+     "end": 24.77,
      "text": "Cuando perdió su campo magnético, el viento solar barrió su atmósfera hacia el espacio y el planeta se convirtió en un desierto frío."
     },
     {
-     "start": 23.99,
-     "end": 32.31,
-     "text": "Aun así, lo más probable es que este sea el primer planeta en el que la humanidad ponga el pie algún día; nuestro recorrido por Marte ha terminado."
+     "start": 24.77,
+     "end": 31.23,
+     "text": "Aun así, lo más probable es que este sea el primer planeta en el que la humanidad ponga el pie algún día."
+    },
+    {
+     "start": 31.23,
+     "end": 41.47,
+     "text": "Ese día, la primera persona que pise una llanura polvorienta de Marte verá en el cielo del atardecer una estrella brillante y azulada: el planeta en el que nació."
+    },
+    {
+     "start": 41.47,
+     "end": 46.49,
+     "text": "Quizá ese sea el momento en que empecemos a escribir juntos la historia de dos mundos."
+    },
+    {
+     "start": 46.49,
+     "end": 48.95,
+     "text": "Nuestro recorrido por Marte ha terminado."
     }
    ]
   },
   "mars": {
-   "hash": "11730ddce550",
-   "duration": 47.03,
+   "hash": "42ef13aa2295",
+   "duration": 66.55,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 6.94,
+     "start": 0.06,
+     "end": 9.14,
+     "text": "Durante miles de años, la gente observó una luz roja que vagaba entre las estrellas del cielo nocturno y le dio el nombre del dios de la guerra."
+    },
+    {
+     "start": 9.14,
+     "end": 19,
+     "text": "Los telescopios convirtieron esa luz en un disco, y las naves espaciales la convirtieron en un mundo real, con cañones, volcanes y tormentas de polvo."
+    },
+    {
+     "start": 19,
+     "end": 25.8,
      "text": "Bienvenidos al recorrido por Marte; el Planeta Rojo, el mundo al que la humanidad ha enviado más vehículos."
     },
     {
-     "start": 6.94,
-     "end": 15.34,
+     "start": 25.8,
+     "end": 34.37,
      "text": "Su día es muy parecido al de la Tierra, veinticuatro horas y treinta y siete minutos; ahora mismo estáis viendo un día de Marte acelerado."
     },
     {
-     "start": 15.34,
-     "end": 23.02,
+     "start": 34.37,
+     "end": 42.31,
      "text": "Su atmósfera es muy tenue y se compone casi por completo de dióxido de carbono; la temperatura media es de menos sesenta grados."
     },
     {
-     "start": 23.02,
-     "end": 32.05,
+     "start": 42.31,
+     "end": 51.47,
      "text": "La cuenca de Hellas, en el hemisferio sur, es la mayor huella de impacto, con dos mil trescientos kilómetros de anchura y nueve kilómetros de profundidad."
     },
     {
-     "start": 32.05,
-     "end": 39.55,
+     "start": 51.47,
+     "end": 59.17,
      "text": "En sus polos hay casquetes de hielo de agua y de hielo seco; en invierno, una cuarta parte de la atmósfera se congela en el polo."
     },
     {
-     "start": 39.55,
-     "end": 47.03,
+     "start": 59.17,
+     "end": 66.55,
      "text": "Los lechos secos de los ríos y los antiguos fondos de lagos de su superficie susurran que Marte fue en otro tiempo muy diferente."
     }
    ]

@@ -29,32 +29,42 @@
    ]
   },
   "iss": {
-   "hash": "4d7ad4a2b4e1",
-   "duration": 31.67,
+   "hash": "853399e89c24",
+   "duration": 52.15,
    "sentences": [
     {
      "start": 0.08,
-     "end": 9.2,
+     "end": 6.88,
+     "text": "Nos ancêtres, assis autour du feu, levaient les yeux vers les étoiles en pensant ne jamais pouvoir les atteindre."
+    },
+    {
+     "start": 6.88,
+     "end": 19.96,
+     "text": "En 1957, Spoutnik s'est mis à tourner autour de la Terre ; depuis, nous envoyons des machines qui portent nos yeux, nos oreilles et notre curiosité dans tous les recoins du Système solaire, et même au-delà."
+    },
+    {
+     "start": 19.96,
+     "end": 29.17,
      "text": "Nous commençons depuis l'orbite terrestre ce tour où nous rendrons visite aux ambassadeurs de l'humanité dans l'espace : devant vous, la Station spatiale internationale."
     },
     {
-     "start": 9.2,
-     "end": 18.33,
+     "start": 29.17,
+     "end": 38.53,
      "text": "À quatre cents kilomètres d'altitude, elle tourne à vingt-huit mille kilomètres à l'heure et fait le tour de la Terre en quatre-vingt-dix minutes ; voici ce tour, en accéléré."
     },
     {
-     "start": 18.33,
-     "end": 21.23,
+     "start": 38.53,
+     "end": 41.55,
      "text": "Les astronautes voient seize levers de soleil par jour."
     },
     {
-     "start": 21.23,
-     "end": 24.81,
+     "start": 41.55,
+     "end": 45.25,
      "text": "Elle a la taille d'un terrain de football et pèse quatre cent vingt tonnes."
     },
     {
-     "start": 24.81,
-     "end": 31.67,
+     "start": 45.25,
+     "end": 52.15,
      "text": "Depuis novembre deux mille, des humains y vivent sans interruption ; c'est la plus longue présence continue de l'humanité dans l'espace."
     }
    ]
@@ -174,33 +184,48 @@
    ]
   },
   "voyager2": {
-   "hash": "df3435316303",
-   "duration": 35.19,
+   "hash": "085e8d6a212d",
+   "duration": 54.39,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 4.92,
+     "start": 0.08,
+     "end": 4.9,
      "text": "Et Voyager Deux, la seule sonde à avoir visité les quatre planètes extérieures."
     },
     {
-     "start": 4.92,
-     "end": 13.54,
+     "start": 4.9,
+     "end": 13.88,
      "text": "Elle a été lancée seize jours avant sa sœur, mais sur une trajectoire plus lente, elle est passée près de Jupiter, Saturne, Uranus et Neptune."
     },
     {
-     "start": 13.54,
-     "end": 20.77,
+     "start": 13.88,
+     "end": 21.42,
      "text": "La plupart de ce que nous savons sur Uranus et Neptune vient encore de ses survols de mille neuf cent quatre-vingt-six et de quatre-vingt-neuf."
     },
     {
-     "start": 20.77,
-     "end": 24.27,
+     "start": 21.42,
+     "end": 24.78,
      "text": "En deux mille dix-huit, elle a atteint l'espace interstellaire."
     },
     {
-     "start": 24.27,
-     "end": 35.19,
-     "text": "Les piles au plutonium des deux Voyager s'affaiblissent ; les sondes se tairont dans les années deux mille trente, mais elles continueront de glisser parmi les étoiles pendant des milliards d'années ; notre tour s'achève ici."
+     "start": 24.78,
+     "end": 34.47,
+     "text": "Les piles au plutonium des deux Voyager s'affaiblissent ; les sondes se tairont dans les années deux mille trente, mais elles continueront de glisser parmi les étoiles pendant des milliards d'années."
+    },
+    {
+     "start": 34.47,
+     "end": 41.79,
+     "text": "Même lorsque les montagnes de la Terre se seront érodées et que les continents auront dérivé, les disques d'or seront toujours là-bas."
+    },
+    {
+     "start": 41.79,
+     "end": 53.03,
+     "text": "Comme une bouteille jetée à l'océan cosmique, ils ne diront qu'une chose : un jour, ici, sur la troisième planète d'une étoile appelée Soleil, a vécu une espèce qui s'interrogeait sur les étoiles."
+    },
+    {
+     "start": 53.03,
+     "end": 54.39,
+     "text": "Notre tour s'achève ici."
     }
    ]
   }

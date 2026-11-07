@@ -70,73 +70,98 @@
    ]
   },
   "cygx1": {
-   "hash": "0eb29caa802a",
-   "duration": 36.62,
+   "hash": "4c88368178fa",
+   "duration": 53.11,
    "sentences": [
     {
      "start": 0.08,
-     "end": 4.96,
+     "end": 4.72,
      "text": "Et pour les étoiles les plus massives, le dernier arrêt : le trou noir."
     },
     {
-     "start": 4.96,
-     "end": 8.56,
+     "start": 4.72,
+     "end": 8.14,
      "text": "Cygnus X 1 est le premier trou noir découvert."
     },
     {
-     "start": 8.56,
-     "end": 19.81,
+     "start": 8.14,
+     "end": 18.98,
      "text": "Cet objet de vingt et une masses solaires attire le gaz de sa compagne supergéante bleue ; le gaz s'échauffe à des millions de degrés dans le disque d'accrétion et émet des rayons X."
     },
     {
-     "start": 19.81,
-     "end": 24.33,
+     "start": 18.98,
+     "end": 23.74,
      "text": "Tous deux tournent autour de leur centre de masse commun une fois tous les cinq jours et demi."
     },
     {
-     "start": 24.33,
-     "end": 28.44,
+     "start": 23.74,
+     "end": 27.75,
      "text": "Même la lumière ne peut pas s'échapper de l'intérieur de l'horizon des événements."
     },
     {
-     "start": 28.44,
-     "end": 34.3,
+     "start": 27.75,
+     "end": 33.11,
      "text": "Le voyage commencé dans un nuage de gaz s'achève par un trou ouvert dans l'espace-temps lui-même."
     },
     {
-     "start": 34.3,
-     "end": 36.62,
+     "start": 33.11,
+     "end": 42.85,
+     "text": "Mais l'histoire ne s'arrête pas là : le gaz dispersé par les étoiles mourantes se mêle à de nouveaux nuages et donne un jour naissance à de nouvelles étoiles et à de nouvelles planètes."
+    },
+    {
+     "start": 42.85,
+     "end": 50.71,
+     "text": "Le Soleil est l'une de ces étoiles d'une génération plus tardive ; nous aussi faisons partie de ce cycle, un moyen pour l'univers de se connaître lui-même."
+    },
+    {
+     "start": 50.71,
+     "end": 53.11,
      "text": "La visite sur la vie des étoiles s'achève ici."
     }
    ]
   },
   "orion": {
-   "hash": "1a30ab844562",
-   "duration": 31.67,
+   "hash": "d119e0949f41",
+   "duration": 48.63,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 6.22,
+     "start": 0.1,
+     "end": 8.94,
+     "text": "Le fer de votre sang, le calcium de vos os, l'oxygène que vous respirez en ce moment : rien de tout cela n'existait aux premiers instants de l'univers."
+    },
+    {
+     "start": 8.94,
+     "end": 13.94,
+     "text": "Tout a été forgé au cœur des étoiles, puis dispersé dans l'espace à leur mort."
+    },
+    {
+     "start": 13.94,
+     "end": 17.86,
+     "text": "Nous sommes faits de poussière d'étoiles, et ce n'est pas une métaphore."
+    },
+    {
+     "start": 17.86,
+     "end": 23.52,
      "text": "Dans cette visite, nous allons suivre l'histoire de la vie d'une étoile, de sa naissance jusqu'à sa mort."
     },
     {
-     "start": 6.22,
-     "end": 15.36,
+     "start": 23.52,
+     "end": 32.47,
      "text": "L'histoire commence dans des endroits comme celui-ci : la nébuleuse d'Orion, une immense usine à étoiles située à mille trois cent cinquante années-lumière de nous."
     },
     {
-     "start": 15.36,
-     "end": 21.37,
+     "start": 32.47,
+     "end": 38.25,
      "text": "Le gaz froid et la poussière s'effondrent sous leur propre poids et forment des centaines de nouvelles étoiles."
     },
     {
-     "start": 21.37,
-     "end": 27.87,
+     "start": 38.25,
+     "end": 44.91,
      "text": "Au centre, les quatre étoiles brillantes du Trapèze éclairent la nébuleuse de l'intérieur par leur lumière ultraviolette."
     },
     {
-     "start": 27.87,
-     "end": 31.67,
+     "start": 44.91,
+     "end": 48.63,
      "text": "Dans le ciel, on la voit à l'œil nu comme une tache floue dans l'épée d'Orion."
     }
    ]
