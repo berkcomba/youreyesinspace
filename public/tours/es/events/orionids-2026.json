@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "orionids": {
+   "hash": "f146b1956fcb",
+   "duration": 38.07,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 8.56,
+     "text": "Las Oriónidas nacen del polvo que el cometa Halley dejó en sus regresos pasados; la Tierra cruza esta estela cada octubre."
+    },
+    {
+     "start": 8.56,
+     "end": 16.32,
+     "text": "El propio Halley está ahora más allá de la órbita de Neptuno, avanzando lentamente hacia su regreso en 2061."
+    },
+    {
+     "start": 16.32,
+     "end": 26.03,
+     "text": "Acerquémonos a la órbita de la Tierra: los granos de polvo chocan con la atmósfera a sesenta y seis kilómetros por segundo y dejan trazos largos y brillantes."
+    },
+    {
+     "start": 26.03,
+     "end": 32.81,
+     "text": "En el máximo se ven unos veinte meteoros por hora; el radiante está cerca del garrote alzado del cazador Orión."
+    },
+    {
+     "start": 32.81,
+     "end": 38.07,
+     "text": "La otra mitad de la misma estela de polvo la vemos en mayo como la lluvia de las Eta Acuáridas."
+    }
+   ]
+  }
+ }
+}

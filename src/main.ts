@@ -46,7 +46,7 @@ import type { NamedStarScreen } from './render/StarPoints';
 import { Input } from './input/Input';
 import { CameraController, type SurfaceStand } from './camera/CameraController';
 import { UI, type UIHost } from './ui/UI';
-import { loadSettings, saveSettings, type Settings } from './ui/Settings';
+import { GRAPHICS_PRESETS, finishGraphicsProbe, graphicsProbePending, loadSettings, saveSettings, type Settings } from './ui/Settings';
 import { AU_KM, CAMERA_FAR_KM, DAY_S, DEG, J2000_JD, PARSEC_KM } from './core/constants';
 import { starLightColor } from './astro/stellar';
 import { fmtDuration, fmtLightYears, fmtScaleDistance } from './ui/format';
@@ -89,7 +89,7 @@ const SETTLE_COMPILE_MS = 120_000;
 /** after the loader lifts, when the landing programs start compiling in the background */
 const GROUND_WARM_DELAY_MS = 10_000;
 /** scratch */
-const _dir = new Vector3(), _up = new Vector3(), _zero = new Vector3(), _v3 = new Vector3();
+const _dir = new Vector3(), _up = new Vector3(), _zero = new Vector3(), _v2 = new Vector3(), _v3 = new Vector3();
 const _m4 = new Matrix4();
 const smooth01 = (x: number): number => { const t = Math.min(1, Math.max(0, x)); return t * t * (3 - 2 * t); };
 
@@ -1910,6 +1910,24 @@ class App implements UIHost {
     aim.normalize();
     const cam = this.camera;
     cam.position.copy(ref.position).addScaledVector(aim, ref.radius + alt);
+    // An eclipse (a near body over a far one, their line passing close to `ref`): stand where that
+    // line meets the ground, i.e. under the shadow axis. From the sub-point of the midpoint the
+    // near body's parallax would leave it off-centre (by γ × its parallax, ~8′ for the Moon).
+    const pair = toward.map((id) => this.universe.get(id)).filter((b): b is CelestialBody => !!b);
+    if (pair.length === 2) {
+      const [near, far] = pair[0].position.distanceToSquared(ref.position) < pair[1].position.distanceToSquared(ref.position) ? pair : [pair[1], pair[0]];
+      const d = _v2.copy(near.position).sub(far.position).normalize();
+      const w = _v3.copy(near.position).sub(ref.position);
+      const t0 = -w.dot(d);
+      const miss2 = w.lengthSq() - t0 * t0;
+      const R = ref.radius;
+      if (t0 > 0 && miss2 < 4 * R * R) {
+        const t = miss2 < R * R ? t0 - Math.sqrt(R * R - miss2) : t0;
+        const foot = w.addScaledVector(d, t).normalize();
+        cam.position.copy(ref.position).addScaledVector(foot, R + alt);
+        aim.copy(far.position).sub(cam.position).normalize();
+      }
+    }
     // keep the reference body's pole as screen-up so the horizon reads naturally
     const up = _up.copy(ref.pole).addScaledVector(aim, -ref.pole.dot(aim));
     if (up.lengthSq() < 1e-6) up.set(0, 1, 0);
@@ -2125,7 +2143,7 @@ class App implements UIHost {
   playEvent(e: SkyEvent, from: 'panel' | 'url' = 'panel'): void {
     for (const id of e.bodies) {
       const d = SOLAR_SYSTEM.find((b) => b.id === id);
-      if (d?.orbit?.kind === 'ephemeris') void ephemeris.prioritize(d.orbit.table);
+      if (d?.orbit?.kind === 'ephemeris' || (d?.orbit?.kind === 'simple' && d.orbit.table)) void ephemeris.prioritize(d.orbit.table!);
     }
     if (this.lessons.active) this.ui.toggleAcademy(false);
     // a running tour/scene ends first (its onEnd must not clear the state set below)
@@ -2241,8 +2259,13 @@ class App implements UIHost {
     this.ui.showToast(_('Hedef bulunamadı'));
   }
 
-  applySettings(): void {
+  applySettings(byUser = false): void {
     const s = this.settings;
+    if (byUser && this.gfxProbe) {
+      this.gfxProbe = false;
+      this.frameTimes.length = 0;
+      if (this.persistSettings) finishGraphicsProbe();
+    }
     if (this.persistSettings) saveSettings(s);
     this.music.enabled = s.music;
     this.music.radio = s.radio;
@@ -2979,6 +3002,30 @@ class App implements UIHost {
   private readonly frameTimes: number[] = [];
   private slowWindows = 0;
 
+  /** first load on a phone or tablet: measuring whether the highest level runs smoothly */
+  private gfxProbe = graphicsProbePending();
+  private probeAcc = 0;
+
+  /**
+   * Over four seconds after the load settles, a device whose median frame rate stays low is moved
+   * to the lowest level once (and remembered); the resolution governor takes over afterwards.
+   */
+  private probeGraphics(now: number, rawDt: number): void {
+    if (now < 6000 || rawDt > 0.5 || document.hidden) return;
+    this.probeAcc += rawDt;
+    this.frameTimes.push(rawDt);
+    if (this.probeAcc < 4) return;
+    const ts = this.frameTimes.sort((a, b) => a - b);
+    const fps = 1 / Math.max(ts[ts.length >> 1], 1e-4);
+    this.frameTimes.length = 0;
+    this.gfxProbe = false;
+    if (this.persistSettings) finishGraphicsProbe();
+    if (fps >= 22) return;
+    Object.assign(this.settings, GRAPHICS_PRESETS.low);
+    this.applySettings();
+    this.ui.showToast(_('Cihaz zorlandığı için düşük grafik ayarına geçildi · Ayarlar'), 4000);
+  }
+
   private applyRenderScale(): void {
     this.engine.setRenderScale(this.settings.renderScale * this.autoScale);
     this.ui.syncSettings();
@@ -2990,7 +3037,8 @@ class App implements UIHost {
     const rawDt = (now - this.last) / 1000;
     const dt = Math.min(0.1, Math.max(0.0001, rawDt));
     this.last = now;
-    this.adaptResolution(now, rawDt);
+    if (this.gfxProbe) this.probeGraphics(now, rawDt);
+    else this.adaptResolution(now, rawDt);
 
     // Simulation
     this.time.advance(dt);

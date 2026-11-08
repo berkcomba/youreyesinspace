@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "v1lightday": {
+   "hash": "5e1bc1fce31b",
+   "duration": 34.55,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 8.44,
+     "text": "Voyager 1 voyage depuis 1977 et franchit aujourd'hui un nouveau seuil : elle est exactement à un jour-lumière de la Terre."
+    },
+    {
+     "start": 8.44,
+     "end": 16.26,
+     "text": "Un signal radio envoyé maintenant depuis la sonde, bien qu'il voyage à la vitesse de la lumière, ne nous parvient que vingt-quatre heures plus tard."
+    },
+    {
+     "start": 16.26,
+     "end": 23.79,
+     "text": "La distance est de vingt-cinq virgule neuf milliards de kilomètres ; du Soleil, elle est cent soixante-treize fois plus éloignée que la Terre."
+    },
+    {
+     "start": 23.79,
+     "end": 28.81,
+     "text": "Reculons et regardons : même l'orbite de Neptune n'est qu'un petit anneau à cette échelle."
+    },
+    {
+     "start": 28.81,
+     "end": 34.55,
+     "text": "C'est le point le plus lointain jamais atteint par un objet humain, et il s'éloigne de dix-sept kilomètres chaque seconde."
+    }
+   ]
+  }
+ }
+}

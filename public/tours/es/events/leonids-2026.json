@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "leonids": {
+   "hash": "249d78565402",
+   "duration": 48.63,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 7.24,
+     "text": "Las Leónidas proceden del polvo dejado por el cometa Tempel-Tuttle, que regresa cada treinta y tres años."
+    },
+    {
+     "start": 7.24,
+     "end": 14.54,
+     "text": "El cometa está ahora cerca del extremo lejano de su órbita; su próximo perihelio es en 2031."
+    },
+    {
+     "start": 14.54,
+     "end": 25.51,
+     "text": "A mediados de noviembre la Tierra cruza su órbita casi de frente: las partículas entran en la atmósfera a setenta y un kilómetros por segundo, la velocidad más alta conocida."
+    },
+    {
+     "start": 25.51,
+     "end": 41.13,
+     "text": "En un año normal se ven quince meteoros por hora; pero en 1833 y 1966 el cielo «llovió» cientos de miles de meteoros por hora, y entre 1999 y 2002 hubo tormentas de nuevo."
+    },
+    {
+     "start": 41.13,
+     "end": 48.63,
+     "text": "El radiante está en la cabeza de Leo; como este año la Luna está cerca de la fase nueva, las condiciones son favorables."
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "v1lightday": {
+   "hash": "cc5c29ba3a75",
+   "duration": 38.71,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 9.42,
+     "text": "Voyager 1 viaja desde 1977 y hoy cruza un nuevo umbral: está exactamente a un día luz de la Tierra."
+    },
+    {
+     "start": 9.42,
+     "end": 17.32,
+     "text": "Una señal de radio enviada ahora desde la nave, aunque viaje a la velocidad de la luz, nos llega solo veinticuatro horas después."
+    },
+    {
+     "start": 17.32,
+     "end": 25.75,
+     "text": "La distancia es de veinticinco coma nueve mil millones de kilómetros; del Sol está ciento setenta y tres veces más lejos que la Tierra."
+    },
+    {
+     "start": 25.75,
+     "end": 32.11,
+     "text": "Alejémonos y miremos: incluso la órbita de Neptuno queda como un pequeño anillo a esta escala."
+    },
+    {
+     "start": 32.11,
+     "end": 38.71,
+     "text": "Es el punto más lejano alcanzado jamás por un objeto humano, y aumenta diecisiete kilómetros cada segundo."
+    }
+   ]
+  }
+ }
+}

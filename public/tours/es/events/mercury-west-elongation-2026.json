@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "mercelong": {
+   "hash": "6be6723d1382",
+   "duration": 39.03,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 7.02,
+     "text": "Mercurio orbita tan cerca del Sol que solo podemos verlo en el crepúsculo, bajo, cerca del horizonte."
+    },
+    {
+     "start": 7.02,
+     "end": 16.82,
+     "text": "Esta mañana está a diecinueve grados y medio al oeste del Sol, en su máxima distancia angular: aparece en el horizonte oriental antes del amanecer."
+    },
+    {
+     "start": 16.82,
+     "end": 23.89,
+     "text": "La elongación es el momento en que, desde la Tierra, miramos la órbita del planeta interior de forma tangente."
+    },
+    {
+     "start": 23.89,
+     "end": 31.55,
+     "text": "Vista desde arriba la geometría es clara: la línea Sol–Mercurio cae perpendicular a la línea de visión desde la Tierra."
+    },
+    {
+     "start": 31.55,
+     "end": 39.03,
+     "text": "Mercurio repite este ciclo aproximadamente cada ciento dieciséis días; la próxima elongación vespertina será en enero."
+    }
+   ]
+  }
+ }
+}

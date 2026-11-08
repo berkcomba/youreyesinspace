@@ -1,0 +1,32 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "newmoon": {
+   "hash": "7a0115f18f0e",
+   "duration": 30.07,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 8.32,
+     "text": "At New Moon the Moon passes between the Sun and Earth; the face turned toward us is dark and it is invisible beside the Sun in the sky."
+    },
+    {
+     "start": 8.32,
+     "end": 17.37,
+     "text": "Not every new moon brings an eclipse, because the Moon's orbit is tilted five degrees to Earth's and its shadow usually passes above or below Earth."
+    },
+    {
+     "start": 17.37,
+     "end": 23.65,
+     "text": "New Moon week brings the darkest skies for stargazers: this year it coincides with the Geminid peak."
+    },
+    {
+     "start": 23.65,
+     "end": 30.07,
+     "text": "You are watching the orbit speeded up: the Moon completes its phases by circling Earth in twenty-nine and a half days."
+    }
+   ]
+  }
+ }
+}

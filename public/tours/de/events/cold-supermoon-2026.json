@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "de",
+ "steps": {
+  "coldmoon": {
+   "hash": "28b4c89d1793",
+   "duration": 34.87,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 8.72,
+     "text": "Auch der Dezember-Vollmond fällt nahe ans Perigäum: etwas kleiner als der im November, aber immer noch einer der größten des Jahres."
+    },
+    {
+     "start": 8.72,
+     "end": 13.88,
+     "text": "Der Mond ist jetzt weniger als dreihundertsechzigtausend Kilometer von der Erde entfernt."
+    },
+    {
+     "start": 13.88,
+     "end": 24.03,
+     "text": "Der Wintervollmond steigt auf der Nordhalbkugel am höchsten an den Himmel; in den Tagen, in denen die Sonne tief bleibt, zieht der Mond ihr gegenüber hoch oben seine Bahn."
+    },
+    {
+     "start": 24.03,
+     "end": 29.79,
+     "text": "Der Dezember-Vollmond heißt Kalter Mond; er markiert den Beginn der langen Winternächte."
+    },
+    {
+     "start": 29.79,
+     "end": 34.87,
+     "text": "Von der Erde aus leuchtet er in den Zwillingen, direkt neben dem Radianten der Geminiden."
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "de",
+ "steps": {
+  "bepisep": {
+   "hash": "6d804e99bd0e",
+   "duration": 45.75,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 8.12,
+     "text": "Zwei Wochen nach dem Eintritt in die Merkurbahn umkreist der BepiColombo-Verbund den Planeten nun in weniger als zehn Stunden."
+    },
+    {
+     "start": 8.12,
+     "end": 16.52,
+     "text": "In diesen Tagen löst sich der Verbund auf: erst der Sonnenschild, der Mio schützt, dann trennen sich die beiden Orbiter voneinander."
+    },
+    {
+     "start": 16.52,
+     "end": 27.67,
+     "text": "Japans Mio bleibt auf einer langgestreckten Ellipse, um die Magnetosphäre des Merkur zu untersuchen, während Europas MPO auf eine oberflächennahe polare Bahn absteigt."
+    },
+    {
+     "start": 27.67,
+     "end": 37.93,
+     "text": "Die wissenschaftliche Mission beginnt Anfang 2027: die Zusammensetzung der Oberfläche, der innere Aufbau und das Magnetfeld des sonnennächsten Planeten."
+    },
+    {
+     "start": 37.93,
+     "end": 45.75,
+     "text": "Die gezeigte Bahn ist der geplante Weg, den die ESA an JPL Horizons übermittelt hat; der Zeitpunkt der Trennung kann sich ändern."
+    }
+   ]
+  }
+ }
+}

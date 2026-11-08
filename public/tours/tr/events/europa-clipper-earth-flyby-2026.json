@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "tr",
+ "steps": {
+  "clipperflyby": {
+   "hash": "58314090d3b0",
+   "duration": 44.47,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 8.04,
+     "text": "Europa Clipper, Jüpiter yolunda son kez eve uğruyor: Dünya'nın yanından geçerek gezegenin yerçekiminden hız çalıyor."
+    },
+    {
+     "start": 8.04,
+     "end": 19.3,
+     "text": "Araç Dünya'ya göre saniyede on iki kilometreden hızlı ilerliyor ve yüzeye üç bin iki yüz kilometreye kadar yaklaşacak; bu, pek çok iletişim uydusundan daha alçak."
+    },
+    {
+     "start": 19.3,
+     "end": 28.39,
+     "text": "En yakın nokta evrensel saatle yirmi on beşte; geçiş, aracın Güneş etrafındaki yörüngesini Jüpiter'e ulaşacak biçimde genişletiyor."
+    },
+    {
+     "start": 28.39,
+     "end": 37.17,
+     "text": "Clipper, Jüpiter'e 2030 Nisan'ında varacak ve Europa'nın buz kabuğu altındaki okyanusu kırk dokuz yakın geçişle inceleyecek."
+    },
+    {
+     "start": 37.17,
+     "end": 44.47,
+     "text": "Yörünge verisi NASA/JPL Horizons'tan alınmış, en yakın geçiş çevresinde dakika çözünürlüğünde örneklenmiştir."
+    }
+   ]
+  }
+ }
+}

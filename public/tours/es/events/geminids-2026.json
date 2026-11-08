@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "geminids": {
+   "hash": "8471c22f6830",
+   "duration": 52.47,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 9.9,
+     "text": "Las Gemínidas son la lluvia de meteoros más abundante del año: en el máximo, bajo un cielo oscuro, se ven hasta ciento cincuenta meteoros por hora."
+    },
+    {
+     "start": 9.9,
+     "end": 21.02,
+     "text": "Su origen no es un cometa sino el asteroide 3200 Faetón, que se acerca al Sol más que Mercurio; el calor solar agrieta su superficie y dispersa polvo."
+    },
+    {
+     "start": 21.02,
+     "end": 34.19,
+     "text": "Cada diciembre la Tierra atraviesa la estela de polvo extendida a lo largo de la órbita de Faetón; las partículas entran en la atmósfera a treinta y cinco kilómetros por segundo y a menudo dejan trazos lentos y coloridos."
+    },
+    {
+     "start": 34.19,
+     "end": 43.29,
+     "text": "Los meteoros parecen salir de un punto del cielo, el radiante en la constelación de Géminis: es la dirección en la que la Tierra atraviesa la corriente."
+    },
+    {
+     "start": 43.29,
+     "end": 52.47,
+     "text": "El mejor momento para observar es después de medianoche; este año la Luna es una fina luna creciente, se pone temprano y el cielo permanece oscuro."
+    }
+   ]
+  }
+ }
+}

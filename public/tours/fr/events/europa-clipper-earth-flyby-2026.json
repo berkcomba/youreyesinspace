@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "clipperflyby": {
+   "hash": "63e644a89354",
+   "duration": 43.19,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 8.7,
+     "text": "Europa Clipper repasse une dernière fois à la maison en route vers Jupiter : en survolant la Terre, elle vole de la vitesse à la gravité de la planète."
+    },
+    {
+     "start": 8.7,
+     "end": 19.7,
+     "text": "La sonde se déplace à plus de douze kilomètres par seconde par rapport à la Terre et s'approchera jusqu'à trois mille deux cents kilomètres de la surface ; plus bas que bien des satellites de télécommunications."
+    },
+    {
+     "start": 19.7,
+     "end": 28.33,
+     "text": "Le passage au plus près a lieu à vingt heures quinze, temps universel ; le survol élargit l'orbite de la sonde autour du Soleil assez pour atteindre Jupiter."
+    },
+    {
+     "start": 28.33,
+     "end": 36.59,
+     "text": "Clipper arrivera à Jupiter en avril 2030 et étudiera l'océan sous la croûte glacée d'Europe au cours de quarante-neuf survols rapprochés."
+    },
+    {
+     "start": 36.59,
+     "end": 43.19,
+     "text": "Les données de trajectoire proviennent de NASA/JPL Horizons, échantillonnées à la minute autour du passage au plus près."
+    }
+   ]
+  }
+ }
+}

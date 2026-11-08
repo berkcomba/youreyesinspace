@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "tr",
+ "steps": {
+  "staurids": {
+   "hash": "db58ff2d4530",
+   "duration": 35.83,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 8.24,
+     "text": "Güney Tauridler, bilinen en kısa periyotlu kuyruklu yıldız olan Encke'nin yüzyıllar içinde saçtığı geniş bir toz akımından gelir."
+    },
+    {
+     "start": 8.24,
+     "end": 14.58,
+     "text": "Encke, Güneş'i yalnızca üç virgül üç yılda bir dolaşır; şu anda yörüngesinin dış yarısında."
+    },
+    {
+     "start": 14.58,
+     "end": 22.53,
+     "text": "Dünya bu geniş akımın içinden haftalarca geçer; parçacıklar atmosfere saniyede yirmi sekiz kilometre gibi görece yavaş girer."
+    },
+    {
+     "start": 22.53,
+     "end": 29.07,
+     "text": "Bu yüzden Tauridler az sayıda ama uzun süren, çoğu zaman ateş topu kadar parlak meteorlar üretir."
+    },
+    {
+     "start": 29.07,
+     "end": 35.83,
+     "text": "Radyan Boğa takımyıldızındadır; bu yıl Ay'ın geç doğması gece yarısına kadar karanlık bir gökyüzü sağlar."
+    }
+   ]
+  }
+ }
+}

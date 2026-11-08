@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "supermoon": {
+   "hash": "7fc59125ca42",
+   "duration": 37.11,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 8.46,
+     "text": "La pleine lune du 24 novembre est la plus grande de l'année : la Lune devient pleine à quelques heures du point de son orbite le plus proche de la Terre."
+    },
+    {
+     "start": 8.46,
+     "end": 16.5,
+     "text": "L'orbite de la Lune n'est pas un cercle mais une ellipse ; sa distance varie entre trois cent cinquante-six mille et quatre cent six mille kilomètres."
+    },
+    {
+     "start": 16.5,
+     "end": 22.59,
+     "text": "Une pleine lune proche du périgée paraît quatorze pour cent plus grande et trente pour cent plus brillante qu'à l'apogée."
+    },
+    {
+     "start": 22.59,
+     "end": 31.11,
+     "text": "Dans la tradition nord-américaine, la pleine lune de novembre s'appelle la Lune du Castor : l'époque où les castors bâtissent leurs huttes pour l'hiver."
+    },
+    {
+     "start": 31.11,
+     "end": 37.11,
+     "text": "Regardons maintenant depuis la Terre : le Soleil juste derrière nous, et devant, la Lune entièrement éclairée."
+    }
+   ]
+  }
+ }
+}

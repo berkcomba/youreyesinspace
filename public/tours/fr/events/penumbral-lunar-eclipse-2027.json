@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "penumbral": {
+   "hash": "51bc79eecb94",
+   "duration": 46.39,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 8.9,
+     "text": "Une éclipse de Lune ne peut se produire qu'à la pleine lune : le Soleil, la Terre et la Lune s'alignent et l'ombre de la Terre tombe sur la Lune."
+    },
+    {
+     "start": 8.9,
+     "end": 16.84,
+     "text": "Cette ombre a deux couches : l'ombre sombre, où le Soleil est entièrement caché, et la large pénombre, où il ne l'est qu'en partie."
+    },
+    {
+     "start": 16.84,
+     "end": 27.33,
+     "text": "Dans la nuit du 20 février, la Lune traverse la partie la plus profonde de la pénombre et s'approche de l'ombre à seulement six pour cent de son propre diamètre avant de longer son bord."
+    },
+    {
+     "start": 27.33,
+     "end": 36.61,
+     "text": "Vue de la Terre, la partie de la Lune la plus proche de l'ombre prend une teinte gris fumé ; c'est bien plus facile à remarquer que la plupart des éclipses par la pénombre."
+    },
+    {
+     "start": 36.61,
+     "end": 46.39,
+     "text": "L'éclipse est visible depuis une grande partie des Amériques, de l'Europe, de l'Afrique et de l'Asie ; en Turquie, le moment le plus profond est à deux heures treize du matin."
+    }
+   ]
+  }
+ }
+}

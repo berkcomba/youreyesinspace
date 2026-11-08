@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "uranusopp": {
+   "hash": "116f5d79939f",
+   "duration": 38.71,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 8.72,
+     "text": "Le 25 novembre, Uranus est à l'opposition : le Soleil, la Terre et Uranus s'alignent et la planète reste dans le ciel toute la nuit."
+    },
+    {
+     "start": 8.72,
+     "end": 18.4,
+     "text": "L'opposition est le moment où une planète extérieure est au plus près de la Terre et au plus brillant ; Uranus se trouve aujourd'hui à deux virgule six milliards de kilomètres de nous."
+    },
+    {
+     "start": 18.4,
+     "end": 27.87,
+     "text": "Vue depuis la Terre, elle se tient dans le Bélier, un point bleu-vert de magnitude cinq virgule six, à peine visible à l'œil nu sous un ciel sombre et facile aux jumelles."
+    },
+    {
+     "start": 27.87,
+     "end": 32.29,
+     "text": "Sa couleur vient du méthane de son atmosphère, qui absorbe la lumière rouge."
+    },
+    {
+     "start": 32.29,
+     "end": 38.71,
+     "text": "Avec son axe couché sur le côté, Uranus roule pour ainsi dire tout au long de son tour de quatre-vingt-quatre ans autour du Soleil."
+    }
+   ]
+  }
+ }
+}

@@ -222,6 +222,7 @@
   "Render çözünürlüğü": "Render resolution",
   "Otomatik çözünürlük (takılınca düşür)": "Automatic resolution (lower when stuttering)",
   "Akıcılık için render çözünürlüğü düşürüldü · Ayarlar": "Render resolution lowered for smoothness · Settings",
+  "Cihaz zorlandığı için düşük grafik ayarına geçildi · Ayarlar": "Your device was struggling, so graphics were set to Low · Settings",
   "Görüş açısı": "Field of view",
   "Pozlama": "Exposure",
   "Fare hassasiyeti": "Mouse sensitivity",

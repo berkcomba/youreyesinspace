@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "supermoon": {
+   "hash": "bf5515bb7994",
+   "duration": 36.15,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 8.6,
+     "text": "The full moon of 24 November is the largest of the year: the Moon turns full within hours of the point in its orbit closest to Earth."
+    },
+    {
+     "start": 8.6,
+     "end": 17.42,
+     "text": "The Moon's orbit is not a circle but an ellipse; its distance varies between three hundred fifty-six thousand and four hundred six thousand kilometres."
+    },
+    {
+     "start": 17.42,
+     "end": 23.77,
+     "text": "A full moon near perigee looks fourteen percent larger and thirty percent brighter than one at apogee."
+    },
+    {
+     "start": 23.77,
+     "end": 30.97,
+     "text": "In North American tradition the November full moon is called the Beaver Moon: the time when beavers build their lodges for winter."
+    },
+    {
+     "start": 30.97,
+     "end": 36.15,
+     "text": "Now let us look from Earth: the Sun directly behind us, the fully lit Moon ahead."
+    }
+   ]
+  }
+ }
+}

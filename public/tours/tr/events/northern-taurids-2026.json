@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "tr",
+ "steps": {
+  "ntaurids": {
+   "hash": "fa9deac1e2bb",
+   "duration": 32.31,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 6.3,
+     "text": "Kuzey Tauridler, aynı Encke akımının gezegen çekimleriyle ikiye bölünmüş kuzey koludur."
+    },
+    {
+     "start": 6.3,
+     "end": 13.9,
+     "text": "Encke'nin yörüngesi Merkür'ün içinden Asteroit Kuşağı'na kadar uzanır ve her dönüşte akıma yeni toz ekler."
+    },
+    {
+     "start": 13.9,
+     "end": 21.51,
+     "text": "Dünya bu kolu Kasım ortasında keser; iki kolun çakıştığı haftalarda ateş topu sayısı belirgin biçimde artar."
+    },
+    {
+     "start": 21.51,
+     "end": 28.69,
+     "text": "Saatte beş kadar meteorla sakin bir yağmurdur, ama yavaş ve parlak izleri fotoğrafçıların gözdesidir."
+    },
+    {
+     "start": 28.69,
+     "end": 32.31,
+     "text": "Radyan, Ülker yıldız kümesinin hemen güneyinde yer alır."
+    }
+   ]
+  }
+ }
+}

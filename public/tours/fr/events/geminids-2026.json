@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "geminids": {
+   "hash": "e046a762e443",
+   "duration": 46.07,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 8.52,
+     "text": "Les Géminides sont la pluie de météores la plus riche de l'année : au maximum, sous un ciel sombre, on voit jusqu'à cent cinquante météores par heure."
+    },
+    {
+     "start": 8.52,
+     "end": 19.32,
+     "text": "Leur source n'est pas une comète mais l'astéroïde 3200 Phaéton, qui s'approche du Soleil plus près que Mercure ; la chaleur solaire fissure sa surface et disperse de la poussière."
+    },
+    {
+     "start": 19.32,
+     "end": 30.93,
+     "text": "Chaque décembre, la Terre traverse la traînée de poussière étirée le long de l'orbite de Phaéton ; les particules entrent dans l'atmosphère à trente-cinq kilomètres par seconde et laissent souvent des traînées lentes et colorées."
+    },
+    {
+     "start": 30.93,
+     "end": 38.93,
+     "text": "Les météores semblent jaillir d'un point du ciel, le radiant dans la constellation des Gémeaux : c'est la direction dans laquelle la Terre traverse le courant."
+    },
+    {
+     "start": 38.93,
+     "end": 46.07,
+     "text": "Le meilleur moment pour observer est après minuit ; cette année, la Lune n'est qu'un mince croissant, se couche tôt et le ciel reste sombre."
+    }
+   ]
+  }
+ }
+}

@@ -123,7 +123,8 @@ export interface UIHost extends MissionPanelHost {
   /** nearest generated object not discovered yet */
   nextDiscovery(): { name: string; distKm: number } | null;
   goToDiscovery(id: string): void;
-  applySettings(): void;
+  /** @param byUser  changed in the settings panel (the visitor's choice wins over the startup probe) */
+  applySettings(byUser?: boolean): void;
   screenshot(): void;
   toggleUI(): void;
 }
@@ -658,7 +659,7 @@ export class UI {
       b.textContent = names[p];
       b.addEventListener('click', () => {
         Object.assign(s, GRAPHICS_PRESETS[p]);
-        this.host.applySettings();
+        this.host.applySettings(true);
       });
       this.presetButtons.set(p, b);
       seg.appendChild(b);
@@ -709,7 +710,7 @@ export class UI {
         input.checked = s[def.key] as boolean;
         input.addEventListener('change', () => {
           (s as unknown as Record<string, unknown>)[def.key] = input.checked;
-          this.host.applySettings();
+          this.host.applySettings(true);
         });
         const knob = document.createElement('span');
         sw.appendChild(input);
@@ -733,7 +734,7 @@ export class UI {
         input.addEventListener('input', () => {
           (s as unknown as Record<string, unknown>)[def.key] = parseFloat(input.value);
           val.textContent = show(parseFloat(input.value));
-          this.host.applySettings();
+          this.host.applySettings(true);
         });
         row.appendChild(input);
         row.appendChild(val);

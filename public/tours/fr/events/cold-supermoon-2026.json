@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "coldmoon": {
+   "hash": "dee696efa795",
+   "duration": 32.95,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 8.54,
+     "text": "La pleine lune de décembre tombe elle aussi près du périgée : un peu plus petite que celle de novembre, mais encore l'une des plus grandes de l'année."
+    },
+    {
+     "start": 8.54,
+     "end": 12.9,
+     "text": "La Lune est aujourd'hui à moins de trois cent soixante mille kilomètres de la Terre."
+    },
+    {
+     "start": 12.9,
+     "end": 22.47,
+     "text": "La pleine lune d'hiver est celle qui monte le plus haut dans le ciel de l'hémisphère nord ; les jours où le Soleil reste bas, la Lune, à l'opposé, chemine tout en haut."
+    },
+    {
+     "start": 22.47,
+     "end": 28.09,
+     "text": "La pleine lune de décembre s'appelle la Lune Froide ; elle marque le début des longues nuits d'hiver."
+    },
+    {
+     "start": 28.09,
+     "end": 32.95,
+     "text": "Vue depuis la Terre, elle brille dans les Gémeaux, juste à côté du radiant des Géminides."
+    }
+   ]
+  }
+ }
+}

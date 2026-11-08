@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "de",
+ "steps": {
+  "bepimoi": {
+   "hash": "8b6fb6b9770a",
+   "duration": 42.23,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.6,
+     "text": "Nach sieben Jahren und neun Planetenvorbeiflügen hat BepiColombo den Merkur erreicht."
+    },
+    {
+     "start": 5.6,
+     "end": 17.22,
+     "text": "Das Einfangen geschieht nicht mit einer einzigen großen Triebwerkszündung, sondern durch eine wochenlange, langsame Annäherung: Die Sonde gleitet förmlich in das schwache Schwerefeld des Merkur hinein."
+    },
+    {
+     "start": 17.22,
+     "end": 24.21,
+     "text": "Heute Abend zieht sie zum ersten Mal nur wenige hundert Kilometer über die Oberfläche; sie ist nun ein Mond des Merkur."
+    },
+    {
+     "start": 24.21,
+     "end": 34.95,
+     "text": "In den kommenden Wochen wird sich die Bahn mit jedem Umlauf ein wenig verengen; im Dezember trennen sich Europas MPO und Japans Mio und beziehen ihre eigenen Wissenschaftsbahnen."
+    },
+    {
+     "start": 34.95,
+     "end": 42.23,
+     "text": "Der Weg, den Sie sehen, ist die geplante Bahn, die die ESA an JPL Horizons übermittelt hat; es ist keine Live-Telemetrie."
+    }
+   ]
+  }
+ }
+}

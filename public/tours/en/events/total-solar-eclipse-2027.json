@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "total2027": {
+   "hash": "799cf25fdb3a",
+   "duration": 47.03,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 8.7,
+     "text": "On 2 August 2027 the Moon passes exactly between the Sun and the Earth, and this time it covers the Sun completely."
+    },
+    {
+     "start": 8.7,
+     "end": 17.32,
+     "text": "Because it is in the part of its orbit close to Earth, it looks eight per cent larger than the Sun in the sky, and its full shadow draws a wide band."
+    },
+    {
+     "start": 17.32,
+     "end": 30.43,
+     "text": "Let's turn back to look at Earth: the Moon's shadow travels as a dark spot across the day side, from the Atlantic to the Strait of Gibraltar, along North Africa to Egypt, then over the Red Sea to Arabia and Somalia."
+    },
+    {
+     "start": 30.43,
+     "end": 41.15,
+     "text": "The longest totality is near Luxor: for six minutes and twenty-three seconds the daytime sky goes dark and the Sun's crown, the corona, is visible to the naked eye."
+    },
+    {
+     "start": 41.15,
+     "end": 47.03,
+     "text": "Europe, the Middle East and Turkey see a partial eclipse; never look at the Sun without eclipse glasses."
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "penumbral": {
+   "hash": "1a3b0ac92926",
+   "duration": 43.51,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 7.8,
+     "text": "A lunar eclipse can only happen at full moon: the Sun, Earth and Moon line up and Earth's shadow falls on the Moon."
+    },
+    {
+     "start": 7.8,
+     "end": 16.24,
+     "text": "That shadow has two layers: the dark umbra, where the Sun is completely hidden, and the wide penumbra, where only part of it is."
+    },
+    {
+     "start": 16.24,
+     "end": 26.49,
+     "text": "On the night of 20 February the Moon passes through the deepest part of the penumbra, coming within just six per cent of its own diameter of the umbra before turning back from its edge."
+    },
+    {
+     "start": 26.49,
+     "end": 34.61,
+     "text": "Seen from Earth, the edge of the Moon nearest the shadow takes on a smoky grey; it is much easier to notice than most penumbral eclipses."
+    },
+    {
+     "start": 34.61,
+     "end": 43.51,
+     "text": "The eclipse can be watched from most of the Americas, Europe, Africa and Asia; in Turkey the deepest moment is at thirteen minutes past two in the morning."
+    }
+   ]
+  }
+ }
+}

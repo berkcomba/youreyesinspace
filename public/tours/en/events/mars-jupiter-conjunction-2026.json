@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "marsjup": {
+   "hash": "75b998cbb161",
+   "duration": 35.51,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 7.52,
+     "text": "On the morning of 16 November, before sunrise, Mars and Jupiter shine side by side on the eastern horizon."
+    },
+    {
+     "start": 7.52,
+     "end": 14.52,
+     "text": "The two planets come within just one point two degrees of each other in the sky, about two and a half full-moon widths."
+    },
+    {
+     "start": 14.52,
+     "end": 22.23,
+     "text": "Of course they are not really side by side: Mars is about three hundred million kilometres from us, Jupiter nine hundred million."
+    },
+    {
+     "start": 22.23,
+     "end": 29.35,
+     "text": "Seen from above it becomes clear: Earth, Mars and Jupiter line up along the same direction in their orbits around the Sun."
+    },
+    {
+     "start": 29.35,
+     "end": 35.51,
+     "text": "A conjunction is only a trick of perspective, but it is one of the easiest sky events to watch with the naked eye."
+    }
+   ]
+  }
+ }
+}

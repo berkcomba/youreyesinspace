@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "tr",
+ "steps": {
+  "supermoon": {
+   "hash": "e5411ada877d",
+   "duration": 37.75,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 9.76,
+     "text": "24 Kasım'daki dolunay yılın en büyüğü: Ay, yörüngesinin Dünya'ya en yakın noktasına birkaç saat arayla tam dolunay evresine giriyor."
+    },
+    {
+     "start": 9.76,
+     "end": 17.44,
+     "text": "Ay'ın yörüngesi daire değil elips; uzaklığı üç yüz elli altı bin ile dört yüz altı bin kilometre arasında değişir."
+    },
+    {
+     "start": 17.44,
+     "end": 24.43,
+     "text": "Perijeye yakın bir dolunay, apojedekinden yüzde on dört daha büyük ve yüzde otuz daha parlak görünür."
+    },
+    {
+     "start": 24.43,
+     "end": 31.81,
+     "text": "Kasım dolunayına Kuzey Amerika geleneğinde Kunduz Ayı denir: kunduzların kış için barınaklarını kurduğu dönem."
+    },
+    {
+     "start": 31.81,
+     "end": 37.75,
+     "text": "Şimdi Dünya'dan bakalım: Güneş tam arkamızda, önümüzde ise tam aydınlanmış Ay."
+    }
+   ]
+  }
+ }
+}

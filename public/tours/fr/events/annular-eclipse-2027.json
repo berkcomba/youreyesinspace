@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "annular": {
+   "hash": "38a525e18f81",
+   "duration": 42.87,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 7.34,
+     "text": "Lors d'une éclipse de Soleil, la Lune passe exactement entre le Soleil et la Terre et son ombre tombe sur la Terre."
+    },
+    {
+     "start": 7.34,
+     "end": 18.82,
+     "text": "Cette fois, la Lune est dans la moitié lointaine de son orbite et paraît donc un peu plus petite que le Soleil dans le ciel : elle ne peut pas le couvrir entièrement et il reste un brillant anneau de feu."
+    },
+    {
+     "start": 18.82,
+     "end": 24.33,
+     "text": "Regardons depuis le centre de l'ombre : le disque sombre de la Lune se pose au milieu du Soleil."
+    },
+    {
+     "start": 24.33,
+     "end": 35.19,
+     "text": "La bande d'annularité s'étend du Pacifique Sud à l'Atlantique en passant par le Chili et l'Argentine ; une éclipse partielle est visible sur de vastes régions d'Amérique du Sud et d'Afrique."
+    },
+    {
+     "start": 35.19,
+     "end": 42.87,
+     "text": "La prochaine grande éclipse aura lieu le 2 août 2027 : une éclipse totale de six minutes traversant l'Égypte et l'Arabie saoudite."
+    }
+   ]
+  }
+ }
+}

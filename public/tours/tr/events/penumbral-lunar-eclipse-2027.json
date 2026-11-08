@@ -1,0 +1,32 @@
+{
+ "voice": "altair",
+ "locale": "tr",
+ "steps": {
+  "penumbral": {
+   "hash": "35c59b216eb3",
+   "duration": 43.19,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 8.52,
+     "text": "Ay tutulması yalnızca dolunayda olur: Güneş, Dünya ve Ay bir doğru üzerinde dizilir ve Dünya'nın gölgesi Ay'a düşer."
+    },
+    {
+     "start": 8.52,
+     "end": 27.09,
+     "text": "Bu gölgenin iki katmanı vardır: Güneş'in tamamen örtüldüğü koyu tam gölge ve Güneş'in yalnızca bir kısmının örtüldüğü geniş yarı gölge. 20 Şubat gecesi Ay, yarı gölgenin en derin kısmından geçiyor ve tam gölgeye kendi çapının yalnızca yüzde altısı kadar yaklaşıp kıyısından dönüyor."
+    },
+    {
+     "start": 27.09,
+     "end": 35.11,
+     "text": "Dünya'dan bakınca Ay'ın gölgeye yakın kenarı dumanlı bir griye bürünür; çoğu yarı gölge tutulmasından çok daha kolay fark edilir."
+    },
+    {
+     "start": 35.11,
+     "end": 43.19,
+     "text": "Tutulma Amerika, Avrupa, Afrika ve Asya'nın büyük bölümünden izlenebilir; Türkiye'de en derin an gece saat ikiyi on üç geçe."
+    }
+   ]
+  }
+ }
+}

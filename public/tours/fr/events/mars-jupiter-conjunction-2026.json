@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "marsjup": {
+   "hash": "54a778f0b502",
+   "duration": 34.87,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.72,
+     "text": "Le matin du 16 novembre, avant le lever du Soleil, Mars et Jupiter brillent côte à côte sur l'horizon est."
+    },
+    {
+     "start": 6.72,
+     "end": 13.26,
+     "text": "Les deux planètes se rapprochent dans le ciel à un virgule deux degré seulement, soit environ deux pleines lunes et demie."
+    },
+    {
+     "start": 13.26,
+     "end": 21.27,
+     "text": "Bien sûr, elles ne sont pas réellement côte à côte : Mars est à quelque trois cents millions de kilomètres de nous, Jupiter à neuf cents millions."
+    },
+    {
+     "start": 21.27,
+     "end": 28.87,
+     "text": "Vu d'en haut, on comprend ce qui se passe : la Terre, Mars et Jupiter s'alignent dans la même direction sur leurs orbites autour du Soleil."
+    },
+    {
+     "start": 28.87,
+     "end": 34.87,
+     "text": "Une conjonction n'est qu'un jeu de perspective, mais c'est l'un des phénomènes célestes les plus faciles à observer à l'œil nu."
+    }
+   ]
+  }
+ }
+}

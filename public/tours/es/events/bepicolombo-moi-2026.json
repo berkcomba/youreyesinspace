@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "bepimoi": {
+   "hash": "e5ea60daf164",
+   "duration": 45.75,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 5.94,
+     "text": "Tras siete años y nueve sobrevuelos planetarios, BepiColombo ha llegado a Mercurio."
+    },
+    {
+     "start": 5.94,
+     "end": 18.78,
+     "text": "La captura no ocurre con un único gran encendido del motor, sino mediante una aproximación lenta de semanas: la nave se desliza, casi flotando, en el débil campo gravitatorio de Mercurio."
+    },
+    {
+     "start": 18.78,
+     "end": 26.13,
+     "text": "Esta tarde pasa por primera vez a solo unos cientos de kilómetros sobre la superficie; ya es una luna de Mercurio."
+    },
+    {
+     "start": 26.13,
+     "end": 38.35,
+     "text": "En las próximas semanas la órbita se estrechará un poco en cada paso; en diciembre el MPO europeo y el Mio japonés se separarán y se instalarán en sus propias órbitas científicas."
+    },
+    {
+     "start": 38.35,
+     "end": 45.75,
+     "text": "El camino que está viendo es la trayectoria prevista que la ESA entregó a JPL Horizons; no es telemetría en directo."
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "tr",
+ "steps": {
+  "leonids": {
+   "hash": "162518460dbe",
+   "duration": 44.79,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.54,
+     "text": "Leonidler, otuz üç yılda bir dönen Tempel-Tuttle Kuyruklu Yıldızı'nın bıraktığı tozdan gelir."
+    },
+    {
+     "start": 6.54,
+     "end": 13.24,
+     "text": "Kuyruklu yıldız şu anda yörüngesinin uzak ucuna yakın; bir sonraki perihelyonu 2031'de."
+    },
+    {
+     "start": 13.24,
+     "end": 23.55,
+     "text": "Dünya, Kasım ortasında onun yörüngesini neredeyse kafa kafaya keser: parçacıklar atmosfere saniyede yetmiş bir kilometreyle, bilinen en yüksek hızla girer."
+    },
+    {
+     "start": 23.55,
+     "end": 38.19,
+     "text": "Sıradan bir yılda saatte on beş meteor görülür; ama 1833 ve 1966'da gökyüzü saatte yüz binlerce meteorla \"yağmış\", 1999–2002 arasında da fırtınalar yaşanmıştı."
+    },
+    {
+     "start": 38.19,
+     "end": 44.79,
+     "text": "Radyan Aslan takımyıldızının başındadır; bu yıl Ay yeni aya yakın olduğundan koşullar elverişli."
+    }
+   ]
+  }
+ }
+}

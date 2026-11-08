@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "uranusopp": {
+   "hash": "7ec8fb96abf5",
+   "duration": 37.43,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 8.92,
+     "text": "On 25 November Uranus is at opposition: Sun, Earth and Uranus line up, and the planet stays in the sky all night."
+    },
+    {
+     "start": 8.92,
+     "end": 17.4,
+     "text": "Opposition is the moment an outer planet is closest to Earth and at its brightest; Uranus is now two point six billion kilometres from us."
+    },
+    {
+     "start": 17.4,
+     "end": 27.39,
+     "text": "Seen from Earth it sits in Aries, a blue-green point at magnitude five point six, barely visible to the naked eye under a dark sky and easy in binoculars."
+    },
+    {
+     "start": 27.39,
+     "end": 31.37,
+     "text": "Its colour comes from methane in its atmosphere absorbing red light."
+    },
+    {
+     "start": 31.37,
+     "end": 37.43,
+     "text": "With its axis tipped on its side, Uranus all but rolls along its eighty-four-year journey around the Sun."
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "tr",
+ "steps": {
+  "annular": {
+   "hash": "47a03ce1a438",
+   "duration": 39.35,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.96,
+     "text": "Bir Güneş tutulmasında Ay, Güneş ile Dünya arasından tam olarak geçer ve gölgesi Dünya'ya düşer."
+    },
+    {
+     "start": 6.96,
+     "end": 16.7,
+     "text": "Bu kez Ay yörüngesinin uzak yarısında olduğundan gökyüzünde Güneş'ten biraz küçük görünür: onu tam örtemez ve geriye parlak bir ateş halkası kalır."
+    },
+    {
+     "start": 16.7,
+     "end": 21.93,
+     "text": "Gölge merkezinden bakalım: Ay'ın karanlık diski Güneş'in ortasına yerleşiyor."
+    },
+    {
+     "start": 21.93,
+     "end": 31.45,
+     "text": "Halkalılık kuşağı Güney Pasifik'ten Şili ve Arjantin üzerinden Atlantik'e uzanır; Güney Amerika ve Afrika'nın geniş bölgelerinde parçalı tutulma izlenir."
+    },
+    {
+     "start": 31.45,
+     "end": 39.35,
+     "text": "Bir sonraki büyük tutulma 2 Ağustos 2027'de: Mısır ve Suudi Arabistan üzerinden geçen altı dakikalık tam tutulma."
+    }
+   ]
+  }
+ }
+}

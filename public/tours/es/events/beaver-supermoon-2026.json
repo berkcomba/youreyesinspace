@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "supermoon": {
+   "hash": "abdd6d4a50b6",
+   "duration": 41.59,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 9.74,
+     "text": "La luna llena del 24 de noviembre es la más grande del año: la Luna alcanza la fase llena a pocas horas del punto de su órbita más cercano a la Tierra."
+    },
+    {
+     "start": 9.74,
+     "end": 18.4,
+     "text": "La órbita lunar no es un círculo sino una elipse; su distancia varía entre trescientos cincuenta y seis mil y cuatrocientos seis mil kilómetros."
+    },
+    {
+     "start": 18.4,
+     "end": 25.95,
+     "text": "Una luna llena cerca del perigeo parece un catorce por ciento más grande y un treinta por ciento más brillante que una en el apogeo."
+    },
+    {
+     "start": 25.95,
+     "end": 35.01,
+     "text": "En la tradición norteamericana la luna llena de noviembre se llama Luna del Castor: la época en que los castores construyen sus madrigueras para el invierno."
+    },
+    {
+     "start": 35.01,
+     "end": 41.59,
+     "text": "Miremos ahora desde la Tierra: el Sol justo detrás de nosotros y, delante, la Luna completamente iluminada."
+    }
+   ]
+  }
+ }
+}

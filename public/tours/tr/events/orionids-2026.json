@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "tr",
+ "steps": {
+  "orionids": {
+   "hash": "a5a2de08c63d",
+   "duration": 37.75,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 8.72,
+     "text": "Orionidler, Halley Kuyruklu Yıldızı'nın geçmiş dönüşlerinde bıraktığı tozdan doğar; Dünya bu şeridi her Ekim ayında keser."
+    },
+    {
+     "start": 8.72,
+     "end": 16.04,
+     "text": "Halley'nin kendisi şu anda Neptün yörüngesinin ötesinde, 2061'deki dönüşüne doğru yavaşça yol alıyor."
+    },
+    {
+     "start": 16.04,
+     "end": 25.27,
+     "text": "Dünya'nın yörüngesine yaklaşalım: toz parçacıkları atmosfere saniyede altmış altı kilometre hızla çarpar ve uzun, parlak izler bırakır."
+    },
+    {
+     "start": 25.27,
+     "end": 32.49,
+     "text": "Zirvede saatte yirmi kadar meteor görülür; radyan, Avcı takımyıldızının kaldırdığı sopanın yakınındadır."
+    },
+    {
+     "start": 32.49,
+     "end": 37.75,
+     "text": "Aynı toz şeridinin öbür yarısını Mayıs ayında Eta Akuarid yağmuru olarak izleriz."
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "solstice": {
+   "hash": "d2f3bb56b370",
+   "duration": 44.15,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 8.96,
+     "text": "El eje de rotación de la Tierra está inclinado veintitrés grados y medio respecto a su plano orbital y apunta en la misma dirección todo el año."
+    },
+    {
+     "start": 8.96,
+     "end": 19.76,
+     "text": "En el solsticio de diciembre el Polo Sur se inclina hacia el Sol y el Polo Norte se aleja de él: la línea entre el día y la noche cruza la Tierra con su ángulo más inclinado."
+    },
+    {
+     "start": 19.76,
+     "end": 27.39,
+     "text": "Más allá del Círculo Polar Ártico el Sol no sale; en el sur, la Antártida está iluminada por el sol de medianoche."
+    },
+    {
+     "start": 27.39,
+     "end": 35.31,
+     "text": "Vista desde la órbita, la Tierra alcanza este punto de su vuelta alrededor del Sol cada año el 21–22 de diciembre."
+    },
+    {
+     "start": 35.31,
+     "end": 44.15,
+     "text": "Lo que crea las estaciones no es la distancia sino esta inclinación: de hecho, la Tierra pasa por su punto más cercano al Sol a principios de enero."
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "hera": {
+   "hash": "57e56e767a4e",
+   "duration": 44.47,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.26,
+     "text": "After a two-year journey, ESA's Hera probe arrives at the binary asteroid Didymos."
+    },
+    {
+     "start": 6.26,
+     "end": 17.44,
+     "text": "Its target is the small moon Dimorphos, which NASA's DART spacecraft deliberately struck in 2022: the impact shortened the moon's orbital period by thirty-three minutes."
+    },
+    {
+     "start": 17.44,
+     "end": 24.59,
+     "text": "Hera is now slowly closing in on the pair and over the coming weeks will settle into orbit from tens of kilometres away."
+    },
+    {
+     "start": 24.59,
+     "end": 34.63,
+     "text": "The CubeSats it carries, Milani and Juventas, will measure Dimorphos's mass and internal structure; the first close-up images are expected in late November."
+    },
+    {
+     "start": 34.63,
+     "end": 44.47,
+     "text": "The approach path you are watching is the planned trajectory ESA supplied to JPL Horizons, published up to 4 November; what follows has not yet been announced."
+    }
+   ]
+  }
+ }
+}

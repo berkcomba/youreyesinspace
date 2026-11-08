@@ -1,9 +1,9 @@
 /**
  * Generate the guided-tour narration with the xAI text-to-speech API (voice "altair").
  *
- *   XAI_API_KEY=… node scripts/tts-tours.mjs [--lang tr,en,de,es,fr] [--tour solar-system] [--force] [--dry]
+ *   XAI_API_KEY=… node scripts/tts-tours.mjs [--lang tr,en,de,es,fr] [--tour solar-system | events/<id> | events] [--force] [--dry]
  *
- * For every tour step and language it writes
+ * For every tour step (and every sky event's scene, under events/<id>) and language it writes
  *   public/tours/<lang>/<tour>/<step>.mp3           (24 kHz, 64 kbps)
  *   public/tours/<lang>/<tour>.json                 { steps: { [stepId]: { duration, sentences: [{start,end,text}] } } }
  * The manifest's sentence timings (derived from the API's per-character timestamps) drive the
@@ -16,6 +16,7 @@
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
+import { register } from 'node:module';
 import { createHash } from 'node:crypto';
 
 const ROOT = new URL('..', import.meta.url).pathname;
@@ -40,7 +41,17 @@ if (!key && !dry) {
   process.exit(1);
 }
 
+// the data modules import each other without extensions (Vite style); resolve those to .ts
+register('data:text/javascript,' + encodeURIComponent(`
+  export async function resolve(spec, ctx, next) {
+    try { return await next(spec, ctx); }
+    catch (e) { if (spec.startsWith('.') && !/\\.\\w+$/.test(spec)) return next(spec + '.ts', ctx); throw e; }
+  }`));
 const { TOURS } = await import('../src/data/tours.ts');
+const { EVENTS, eventTour } = await import('../src/data/events.ts');
+// events play as one-scene tours whose audio lives under tours/<lang>/events/<id>
+const ALL = [...TOURS, ...EVENTS.map(eventTour)];
+const audioId = (tour) => tour.audio ?? tour.id;
 
 const dicts = {};
 for (const l of langs) {
@@ -142,10 +153,10 @@ async function synthesize(text, lang) {
 let totalChars = 0;
 const jobs = [];
 for (const lang of langs) {
-  for (const tour of TOURS) {
-    if (onlyTour && tour.id !== onlyTour) continue;
-    const dir = join(OUT, lang, tour.id);
-    const manifestPath = join(OUT, lang, `${tour.id}.json`);
+  for (const tour of ALL) {
+    if (onlyTour && tour.id !== onlyTour && audioId(tour) !== onlyTour && !(onlyTour === 'events' && audioId(tour).startsWith('events/'))) continue;
+    const dir = join(OUT, lang, audioId(tour));
+    const manifestPath = join(OUT, lang, `${audioId(tour)}.json`);
     const manifest = existsSync(manifestPath) ? JSON.parse(readFileSync(manifestPath, 'utf8')) : { voice: VOICE, locale: lang, steps: {} };
     manifest.voice = VOICE;
     manifest.locale = lang;

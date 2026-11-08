@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "bepisep": {
+   "hash": "b5925f5196cb",
+   "duration": 39.99,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 7.04,
+     "text": "Two weeks after entering Mercury orbit, the BepiColombo stack now circles the planet in under ten hours."
+    },
+    {
+     "start": 7.04,
+     "end": 14.6,
+     "text": "In these days the stack comes apart: first the sunshield protecting Mio, then the two orbiters separate from each other."
+    },
+    {
+     "start": 14.6,
+     "end": 24.03,
+     "text": "Japan's Mio stays in a long elliptical orbit to study Mercury's magnetosphere, while Europe's MPO descends to a polar orbit close to the surface."
+    },
+    {
+     "start": 24.03,
+     "end": 33.49,
+     "text": "The science mission begins in early 2027: the composition of the surface, the interior, and the magnetic field of the planet nearest the Sun."
+    },
+    {
+     "start": 33.49,
+     "end": 39.99,
+     "text": "The orbit shown is the planned path ESA supplied to JPL Horizons; the separation time may change."
+    }
+   ]
+  }
+ }
+}

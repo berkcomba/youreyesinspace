@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "de",
+ "steps": {
+  "leonids": {
+   "hash": "fc6f19c98341",
+   "duration": 47.03,
+   "sentences": [
+    {
+     "start": 0.02,
+     "end": 6.5,
+     "text": "Die Leoniden stammen aus dem Staub des Kometen Tempel-Tuttle, der alle dreiunddreißig Jahre wiederkehrt."
+    },
+    {
+     "start": 6.5,
+     "end": 13.78,
+     "text": "Der Komet befindet sich derzeit nahe dem fernen Ende seiner Bahn; sein nächstes Perihel ist 2031."
+    },
+    {
+     "start": 13.78,
+     "end": 24.09,
+     "text": "Mitte November kreuzt die Erde seine Bahn fast frontal: Die Teilchen treten mit einundsiebzig Kilometern pro Sekunde in die Atmosphäre ein, der höchsten bekannten Geschwindigkeit."
+    },
+    {
+     "start": 24.09,
+     "end": 40.39,
+     "text": "In einem gewöhnlichen Jahr sieht man fünfzehn Meteore pro Stunde; 1833 und 1966 aber „regnete“ der Himmel Hunderttausende Meteore pro Stunde, und zwischen 1999 und 2002 gab es erneut Stürme."
+    },
+    {
+     "start": 40.39,
+     "end": 47.03,
+     "text": "Der Radiant liegt im Kopf des Löwen; da der Mond dieses Jahr nahe Neumond steht, sind die Bedingungen günstig."
+    }
+   ]
+  }
+ }
+}

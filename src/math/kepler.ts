@@ -99,6 +99,31 @@ export function positionFromE(r: ResolvedElements, E: number, out: Vector3): Vec
   return out.set(x, y, z);
 }
 
+/**
+ * Osculating elements of a bound orbit from a state vector (math frame, km and km/s); also
+ * returns the eccentric anomaly, so `positionFromE(out, E)` reproduces `pos`.
+ */
+export function elementsFromState(pos: Vector3, vel: Vector3, gm: number, out: ResolvedElements): number {
+  const r = pos.length(), v2 = vel.lengthSq();
+  const h = _h.crossVectors(pos, vel), hl = h.length();
+  const ev = _e.copy(pos).multiplyScalar(v2 - gm / r).addScaledVector(vel, -pos.dot(vel)).divideScalar(gm);
+  const e = Math.min(ev.length(), 0.999);
+  const a = 1 / (2 / r - v2 / gm);
+  const node = Math.atan2(h.x, -h.y);
+  const cO = Math.cos(node), sO = Math.sin(node);
+  // argument of perigee and true anomaly measured in the orbit plane from the node line
+  const q = _q.crossVectors(h, _n.set(cO, sO, 0)).divideScalar(hl);
+  const argPeri = Math.atan2(ev.dot(q), ev.x * cO + ev.y * sO);
+  const nu = Math.atan2(pos.dot(q), pos.x * cO + pos.y * sO) - argPeri;
+  const E = 2 * Math.atan2(Math.sqrt(1 - e) * Math.sin(nu / 2), Math.sqrt(1 + e) * Math.cos(nu / 2));
+  out.a = a; out.e = e; out.i = Math.acos(Math.max(-1, Math.min(1, h.z / hl)));
+  out.node = wrapAngle(node); out.argPeri = wrapAngle(argPeri);
+  out.M = wrapAngle(E - e * Math.sin(E));
+  out.n = Math.sqrt(gm / (a * a * a));
+  return E;
+}
+const _h = new Vector3(), _e = new Vector3(), _q = new Vector3(), _n = new Vector3();
+
 /** Radial distance for given E */
 export function radiusFromE(r: ResolvedElements, E: number): number {
   return r.a * (1 - r.e * Math.cos(E));

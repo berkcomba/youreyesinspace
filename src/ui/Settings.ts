@@ -175,18 +175,37 @@ export function matchPreset(s: Settings): GraphicsPreset | null {
 }
 
 const KEY = 'yeits.settings.v1';
+const PROBE_KEY = 'yeits.gfxProbe.v1';
 
-/** first visit: the lowest level on phones and tablets, the highest on desktops */
+const isMobile = (): boolean => window.matchMedia('(pointer: coarse)').matches;
+
+/**
+ * Phones and tablets start at the highest level too; the first seconds after load are measured
+ * once, and a device that cannot keep up drops to the lowest level (see App.probeGraphics).
+ */
+export function graphicsProbePending(): boolean {
+  try {
+    return isMobile() && localStorage.getItem(PROBE_KEY) === null;
+  } catch {
+    return false;
+  }
+}
+export function finishGraphicsProbe(): void {
+  try { localStorage.setItem(PROBE_KEY, '1'); } catch { /* ignore */ }
+}
+
 function firstVisit(): Settings {
-  const mobile = window.matchMedia('(pointer: coarse)').matches;
-  return { ...DEFAULT_SETTINGS, ...GRAPHICS_PRESETS[mobile ? 'low' : 'high'] };
+  return { ...DEFAULT_SETTINGS, ...GRAPHICS_PRESETS.high };
 }
 
 export function loadSettings(): Settings {
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) return firstVisit();
-    return { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
+    const s: Settings = { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
+    // phones used to be put on the lowest level unasked; they get measured instead
+    if (graphicsProbePending() && matchPreset(s) === 'low') Object.assign(s, GRAPHICS_PRESETS.high);
+    return s;
   } catch {
     return firstVisit();
   }

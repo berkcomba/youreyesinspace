@@ -1,0 +1,32 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "newmoon": {
+   "hash": "205ce26fb329",
+   "duration": 33.91,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 8.96,
+     "text": "En la luna nueva, la Luna pasa entre el Sol y la Tierra; la cara que nos muestra está a oscuras y resulta invisible junto al Sol en el cielo."
+    },
+    {
+     "start": 8.96,
+     "end": 19.89,
+     "text": "No todas las lunas nuevas traen eclipse, porque la órbita de la Luna está inclinada cinco grados respecto a la de la Tierra y su sombra suele pasar por encima o por debajo de ella."
+    },
+    {
+     "start": 19.89,
+     "end": 27.27,
+     "text": "La semana de luna nueva trae el cielo más oscuro para los observadores: este año coincide con el máximo de las Gemínidas."
+    },
+    {
+     "start": 27.27,
+     "end": 33.91,
+     "text": "Está viendo la órbita acelerada: la Luna completa sus fases dando la vuelta a la Tierra en veintinueve días y medio."
+    }
+   ]
+  }
+ }
+}

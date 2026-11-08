@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "annular": {
+   "hash": "6b1dd5d7d2d6",
+   "duration": 41.59,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.72,
+     "text": "En un eclipse solar la Luna pasa exactamente entre el Sol y la Tierra y su sombra cae sobre la Tierra."
+    },
+    {
+     "start": 6.72,
+     "end": 17.38,
+     "text": "Esta vez la Luna está en la mitad lejana de su órbita, por lo que se ve algo más pequeña que el Sol en el cielo: no logra cubrirlo del todo y queda un brillante anillo de fuego."
+    },
+    {
+     "start": 17.38,
+     "end": 23.11,
+     "text": "Miremos desde el centro de la sombra: el disco oscuro de la Luna se posa en el centro del Sol."
+    },
+    {
+     "start": 23.11,
+     "end": 33.71,
+     "text": "La franja de anularidad va del Pacífico Sur, cruzando Chile y Argentina, hasta el Atlántico; en amplias zonas de Sudamérica y África se observa un eclipse parcial."
+    },
+    {
+     "start": 33.71,
+     "end": 41.59,
+     "text": "El próximo gran eclipse llega el 2 de agosto de 2027: un eclipse total de seis minutos que cruza Egipto y Arabia Saudí."
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "total2027": {
+   "hash": "24f61361ef2a",
+   "duration": 50.87,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 9.1,
+     "text": "El 2 de agosto de 2027 la Luna pasa exactamente entre el Sol y la Tierra, y esta vez cubre el Sol por completo."
+    },
+    {
+     "start": 9.1,
+     "end": 19.36,
+     "text": "Como está en la parte de su órbita más cercana a la Tierra, en el cielo se ve un ocho por ciento más grande que el Sol, y su sombra total traza una franja ancha."
+    },
+    {
+     "start": 19.36,
+     "end": 34.75,
+     "text": "Volvamos a mirar la Tierra: la sombra de la Luna recorre el lado diurno como una mancha oscura, desde el Atlántico hasta el estrecho de Gibraltar, a lo largo del norte de África hasta Egipto, y luego cruza el mar Rojo hacia Arabia y Somalia."
+    },
+    {
+     "start": 34.75,
+     "end": 44.89,
+     "text": "La totalidad más larga se da cerca de Luxor: durante seis minutos y veintitrés segundos el cielo diurno se oscurece y la corona del Sol se ve a simple vista."
+    },
+    {
+     "start": 44.89,
+     "end": 50.87,
+     "text": "Europa, Oriente Medio y Turquía ven un eclipse parcial; nunca mire al Sol sin gafas de eclipse."
+    }
+   ]
+  }
+ }
+}

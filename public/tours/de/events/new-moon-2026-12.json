@@ -1,0 +1,32 @@
+{
+ "voice": "altair",
+ "locale": "de",
+ "steps": {
+  "newmoon": {
+   "hash": "67f33c744d52",
+   "duration": 34.55,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 9.98,
+     "text": "Bei Neumond zieht der Mond zwischen Sonne und Erde hindurch; seine uns zugewandte Seite ist dunkel, und er bleibt neben der Sonne am Himmel unsichtbar."
+    },
+    {
+     "start": 9.98,
+     "end": 20.25,
+     "text": "Nicht jeder Neumond bringt eine Finsternis, denn die Mondbahn ist um fünf Grad gegen die Erdbahn geneigt und sein Schatten zieht meist über oder unter der Erde vorbei."
+    },
+    {
+     "start": 20.25,
+     "end": 27.31,
+     "text": "Die Neumondwoche bringt Sternguckern den dunkelsten Himmel: Dieses Jahr fällt sie mit dem Maximum der Geminiden zusammen."
+    },
+    {
+     "start": 27.31,
+     "end": 34.55,
+     "text": "Sie sehen die Bahn im Zeitraffer: Der Mond durchläuft seine Phasen, indem er die Erde in neunundzwanzigeinhalb Tagen umrundet."
+    }
+   ]
+  }
+ }
+}

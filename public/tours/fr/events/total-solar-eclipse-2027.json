@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "total2027": {
+   "hash": "4f10fdeabb62",
+   "duration": 47.03,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 8.12,
+     "text": "Le 2 août 2027, la Lune passe exactement entre le Soleil et la Terre, et cette fois elle couvre entièrement le Soleil."
+    },
+    {
+     "start": 8.12,
+     "end": 17.16,
+     "text": "Comme elle se trouve dans la partie de son orbite proche de la Terre, elle paraît huit pour cent plus grande que le Soleil dans le ciel, et son ombre trace une large bande."
+    },
+    {
+     "start": 17.16,
+     "end": 30.55,
+     "text": "Revenons vers la Terre : l'ombre de la Lune glisse comme une tache sombre sur la face éclairée, de l'Atlantique au détroit de Gibraltar, le long de l'Afrique du Nord jusqu'à l'Égypte, puis par-delà la mer Rouge vers l'Arabie et la Somalie."
+    },
+    {
+     "start": 30.55,
+     "end": 40.11,
+     "text": "La totalité la plus longue a lieu près de Louxor : pendant six minutes et vingt-trois secondes, le ciel de jour s'assombrit et la couronne du Soleil est visible à l'œil nu."
+    },
+    {
+     "start": 40.11,
+     "end": 47.03,
+     "text": "L'Europe, le Moyen-Orient et la Turquie verront une éclipse partielle ; ne regardez jamais le Soleil sans lunettes d'éclipse."
+    }
+   ]
+  }
+ }
+}

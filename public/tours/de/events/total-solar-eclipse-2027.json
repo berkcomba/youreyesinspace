@@ -1,0 +1,42 @@
+{
+ "voice": "altair",
+ "locale": "de",
+ "steps": {
+  "total2027": {
+   "hash": "44299c28039b",
+   "duration": 50.87,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 0.68,
+     "text": "Am 2."
+    },
+    {
+     "start": 0.68,
+     "end": 9.1,
+     "text": "August 2027 zieht der Mond genau zwischen Sonne und Erde hindurch und bedeckt die Sonne diesmal vollständig."
+    },
+    {
+     "start": 9.1,
+     "end": 18.78,
+     "text": "Weil er sich im erdnahen Teil seiner Bahn befindet, erscheint er am Himmel acht Prozent größer als die Sonne, und sein Kernschatten zieht einen breiten Streifen."
+    },
+    {
+     "start": 18.78,
+     "end": 32.47,
+     "text": "Schauen wir zurück zur Erde: Der Mondschatten wandert als dunkler Fleck über die Tagseite, vom Atlantik zur Straße von Gibraltar, entlang Nordafrikas nach Ägypten, dann über das Rote Meer nach Arabien und Somalia."
+    },
+    {
+     "start": 32.47,
+     "end": 43.85,
+     "text": "Die längste Totalität gibt es bei Luxor: Sechs Minuten und dreiundzwanzig Sekunden lang wird der Taghimmel dunkel, und die Krone der Sonne, die Korona, ist mit bloßem Auge zu sehen."
+    },
+    {
+     "start": 43.85,
+     "end": 50.87,
+     "text": "Europa, der Nahe Osten und die Türkei sehen eine partielle Finsternis; schauen Sie nie ohne Finsternisbrille in die Sonne."
+    }
+   ]
+  }
+ }
+}

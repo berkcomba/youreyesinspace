@@ -15,7 +15,9 @@ const N_TAU = 56;
 const N_BETA = 26;
 const N_DUST = N_TAU * N_BETA;
 /** how far back the dust is followed (days) */
-const TMAX_DAYS = 110;
+const TMAX_DAYS = 70;
+/** drawn activity never drops below this, so a comet far out still trails a faint wisp (CO/CO₂ outgassing) */
+const MIN_ACTIVITY = 0.12;
 const N_ION = 420;
 const N_COMA = 6;
 const N_ALL = N_DUST + N_ION + N_COMA;
@@ -70,7 +72,7 @@ interface Tail {
  * their own orbits around a Sun lightened by radiation pressure (β), which bends the tail along
  * the orbit as the real syndynes do. The ion tail streams straight down the solar wind, aberrated
  * by the comet's motion; the coma is a soft green-white glow around the nucleus. Everything
- * scales with the sublimation activity, so a comet far out is a bare nucleus.
+ * scales with the sublimation activity; a comet far out keeps only a faint wisp.
  */
 export class CometTails {
   readonly group = new Group();
@@ -156,12 +158,12 @@ export class CometTails {
       const tauDays = TMAX_DAYS * Math.pow(f, 1.5);
       if (!this.stateAt(b, jd - tauDays, _p, _v)) return;
       const rAU = _p.length() / AU_KM;
-      const aRel = cometActivity(rAU, sqrtLum(b.parent!));
+      const aRel = Math.max(cometActivity(rAU, sqrtLum(b.parent!)), MIN_ACTIVITY);
       // grains leave preferentially sunward (the day side sublimates)
       _dir.copy(_p).normalize();
       for (let m = 0; m < N_BETA; m++) {
         const i = k * N_BETA + m;
-        const beta = 0.004 * Math.pow(210, m / (N_BETA - 1));   // 0.004 … 0.84
+        const beta = 0.004 * Math.pow(100, m / (N_BETA - 1));   // 0.004 … 0.4
         _p2.copy(_p);
         _r.set(t.eject[i * 3], t.eject[i * 3 + 1], t.eject[i * 3 + 2]).addScaledVector(_dir, -0.15).add(_v);
         propagateState(_p2, _r, gm * (1 - beta), tauDays * DAY_S, _m);
@@ -170,7 +172,7 @@ export class CometTails {
         // older dust has spread thin; the biggest grains (small β) are few but linger;
         // the freshest dust sits inside the coma, which is drawn on its own
         const age = tauDays / TMAX_DAYS;
-        t.dustW[i] = Math.min(aRel, 1.5) * Math.pow(1 - age, 0.5) / (1 + tauDays / 60) * Math.min(1, 0.04 + age * 5) * (0.5 + 0.5 * Math.pow(1 - m / N_BETA, 0.5));
+        t.dustW[i] = Math.min(aRel, 1.2) * Math.pow(1 - age, 0.5) / (1 + tauDays / 60) * Math.min(1, 0.04 + age * 5) * (0.5 + 0.5 * Math.pow(1 - m / N_BETA, 0.5));
         t.dustSize[i] = 3.2e6 * (0.03 + 0.97 * Math.pow(age, 0.6)) * (0.6 + 0.6 * beta);
       }
     }
@@ -194,9 +196,9 @@ export class CometTails {
       const t = this.tailFor(b);
       _rel.copy(b.position).sub(b.parent.position);
       const rAU = _rel.length() / AU_KM;
-      const A = cometActivity(rAU, sqrtLum(b.parent));
-      t.activity = A;
-      if (A < 0.003 || !visible) { t.points.visible = false; continue; }
+      t.activity = cometActivity(rAU, sqrtLum(b.parent));
+      const A = Math.max(t.activity, MIN_ACTIVITY);
+      if (!visible) { t.points.visible = false; continue; }
       t.points.visible = true;
       if (!(Math.abs(jd - t.lastJd) < RECOMPUTE_JD)) this.rebuildDust(t, jd);
       // parent, camera-relative
@@ -205,7 +207,7 @@ export class CometTails {
       const gain = Math.min(1, A) ** 0.5;
       for (let i = 0; i < N_DUST; i++) {
         pos[i * 3] = _p.x + t.dust[i * 3]; pos[i * 3 + 1] = _p.y + t.dust[i * 3 + 1]; pos[i * 3 + 2] = _p.z + t.dust[i * 3 + 2];
-        alpha[i] = t.dustW[i] * 0.28 * gain;
+        alpha[i] = t.dustW[i] * 0.07 * gain * gain;
         size[i] = t.dustSize[i] * (0.7 + 0.3 * gain);
       }
       // ion tail: down the solar wind (≈400 km/s radial) as seen from the moving nucleus
@@ -213,7 +215,7 @@ export class CometTails {
       _dir.copy(_p2).normalize().multiplyScalar(400).sub(_v).normalize();
       _e1.crossVectors(_dir, Math.abs(_dir.y) < 0.9 ? _up : _e2.set(1, 0, 0)).normalize();
       _e2.crossVectors(_dir, _e1);
-      const L = 0.22 * AU_KM * Math.pow(Math.min(A, 4), 0.6);
+      const L = 0.12 * AU_KM * Math.pow(Math.min(A, 2.5), 0.6);
       const nuc = _rel.copy(b.position).sub(camPos);
       const wob = (performance.now() / 1000) * 0.05;
       for (let k = 0; k < N_ION; k++) {
@@ -226,7 +228,7 @@ export class CometTails {
         pos[i * 3] = nuc.x + _dir.x * L * s + _e1.x * (jx * w + rip) + _e2.x * jy * w;
         pos[i * 3 + 1] = nuc.y + _dir.y * L * s + _e1.y * (jx * w + rip) + _e2.y * jy * w;
         pos[i * 3 + 2] = nuc.z + _dir.z * L * s + _e1.z * (jx * w + rip) + _e2.z * jy * w;
-        alpha[i] = Math.pow(1 - s, 1.3) * 0.15 * gain * (0.5 + 0.5 * t.ionJitter[k * 3 + 2]);
+        alpha[i] = Math.pow(1 - s, 1.3) * 0.09 * gain * (0.5 + 0.5 * t.ionJitter[k * 3 + 2]);
         size[i] = L * 0.035 * (0.35 + 1.0 * s);
       }
       // coma
@@ -236,7 +238,7 @@ export class CometTails {
         const f = Math.pow(0.55, k);
         pos[i * 3] = nuc.x; pos[i * 3 + 1] = nuc.y; pos[i * 3 + 2] = nuc.z;
         size[i] = Rc * 2 * f;
-        alpha[i] = 0.1 * gain * (0.6 + 0.4 * k / (N_COMA - 1));
+        alpha[i] = 0.08 * gain * (0.6 + 0.4 * k / (N_COMA - 1));
       }
       (t.geo.attributes.position as BufferAttribute).needsUpdate = true;
       (t.geo.attributes.alpha as BufferAttribute).needsUpdate = true;

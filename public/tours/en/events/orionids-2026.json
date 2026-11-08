@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "orionids": {
+   "hash": "0f799ac68b88",
+   "duration": 33.27,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 7.46,
+     "text": "The Orionids are born from dust left by Halley's Comet on past returns; Earth crosses this trail every October."
+    },
+    {
+     "start": 7.46,
+     "end": 14,
+     "text": "Halley itself is now beyond the orbit of Neptune, slowly heading for its return in 2061."
+    },
+    {
+     "start": 14,
+     "end": 22.15,
+     "text": "Let us move in to Earth's orbit: the dust grains strike the atmosphere at sixty-six kilometres a second and leave long, bright trails."
+    },
+    {
+     "start": 22.15,
+     "end": 28.63,
+     "text": "At peak about twenty meteors an hour are seen; the radiant lies near the club raised by Orion the Hunter."
+    },
+    {
+     "start": 28.63,
+     "end": 33.27,
+     "text": "We meet the other half of the same dust trail in May as the Eta Aquariid shower."
+    }
+   ]
+  }
+ }
+}

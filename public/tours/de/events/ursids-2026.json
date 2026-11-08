@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "de",
+ "steps": {
+  "ursids": {
+   "hash": "87869b07289f",
+   "duration": 42.55,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 6.86,
+     "text": "Die Ursiden entstehen aus dem Staub des Kometen 8P/Tuttle, der alle dreizehneinhalb Jahre wiederkehrt."
+    },
+    {
+     "start": 6.86,
+     "end": 17.26,
+     "text": "Tuttles Bahn ist um fünfundfünfzig Grad gegen die Ekliptik geneigt; er ist derzeit etwa so weit entfernt wie Saturn, sein nächstes Perihel ist 2035."
+    },
+    {
+     "start": 17.26,
+     "end": 25.69,
+     "text": "Die Erde durchquert diesen Strom unmittelbar nach der Sonnenwende; die Teilchen treten mit dreiunddreißig Kilometern pro Sekunde in die Atmosphäre ein."
+    },
+    {
+     "start": 25.69,
+     "end": 35.95,
+     "text": "Es ist ein ruhiger Strom: im Maximum etwa zehn Meteore pro Stunde, doch mit dem Radianten im Kleinen Bären steht er auf der Nordhalbkugel die ganze Nacht über dem Horizont."
+    },
+    {
+     "start": 35.95,
+     "end": 42.55,
+     "text": "Selten gab es Ausbrüche mit über hundert pro Stunde, so 1945 und 1986."
+    }
+   ]
+  }
+ }
+}

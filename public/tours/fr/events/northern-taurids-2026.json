@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "ntaurids": {
+   "hash": "5aec658af6a9",
+   "duration": 33.27,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.54,
+     "text": "Les Taurides Nord sont la branche nord du même courant d'Encke, scindé en deux par l'attraction des planètes."
+    },
+    {
+     "start": 6.54,
+     "end": 15.48,
+     "text": "L'orbite d'Encke s'étend de l'intérieur de celle de Mercure jusqu'à la ceinture d'astéroïdes et ajoute de la poussière fraîche au courant à chaque retour."
+    },
+    {
+     "start": 15.48,
+     "end": 23.35,
+     "text": "La Terre croise cette branche à la mi-novembre ; dans les semaines où les deux branches se superposent, le nombre de bolides augmente nettement."
+    },
+    {
+     "start": 23.35,
+     "end": 30.59,
+     "text": "Avec environ cinq météores par heure, c'est une pluie calme, mais ses traînées lentes et brillantes font le bonheur des photographes."
+    },
+    {
+     "start": 30.59,
+     "end": 33.27,
+     "text": "Le radiant se trouve juste au sud de l'amas des Pléiades."
+    }
+   ]
+  }
+ }
+}

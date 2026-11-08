@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "leonids": {
+   "hash": "769025b56d8d",
+   "duration": 43.83,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 6.2,
+     "text": "The Leonids come from dust left by Comet Tempel-Tuttle, which returns every thirty-three years."
+    },
+    {
+     "start": 6.2,
+     "end": 12.54,
+     "text": "The comet is now near the far end of its orbit; its next perihelion is in 2031."
+    },
+    {
+     "start": 12.54,
+     "end": 22.05,
+     "text": "In mid-November Earth cuts across its orbit almost head-on: the particles enter the atmosphere at seventy-one kilometres a second, the highest speed known."
+    },
+    {
+     "start": 22.05,
+     "end": 38.47,
+     "text": "In an ordinary year fifteen meteors an hour are seen; but in 1833 and 1966 the sky \"rained\" hundreds of thousands of meteors an hour, and storms came again between 1999 and 2002."
+    },
+    {
+     "start": 38.47,
+     "end": 43.83,
+     "text": "The radiant lies in the head of Leo; with the Moon near new this year, conditions are favourable."
+    }
+   ]
+  }
+ }
+}

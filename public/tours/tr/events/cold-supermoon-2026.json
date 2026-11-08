@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "tr",
+ "steps": {
+  "coldmoon": {
+   "hash": "e3a7e701818c",
+   "duration": 32.95,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 7.96,
+     "text": "Aralık dolunayı da perijeye yakın denk geliyor: Kasım'dakinden biraz daha küçük ama yine yılın en büyüklerinden biri."
+    },
+    {
+     "start": 7.96,
+     "end": 12.02,
+     "text": "Ay şu anda Dünya'ya üç yüz altmış bin kilometreden daha yakın."
+    },
+    {
+     "start": 12.02,
+     "end": 21.67,
+     "text": "Kış dolunayı kuzey yarıkürede gökyüzünde en yükseğe çıkan dolunaydır; Güneş'in alçakta kaldığı günlerde Ay onun karşısında, yüksekte yol alır."
+    },
+    {
+     "start": 21.67,
+     "end": 27.27,
+     "text": "Aralık dolunayına Soğuk Ay denir; uzun kış gecelerinin başlangıcını işaret eder."
+    },
+    {
+     "start": 27.27,
+     "end": 32.95,
+     "text": "Dünya'dan bakınca İkizler takımyıldızında, Geminidlerin radyanının hemen yanında parlıyor."
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "orionids": {
+   "hash": "a4db958c7837",
+   "duration": 36.15,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 8.46,
+     "text": "Les Orionides naissent de la poussière laissée par la comète de Halley lors de ses retours passés ; la Terre croise cette traînée chaque octobre."
+    },
+    {
+     "start": 8.46,
+     "end": 15.56,
+     "text": "Halley elle-même est aujourd'hui au-delà de l'orbite de Neptune, cheminant lentement vers son retour en 2061."
+    },
+    {
+     "start": 15.56,
+     "end": 23.67,
+     "text": "Approchons-nous de l'orbite terrestre : les grains de poussière frappent l'atmosphère à soixante-six kilomètres par seconde et laissent de longues traînées brillantes."
+    },
+    {
+     "start": 23.67,
+     "end": 30.47,
+     "text": "Au maximum, on voit une vingtaine de météores par heure ; le radiant se trouve près de la massue levée d'Orion le chasseur."
+    },
+    {
+     "start": 30.47,
+     "end": 36.15,
+     "text": "Nous retrouvons l'autre moitié de la même traînée de poussière en mai, sous la forme de la pluie des Êta Aquarides."
+    }
+   ]
+  }
+ }
+}

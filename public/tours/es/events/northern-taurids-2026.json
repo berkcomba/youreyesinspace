@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "ntaurids": {
+   "hash": "14b1a0e754c2",
+   "duration": 37.11,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 7.86,
+     "text": "Las Táuridas del Norte son la rama norte de la misma corriente de Encke, dividida en dos por la gravedad de los planetas."
+    },
+    {
+     "start": 7.86,
+     "end": 16.8,
+     "text": "La órbita de Encke se extiende desde el interior de la de Mercurio hasta el cinturón de asteroides y añade polvo nuevo a la corriente en cada regreso."
+    },
+    {
+     "start": 16.8,
+     "end": 25.83,
+     "text": "La Tierra cruza esta rama a mediados de noviembre; en las semanas en que las dos ramas se solapan, el número de bólidos aumenta de forma notable."
+    },
+    {
+     "start": 25.83,
+     "end": 33.75,
+     "text": "Con unos cinco meteoros por hora es una lluvia tranquila, pero sus trazos lentos y brillantes son los favoritos de los fotógrafos."
+    },
+    {
+     "start": 33.75,
+     "end": 37.11,
+     "text": "El radiante está justo al sur del cúmulo de las Pléyades."
+    }
+   ]
+  }
+ }
+}

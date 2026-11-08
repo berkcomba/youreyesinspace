@@ -51,6 +51,15 @@ const SPEC = [
       { center: 'didymos', start: '2026-10-01', stop: '2026-11-04 01:00', step: '1 h' },
     ],
   },
+  {
+    // the Moon's mean elements are off by up to ~2°; this table carries the eclipses and supermoons
+    // (12 h samples, cubic interpolation: ~1 km). Positions to 0.1 km keep the file small.
+    // sampled on UT (the app's clock): the 69 s TDB offset is ~40″ of lunar motion
+    id: 'moon', target: '301', name: 'Moon', digits: 1, timeType: 'UT',
+    segments: [
+      { center: 'earth', start: '2026-10-01', stop: '2029-01-01', step: '12 h' },
+    ],
+  },
 ];
 
 /** interstellar probes: heliocentric state at one epoch (straight-line model in the app) */
@@ -68,10 +77,10 @@ function q(params) {
   return u.toString();
 }
 
-async function vectors(target, center, start, stop, step) {
+async function vectors(target, center, start, stop, step, timeType = 'TDB') {
   const url = q({
     format: 'text', COMMAND: target, OBJ_DATA: 'NO', MAKE_EPHEM: 'YES', EPHEM_TYPE: 'VECTORS',
-    CENTER: center, START_TIME: start, STOP_TIME: stop, STEP_SIZE: step,
+    CENTER: center, START_TIME: start, STOP_TIME: stop, STEP_SIZE: step, TIME_TYPE: timeType,
     REF_PLANE: 'ECLIPTIC', REF_SYSTEM: 'ICRF', VEC_TABLE: '2', OUT_UNITS: 'KM-S', CSV_FORMAT: 'YES', VEC_CORR: 'NONE',
   });
   const res = await fetch(url);
@@ -94,11 +103,12 @@ async function build(spec) {
   for (const s of spec.segments) {
     const [n, unit] = s.step.split(' ');
     const step = parseFloat(n) * STEP_DAYS[unit];
-    const { rows, source: src } = await vectors(spec.target, CENTERS[s.center], s.start, s.stop, s.step);
+    const { rows, source: src } = await vectors(spec.target, CENTERS[s.center], s.start, s.stop, s.step, spec.timeType);
     source = src;
     // positions to 10 m: ample for a vehicle that is drawn as a point until you are within a few km
     const p = new Array(rows.length * 3);
-    for (let i = 0; i < rows.length; i++) { p[i * 3] = round(rows[i].p[0], 2); p[i * 3 + 1] = round(rows[i].p[1], 2); p[i * 3 + 2] = round(rows[i].p[2], 2); }
+    const dig = spec.digits ?? 2;
+    for (let i = 0; i < rows.length; i++) { p[i * 3] = round(rows[i].p[0], dig); p[i * 3 + 1] = round(rows[i].p[1], dig); p[i * 3 + 2] = round(rows[i].p[2], dig); }
     segments.push({ center: s.center, jd0: rows[0].jd, step, n: rows.length, p });
     console.log(`  ${spec.id} @${s.center} ${s.start} → ${s.stop} ${s.step}: ${rows.length} samples`);
   }

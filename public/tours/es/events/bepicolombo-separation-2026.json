@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "bepisep": {
+   "hash": "e41cdd215490",
+   "duration": 47.99,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 8.64,
+     "text": "Dos semanas después de entrar en órbita de Mercurio, el conjunto BepiColombo da ya la vuelta al planeta en menos de diez horas."
+    },
+    {
+     "start": 8.64,
+     "end": 17.48,
+     "text": "Estos días el conjunto se separa: primero el escudo solar que protege a Mio y luego los dos orbitadores se desprenden uno del otro."
+    },
+    {
+     "start": 17.48,
+     "end": 29.27,
+     "text": "El Mio japonés permanece en una órbita elíptica alargada para estudiar la magnetosfera de Mercurio, mientras el MPO europeo desciende a una órbita polar cercana a la superficie."
+    },
+    {
+     "start": 29.27,
+     "end": 40.21,
+     "text": "La misión científica comenzará a principios de 2027: la composición de la superficie, la estructura interna y el campo magnético del planeta más cercano al Sol."
+    },
+    {
+     "start": 40.21,
+     "end": 47.99,
+     "text": "La órbita mostrada es el camino previsto que la ESA entregó a JPL Horizons; el momento de la separación puede cambiar."
+    }
+   ]
+  }
+ }
+}

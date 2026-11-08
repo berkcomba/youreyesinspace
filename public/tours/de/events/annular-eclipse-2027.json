@@ -1,0 +1,42 @@
+{
+ "voice": "altair",
+ "locale": "de",
+ "steps": {
+  "annular": {
+   "hash": "9bc316499886",
+   "duration": 44.79,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 7.6,
+     "text": "Bei einer Sonnenfinsternis zieht der Mond genau zwischen Sonne und Erde hindurch, und sein Schatten fällt auf die Erde."
+    },
+    {
+     "start": 7.6,
+     "end": 19.04,
+     "text": "Diesmal befindet sich der Mond in der fernen Hälfte seiner Bahn und erscheint am Himmel etwas kleiner als die Sonne: Er kann sie nicht ganz bedecken, und ein heller Feuerring bleibt übrig."
+    },
+    {
+     "start": 19.04,
+     "end": 24.19,
+     "text": "Schauen wir aus der Schattenmitte: Die dunkle Mondscheibe legt sich in die Mitte der Sonne."
+    },
+    {
+     "start": 24.19,
+     "end": 35.69,
+     "text": "Die Zone der Ringförmigkeit reicht vom Südpazifik über Chile und Argentinien bis zum Atlantik; in weiten Teilen Südamerikas und Afrikas ist eine partielle Finsternis zu sehen."
+    },
+    {
+     "start": 35.69,
+     "end": 38.05,
+     "text": "Die nächste große Finsternis kommt am 2."
+    },
+    {
+     "start": 38.05,
+     "end": 44.79,
+     "text": "August 2027: eine sechsminütige totale Finsternis über Ägypten und Saudi-Arabien."
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "de",
+ "steps": {
+  "ntaurids": {
+   "hash": "6819332c0166",
+   "duration": 37.11,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 8.4,
+     "text": "Die Nördlichen Tauriden sind der nördliche Zweig desselben Encke-Stroms, den die Schwerkraft der Planeten in zwei Teile gespalten hat."
+    },
+    {
+     "start": 8.4,
+     "end": 17.08,
+     "text": "Enckes Bahn reicht von innerhalb der Merkurbahn bis zum Asteroidengürtel und fügt dem Strom bei jeder Wiederkehr neuen Staub hinzu."
+    },
+    {
+     "start": 17.08,
+     "end": 25.65,
+     "text": "Die Erde kreuzt diesen Zweig Mitte November; in den Wochen, in denen sich die beiden Zweige überlagern, steigt die Zahl der Feuerkugeln deutlich."
+    },
+    {
+     "start": 25.65,
+     "end": 33.37,
+     "text": "Mit etwa fünf Meteoren pro Stunde ist es ein ruhiger Strom, doch seine langsamen, hellen Spuren sind bei Fotografen beliebt."
+    },
+    {
+     "start": 33.37,
+     "end": 37.11,
+     "text": "Der Radiant liegt direkt südlich des Sternhaufens der Plejaden."
+    }
+   ]
+  }
+ }
+}

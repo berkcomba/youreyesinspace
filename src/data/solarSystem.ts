@@ -26,6 +26,7 @@ function moonOrbit(
     frame: opts.frame ?? 'parentEquator',
     nodeRate: opts.nodeRate,
     periRate: opts.periRate,
+    ...(opts.table && { table: opts.table }),
   };
 }
 
@@ -101,7 +102,9 @@ export const SOLAR_SYSTEM: BodyData[] = [
     // anomalistic month (27.5545 d), and `periRate` is the argument of perigee rate
     // ω' = ϖ' − Ω' = 0.11140 + 0.05295 °/d: together with the node rate the mean longitude
     // advances 13.17636 °/d (the sidereal month), which keeps the phases on the calendar.
-    orbit: moonOrbit(384_400, 0.0549, 5.145, 27.554550, 134.96, { frame: 'ecliptic', node: 125.04, argPeri: 318.31, nodeRate: -0.0529539, periRate: 0.1643580 }),
+    // Within the Horizons table's span (scripts/fetch-horizons.mjs) the position is JPL's own,
+    // accurate enough for eclipses; the mean elements miss the evection and variation (~1–2°).
+    orbit: moonOrbit(384_400, 0.0549, 5.145, 27.554550, 134.96, { frame: 'ecliptic', node: 125.04, argPeri: 318.31, nodeRate: -0.0529539, periRate: 0.1643580, table: 'moon' }),
     appearance: { kind: 'terrestrial', seed: 33, landLow: [0.22, 0.22, 0.23], landMid: [0.38, 0.38, 0.38], landHigh: [0.58, 0.57, 0.55], craters: 1.0, roughness: 1.0, variation: 0.6 },
     description: 'Dünya\'nın tek doğal uydusu ve Güneş Sistemi\'nin beşinci büyük uydusu. Kilitli dönüş nedeniyle hep aynı yüzünü Dünya\'ya gösterir.',
     facts: { 'Yüzey çekimi': '1.62 m/s²', 'Ortalama uzaklık': '384 400 km' },

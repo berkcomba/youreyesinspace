@@ -1,0 +1,32 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "newmoon": {
+   "hash": "1b18fac3e3b0",
+   "duration": 32.63,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 8.74,
+     "text": "À la nouvelle lune, la Lune passe entre le Soleil et la Terre ; la face tournée vers nous est sombre et elle reste invisible à côté du Soleil dans le ciel."
+    },
+    {
+     "start": 8.74,
+     "end": 19.25,
+     "text": "Toutes les nouvelles lunes n'apportent pas d'éclipse, car l'orbite de la Lune est inclinée de cinq degrés par rapport à celle de la Terre et son ombre passe le plus souvent au-dessus ou au-dessous de la Terre."
+    },
+    {
+     "start": 19.25,
+     "end": 26.67,
+     "text": "La semaine de la nouvelle lune offre le ciel le plus sombre aux observateurs : cette année, elle coïncide avec le maximum des Géminides."
+    },
+    {
+     "start": 26.67,
+     "end": 32.63,
+     "text": "Vous regardez l'orbite en accéléré : la Lune accomplit ses phases en faisant le tour de la Terre en vingt-neuf jours et demi."
+    }
+   ]
+  }
+ }
+}

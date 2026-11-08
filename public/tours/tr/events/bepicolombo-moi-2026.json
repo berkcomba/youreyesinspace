@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "tr",
+ "steps": {
+  "bepimoi": {
+   "hash": "cbd7a4ec7a5e",
+   "duration": 39.99,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.34,
+     "text": "BepiColombo, yedi yıl ve dokuz gezegen geçişinin ardından Merkür'e vardı."
+    },
+    {
+     "start": 5.34,
+     "end": 16.32,
+     "text": "Yakalanma tek bir büyük motor ateşlemesiyle değil, haftalarca süren yavaş bir yaklaşmayla gerçekleşiyor: araç, Merkür'ün zayıf çekim alanına adeta süzülerek giriyor."
+    },
+    {
+     "start": 16.32,
+     "end": 23.13,
+     "text": "Bu akşam ilk kez yüzeyin yalnızca birkaç yüz kilometre üstünden geçiyor; artık Merkür'ün bir uydusu."
+    },
+    {
+     "start": 23.13,
+     "end": 33.57,
+     "text": "Önümüzdeki haftalarda yörünge her geçişte biraz daha daralacak; Aralık'ta Avrupa'nın MPO'su ile Japonya'nın Mio'su ayrılıp kendi bilim yörüngelerine yerleşecek."
+    },
+    {
+     "start": 33.57,
+     "end": 39.99,
+     "text": "İzlediğiniz yol, ESA'nın JPL Horizons'a verdiği planlanan yörüngedir; canlı telemetri değildir."
+    }
+   ]
+  }
+ }
+}

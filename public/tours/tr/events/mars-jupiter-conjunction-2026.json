@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "tr",
+ "steps": {
+  "marsjup": {
+   "hash": "e2a7d4120b56",
+   "duration": 36.15,
+   "sentences": [
+    {
+     "start": 0,
+     "end": 6.42,
+     "text": "16 Kasım sabahı, gün doğmadan önce doğu ufkunda Mars ile Jüpiter yan yana parlıyor."
+    },
+    {
+     "start": 6.42,
+     "end": 13.84,
+     "text": "İki gezegen gökyüzünde yalnızca bir virgül iki derece, yani dolunayın iki buçuk katı kadar birbirine yaklaşıyor."
+    },
+    {
+     "start": 13.84,
+     "end": 21.73,
+     "text": "Elbette gerçekte yan yana değiller: Mars bizden yaklaşık üç yüz milyon, Jüpiter ise dokuz yüz milyon kilometre uzakta."
+    },
+    {
+     "start": 21.73,
+     "end": 29.99,
+     "text": "Yukarıdan bakınca ne olduğu anlaşılıyor: Dünya, Mars ve Jüpiter Güneş çevresindeki yörüngelerinde aynı doğrultuya diziliyor."
+    },
+    {
+     "start": 29.99,
+     "end": 36.15,
+     "text": "Kavuşum yalnızca bir perspektif oyunudur, ama çıplak gözle izlemesi en kolay gök olaylarından biridir."
+    }
+   ]
+  }
+ }
+}

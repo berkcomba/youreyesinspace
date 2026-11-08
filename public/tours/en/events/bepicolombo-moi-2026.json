@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "bepimoi": {
+   "hash": "7571e7ab7fc6",
+   "duration": 39.67,
+   "sentences": [
+    {
+     "start": 0.12,
+     "end": 5.92,
+     "text": "After seven years and nine planetary flybys, BepiColombo has reached Mercury."
+    },
+    {
+     "start": 5.92,
+     "end": 15.42,
+     "text": "Capture happens not with one big engine burn but through a slow approach lasting weeks: the spacecraft all but glides into Mercury's weak gravity field."
+    },
+    {
+     "start": 15.42,
+     "end": 22.89,
+     "text": "This evening, for the first time, it passes only a few hundred kilometres above the surface; it is now a moon of Mercury."
+    },
+    {
+     "start": 22.89,
+     "end": 33.01,
+     "text": "Over the coming weeks the orbit will tighten a little with every pass; in December Europe's MPO and Japan's Mio will separate and settle into their own science orbits."
+    },
+    {
+     "start": 33.01,
+     "end": 39.67,
+     "text": "The path you are watching is the planned trajectory ESA supplied to JPL Horizons; it is not live telemetry."
+    }
+   ]
+  }
+ }
+}

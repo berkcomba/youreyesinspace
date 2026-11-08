@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "tr",
+ "steps": {
+  "bepisep": {
+   "hash": "867fdbf6b324",
+   "duration": 41.91,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 8.12,
+     "text": "Merkür yörüngesine girdikten iki hafta sonra BepiColombo yığını artık gezegeni on saatten kısa sürede dolanıyor."
+    },
+    {
+     "start": 8.12,
+     "end": 15.94,
+     "text": "Bu günlerde yığın ayrılıyor: önce Mio'yu koruyan güneş kalkanı, sonra iki yörünge aracı birbirinden kopuyor."
+    },
+    {
+     "start": 15.94,
+     "end": 26.13,
+     "text": "Japonya'nın Mio'su Merkür'ün manyetosferini incelemek için uzun elips yörüngede kalırken, Avrupa'nın MPO'su yüzeye yakın kutup yörüngesine iniyor."
+    },
+    {
+     "start": 26.13,
+     "end": 34.83,
+     "text": "Bilim görevi 2027 başında başlayacak: yüzeyin bileşimi, iç yapısı ve Güneş'e en yakın gezegenin manyetik alanı."
+    },
+    {
+     "start": 34.83,
+     "end": 41.91,
+     "text": "Gösterilen yörünge, ESA'nın JPL Horizons'a verdiği planlanan yoldur; ayrılma zamanı değişebilir."
+    }
+   ]
+  }
+ }
+}

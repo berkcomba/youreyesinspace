@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "uranusopp": {
+   "hash": "b15af09381e5",
+   "duration": 42.55,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 9.14,
+     "text": "El 25 de noviembre Urano está en oposición: el Sol, la Tierra y Urano se alinean y el planeta permanece en el cielo toda la noche."
+    },
+    {
+     "start": 9.14,
+     "end": 20.3,
+     "text": "La oposición es el momento en que un planeta exterior está más cerca de la Tierra y más brillante; Urano se encuentra ahora a dos coma seis mil millones de kilómetros de nosotros."
+    },
+    {
+     "start": 20.3,
+     "end": 31.35,
+     "text": "Visto desde la Tierra está en Aries, un punto azul verdoso de magnitud cinco coma seis, apenas visible a simple vista bajo un cielo oscuro y fácil con prismáticos."
+    },
+    {
+     "start": 31.35,
+     "end": 35.87,
+     "text": "Su color procede del metano de su atmósfera, que absorbe la luz roja."
+    },
+    {
+     "start": 35.87,
+     "end": 42.55,
+     "text": "Con su eje tumbado de lado, Urano casi rueda a lo largo de su vuelta de ochenta y cuatro años alrededor del Sol."
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "ursids": {
+   "hash": "5f48461c169c",
+   "duration": 44.79,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 7.6,
+     "text": "Las Úrsidas nacen del polvo dejado por el cometa 8P/Tuttle, que regresa cada trece años y medio."
+    },
+    {
+     "start": 7.6,
+     "end": 19.42,
+     "text": "La órbita de Tuttle está inclinada cincuenta y cinco grados respecto a la eclíptica; ahora está a una distancia similar a la de Saturno y su próximo perihelio es en 2035."
+    },
+    {
+     "start": 19.42,
+     "end": 27.79,
+     "text": "La Tierra atraviesa esta corriente justo después del solsticio; las partículas entran en la atmósfera a treinta y tres kilómetros por segundo."
+    },
+    {
+     "start": 27.79,
+     "end": 37.63,
+     "text": "Es una lluvia tranquila: unos diez meteoros por hora en el máximo, pero con el radiante en la Osa Menor permanece sobre el horizonte toda la noche en el hemisferio norte."
+    },
+    {
+     "start": 37.63,
+     "end": 44.79,
+     "text": "Rara vez, en 1945 y 1986 se registraron estallidos de más de cien por hora."
+    }
+   ]
+  }
+ }
+}

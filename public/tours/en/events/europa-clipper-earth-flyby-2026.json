@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "clipperflyby": {
+   "hash": "43b866827395",
+   "duration": 42.55,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 8.34,
+     "text": "Europa Clipper drops by home one last time on its way to Jupiter: flying past Earth, it steals speed from the planet's gravity."
+    },
+    {
+     "start": 8.34,
+     "end": 19.68,
+     "text": "The spacecraft is moving faster than twelve kilometres a second relative to Earth and will come within three thousand two hundred kilometres of the surface; that is lower than many communications satellites."
+    },
+    {
+     "start": 19.68,
+     "end": 27.71,
+     "text": "Closest approach is at twenty fifteen universal time; the flyby stretches the craft's orbit around the Sun far enough to reach Jupiter."
+    },
+    {
+     "start": 27.71,
+     "end": 35.65,
+     "text": "Clipper will arrive at Jupiter in April 2030 and study the ocean beneath Europa's icy shell over forty-nine close flybys."
+    },
+    {
+     "start": 35.65,
+     "end": 42.55,
+     "text": "The trajectory data comes from NASA/JPL Horizons, sampled at one-minute resolution around closest approach."
+    }
+   ]
+  }
+ }
+}

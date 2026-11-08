@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "tr",
+ "steps": {
+  "ursids": {
+   "hash": "299b69f379b4",
+   "duration": 40.31,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 7.46,
+     "text": "Ursidler, on üç buçuk yılda bir dönen 8P/Tuttle Kuyruklu Yıldızı'nın bıraktığı tozdan doğar."
+    },
+    {
+     "start": 7.46,
+     "end": 16.74,
+     "text": "Tuttle'ın yörüngesi ekliptiğe elli beş derece eğiktir; şu anda Satürn'e yakın uzaklıkta, bir sonraki perihelyonu 2035'te."
+    },
+    {
+     "start": 16.74,
+     "end": 24.75,
+     "text": "Dünya, gündönümünün hemen ardından bu akımın içinden geçer; parçacıklar atmosfere saniyede otuz üç kilometreyle girer."
+    },
+    {
+     "start": 24.75,
+     "end": 33.85,
+     "text": "Sakin bir yağmurdur: zirvede saatte on kadar meteor, ama radyanı Küçükayı'da olduğundan kuzey yarıkürede bütün gece ufkun üstündedir."
+    },
+    {
+     "start": 33.85,
+     "end": 40.31,
+     "text": "Seyrek de olsa 1945 ve 1986'da saatte yüzü aşan patlamalar kaydedilmiştir."
+    }
+   ]
+  }
+ }
+}

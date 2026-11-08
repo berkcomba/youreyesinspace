@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "marsjup": {
+   "hash": "13cbae05a9bb",
+   "duration": 39.03,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 7.36,
+     "text": "La mañana del 16 de noviembre, antes del amanecer, Marte y Júpiter brillan juntos en el horizonte oriental."
+    },
+    {
+     "start": 7.36,
+     "end": 14.1,
+     "text": "Los dos planetas se acercan en el cielo a solo uno coma dos grados, unas dos lunas llenas y media."
+    },
+    {
+     "start": 14.1,
+     "end": 23.15,
+     "text": "Por supuesto, en realidad no están juntos: Marte está a unos trescientos millones de kilómetros de nosotros, Júpiter a novecientos millones."
+    },
+    {
+     "start": 23.15,
+     "end": 31.87,
+     "text": "Visto desde arriba se entiende lo que ocurre: la Tierra, Marte y Júpiter se alinean en la misma dirección en sus órbitas alrededor del Sol."
+    },
+    {
+     "start": 31.87,
+     "end": 39.03,
+     "text": "Una conjunción es solo un juego de perspectiva, pero es uno de los fenómenos celestes más fáciles de observar a simple vista."
+    }
+   ]
+  }
+ }
+}

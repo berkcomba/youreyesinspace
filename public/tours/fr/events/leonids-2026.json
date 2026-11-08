@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "leonids": {
+   "hash": "21bbb21f92b2",
+   "duration": 43.51,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.58,
+     "text": "Les Léonides proviennent de la poussière laissée par la comète Tempel-Tuttle, qui revient tous les trente-trois ans."
+    },
+    {
+     "start": 6.58,
+     "end": 13.26,
+     "text": "La comète est aujourd'hui près de l'extrémité lointaine de son orbite ; son prochain périhélie est en 2031."
+    },
+    {
+     "start": 13.26,
+     "end": 23.19,
+     "text": "À la mi-novembre, la Terre coupe son orbite presque de front : les particules entrent dans l'atmosphère à soixante et onze kilomètres par seconde, la vitesse la plus élevée connue."
+    },
+    {
+     "start": 23.19,
+     "end": 37.27,
+     "text": "Une année ordinaire, on voit quinze météores par heure ; mais en 1833 et 1966, le ciel a « plu » des centaines de milliers de météores par heure, et des tempêtes sont revenues entre 1999 et 2002."
+    },
+    {
+     "start": 37.27,
+     "end": 43.51,
+     "text": "Le radiant se trouve dans la tête du Lion ; la Lune étant proche de la nouvelle lune cette année, les conditions sont favorables."
+    }
+   ]
+  }
+ }
+}

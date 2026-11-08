@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "de",
+ "steps": {
+  "v1lightday": {
+   "hash": "1706a3b1670e",
+   "duration": 39.03,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 10.02,
+     "text": "Voyager 1 ist seit 1977 unterwegs und überschreitet heute eine neue Schwelle: Die Sonde ist genau einen Lichttag von der Erde entfernt."
+    },
+    {
+     "start": 10.02,
+     "end": 17.6,
+     "text": "Ein jetzt von ihr gesendetes Funksignal erreicht uns, obwohl es mit Lichtgeschwindigkeit reist, erst nach vierundzwanzig Stunden."
+    },
+    {
+     "start": 17.6,
+     "end": 26.05,
+     "text": "Die Entfernung beträgt fünfundzwanzig Komma neun Milliarden Kilometer; von der Sonne ist sie hundertdreiundsiebzigmal weiter entfernt als die Erde."
+    },
+    {
+     "start": 26.05,
+     "end": 31.81,
+     "text": "Ziehen wir uns zurück und schauen: Selbst die Neptunbahn bleibt in diesem Maßstab ein kleiner Ring."
+    },
+    {
+     "start": 31.81,
+     "end": 39.03,
+     "text": "Dies ist der fernste Punkt, den je ein von Menschen gebautes Objekt erreicht hat, und er wächst jede Sekunde um siebzehn Kilometer."
+    }
+   ]
+  }
+ }
+}

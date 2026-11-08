@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "staurids": {
+   "hash": "ecd38980d21d",
+   "duration": 38.39,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 9.14,
+     "text": "Las Táuridas del Sur proceden de una amplia corriente de polvo esparcida durante siglos por Encke, el cometa de periodo más corto conocido."
+    },
+    {
+     "start": 9.14,
+     "end": 15.44,
+     "text": "Encke da la vuelta al Sol en solo tres coma tres años; ahora está en la mitad exterior de su órbita."
+    },
+    {
+     "start": 15.44,
+     "end": 25.75,
+     "text": "La Tierra tarda semanas en atravesar esta corriente tan ancha; las partículas entran en la atmósfera a una velocidad relativamente baja, veintiocho kilómetros por segundo."
+    },
+    {
+     "start": 25.75,
+     "end": 32.17,
+     "text": "Por eso las Táuridas producen pocos meteoros, pero duraderos y a menudo tan brillantes como bólidos."
+    },
+    {
+     "start": 32.17,
+     "end": 38.39,
+     "text": "El radiante está en Tauro; este año la salida tardía de la Luna mantiene el cielo oscuro hasta medianoche."
+    }
+   ]
+  }
+ }
+}

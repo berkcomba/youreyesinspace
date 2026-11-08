@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "ursids": {
+   "hash": "7a3014c11fb9",
+   "duration": 40.63,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.96,
+     "text": "Les Ursides naissent de la poussière laissée par la comète 8P/Tuttle, qui revient tous les treize ans et demi."
+    },
+    {
+     "start": 6.96,
+     "end": 17.54,
+     "text": "L'orbite de Tuttle est inclinée de cinquante-cinq degrés sur l'écliptique ; elle se trouve aujourd'hui à une distance proche de celle de Saturne, avec un prochain périhélie en 2035."
+    },
+    {
+     "start": 17.54,
+     "end": 24.73,
+     "text": "La Terre traverse ce courant juste après le solstice ; les particules entrent dans l'atmosphère à trente-trois kilomètres par seconde."
+    },
+    {
+     "start": 24.73,
+     "end": 34.39,
+     "text": "C'est une pluie calme : une dizaine de météores par heure au maximum, mais avec son radiant dans la Petite Ourse, elle reste au-dessus de l'horizon toute la nuit dans l'hémisphère nord."
+    },
+    {
+     "start": 34.39,
+     "end": 40.63,
+     "text": "Rarement, des sursauts de plus de cent par heure ont été enregistrés en 1945 et 1986."
+    }
+   ]
+  }
+ }
+}

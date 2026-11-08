@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "de",
+ "steps": {
+  "solstice": {
+   "hash": "deeb9ede4dcb",
+   "duration": 42.55,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 9.06,
+     "text": "Die Rotationsachse der Erde ist um dreiundzwanzigeinhalb Grad gegen ihre Bahnebene geneigt und zeigt das ganze Jahr über in dieselbe Richtung."
+    },
+    {
+     "start": 9.06,
+     "end": 18.8,
+     "text": "Zur Dezember-Sonnenwende neigt sich der Südpol zur Sonne hin und der Nordpol von ihr weg: Die Tag-Nacht-Grenze schneidet die Erde im steilsten Winkel."
+    },
+    {
+     "start": 18.8,
+     "end": 26.55,
+     "text": "Jenseits des nördlichen Polarkreises geht die Sonne gar nicht auf; im Süden ist die Antarktis von der Mitternachtssonne erhellt."
+    },
+    {
+     "start": 26.55,
+     "end": 34.77,
+     "text": "Aus der Umlaufbahn betrachtet erreicht die Erde diesen Punkt ihrer Runde um die Sonne jedes Jahr am 21. –22. Dezember."
+    },
+    {
+     "start": 34.77,
+     "end": 42.55,
+     "text": "Nicht die Entfernung, sondern diese Neigung macht die Jahreszeiten: Tatsächlich passiert die Erde ihren sonnennächsten Punkt Anfang Januar."
+    }
+   ]
+  }
+ }
+}

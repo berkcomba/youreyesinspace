@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "tr",
+ "steps": {
+  "geminids": {
+   "hash": "cd82fefe26db",
+   "duration": 47.03,
+   "sentences": [
+    {
+     "start": 0.06,
+     "end": 8.14,
+     "text": "Geminidler yılın en zengin meteor yağmurudur: zirvede karanlık bir gökyüzünde saatte yüz elliye kadar meteor görülür."
+    },
+    {
+     "start": 8.14,
+     "end": 18.06,
+     "text": "Kaynağı bir kuyruklu yıldız değil, Güneş'e Merkür'den de çok yaklaşan asteroit 3200 Phaethon'dur; Güneş'in ısısı yüzeyini çatlatıp toz saçar."
+    },
+    {
+     "start": 18.06,
+     "end": 30.01,
+     "text": "Dünya her Aralık ayında Phaethon'un yörüngesi boyunca uzanan toz şeridinden geçer; parçacıklar atmosfere saniyede otuz beş kilometreyle girer ve çoğu zaman renkli, yavaş izler bırakır."
+    },
+    {
+     "start": 30.01,
+     "end": 39.21,
+     "text": "Meteorlar gökyüzünde İkizler takımyıldızındaki bir noktadan, radyandan saçılır gibi görünür: bu, Dünya'nın akımın içinden geçiş doğrultusudur."
+    },
+    {
+     "start": 39.21,
+     "end": 47.03,
+     "text": "En iyi izleme zamanı gece yarısından sonra; Ay bu yıl ince hilal olduğundan erkenden batar ve gökyüzü karanlık kalır."
+    }
+   ]
+  }
+ }
+}

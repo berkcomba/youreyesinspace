@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "coldmoon": {
+   "hash": "ae6494e85959",
+   "duration": 35.83,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 8.84,
+     "text": "La luna llena de diciembre también coincide con el perigeo: algo más pequeña que la de noviembre, pero aún una de las mayores del año."
+    },
+    {
+     "start": 8.84,
+     "end": 13.44,
+     "text": "La Luna está ahora a menos de trescientos sesenta mil kilómetros de la Tierra."
+    },
+    {
+     "start": 13.44,
+     "end": 24.55,
+     "text": "La luna llena de invierno es la que más alto sube en el cielo del hemisferio norte; en los días en que el Sol se queda bajo, la Luna, frente a él, recorre el cielo en lo alto."
+    },
+    {
+     "start": 24.55,
+     "end": 30.89,
+     "text": "La luna llena de diciembre se llama Luna Fría; marca el inicio de las largas noches de invierno."
+    },
+    {
+     "start": 30.89,
+     "end": 35.83,
+     "text": "Vista desde la Tierra brilla en Géminis, justo al lado del radiante de las Gemínidas."
+    }
+   ]
+  }
+ }
+}

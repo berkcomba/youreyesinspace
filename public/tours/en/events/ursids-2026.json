@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "ursids": {
+   "hash": "a2fb8d801571",
+   "duration": 38.07,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 7.34,
+     "text": "The Ursids are born from dust left by Comet 8P/Tuttle, which returns every thirteen and a half years."
+    },
+    {
+     "start": 7.34,
+     "end": 16.62,
+     "text": "Tuttle's orbit is inclined fifty-five degrees to the ecliptic; it is now about as far out as Saturn, with its next perihelion in 2035."
+    },
+    {
+     "start": 16.62,
+     "end": 23.53,
+     "text": "Earth passes through this stream just after the solstice; the particles enter the atmosphere at thirty-three kilometres a second."
+    },
+    {
+     "start": 23.53,
+     "end": 32.75,
+     "text": "It is a quiet shower: about ten meteors an hour at peak, but with its radiant in Ursa Minor it stays above the horizon all night in the northern hemisphere."
+    },
+    {
+     "start": 32.75,
+     "end": 38.07,
+     "text": "Rarely, outbursts of over a hundred an hour were recorded in 1945 and 1986."
+    }
+   ]
+  }
+ }
+}

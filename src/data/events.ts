@@ -74,6 +74,8 @@ const NASA = (url: string) => ({ name: 'NASA', url });
 const JPL = (url: string) => ({ name: 'NASA/JPL', url });
 const IMO = { name: 'IMO', url: 'https://www.imo.net/resources/calendar/' };
 const USNO = { name: 'USNO', url: 'https://aa.usno.navy.mil/data/' };
+const NASA_ECLIPSE_LUNAR = NASA('https://eclipse.gsfc.nasa.gov/LEdecade/LEdecade2021.html');
+const NASA_ECLIPSE_SOLAR = NASA('https://eclipse.gsfc.nasa.gov/SEdecade/SEdecade2021.html');
 const HORIZONS = 'NASA/JPL Horizons, 2026-10-22';
 
 /** A shower's radiant (ICRF, degrees) and entry speed (km/s) — IMO working list */
@@ -502,6 +504,60 @@ export const EVENTS: SkyEvent[] = [
         orbits(1, true), overview(1, 'moon', 9), dolly(1, 0), readout(1, 'separation', 'moon', 'sun', { label: 'Ay–Güneş açısal ayrıklığı', text: 'Dünya merkezinden' }),
         time(2, '2027-02-06T15:50:00Z'), rate(2, 60), orbits(2, false), lookFrom(2, 'earth', ['moon', 'sun'], 4, 50), fov(2, 2.2, 10),
         card(3, { big: '2 Ağu 2027', title: 'Sonraki tam tutulma', text: 'Luksor üzerinde 6 dk 23 s — yüzyılın en uzunlarından.' }),
+      ],
+    }],
+  },
+  {
+    id: 'penumbral-lunar-eclipse-2027', kind: 'eclipse', status: 'confirmed', source: NASA_ECLIPSE_LUNAR,
+    title: 'Yarı gölge Ay tutulması',
+    summary: 'Dolunay, Dünya\'nın yarı gölgesinin en derin kısmından geçiyor: tam gölgenin hemen kıyısında, bir kenarı belirgin biçimde kararıyor.',
+    kicker: 'Ay, Dünya\'nın gölgesinin kıyısından geçiyor',
+    facts: [['Tür', 'Yarı gölge'], ['En derin an', '20 Şub 23:13 UTC'], ['Tam gölgeye uzaklık', 'Ay çapının %6\'sı'], ['Görünür', 'Amerika · Avrupa · Afrika · Asya'], ['Türkiye\'de', '21 Şub 02:13']],
+    // NASA/GSFC (Espenak): greatest eclipse 23:14:06 TD, umbral magnitude −0.057, Saros 143
+    time: '2027-02-20T23:13:00Z',
+    sceneStart: '2027-02-20T21:40:00Z',
+    bodies: ['moon', 'earth', 'sun'], view: 'space', tags: ['eclipse', 'moon', 'naked-eye'],
+    scene: [{
+      id: 'penumbral', target: body('moon'), timeRate: 240, dwell: 5, orbitRate: 0.01, dollyRate: PUSH,
+      // 0 full Moon (its lit face, the shadow not yet on it) · 1 two shadows (climb above the
+      // aligned Sun–Earth–Moon) · 2 deepest (clock onto greatest eclipse, back on the Moon) ·
+      // 3 from Earth (sky view zooming onto the dimmed disc) · 4 where / next
+      text: 'Ay tutulması yalnızca dolunayda olur: Güneş, Dünya ve Ay bir doğru üzerinde dizilir ve Dünya\'nın gölgesi Ay\'a düşer. Bu gölgenin iki katmanı vardır: Güneş\'in tamamen örtüldüğü koyu tam gölge ve Güneş\'in yalnızca bir kısmının örtüldüğü geniş yarı gölge. 20 Şubat gecesi Ay, yarı gölgenin en derin kısmından geçiyor ve tam gölgeye kendi çapının yalnızca yüzde altısı kadar yaklaşıp kıyısından dönüyor. Dünya\'dan bakınca Ay\'ın gölgeye yakın kenarı dumanlı bir griye bürünür; çoğu yarı gölge tutulmasından çok daha kolay fark edilir. Tutulma Amerika, Avrupa, Afrika ve Asya\'nın büyük bölümünden izlenebilir; Türkiye\'de en derin an gece saat ikiyi on üç geçe.',
+      cues: [
+        orbits(0, false), fill(0, false), vantage(0, 6, 0, 3.4, 'moon', 6),
+        orbits(1, true), overview(1, 'moon', 9), dolly(1, 0), readout(1, 'distance', 'moon', 'earth', { label: 'Dünya–Ay uzaklığı' }),
+        time(2, '2027-02-20T22:58:00Z'), rate(2, 60), orbits(2, false), vantage(2, 4, 0, 3.0, 'moon', 6), dolly(2, PUSH),
+        lookFrom(3, 'earth', ['moon'], 7), fov(3, 2.6, 9),
+        card(4, { big: '31 Ara 2028', title: 'Sonraki tam Ay tutulması', text: 'Avrupa, Afrika, Asya ve Avustralya\'dan; tam evre 71 dakika.' }),
+      ],
+    }],
+  },
+
+  /* ------------------------------------------------------------------ August 2027 */
+  {
+    id: 'total-solar-eclipse-2027', kind: 'eclipse', status: 'confirmed', source: NASA_ECLIPSE_SOLAR,
+    title: 'Tam Güneş tutulması: Luksor\'da altı dakikadan uzun',
+    summary: 'Ay Güneş\'i tamamen örtüyor: tam gölge Cebelitarık Boğazı\'ndan Kuzey Afrika boyunca Mısır\'a, Arabistan\'a ve Somali\'ye uzanıyor. Türkiye\'den parçalı görünür.',
+    kicker: 'Gündüz gece oluyor: altı dakikadan uzun tam tutulma',
+    facts: [['Tür', 'Tam'], ['En uzun tam evre', '6 dk 23 sn'], ['Büyüklük', '1,079'], ['Yol', 'İspanya · Fas · Mısır · Arabistan'], ['Türkiye\'den', 'Parçalı']],
+    // NASA/GSFC (Espenak): greatest eclipse 10:07:49 TD near Luxor, magnitude 1.079, Saros 136
+    time: '2027-08-02T10:07:00Z',
+    sceneStart: '2027-08-02T09:00:00Z',
+    bodies: ['moon', 'sun', 'earth'], view: 'space', tags: ['eclipse', 'naked-eye'],
+    scene: [{
+      id: 'total2027', target: body('moon'), timeRate: 120, dwell: 6, orbitRate: 0.01, dollyRate: PUSH,
+      // 0 geometry (sunward side of the Moon, Earth behind it) · 1 why total (climb above the
+      // orbit, live separation) · 2 the shadow on Earth (day side, the clock running four minutes
+      // a second while the dark spot crosses North Africa) · 3 totality (sky view from under the
+      // shadow, the Moon covering the Sun) · 4 safety / record
+      text: '2 Ağustos 2027\'de Ay, Güneş ile Dünya arasından tam olarak geçiyor ve bu kez Güneş\'i bütünüyle örtüyor. Ay yörüngesinin Dünya\'ya yakın kısmında olduğundan gökyüzünde Güneş\'ten yüzde sekiz daha büyük görünür ve tam gölgesi geniş bir kuşak çizer. Dünya\'ya dönüp bakalım: Ay\'ın gölgesi gündüz tarafında koyu bir leke olarak Atlantik\'ten Cebelitarık Boğazı\'na, Kuzey Afrika boyunca Mısır\'a, oradan Kızıldeniz\'i aşıp Arabistan\'a ve Somali\'ye yol alır. En uzun tam evre Luksor yakınında: altı dakika yirmi üç saniye boyunca gündüz gökyüzü kararır ve Güneş\'in tacı, korona, çıplak gözle görünür. Avrupa, Orta Doğu ve Türkiye\'den parçalı olarak izlenir; tutulma gözlüğü olmadan Güneş\'e asla bakmayın.',
+      cues: [
+        orbits(0, false), shot(0, 'moon', 'earth', 7, { az: 26, elev: 12, seconds: 7 }),
+        orbits(1, true), overview(1, 'moon', 9), dolly(1, 0), readout(1, 'separation', 'moon', 'sun', { label: 'Ay–Güneş açısal ayrıklığı', text: 'Dünya merkezinden' }),
+        // the umbra lands near the subsolar point: frame Earth's noon side from the north
+        time(2, '2027-08-02T09:25:00Z'), rate(2, 240), orbits(2, false), fill(2, false), vantage(2, 26, 0, 3.6, 'earth', 7), dolly(2, 0),
+        time(3, '2027-08-02T10:03:00Z'), rate(3, 20), lookFrom(3, 'earth', ['moon', 'sun'], 4, 50), fov(3, 2.2, 10),
+        card(4, { big: '6 dk 23 sn', title: 'Luksor yakınında tam evre', text: 'Bu yüzyılda karadan görülecek en uzun tam tutulmalardan biri.' }),
       ],
     }],
   },

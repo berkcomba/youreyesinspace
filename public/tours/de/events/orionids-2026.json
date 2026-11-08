@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "de",
+ "steps": {
+  "orionids": {
+   "hash": "8bd50110d3da",
+   "duration": 39.67,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 9.48,
+     "text": "Die Orioniden entstehen aus dem Staub, den der Halleysche Komet bei früheren Wiederkehren hinterlassen hat; die Erde kreuzt diese Spur jeden Oktober."
+    },
+    {
+     "start": 9.48,
+     "end": 17.82,
+     "text": "Halley selbst befindet sich derzeit jenseits der Neptunbahn und bewegt sich langsam auf seine Wiederkehr 2061 zu."
+    },
+    {
+     "start": 17.82,
+     "end": 27.03,
+     "text": "Nähern wir uns der Erdbahn: Die Staubkörner treffen mit sechsundsechzig Kilometern pro Sekunde auf die Atmosphäre und hinterlassen lange, helle Spuren."
+    },
+    {
+     "start": 27.03,
+     "end": 35.05,
+     "text": "Im Maximum sind etwa zwanzig Meteore pro Stunde zu sehen; der Radiant liegt nahe der erhobenen Keule des Jägers Orion."
+    },
+    {
+     "start": 35.05,
+     "end": 39.67,
+     "text": "Die andere Hälfte derselben Staubspur erleben wir im Mai als Eta-Aquariiden."
+    }
+   ]
+  }
+ }
+}

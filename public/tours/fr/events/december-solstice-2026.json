@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "solstice": {
+   "hash": "2856f52af5e1",
+   "duration": 38.71,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 8.74,
+     "text": "L'axe de rotation de la Terre est incliné de vingt-trois degrés et demi par rapport à son plan orbital et pointe dans la même direction toute l'année."
+    },
+    {
+     "start": 8.74,
+     "end": 18.44,
+     "text": "Au solstice de décembre, le pôle Sud penche vers le Soleil et le pôle Nord s'en éloigne : la limite jour-nuit traverse la Terre selon l'angle le plus incliné."
+    },
+    {
+     "start": 18.44,
+     "end": 25.91,
+     "text": "Au-delà du cercle polaire arctique, le Soleil ne se lève pas ; au sud, l'Antarctique est éclairé par le soleil de minuit."
+    },
+    {
+     "start": 25.91,
+     "end": 32.09,
+     "text": "Vue depuis l'orbite, la Terre atteint ce point de son tour autour du Soleil chaque année les 21–22 décembre."
+    },
+    {
+     "start": 32.09,
+     "end": 38.71,
+     "text": "Ce n'est pas la distance mais cette inclinaison qui fait les saisons : la Terre passe en réalité au plus près du Soleil début janvier."
+    }
+   ]
+  }
+ }
+}

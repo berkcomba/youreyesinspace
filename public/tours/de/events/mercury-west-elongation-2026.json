@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "de",
+ "steps": {
+  "mercelong": {
+   "hash": "932112b1a1f7",
+   "duration": 35.19,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.64,
+     "text": "Merkur kreist so nah um die Sonne, dass wir ihn nur in der Dämmerung, tief am Horizont, sehen können."
+    },
+    {
+     "start": 6.64,
+     "end": 15.62,
+     "text": "Heute Morgen steht er neunzehneinhalb Grad westlich der Sonne, in seinem größten Winkelabstand: Er erscheint vor Sonnenaufgang am Osthorizont."
+    },
+    {
+     "start": 15.62,
+     "end": 21.99,
+     "text": "Die Elongation ist der Moment, in dem wir von der Erde aus tangential auf die Bahn des inneren Planeten blicken."
+    },
+    {
+     "start": 21.99,
+     "end": 28.65,
+     "text": "Von oben ist die Geometrie klar: Die Linie Sonne–Merkur steht senkrecht auf der Sichtlinie von der Erde."
+    },
+    {
+     "start": 28.65,
+     "end": 35.19,
+     "text": "Merkur wiederholt diesen Zyklus etwa alle hundertsechzehn Tage; die nächste Abendelongation kommt im Januar."
+    }
+   ]
+  }
+ }
+}

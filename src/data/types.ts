@@ -24,6 +24,12 @@ export interface SimpleElements {
   nodeRate?: number;
   /** Optional apsidal precession (deg/day) */
   periRate?: number;
+  /**
+   * Sampled JPL Horizons table (`/ephem/<table>.json`, centred on the parent) that replaces the
+   * Keplerian position wherever it covers the date; the elements remain the fallback and the
+   * drawn orbit. Used for the Moon, whose perturbations reach a degree and spoil eclipses.
+   */
+  table?: string;
 }
 
 /**

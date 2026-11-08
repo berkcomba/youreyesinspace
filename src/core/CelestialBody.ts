@@ -3,7 +3,7 @@ import { _, fixed } from '../i18n';
 import type { BodyData } from '../data/types';
 import { basisFromPole, poleToScene } from '../math/frames';
 import {
-  isKeplerian, mathToScene, periodDays, positionFromE, resolveElements, solveKepler, visViva,
+  elementsFromState, isKeplerian, mathToScene, periodDays, positionFromE, resolveElements, solveKepler, visViva,
   type ResolvedElements,
 } from '../math/kepler';
 import { DAY_S, DEG, G } from './constants';
@@ -206,6 +206,15 @@ export class CelestialBody {
       this.E = solveKepler(r.M, r.e);
       positionFromE(r, this.E, _math);
       mathToScene(_math, this.orbitBasis, this.localPosition);
+      if (o.kind === 'simple' && o.table) {
+        ephemeris.ensure(o.table);
+        if (ephemeris.sample(o.table, jd, _math, _tmp2) === this.parent.id) {
+          mathToScene(_math, _identity3, this.localPosition);
+          // the osculating ellipse, so the drawn orbit passes through the tabulated position
+          this.E = elementsFromState(_math, _tmp2, parentGM + this.gm, r);
+          this.periodDays = periodDays(r);
+        }
+      }
       this.position.copy(this.parent.position).add(this.localPosition);
       // around a barycentre the effective GM of body i is G·m_j³/(m_i+m_j)² (m_j = the partner)
       const mu = this.parent.data.type === 'barycenter'

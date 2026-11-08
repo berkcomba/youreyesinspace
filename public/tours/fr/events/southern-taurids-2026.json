@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "staurids": {
+   "hash": "62203ee1c368",
+   "duration": 35.19,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 8.56,
+     "text": "Les Taurides Sud proviennent d'un large courant de poussière dispersé au fil des siècles par Encke, la comète à la période la plus courte connue."
+    },
+    {
+     "start": 8.56,
+     "end": 15.42,
+     "text": "Encke fait le tour du Soleil en trois virgule trois ans seulement ; elle se trouve actuellement dans la moitié extérieure de son orbite."
+    },
+    {
+     "start": 15.42,
+     "end": 23.41,
+     "text": "La Terre met des semaines à traverser ce large courant ; les particules entrent dans l'atmosphère assez lentement, à vingt-huit kilomètres par seconde."
+    },
+    {
+     "start": 23.41,
+     "end": 29.23,
+     "text": "C'est pourquoi les Taurides produisent peu de météores, mais de longue durée et souvent aussi brillants que des bolides."
+    },
+    {
+     "start": 29.23,
+     "end": 35.19,
+     "text": "Le radiant se trouve dans le Taureau ; cette année, le lever tardif de la Lune garde le ciel sombre jusqu'à minuit."
+    }
+   ]
+  }
+ }
+}

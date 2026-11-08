@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "mercelong": {
+   "hash": "0f27c7f173e1",
+   "duration": 35.83,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.02,
+     "text": "Mercure tourne si près du Soleil que nous ne pouvons la voir qu'au crépuscule, bas sur l'horizon."
+    },
+    {
+     "start": 6.02,
+     "end": 15.92,
+     "text": "Ce matin, elle se tient à dix-neuf degrés et demi à l'ouest du Soleil, à sa plus grande distance angulaire : elle apparaît sur l'horizon est avant le lever du Soleil."
+    },
+    {
+     "start": 15.92,
+     "end": 22.45,
+     "text": "L'élongation est le moment où, depuis la Terre, nous regardons l'orbite de la planète intérieure de façon tangente."
+    },
+    {
+     "start": 22.45,
+     "end": 29.75,
+     "text": "Vue d'en haut, la géométrie est claire : la ligne Soleil–Mercure tombe perpendiculairement à la ligne de visée depuis la Terre."
+    },
+    {
+     "start": 29.75,
+     "end": 35.83,
+     "text": "Mercure répète ce cycle environ tous les cent seize jours ; la prochaine élongation du soir aura lieu en janvier."
+    }
+   ]
+  }
+ }
+}

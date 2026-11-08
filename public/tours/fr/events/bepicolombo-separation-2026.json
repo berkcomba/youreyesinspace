@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "fr",
+ "steps": {
+  "bepisep": {
+   "hash": "899535194608",
+   "duration": 41.91,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 7.82,
+     "text": "Deux semaines après son entrée en orbite autour de Mercure, l'ensemble BepiColombo fait désormais le tour de la planète en moins de dix heures."
+    },
+    {
+     "start": 7.82,
+     "end": 15.8,
+     "text": "Ces jours-ci, l'ensemble se sépare : d'abord le bouclier solaire qui protège Mio, puis les deux orbiteurs se détachent l'un de l'autre."
+    },
+    {
+     "start": 15.8,
+     "end": 26.37,
+     "text": "Le Mio japonais reste sur une longue orbite elliptique pour étudier la magnétosphère de Mercure, tandis que le MPO européen descend sur une orbite polaire proche de la surface."
+    },
+    {
+     "start": 26.37,
+     "end": 35.65,
+     "text": "La mission scientifique débutera début 2027 : la composition de la surface, la structure interne et le champ magnétique de la planète la plus proche du Soleil."
+    },
+    {
+     "start": 35.65,
+     "end": 41.91,
+     "text": "L'orbite affichée est le trajet prévu fourni par l'ESA à JPL Horizons ; l'heure de la séparation peut changer."
+    }
+   ]
+  }
+ }
+}

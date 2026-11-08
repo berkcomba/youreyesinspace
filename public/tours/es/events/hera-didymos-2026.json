@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "hera": {
+   "hash": "f47bec0f1d67",
+   "duration": 46.71,
+   "sentences": [
+    {
+     "start": 0.04,
+     "end": 5.94,
+     "text": "Tras dos años de viaje, la sonda Hera de la ESA llega al asteroide binario Didymos."
+    },
+    {
+     "start": 5.94,
+     "end": 18.5,
+     "text": "Su objetivo es la pequeña luna Dimorphos, contra la que la nave DART de la NASA impactó deliberadamente en 2022: el impacto acortó el periodo orbital de la luna en treinta y tres minutos."
+    },
+    {
+     "start": 18.5,
+     "end": 25.75,
+     "text": "Hera se acerca ahora lentamente al par y en las próximas semanas se situará en órbita a decenas de kilómetros."
+    },
+    {
+     "start": 25.75,
+     "end": 36.07,
+     "text": "Los CubeSats que lleva, Milani y Juventas, medirán la masa y la estructura interna de Dimorphos; las primeras imágenes cercanas se esperan a finales de noviembre."
+    },
+    {
+     "start": 36.07,
+     "end": 46.71,
+     "text": "La trayectoria de aproximación que está viendo es la prevista que la ESA entregó a JPL Horizons, publicada hasta el 4 de noviembre; lo que sigue aún no se ha anunciado."
+    }
+   ]
+  }
+ }
+}

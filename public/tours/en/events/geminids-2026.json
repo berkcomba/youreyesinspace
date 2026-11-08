@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "en",
+ "steps": {
+  "geminids": {
+   "hash": "e2eedf5f65fc",
+   "duration": 46.39,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 8.42,
+     "text": "The Geminids are the richest meteor shower of the year: at peak, under a dark sky, up to one hundred fifty meteors an hour."
+    },
+    {
+     "start": 8.42,
+     "end": 19.32,
+     "text": "Their source is not a comet but the asteroid 3200 Phaethon, which comes closer to the Sun than Mercury; the Sun's heat cracks its surface and scatters dust."
+    },
+    {
+     "start": 19.32,
+     "end": 30.59,
+     "text": "Every December Earth passes through the dust trail stretched along Phaethon's orbit; the particles enter the atmosphere at thirty-five kilometres a second and often leave colourful, slow trails."
+    },
+    {
+     "start": 30.59,
+     "end": 39.55,
+     "text": "The meteors seem to spray from one point in the sky, the radiant in the constellation Gemini: this is the direction in which Earth is cutting through the stream."
+    },
+    {
+     "start": 39.55,
+     "end": 46.39,
+     "text": "The best time to watch is after midnight; this year the Moon is a thin crescent, sets early, and the sky stays dark."
+    }
+   ]
+  }
+ }
+}

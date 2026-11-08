@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "de",
+ "steps": {
+  "clipperflyby": {
+   "hash": "7ce910aa4084",
+   "duration": 47.67,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 10.32,
+     "text": "Europa Clipper schaut auf dem Weg zum Jupiter ein letztes Mal zu Hause vorbei: Beim Vorbeiflug an der Erde stiehlt die Sonde der Schwerkraft des Planeten Geschwindigkeit."
+    },
+    {
+     "start": 10.32,
+     "end": 22.22,
+     "text": "Sie bewegt sich relativ zur Erde schneller als zwölf Kilometer pro Sekunde und kommt der Oberfläche bis auf dreitausendzweihundert Kilometer nahe; das ist tiefer als viele Kommunikationssatelliten."
+    },
+    {
+     "start": 22.22,
+     "end": 30.85,
+     "text": "Die größte Annäherung ist um zwanzig Uhr fünfzehn Weltzeit; der Vorbeiflug weitet die Sonnenbahn der Sonde so, dass sie den Jupiter erreicht."
+    },
+    {
+     "start": 30.85,
+     "end": 40.17,
+     "text": "Clipper wird im April 2030 beim Jupiter ankommen und den Ozean unter der Eiskruste Europas in neunundvierzig nahen Vorbeiflügen untersuchen."
+    },
+    {
+     "start": 40.17,
+     "end": 47.67,
+     "text": "Die Bahndaten stammen von NASA/JPL Horizons und sind um die größte Annäherung herum in Minutenauflösung abgetastet."
+    }
+   ]
+  }
+ }
+}

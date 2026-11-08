@@ -1,0 +1,42 @@
+{
+ "voice": "altair",
+ "locale": "de",
+ "steps": {
+  "hera": {
+   "hash": "94567089c834",
+   "duration": 47.35,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 5.34,
+     "text": "Nach zwei Jahren Reise erreicht die ESA-Sonde Hera den Doppelasteroiden Didymos."
+    },
+    {
+     "start": 5.34,
+     "end": 17.34,
+     "text": "Ihr Ziel ist der kleine Mond Dimorphos, den die NASA-Sonde DART 2022 absichtlich getroffen hat: Der Einschlag verkürzte die Umlaufzeit des Mondes um dreiunddreißig Minuten."
+    },
+    {
+     "start": 17.34,
+     "end": 25.87,
+     "text": "Hera nähert sich dem Paar jetzt langsam und wird sich in den kommenden Wochen aus einigen zehn Kilometern Entfernung in eine Umlaufbahn begeben."
+    },
+    {
+     "start": 25.87,
+     "end": 35.97,
+     "text": "Die mitgeführten CubeSats Milani und Juventas werden Masse und innere Struktur von Dimorphos vermessen; erste Nahaufnahmen werden Ende November erwartet."
+    },
+    {
+     "start": 35.97,
+     "end": 43.09,
+     "text": "Der Anflugweg, den Sie sehen, ist die geplante Bahn, die die ESA an JPL Horizons übermittelt hat und die bis zum 4."
+    },
+    {
+     "start": 43.09,
+     "end": 47.35,
+     "text": "November veröffentlicht ist; was danach kommt, ist noch nicht bekannt gegeben."
+    }
+   ]
+  }
+ }
+}

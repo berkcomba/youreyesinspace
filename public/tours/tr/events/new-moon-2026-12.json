@@ -1,0 +1,32 @@
+{
+ "voice": "altair",
+ "locale": "tr",
+ "steps": {
+  "newmoon": {
+   "hash": "f1f72ddab354",
+   "duration": 33.59,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 8.08,
+     "text": "Yeni Ay'da Ay, Güneş ile Dünya arasından geçer; bize dönük yüzü karanlıktır ve gökyüzünde Güneş'in yanında görünmez."
+    },
+    {
+     "start": 8.08,
+     "end": 18.67,
+     "text": "Her yeni ayda tutulma olmaz, çünkü Ay'ın yörüngesi Dünya'nınkine göre beş derece eğiktir ve gölgesi çoğu zaman Dünya'nın üstünden ya da altından geçer."
+    },
+    {
+     "start": 18.67,
+     "end": 26.23,
+     "text": "Yeni Ay haftası, gök gözlemcileri için en karanlık gökyüzünü getirir: bu yıl Geminid zirvesiyle çakışıyor."
+    },
+    {
+     "start": 26.23,
+     "end": 33.59,
+     "text": "Yörüngeyi hızlandırılmış izliyorsunuz: Ay, Dünya'nın çevresini yirmi dokuz buçuk günde dolanarak evrelerini tamamlar."
+    }
+   ]
+  }
+ }
+}

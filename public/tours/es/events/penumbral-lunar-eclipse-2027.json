@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "penumbral": {
+   "hash": "43da9917e2ce",
+   "duration": 49.59,
+   "sentences": [
+    {
+     "start": 0.1,
+     "end": 9.22,
+     "text": "Un eclipse lunar solo puede ocurrir en luna llena: el Sol, la Tierra y la Luna se alinean y la sombra de la Tierra cae sobre la Luna."
+    },
+    {
+     "start": 9.22,
+     "end": 19.16,
+     "text": "Esa sombra tiene dos capas: la umbra oscura, donde el Sol queda totalmente oculto, y la amplia penumbra, donde solo se oculta una parte."
+    },
+    {
+     "start": 19.16,
+     "end": 31.13,
+     "text": "La noche del 20 de febrero la Luna atraviesa la parte más profunda de la penumbra y se acerca a la umbra hasta solo un seis por ciento de su propio diámetro antes de pasar de largo por su borde."
+    },
+    {
+     "start": 31.13,
+     "end": 40.61,
+     "text": "Desde la Tierra, el borde de la Luna más cercano a la sombra toma un gris ahumado; es mucho más fácil de notar que la mayoría de los eclipses penumbrales."
+    },
+    {
+     "start": 40.61,
+     "end": 49.59,
+     "text": "El eclipse se puede ver desde gran parte de América, Europa, África y Asia; en Turquía el momento más profundo es a las dos y trece de la madrugada."
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "es",
+ "steps": {
+  "clipperflyby": {
+   "hash": "4c4af008f6bc",
+   "duration": 47.67,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 8.56,
+     "text": "Europa Clipper pasa por casa una última vez camino de Júpiter: al sobrevolar la Tierra, roba velocidad a la gravedad del planeta."
+    },
+    {
+     "start": 8.56,
+     "end": 20.1,
+     "text": "La nave se mueve a más de doce kilómetros por segundo respecto a la Tierra y se acercará hasta tres mil doscientos kilómetros de la superficie; más bajo que muchos satélites de comunicaciones."
+    },
+    {
+     "start": 20.1,
+     "end": 30.43,
+     "text": "La máxima aproximación es a las veinte quince, tiempo universal; el sobrevuelo amplía la órbita de la nave alrededor del Sol lo suficiente para alcanzar Júpiter."
+    },
+    {
+     "start": 30.43,
+     "end": 39.43,
+     "text": "Clipper llegará a Júpiter en abril de 2030 y estudiará el océano bajo la corteza helada de Europa en cuarenta y nueve sobrevuelos cercanos."
+    },
+    {
+     "start": 39.43,
+     "end": 47.67,
+     "text": "Los datos de trayectoria provienen de NASA/JPL Horizons, muestreados con resolución de un minuto en torno a la máxima aproximación."
+    }
+   ]
+  }
+ }
+}

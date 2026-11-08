@@ -1,0 +1,42 @@
+{
+ "voice": "altair",
+ "locale": "de",
+ "steps": {
+  "penumbral": {
+   "hash": "e87872427907",
+   "duration": 50.87,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 8.6,
+     "text": "Eine Mondfinsternis gibt es nur bei Vollmond: Sonne, Erde und Mond stehen auf einer Linie, und der Erdschatten fällt auf den Mond."
+    },
+    {
+     "start": 8.6,
+     "end": 18.84,
+     "text": "Dieser Schatten hat zwei Schichten: den dunklen Kernschatten, in dem die Sonne ganz verdeckt ist, und den breiten Halbschatten, in dem sie nur teilweise verdeckt ist."
+    },
+    {
+     "start": 18.84,
+     "end": 20.2,
+     "text": "In der Nacht des 20."
+    },
+    {
+     "start": 20.2,
+     "end": 31.01,
+     "text": "Februar zieht der Mond durch den tiefsten Teil des Halbschattens und kommt dem Kernschatten bis auf sechs Prozent seines eigenen Durchmessers nahe, bevor er an dessen Rand vorbeizieht."
+    },
+    {
+     "start": 31.01,
+     "end": 40.73,
+     "text": "Von der Erde aus nimmt der dem Schatten zugewandte Rand des Mondes ein rauchiges Grau an; das ist viel leichter zu bemerken als bei den meisten Halbschattenfinsternissen."
+    },
+    {
+     "start": 40.73,
+     "end": 50.87,
+     "text": "Die Finsternis ist in weiten Teilen Amerikas, Europas, Afrikas und Asiens zu sehen; in der Türkei ist der tiefste Moment um dreizehn Minuten nach zwei Uhr nachts."
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,37 @@
+{
+ "voice": "altair",
+ "locale": "tr",
+ "steps": {
+  "mercelong": {
+   "hash": "8f3ea41c95b8",
+   "duration": 33.91,
+   "sentences": [
+    {
+     "start": 0.08,
+     "end": 6.78,
+     "text": "Merkür Güneş'e o kadar yakın dolaşır ki onu ancak alacakaranlıkta, ufka yakın görebiliriz."
+    },
+    {
+     "start": 6.78,
+     "end": 15.72,
+     "text": "Bu sabah Güneş'ten on dokuz buçuk derece batıda, yani en büyük açısal uzaklığında: gün doğumundan önce doğu ufkunda belirir."
+    },
+    {
+     "start": 15.72,
+     "end": 20.25,
+     "text": "Uzanım, iç gezegenin yörüngesine Dünya'dan teğet baktığımız andır."
+    },
+    {
+     "start": 20.25,
+     "end": 27.57,
+     "text": "Yukarıdan bakınca geometri açık: Güneş–Merkür doğrusu, Dünya'dan gelen bakış çizgisine dik düşer."
+    },
+    {
+     "start": 27.57,
+     "end": 33.91,
+     "text": "Merkür bu döngüyü yaklaşık her yüz on altı günde yineler; bir sonraki akşam uzanımı Ocak'ta."
+    }
+   ]
+  }
+ }
+}
