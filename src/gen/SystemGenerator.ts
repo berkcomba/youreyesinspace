@@ -187,7 +187,7 @@ export function generateSystem(star: StarInfo, opts: GenerateOptions = {}): Gene
     mass: star.massKg,
     rotationPeriod: rotHours,
     pole: { ra: rng.range(0, 360), dec: rng.range(-90, 90) },
-    appearance: { kind: 'star', temperature: star.temperature, seed: star.index % 997 + 3 },
+    appearance: { kind: 'star', temperature: star.temperature, seed: star.index % 997 + 3, ...(star.tint && { tint: star.tint }) },
     temperature: star.temperature,
     description: starDescription(star),
     facts: starFacts(star),

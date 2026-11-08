@@ -97,8 +97,8 @@ export function bvToRgb(bv: number): [number, number, number] {
  * Light colour a star casts on its planets, normalised so a G2V star gives ~white.
  * Saturation is exaggerated a little so red dwarfs read as orange-lit worlds.
  */
-export function starLightColor(T: number): [number, number, number] {
-  const [r, g, b] = temperatureToRgb(T);
+export function starLightColor(T: number, tint?: [number, number, number]): [number, number, number] {
+  const [r, g, b] = tint ?? temperatureToRgb(T);
   const [sr, sg, sb] = temperatureToRgb(SUN_TEMPERATURE_K);
   const out: [number, number, number] = [r / sr, g / sg, b / sb];
   const mx = Math.max(out[0], out[1], out[2]);

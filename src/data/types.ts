@@ -133,6 +133,8 @@ export type Appearance =
       kind: 'star';
       temperature: number; // K
       seed: number;
+      /** perceived photosphere colour (sRGB 0…1) where it is not the blackbody's: the colourful white dwarfs */
+      tint?: [number, number, number];
     }
   | {
       kind: 'spacecraft';

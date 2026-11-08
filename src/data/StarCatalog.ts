@@ -7,6 +7,7 @@ import {
 } from '../astro/stellar';
 import { STAR_NAMED, STAR_WD, STAR_PLANETS, STAR_GAIA_DIST, STAR_VELOCITY, GRID_PC, GRID_SPAN, cell, guessBv, type CatalogTier } from './starTierFormat';
 import type { TierResult } from './StarTiers.worker';
+import { COLOURED_DWARFS, hexToRgb, type ColouredDwarf } from './colouredDwarfs';
 import TierWorker from './StarTiers.worker?worker';
 
 export { STAR_NAMED, STAR_WD, STAR_PLANETS, STAR_GAIA_DIST, STAR_VELOCITY, type CatalogTier };
@@ -54,6 +55,8 @@ export interface StarInfo {
   lumClass: number;
   catalogSpectral: string;
   isWhiteDwarf: boolean;
+  /** perceived disc colour (sRGB 0…1) where it is not the blackbody's */
+  tint?: [number, number, number];
   /** true for procedurally generated stars (not in the HYG catalogue) */
   procedural?: boolean;
 }
@@ -104,6 +107,8 @@ export class StarCatalog {
   readonly namedIndices: number[] = [];
   /** indices of the exoplanet hosts */
   readonly hostIndices: number[] = [];
+  /** white dwarfs of unusual colour (colouredDwarfs.ts), by index once their tier has landed */
+  private readonly coloured = new Map<number, ColouredDwarf>();
   readonly tiers: CatalogTier[];
   readonly loadedTiers: CatalogTier[] = [];
   /** the tiers take part in nearest-star queries and search (off while the deep catalogue is switched off) */
@@ -212,6 +217,7 @@ export class StarCatalog {
             worker.postMessage({ tier: t, core: this.core, buf }, [buf]);
           });
           this.adoptTier(res);
+          this.markColoured(res);
           this.count = t.first + t.count;
           this.loadedTiers.push(t);
           for (const fn of this.tierListeners) fn(t, { colors: res.colors, indices: res.indices });
@@ -232,6 +238,25 @@ export class StarCatalog {
     this.spectClass.set(r.spectClass, i0); this.spectSub.set(r.spectSub, i0); this.lumClass.set(r.lumClass, i0); this.flags.set(r.flags, i0);
     this.extIds.set(r.extIds, k0); this.extHi.set(r.extHi, k0);
     this.gridKeys = r.gridKeys; this.gridStart = r.gridStart; this.gridIdx = r.gridIdx;
+  }
+
+  /** Name and recolour the white dwarfs of colouredDwarfs.ts in a landed tier (before its points are drawn) */
+  private markColoured(r: TierResult): void {
+    if (r.tier.file !== 'stars-gcns.bin') return;
+    const want = new Map(COLOURED_DWARFS.map((c) => {
+      const id = BigInt(c.gaia);
+      return [`${Number(id >> 32n)}:${Number(id & 0xffffffffn)}`, c];
+    }));
+    for (let k = 0; k < r.tier.count && want.size; k++) {
+      const key = `${r.extHi[k]}:${r.extIds[k]}`;
+      const c = want.get(key);
+      if (!c) continue;
+      want.delete(key);
+      const i = r.tier.first + k;
+      this.coloured.set(i, c);
+      this.names.set(i, { proper: c.wd, bayer: '', gliese: c.alias ?? '', constellation: '', host: '' });
+      r.colors.set(hexToRgb(c.hex), k * 3);
+    }
   }
 
   private grow(n: number): void {
@@ -291,7 +316,7 @@ export class StarCatalog {
   /** Display name: proper → planet-host designation → Bayer → Gliese → HIP → survey designation */
   nameOf(i: number): string {
     if (i === 0) return _('Güneş');
-    if (i >= this.core) return this.designation(i);
+    if (i >= this.core) return this.names.get(i)?.proper || this.designation(i);
     const n = this.names.get(i);
     if (n?.proper) return n.proper;
     // "eps Eri", "ups And": the Bayer letter reads better than the archive's abbreviation
@@ -343,6 +368,8 @@ export class StarCatalog {
     const isWD = (this.flags[i] & STAR_WD) !== 0;
     let temperature = bvToTemperature(bv);
     if (isWD) temperature = Math.max(temperature, 8000);
+    const dwarf = this.coloured.get(i);
+    if (dwarf?.teff) temperature = dwarf.teff;
     const absMag = this.absMags[i];
     let luminosity = luminosityFromAbsMag(absMag, temperature);
     let lumClass = this.lumClass[i];
@@ -378,11 +405,17 @@ export class StarCatalog {
       radiusKm: radiusSolar * SUN_RADIUS_KM,
       massSolar,
       massKg: massSolar * SUN_MASS_KG,
-      spectral: isWD ? 'DA' : spectralFromTemperature(temperature) + (LUM_CLASS_LABEL[lumClass] ?? ''),
+      spectral: dwarf ? dwarf.spectral : isWD ? 'DA' : spectralFromTemperature(temperature) + (LUM_CLASS_LABEL[lumClass] ?? ''),
       lumClass,
-      catalogSpectral: this.catalogSpectral(i),
+      catalogSpectral: dwarf ? dwarf.spectral : this.catalogSpectral(i),
       isWhiteDwarf: isWD,
+      ...(dwarf && { tint: hexToRgb(dwarf.hex) }),
     };
+  }
+
+  /** The colourful white dwarf at index i, if it is one */
+  colouredDwarf(i: number): ColouredDwarf | undefined {
+    return this.coloured.get(i);
   }
 
   /**

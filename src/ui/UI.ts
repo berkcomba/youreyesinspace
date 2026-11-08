@@ -21,6 +21,7 @@ import type { GalaxySprites } from '../render/GalaxySprites';
 import type { LandmarkSprites } from '../render/LandmarkSprites';
 import { LANDMARK_KIND_LABEL } from '../data/landmarks';
 import { HYDROGEN_BURNING_LIMIT } from '../data/BrownDwarfs';
+import { colouredDwarf } from '../data/colouredDwarfs';
 import { AU_KM, LIGHT_YEAR_KM, PARSEC_KM, RAD } from '../core/constants';
 import { LUM_CLASS_DESC, SUN_MASS_KG } from '../astro/stellar';
 import { GALAXY_TYPE_LABEL } from '../galaxy/GalaxyModel';
@@ -435,7 +436,8 @@ export class UI {
       for (const p of group.items) {
         // skip destinations this build cannot resolve
         if (p.kind === 'galaxy' && resolveGalaxy(p.ref) === null) continue;
-        if (p.kind === 'star' && u.catalog.search(p.ref, 1).length === 0) continue;
+        // the colourful white dwarfs live in the background-loaded Gaia tier
+        if (p.kind === 'star' && !colouredDwarf(p.ref) && u.catalog.search(p.ref, 1).length === 0) continue;
         if (p.kind === 'blackhole' && !u.blackHole(p.ref)) continue;
         if (p.kind === 'landmark' && !u.landmark(p.ref)) continue;
         if (p.kind === 'exoplanet' && !u.exoplanets.byName(p.ref)) continue;
@@ -452,8 +454,9 @@ export class UI {
             const hit = u.exoplanets.byName(p.ref)!;
             h.goToSystemBody(`c${hit.host.i}`, exoBodyId(hit.host.i, hit.planet.name));
           } else if (p.kind === 'star') {
-            const hits = u.catalog.search(p.ref, 1);
-            if (hits.length) h.goToStar(`c${hits[0]}`);
+            const go = (): void => { const hits = u.catalog.search(p.ref, 1); if (hits.length) h.goToStar(`c${hits[0]}`); };
+            if (colouredDwarf(p.ref)) void u.catalog.loadTiers().then(go);
+            else go();
           } else {
             const gi = resolveGalaxy(p.ref);
             if (gi !== null) h.goToGalaxy(gi);
@@ -1141,6 +1144,7 @@ export class UI {
     const isExtra = u.extraSystem(id) !== undefined;
     const isProc = ci < 0 && !isExtra;
     const bd = u.brownDwarf(id);
+    const dwarf = ci >= 0 ? u.catalog.colouredDwarf(ci) : undefined;
     this.infoName.textContent = s.name;
     this.infoType.textContent = isBH
       ? _('Kara delik sistemi')
@@ -1162,6 +1166,7 @@ export class UI {
     if (!isProc) rows.push(['Kadir (Dünya\'dan)', fixed(s.mag, 2)]);
     rows.push(['Mutlak kadir', fixed(s.absMag, 2)]);
     rows.push(['B−V renk', fixed(s.bv, 2)]);
+    if (dwarf) rows.push(['Algılanan renk', `${_(dwarf.label)} (${dwarf.hex})`]);
     rows.push('sep');
     rows.push(['Sıcaklık*', `${fixed(s.temperature, 0)} K`]);
     rows.push(['Parlaklık*', `${s.luminosity >= 1 ? fixed(s.luminosity, 2) : s.luminosity.toPrecision(3)} L☉`]);
@@ -1199,6 +1204,7 @@ export class UI {
         : u.hasMeasuredInfo(id)
         ? `${_(sys.star.data.description ?? '')} ${_('(* Tayf ve yörünge ölçümlerinden gelen değerler; katalog tahminlerinin yerini alır.)')}`
         : `${_(sys.star.data.description ?? '')} ${_('(* Kadir, uzaklık ve B−V renginden türetilen tahminler.)')}`;
+    if (dwarf) this.infoDesc.textContent = `${_(dwarf.note)} ${this.infoDesc.textContent}`;
   }
 
   private renderInfo(b: CelestialBody, camDist: number): void {

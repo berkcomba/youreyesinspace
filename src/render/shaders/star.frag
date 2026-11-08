@@ -5,6 +5,8 @@ uniform float uTime;       // simulation time (hours) — slow evolution: spot d
 uniform float uRealTime;   // wall-clock seconds — granulation boils even when the clock is paused
 uniform float uTemperature;
 uniform float uIntensity;
+uniform vec3 uTint;        // perceived disc colour, used instead of the blackbody when uTinted is set
+uniform float uTinted;
 
 varying vec3 vObjPos;
 varying vec3 vWorldPos;
@@ -114,12 +116,14 @@ void main() {
   k = mix(k, 2.5, smoothstep(7500.0, 14000.0, T));          // hot stars: keep the blue, lightly
   vec3 sat = pow(bb, vec3(k));
   sat.b *= mix(0.5, 1.0, smoothstep(6500.0, 9000.0, T));    // golden rather than tan for G/K stars
+  // a tinted disc (green, pink, vivid blue white dwarfs) keeps its own hue, deepened the same way
+  sat = mix(sat, pow(uTint, vec3(2.0)), uTinted);
   sat /= max(max(sat.r, sat.g), max(sat.b, 1e-3));
   float whiten = mix(0.35, 0.12, smoothstep(5000.0, 3200.0, T));   // red dwarfs stay deep orange
   vec3 hot = mix(sat, vec3(1.0), whiten) * 1.45;             // cell centres: brighter and whiter
   vec3 color = mix(sat * 0.25, hot, surf);
   // intergranular lanes and spots are cooler → slightly redder
-  vec3 cool = mix(vec3(1.0), vec3(1.0, 0.72, 0.48), smoothstep(12000.0, 3500.0, T) * 0.8);
+  vec3 cool = mix(vec3(1.0), vec3(1.0, 0.72, 0.48), smoothstep(12000.0, 3500.0, T) * 0.8 * (1.0 - 0.6 * uTinted));
   color *= mix(vec3(1.0), cool, clamp(lanes * 0.5 + umbra + penumbra * 0.6, 0.0, 1.0));
   color *= limb * mix(vec3(1.0), cool * vec3(1.0, 0.85, 0.7), pow(1.0 - mu, 1.3) * 0.9);
 

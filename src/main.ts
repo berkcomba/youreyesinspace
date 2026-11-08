@@ -433,7 +433,7 @@ class App implements UIHost {
     this.belts.setSystem(sys.belts, (s) => (s.centerId && sys.get(s.centerId)) || sys.star, (c) => (sys.catalogIndex === 0 ? IDENTITY : c.poleBasis));
     this.restoreAsteroids(sys);
     if (sys.catalogIndex === 0) for (const k of this.smallSpawned) this.spawnSmallBody(k);
-    const [r, g, b] = starLightColor(sys.starTemperature);
+    const [r, g, b] = starLightColor(sys.starTemperature, sys.star.data.appearance.kind === 'star' ? sys.star.data.appearance.tint : undefined);
     this.sunColor.set(r, g, b);
     this.starLuminosity = sys.catalogIndex === 0 ? 1 : this.universe.starInfo(sys.starId).luminosity;
     this.multiple = sys.bodies.some((b) => b.data.type === 'barycenter');

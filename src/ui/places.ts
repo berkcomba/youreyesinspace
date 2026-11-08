@@ -130,6 +130,9 @@ export const PLACES: PlaceGroup[] = [
       { label: 'Aldebaran', kind: 'star', ref: 'Aldebaran' },
       { label: 'Antares', kind: 'star', ref: 'Antares' },
       { label: 'Deneb', kind: 'star', ref: 'Deneb', note: '~2600 ıy uzakta' },
+      { label: 'Yeşil yıldız (WD J1330+6435)', kind: 'star', ref: 'WD J1330+6435', note: 'Bilinen ilk yeşil yıldız – 280 ıy' },
+      { label: 'Pembe beyaz cüce (LHS 2229)', kind: 'star', ref: 'WD J1011+2845', note: 'Algılanan rengi en kırmızı yıldız' },
+      { label: 'Mavi beyaz cüce (WD J2356−2054)', kind: 'star', ref: 'WD J2356−2054', note: '4000 K ama canlı mavi' },
     ],
   },
   {

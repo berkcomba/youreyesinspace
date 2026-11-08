@@ -232,15 +232,19 @@ export class BodyView {
     if (a.kind === 'star' || a.kind === 'pulsar') {
       // neutron stars: million-kelvin surface → render as a blue-white star
       const T = a.kind === 'star' ? a.temperature : 28_000;
+      const tint = a.kind === 'star' ? a.tint : undefined;
       this.surfaceMat = new ShaderMaterial({
         vertexShader: Shaders.surfaceVert,
         fragmentShader: Shaders.starFrag,
-        uniforms: { ...baseUniforms, uRealTime: { value: 0 }, uTemperature: { value: T }, uIntensity: { value: a.kind === 'pulsar' ? 1.8 : 0.9 } },
+        uniforms: {
+          ...baseUniforms, uRealTime: { value: 0 }, uTemperature: { value: T }, uIntensity: { value: a.kind === 'pulsar' ? 1.8 : 0.9 },
+          uTint: { value: tint ? new Vector3(...tint) : new Vector3() }, uTinted: { value: tint ? 1 : 0 },
+        },
       });
       // Corona billboard, tinted by the photosphere temperature
-      const [cr, cg, cb] = temperatureToRgb(T);
+      const [cr, cg, cb] = tint ?? temperatureToRgb(T);
       // corona tint: golden-orange around Sun-like and cooler stars, the photosphere colour for hot ones
-      const warm = new Color(cr, cg, cb).lerp(new Color(1.0, 0.56, 0.16), T < 7500 ? 0.85 : 0.15);
+      const warm = new Color(cr, cg, cb).lerp(new Color(1.0, 0.56, 0.16), tint ? 0.2 : T < 7500 ? 0.85 : 0.15);
       if (a.kind === 'pulsar') warm.lerp(new Color(a.beamColor[0], a.beamColor[1], a.beamColor[2]), 0.5);
       // chromosphere: Hα pink for cool/solar stars, fading to the photosphere colour for hot ones
       const hotness = Math.min(1, Math.max(0, (T - 7000) / 5000));
@@ -1046,7 +1050,7 @@ export class BodyRenderer {
     if (!c) {
       const a = star.data.appearance;
       const T = a.kind === 'star' ? a.temperature : a.kind === 'pulsar' ? 28_000 : 5772;
-      const [r, g, b] = starLightColor(T);
+      const [r, g, b] = starLightColor(T, a.kind === 'star' ? a.tint : undefined);
       c = new Vector3(r, g, b);
       this.lightColors.set(star, c);
     }
