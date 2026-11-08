@@ -127,6 +127,10 @@ vec3 gasAlbedo(vec3 p, out float height) {
     float angle = atan(d.y, d.x);
     float spiral = fbm(vec3(r * 4.0, angle * 1.5, uSeed * 9.0), 3);
     float mask = smoothstep(1.15, 0.7, r + spiral * 0.25);
+    // the Red Spot Hollow: the belt clears to a pale bay around the storm, without it the red
+    // oval drowns in the dark South Equatorial Belt it borders
+    float hollow = smoothstep(1.8, 1.05, r + spiral * 0.15) * (1.0 - mask) * step(0.6, uTurbulence);
+    albedo = mix(albedo, mix(bright, mean, 0.3), hollow * 0.8);
     vec3 stormCol = uStormColor * (0.85 + 0.3 * spiral);
     // darker collar around the storm, brighter eye
     stormCol *= 0.8 + 0.35 * smoothstep(0.8, 0.2, r);
