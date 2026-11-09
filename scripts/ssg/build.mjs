@@ -26,5 +26,18 @@ await build({
   },
 });
 
+// the telescope view of the encyclopedia pages: one self-contained script
+await build({
+  root,
+  configFile: false,
+  logLevel: 'warn',
+  build: {
+    outDir: path.join(root, 'dist/wiki'),
+    emptyOutDir: false,
+    target: 'es2020',
+    lib: { entry: path.join(root, 'src/scope/wiki.ts'), formats: ['iife'], name: 'YeisScope', fileName: () => 'scope.js' },
+  },
+});
+
 const { generate } = await import(pathToFileURL(path.join(bundleDir, 'main.mjs')).href);
 await generate({ root, args: process.argv.slice(2), buildId: process.env.BUILD_ID ?? Date.now().toString(36) });

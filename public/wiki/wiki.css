@@ -166,6 +166,29 @@ html:has(.w-embed), .w-embed { height: 100%; margin: 0; padding: 0; overflow: hi
 .w-loc-brand .more { margin-left: auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--accent); }
 .w-loc-brand:hover .more { color: #cdae82; }
 
+/* the telescope view (/wiki/scope.js) */
+.w-scope { margin: 16px 0 18px; border: 1px solid var(--border); background: #0b0e13; min-height: 320px; }
+.scope-stage { position: relative; background: #000; cursor: zoom-in; }
+.scope-stage.close { cursor: zoom-out; }
+.scope-stage canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+.scope-fail { margin: 0; padding: 40px 16px; color: var(--text-3); font-size: 13px; text-align: center; }
+.scope-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 10px 12px; border-top: 1px solid var(--border); font-size: 12.5px; }
+.scope-ctl label { display: flex; align-items: center; gap: 8px; min-width: 0; color: var(--text-3); }
+.scope-ctl label[hidden] { display: none; }
+.scope-ctl label.wide { flex: 1 1 220px; }
+.scope-ctl .n { white-space: nowrap; }
+.scope-ctl select { font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 4px 6px; max-width: 100%; min-width: 0; }
+.scope-ctl input[type='range'] { flex: 1; min-width: 70px; accent-color: var(--accent); }
+.scope-ctl .v { color: var(--text); font-variant-numeric: tabular-nums; min-width: 44px; text-align: right; }
+.scope-ro { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 2px 18px; padding: 9px 12px; border-top: 1px solid var(--border); font-size: 12.5px; }
+.scope-ro div { display: flex; justify-content: space-between; gap: 10px; min-width: 0; }
+.scope-ro span:first-child { color: var(--text-3); white-space: nowrap; }
+.scope-ro .v { color: var(--text); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.scope-notes { margin: 0; padding: 8px 12px 0 28px; color: var(--text-2); font-size: 12.5px; }
+.scope-notes li { margin: 0 0 4px; }
+.scope-cap { margin: 0; padding: 6px 12px 10px; color: var(--text-3); font-size: 12px; }
+@media (max-width: 560px) { .w-scope { min-height: 220px; } .scope-ctl label { flex: 1 1 100%; } }
+
 /* the one action of the page */
 .w-open { margin: 36px 0 0; }
 .w-btn {

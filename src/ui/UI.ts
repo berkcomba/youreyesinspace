@@ -8,6 +8,7 @@ import type { SmallBodyCatalog } from '../data/SmallBodies';
 import { copyText, viewUrl } from '../app/share';
 import { wikiHome, wikiPage } from '../app/wiki';
 import { LessonPanel } from './LessonPanel';
+import { ScopeCard, scopeTargetFor } from './ScopeCard';
 import type { TourPlayer } from '../core/TourPlayer';
 import type { LessonPlayer } from '../core/LessonPlayer';
 import { phaseLabel } from '../astro/mission';
@@ -215,6 +216,7 @@ export class UI {
   private readonly infoBody = $('info-body');
   private readonly infoDesc = $('info-desc');
   private readonly infoWiki = $<HTMLAnchorElement>('info-wiki');
+  private readonly scope = new ScopeCard($('info-scope'), $<HTMLButtonElement>('info-scope-btn'), $('info-scope-view'));
   private readonly settingsPanel = $('settings');
   private readonly help = $('help');
   private readonly about = $('about');
@@ -1022,6 +1024,12 @@ export class UI {
       if (page) { if (this.infoWiki.getAttribute('href') !== page) this.infoWiki.href = page; }
       if (this.infoWiki.hidden !== !page) this.infoWiki.hidden = !page;
     }
+    const h = this.host;
+    const scopeKey = this.info.hidden ? null
+      : `${h.universe.current.catalogIndex}|${selected?.id ?? ''}|${h.selectedStar ?? ''}|${h.selectedGalaxy ?? ''}|${h.selectedLandmark ?? ''}`;
+    this.scope.sync(scopeKey, () => scopeTargetFor({
+      universe: h.universe, selected, star: h.selectedStar, galaxy: h.selectedGalaxy, landmark: h.selectedLandmark,
+    }), h.time.jd, now);
   }
 
   /** the `?open=` key of the selection, which the encyclopedia index maps to a page */

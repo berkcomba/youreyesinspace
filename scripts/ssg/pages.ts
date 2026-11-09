@@ -5,9 +5,13 @@ import { KIND_LABELS, STATUS_LABELS, type SkyEvent } from '../../src/data/events
 import { LANDMARK_KIND_LABEL } from '../../src/data/landmarks';
 import type { BodyData } from '../../src/data/types';
 import { GALAXY_TYPE_LABEL } from '../../src/galaxy/GalaxyModel';
+import { CATALOG } from '../../src/galaxy/galaxies';
+import { SOLAR_SYSTEM } from '../../src/data/solarSystem';
+import { blackHoleTarget, galaxyTarget, landmarkTarget, solarTarget, starTarget } from '../../src/scope/targets';
+import type { ScopeTarget } from '../../src/scope/types';
 import { typeLabel } from '../../src/ui/format';
 import { CONSTELLATIONS, PC_LY, constellationAt, epochFor, fmtDec, fmtRa, midnightMonth, sceneToRaDec, visibility } from './astro';
-import { a, appUrl, currentLang, esc, factTable, linkList, locator, openButton, section, t, url, w, type Page } from './html';
+import { a, appUrl, currentLang, esc, factTable, linkList, locator, openButton, scopeFigure, section, t, url, w, type Page } from './html';
 import { tidyBayer } from './catalog';
 import { AZ_PATH, searchForm } from './az';
 import { dateLong, lat, ly, mag, monthName, pc, plain, sig, years } from './format';
@@ -24,6 +28,11 @@ export function conName(abbr: string): string {
   const c = CONSTELLATIONS[abbr];
   if (!c) return abbr;
   return currentLang() === 'tr' ? c[1] : c[0];
+}
+
+/** "From the Earth, through a telescope" */
+function scopeSection(target: ScopeTarget | null): string {
+  return target ? section(t('Dünya\'dan teleskopla'), scopeFigure(target)) : '';
 }
 
 function conLink(site: Site, abbr: string): string {
@@ -141,6 +150,7 @@ export function starPage(s: StarEntry, site: Site): Page {
   const body = [
     facts,
     section(w('Gökyüzünde'), locator({ ra: s.ra, dec: s.dec, ly: lyDist, mag: s.mag, con: s.con, name: s.name }) + skyParagraph(s.ra, s.dec, s.mag)),
+    scopeSection(starTarget({ name: s.name, ra: s.ra, dec: s.dec, mag: s.mag, bv: cat.bv[i] })),
     section(w('Işığın yolculuğu'), lightParagraph(lyDist, buildYear)),
     section(w('Oradan bakınca Güneş'), fromThere),
     planets.length ? section(w('Gezegenleri'), planetList) : '',
@@ -339,6 +349,7 @@ export function dsoPage(d: DsoEntry, site: Site): Page {
       ...coordRows(def.ra, def.dec),
     ]),
     section(w('Gökyüzünde'), locator({ ra: def.ra, dec: def.dec, ly: def.distancePc !== undefined ? def.distancePc * PC_LY : undefined, con: d.con, name }) + skyParagraph(def.ra, def.dec, null)),
+    scopeSection(landmarkTarget(def, name, hostGalaxy ? hostGalaxy.distMpc * 1e6 : undefined)),
     def.distancePc !== undefined ? section(w('Işığın yolculuğu'), lightParagraph(def.distancePc * PC_LY, +site.buildDate.slice(0, 4))) : '',
     openButton(appUrl({ open: `landmark:${def.id}` })),
   ].join('\n');
@@ -379,6 +390,7 @@ export function galaxyPage(g: GalaxyEntry, site: Site): Page {
       [w('Kaynak'), esc(g.source === 'curated' ? w('Derlenmiş katalog (NED, yaklaşık değerler)') : g.source === 'ungc' ? 'Updated Nearby Galaxy Catalog (Karachentsev et al. 2013)' : '2MASS Redshift Survey (Huchra et al. 2012)')],
     ]),
     section(w('Gökyüzünde'), locator({ ra: g.ra, dec: g.dec, ly: lyDist, mag: appMag, con: g.con, name }) + skyParagraph(g.ra, g.dec, appMag)),
+    scopeSection(galaxyTarget({ ...CATALOG.find((c) => c.name === g.name), ...g }, name)),
     section(w('Işığın yolculuğu'), lightParagraph(lyDist, +site.buildDate.slice(0, 4))),
     openButton(appUrl({ open: `galaxy:${g.name}` })),
   ].join('\n');
@@ -415,6 +427,7 @@ export function blackHolePage(entry: Site['blackHoles'][number], site: Site): Pa
       ...Object.entries(bh?.facts ?? {}).map(([k, v]) => [t(k), esc(t(v))] as [string, string]),
       bh?.discovered ? [w('Keşif'), esc(t(bh.discovered))] : null,
     ]),
+    scopeSection(blackHoleTarget(e.bodyId, e.name)),
     `<p>${esc(w('Olay ufku, kaçış hızının ışık hızına eşit olduğu sınırdır: içeriden hiçbir şey, ışık bile dışarı çıkamaz. Yarıçapı kütleyle doğru orantılıdır (Schwarzschild yarıçapı, dönmeyen bir kara delik için).'))}</p>`,
     openButton(appUrl({ open: `bh:${e.id}` })),
   ].join('\n');
@@ -481,6 +494,7 @@ export function solarPage(entry: Site['solar'][number], site: Site): Page {
   const lede = b.description ? esc(t(b.description)) : esc(typeLabel(b.type));
   const body = [
     facts,
+    scopeSection(solarTarget(b.id, SOLAR_SYSTEM, t)),
     children.length ? section(b.type === 'star' ? w('Çevresinde dolananlar') : w('Uyduları ve çevresindekiler'), linkList(children.map((c) => ({ href: url(`/solar-system/${c.slug}`), label: t(c.body.name), note: typeLabel(c.body.type) })), 'w-list w-cols')) : '',
     openButton(appUrl({ target: b.id })),
   ].join('\n');

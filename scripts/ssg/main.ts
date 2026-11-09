@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { initI18n, type Locale } from '../../src/i18n';
+import { scopeStrings } from '../../src/scope/strings';
 import { BLACK_HOLES } from '../../src/data/blackholes';
 import { deepSkyLandmarks, type DeepSkyData } from '../../src/data/DeepSky';
 import { EVENTS } from '../../src/data/events';
@@ -180,6 +181,7 @@ export async function generate({ root, args, buildId }: { root: string; args: st
     bytes += search.length;
     const skyJson = JSON.stringify({ ...sky, t: locatorStrings(), n: Object.fromEntries(Object.keys(CONSTELLATIONS).map((k) => [k, conName(k)])) });
     fs.writeFileSync(path.join(opt.out, url('/encyclopedia/sky.json', lang)), skyJson);
+    fs.writeFileSync(path.join(opt.out, url('/encyclopedia/scope.json', lang)), JSON.stringify(scopeStrings()));
     const list: Array<[string, () => Page]> = [
       ...hubPages(site).map((p) => ['hubs', () => p] as [string, () => Page]),
       ...azPages(entries).map((p) => ['hubs', () => p] as [string, () => Page]),

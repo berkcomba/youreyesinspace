@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { _, LOCALES, type Locale } from '../../src/i18n';
+import type { ScopeTarget } from '../../src/scope/types';
 
 export const SITE = 'https://youreyesinspace.com';
 export const LANGS: Locale[] = ['en', 'tr', 'de', 'es', 'fr'];
@@ -93,6 +94,13 @@ export function locator(o: { ra: number; dec: number; ly?: number; mag?: number 
   if (o.fov) attrs.push(`data-fov="${o.fov}"`);
   if (o.area) attrs.push('data-area="1"');
   return `<figure class="w-loc" ${attrs.join(' ')}></figure>`;
+}
+
+/** the telescope view (/wiki/scope.js, from src/scope): the object goes into the page as JSON */
+export function scopeFigure(target: ScopeTarget | null): string {
+  if (!target) return '';
+  const json = JSON.stringify(target, (_k, v: unknown) => (typeof v === 'number' ? Number(v.toPrecision(7)) : v));
+  return `<figure class="w-scope" data-t="${esc(json)}"></figure>`;
 }
 
 export function locatorStrings(): Record<string, string> {
@@ -223,7 +231,7 @@ export function render(p: Page, buildId: string, available: Locale[] = LANGS): s
       <div class="w-langs">${langLinks}</div>
       <p>${esc(w('Your Eyes In Space, gözlemlenebilir evreni gerçek verilerle tarayıcıda gezdiren ücretsiz ve açık kaynaklı bir simülasyondur. Bu sayfadaki değerler simülasyonun kullandığı kataloglardan hesaplanmıştır.'))}</p>
       <p>${esc(w('Kaynaklar'))}: HYG / AT-HYG (David Nash, CC BY-SA 4.0) · ESA Gaia · NASA Exoplanet Archive · NASA/JPL · ATNF Pulsar Catalogue · HEASARC · NED · IAU. <a href="https://github.com/berkcomba/youreyesinspace">${esc(w('Kaynak kodu'))}</a> (AGPL-3.0)</p>
-    </footer>${[...(p.scripts ?? []), ...(p.body.includes('class="w-loc"') ? ['/wiki/locator.js'] : [])].map((s) => `\n    <script src="${s}?v=${buildId}" defer></script>`).join('')}
+    </footer>${[...(p.scripts ?? []), ...(p.body.includes('class="w-loc"') ? ['/wiki/locator.js'] : []), ...(p.body.includes('class="w-scope"') ? ['/wiki/scope.js'] : [])].map((s) => `\n    <script src="${s}?v=${buildId}" defer></script>`).join('')}
   </body>
 </html>
 `;
