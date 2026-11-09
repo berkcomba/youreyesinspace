@@ -3,7 +3,7 @@
  * arcsec²) on a W×H grid north up and east left, plus a list of point sources. The GPU adds the
  * atmosphere, the optics and the eye (gl.ts); this module only paints what is there.
  */
-import type { Instrument } from './instruments';
+import { bandWeights, type Instrument, type Line } from './instruments';
 import type { MoonSpot, SolarGeo, V3 } from './ephem';
 import { raDecVec, vec } from './ephem';
 import type { DiskLook, ScopeDeep, ScopeTarget } from './types';
@@ -30,7 +30,22 @@ export interface SceneInput {
   images: Images;
   jd: number;
   visual: boolean;
+  /** effective wavelength of the picture, metres (what the dust lets through) */
+  lam: number;
+  /** wavelength of each picture channel (camera); a painter that honours them marks the scene `banded` */
+  lams?: [number, number, number];
+  /** a line filter, and the fraction of the continuum it passes */
+  line?: Line;
+  cont?: number;
 }
+
+/** how much of a nebula's light a line filter passes, by kind */
+const LINE_T: Record<Line, Partial<Record<ScopeDeep['kind'], number>>> = {
+  uhc: { nebula: 0.85, pn: 0.9, snr: 0.85 },
+  oiii: { nebula: 0.45, pn: 0.9, snr: 0.85 },
+  ha: { nebula: 1, pn: 0.6, snr: 0.8 },
+  duo: { nebula: 1, pn: 1, snr: 1 },
+};
 
 export type Note = [string, Record<string, string | number>?];
 
@@ -45,6 +60,8 @@ export interface Scene {
   /** radio: brightest value after the beam */
   radioPeak: number;
   notes: Note[];
+  /** the sky is already in the camera's bands (not in visible r, g, b) */
+  banded: boolean;
 }
 
 /* ------------------------------------------------------------------ colour */
@@ -90,6 +107,7 @@ class Canvas {
   readonly sky: Float32Array;
   stars: number[] = [];
   peak = 0;
+  banded = false;
   constructor(readonly W: number, readonly H: number, readonly s: number) {
     this.sky = new Float32Array(W * H * 4);
   }
@@ -105,19 +123,43 @@ class Canvas {
     this.stars.push(X, Y, flux, seed % 9973, rgb[0], rgb[1], rgb[2], 0);
   }
 
+  /** a small elliptical Gaussian (σ along and across `ang`, arcsec) of total `flux`, into the sky */
+  blob(x: number, y: number, sa: number, sb: number, ang: number, flux: number, rgb: readonly number[]): void {
+    const s = this.s;
+    const X = this.W / 2 + x / s - 0.5, Y = this.H / 2 - y / s - 0.5;
+    const r = 3 * Math.max(sa, sb) / s;
+    if (X < -r || X > this.W + r || Y < -r || Y > this.H + r || !(flux > 0)) return;
+    // below a pixel: all of it in the nearest one
+    const ea = Math.max(sa, 0.45 * s), eb = Math.max(sb, 0.45 * s);
+    const c = Math.cos(ang), sn = Math.sin(ang);
+    const k = flux / (2 * Math.PI * ea * eb);
+    const i0 = Math.max(0, Math.floor(X - r)), i1 = Math.min(this.W - 1, Math.ceil(X + r));
+    const j0 = Math.max(0, Math.floor(Y - r)), j1 = Math.min(this.H - 1, Math.ceil(Y + r));
+    for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) {
+      const dx = (i - X) * s, dy = (Y - j) * s;
+      const u = dx * c + dy * sn, v = -dx * sn + dy * c;
+      const g = k * Math.exp(-0.5 * ((u / ea) ** 2 + (v / eb) ** 2));
+      if (g < k * 0.011) continue;
+      const o = (j * this.W + i) * 4;
+      this.sky[o] += g * rgb[0]; this.sky[o + 1] += g * rgb[1]; this.sky[o + 2] += g * rgb[2];
+      const yv = lum(this.sky.subarray(o, o + 3));
+      if (yv > this.peak) this.peak = yv;
+    }
+  }
+
   /**
    * Paints an extended source given by `shade` (unnormalised surface brightness) inside a box of
    * half-size `ext` arcsec around (cx, cy), scaled so that it adds up to `flux`. Too small to be
    * resolved on this grid, it becomes a point source of the same colour.
    */
-  extended(cx: number, cy: number, ext: number, flux: number, shade: Shade, seed = 1): void {
+  extended(cx: number, cy: number, ext: number, flux: number, shade: Shade, seed = 1, norm: Shade = shade): void {
     if (!(flux > 0)) return;
     const c = [0, 0, 0];
-    // normalisation over the whole object (it may overflow the field)
+    // normalisation over the whole object (it may overflow the field), in the broad band (`norm`)
     const n = 96, step = (2 * ext) / n;
     let sy = 0, sr = 0, sg = 0, sb = 0;
     for (let a = 0; a < n; a++) for (let b = 0; b < n; b++) {
-      if (!shade(-ext + (a + 0.5) * step, -ext + (b + 0.5) * step, c)) continue;
+      if (!norm(-ext + (a + 0.5) * step, -ext + (b + 0.5) * step, c)) continue;
       sr += c[0]; sg += c[1]; sb += c[2]; sy += lum(c);
     }
     if (!(sy > 0)) return;
@@ -405,8 +447,11 @@ function fieldStars(cv: Canvas, seed: number, ra: number, dec: number, lim: numb
 }
 
 const S_BULGE = srgb(1.0, 0.88, 0.72), S_DISK = srgb(0.84, 0.88, 1.0);
+const S_YOUNG = srgb(0.62, 0.74, 1.0), S_HII = srgb(1.0, 0.42, 0.62);
+const sstep = (a: number, b: number, x: number) => { const u = Math.max(0, Math.min(1, (x - a) / (b - a))); return u * u * (3 - 2 * u); };
 
-function paintGalaxy(cv: Canvas, t: ScopeDeep, visual: boolean): void {
+function paintGalaxy(cv: Canvas, t: ScopeDeep, inp: SceneInput): void {
+  const visual = inp.visual;
   const R = Math.max(t.size / 2, cv.s);
   let q = Math.max(0.12, t.axis ?? 1);
   const pa = (t.pa ?? 0) * DEG;
@@ -421,46 +466,128 @@ function paintGalaxy(cv: Canvas, t: ScopeDeep, visual: boolean): void {
   const h = R / 3.2;
   const BT = elliptical ? 1 : type === 'S0' ? 0.55 : type === 'Irr' ? 0 : 0.22;
   const Ib = BT / (22.66 * Re * Re * qb), Id = (1 - BT) / (2 * Math.PI * h * h * q);
-  const pitch = Math.tan(16 * DEG);
   const seed = hashStr(t.name) % 1000;
+  const pitch = Math.tan((15 + (seed % 9)) * DEG);
   const minR = cv.s * 0.5;
   const lanePa = 122 * DEG, ls = Math.sin(lanePa), lc = Math.cos(lanePa);
-  cv.extended(0, 0, R * 1.6, flux, (x, y, out) => {
+  // per picture channel, at its wavelength: dust opaque to blue light and nearly clear in the near
+  // infrared (A ∝ λ^-1.6), glowing itself from ~3 µm (PAH) on; young stars and ionised gas fading
+  // against the old red stars; the channel's band made of the visible colour
+  const lams = inp.lams && !visual ? inp.lams : ([610e-9, 550e-9, 460e-9] as const);
+  const W = lams.map((l, c) => (inp.lams && !visual ? bandWeights(l) : [c === 0 ? 1 : 0, c === 1 ? 1 : 0, c === 2 ? 1 : 0]));
+  const dustK = lams.map((l) => Math.min(1.3, (0.55e-6 / l) ** 1.6));
+  const glowK = lams.map((l) => (l > 5e-6 ? 1 : l > 3e-6 ? 0.22 : 0));
+  const oldK = lams.map((l) => (l > 5e-6 ? 0.12 : 1));
+  const young = lams.map((l) => Math.min(1, (0.7e-6 / l) ** 1.5));
+  const band = (c: number, v: readonly number[]) => W[c][0] * v[0] + W[c][1] * v[1] + W[c][2] * v[2];
+  cv.banded = !visual && !!inp.lams;
+  const cont = inp.cont ?? 1;
+  const lineK = inp.line === 'ha' || inp.line === 'duo' ? 1 : inp.line === 'oiii' ? 0.25 : inp.line === 'uhc' ? 0.6 : 0;
+  const spiral = type === 'S' || type === 'SB';
+  // faint, low-contrast structure is lost on the dark-adapted eye; only big apertures bring out the arms
+  const kv = visual ? Math.min(0.6, 0.1 + 0.35 * Math.log10(Math.max(1, inp.ins.D / 100))) : 1;
+  /** the arms' phase at a point of the disk plane (0 on a crest) */
+  const armPhase = (u: number, v: number, rd: number) =>
+    2 * (Math.atan2(v, u) - Math.log(rd / h + 0.05) / pitch) + 0.5 * (fbm3(u * 1.2, v * 1.2, seed + 5, 3) - 0.5);
+  const vis = [0, 0, 0];
+  const shade = (lineMode: boolean): Shade => (x, y, out) => {
     const a = -x * sp + y * cp, b = x * cp + y * sp;
     const rb = Math.max(minR, Math.hypot(a, b / qb));
     const bulge = BT > 0 ? Ib * Math.exp(-7.669 * ((rb / Re) ** 0.25 - 1)) : 0;
-    let disk = 0;
+    let disk = 0, blueK = 0, tau = 0, glow = 0;
     if (BT < 1) {
       const rd = Math.max(minR, Math.hypot(a, b / q));
-      disk = Id * Math.exp(-rd / h);
-      if (type === 'S' || type === 'SB') {
-        const th = Math.atan2(b / q, a);
-        const ph = 2 * (th - Math.log(rd / h + 0.05) / pitch);
-        const arm = Math.cos(ph);
-        const on = Math.min(1, Math.max(0, (rd / h - 0.4)));
-        disk *= 1 + 0.7 * arm * on * (0.7 + 0.6 * noise3(a / h * 2, b / q / h * 2, seed));
-        // dust on the inner edge of the arms, star-forming knots along their crests
-        disk *= 1 - 0.45 * on * Math.max(0, Math.cos(ph - 0.9)) ** 6;
-        disk *= 1 + 1.6 * on * Math.max(0, arm) ** 3 * Math.max(0, noise3(a / h * 9, b / q / h * 9, seed + 7) - 0.15) * 2;
+      const u = a / h, v = b / q / h;
+      const d0 = Id * Math.exp(-rd / h);
+      disk = d0;
+      if (spiral) {
+        const ph = armPhase(u, v, rd);
+        const arm = Math.max(0, Math.cos(ph));
+        const on = Math.min(1, Math.max(0, rd / h - 0.35));
+        // structure drawn out along the arms: noise in (phase, radius), continuous across the arms' wrap
+        const pu = Math.cos(ph / 2) * 3, pv = Math.sin(ph / 2) * 3, pr = (rd / h) * 2.2;
+        const floc = 0.55 + 0.9 * fbm3(pu, pv, pr + seed, 3);
+        disk *= 1 + kv * (-0.55 * on + 1.3 * on * arm ** 2 * floc);
+        // the arms' crests are where the young blue stars are
+        blueK = d0 * on * arm ** 4 * floc * 0.8;
+        // thin dust lanes on the arms' inner edges, feathers and spurs between them
+        const lane = on * Math.max(0, Math.cos(ph - 0.55)) ** 18 * (0.45 + fbm3(pu * 2, pv * 2, pr * 2 + seed + 3, 3));
+        const ridge = 1 - Math.abs(2 * fbm3(pu * 1.6, pv * 1.6, pr * 2.4 + seed + 23, 3) - 1);
+        const patch = sstep(0.42, 0.68, fbm3(u * 1.4, v * 1.4, seed + 31, 3));
+        const fil = sstep(0.86, 0.97, ridge) * patch * Math.exp(-rd / (2.2 * h)) * sstep(0.35, 1, rd / h);
+        tau = kv * (2.2 * lane + 0.6 * fil);
+        glow = d0 * (2 * lane + fil);
         if (type === 'SB') disk += Id * 0.9 * Math.exp(-((a / (0.45 * h * 2.2)) ** 2 + (b / (0.12 * h * 2.2)) ** 2) * 2);
-        if (q < 0.4) disk *= 1 - 0.65 * Math.exp(-(((b - 0.03 * R) / (0.05 * R)) ** 2)) * Math.min(1, rd / (0.15 * R));
+        if (q < 0.4) {
+          const l = Math.exp(-(((b - 0.03 * R) / (0.05 * R)) ** 2)) * Math.min(1, rd / (0.15 * R)) * (0.6 + 0.8 * fbm3(a / R * 14, b / R * 14, seed + 9, 3));
+          tau += 2.4 * l * Math.sqrt(kv);
+          glow += d0 * 2 * l;
+        }
       } else if (type === 'Irr') {
-        disk *= 0.35 + 1.3 * fbm3(a / h * 1.6, b / q / h * 1.6, seed, 4) ** 2;
+        disk *= 0.35 + 1.3 * fbm3(u * 1.6, v * 1.6, seed, 4) ** 2;
+        blueK = disk * Math.max(0, fbm3(u * 5, v * 5, seed + 11, 3) - 0.4);
       }
     }
     // fade out before the edge of the painted box
     const re = Math.hypot(a, b / q) / R;
-    let f = re < 1.15 ? 1 : Math.max(0, 1 - (re - 1.15) / 0.4) ** 2;
+    const f = re < 1.15 ? 1 : Math.max(0, 1 - (re - 1.15) / 0.4) ** 2;
     if (lane) {
       const la = -x * ls + y * lc, lb = x * lc + y * ls;
-      f *= 1 - 0.85 * Math.exp(-(((lb + 0.02 * R) / (0.075 * R)) ** 2)) * Math.exp(-((la / (0.62 * R)) ** 6)) * (0.75 + 0.5 * noise3(la / R * 8, lb / R * 8, 3));
+      const l = Math.exp(-(((lb + 0.02 * R) / (0.075 * R)) ** 2)) * Math.exp(-((la / (0.62 * R)) ** 6)) * (0.75 + 0.5 * noise3(la / R * 8, lb / R * 8, 3));
+      tau += 2 * l;
+      glow += (bulge + disk) * 0.6 * l;
     }
     const blue = visual ? 0.6 : 1;
-    out[0] = (bulge * S_BULGE[0] + disk * (S_DISK[0] + (1 - blue) * 0.2)) * f;
-    out[1] = (bulge * S_BULGE[1] + disk * S_DISK[1]) * f;
-    out[2] = (bulge * S_BULGE[2] + disk * S_DISK[2] * blue) * f;
+    for (let c = 0; c < 3; c++) {
+      // the bulge lies partly in front of the dust
+      const ext = Math.exp(-tau * dustK[c]);
+      for (let j = 0; j < 3; j++) {
+        const tint = j === 0 ? S_DISK[0] + (1 - blue) * 0.2 : j === 2 ? S_DISK[2] * blue : S_DISK[1];
+        vis[j] = (bulge * S_BULGE[j] * Math.sqrt(ext) + (disk * tint + blueK * young[c] * S_YOUNG[j]) * ext) * oldK[c];
+      }
+      let v = band(c, vis) + glow * glowK[c] * 0.9;
+      if (lineMode) v *= cont;
+      out[c] = Math.max(0, v) * f;
+    }
     return bulge + disk > 0;
-  }, seed);
+  };
+  cv.extended(0, 0, R * 1.6, flux, shade(!!inp.line), seed, shade(false));
+  // star-forming regions (pink, Hα) and young clusters (blue) along the arms, once they are resolved
+  if ((spiral || type === 'Irr') && R / cv.s > 25) {
+    const r = rng(seed * 7919 + 13);
+    const along = Math.atan2(cp, -sp);
+    const place = (): [number, number] | null => {
+      const rd = -h * Math.log(Math.max(1e-9, r() * r()));
+      if (rd > R * 1.05 || rd < 0.4 * h) return null;
+      let th: number;
+      if (spiral) {
+        th = Math.log(rd / h + 0.05) / pitch + (r() < 0.5 ? 0 : Math.PI) + gauss(r) * 0.16;
+        const u0 = (rd * Math.cos(th)) / h, v0 = (rd * Math.sin(th)) / h;
+        th -= 0.25 * (fbm3(u0 * 1.2, v0 * 1.2, seed + 5, 3) - 0.5);
+      } else th = r() * 2 * Math.PI;
+      const A = rd * Math.cos(th), B = rd * Math.sin(th) * q;
+      return [-A * sp + B * cp, A * cp + B * sp];
+    };
+    const sets: Array<[number, number, number, readonly number[]]> = [
+      // count, share of the light, size (of R), colour
+      [420, 0.035, 0.0045, S_HII],
+      [560, 0.04, 0.003, S_YOUNG],
+    ];
+    sets.forEach(([n, share, size, col], si) => {
+      const hii = si === 0;
+      const each = (flux * share * kv) / n;
+      const c = [0, 1, 2].map((k) => {
+        if (inp.line) return hii ? lineK * 1.4 * col[k] : cont * col[k] * young[k];
+        return Math.max(0, band(k, col)) * young[k] * oldK[k] + (hii ? glowK[k] * 2 : 0);
+      });
+      for (let i = 0; i < n; i++) {
+        const p = place();
+        if (!p) continue;
+        const sz = R * size * (0.4 + 1.8 * r() ** 2.5);
+        cv.blob(p[0], p[1], sz, sz * Math.max(q, 0.3), along, each * Math.exp(gauss(r) * 0.8), c);
+      }
+    });
+  }
   if (t.special === 'm87') {
     // the jet: ~20″ to the west-north-west, a knotty thread of synchrotron light
     const jp = 290 * DEG, js = Math.sin(jp), jc = Math.cos(jp);
@@ -578,6 +705,38 @@ function paintNebula(cv: Canvas, t: ScopeDeep, visual: boolean): void {
   if (t.kind === 'pn' && t.size > 8) cv.star(0, 0, flux * 0.03, bvRgb(-0.3), 7);
 }
 
+/**
+ * The S-stars around Sgr A* in the K band: S2 on its measured orbit (GRAVITY 2018), the others
+ * representative, Sgr A* itself as a faint flickering source, a few bright IRS 16 stars further out.
+ */
+function paintSStars(cv: Canvas, jd: number, seed: number, lam: number): void {
+  // the magnitudes are K band; the dust takes more at shorter wavelengths (A_K ≈ 2.5, A ∝ λ^-1.75)
+  const dim = 10 ** (-0.4 * 2.5 * ((2.2e-6 / lam) ** 1.75 - 1));
+  const put = (x: number, y: number, f: number, rgb: [number, number, number], s: number) => cv.star(x, y, f * dim, rgb, s);
+  const year = 2000 + (jd - 2_451_545) / 365.25;
+  const a = 0.1255, e = 0.8843, inc = 134.18 * DEG, node = 226.94 * DEG, peri = 65.51 * DEG, P = 16.0518, tp = 2018.379;
+  const M = (2 * Math.PI * (((year - tp) / P) % 1) + 4 * Math.PI) % (2 * Math.PI);
+  let E = M;
+  for (let k = 0; k < 30; k++) E -= (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E));
+  const X = Math.cos(E) - e, Y = Math.sqrt(1 - e * e) * Math.sin(E);
+  const ci = Math.cos(inc), cw = Math.cos(peri), sw = Math.sin(peri), cO = Math.cos(node), sO = Math.sin(node);
+  // Thiele–Innes constants: A, F → declination, B, G → right ascension
+  const A = a * (cw * cO - sw * sO * ci), B = a * (cw * sO + sw * cO * ci);
+  const F = a * (-sw * cO - cw * sO * ci), G = a * (-sw * sO + cw * cO * ci);
+  const dDec = A * X + F * Y, dRa = B * X + G * Y;
+  put(-dRa, dDec, 10 ** (-0.4 * 14.1), bvRgb(-0.2), 2);
+  const r = rng(seed ^ 0x9e3779b9);
+  put(0, 0, 10 ** (-0.4 * (16.3 + r() * 1.2)), bvRgb(1.6), 3);
+  for (let k = 0; k < 36; k++) {
+    const rr = 0.08 + 0.95 * r() ** 0.7, th = r() * 2 * Math.PI;
+    put(rr * Math.cos(th), rr * Math.sin(th), 10 ** (-0.4 * (14.6 + r() * 3)), bvRgb(r() < 0.7 ? -0.2 : 1.4), Math.floor(r() * 9973));
+  }
+  for (let k = 0; k < 7; k++) {
+    const rr = 1 + 2.5 * r(), th = r() * 2 * Math.PI;
+    put(rr * Math.cos(th), rr * Math.sin(th), 10 ** (-0.4 * (9.5 + r() * 2)), bvRgb(-0.25), Math.floor(r() * 9973));
+  }
+}
+
 function paintDeep(cv: Canvas, inp: SceneInput, notes: Note[]): void {
   const t = inp.target as ScopeDeep;
   const seed = hashStr(t.name);
@@ -587,7 +746,7 @@ function paintDeep(cv: Canvas, inp: SceneInput, notes: Note[]): void {
       cv.star(0, 0, 10 ** (-0.4 * t.mag), bvRgb(t.bv ?? (t.kind === 'pulsar' ? 0 : 0.65)), seed % 9973);
       break;
     case 'galaxy':
-      paintGalaxy(cv, t, inp.visual);
+      paintGalaxy(cv, t, inp);
       break;
     case 'globular':
       paintGlobular(cv, t, inp.lim);
@@ -596,7 +755,11 @@ function paintDeep(cv: Canvas, inp: SceneInput, notes: Note[]): void {
       paintOpen(cv, t, inp.lim);
       break;
     case 'bh':
-      if (t.special === 'sgra') notes.push(['nDust']);
+      if (t.special === 'sgra') {
+        // in the K band the dust dims the Galactic Centre by only ~3 mag instead of ~30
+        if (inp.lam > 1.1e-6) { paintSStars(cv, inp.jd, seed, inp.lam); notes.push(['nIrGc']); }
+        else notes.push(['nDust']);
+      }
       break;
     default:
       if (img && t.imgSpan) paintPhoto(cv, t, img, inp.visual);
@@ -805,6 +968,14 @@ export function buildScene(inp: SceneInput): Scene {
     paintSolar(cv, inp, notes);
     if (inp.target.primary.id !== 'sun' && inp.geo) fieldStars(cv, hashStr(inp.target.target), inp.geo.ra, inp.geo.dec, inp.lim);
   } else paintDeep(cv, inp, notes);
+  // a line filter: a nebula's own lines pass, the rest only with the filter's slice of the continuum
+  const cont = inp.cont ?? 1;
+  if (inp.line && cont < 1 && inp.ins.mode !== 'radio') {
+    const t = inp.target;
+    const k = t.kind === 'solar' ? cont : t.kind === 'galaxy' ? 1 : LINE_T[inp.line][t.kind] ?? cont;
+    if (k !== 1) { for (let i = 0; i < cv.sky.length; i++) cv.sky[i] *= k; cv.peak *= k; }
+    for (let i = 2; i < cv.stars.length; i += 8) cv.stars[i] *= cont;
+  }
   const stars = new Float32Array(cv.stars);
-  return { sky: cv.sky, stars, nStars: stars.length / 8, peak: cv.peak, radioPeak, notes };
+  return { sky: cv.sky, stars, nStars: stars.length / 8, peak: cv.peak, radioPeak, notes, banded: cv.banded };
 }

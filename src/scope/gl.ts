@@ -52,7 +52,7 @@ ${NOISE}
 // a Gaussian blur of sigma (px) at p (px): 13 taps on a golden-angle spiral over a prefiltered level
 float tapc(vec2 p, float s, int ch) {
   float lod = log2(max(1.0, s * 0.55));
-  float acc = 0.0, wsum = 0.0;
+  float acc = 0.0, cov = 0.0;
   float rot = hash12(floor(p)) * 6.2831;
   for (int k = 0; k < 13; k++) {
     float fk = float(k);
@@ -62,9 +62,10 @@ float tapc(vec2 p, float s, int ch) {
     float w = exp(-r * r / (2.0 * s * s + 1e-6));
     vec4 c = textureLod(uSky, q / uTexRes, lod);
     acc += w * (ch == 0 ? c.r : ch == 1 ? c.g : c.b);
-    wsum += w;
+    cov += w * c.a;
   }
-  return acc / wsum;
+  // alpha marks the picture, 0 in the power-of-two padding: a wide blur is not darkened at the edges
+  return acc / max(cov, 1e-6);
 }
 void main() {
   vec2 p = vec2(vUv.x, 1.0 - vUv.y) * uRes;
@@ -86,7 +87,7 @@ void main() {
   c.r = tapc(p - dp - vec2(0.0, -uDisp.r / uScale), uSigma.r / uScale, 0);
   c.g = tapc(p - dp - vec2(0.0, -uDisp.g / uScale), uSigma.g / uScale, 1);
   c.b = tapc(p - dp - vec2(0.0, -uDisp.b / uScale), uSigma.b / uScale, 2);
-  o = vec4(c * uExt, 1.0);
+  o = vec4(c * uExt, 0.0);
 }`;
 
 const VS_STAR = `#version 300 es
@@ -103,6 +104,7 @@ uniform float uScint;
 uniform float uColorTw;
 uniform float uExtent;
 uniform float uSkyY;
+uniform float uApert;
 uniform float uHaloA;
 uniform float uHaloW;
 uniform float uSpikeLen;
@@ -110,6 +112,7 @@ out vec2 vOff;
 flat out vec3 vCol;
 flat out float vSeed;
 flat out float vR;
+flat out float vSat;
 float wob(float t, float s) {
   return (sin(t * 7.3 + s * 1.7) + 0.6 * sin(t * 13.1 + s * 4.1) + 0.35 * sin(t * 23.7 + s * 2.9) + 0.2 * sin(t * 41.3 + s * 7.7)) / 1.25;
 }
@@ -130,6 +133,9 @@ void main() {
   float r = clamp(max(uExtent, max(rHalo, rSpike)), 2.5 * uScale, 260.0 * uScale);
   vOff = aPos * r;
   vR = r;
+  // the eye sees a star's colour by its total light through the aperture, not by the glow around it
+  float mEff = -2.5 * log(f / ${ENC.toExponential()}) / log(10.0) - uApert;
+  vSat = smoothstep(5.0, 2.0, mEff);
   vCol = col;
   vSeed = s;
   vec2 c = aA.xy + vec2(jit.x, -jit.y) / uScale + vec2(aPos.x, -aPos.y) * r / uScale;
@@ -142,6 +148,7 @@ in vec2 vOff; // arcsec from the star, +x west, +y north
 flat in vec3 vCol;
 flat in float vSeed;
 flat in float vR;
+flat in float vSat;
 uniform float uScale;
 uniform float uTime;
 uniform vec3 uLamD;     // λ/D per channel, arcsec
@@ -179,7 +186,9 @@ float airy(float r, float lamD) {
   float a = 2.0 * j1(x) / x;
   if (e > 0.0) a -= e * e * 2.0 * j1(e * x) / (e * x);
   a /= (1.0 - e * e);
-  return norm * a * a;
+  // a filter's bandwidth (λ/Δλ ~ 4) washes the outer rings into their mean envelope
+  float env = 4.0 * (1.0 + e) / (3.14159265 * x * x * x * (1.0 - e * e) * (1.0 - e * e));
+  return norm * mix(a * a, env, smoothstep(9.0, 20.0, x));
 }
 float gauss(float r, float s) { return exp(-r * r / (2.0 * s * s)) / (6.2831853 * s * s); }
 float psf(vec2 off, float lamD) {
@@ -215,7 +224,9 @@ void main() {
   c.b = psf(vOff - vec2(0.0, uDisp.b), uLamD.b) * vCol.b;
   // the sprite is a square: fade the far wings out before its edge
   c *= 1.0 - smoothstep(0.7 * vR, vR, length(vOff));
-  o = vec4(min(c * uExt, vec3(60000.0)), 1.0);
+  c = min(c * uExt, vec3(60000.0));
+  // alpha: the part of this light whose colour the eye can tell
+  o = vec4(c, dot(c, vec3(0.2126, 0.7152, 0.0722)) * vSat);
 }`;
 
 const FS_OUT = `#version 300 es
@@ -234,6 +245,7 @@ uniform float uNoise;
 uniform float uSoft;
 uniform float uWhite;
 uniform float uMono;
+uniform float uPix;
 out vec4 o;
 ${NOISE}
 vec3 cmap(float t) {
@@ -247,8 +259,11 @@ vec3 cmap(float t) {
 float lum(vec3 c) { return dot(c, vec3(0.2126, 0.7152, 0.0722)); }
 void main() {
   vec2 uv = 0.5 + (vUv - 0.5) * uFlip;
+  // the camera's pixels, once they are larger than the screen's
+  if (uPix > 1.5) uv = (floor(uv * uRes / uPix) + 0.5) * uPix / uRes;
   vec2 fc = gl_FragCoord.xy;
-  vec3 s = texture(uImg, uv).rgb;
+  vec4 s4 = texture(uImg, uv);
+  vec3 s = s4.rgb;
   vec3 col;
   float g1 = hash12(fc + fract(uTime * 7.13) * 917.0) - 0.5;
   float g2 = hash12(fc * 1.37 + fract(uTime * 3.71) * 533.0) - 0.5;
@@ -257,13 +272,16 @@ void main() {
     float v = s.r / uWhite + uNoise * (g1 + g2) * 1.7;
     col = cmap(uSoft >= 1.0 ? v : asinh(max(v, -0.02) / uSoft) / asinh(1.0 / uSoft));
   } else if (uMode == 1) {
-    float st = hash12(fc) - 0.5, st2 = hash12(fc * 1.91 + 7.0) - 0.5;
+    vec2 pc = uPix > 1.5 ? floor(uv * uRes / uPix) : fc;
+    float st = hash12(pc) - 0.5, st2 = hash12(pc * 1.91 + 7.0) - 0.5;
     vec3 v = s + uNoise * (st + st2) * 1.7;
     float y = lum(v);
-    float m = asinh(max(y, -uSoft) / uSoft) / asinh(uWhite / uSoft);
+    float m = clamp(asinh(max(y, -uSoft) / uSoft) / asinh(uWhite / uSoft), 0.0, 1.0);
     vec3 hue = y > 1e-9 ? clamp(v / y, 0.0, 3.0) : vec3(1.0);
-    hue = mix(hue, vec3(1.0, 0.97, 0.92), uMono);
-    col = clamp(m, 0.0, 1.0) * mix(vec3(1.0), hue, clamp(m * 1.4, 0.0, 1.0));
+    hue = mix(hue, vec3(1.0), uMono);
+    // colour down to the faint parts, as in a colour-balanced composite; hue kept where it saturates
+    col = m * mix(vec3(1.0), hue, clamp(m * 5.0, 0.0, 1.0));
+    col /= max(1.0, max(col.r, max(col.g, col.b)));
   } else {
     vec3 e = (s + uSky) * uGain;
     float y = max(lum(e), 1e-12);
@@ -273,9 +291,11 @@ void main() {
     float d = clamp((v - vs * 0.82) / (1.0 - vs * 0.82), 0.0, 1.0);
     // colour only where the light is bright enough for the cones
     float mu = -2.5 * log(y / ${ENC.toExponential()}) / log(10.0);
-    float sat = smoothstep(17.5, 13.0, mu);
+    float sat = max(smoothstep(17.5, 13.0, mu), clamp(s4.a / max(lum(s), 1e-20), 0.0, 1.0));
     vec3 hue = mix(vec3(0.93, 0.97, 1.06), clamp(e / y, 0.0, 4.0), sat);
-    col = clamp(pow(d, 0.9) * hue, 0.0, 1.0);
+    // a bright star keeps its colour (Betelgeuse orange, Vega blue-white) instead of clipping to white
+    col = pow(d, 0.9) * hue;
+    col /= max(1.0, max(col.r, max(col.g, col.b)));
   }
   col = pow(col, vec3(1.0 / 2.2));
   // the dark-adapted eye's own noise, in display space so that it stays faint
@@ -333,6 +353,10 @@ export interface FrameParams {
   k: number;
   stop: number;
   noise: number;
+  /** detector pixel, screen pixels */
+  pix: number;
+  /** visual: 5 log10(D / 7 mm), how much brighter a star's colour shows than to the naked eye */
+  apert: number;
   soft: number;
   white: number;
   mono: number;
@@ -418,6 +442,7 @@ export class ScopeGL {
     this.TH = 1 << Math.ceil(Math.log2(H));
     gl.bindTexture(gl.TEXTURE_2D, this.skyTex);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, this.TW, this.TH, 0, gl.RGBA, gl.HALF_FLOAT, null);
+    for (let i = 3; i < sky.length; i += 4) sky[i] = 1;
     gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, W, H, gl.RGBA, gl.FLOAT, sky);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
@@ -474,6 +499,7 @@ export class ScopeGL {
       u1(p, 'uColorTw', f.colorTw);
       u1(p, 'uExtent', Math.max(4 * Math.max(f.sigSe, f.lamD[1]), 3 * f.scale));
       u1(p, 'uSkyY', skyY);
+      u1(p, 'uApert', f.apert);
       u1(p, 'uHaloA', f.haloA);
       u1(p, 'uHaloW', f.haloW);
       u1(p, 'uSpikeLen', f.spikes ? 1 : 0);
@@ -511,6 +537,7 @@ export class ScopeGL {
     u1(p, 'uSoft', f.soft);
     u1(p, 'uWhite', f.white);
     u1(p, 'uMono', f.mono);
+    u1(p, 'uPix', f.pix);
     gl.bindVertexArray(this.vaoQuad);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     gl.bindVertexArray(null);

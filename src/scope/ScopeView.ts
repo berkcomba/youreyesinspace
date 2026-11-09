@@ -5,7 +5,7 @@
  */
 import { ENC, ScopeGL, type FrameParams } from './gl';
 import { jdOf, solarGeometry, type SolarGeo } from './ephem';
-import { INSTRUMENTS, SKY_MU, airmass, instrument, limitingMag, magRange, type Instrument } from './instruments';
+import { EYEPIECES, INSTRUMENTS, SKY_MU, airmass, bandWeights, instrument, limitingMag, magRange, type Filter, type Instrument } from './instruments';
 import { buildScene, type Images, type Note, type Raster, type Scene } from './scene';
 import type { ScopeDeep, ScopeStrings, ScopeTarget } from './types';
 
@@ -61,6 +61,19 @@ function fmtAngle(a: number, lang: string): string {
   if (a >= 1e-3) return `${fmtNum(a * 1000, a >= 0.01 ? 0 : 1, lang)} mas`;
   return `${fmtNum(a * 1e6, 0, lang)} µas`;
 }
+/** a wavelength: nm, µm, mm, cm */
+function fmtLam(l: number, lang: string): string {
+  if (l >= 0.01) return `${fmtNum(l * 100, l >= 0.1 ? 0 : 1, lang)} cm`;
+  if (l >= 1e-4) return `${fmtNum(l * 1000, l >= 1e-3 ? 1 : 2, lang)} mm`;
+  if (l >= 1e-6) return `${fmtNum(l * 1e6, 2, lang)} µm`;
+  return `${fmtNum(l * 1e9, 0, lang)} nm`;
+}
+function fmtTime(t: number, lang: string): string {
+  if (t >= 3600) return `${fmtNum(t / 3600, t >= 36000 ? 0 : 1, lang)} h`;
+  if (t >= 60) return `${fmtNum(t / 60, t >= 600 ? 0 : 1, lang)} min`;
+  if (t >= 1) return `${fmtNum(t, t >= 10 ? 0 : 1, lang)} s`;
+  return `1/${Math.round(1 / t)} s`;
+}
 const tpl = (s: string, p: Record<string, string | number>) => Object.keys(p).reduce((o, k) => o.split(`{${k}}`).join(String(p[k])), s);
 
 const smooth = (a: number, b: number, x: number) => { const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
@@ -83,8 +96,27 @@ export class ScopeView {
   private seeSel = document.createElement('select');
   private skySel = document.createElement('select');
   private skyWrap!: HTMLElement;
+  private zoomRow!: HTMLElement;
+  private epSel = document.createElement('select');
+  private barIn = document.createElement('input');
+  private epRow!: HTMLElement;
+  private filSel = document.createElement('select');
+  private filRow!: HTMLElement;
+  private filName = document.createElement('span');
+  private expIn = document.createElement('input');
+  private expVal = document.createElement('span');
+  private expRow!: HTMLElement;
+  private cfgSel = document.createElement('select');
+  private cfgRow!: HTMLElement;
   private ins: Instrument;
   private M = 100;
+  /** eyepiece (index into EYEPIECES) and a 2× Barlow */
+  private ep = 2;
+  private barlow = false;
+  /** filter / band, array configuration, exposure (s) */
+  private fi = 0;
+  private cfg = 0;
+  private expo = 600;
   /** visual only: how much closer than the whole field stop the picture is shown */
   private crop = 1;
   private field = 60;
@@ -118,8 +150,9 @@ export class ScopeView {
     this.bortle = s.bortle ?? 4;
     this.geo = target.kind === 'solar' ? solarGeometry(target, this.jd) : null;
     // the observer's own telescope carries over between objects; the big ones are picked per object
-    const remembered = s.ins ? INSTRUMENTS.find((i) => i.id === s.ins && i.group === 'amateur') : undefined;
+    const remembered = s.ins ? INSTRUMENTS.find((i) => i.id === s.ins && (i.group === 'amateur' || i.group === 'commercial')) : undefined;
     this.ins = !this.deep?.prefer && remembered && this.shows(remembered) ? remembered : this.defaultInstrument();
+    this.resetExposure();
     this.resetZoom();
     const p = target.kind === 'solar' ? target.primary.id : '';
     if (p && p !== 'sun' && p !== 'moon') this.crop = 3;
@@ -196,16 +229,28 @@ export class ScopeView {
       let want: number;
       if (this.deep?.kind === 'star' || this.deep?.kind === 'pulsar') want = ins.D * 1.4;
       else if (t.kind === 'solar' && (t.primary.id === 'sun' || t.primary.id === 'moon')) want = (span * 0.75) / size;
-      else if (t.kind === 'solar') want = Math.max(ins.D * 1.2, (span * 0.18) / size);
+      // planets: about 1.25× the aperture in mm, what a good night allows
+      else if (t.kind === 'solar') want = ins.D * 1.25;
       // deep sky: no smaller exit pupil than ~2 mm (1 mm for small bright planetaries and globulars)
       else want = Math.min((span * 0.45) / size, ins.D / (this.deep?.kind === 'pn' || this.deep?.kind === 'globular' ? 1 : 2));
       this.M = Math.round(Math.max(lo, Math.min(hi, want)));
+      // the eyepiece (and Barlow) of the case that comes closest
+      if (ins.F) {
+        let best = Infinity;
+        for (const b of [false, true]) EYEPIECES.forEach((e, k) => {
+          const d = Math.abs(Math.log((ins.F! / e.f) * (b ? 2 : 1) / this.M)) + (b ? 0.02 : 0);
+          if (d < best) { best = d; this.ep = k; this.barlow = b; }
+        });
+        this.setEyepiece();
+      }
     } else {
       const [lo, hi] = this.fieldRange();
       const t = this.target;
       let want = size * 1.7;
       if (t.kind === 'solar' && t.target !== t.primary.id && this.geo) want = Math.max(want, Math.hypot(...this.geo.center) * 2.6);
-      if (this.deep?.kind === 'star' || this.deep?.kind === 'pulsar') want = ins.mode === 'radio' ? ins.beam! * 12 : 30;
+      if (this.deep?.kind === 'star' || this.deep?.kind === 'pulsar') want = ins.mode === 'radio' ? this.radio().beam * 12 : 30;
+      // the S-stars around Sgr A* fill the central arcseconds
+      if (this.deep?.special === 'sgra' && ins.mode === 'detector') want = 4;
       // the EHT looks at the shadow, not at the host galaxy
       if (ins.id === 'eht') want = 160e-6;
       this.field = Math.max(lo, Math.min(hi, want));
@@ -214,8 +259,44 @@ export class ScopeView {
 
   private fieldRange(): [number, number] {
     const ins = this.ins;
-    if (ins.mode === 'radio') return [ins.beam! * 5, ins.beam! * (ins.id === 'eht' ? 40 : 500)];
-    return ins.id === 'hale' ? [6, 1200] : [1.5, 60];
+    if (ins.mode === 'radio') { const b = this.radio().beam; return [b * 5, b * (ins.id === 'eht' ? 40 : 500)]; }
+    const fov = this.filter()?.fov ?? ins.fov ?? 60;
+    return [ins.smart ? fov / 16 : Math.min(1.5, fov / 4), fov];
+  }
+
+  private setEyepiece(): void {
+    const ins = this.ins;
+    if (ins.mode === 'visual' && ins.F) this.M = Math.round((ins.F / EYEPIECES[this.ep].f) * (this.barlow ? 2 : 1));
+  }
+
+  /** apparent field of the eyepiece in use, degrees */
+  private afov(): number { return this.ins.F && this.ins.mode === 'visual' ? EYEPIECES[this.ep].afov : this.ins.afov!; }
+
+  private filter(): Filter | null { return this.ins.filters?.[this.fi] ?? null; }
+
+  /** wavelength of each picture channel, metres */
+  private lamRGB(): [number, number, number] {
+    const f = this.filter();
+    if (f && this.ins.mode === 'detector') return typeof f.lam === 'number' ? [f.lam, f.lam, f.lam] : f.lam;
+    const l = this.ins.lambda ?? 550e-9;
+    return [l, l, l];
+  }
+
+  /** a radio telescope in the chosen band and array configuration */
+  private radio(): { lambda: number; beam: number; las?: number } {
+    const ins = this.ins;
+    const f = this.filter();
+    const k = f && typeof f.lam === 'number' ? f.lam / ins.lambda! : 1;
+    const c = ins.configs?.[this.cfg];
+    return { lambda: f && typeof f.lam === 'number' ? f.lam : ins.lambda!, beam: ins.beam! * k * (c?.k ?? 1), las: ins.las ? ins.las * k * (c?.las ?? 1) : undefined };
+  }
+
+  private resetExposure(): void {
+    const t = this.target;
+    const ins = this.ins;
+    if (ins.mode !== 'detector') return;
+    // planets are taken in fractions of a second, the Moon and the Sun in milliseconds
+    this.expo = t.kind === 'solar' ? (t.primary.id === 'sun' || t.primary.id === 'moon' ? 0.005 : 0.5) : ins.exp ?? 600;
   }
 
   /* ---------------- DOM ---------------- */
@@ -247,7 +328,7 @@ export class ScopeView {
       return l;
     };
     // instruments, grouped
-    for (const [g, key] of [['amateur', 'gAmateur'], ['research', 'gResearch'], ['radio', 'gRadio']] as const) {
+    for (const [g, key] of [['amateur', 'gAmateur'], ['commercial', 'gCommercial'], ['research', 'gResearch'], ['space', 'gSpace'], ['radio', 'gRadio']] as const) {
       const og = document.createElement('optgroup');
       og.label = T[key];
       for (const i of INSTRUMENTS.filter((x) => x.group === g)) {
@@ -261,7 +342,9 @@ export class ScopeView {
     this.insSel.value = this.ins.id;
     this.insSel.addEventListener('change', () => {
       this.ins = instrument(this.insSel.value);
+      this.fi = 0; this.cfg = 0; this.barlow = false;
       this.save();
+      this.resetExposure();
       this.resetZoom();
       this.syncControls();
       this.rebuild();
@@ -304,14 +387,42 @@ export class ScopeView {
     this.skySel.value = String(this.bortle);
     this.skySel.addEventListener('change', () => { this.bortle = +this.skySel.value; this.save(); this.rebuild(); });
 
-    const zoomRow = row('', this.zoom, this.zoomVal);
-    zoomRow.classList.add('wide');
-    zoomRow.querySelector('.n')!.replaceWith(this.zoomName);
+    // eyepiece case and Barlow lens
+    this.epSel.addEventListener('change', () => { this.ep = +this.epSel.value; this.setEyepiece(); this.syncControls(); this.rebuild(); });
+    this.barIn.type = 'checkbox';
+    this.barIn.addEventListener('change', () => { this.barlow = this.barIn.checked; this.setEyepiece(); this.syncControls(); this.rebuild(); });
+    const bar = document.createElement('span');
+    bar.className = 'scope-chk';
+    bar.append(this.barIn, document.createTextNode(T.barlow));
+    bar.addEventListener('click', (e) => { if (e.target !== this.barIn) { e.preventDefault(); this.barIn.click(); } });
+    this.epRow = row(T.eyepiece, this.epSel, bar);
+    this.filSel.addEventListener('change', () => {
+      this.fi = +this.filSel.value;
+      // a camera of its own behind some filters (WFC3/IR, MIRI): keep the field inside it
+      const [lo, hi] = this.fieldRange();
+      this.field = Math.max(lo, Math.min(hi, this.field));
+      this.syncControls();
+      this.rebuild();
+    });
+    this.filRow = row('', this.filSel);
+    this.filRow.querySelector('.n')!.replaceWith(this.filName);
+    this.filName.className = 'n';
+    this.expIn.type = 'range';
+    this.expIn.addEventListener('input', () => { this.expo = 10 ** +this.expIn.value; this.expText(); this.rebuild(); });
+    this.expVal.className = 'v';
+    this.expRow = row(T.exposure, this.expIn, this.expVal);
+    this.expRow.classList.add('wide');
+    this.cfgSel.addEventListener('change', () => { this.cfg = +this.cfgSel.value; this.resetZoom(); this.syncControls(); this.rebuild(); });
+    this.cfgRow = row(T.config, this.cfgSel);
+
+    this.zoomRow = row('', this.zoom, this.zoomVal);
+    this.zoomRow.classList.add('wide');
+    this.zoomRow.querySelector('.n')!.replaceWith(this.zoomName);
     this.zoomName.className = 'n';
     const altRow = row(T.alt, this.altIn, this.altVal);
     altRow.classList.add('wide');
     this.skyWrap = row(T.sky, this.skySel);
-    ctl.append(row(T.ins, this.insSel), zoomRow, altRow, row(T.seeing, this.seeSel), this.skyWrap);
+    ctl.append(row(T.ins, this.insSel), this.epRow, this.zoomRow, this.filRow, this.cfgRow, this.expRow, altRow, row(T.seeing, this.seeSel), this.skyWrap);
     this.readout.className = 'scope-ro';
     this.notesEl.className = 'scope-notes';
     this.caption.className = 'scope-cap';
@@ -321,7 +432,31 @@ export class ScopeView {
 
   private syncControls(): void {
     const ins = this.ins;
+    const T = this.T;
     this.insSel.value = ins.id;
+    const opt = (v: number, text: string) => { const o = document.createElement('option'); o.value = String(v); o.textContent = text; return o; };
+    // eyepieces with the magnification each gives on this telescope
+    this.epRow.hidden = !(ins.mode === 'visual' && ins.F);
+    if (!this.epRow.hidden) {
+      this.epSel.replaceChildren(...EYEPIECES.map((e, k) => opt(k, `${fmtNum(e.f, e.f % 1 ? 1 : 0, this.lang)} mm ${T[e.kind]} · ${Math.round((ins.F! / e.f) * (this.barlow ? 2 : 1))}×`)));
+      this.epSel.value = String(this.ep);
+      this.barIn.checked = this.barlow;
+    }
+    const fs = ins.filters ?? [];
+    this.filRow.hidden = fs.length < 2;
+    this.filName.textContent = ins.mode === 'radio' ? T.band : T.filter;
+    this.filSel.replaceChildren(...fs.map((f, k) => opt(k, this.filterName(f))));
+    this.filSel.value = String(this.fi);
+    this.cfgRow.hidden = !ins.configs;
+    this.cfgSel.replaceChildren(...(ins.configs ?? []).map((c, k) => opt(k, T[c.label] ?? c.id)));
+    this.cfgSel.value = String(this.cfg);
+    this.expRow.hidden = ins.mode !== 'detector';
+    if (!this.expRow.hidden) {
+      Object.assign(this.expIn, { min: -3, max: Math.log10(ins.expMax ?? 36000), step: 0.01 });
+      this.expIn.value = String(Math.log10(this.expo));
+      this.expText();
+    }
+    this.zoomRow.hidden = ins.mode === 'visual';
     if (ins.mode === 'visual') {
       const [lo, hi] = magRange(ins);
       this.zoomName.textContent = this.T.mag;
@@ -335,10 +470,20 @@ export class ScopeView {
       this.zoom.value = String(Math.log10(this.field));
       this.zoom.disabled = false;
     }
-    this.skyWrap.hidden = ins.mode !== 'visual';
-    this.altIn.disabled = ins.mode === 'radio';
-    this.seeSel.disabled = ins.mode === 'radio';
+    this.skyWrap.hidden = ins.mode !== 'visual' && !ins.smart;
+    this.altIn.disabled = ins.mode === 'radio' || !!ins.space;
+    this.seeSel.disabled = ins.mode === 'radio' || !!ins.space;
     this.zoomText();
+  }
+
+  private filterName(f: Filter): string {
+    const T = this.T, L = this.lang;
+    const name = T[f.label] ?? f.label;
+    return typeof f.lam !== 'number' || this.ins.mode === 'visual' ? name : `${name} · ${fmtLam(f.lam, L)}`;
+  }
+
+  private expText(): void {
+    this.expVal.textContent = fmtTime(this.expo, this.lang);
   }
 
   private zoomText(): void {
@@ -421,22 +566,62 @@ export class ScopeView {
 
   /* ---------------- physics ---------------- */
 
-  private get extinction(): number { return airmass(this.alt) * 0.2; }
+  private get extinction(): number { return this.ins.space ? 0 : airmass(this.alt) * 0.2; }
 
-  private lim(): number { return limitingMag(this.ins, this.bortle, this.extinction, this.M); }
+  private lim(): number {
+    const ins = this.ins;
+    let m = limitingMag(ins, this.bortle, this.extinction, this.M);
+    if (ins.mode !== 'detector') return m;
+    // background-limited: 1.25 mag per decade of exposure; the band; a wider seeing disk; a brighter sky
+    m += 1.25 * Math.log10(this.expo / 3600) + (this.filter()?.dm ?? 0);
+    if (!ins.space && !ins.strehl) {
+      const lam = this.lamRGB()[1];
+      const disk = (s: number) => Math.hypot(s * (lam / 550e-9) ** -0.2, (1.03 * SEC * lam) / (ins.D / 1000), (this.filter()?.pix ?? ins.pix ?? 0) * 1.5);
+      m -= 2.5 * Math.log10(disk(this.seeing * airmass(this.alt) ** 0.6) / disk(1.2));
+    }
+    if (ins.smart) m += 0.5 * (SKY_MU[this.bortle - 1] - 21.7);
+    return m;
+  }
 
   /** the new picture of the sky above the atmosphere */
   private compose(): void {
     const ins = this.ins;
     const visual = ins.mode === 'visual';
-    if (visual) this.scale = ((ins.id === 'eye' ? ins.afov! : ins.afov! / this.M) * 3600) / (0.96 * Math.min(this.W, this.H) * this.crop);
+    if (visual) this.scale = ((ins.id === 'eye' ? this.afov() : this.afov() / this.M) * 3600) / (0.96 * Math.min(this.W, this.H) * this.crop);
     else this.scale = this.field / this.H;
     const lim = ins.mode === 'radio' ? 0 : this.lim();
+    const f = this.filter();
+    const lam = this.lamRGB();
     this.scene = buildScene({
-      target: this.target, geo: this.geo, ins, W: this.W, H: this.H, scale: this.scale, lim,
-      images: this.images, jd: this.jd, visual,
+      target: this.target, geo: this.geo, ins: ins.mode === 'radio' ? { ...ins, ...this.radio() } : ins, W: this.W, H: this.H, scale: this.scale, lim,
+      images: this.images, jd: this.jd, visual, lam: visual ? 550e-9 : Math.sqrt(lam[0] * lam[2]), lams: ins.mode === 'detector' ? lam : undefined, line: f?.line, cont: f?.cont,
     });
     const sc = this.scene;
+    // the filter: a colour filter's transmission (eyepiece), or the bands of the picture's channels (camera)
+    let mix: number[][] | null = null;
+    if (visual && f?.t) mix = [[f.t[0], 0, 0], [0, f.t[1], 0], [0, 0, f.t[2]]];
+    else if (ins.mode === 'detector') mix = lam.map((l) => bandWeights(l));
+    if (mix) {
+      const [a, b, c] = mix;
+      const sky = sc.sky;
+      let peak = sc.banded ? sc.peak : 0;
+      for (let k = 0; k < sky.length && !sc.banded; k += 4) {
+        const r = sky[k], g = sky[k + 1], bl = sky[k + 2];
+        if (!r && !g && !bl) continue;
+        sky[k] = Math.max(0, a[0] * r + a[1] * g + a[2] * bl);
+        sky[k + 1] = Math.max(0, b[0] * r + b[1] * g + b[2] * bl);
+        sky[k + 2] = Math.max(0, c[0] * r + c[1] * g + c[2] * bl);
+        peak = Math.max(peak, 0.2126 * sky[k] + 0.7152 * sky[k + 1] + 0.0722 * sky[k + 2]);
+      }
+      sc.peak = peak;
+      const st = sc.stars;
+      for (let k = 0; k < sc.nStars; k++) {
+        const o = k * 8 + 4, r = st[o], g = st[o + 1], bl = st[o + 2];
+        st[o] = Math.max(0, a[0] * r + a[1] * g + a[2] * bl);
+        st[o + 1] = Math.max(0, b[0] * r + b[1] * g + b[2] * bl);
+        st[o + 2] = Math.max(0, c[0] * r + c[1] * g + c[2] * bl);
+      }
+    }
     // radio maps are normalised to their own peak, and would overflow half floats at ENC
     if (ins.mode !== 'radio') for (let k = 0; k < sc.sky.length; k++) sc.sky[k] *= ENC;
     for (let k = 0; k < sc.nStars; k++) sc.stars[k * 8 + 2] *= ENC;
@@ -453,23 +638,25 @@ export class ScopeView {
     const tanz = Math.min(5, Math.tan(z));
     const ext = [0.11, 0.19, 0.31].map((k) => 10 ** (-0.4 * k * X)) as [number, number, number];
     const D = ins.D / 1000;
-    const lam = ins.lambda ?? 550e-9;
+    const lams = this.lamRGB();
+    const lam = ins.mode === 'radio' ? this.radio().lambda : lams[1];
     const lamD = (SEC * lam) / D;
-    const lamD3: [number, number, number] = ins.mode === 'visual' ? [lamD * 610 / 550, lamD, lamD * 460 / 550] : [lamD, lamD, lamD];
+    const lamD3: [number, number, number] = ins.mode === 'visual' ? [lamD * 610 / 550, lamD, lamD * 460 / 550] : lams.map((l) => (SEC * l) / D) as [number, number, number];
     const fwhmV = this.seeing * X ** 0.6;
     const fwhm = fwhmV * (lam / 550e-9) ** -0.2;
     const r0 = (0.98 * lam) / (fwhm / SEC);
     const f: FrameParams = {
       mode: 0, time, scale: this.scale, tilt: [0, 0], boil: 0, iso: 1, sigma: [1, 1, 1], disp: [0, 0, 0], ext, las: 0,
       jit: 0, scint: 0, colorTw: 0, lamD: lamD3, obs: ins.obstruction, strehl: 0, sigSe: 1, speck: 0,
-      haloA: fwhm * 1.3, haloW: 0.05, spikes: ins.spikes, spikeAng: ins.spikes === 6 ? 0 : Math.PI / 4,
-      flip: [1, 1], sky: [0, 0, 0], gain: 1, k: 1, stop: 0, noise: 0, soft: 1, white: 1, mono: 0,
+      haloA: fwhm * 1.3, haloW: 0.05, spikes: ins.spikes, spikeAng: ins.id === 'jwst' ? Math.PI / 2 : ins.spikes === 6 ? 0 : Math.PI / 4,
+      flip: [1, 1], sky: [0, 0, 0], gain: 1, k: 1, stop: 0, noise: 0, soft: 1, white: 1, mono: 0, pix: 0, apert: 5 * Math.log10(Math.max(1, ins.D / 7)),
     };
     if (ins.mode === 'radio') {
       f.mode = 2;
-      const b = ins.beam! / 2.355;
+      const rd = this.radio();
+      const b = rd.beam / 2.355;
       f.sigma = [b, b, b];
-      f.las = ins.las ? ins.las / 2.355 : 0;
+      f.las = rd.las ? rd.las / 2.355 : 0;
       f.ext = [1, 1, 1];
       const peak = sc.radioPeak;
       f.white = peak > 0 ? peak * 1.05 : 1;
@@ -482,24 +669,38 @@ export class ScopeView {
     if (ins.mode === 'detector') {
       f.mode = 1;
       const ao = ins.strehl !== undefined;
-      f.strehl = ao ? ins.strehl! : 0;
+      // the Strehl ratio falls towards short wavelengths: S(λ) = S₀^((λ₀/λ)²)
+      f.strehl = ao ? ins.strehl! ** ((ins.lambda! / lam) ** 2) : 0;
+      const pix = this.filter()?.pix ?? ins.pix ?? 0;
+      f.pix = pix / this.scale;
       f.sigSe = ao ? (fwhm * 0.8) / 2.355 : Math.hypot(fwhm / 2.355, 0.42 * lamD);
-      const s = ao ? Math.hypot(0.42 * lamD, 0.6 * this.scale, fwhm * 0.12) : f.sigSe;
-      f.sigma = [s, s, s];
+      f.sigma = lamD3.map((l) => (ao ? Math.hypot(0.42 * l, 0.6 * this.scale, fwhm * 0.12, 0.3 * pix) : Math.hypot(f.sigSe, 0.3 * pix))) as [number, number, number];
       f.haloW = ao ? 0.08 : 0.04;
       if (ao) f.ext = [0.93, 0.93, 0.93];
-      f.mono = ao ? 1 : 0;
+      f.mono = typeof this.filter()?.lam === 'number' ? 1 : 0;
+      if (ins.space) {
+        // only the optics: the Airy core, a little scattered light, no seeing at all
+        f.sigSe = (1.6 * lamD) / 2.355;
+        f.sigma = lamD3.map((l) => Math.hypot(0.42 * l, 0.6 * this.scale, 0.3 * pix)) as [number, number, number];
+        f.haloA = 4 * lamD;
+        f.haloW = 0.03;
+        f.ext = [1, 1, 1];
+      }
       // noise: a star at the exposure's limit stands 4σ above it
       const core = Math.max(ao ? 0.42 * lamD : f.sigSe, 0.6 * this.scale);
-      const fl = 10 ** (-0.4 * (ins.limit ?? 23)) * ENC;
+      const fl = 10 ** (-0.4 * (this.lim() + this.extinction)) * ENC;
       const peakLim = (fl / (2 * Math.PI * core * core)) * (ao ? Math.max(0.2, f.strehl) : 1);
       f.noise = peakLim / 4;
       f.soft = f.noise * 3;
       const ft = 10 ** (-0.4 * this.targetMag()) * ENC;
       const starPeak = this.deep?.kind === 'star' || this.deep?.kind === 'pulsar' ? (ft / (2 * Math.PI * core * core)) * 0.5 : 0;
-      f.white = Math.max(sc.peak * 0.8, starPeak, f.noise * 60);
-      // a display stretch, not a log of everything: ~3000:1 below white at most
-      f.soft = Math.max(f.soft, f.white * 3e-4);
+      // a crowded field of point sources (the Galactic Centre): white at its brightest star
+      let crowd = 0;
+      if (this.deep?.kind === 'bh') for (let k = 0; k < sc.nStars; k++) crowd = Math.max(crowd, sc.stars[k * 8 + 2]);
+      f.white = Math.max(sc.peak * 0.8, starPeak, f.noise * 60, (crowd / (2 * Math.PI * core * core)) * 0.3);
+      // a display stretch, not a log of everything: ~3000:1 below white at most; a bright disk near linear
+      const point = this.deep?.kind === 'star' || this.deep?.kind === 'pulsar';
+      f.soft = Math.max(f.soft, f.white * (this.target.kind === 'solar' ? 1 : crowd ? 0.03 : point ? 3e-4 : 1.5e-3));
       this.skyY = f.noise * 2;
       return f;
     }
@@ -538,11 +739,14 @@ export class ScopeView {
     const tint = [0.86 + 0.36 * b, 0.97, 1.16 - 0.4 * b];
     const ty = 0.2126 * tint[0] + 0.7152 * tint[1] + 0.0722 * tint[2];
     const sky = 10 ** (-0.4 * mu) * ENC;
-    f.sky = [sky * tint[0] / ty, sky * tint[1] / ty, sky * tint[2] / ty];
+    // through a filter: its share of the sky's continuum, in its colour
+    const fl = this.filter();
+    const tr = (c: number) => (fl?.cont ?? 1) * (fl?.t?.[c] ?? 1);
+    f.sky = [sky * tint[0] / ty * tr(0), sky * tint[1] / ty * tr(1), sky * tint[2] / ty * tr(2)];
     const exit = ins.D / M;
     f.gain = ins.id === 'eye' ? 1 : 0.88 * Math.min(1, (exit / 7) ** 2);
-    this.skyY = sky;
-    const ys = sky * f.gain;
+    this.skyY = 0.2126 * f.sky[0] + 0.7152 * f.sky[1] + 0.0722 * f.sky[2];
+    const ys = this.skyY * f.gain;
     // the eye adapts down to about a dark rural sky seen through a wide exit pupil, no further
     f.k = Math.max(ys * 9, 10 ** (-0.4 * 21.5) * ENC * 9, sc.peak * f.gain * 0.32);
     f.stop = 0.48 * Math.min(this.W, this.H) * this.crop;
@@ -557,18 +761,25 @@ export class ScopeView {
     const D = ins.D / 1000;
     if (ins.mode === 'visual') {
       const M = ins.id === 'eye' ? 1 : this.M;
-      rows.push([T.rTfov, fmtAngle((ins.id === 'eye' ? ins.afov! : ins.afov! / M) * 3600, L)]);
+      if (ins.id !== 'eye') rows.push([T.mag, `${M}×`]);
+      rows.push([T.rTfov, fmtAngle((ins.id === 'eye' ? this.afov() : this.afov() / M) * 3600, L)]);
       if (ins.id !== 'eye') rows.push([T.rExit, `${fmtNum(ins.D / M, 1, L)} mm`]);
       rows.push([T.rRes, fmtAngle(Math.max(116 / ins.D, 60 / M), L)]);
       rows.push([T.rLim, fmtNum(this.lim(), 1, L)]);
     } else if (ins.mode === 'detector') {
+      const lams = this.lamRGB();
+      const lo = Math.min(...lams), hi = Math.max(...lams);
       rows.push([T.rTfov, fmtAngle(this.field, L)]);
-      rows.push([T.rRes, fmtAngle(ins.strehl ? 1.22 * SEC * ins.lambda! / D : this.seeing * airmass(this.alt) ** 0.6, L)]);
+      rows.push([T.rLam, lo === hi ? fmtLam(lo, L) : `${fmtLam(lo, L)} – ${fmtLam(hi, L)}`]);
+      const diff = 1.22 * SEC * hi / D, pix = this.filter()?.pix ?? ins.pix ?? 0;
+      rows.push([T.rRes, fmtAngle(Math.max(ins.strehl ? diff : Math.hypot(this.seeing * airmass(this.alt) ** 0.6, diff), 2 * pix), L)]);
       rows.push([T.rLim, fmtNum(this.lim(), 1, L)]);
     } else {
+      const rd = this.radio();
       rows.push([T.rTfov, fmtAngle(this.field, L)]);
-      rows.push([T.rBeam, fmtAngle(ins.beam!, L)]);
-      if (ins.las) rows.push([T.rLas, fmtAngle(ins.las, L)]);
+      rows.push([T.rFreq, `${fmtNum(0.2998 / rd.lambda, rd.lambda > 0.1 ? 2 : 0, L)} GHz · ${fmtLam(rd.lambda, L)}`]);
+      rows.push([T.rBeam, fmtAngle(rd.beam, L)]);
+      if (rd.las) rows.push([T.rLas, fmtAngle(rd.las, L)]);
     }
     if (this.targetMag() < 40) rows.push([T.rBright, fmtNum(this.targetMag(), 1, L)]);
     const size = this.objSize();
@@ -587,9 +798,32 @@ export class ScopeView {
     // notes
     const notes: Note[] = [...(this.scene?.notes ?? [])];
     if (ins.mode === 'visual' && !this.shows(ins) && this.deep?.special !== 'sgra') notes.unshift(['nFaint', { m: fmtNum(this.targetMag(), 1, L), l: fmtNum(this.lim(), 1, L) }]);
-    if (ins.mode === 'detector' && ins.strehl) notes.push(['nAo']);
-    if (ins.mode === 'radio' && ins.las && size > ins.las * 1.5) notes.push(['nLas', { las: fmtAngle(ins.las, L) }]);
-    if (ins.mode === 'radio' && size > 0 && size < ins.beam! * 0.6 && !notes.some(([k]) => k === 'nEht' || k === 'nRadioDark')) notes.push(['nBeam']);
+    if (ins.mode === 'detector' && ins.strehl) notes.push(ins.space ? ['nSpace'] : ['nAo', { s: fmtNum(ins.strehl ** ((ins.lambda! / this.lamRGB()[1]) ** 2), 2, L) }]);
+    if (ins.smart) notes.push(['nSmart']);
+    const fl = this.filter();
+    if (fl?.id === 'F770W') notes.push(['nMiri']);
+    if (ins.mode === 'visual' && ins.id !== 'eye' && !ins.fixedMag) {
+      const exit = ins.D / this.M;
+      if (exit > 7.2) notes.push(['nExitBig', { e: fmtNum(exit, 1, L) }]);
+      if (this.M > 2 * ins.D * 1.05) notes.push(['nEmpty', { m: Math.round(2 * ins.D) }]);
+    }
+    // a line filter helps only where the light is in the lines
+    const emission = this.deep && ['nebula', 'pn', 'snr'].includes(this.deep.kind);
+    if (fl?.line && !emission && ins.mode !== 'radio') notes.push(['nLineOnly']);
+    if (fl?.t && !fl.line && this.target.kind !== 'solar') notes.push(['nColourFilter']);
+    // where in the sky a space telescope may point (its sunshield, its baffles)
+    if (ins.space && this.geo && this.target.kind === 'solar') {
+      const jwst = ins.id === 'jwst';
+      if (jwst && this.target.primary.id === 'moon') notes.unshift(['nJwstMoon']);
+      else {
+        const [lo, hi] = jwst ? [85, 135] : [50, 180];
+        const e = this.geo.elong;
+        if (e < lo || e > hi) notes.unshift(['nAvoid', { e: Math.round(e), lo, hi }]);
+      }
+    }
+    const rd = ins.mode === 'radio' ? this.radio() : null;
+    if (rd?.las && size > rd.las * 1.5) notes.push(['nLas', { las: fmtAngle(rd.las, L) }]);
+    if (rd && size > 0 && size < rd.beam * 0.6 && !notes.some(([k]) => k === 'nEht' || k === 'nRadioDark')) notes.push(['nBeam']);
     if (ins.mode !== 'radio' && this.target.kind !== 'solar') notes.push(['nField']);
     const seen = new Set<string>();
     this.notesEl.replaceChildren(...notes.filter(([k]) => !seen.has(k) && seen.add(k)).map(([k, p]) => {
@@ -599,7 +833,7 @@ export class ScopeView {
     }));
     this.notesEl.hidden = !this.notesEl.childElementCount;
     const orient = ins.orient === 'inverted' ? T.oInverted : ins.orient === 'mirrored' ? T.oMirrored : T.oUpright;
-    this.caption.textContent = ins.mode === 'visual' ? `${T.capVisual} ${orient} ${this.crop > 1 ? T.hWhole : T.hClose}` : ins.mode === 'detector' ? T.capDetector : T.capRadio;
+    this.caption.textContent = ins.mode === 'visual' ? `${T.capVisual} ${orient} ${this.crop > 1 ? T.hWhole : T.hClose}` : ins.mode === 'detector' ? (typeof fl?.lam === 'number' ? `${T.capDetector} ${T.capMono}` : T.capDetector) : T.capRadio;
     this.drawOverlay();
   }
 
@@ -640,7 +874,7 @@ export class ScopeView {
     c.textAlign = 'left';
     c.fillText(fmtAngle(val, this.lang), bx + bar + 6, by);
     if (ins.mode === 'radio') {
-      const r = ins.beam! / pxArc / 2;
+      const r = this.radio().beam / pxArc / 2;
       if (r > 1.5 && r < h / 3) {
         c.strokeStyle = 'rgba(228, 228, 222, 0.7)';
         c.beginPath(); c.arc(bx + r, by - 14 - r, r, 0, Math.PI * 2); c.stroke();

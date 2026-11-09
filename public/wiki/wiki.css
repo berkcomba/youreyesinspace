@@ -175,6 +175,8 @@ html:has(.w-embed), .w-embed { height: 100%; margin: 0; padding: 0; overflow: hi
 .scope-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 10px 12px; border-top: 1px solid var(--border); font-size: 12.5px; }
 .scope-ctl label { display: flex; align-items: center; gap: 8px; min-width: 0; color: var(--text-3); }
 .scope-ctl label[hidden] { display: none; }
+.scope-ctl .scope-chk { display: flex; align-items: center; flex: 0 0 auto; gap: 4px; white-space: nowrap; color: var(--text-2); }
+.scope-chk input { margin: 0; accent-color: var(--accent); }
 .scope-ctl label.wide { flex: 1 1 220px; }
 .scope-ctl .n { white-space: nowrap; }
 .scope-ctl select { font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 2px; padding: 4px 6px; max-width: 100%; min-width: 0; }
