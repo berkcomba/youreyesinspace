@@ -1,9 +1,9 @@
 {
  "since": "2026-09-29",
- "updatedAt": "2026-11-09",
- "visits": 261197,
- "human": 47611,
- "visitors": 28110,
+ "updatedAt": "2026-11-10",
+ "visits": 300908,
+ "human": 48436,
+ "visitors": 28690,
  "days": {
   "2026-09-29": {
    "visits": 138,
@@ -211,9 +211,14 @@
    "visitors": 333
   },
   "2026-11-09": {
-   "visits": 51976,
-   "human": 1584,
-   "visitors": 129
+   "visits": 56388,
+   "human": 1613,
+   "visitors": 315
+  },
+  "2026-11-10": {
+   "visits": 35299,
+   "human": 796,
+   "visitors": 394
   }
  }
 }
