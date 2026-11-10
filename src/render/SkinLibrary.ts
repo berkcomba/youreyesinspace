@@ -67,6 +67,7 @@ const MAP_CREDITS: Record<string, string> = {
   pluto: 'NASA/JHUAPL/SwRI New Horizons, USGS',
   charon: 'NASA/JHUAPL/SwRI New Horizons, USGS',
   triton: 'NASA/JPL Voyager 2, USGS',
+  hd189733b: 'Your Eyes In Space, after NASA/ESA/M. Kornmesser',
 };
 const SSS_CREDIT = 'Solar System Scope (CC BY 4.0)';
 const BRENT_CREDIT = 'Brent Patterson (CC BY 3.0)';

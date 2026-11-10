@@ -133,6 +133,10 @@ interface Observed {
   bands?: Array<[number, number, number]>;
   albedo?: number;
   airless?: boolean;
+  /** a hand-made map (public/maps) instead of the generated cloud deck */
+  skin?: string;
+  /** colour of the haze at the limb */
+  haze?: [number, number, number];
 }
 
 const OBSERVED: Record<string, Observed> = {
@@ -144,7 +148,7 @@ const OBSERVED: Record<string, Observed> = {
   'K2-18 b': { cls: 'subneptune', bands: [[0.45, 0.62, 0.8], [0.5, 0.68, 0.84], [0.42, 0.58, 0.76], [0.55, 0.7, 0.86]], note: 'Hubble ve JWST atmosferde metan ve CO₂ buldu; su okyanuslu "hycean" bir dünya mı, gaz zarflı bir mini-Neptün mü olduğu tartışmalı (Madhusudhan ve ark. 2023).' },
   'GJ 1214 b': { cls: 'subneptune', albedo: 0.5, bands: [[0.8, 0.8, 0.76], [0.74, 0.74, 0.7], [0.85, 0.84, 0.8]], note: 'Tayfı düz: yüksek irtifada kalın pus/bulut katmanı; JWST yansıtıcı, metalce zengin bir atmosfer görüyor (Kempton ve ark. 2023).' },
   'Kepler-7 b': { albedo: 0.35, bands: [[0.9, 0.88, 0.82], [0.82, 0.8, 0.74], [0.95, 0.94, 0.9], [0.76, 0.72, 0.66]], note: 'Kepler evre eğrisi: yüksek albedo, batı yarıküresinde parlak bulutlar (Demory ve ark. 2013).' },
-  'HD 189733 b': { albedo: 0.4, bands: [[0.16, 0.32, 0.72], [0.12, 0.26, 0.62], [0.2, 0.38, 0.8], [0.14, 0.28, 0.66]], note: 'Hubble yansıma tayfı: derin lacivert renk, silikat pusundan saçılma (Evans ve ark. 2013).' },
+  'HD 189733 b': { albedo: 0.4, skin: 'map:hd189733b', haze: [0.35, 0.55, 1.0], bands: [[0.16, 0.32, 0.72], [0.12, 0.26, 0.62], [0.2, 0.38, 0.8], [0.14, 0.28, 0.66]], note: 'Hubble yansıma tayfı: derin lacivert renk, silikat pusundan saçılma (Evans ve ark. 2013).' },
   'WASP-12 b': { albedo: 0.05, bands: [[0.08, 0.07, 0.07], [0.06, 0.05, 0.05], [0.1, 0.08, 0.08]], note: 'Neredeyse ışık yansıtmıyor (albedo < 0,064): asfalt kadar koyu. Gelgitle yumurta biçimine çekilmiş, yörüngesi küçülüyor.' },
   'TrES-2 b': { albedo: 0.01, bands: [[0.05, 0.03, 0.03], [0.04, 0.025, 0.025], [0.07, 0.035, 0.03]], note: "Bilinen en karanlık ötegezegenlerden: ışığın %1'inden azını yansıtır (Kipping ve Spiegel 2011)." },
   'HD 209458 b': { note: 'Geçişi gözlenen ilk ötegezegen (2000) ve atmosferi tespit edilen ilki: sodyum ve uzaya kaçan bir hidrojen kuyruğu.' },
@@ -266,8 +270,9 @@ export function realSystem(star: StarInfo, host: ExoHost, toSun: Vector3): Gener
       appearance = obs?.bands ? bandsLook(prng, id, obs.bands, 0.4)
         : sub ? gasAppearance(prng, Teq, Teq < 700, id)
           : bandsLook(prng, id, SUDARSKY[cls], cls === 'sudarsky1' ? 0.8 : 0.45);
+      if (obs?.skin && appearance.kind === 'gas') appearance.skin = obs.skin;
       albedo = obs?.albedo ?? (cls === 'sudarsky2' ? 0.8 : cls === 'sudarsky1' ? 0.5 : cls === 'sudarsky3' ? 0.12 : cls === 'sudarsky4' ? 0.05 : cls === 'sudarsky5' ? 0.4 : 0.3);
-      atmosphere = { color: sub ? [0.55, 0.72, 1.0] : Teq > 800 ? [0.7, 0.5, 0.45] : [0.85, 0.85, 0.9], height: sub ? 0.03 : 0.012, density: 0.5 };
+      atmosphere = { color: obs?.haze ?? (sub ? [0.55, 0.72, 1.0] : Teq > 800 ? [0.7, 0.5, 0.45] : [0.85, 0.85, 0.9]), height: sub ? 0.03 : 0.012, density: 0.5 };
     }
 
     const el = skyToEcliptic(toSun, iSky, nodeSky, w);

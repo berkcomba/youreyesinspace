@@ -1,0 +1,77 @@
+// HD 189733 b: a deep cobalt hot Jupiter with silicate ("glass") clouds torn into streaks by
+// ~8 000 km/h winds. Evaluated per pixel of an equirectangular map: u → longitude, v → latitude.
+
+float fbm(point x, int oct) {
+  float s = 0.0, a = 0.5;
+  point y = x;
+  for (int i = 0; i < oct; i++) {
+    s += a * noise("snoise", y);
+    y = y * 2.03 + point(1.7, 9.2, 3.1);
+    a *= 0.5;
+  }
+  return s;
+}
+
+float ridged(point x, int oct) {
+  float s = 0.0, a = 0.5;
+  point y = x;
+  for (int i = 0; i < oct; i++) {
+    float n = 1.0 - abs(noise("snoise", y));
+    s += a * n * n;
+    y = y * 2.07 + point(5.3, 1.1, 7.9);
+    a *= 0.5;
+  }
+  return s;
+}
+
+shader hd189733(
+  point UV = point(0.5, 0.5, 0),
+  float Seed = 0.0,
+  float Jet = 2.2,
+  float Warp = 2.6,
+  output color Col = 0)
+{
+  float lon = (UV[0] - 0.5) * M_2PI;
+  float lat = (UV[1] - 0.5) * M_PI;
+  // the super-rotating equatorial jet and weaker jets either side shear the deck along longitude
+  float jet = Jet * exp(-pow(lat / 0.45, 2.0)) + 0.2 * sin(3.0 * lat + 0.4) + 0.08 * sin(7.0 * lat + 1.3);
+  float lo = lon + jet;
+  point p = point(cos(lat) * cos(lo), cos(lat) * sin(lo), sin(lat)) + point(Seed, 2.0 * Seed, -Seed);
+  // stretched east–west: features are thinner in latitude than along the wind
+  point ps = point(p[0], p[1], p[2] * 3.0);
+
+  // nested domain warp: the marbling of turbulent cloud
+  vector q = vector(fbm(ps * 0.9 + point(1.7, 0, 0), 5), fbm(ps * 0.9 + point(9.2, 3, 1), 5), fbm(ps * 0.9 + point(4.1, 7, 2), 5));
+  point pr = ps * 1.5 + Warp * q;
+  vector r = vector(fbm(pr + point(1.3, 2, 0), 5), fbm(pr + point(7.7, 1, 4), 5), fbm(pr + point(2.9, 6, 3), 5));
+  point pf = ps * 2.2 + Warp * 1.1 * r;
+  float f = fbm(pf, 8);
+  // fine filaments: the glass-cloud streaks, combed along the warped flow
+  float fil = ridged(ps * point(4.0, 4.0, 6.0) + 1.8 * r + 0.8 * q, 6);
+  // where the deck is thick and bright (patchy, as in the Hubble-era impression)
+  float thick = smoothstep(-0.1, 0.4, fbm(p * 1.1 + point(11, 3, 5), 4) + 0.35 * q[0]);
+  // puffy convective cells inside the thick patches
+  float cells = smoothstep(0.2, 0.5, fbm(ps * 9.0 + 0.6 * r, 5));
+
+  color deep = color(0.004, 0.016, 0.1);
+  color navy = color(0.012, 0.045, 0.24);
+  color cobalt = color(0.025, 0.1, 0.44);
+  // slate rather than white: the silicate deck is lit through the blue haze
+  color cloudLo = color(0.11, 0.18, 0.42);
+  color cloudHi = color(0.32, 0.41, 0.63);
+  color white = color(0.64, 0.72, 0.87);
+
+  // the gaps between the clouds: the deep blue haze, darkest in the eddies' cores
+  color gap = mix(deep, navy, smoothstep(-0.65, -0.15, f + 0.25 * q[2]));
+  gap = mix(gap, cobalt, 0.7 * smoothstep(-0.35, 0.05, f + 0.3 * r[1]));
+  // the cloud deck, brighter where it is thick, combed into streaks
+  float streak = smoothstep(0.48, 0.78, fil);
+  color cloud = mix(cloudLo, cloudHi, smoothstep(0.05, 0.55, f + 0.2 * thick));
+  cloud = mix(cloud, white, clamp(streak * (0.25 + 0.45 * thick) + cells * thick * 0.45, 0.0, 1.0));
+  float cover = smoothstep(-0.04, 0.22, f + 0.18 * thick - 0.06);
+  color c = mix(gap, cloud, cover);
+  // bright rims where the cloud edge meets the clear haze (the curled edges of the eddies)
+  float rim = exp(-pow((f + 0.18 * thick - 0.09) / 0.035, 2.0));
+  c = mix(c, white, rim * 0.35 * (0.4 + 0.6 * thick));
+  Col = c;
+}
