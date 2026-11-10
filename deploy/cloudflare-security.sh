@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 # ---------------------------------------------------------------------------
 # Cloudflare production hardening for youreyesinthespace (in front of Cloud Run).
-# Idempotent: safe to re-run. Uses only the Cloudflare v4 API.
+# Idempotent: safe to re-run. Uses only the Cloudflare v4 API, bash and curl, and stays within
+# what the Free plan allows (no regex in rules, one rate limiting rule of 10 s).
 #
 # Required env:
 #   CF_API_TOKEN        API token with Zone:Zone Settings:Edit, Zone:Firewall Services:Edit,
 #                       Zone:Cache Rules:Edit, Zone:Transform Rules:Edit, Zone:Bot Management:Edit
 #   CF_ZONE_ID          zone id of the domain
-#   SITE_HOST           e.g. example.com
+#   SITE_HOST           e.g. example.com (www.<SITE_HOST> is covered too)
 #   ORIGIN_AUTH_SECRET  same value passed to Cloud Run (X-Origin-Auth header) – optional
 #
 # Never commit these values; export them in the shell or use a secret manager.
@@ -20,34 +21,43 @@ set -euo pipefail
 
 API="https://api.cloudflare.com/client/v4"
 AUTH=(-H "Authorization: Bearer ${CF_API_TOKEN}" -H "Content-Type: application/json")
+# the apex and www are both mapped to the service: every rule has to hold for the two of them
+HOSTS='http.host in {\"'"${SITE_HOST}"'\" \"www.'"${SITE_HOST}"'\"}'
 
-cf() { # method path [json]
-  local method="$1" path="$2" body="${3:-}"
+FAILED=()
+
+# One API call. A failure is reported and remembered, not fatal: every step is independent, and
+# a setting Cloudflare has retired or keeps for a higher plan must not leave the rest unapplied.
+call() { # label method path [json] [secret]
+  local label="$1" method="$2" path="$3" body="${4:-}" secret="${5:-}" resp
+  local okre='"success":[[:space:]]*true'
   if [[ -n "$body" ]]; then
-    curl -sS -X "$method" "${API}${path}" "${AUTH[@]}" --data "$body"
+    # the body goes in on stdin: it may carry the origin secret, which must not show in `ps`
+    resp="$(printf '%s' "$body" | curl -sS -X "$method" "${API}${path}" "${AUTH[@]}" --data @- 2>&1)" || true
   else
-    curl -sS -X "$method" "${API}${path}" "${AUTH[@]}"
+    resp="$(curl -sS -X "$method" "${API}${path}" "${AUTH[@]}" 2>&1)" || true
   fi
-}
-
-ok() { # pipe: fail loudly if success != true
-  local resp; resp="$(cat)"
-  if [[ "$(printf '%s' "$resp" | jq -r '.success')" != "true" ]]; then
-    echo "✖ Cloudflare API hatası:" >&2
-    printf '%s\n' "$resp" | jq '.errors' >&2
-    exit 1
+  if [[ "$resp" =~ $okre ]]; then return 0; fi
+  FAILED+=("$label")
+  if [[ -n "$secret" ]]; then
+    echo "    ✖ ${label} (yanıt gösterilmiyor: sırrı içerebilir)" >&2
+  else
+    echo "    ✖ ${label}: ${resp:0:600}" >&2
   fi
-  printf '%s' "$resp"
 }
 
 setting() { # name value-json
   echo "  · $1 = $2"
-  cf PATCH "/zones/${CF_ZONE_ID}/settings/$1" "{\"value\":$2}" | ok >/dev/null
+  call "ayar $1" PATCH "/zones/${CF_ZONE_ID}/settings/$1" "{\"value\":$2}"
 }
 
 echo "▶ TLS / HTTPS"
 setting ssl '"strict"'                       # Full (strict): Cloud Run has a valid cert
-setting always_use_https '"on"'
+# Off on purpose. Cloud Run renews its certificate over http (/.well-known/acme-challenge/), and
+# Cloudflare's redirect would swallow that request: the renewal fails and, with Full (strict),
+# the site goes down when the certificate runs out. nginx redirects visitors instead (CF-Visitor).
+# https://cloud.google.com/run/docs/mapping-custom-domains#dns_update
+setting always_use_https '"off"'
 setting automatic_https_rewrites '"on"'
 setting min_tls_version '"1.2"'
 setting tls_1_3 '"on"'
@@ -55,55 +65,44 @@ setting opportunistic_encryption '"on"'
 setting security_header '{"strict_transport_security":{"enabled":true,"max_age":31536000,"include_subdomains":true,"preload":true,"nosniff":true}}'
 
 echo "▶ Performans"
-setting brotli '"on"'
+# (Brotli is always on and Auto Minify is gone: neither is a zone setting any more)
 setting early_hints '"on"'
 setting http3 '"on"'
-setting zero_rtt '"on"'
-setting minify '{"css":"on","html":"on","js":"off"}'   # JS zaten minified; Cloudflare minify modül scriptlerini bozmasın
+setting 0rtt '"on"'
 
 echo "▶ Güvenlik seviyesi / bot"
 setting security_level '"medium"'
 setting browser_check '"on"'
 setting challenge_ttl '1800'
-setting privacy_pass '"on"'
 # Bot Fight Mode (free plan) – Super Bot Fight Mode planlarda otomatik devreye girer
-cf PUT "/zones/${CF_ZONE_ID}/bot_management" '{"fight_mode":true}' | ok >/dev/null || true
+echo "  · bot fight mode"
+call "bot fight mode" PUT "/zones/${CF_ZONE_ID}/bot_management" '{"fight_mode":true}'
 
 # ---------------------------------------------------------------------------
 # Rulesets helper: create-or-update the zone entrypoint ruleset for a phase
 # ---------------------------------------------------------------------------
-put_phase() { # phase rules-json
+put_phase() { # phase rules-json [secret]
   local phase="$1" rules="$2"
   echo "  · ruleset phase ${phase}"
-  cf PUT "/zones/${CF_ZONE_ID}/rulesets/phases/${phase}/entrypoint" \
-    "{\"name\":\"yeits ${phase}\",\"kind\":\"zone\",\"phase\":\"${phase}\",\"rules\":${rules}}" | ok >/dev/null
+  call "kurallar ${phase}" PUT "/zones/${CF_ZONE_ID}/rulesets/phases/${phase}/entrypoint" \
+    "{\"name\":\"yeits ${phase}\",\"kind\":\"zone\",\"phase\":\"${phase}\",\"rules\":${rules}}" "${3:-}"
 }
 
 echo "▶ WAF özel kuralları (http_request_firewall_custom)"
+# /.well-known/ stays open: the certificate renewal above goes through it.
+# Verified bots are left alone: link previews (the cards of a shared ?target= link) are among them.
 put_phase http_request_firewall_custom "$(cat <<JSON
 [
   {
     "description": "Sadece GET/HEAD/OPTIONS - statik site",
-    "expression": "(http.host eq \"${SITE_HOST}\" and not http.request.method in {\"GET\" \"HEAD\" \"OPTIONS\"})",
+    "expression": "(${HOSTS} and not http.request.method in {\"GET\" \"HEAD\" \"OPTIONS\"})",
     "action": "block",
     "enabled": true
   },
   {
     "description": "Gizli dosyalar, source map, .env, git",
-    "expression": "(http.request.uri.path matches \"^/(\\\\.|.*\\\\.map$|.*\\\\.env|.*\\\\.git)\")",
+    "expression": "((starts_with(http.request.uri.path, \"/.\") and not starts_with(http.request.uri.path, \"/.well-known/\")) or ends_with(http.request.uri.path, \".map\") or http.request.uri.path contains \".env\" or http.request.uri.path contains \"/.git\")",
     "action": "block",
-    "enabled": true
-  },
-  {
-    "description": "Yüksek tehdit skoru -> managed challenge",
-    "expression": "(cf.threat_score gt 30)",
-    "action": "managed_challenge",
-    "enabled": true
-  },
-  {
-    "description": "Doğrulanmamış otomatik bot -> managed challenge (index.html)",
-    "expression": "(cf.client.bot and not cf.verified_bot_category in {\"Search Engine Crawler\" \"Monitoring & Analytics\"} and http.request.uri.path eq \"/\")",
-    "action": "managed_challenge",
     "enabled": true
   }
 ]
@@ -111,28 +110,16 @@ JSON
 )"
 
 echo "▶ Rate limiting (http_ratelimit)"
-# ~500 kullanıcı/gün için cömert ama flood'u kesen sınırlar (IP başına, 10 sn pencere)
+# One rule, 10 s window, 10 s block and a path-only expression: all the Free plan has. Requests
+# answered from the edge cache count too, and a classroom shares one address, so the limit sits
+# well above a room of page loads (~150 requests each) and only stops a flood.
 put_phase http_ratelimit "$(cat <<JSON
 [
   {
-    "description": "HTML shell: IP basina 10 sn'de 60 istek",
-    "expression": "(http.host eq \"${SITE_HOST}\" and http.request.uri.path in {\"/\" \"/index.html\"})",
-    "action": "managed_challenge",
-    "ratelimit": {"characteristics": ["ip.src","cf.colo.id"], "period": 10, "requests_per_period": 60, "mitigation_timeout": 60},
-    "enabled": true
-  },
-  {
-    "description": "Buyuk veri (stars.bin, modeller): IP basina 10 sn'de 120 istek",
-    "expression": "(http.host eq \"${SITE_HOST}\" and starts_with(http.request.uri.path, \"/data/\") or starts_with(http.request.uri.path, \"/models/\"))",
+    "description": "Genel: IP basina 10 sn'de 2000 istek",
+    "expression": "(starts_with(http.request.uri.path, \"/\"))",
     "action": "block",
-    "ratelimit": {"characteristics": ["ip.src","cf.colo.id"], "period": 10, "requests_per_period": 120, "mitigation_timeout": 120},
-    "enabled": true
-  },
-  {
-    "description": "Genel: IP basina 10 sn'de 600 istek",
-    "expression": "(http.host eq \"${SITE_HOST}\")",
-    "action": "block",
-    "ratelimit": {"characteristics": ["ip.src","cf.colo.id"], "period": 10, "requests_per_period": 600, "mitigation_timeout": 300},
+    "ratelimit": {"characteristics": ["ip.src","cf.colo.id"], "period": 10, "requests_per_period": 2000, "mitigation_timeout": 10},
     "enabled": true
   }
 ]
@@ -140,35 +127,15 @@ JSON
 )"
 
 echo "▶ Cache kuralları (http_request_cache_settings)"
+# The static folders are kept at the edge whatever their file type (Cloudflare would skip .json,
+# .glb and .bin on its own); for how long is nginx's decision alone (deploy/nginx): a year for
+# the hashed and ?v= URLs, a day for images, revalidate-every-time for the unversioned audio.
+# HTML is not kept at the edge: a deploy shows at once.
 put_phase http_request_cache_settings "$(cat <<JSON
 [
   {
-    "description": "Hashli asset + veri + modeller: edge'de 1 yil",
-    "expression": "(http.host eq \"${SITE_HOST}\" and (starts_with(http.request.uri.path, \"/assets/\") or starts_with(http.request.uri.path, \"/data/\") or starts_with(http.request.uri.path, \"/models/\")))",
-    "action": "set_cache_settings",
-    "action_parameters": {
-      "cache": true,
-      "edge_ttl": {"mode": "override_origin", "default": 31536000},
-      "browser_ttl": {"mode": "respect_origin"},
-      "cache_key": {"custom_key": {"query_string": {"include": "*"}}},
-      "serve_stale": {"disable_stale_while_updating": false}
-    },
-    "enabled": true
-  },
-  {
-    "description": "HTML shell: edge'de 5 dk, origin'e saygi",
-    "expression": "(http.host eq \"${SITE_HOST}\" and http.request.uri.path in {\"/\" \"/index.html\"})",
-    "action": "set_cache_settings",
-    "action_parameters": {
-      "cache": true,
-      "edge_ttl": {"mode": "override_origin", "default": 300},
-      "browser_ttl": {"mode": "respect_origin"}
-    },
-    "enabled": true
-  },
-  {
-    "description": "Olay duzeltmeleri ve efemeris: kisa edge TTL",
-    "expression": "(http.host eq \"${SITE_HOST}\" and (starts_with(http.request.uri.path, \"/events/\") or starts_with(http.request.uri.path, \"/ephem/\")))",
+    "description": "Statik klasorler: edge'de tut, sureler origin'den",
+    "expression": "(${HOSTS} and (starts_with(http.request.uri.path, \"/assets/\") or starts_with(http.request.uri.path, \"/data/\") or starts_with(http.request.uri.path, \"/models/\") or starts_with(http.request.uri.path, \"/maps/\") or starts_with(http.request.uri.path, \"/skins/\") or starts_with(http.request.uri.path, \"/ground/\") or starts_with(http.request.uri.path, \"/nebulae/\") or starts_with(http.request.uri.path, \"/tours/\") or starts_with(http.request.uri.path, \"/tour-media/\") or starts_with(http.request.uri.path, \"/lessons/\") or starts_with(http.request.uri.path, \"/music/\") or starts_with(http.request.uri.path, \"/expedition/\") or starts_with(http.request.uri.path, \"/scope/\") or starts_with(http.request.uri.path, \"/wiki/\") or starts_with(http.request.uri.path, \"/events/\") or starts_with(http.request.uri.path, \"/ephem/\")))",
     "action": "set_cache_settings",
     "action_parameters": {
       "cache": true,
@@ -179,7 +146,7 @@ put_phase http_request_cache_settings "$(cat <<JSON
   },
   {
     "description": "Kullanim isaretcisi: cache yok (her istek origin loguna dusmeli)",
-    "expression": "(http.host eq \"${SITE_HOST}\" and http.request.uri.path eq \"/_b.gif\")",
+    "expression": "(${HOSTS} and http.request.uri.path eq \"/_b.gif\")",
     "action": "set_cache_settings",
     "action_parameters": {"cache": false},
     "enabled": true
@@ -194,14 +161,14 @@ if [[ -n "${ORIGIN_AUTH_SECRET:-}" ]]; then
 [
   {
     "description": "Cloud Run origin'e paylasilan sir",
-    "expression": "(http.host eq \"${SITE_HOST}\")",
+    "expression": "(${HOSTS})",
     "action": "rewrite",
     "action_parameters": {"headers": {"X-Origin-Auth": {"operation": "set", "value": "${ORIGIN_AUTH_SECRET}"}}},
     "enabled": true
   }
 ]
 JSON
-)"
+)" secret
 else
   echo "⚠ ORIGIN_AUTH_SECRET verilmedi; origin koruma başlığı eklenmedi."
 fi
@@ -209,24 +176,24 @@ fi
 echo "▶ Yanıt başlıkları (http_response_headers_transform) – origin'de zaten var, edge'de garanti"
 # X-Frame-Options yalnızca gömülebilir olay görünümü (?embed=1) dışında: Olaylar panelinin verdiği
 # iframe kodu başka sitelerde çalışmalı; origin (nginx) aynı koşulla CSP frame-ancestors'ı da açar.
+# (`Server` is Cloudflare's own and cannot be rewritten.)
 put_phase http_response_headers_transform "$(cat <<JSON
 [
   {
     "description": "Guvenlik basliklari",
-    "expression": "(http.host eq \"${SITE_HOST}\")",
+    "expression": "(${HOSTS})",
     "action": "rewrite",
     "action_parameters": {"headers": {
       "X-Content-Type-Options": {"operation": "set", "value": "nosniff"},
       "Referrer-Policy": {"operation": "set", "value": "strict-origin-when-cross-origin"},
       "Permissions-Policy": {"operation": "set", "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=()"},
-      "Server": {"operation": "remove"},
       "X-Powered-By": {"operation": "remove"}
     }},
     "enabled": true
   },
   {
     "description": "Cerceve yasagi (embed disinda)",
-    "expression": "(http.host eq \"${SITE_HOST}\" and not http.request.uri.args[\"embed\"][0] eq \"1\")",
+    "expression": "(${HOSTS} and not http.request.uri.args[\"embed\"][0] eq \"1\")",
     "action": "rewrite",
     "action_parameters": {"headers": {
       "X-Frame-Options": {"operation": "set", "value": "DENY"}
@@ -238,5 +205,10 @@ JSON
 )"
 
 echo
+if (( ${#FAILED[@]} )); then
+  echo "✖ ${#FAILED[@]} adım uygulanamadı (diğerleri uygulandı):" >&2
+  printf '    - %s\n' "${FAILED[@]}" >&2
+  exit 1
+fi
 echo "✔ Cloudflare yapılandırması tamamlandı: https://${SITE_HOST}"
 echo "  Kontrol: curl -sI https://${SITE_HOST}/ | grep -iE 'strict-transport|content-security|cf-cache-status|cache-control'"

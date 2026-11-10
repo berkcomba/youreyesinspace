@@ -65,14 +65,25 @@ Script (idempotent) şunları kurar:
 
 | Alan | Ayar |
 |---|---|
-| TLS | SSL **Full (strict)**, Always HTTPS, min TLS 1.2, TLS 1.3, HSTS 1 yıl + preload |
-| Performans | Brotli, HTTP/3, 0-RTT, Early Hints, CSS/HTML minify (JS kapalı) |
-| Bot | Bot Fight Mode, Browser Integrity Check, security level *medium*, doğrulanmamış botlara managed challenge |
-| WAF | Sadece GET/HEAD/OPTIONS; `.map`, `.env`, `.git`, gizli dosya yolları blok; threat score > 30 challenge |
-| Rate limit | `/` 60 istek/10 sn/IP (challenge); `/data`, `/models` 120/10 sn (blok); genel 600/10 sn (blok) |
-| Cache | `/assets`, `/data`, `/models` edge'de 1 yıl (query string cache key'de → `?v=BUILD_ID` ile bust); `/` 5 dk; `/events/*.json` (5 dk) ve `/ephem/*.json` (1 gün) origin'e saygı; `/_b.gif` cache dışı |
+| TLS | SSL **Full (strict)**, min TLS 1.2, TLS 1.3, HSTS 1 yıl + preload. **Always Use HTTPS kapalı**: Cloud Run sertifikasını http üzerinden yeniler, Cloudflare'in yönlendirmesi bu isteği yutar ([Google'ın notu](https://cloud.google.com/run/docs/mapping-custom-domains#dns_update)); http → https yönlendirmesini nginx yapar (`CF-Visitor`) |
+| Performans | HTTP/3, 0-RTT, Early Hints (Brotli zaten hep açık) |
+| Bot | Bot Fight Mode, Browser Integrity Check, security level *medium* |
+| WAF | Sadece GET/HEAD/OPTIONS; `.map`, `.env`, `.git`, gizli dosya yolları blok (`/.well-known/` hariç: sertifika yenilemesi oradan geçer) |
+| Rate limit | Genel 2000 istek/10 sn/IP, 10 sn blok (Free planın tek kuralı; önbellekten dönen istekler de sayılır) |
+| Cache | Statik klasörlerin tamamı (`/assets`, `/data`, `/models`, `/maps`, `/skins`, `/ground`, `/nebulae`, `/tours`, `/tour-media`, `/lessons`, `/music`, `/expedition`, `/scope`, `/wiki`, `/events`, `/ephem`) dosya türü ne olursa olsun edge'de tutulur; süreyi yalnızca nginx'in `Cache-Control` başlığı belirler. HTML edge'de tutulmaz; `/_b.gif` cache dışı |
 | Origin koruması | Transform rule ile `X-Origin-Auth: <sır>`; nginx başlığı doğrulamayan isteğe 403 |
-| Başlıklar | nosniff, Referrer-Policy, Permissions-Policy; `Server`/`X-Powered-By` kaldırılır. `X-Frame-Options: DENY` yalnızca `?embed=1` **dışında** (gömülebilir olay görünümü başka sitelerde iframe içinde çalışır; nginx aynı koşulla CSP `frame-ancestors`'ı da `*` yapar) |
+| Başlıklar | nosniff, Referrer-Policy, Permissions-Policy; `X-Powered-By` kaldırılır. `X-Frame-Options: DENY` yalnızca `?embed=1` **dışında** (gömülebilir olay görünümü başka sitelerde iframe içinde çalışır; nginx aynı koşulla CSP `frame-ancestors`'ı da `*` yapar) |
+
+Kurallar kök alan adı ve `www` için birlikte geçerlidir (ikisi de servise eşli). Betik yalnızca
+bash ve curl ister; bir adım başarısız olursa diğerlerini yine uygular ve sonunda neyin
+uygulanamadığını listeler.
+
+**Sıra önemli:** `ORIGIN_AUTH_SECRET` Cloud Run'a (GitHub secret) ancak kayıtlar Proxied olduktan ve
+bu betik başlığı ekledikten **sonra** verilir; yoksa site herkese 403 döner.
+
+**Sertifika yenilemesi:** Google sertifikayı bitişinden yaklaşık bir ay önce yeniler. Proxied'a
+geçtikten sonraki ilk yenilemede sertifikanın başlangıç tarihinin değiştiğini kontrol et
+(Cloud Run → Domain mappings). Yenilenmezse geçici olarak kayıtları DNS only yap.
 
 Ek olarak panelden (API'si plana bağlı):
 
@@ -99,7 +110,7 @@ Tarayıcıda: DevTools → Network → `stars.bin` ve `*.glb` için `cf-cache-st
 
 `./deploy/cloudrun-deploy.sh` yeniden çalıştırılır; `BUILD_ID` = git commit kısa hash'i.
 Vite hash'li `/assets` + `?v=BUILD_ID` sayesinde eski cache ile çakışma olmaz; `index.html`
-edge'de en fazla 5 dk kalır. Anında yenilemek için Cloudflare **Caching → Purge Everything**.
+edge'de tutulmaz. Sürümsüz bir dosyayı (ör. bir harita) anında yenilemek için Cloudflare **Caching → Purge**.
 
 ## Lisans / atıf gereklilikleri
 

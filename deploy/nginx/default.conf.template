@@ -43,6 +43,11 @@ server {
   # Block everything but simple reads; the app has no API surface.
   if ($request_method !~ ^(GET|HEAD|OPTIONS)$) { return 405; }
 
+  # http → https. Cloudflare is told not to do it (its redirect would swallow the request that
+  # renews the Cloud Run certificate, see deploy/cloudflare-security.sh) and it always reaches us
+  # over https, so the visitor's own scheme arrives in CF-Visitor.
+  if ($http_cf_visitor ~ '"scheme":"http"') { return 301 https://$host$request_uri; }
+
   # Origin protection (see Dockerfile / deploy/cloudflare.md)
   set $origin_block 0;
   if ($origin_secret_required = 1) { set $origin_block 1; }
