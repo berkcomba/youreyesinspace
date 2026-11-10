@@ -34,3 +34,17 @@ export const LANDMARK_IMAGES: Record<string, LandmarkImage> = {
 /** atlas layout: N×N slots of SLOT px */
 export const LANDMARK_ATLAS_GRID = 4;
 export const LANDMARK_ATLAS_SLOT = 512;
+
+/**
+ * Molecular-cloud frames rendered from Brent Patterson's world shaders (public/nebulae/gen/<file>.jpg,
+ * not in the repository): the night sky of a world inside a nebula (NebulaBackdrop). H II regions
+ * draw from the red and violet ones, reflection nebulae from the blue.
+ */
+export const NEBULA_BACKDROPS = {
+  hii: [
+    'mc-subtleRedNebula-0', 'mc-subtleRedNebula-1', 'mc-subtleRedNebula-2', 'mc-strongNebula1-0', 'mc-strongNebula1-2',
+    'mc-strongNebula2-0', 'mc-strongNebula2-1', 'mc-strongNebula2-2', 'mc-strongNebula2-3', 'mc-fiery2-1', 'mc-fiery2-3',
+  ],
+  reflection: ['mc-subtleBlue-0', 'mc-subtleBlue-1', 'mc-subtleBlue-2', 'mc-subtleBlue-3', 'mc-strongNebula1-3'],
+} as const;
+export const NEBULA_BACKDROP_CREDIT = 'Molecular cloud render: Brent Patterson (CC BY 3.0)';

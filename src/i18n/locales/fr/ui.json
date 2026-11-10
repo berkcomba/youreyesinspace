@@ -315,6 +315,7 @@
   "Gale arazisi: HiRISE DEM ve renkli mozaik (NASA/JPL-Caltech/UArizona/USGS) · CTX mozaik (NASA/JPL/MSSS) · HRSC+MOLA (ESA/DLR/FU Berlin, USGS) · Ufuk: Mont Mercou 360° panoraması (NASA/JPL-Caltech/MSSS)": "Terrain de Gale : MNE et mosaïque couleur HiRISE (NASA/JPL-Caltech/UArizona/USGS) · mosaïque CTX (NASA/JPL/MSSS) · HRSC+MOLA (ESA/DLR/FU Berlin, USGS) · Horizon : panorama à 360° de Mont Mercou (NASA/JPL-Caltech/MSSS)",
   "Jezero arazisi: HiRISE DTM ve ortofoto (NASA/JPL-Caltech/UArizona/USGS) · CTX mozaik (NASA/JPL/MSSS) · HRSC+MOLA (ESA/DLR/FU Berlin, USGS) · Ufuk: Mastcam-Z \"Van Zyl Overlook\" panoraması (NASA/JPL-Caltech/ASU/MSSS)": "Terrain de Jezero : MNT et orthophoto HiRISE (NASA/JPL-Caltech/UArizona/USGS) · mosaïque CTX (NASA/JPL/MSSS) · HRSC+MOLA (ESA/DLR/FU Berlin, USGS) · Horizon : panorama Mastcam-Z « Van Zyl Overlook » (NASA/JPL-Caltech/ASU/MSSS)",
   "Fotoğraf: {source}": "Photographie : {source}",
+  "Yüzey haritası: {source}": "Carte de surface : {source}",
   "Görsel: {source}": "Image : {source}",
   "Venüs yüzeyi: NASA Trek · Magellan radar mozaiği, yapay renk (4.6 km/px)": "Surface de Vénus : NASA Trek · mosaïque radar Magellan, fausses couleurs (4,6 km/px)",
   "Io görüntüsü: NASA Trek · Galileo SSI / Voyager renk mozaiği (1 km/px)": "Image d'Io : NASA Trek · mosaïque couleur Galileo SSI / Voyager (1 km/px)",

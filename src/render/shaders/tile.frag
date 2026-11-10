@@ -84,6 +84,8 @@ void main() {
     float haze = uAtmDensity * 0.12 * (1.0 - NdotV * 0.7) * dayFactor;
     color = mix(color, color * 0.9 + uAtmColor * 0.08, haze);
     color += scatter * eclipse * uSunColor;
+    vec3 rd = normalize(P), up = normalize(-uBodyPos);
+    color += skyHaze(dot(rd, up), dot(rd, L), dot(up, L), length(P), uAtmColor, uAtmDensity, uSunsetColor, uSunColor);
   }
 
   // Night lights

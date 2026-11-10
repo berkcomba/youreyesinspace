@@ -1,9 +1,10 @@
 import {
   HalfFloatType, LinearFilter, LinearMipmapLinearFilter, Mesh, OrthographicCamera, PlaneGeometry, RGBAFormat, Scene, ShaderMaterial,
-  SRGBColorSpace, UnsignedByteType, WebGLCubeRenderTarget, type IUniform, type WebGLRenderer,
+  SRGBColorSpace, UnsignedByteType, WebGLCubeRenderTarget, WebGLRenderTarget, type IUniform, type WebGLRenderer,
 } from 'three';
 import { Shaders } from './shaders';
 import type { BodyView } from './BodyRenderer';
+import { skinUniforms, touchSkin } from './SkinLibrary';
 
 /**
  * Baked surface maps of a procedural body.
@@ -101,7 +102,8 @@ export class SurfaceBaker {
         if (have && have.res >= res) continue;
         if (v.apparentRadiusPx > bestPx) { best = v; bestPx = v.apparentRadiusPx; bestRes = res; }
       }
-      if (best) this.start(best, bestRes);
+      // a library skin is fetched for the body about to be baked only (then it waits for it)
+      if (best && best.skinSettled()) this.start(best, bestRes);
     }
     if (this.job) this.step();
   }
@@ -123,22 +125,26 @@ export class SurfaceBaker {
     const palette = view.surfaceMat!.uniforms;
     const shared: Record<string, IUniform> = {};
     for (const [k, u] of Object.entries(palette)) shared[k] = u;
+    const skin = view.skin;
+    const defines: Record<string, string> = skin ? (kind === 'gas' ? { SKIN: '', SKIN_FLAT: '' } : { SKIN: '' }) : {};
+    if (skin) Object.assign(shared, skinUniforms(skin, kind === 'gas'));
     const frag = kind === 'gas' ? Shaders.bakeGasFrag : Shaders.bakeTerrestrialFrag;
     const height = new ShaderMaterial({
-      vertexShader: Shaders.fullscreenVert, fragmentShader: frag,
+      vertexShader: Shaders.fullscreenVert, fragmentShader: frag, defines,
       uniforms: { ...shared, uFace: { value: 0 }, uRes: { value: res }, uPass: { value: 0 }, uHeightMap: { value: null } },
       depthTest: false, depthWrite: false,
     });
     const surface = new ShaderMaterial({
-      vertexShader: Shaders.fullscreenVert, fragmentShader: frag,
+      vertexShader: Shaders.fullscreenVert, fragmentShader: frag, defines,
       uniforms: { ...shared, uFace: { value: 0 }, uRes: { value: res }, uPass: { value: 1 }, uHeightMap: { value: scratch.texture } },
       depthTest: false, depthWrite: false,
     });
-    // cavity strength: the small worlds' relief is modest, their hollows should not go black
+    // cavity strength: the small worlds' relief is modest, their hollows should not go black; a
+    // skin's height spans its whole range (sea floor to peaks), its shading is in the normal already
     const normal = new ShaderMaterial({
       vertexShader: Shaders.fullscreenVert,
-      fragmentShader: Shaders.bakeNormalFrag,
-      uniforms: { uFace: { value: 0 }, uRes: { value: res }, uPass: { value: 2 }, uHeightMap: { value: scratch.texture }, uCavityScale: { value: kind === 'gas' ? 3 : 9 } },
+      fragmentShader: Shaders.bakeNormalFrag, defines,
+      uniforms: { uFace: { value: 0 }, uRes: { value: res }, uPass: { value: 2 }, uHeightMap: { value: scratch.texture }, uCavityScale: { value: skin ? (kind === 'gas' ? 1 : 2.5) : kind === 'gas' ? 3 : 9 } },
       depthTest: false, depthWrite: false,
     });
     this.job = { view, kind, res, pass: 0, face: 0, a, n, height, surface, normal, linked: false };
@@ -196,6 +202,7 @@ export class SurfaceBaker {
 
   private step(): void {
     const j = this.job!;
+    if (j.view.skin) touchSkin(j.view.skin);
     if (!this.programsReady(j)) return;
     const r = this.renderer;
     const prevTarget = r.getRenderTarget();
@@ -252,4 +259,29 @@ export class SurfaceBaker {
     this.scratch.clear();
     this.quad.geometry.dispose();
   }
+}
+
+let warming: Promise<void> | null = null;
+
+/**
+ * Link the skin bake programs in the background and keep them (the geology makes the rocky one
+ * seconds to link on D3D; the first world dressed by a skin would show its plain colours meanwhile).
+ */
+export function warmBake(renderer: WebGLRenderer): Promise<void> {
+  if (!warming) {
+    const scene = new Scene();
+    for (const [frag, defines] of [[Shaders.bakeTerrestrialFrag, { SKIN: '' }], [Shaders.bakeGasFrag, { SKIN: '', SKIN_FLAT: '' }]] as const) {
+      const mesh = new Mesh(new PlaneGeometry(2, 2), new ShaderMaterial({ vertexShader: Shaders.fullscreenVert, fragmentShader: frag, defines, depthTest: false, depthWrite: false }));
+      mesh.frustumCulled = false;
+      scene.add(mesh);
+    }
+    // a render target like the bake's: the program cache key depends on it
+    const rt = new WebGLRenderTarget(1, 1, { depthBuffer: false, stencilBuffer: false });
+    const prev = renderer.getRenderTarget();
+    renderer.setRenderTarget(rt);
+    warming = renderer.compileAsync(scene, new OrthographicCamera(-1, 1, 1, -1, 0, 1)).then(() => undefined, () => undefined);
+    renderer.setRenderTarget(prev);
+    rt.dispose();
+  }
+  return warming;
 }

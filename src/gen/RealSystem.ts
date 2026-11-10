@@ -7,7 +7,7 @@ import { LUM_CLASS_DESC } from '../astro/stellar';
 import { fmtLightYears } from '../ui/format';
 import { _, fixed, localeTag } from '../i18n';
 import {
-  CLASS_LABEL, EARTH_MASS, EARTH_RADIUS, Rng, describeTemp, fmtPeriod, gasAppearance, hashSeed, rockyAppearance,
+  CLASS_LABEL, EARTH_MASS, EARTH_RADIUS, Rng, describeTemp, fmtPeriod, gasAppearance, hashSeed, rockyAppearance, varyRocky,
   starFacts, SUDARSKY_BANDS, type GeneratedSystem, type PlanetClass,
 } from './SystemGenerator';
 
@@ -123,7 +123,7 @@ const SUDARSKY: Record<string, Array<[number, number, number]>> = {
 
 function bandsLook(rng: Rng, id: string, bands: Array<[number, number, number]>, turbulence = 0.5): Appearance {
   const seed = hashSeed(...id.split('').map((c) => c.charCodeAt(0))) % 10_000;
-  return { kind: 'gas', seed, bands: bands.map((b) => rng.tint(b, 0.04)), bandFreq: rng.range(5, 12), turbulence };
+  return { kind: 'gas', seed, bands: bands.map((b) => rng.tint(b, 0.04)), bandFreq: rng.range(5, 12), turbulence, skin: 'gas' };
 }
 
 /** What has actually been measured for a handful of famous worlds */
@@ -259,6 +259,7 @@ export function realSystem(star: StarInfo, host: ExoHost, toSun: Vector3): Gener
       appearance = look.appearance;
       atmosphere = obs?.airless ? undefined : look.atmosphere;
       clouds = obs?.airless ? undefined : look.clouds;
+      varyRocky(appearance, atmosphere, id, !obs);
       albedo = obs?.albedo ?? (cls === 'venusian' ? 0.7 : cls === 'eyeball' ? 0.45 : cls === 'ice' ? 0.55 : cls === 'temperate' ? 0.3 : 0.12);
     } else {
       const sub = cls === 'subneptune' || cls === 'neptune';

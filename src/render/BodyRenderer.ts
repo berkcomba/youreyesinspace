@@ -18,8 +18,9 @@ import { GODRAYS_LAYER } from './GodRaysPass';
 import { TileGlobe } from './TileGlobe';
 import { buildProceduralShip, disposeGroup } from './ProceduralShips';
 import { Terrain, type TerrainMeta } from './Terrain';
-import type { GeneratedGround } from './GroundGen';
+import { irregularity, type GeneratedGround } from './GroundGen';
 import { BAKE_FADE_S, SurfaceBaker, type SurfaceBake } from './PlanetBake';
+import { loadSkin, type Skin } from './SkinLibrary';
 import { disposeOrPin } from './ProgramPins';
 
 export interface RenderSettings {
@@ -41,6 +42,9 @@ const _v = new Vector3();
 const _qInv = new Quaternion();
 const _n = new Vector3();
 const _v2 = new Vector3();
+const _v3 = new Vector3();
+const _sky = new Vector4();
+const _dir = new Vector3();
 
 type Uniforms = Record<string, IUniform>;
 
@@ -76,6 +80,7 @@ function lightingUniforms(): Uniforms {
     uRingGaps: { value: [new Vector4(), new Vector4(), new Vector4(), new Vector4()] },
     uFill: { value: 0 },
     uAlpha: { value: 1 },
+    uSky: { value: new Vector4(0, 1, 0, -1) },
   };
 }
 
@@ -199,6 +204,11 @@ export class BodyView {
   /** surface baked into cube maps (PlanetBake): which model, the maps, and their fade-in */
   readonly bakeKind: 'terrestrial' | 'gas' | null = null;
   bake: SurfaceBake | null = null;
+  /** generated worlds: the library skin the bake reads instead of the procedural model (SkinLibrary) */
+  skin: Skin | null = null;
+  private skinState: 'none' | 'idle' | 'loading' | 'ready' = 'none';
+  /** 0 … 1, how far the globe is a potato (GroundGen: irregularity) */
+  private irregular = 0;
   private bakeFade = 0;
   private bakeLast = 0;
 
@@ -209,7 +219,8 @@ export class BodyView {
     const d = body.data;
     const a = d.appearance;
 
-    const irregular = d.radius < 50 ? 1.0 : d.radius < 300 && (d.type === 'asteroid' || d.type === 'comet') ? 0.5 : 0;
+    const irregular = irregularity(d);
+    this.irregular = irregular;
 
     const baseUniforms: Uniforms = {
       uSeed: { value: a.seed },
@@ -293,6 +304,7 @@ export class BodyView {
         },
       });
       this.bakeKind = 'gas';
+      if (a.skin) this.skinState = 'idle';
     } else {
       const lit = lightingUniforms();
       this.lit.push(lit);
@@ -324,6 +336,8 @@ export class BodyView {
         },
       });
       this.bakeKind = 'terrestrial';
+      // a potato keeps the procedural regolith: a planet's map would not fit its shape
+      if (a.skin && !irregular) this.skinState = 'idle';
       const img = IMAGERY[d.id];
       if (img) {
         this.tiles = new TileGlobe(body, img, lit, {
@@ -395,6 +409,7 @@ export class BodyView {
           uOccluders: { value: [new Vector4(), new Vector4(), new Vector4(), new Vector4()] },
           uAlpha: { value: 1 },
           uGround: { value: 0 },
+          uInside: { value: 0 },
         },
         transparent: true,
         blending: AdditiveBlending,
@@ -454,6 +469,25 @@ export class BodyView {
     if (this.ringParticles) scene.add(this.ringParticles.group);
     if (this.atmosphere) scene.add(this.atmosphere);
     if (this.corona) scene.add(this.corona);
+  }
+
+  /**
+   * Whether the bake may start: a body dressed by a library skin waits for its maps (fetched on
+   * the first ask); without one, or if they cannot be had, the procedural model is baked.
+   */
+  /** the body has a skin, but its maps could not be had (the procedural surface stays) */
+  get skinFailed(): boolean { return this.skinState === 'ready' && !this.skin; }
+
+  skinSettled(): boolean {
+    if (this.skinState === 'ready' && this.skin && !this.skin.alive) this.skinState = 'idle';
+    if (this.skinState === 'idle') {
+      this.skinState = 'loading';
+      loadSkin(this.body.data.appearance).then((s) => {
+        this.skin = s;
+        this.skinState = 'ready';
+      }, () => { this.skin = null; this.skinState = 'ready'; });
+    }
+    return this.skinState === 'ready' || this.skinState === 'none';
   }
 
   /** The baked surface maps arrived (or were released): the shader fades over to / back from them */
@@ -603,6 +637,7 @@ export class BodyView {
         color: atm ? vec3(atm.color) : new Vector3(1, 1, 1),
         density: atm?.density ?? 0,
         sunsetColor: atm?.sunsetColor ? vec3(atm.sunsetColor) : new Vector3(1, 0.6, 0.35),
+        height: atm?.height, radius: this.body.parent?.equatorialRadius,
       });
       this.terrain = t;
       this.group.add(t.group);
@@ -627,10 +662,15 @@ export class BodyView {
   landAt(ground: GeneratedGround): Terrain {
     this.releaseLanding();
     const atm = this.body.data.atmosphere;
+    // morning mist needs water: seas, lakes or a cloud deck (a desert's dawn stays clear)
+    const a = this.body.data.appearance;
+    const wet = (a.kind === 'terrestrial' && ((a.seaLevel ?? -1) >= 0 || (this.skin?.water ?? 0) > 0)) || !!this.body.data.clouds;
     const terrain = new Terrain(ground.source, 0, ground.site.radius, this.maxAnisotropy, {
       color: atm ? vec3(atm.color) : new Vector3(1, 1, 1),
       density: atm?.density ?? 0,
       sunsetColor: atm?.sunsetColor ? vec3(atm.sunsetColor) : new Vector3(1, 0.6, 0.35),
+      mist: wet ? 1 : 0.1,
+      height: atm?.height, radius: this.body.equatorialRadius,
     });
     const site = new Group();
     site.position.copy(ground.site.pos);
@@ -649,10 +689,11 @@ export class BodyView {
     L.ground.dispose();
     L.site.removeFromParent();
     this.landing = null;
+    if (this.surface) this.surface.visible = true;
   }
 
   /** Fade the landing ground by the camera's distance from its site; light it like the globe. */
-  private updateLanding(camPos: Vector3, dtReal: number, sunPos: Vector3, sunColor: Vector3, settings: RenderSettings): void {
+  private updateLanding(camPos: Vector3, dtReal: number, sunPos: Vector3, sunRadius: number, sunColor: Vector3, settings: RenderSettings): void {
     const L = this.landing!;
     const b = this.body;
     // the site, camera-relative
@@ -663,10 +704,36 @@ export class BodyView {
     L.fade = L.fade < goal ? Math.min(goal, L.fade + slew) : Math.max(goal, L.fade - slew);
     // camera and Sun in the site frame (+Y up)
     _qInv.copy(b.rotation).multiply(L.ground.site.quat).invert();
-    _n.copy(sunPos).sub(camPos).sub(_v2).normalize().applyQuaternion(_qInv);
+    _n.copy(sunPos).sub(camPos).sub(_v2);
+    const sunAng = sunRadius / Math.max(_n.length(), 1e-9);
+    _n.normalize().applyQuaternion(_qInv);
     _v2.negate().applyQuaternion(_qInv);
-    L.terrain.update(L.fade, _n, sunColor, settings.fill?.get(b.id) ?? 0, _v2);
+    this.landingCam.copy(_v2);
+    L.terrain.update(L.fade, _n, sunColor, settings.fill?.get(b.id) ?? 0, _v2, sunAng);
+    L.terrain.setHorizon(this.relPos.length(), b.equatorialRadius);
     if (L.fade > 0.002) this.group.visible = true;
+    // a potato's lobes would rise through the ground laid on it: once down, the ground is the world
+    if (this.surface && this.irregular > 0) this.surface.visible = L.fade < 0.5;
+  }
+
+  /** the camera in the landing site's frame (km), as of the last update */
+  private readonly landingCam = new Vector3();
+
+  /**
+   * Standing on the landing ground: how far (rad) the world direction `dir` from the camera clears
+   * the horizon of the relief around it, negative behind a hill — Infinity when not landed here.
+   */
+  skyMargin(dir: Vector3): number {
+    const L = this.landing;
+    if (!L?.terrain.ready || L.fade < 0.5) return Infinity;
+    _qInv.copy(this.body.rotation).multiply(L.ground.site.quat).invert();
+    return L.terrain.skyMargin(this.landingCam, _dir.copy(dir).applyQuaternion(_qInv));
+  }
+
+  /** redraw what the Sun's motion has made stale in the ground's sunlight maps */
+  bakeSunlight(renderer: WebGLRenderer): void {
+    this.landing?.terrain.bakeSunlight(renderer);
+    this.terrain?.bakeSunlight(renderer);
   }
 
   /** Fade the terrain by camera distance; a slew limit smooths the moment it finishes loading. */
@@ -686,6 +753,8 @@ export class BodyView {
     _v2.copy(this.relPos).negate().applyQuaternion(_qInv);
     _v.copy(sunPos).sub(this.body.position).normalize().applyQuaternion(_qInv);
     t.update(this.terrainFade, _v, sunColor, settings.fill?.get(this.body.parent?.id ?? '') ?? 0, _v2);
+    const p = this.body.parent;
+    if (p) t.setHorizon(_v3.copy(this.body.position).sub(this.relPos).distanceTo(p.position), p.equatorialRadius);
   }
 
   update(
@@ -850,6 +919,7 @@ export class BodyView {
     if (this.atmosphere && this.atmosphereMat) {
       const on = settings.atmospheres && this.meshVisible && this.apparentRadiusPx > 1.5;
       this.atmosphere.visible = on;
+      _sky.set(0, 1, 0, -1);
       if (on) {
         this.atmosphere.position.copy(this.relPos);
         const u = this.atmosphereMat.uniforms;
@@ -871,22 +941,24 @@ export class BodyView {
         // (faint far from the Sun: Pluto's noon sky stays dark)
         const dAU = Math.hypot(_v.x - this.relPos.x, _v.y - this.relPos.y, _v.z - this.relPos.z) / AU_KM;
         u.uGround.value = (1 - smoothstep(0, (outer - b.equatorialRadius) * 0.3, dist - b.polarRadius)) * Math.min(1, 100 / Math.max(1, dAU * dAU));
-        // Inside the shell: render the back faces without depth test so the sky is visible
+        // Inside the shell: render the back faces; the shader pulls the rays that end on the planet
+        // in front of everything, the sky stays behind the relief that stands against it
+        this.atmosphereMat.side = inside ? BackSide : FrontSide;
+        u.uInside.value = inside ? 1 : 0;
+        // the shell's constants for the relief above the horizon (sky_haze.glsl)
         if (inside) {
-          this.atmosphereMat.side = BackSide;
-          this.atmosphereMat.depthTest = false;
-        } else {
-          this.atmosphereMat.side = FrontSide;
-          this.atmosphereMat.depthTest = true;
+          const R = b.equatorialRadius, H = outer - R, c = Math.min(R / Math.max(dist, 1e-6), 0.99995);
+          _sky.set(((u.uDensity.value as number) * 0.22 * 7) / H, Math.sqrt((Math.PI * R * 7) / (2 * H)), R / H, -Math.sqrt(1 - c * c));
         }
       }
+      for (const lit of this.lit) (lit.uSky.value as Vector4).copy(_sky);
     }
 
     if (this.landing) {
       const now = performance.now();
       const dtReal = this.landingLast ? Math.min(0.5, (now - this.landingLast) / 1000) : 0;
       this.landingLast = now;
-      this.updateLanding(camPos, dtReal, sunPos, sunColor, settings);
+      this.updateLanding(camPos, dtReal, sunPos, sunRadius, sunColor, settings);
     }
 
     // Pulsar: brightness pulse when a beam sweeps across the line of sight
@@ -939,12 +1011,14 @@ export class BodyRenderer {
 
   /** credit line for the imagery currently dominating the view (null = none) */
   imageryCredit: string | null = null;
+  /** source of the surface map on the body filling the view (null = none owed) */
+  skinCredit: string | null = null;
   /** bakes the procedural surfaces into cube maps (null without a renderer: tests) */
   private readonly baker: SurfaceBaker | null;
   /** true while the planets in view are still being baked (warm-up waits for this to clear) */
   get baking(): boolean { return this.baker?.pending(this.views) ?? false; }
 
-  constructor(private readonly scene: Scene, private readonly maxAnisotropy = 1, renderer: WebGLRenderer | null = null) {
+  constructor(private readonly scene: Scene, private readonly maxAnisotropy = 1, private readonly renderer: WebGLRenderer | null = null) {
     this.sunLight.target.position.set(0, 0, 0);
     scene.add(this.sunLight, this.sunLight.target, this.fillLight);
     this.baker = renderer ? new SurfaceBaker(renderer, maxAnisotropy) : null;
@@ -1082,6 +1156,8 @@ export class BodyRenderer {
     this.fillLight.color.setRGB(0.4 + 0.6 * shipFill, 0.53 + 0.47 * shipFill, 0.73 + 0.27 * shipFill);
     let credit: string | null = null;
     let best = 12; // px: only credit imagery when the body is clearly resolved
+    let skinCredit: string | null = null;
+    let skinBest = 12;
     for (const v of this.views) {
       const host = hostOf?.(v.body) ?? null;
       if (host && host !== v.body) v.update(camPos, camQuat, camera, viewportH, fovRad, host.position, host.radius, this.lightColorOf(host), time, settings);
@@ -1089,10 +1165,15 @@ export class BodyRenderer {
       if (v.imageryActive && v.tiles && v.apparentRadiusPx > best) {
         best = v.apparentRadiusPx;
         credit = v.tiles.imagery.credit;
+      } else if (v.skin?.credit && v.apparentRadiusPx > skinBest) {
+        skinBest = v.apparentRadiusPx;
+        skinCredit = v.skin.credit;
       }
       if (v.terrainActive) { const a = v.body.data.appearance; if (a.kind === 'spacecraft' && a.terrain) { credit = a.terrain.credit; best = Infinity; } }
     }
     this.imageryCredit = credit;
+    this.skinCredit = credit ? null : skinCredit;
+    if (this.renderer) for (const v of this.views) v.bakeSunlight(this.renderer);
     this.baker?.update(this.views, performance.now());
   }
 }

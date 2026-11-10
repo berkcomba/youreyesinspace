@@ -17,8 +17,16 @@ void main() {
   float texel = 1.5707963 / uRes;
   float e = 1.2 * texel;
   float h = hAt(p);
+#ifdef SKIN
+  // a skin's slopes come from its baked normal (pass 0 put them beside the height), the slopes of
+  // the craters laid over it from their height in A
+  vec4 c = textureLod(uHeightMap, p, 0.0);
+  float gT = c.g + (textureLod(uHeightMap, normalize(p + T * e), 0.0).a - textureLod(uHeightMap, normalize(p - T * e), 0.0).a) / (2.0 * e);
+  float gB = c.b + (textureLod(uHeightMap, normalize(p + B * e), 0.0).a - textureLod(uHeightMap, normalize(p - B * e), 0.0).a) / (2.0 * e);
+#else
   float gT = (hAt(p + T * e) - hAt(p - T * e)) / (2.0 * e);
   float gB = (hAt(p + B * e) - hAt(p - B * e)) / (2.0 * e);
+#endif
   // cavity: the height against the mean of three rings around it (4, 14 and 40 texels; the wide
   // one lets whole crater bowls and basin floors darken, not only their rims)
   float m1 = 0.0, m2 = 0.0, m3 = 0.0;

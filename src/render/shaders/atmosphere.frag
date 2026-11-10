@@ -20,6 +20,7 @@ uniform float uDensity;
 uniform vec4 uOccluders[4];
 uniform float uAlpha;   // brightness (tours fade comparison bodies in/out)
 uniform float uGround;  // 1 with the camera on the surface: the daytime sky dome
+uniform float uInside;  // 1 with the camera inside the shell (its back faces drawn)
 
 varying vec3 vWorldPos;
 
@@ -57,6 +58,11 @@ void main() {
   float rIn = min(uBodyRadius, length(ocS) * 0.99995);
   bool hitPlanet = raySphere(ocS, rdS, rIn, tIn0, tIn1) && tIn1 > 0.0;
   if (hitPlanet) tExit = min(tExit, max(tIn0, 0.0));
+#if defined( USE_LOGARITHMIC_DEPTH_BUFFER )
+  // inside the shell: a ray that ends on the planet lays its haze over whatever ground it meets; one
+  // that misses it is sky, out at the shell, behind any relief rising above the horizon
+  if (uInside > 0.5 && hitPlanet) gl_FragDepth = 0.0;
+#endif
   float path = tExit - tEntry;
   if (path <= 0.0) discard;
 

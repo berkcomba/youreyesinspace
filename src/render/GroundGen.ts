@@ -3,10 +3,13 @@ import {
   Scene, ShaderMaterial, SRGBColorSpace, UnsignedByteType, Vector2, Vector3, Vector4, WebGLRenderTarget, type IUniform, type Texture, type WebGLRenderer,
 } from 'three';
 import type { CelestialBody } from '../core/CelestialBody';
+import type { BodyData } from '../data/types';
+import { groundMaterials } from '../data/groundMaterials';
 import { DEG } from '../core/constants';
 import { Shaders } from './shaders';
 import { GRID_N, TERRAIN_MAX_RINGS, type HeightField, type TerrainMeta, type TerrainSource } from './Terrain';
 import type { ImageryPatch } from './TileGlobe';
+import { skinUniforms, type Skin } from './SkinLibrary';
 
 /**
  * Ground for a landing anywhere on a procedural body.
@@ -48,13 +51,55 @@ export interface GeneratedGround {
   dispose(): void;
 }
 
-/** Solid bodies whose sphere the visitor can stand on (the potato-shaped rocks are left out). */
+/**
+ * How far a body's shape departs from a sphere (`smallBodyRadius` in common.glsl), 0 … 1. Self-
+ * gravity rounds rock and ice only above a couple of hundred kilometres: smaller moons are
+ * potatoes (Hyperion, Proteus' smaller kin, Phobos), ever more so the smaller they are.
+ */
+export function irregularity(d: BodyData): number {
+  if (d.radius < 50) return 1;
+  if (d.radius < 300 && (d.type === 'asteroid' || d.type === 'comet')) return 0.5;
+  if (d.type === 'moon' && d.radius < 180) return 0.3 + 0.7 * (180 - d.radius) / 130;
+  return 0;
+}
+
+/**
+ * Solid bodies the visitor can stand on: the round worlds and the potato-shaped moons (the
+ * ground is laid on their shape, see `fitToShape`); asteroids and comets are left out.
+ */
 export function landable(b: CelestialBody): boolean {
   const d = b.data;
   if (d.appearance.kind !== 'terrestrial') return false;
-  if (d.radius < 50) return false;
-  if (d.radius < 300 && (d.type === 'asteroid' || d.type === 'comet')) return false;
-  return true;
+  return irregularity(d) === 0 || d.type === 'moon';
+}
+
+let potatoMat: ShaderMaterial | null = null;
+
+/**
+ * A site on a potato-shaped body moved onto its actual surface (surface.vert's shape, read back
+ * from the GPU): the radius there, not the sphere's, carries the ground and its curvature.
+ */
+export function fitToShape(renderer: WebGLRenderer, b: CelestialBody, site: GroundSite): GroundSite {
+  const amount = irregularity(b.data);
+  if (amount === 0) return site;
+  potatoMat ??= new ShaderMaterial({
+    vertexShader: Shaders.fullscreenVert, fragmentShader: Shaders.potatoFrag,
+    uniforms: { uDir: { value: new Vector3() }, uSeed: { value: 0 }, uIrregular: { value: 0 } },
+    depthTest: false, depthWrite: false,
+  });
+  const u = potatoMat.uniforms;
+  // the shape is sampled on the unsquashed unit sphere, as the globe's vertices are
+  (u.uDir.value as Vector3).copy(site.up);
+  u.uSeed.value = b.data.appearance.seed;
+  u.uIrregular.value = amount;
+  const rt = new WebGLRenderTarget(1, 1, { format: RGBAFormat, type: UnsignedByteType, depthBuffer: false, stencilBuffer: false, minFilter: NearestFilter, magFilter: NearestFilter, generateMipmaps: false });
+  fullscreen(renderer, potatoMat, rt);
+  const px = new Uint8Array(4);
+  renderer.readRenderTargetPixels(rt, 0, 0, 1, 1, px);
+  rt.dispose();
+  const k = 0.25 + ((px[0] * 256 + px[1]) / 65535) * 1.5;
+  const pos = site.up.clone().multiplyScalar(b.radius * k);
+  return { ...site, pos, radius: pos.length() };
 }
 
 /** Relief amplitude (km) the globe's 0…1 height field spans on this body. */
@@ -126,6 +171,9 @@ function fullscreen(renderer: WebGLRenderer, mat: ShaderMaterial, rt: WebGLRende
 
 let warming: Promise<void> | null = null;
 
+/** the ground programs of a body dressed by a library skin */
+const SKIN_DEFINES = { SKIN: '', SKIN_GROUND: '' };
+
 /**
  * Link the two ground programs in the background (KHR_parallel_shader_compile) and keep them: on
  * first use the link would freeze the page instead — seconds, tens of them on D3D (ANGLE) with a
@@ -134,8 +182,9 @@ let warming: Promise<void> | null = null;
 export function warmGround(renderer: WebGLRenderer): Promise<void> {
   if (!warming) {
     const scene = new Scene();
+    for (const defines of [{}, SKIN_DEFINES])
     for (const frag of [Shaders.groundHeightFrag, Shaders.groundAlbedoFrag]) {
-      const mesh = new Mesh(new PlaneGeometry(2, 2), new ShaderMaterial({ vertexShader: Shaders.fullscreenVert, fragmentShader: frag, depthTest: false, depthWrite: false }));
+      const mesh = new Mesh(new PlaneGeometry(2, 2), new ShaderMaterial({ vertexShader: Shaders.fullscreenVert, fragmentShader: frag, defines, depthTest: false, depthWrite: false }));
       mesh.frustumCulled = false;
       scene.add(mesh);
     }
@@ -159,6 +208,8 @@ export function generateGround(
   renderer: WebGLRenderer, b: CelestialBody, palette: Record<string, IUniform>, site: GroundSite, maxAnisotropy: number,
   /** real imagery around the site: its colours replace the procedural palette, its seas the procedural ones */
   real: ImageryPatch | null = null,
+  /** the library skin the globe wears: the ground continues its relief, colours and seas */
+  skin: Skin | null = null,
 ): GeneratedGround {
   const sizes = groundRingSizes(b);
   const amp = reliefAmplitude(b);
@@ -175,14 +226,16 @@ export function generateGround(
     uRes: { value: 0 },
     uRealMap: { value: real?.tex ?? null },
     uRealRect: { value: real ? new Vector4(real.lon0, real.latBottom, real.span, real.water ? 2 : 1) : new Vector4(0, 0, 1, 0) },
+    ...(skin ? skinUniforms(skin, false) : {}),
   };
+  const defines = skin ? SKIN_DEFINES : {};
   const heightMat = new ShaderMaterial({
-    vertexShader: Shaders.fullscreenVert, fragmentShader: Shaders.groundHeightFrag,
+    vertexShader: Shaders.fullscreenVert, fragmentShader: Shaders.groundHeightFrag, defines,
     uniforms: { ...shared, ...siteU, uRange: { value: new Vector2(hmin, hmax) } },
     depthTest: false, depthWrite: false,
   });
   const albedoMat = new ShaderMaterial({
-    vertexShader: Shaders.fullscreenVert, fragmentShader: Shaders.groundAlbedoFrag,
+    vertexShader: Shaders.fullscreenVert, fragmentShader: Shaders.groundAlbedoFrag, defines,
     uniforms: { ...shared, ...siteU },
     depthTest: false, depthWrite: false,
   });
@@ -225,8 +278,12 @@ export function generateGround(
   heightMat.dispose();
   albedoMat.dispose();
   const seed = (palette.uSeed?.value as number | undefined) ?? 0;
+  const dress = groundMaterials(b.data);
+  const rocks = dress && dress.rocks > 0
+    ? { density: dress.rocks, seed: Math.round(site.lat * 1e4) ^ Math.round(site.lon * 1e4) * 7919 ^ seed, family: dress.rockFamily }
+    : undefined;
   return {
-    source: { kind: 'generated', meta: { rings }, fields, textures, seed },
+    source: { kind: 'generated', meta: { rings, ground: dress?.flat, groundSteep: dress?.steep, rocks }, fields, textures, seed },
     site,
     half: sizes[sizes.length - 1] / 2,
     water,

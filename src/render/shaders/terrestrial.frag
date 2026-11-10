@@ -46,7 +46,8 @@ void main() {
     cavity = b.cavity;
     height = b.height;
     ocean = b.flag > 0.75;
-    lavaGlow = ocean ? 0.0 : b.flag * 2.0;
+    // coasts filter between water (1) and land (0): only a volcanic world reads the flag as glow
+    lavaGlow = ocean || uVolcanic <= 0.0 ? 0.0 : b.flag * 2.0;
     // closer than the bake resolves: the procedural grain carries on underneath
     float mag = bakeMagnification(p);
     float close = smoothstep(1.5, 6.0, mag);
@@ -137,6 +138,8 @@ void main() {
     float haze = uAtmDensity * 0.12 * (1.0 - NdotV * 0.7) * dayFactor;
     color = mix(color, color * 0.9 + uAtmColor * 0.08, haze);
     color += scatter * shadowAt(P, L) * uSunColor;
+    vec3 rd = normalize(vWorldPos), up = normalize(-uBodyPos);
+    color += skyHaze(dot(rd, up), dot(rd, L), dot(up, L), length(vWorldPos), uAtmColor, uAtmDensity, uSunsetColor, uSunColor);
   }
 
   // An opaque haze deck (Titan's tholins, Venus' sulphuric clouds): the ground is a faint

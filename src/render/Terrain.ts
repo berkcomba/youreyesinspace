@@ -1,8 +1,12 @@
 import {
-  AlwaysDepth, BufferAttribute, BufferGeometry, CustomBlending, Group, Mesh, OneMinusSrcAlphaFactor, ShaderMaterial,
-  SrcAlphaFactor, SRGBColorSpace, TextureLoader, Vector2, Vector3, Vector4, type Texture,
+  AlwaysDepth, BufferAttribute, BufferGeometry, CustomBlending, DataTexture, FloatType, Group, LinearFilter, Matrix4, Mesh, NearestFilter,
+  NoColorSpace, OneMinusSrcAlphaFactor, OrthographicCamera, PlaneGeometry, RedFormat, RepeatWrapping, Scene, ShaderMaterial,
+  SrcAlphaFactor, SRGBColorSpace, TextureLoader, Vector2, Vector3, Vector4, WebGLRenderTarget, type Texture, type WebGLRenderer,
 } from 'three';
+import type { GroundMaterial } from '../data/types';
+import type { RockFamily } from '../data/groundMaterials';
 import { Shaders } from './shaders';
+import { GroundRocks } from './GroundRocks';
 
 /**
  * Real ground under a lander, out to the horizon: nested square rings of relief + imagery around
@@ -33,6 +37,12 @@ export interface TerrainMeta {
   tone?: number[];
   globeTone?: number[];
   pano?: { file: string; elevMin: number; elevMax: number; north: number; tone: number[] };
+  /** the world's close-range material, laid over the maps (generated ground) */
+  ground?: GroundMaterial;
+  /** what the slopes are made of instead (blended in with the steepness) */
+  groundSteep?: GroundMaterial;
+  /** rocks strewn around the site (GroundRocks): how many (0…1), and their layout's seed */
+  rocks?: { density: number; seed: number; family?: RockFamily };
 }
 
 /** at most this many rings are drawn (the shader samples as many textures) */
@@ -51,8 +61,55 @@ const PANO_NEAR_KM = 0.03;
 const PANO_MAST_KM = 0.002;
 /** the ground's natural tone is fully applied below this camera height (km), gone 5 km up */
 const NEAR_TONE_KM = 0.3;
+/** texels per side of each ring's sunlight map */
+const SUN_RES = 512;
+/** a ring's sunlight map is redone once the Sun has moved this far from where it was made for */
+const SUN_REDO_COS = Math.cos(0.0015);
+/** the horizon march reaches this many patch half-sizes out (beyond the patch: the bare sphere) */
+const SUN_REACH = 2.5;
 
 const textureLoader = new TextureLoader();
+
+let quadScene: Scene | null = null;
+let quadCam: OrthographicCamera | null = null;
+let quad: Mesh | null = null;
+
+function drawQuad(renderer: WebGLRenderer, mat: ShaderMaterial, rt: WebGLRenderTarget): void {
+  if (!quadScene) {
+    quadScene = new Scene();
+    quadCam = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    quad = new Mesh(new PlaneGeometry(2, 2), mat);
+    quad.frustumCulled = false;
+    quadScene.add(quad);
+  }
+  quad!.material = mat;
+  const prev = renderer.getRenderTarget();
+  const prevClear = renderer.autoClear;
+  renderer.autoClear = true;
+  renderer.setRenderTarget(rt);
+  renderer.render(quadScene, quadCam!);
+  renderer.setRenderTarget(prev);
+  renderer.autoClear = prevClear;
+}
+
+/** ground materials, fetched once and kept: every landing on the world lays the same tile */
+const groundTextures = new Map<string, Promise<Texture>>();
+
+function groundTexture(file: string, anisotropy: number): Promise<Texture> {
+  let p = groundTextures.get(file);
+  if (!p) {
+    p = new Promise<Texture>((resolve, reject) => {
+      textureLoader.load(`/ground/${file}${/\.\w+$/.test(file) ? '' : '.png'}?v=${__BUILD_ID__}`, (t) => {
+        t.colorSpace = NoColorSpace; t.flipY = false; t.anisotropy = anisotropy;
+        t.wrapS = t.wrapT = RepeatWrapping;
+        resolve(t);
+      }, undefined, reject);
+    });
+    p.catch(() => groundTextures.delete(file));
+    groundTextures.set(file, p);
+  }
+  return p;
+}
 
 export interface HeightField { half: number; n: number; data: Float32Array }
 
@@ -103,6 +160,7 @@ export class Terrain {
   private clear: Mesh | null = null;
   private pano: Mesh | null = null;
   private panoMat: ShaderMaterial | null = null;
+  private rocks: GroundRocks | null = null;
   private disposed = false;
   /** half-size (km) of the whole patch */
   readonly half: number;
@@ -110,6 +168,14 @@ export class Terrain {
   private readonly meta: TerrainMeta;
   /** the height fields once loaded (finest first): the ground under a visitor's feet */
   private fields: HeightField[] = [];
+  /** sunlight maps (see sunlight.frag): the heights on the GPU, a map per ring, the Sun each was made for */
+  private heightTex: DataTexture[] = [];
+  private sunTargets: WebGLRenderTarget[] = [];
+  private sunMade: Vector3[] = [];
+  private sunMat: ShaderMaterial | null = null;
+  private sunNext = 0;
+  private readonly sunDir = new Vector3(0, 1, 0);
+  private sunAng = 0.0047;
 
   /**
    * @param groundY      y of the vehicle's ground level in its frame (km)
@@ -118,7 +184,12 @@ export class Terrain {
    */
   constructor(
     private readonly source: TerrainSource, groundY: number, private readonly curvatureR: number,
-    private readonly anisotropy: number, atmosphere: { color: Vector3; density: number; sunsetColor: Vector3 },
+    private readonly anisotropy: number,
+    /**
+     * `mist`: 0 … 1, how readily the hollows fill with morning mist (a humid world's); `height`
+     * (the data's, a fraction of the radius) and `radius` (km): its shell, as BodyRenderer draws it
+     */
+    atmosphere: { color: Vector3; density: number; sunsetColor: Vector3; mist?: number; height?: number; radius?: number },
   ) {
     const meta = source.meta;
     this.meta = meta;
@@ -133,7 +204,12 @@ export class Terrain {
       : fallback.clone();
     const globeGain = gain(meta.globeTone, new Vector3(1, 1, 1));
     const nearGain = gain(meta.pano?.tone, globeGain);
+    // the shell's constants (sky_haze.glsl); the horizon comes with each frame (setHorizon)
+    const skyR = atmosphere.radius ?? curvatureR, skyH = skyR * (atmosphere.height ?? 0) * 3.2;
     const uniforms: Record<string, { value: unknown }> = {
+      uSky: { value: skyH > 0
+        ? new Vector4((atmosphere.density * 0.22 * 7) / skyH, Math.sqrt((Math.PI * skyR * 7) / (2 * skyH)), skyR / skyH, -0.01)
+        : new Vector4(0, 1, 0, -1) },
       uHalf: { value: new Float32Array(TERRAIN_MAX_RINGS).fill(1e9) },
       uRings: { value: this.rings.length },
       uSunDir: { value: new Vector3(0, 1, 0) }, uSunColor: { value: new Vector3(1, 1, 1) },
@@ -143,9 +219,13 @@ export class Terrain {
       uGlobeGain: { value: globeGain }, uNearGain: { value: nearGain }, uNear: { value: 0 },
       uProcedural: { value: source.kind === 'generated' ? 1 : 0 }, uSeed: { value: source.kind === 'generated' ? source.seed : 0 },
       uCamLocal: { value: new Vector3() },
-      uTime: { value: 0 }, uMistLevel: { value: -1e9 },
+      uTime: { value: 0 }, uMistLevel: { value: -1e9 }, uMist: { value: atmosphere.mist ?? 1 },
+      uGround: { value: null }, uGroundRange: { value: new Vector4(0, 0, 0, 0) },
+      uGroundB: { value: null }, uGroundRangeB: { value: new Vector4(0, 0, 0, 0) },
+      uRockShadow: { value: null }, uRockShadowMat: { value: new Matrix4() }, uRockShadowOn: { value: 0 }, uRockShadowTexel: { value: 0 },
+      uSunlit: { value: 0 },
     };
-    for (let i = 0; i < TERRAIN_MAX_RINGS; i++) uniforms[`uTex${i}`] = { value: null };
+    for (let i = 0; i < TERRAIN_MAX_RINGS; i++) { uniforms[`uTex${i}`] = { value: null }; uniforms[`uSun${i}`] = { value: null }; }
     this.mat = new ShaderMaterial({
       vertexShader: Shaders.terrainVert,
       fragmentShader: Shaders.terrainFrag,
@@ -166,6 +246,20 @@ export class Terrain {
     const v = `?v=${__BUILD_ID__}`;
     const pano = this.meta.pano;
     const src = this.source;
+    // the close-range material arrives during the descent; until then (or without it) the maps alone
+    // (a level-ground material that cannot be had — a site-only bake on a clone — gives way to the slopes')
+    const lay = (gm: GroundMaterial, slot: '' | 'B', fallback?: GroundMaterial): void => {
+      groundTexture(gm.file, this.anisotropy).then((t) => {
+        if (this.disposed) return;
+        this.mat.uniforms[`uGround${slot}`].value = t;
+        (this.mat.uniforms[`uGroundRange${slot}`].value as Vector4).set(gm.slope, gm.albedo, gm.height, 1);
+      }, (err) => {
+        console.warn(`Zemin malzemesi yüklenemedi: ${gm.file}`, err);
+        if (fallback) lay(fallback, slot);
+      });
+    };
+    if (this.meta.ground) lay(this.meta.ground, '', this.meta.groundSteep);
+    if (this.meta.groundSteep) lay(this.meta.groundSteep, 'B');
     const [fields, texs, panoTex] = src.kind === 'generated'
       ? [src.fields.slice(0, rings.length), src.textures.slice(0, rings.length), null]
       : await Promise.all([
@@ -185,6 +279,7 @@ export class Terrain {
     }
     // the same texture repeated keeps the sampler array complete on every driver
     for (let i = rings.length; i < TERRAIN_MAX_RINGS; i++) u[`uTex${i}`].value = texs[rings.length - 1];
+    this.prepareSunlight(fields);
 
     for (let i = 0; i < rings.length; i++) {
       const mesh = new Mesh(this.buildRing(fields, i), this.mat);
@@ -192,6 +287,12 @@ export class Terrain {
       mesh.frustumCulled = false;
       this.meshes.push(mesh);
       this.group.add(mesh);
+    }
+
+    if (src.kind === 'generated' && this.meta.rocks) {
+      const r = this.meta.rocks;
+      this.rocks = new GroundRocks(u, (x, z) => this.surfaceY(x, z), r.density, r.seed, r.family ?? null, TERRAIN_ORDER_GROUND);
+      this.group.add(this.rocks.group);
     }
 
     // depth floor under the footprint (a little wider, for the relief seen edge-on): the planet's
@@ -208,6 +309,83 @@ export class Terrain {
     this.group.add(this.clear);
 
     if (pano && panoTex) this.buildPano(pano, panoTex);
+  }
+
+  /** the heights on the GPU and an empty sunlight map per ring (drawn by `bakeSunlight`) */
+  private prepareSunlight(fields: HeightField[]): void {
+    const n = fields.length;
+    const halves = new Float32Array(TERRAIN_MAX_RINGS), counts = new Float32Array(TERRAIN_MAX_RINGS).fill(2);
+    for (let i = 0; i < n; i++) {
+      const f = fields[i];
+      const t = new DataTexture(f.data, f.n, f.n, RedFormat, FloatType);
+      t.minFilter = t.magFilter = NearestFilter;
+      t.generateMipmaps = false;
+      t.needsUpdate = true;
+      this.heightTex.push(t);
+      this.sunTargets.push(new WebGLRenderTarget(SUN_RES, SUN_RES, { depthBuffer: false, stencilBuffer: false, generateMipmaps: false, minFilter: LinearFilter, magFilter: LinearFilter }));
+      this.sunMade.push(new Vector3(NaN, NaN, NaN));
+      halves[i] = f.half;
+      counts[i] = f.n;
+    }
+    const u = this.mat.uniforms;
+    const uniforms: Record<string, { value: unknown }> = {
+      uHalf: { value: halves }, uN: { value: counts },
+      uOuter: { value: this.half }, uEdge: { value: EDGE_FADE }, uCurv: { value: 1 / (2 * this.curvatureR) },
+      uRingHalf: { value: 1 }, uSunDir: { value: new Vector3() }, uSunAng: { value: this.sunAng },
+      uT0: { value: 0 }, uGrow: { value: 1 },
+    };
+    for (let i = 0; i < TERRAIN_MAX_RINGS; i++) {
+      uniforms[`uH${i}`] = { value: this.heightTex[Math.min(i, n - 1)] };
+      u[`uSun${i}`].value = this.sunTargets[Math.min(i, n - 1)].texture;
+    }
+    this.sunMat = new ShaderMaterial({ vertexShader: Shaders.fullscreenVert, fragmentShader: Shaders.sunlightFrag, uniforms, depthTest: false, depthWrite: false });
+  }
+
+  /**
+   * Redraw the sunlight map of (at most) one ring the Sun has moved on from — once a frame, so a
+   * running clock costs one ring per frame. The maps are used once every ring has one.
+   */
+  bakeSunlight(renderer: WebGLRenderer): void {
+    if (!this.sunMat || !this.group.visible) return;
+    this.rocks?.renderShadows(renderer, this.sunDir);
+    const n = this.sunTargets.length;
+    for (let k = 0; k < n; k++) {
+      const i = (this.sunNext + k) % n;
+      if (this.sunMade[i].dot(this.sunDir) > SUN_REDO_COS) continue;
+      const u = this.sunMat.uniforms;
+      const half = this.rings[i].size / 2;
+      const t0 = (1.5 * 2 * half) / SUN_RES;
+      u.uRingHalf.value = half;
+      u.uT0.value = t0;
+      u.uGrow.value = Math.pow((SUN_REACH * this.half) / t0, 1 / 63);
+      (u.uSunDir.value as Vector3).copy(this.sunDir);
+      u.uSunAng.value = this.sunAng;
+      drawQuad(renderer, this.sunMat, this.sunTargets[i]);
+      this.sunMade[i].copy(this.sunDir);
+      this.sunNext = i + 1;
+      if (this.sunMade.every((s) => !Number.isNaN(s.x))) this.mat.uniforms.uSunlit.value = 1;
+      return;
+    }
+  }
+
+  /**
+   * How far (rad) direction `dir` (unit, patch frame) clears the horizon seen from `from` (patch
+   * frame, km): the relief and the curve of the planet; negative behind them (the Sun behind a hill).
+   */
+  skyMargin(from: Vector3, dir: Vector3): number {
+    if (!this.fields.length) return Infinity;
+    const len = Math.hypot(dir.x, dir.z);
+    if (len < 1e-6) return Infinity;
+    const el = Math.atan2(dir.y, len);
+    if (el > 0.6) return Infinity; // no horizon rises that high
+    const dx = dir.x / len, dz = dir.z / len;
+    let horizon = -Math.PI / 2, t = 0.002;
+    const grow = Math.pow((SUN_REACH * this.half) / t, 1 / 95);
+    for (let k = 0; k < 96; k++) {
+      horizon = Math.max(horizon, Math.atan2(this.surfaceY(from.x + dx * t, from.z + dz * t) - from.y, t));
+      t *= grow;
+    }
+    return el - horizon;
   }
 
   /** the panorama strip on a band of a sphere around the mast (see the class comment) */
@@ -399,10 +577,12 @@ export class Terrain {
    *               belong to the view from the ground; from altitude the patch must match the
    *               globe's tiles, which have neither; the panorama shows only right at the vehicle
    */
-  update(opacity: number, sunDir: Vector3, sunColor: Vector3, fill: number, cam: Vector3): void {
+  update(opacity: number, sunDir: Vector3, sunColor: Vector3, fill: number, cam: Vector3, sunAng = 0.0047): void {
     const u = this.mat.uniforms;
     u.uOpacity.value = opacity;
     (u.uSunDir.value as Vector3).copy(sunDir);
+    this.sunDir.copy(sunDir);
+    this.sunAng = sunAng;
     (u.uSunColor.value as Vector3).copy(sunColor);
     u.uFill.value = fill;
     u.uHaze.value = 1 - smooth01((cam.y - 2) / 18);
@@ -414,6 +594,7 @@ export class Terrain {
     const ground = this.surfaceY(cam.x, cam.z);
     u.uMistLevel.value = ground - 0.03 - Math.max(0, cam.y - ground - 0.15) * 4;
     this.group.visible = this.meshes.length > 0 && opacity > 0.002;
+    this.rocks?.update(cam);
     if (this.pano && this.panoMat) {
       // gone once the camera is far from the vehicle or well above the mast: seen from higher up
       // the band would stand around the vehicle like a wall
@@ -423,8 +604,19 @@ export class Terrain {
     }
   }
 
+  /**
+   * The camera `dist` (km) from the centre of the world whose sky this is, of radius `R`: where its
+   * shell's rays stop meeting the planet (atmosphere.frag) — the relief above that line takes the
+   * sky's haze here instead
+   */
+  setHorizon(dist: number, R: number): void {
+    const c = Math.min(R / Math.max(dist, 1e-6), 0.99995);
+    (this.mat.uniforms.uSky.value as Vector4).w = -Math.sqrt(1 - c * c);
+  }
+
   dispose(): void {
     this.disposed = true;
+    this.rocks?.dispose();
     for (const m of this.meshes) m.geometry.dispose();
     this.clear?.geometry.dispose();
     (this.clear?.material as ShaderMaterial | undefined)?.dispose();
@@ -432,6 +624,9 @@ export class Terrain {
     this.panoMat?.dispose();
     this.mat.dispose();
     for (const t of this.textures) t.dispose();
+    for (const t of this.heightTex) t.dispose();
+    for (const t of this.sunTargets) t.dispose();
+    this.sunMat?.dispose();
     this.group.removeFromParent();
   }
 }

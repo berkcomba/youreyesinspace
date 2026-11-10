@@ -36,10 +36,27 @@ const TREK = 'https://trek.nasa.gov/tiles';
  * session asks the worker instead.
  */
 const TREK_PROXY = (() => {
-  const relay = ((import.meta.env.VITE_XP_SERVER as string | undefined) ?? '').replace(/^ws/, 'http').replace(/\/$/, '');
+  // the dev server has no relay of its own: the public one admits localhost origins
+  const env = (import.meta.env.VITE_XP_SERVER as string | undefined) ?? (import.meta.env.DEV ? 'https://yeis-expedition.youreyesinspace.workers.dev' : '');
+  const relay = env.replace(/^ws/, 'http').replace(/\/$/, '');
   return relay ? `${relay}/trek` : '';
 })();
-let trekBase = TREK;
+/**
+ * A network found unable to reach Trek (several tiles failing, not one missing tile) is remembered
+ * for a few days: no stalled first tiles next visit
+ */
+const TREK_BLOCKED_KEY = 'yeits.trekBlocked';
+const TREK_BLOCKED_MS = 3 * 86400e3;
+const TREK_BLOCKED_AFTER = 4;
+let trekFails = 0;
+let trekBase = (() => {
+  try {
+    const at = Number(localStorage.getItem(TREK_BLOCKED_KEY));
+    return TREK_PROXY && at && Date.now() - at < TREK_BLOCKED_MS ? TREK_PROXY : TREK;
+  } catch {
+    return TREK;
+  }
+})();
 
 /**
  * URL to try instead of one that failed to load, or null. A failed direct Trek tile switches all
@@ -48,6 +65,9 @@ let trekBase = TREK;
 export function imageryFallback(url: string): string | null {
   if (!TREK_PROXY || !url.startsWith(`${TREK}/`)) return null;
   trekBase = TREK_PROXY;
+  if (++trekFails === TREK_BLOCKED_AFTER) {
+    try { localStorage.setItem(TREK_BLOCKED_KEY, String(Date.now())); } catch { /* private mode */ }
+  }
   return TREK_PROXY + url.slice(TREK.length);
 }
 

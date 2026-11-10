@@ -154,7 +154,7 @@ export class Overlay {
     pin: SurfacePinScreen | null = null,
     sun: SunMarkerScreen | null = null,
     /** standing on `body`: its ground hides everything below the local horizon (`up`) */
-    ground: { body: CelestialBody; up: Vector3 } | null = null,
+    ground: { body: CelestialBody; up: Vector3; hides?: (dir: Vector3) => boolean } | null = null,
   ): ScreenItem[] {
     const ctx = this.ctx;
     const W = this.width, H = this.height;
@@ -201,6 +201,8 @@ export class Overlay {
     const anyOccluder = occluders.length > 0 || ground !== null;
     const occluded = (dir: Vector3, beyond = Infinity): boolean => {
       if (ground && dir.dot(ground.up) < -0.01) return true;
+      // the hills around (a direction high above them is clear without asking)
+      if (ground?.hides && dir.dot(ground.up) < 0.5 && ground.hides(dir)) return true;
       for (const v of occluders) {
         const d = v.distance;
         if (d >= beyond) continue; // the occluder itself, or something behind the body in question

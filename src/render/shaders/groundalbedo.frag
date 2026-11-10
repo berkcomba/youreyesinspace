@@ -1,14 +1,28 @@
-// Colour map of one ground ring (see ground_common.glsl): the globe's own albedo at each texel,
+// Colour map of one ground ring (see ground_common.glsl): the globe's own albedo (or skin) at each texel,
 // with metre-scale variation it has no room for on the globe. Linear RGB (the target is sRGB);
 // A < 0.75 marks open water (the terrain shader adds the Sun's glitter there).
 void main() {
   vec2 xz = localXZ();
   vec3 p = noiseDir(xz);
-  float h = heightAt(p);
-  bool water = openWater(p, h);
+#ifdef SKIN
+  Geo geo = geoAt(p);
+  vec4 sc = skinColorG(p, geo);
+  float h = globeHeightG(p, geo);
+  bool water = openWater(p, h, uSkinWater > 0.0 ? sc.a : 0.0);
+#else
+  float h = globeHeight(p);
+  bool water = openWater(p, h, 0.0);
+#endif
   bool ocean = water;
   float lavaGlow;
+#ifdef SKIN
+  // the skin's own colours (as the globe shows them), the body's craters over them
+  vec3 albedo = sc.rgb;
+  lavaGlow = uSkinWater > 0.0 ? 0.0 : sc.a * 2.0;
+  if (!ocean && uCraters * uSkinCraters > 0.0) albedo = craterAlbedo(p, albedo, 2.2);
+#else
   vec3 albedo = terrestrialAlbedo(p, h, ocean, lavaGlow);
+#endif
   vec3 rc;
   if (realColour(p, rc)) {
     // the imagery's colours, the procedural tint only as a hint of texture

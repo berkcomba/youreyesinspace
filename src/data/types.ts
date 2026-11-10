@@ -90,6 +90,22 @@ export type OrbitElements = JplElements | SimpleElements | LinearState | Surface
 
 export interface PoleRaDec { ra: number; dec: number }
 
+/**
+ * Close-range ground of a landable world: a seamless tile baked from a Blender surface material
+ * (scripts/ground-bake.py, ground-pack.py) into `public/ground/<file>.png` — RG the slope, B an
+ * albedo factor about 1, A the height — laid at several sizes under the visitor's feet. The
+ * numbers are the pack's encoding ranges.
+ */
+export interface GroundMaterial {
+  file: string;
+  /** slopes span ±slope (rise over run: the same at every size the tile is laid at) */
+  slope: number;
+  /** albedo factors span 0…albedo */
+  albedo: number;
+  /** the height range, as a fraction of the tile's size */
+  height: number;
+}
+
 export type Appearance =
   | {
       kind: 'terrestrial';
@@ -122,6 +138,10 @@ export type Appearance =
       style?: 'temperate' | 'desert' | 'ice' | 'lava';
       /** vegetation paints the temperate biomes */
       life?: boolean;
+      /** a baked material laid over the landing ground at metre scales (see GroundMaterial) */
+      ground?: GroundMaterial;
+      /** generated worlds: the family of baked surface maps that dresses the globe (SkinLibrary) */
+      skin?: string;
     }
   | {
       kind: 'gas';
@@ -131,9 +151,13 @@ export type Appearance =
       turbulence: number;
       /** Great-red-spot style storm: [lat deg, lon deg, size, r,g,b] */
       storm?: [number, number, number, number, number, number];
+      /** where the storm sits on a real map skin ([lat, east lon] deg, body frame): it does not drift there */
+      mapStorm?: [number, number];
       /** Saturn's north polar hexagon (the jet at 78° N) and the polar vortex inside it */
       hexagon?: boolean;
       hazeColor?: [number, number, number];
+      /** generated worlds: the family of baked cloud decks (SkinLibrary), recoloured to `bands` */
+      skin?: string;
     }
   | {
       kind: 'star';

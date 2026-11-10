@@ -51,6 +51,22 @@ float basinField(vec3 p, float seed, float density) {
   return c;
 }
 
+// The craters' and basins' share of the height field (a library skin gets them on top of its own
+// relief): the airless worlds, never resurfaced, are saturated with them.
+float craterRelief(vec3 p) {
+  if (uCraters <= 0.0) return 0.0;
+  float cratered = uSeaLevel < 0.0 ? clamp(uCraters, 0.0, 1.0) : 0.0;
+  return craterField(p, uSeed, uCraters * 0.85) * (0.12 + 0.1 * cratered)
+       + basinField(p, uSeed, uCraters) * (0.1 + 0.06 * cratered);
+}
+
+// What the body itself lays over a library skin (whose relief is smooth below its ~10 km texels):
+// its craters, and hills of a few tens to a couple of hundred km
+float skinOverlay(vec3 p) {
+  vec3 q = p * uRoughness + uSeed;
+  return craterRelief(p) * 1.6 + fbm(q * 18.0 + 11.0, 4) * 0.07;
+}
+
 // Height field on unit sphere, 0..1
 float heightAt(vec3 p) {
   vec3 q = p * uRoughness + uSeed;
@@ -69,11 +85,7 @@ float heightAt(vec3 p) {
   // plateaus: part of the land is flattened toward a shelf height (otherwise fbm is bumpy everywhere)
   float plateau = smoothstep(0.2, 0.6, fbm(qw * 1.7 + 41.0, 3)) * land;
   h = mix(h, 0.62 + 0.25 * (h - 0.62), plateau * 0.6);
-  if (uCraters > 0.0) {
-    h += craterField(p, uSeed, uCraters * 0.85) * (0.12 + 0.1 * cratered);
-    h += basinField(p, uSeed, uCraters) * (0.1 + 0.06 * cratered);
-  }
-  return h;
+  return h + craterRelief(p);
 }
 
 // Bright ejecta rays of the youngest large craters (Tycho, Copernicus): radial streaks that fade
@@ -101,6 +113,16 @@ float craterRays(vec3 p, float seed, float density) {
     rays += streak * exp(-(t - 1.0) * 0.55) * smoothstep(0.9, 1.2, t);
   }
   return clamp(rays, 0.0, 1.0);
+}
+
+// The craters in the albedo: bright rims and fresh ejecta blankets, slightly darker floors, so
+// they read at full phase too, where the relief shading vanishes; rays from the youngest
+// (`k` > 1: over a library skin, whose own mottling would drown them)
+vec3 craterAlbedo(vec3 p, vec3 albedo, float k) {
+  float cf = craterField(p, uSeed, uCraters * 0.85);
+  albedo *= max(1.0 + (smoothstep(0.04, 0.3, cf) * 0.22 - smoothstep(-0.15, -0.6, cf) * 0.1) * k, 0.3);
+  float rays = craterRays(p, uSeed, uCraters * 0.85);
+  return mix(albedo, albedo * 1.45 + 0.08, min(rays * 0.55 * k, 1.0));
 }
 
 // ---- surface regimes -------------------------------------------------------------------------
@@ -223,13 +245,7 @@ vec3 terrestrialAlbedo(vec3 p, float h, inout bool ocean, out float lavaGlow) {
         // maria: dark lava plains flooding the low ground of the old basins
         float mare = smoothstep(0.5, 0.36, h) * smoothstep(0.0, 0.45, fbm(p * 1.6 + uSeed * 3.3, 3) + 0.2 * uVariation);
         albedo *= 1.0 - 0.55 * mare * clamp(uVariation * 0.5 + 0.6, 0.0, 1.0);
-        // the craters themselves: bright rims and fresh ejecta blankets, slightly darker floors,
-        // so they read at full phase too, where the relief shading vanishes
-        float cf = craterField(p, uSeed, uCraters * 0.85);
-        albedo *= 1.0 + smoothstep(0.04, 0.3, cf) * 0.22 - smoothstep(-0.15, -0.6, cf) * 0.1;
-        // bright rays of the young craters
-        float rays = craterRays(p, uSeed, uCraters * 0.85);
-        albedo = mix(albedo, albedo * 1.45 + 0.08, rays * 0.55);
+        albedo = craterAlbedo(p, albedo, 1.0);
       }
     }
   }

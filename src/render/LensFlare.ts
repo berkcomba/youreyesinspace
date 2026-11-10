@@ -65,11 +65,48 @@ void main() {
   gl_FragColor = vec4(col * a * vElem.w * uIntensity, 1.0);
 }`;
 
+// The Sun just behind the horizon of an airless world: its glare gone, the corona and the inner
+// zodiacal light show — the pearly glow with faint streamers the Apollo crews sketched over the
+// lunar horizon before sunrise. Drawn at the far plane with the depth test on, so the hill that
+// hides the Sun hides the lower half of the glow too.
+const GLOW_VERT = /* glsl */ `
+uniform vec2 uStar;
+uniform vec2 uSize;      // half-extent (NDC x, y)
+varying vec2 vUv;
+void main() {
+  vUv = position.xy;
+  gl_Position = vec4(uStar + position.xy * uSize, 0.99999, 1.0);
+}`;
+
+const GLOW_FRAG = /* glsl */ `
+precision highp float;
+uniform float uIntensity;
+uniform float uExtent;   // angle (rad) at the quad's edge
+uniform vec3 uColor;
+varying vec2 vUv;
+void main() {
+  float r = length(vUv);
+  float th = r * uExtent;
+  float ang = atan(vUv.y, vUv.x);
+  // streamers: a few broad, uneven rays of the outer corona
+  float rays = 0.55 + 0.45 * pow(0.5 + 0.5 * cos(ang * 5.0 + 1.7 * sin(ang * 3.0 + 0.6)), 3.0);
+  float inner = exp(-th / 0.01);
+  float outer = exp(-th / 0.045) * rays;
+  float zodiacal = exp(-th / 0.18) * 0.04;
+  float edge = max(0.0, 1.0 - r * r);
+  float a = (inner * 1.1 + outer * 0.45 + zodiacal) * edge * edge;
+  vec3 col = mix(uColor, vec3(1.0, 0.97, 0.92), 0.6);
+  gl_FragColor = vec4(col * a * uIntensity, 1.0);
+}`;
+
 export class LensFlare {
   readonly mesh: Mesh;
   private readonly mat: ShaderMaterial;
   private readonly star = new Vector2();
   private level = 0;
+  private readonly glow: Mesh;
+  private readonly glowMat: ShaderMaterial;
+  private glowLevel = 0;
 
   constructor(scene: Scene) {
     const n = ELEMENTS.length;
@@ -113,6 +150,48 @@ export class LensFlare {
     this.mesh.renderOrder = 60;
     this.mesh.visible = false;
     scene.add(this.mesh);
+
+    const quad = new BufferGeometry();
+    quad.setAttribute('position', new BufferAttribute(new Float32Array([-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0]), 3));
+    quad.setIndex(new BufferAttribute(new Uint16Array([0, 1, 2, 0, 2, 3]), 1));
+    this.glowMat = new ShaderMaterial({
+      vertexShader: GLOW_VERT,
+      fragmentShader: GLOW_FRAG,
+      uniforms: {
+        uStar: { value: new Vector2() }, uSize: { value: new Vector2(1, 1) },
+        uIntensity: { value: 0 }, uExtent: { value: 0.4 }, uColor: { value: new Vector3(1, 1, 1) },
+      },
+      transparent: true,
+      blending: AdditiveBlending,
+      depthTest: true,
+      depthWrite: false,
+    });
+    this.glow = new Mesh(quad, this.glowMat);
+    this.glow.frustumCulled = false;
+    this.glow.renderOrder = 59;
+    this.glow.visible = false;
+    scene.add(this.glow);
+  }
+
+  /**
+   * The glow of a star just hidden behind the horizon (see GLOW_FRAG).
+   * @param ndc       the star's position (NDC; null: none)
+   * @param strength  0 … 1, already zero while the disc is in view
+   * @param ndcPerRad NDC y units per radian at the centre of the view
+   */
+  updateGlow(ndc: Vector2 | null, strength: number, ndcPerRad: number, color: Vector3, aspect: number, dt: number): void {
+    const target = ndc ? strength : 0;
+    this.glowLevel += (target - this.glowLevel) * Math.min(1, dt * 4);
+    if (this.glowLevel < 0.002 && target === 0) this.glowLevel = 0;
+    this.glow.visible = this.enabled && this.glowLevel > 0.002;
+    if (!this.glow.visible) return;
+    const u = this.glowMat.uniforms;
+    if (ndc) (u.uStar.value as Vector2).copy(ndc);
+    const extent = 0.6; // rad
+    (u.uSize.value as Vector2).set((extent * ndcPerRad) / aspect, extent * ndcPerRad);
+    u.uExtent.value = extent;
+    u.uIntensity.value = this.glowLevel;
+    (u.uColor.value as Vector3).copy(color);
   }
 
   /**
@@ -141,7 +220,7 @@ export class LensFlare {
     this.mesh.visible = this.level > 0.002;
   }
 
-  setEnabled(on: boolean): void { if (!on) { this.level = 0; this.mesh.visible = false; } this.enabled = on; }
+  setEnabled(on: boolean): void { if (!on) { this.level = 0; this.mesh.visible = false; this.glowLevel = 0; this.glow.visible = false; } this.enabled = on; }
   enabled = true;
 }
 

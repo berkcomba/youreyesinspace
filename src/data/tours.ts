@@ -386,6 +386,8 @@ export const TOURS: TourDef[] = [
       { id: 'lookback', target: body('pluto'), lead: 5,
         // the approach turns the camera past Pluto's night side to the Sun before the voice starts
         // 0 the Sun and the speck · 1 everyone we know · 2 every planet (system overview) · 3 farewell
+        // no orbit drift: round Pluto's tipped-over pole it would roll the Sun and the Milky Way
+        // across the screen; the camera only pulls back
         text: 'Buradan geriye baktığımızda Güneş, gökyüzündeki en parlak yıldızdan ibaret; Dünya ise onun parıltısında kaybolmuş, gözle seçilemeyecek kadar küçük bir nokta. Sevdiğimiz, tanıdığımız herkes, yaşanmış her öykü ve akmış her nehir o noktanın üzerinde. Bütün gezegenleri tek tek gezdik ama hiçbirinde ikinci bir yuva bulamadık; şimdilik o nokta, sahip olduğumuz tek ev. Güneş Sistemi turumuz burada bitiyor; iyi yolculuklar.',
         cues: [
           fill(0, false),
@@ -393,7 +395,7 @@ export const TOURS: TourDef[] = [
           dolly(1, 0.05),
           dolly(2, 0), overview(2, 'pluto', 10),
           dolly(3, 0.04),
-        ], show: ['earth'], dwell: 1.5 },
+        ], show: ['earth'], dwell: 1.5, orbitRate: 0, dollyRate: 0.03 },
 
       // closing credits without a voice: one flyby after another, inward to home, under the music
       // past Earth (about 23.5 s in) it pulls out to the opening view, where the orbits come back

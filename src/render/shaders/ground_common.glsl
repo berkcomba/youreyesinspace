@@ -28,6 +28,17 @@ vec3 noiseDir(vec2 xz) {
   return normalize(vec3(obj.x, obj.y * uUnsquash, obj.z));
 }
 
+// The globe's height field (0 … 1) and sea surface: the procedural ones, or a library skin's
+// relief with the body's own craters on top (as the surface bake has it) and the skin's sea
+#ifdef SKIN
+#define SEA_LEVEL uSkinSea
+float globeHeightG(vec3 p, Geo g) { return skinHeightG(g) + skinOverlay(p) * uSkinCraters + g.h; }
+float globeHeight(vec3 p) { return globeHeightG(p, geoAt(p)); }
+#else
+#define SEA_LEVEL uSeaLevel
+float globeHeight(vec3 p) { return heightAt(p); }
+#endif
+
 // metre-scale relief: dunes, hummocks, gullies, boulders — what the globe's field, whose finest
 // feature spans tens of kilometres, has no word for. km-space noise so it is the same on every ring.
 float groundDetail(vec2 xz, float h) {
@@ -120,28 +131,43 @@ float lakeAt(vec2 xz, out float inside) {
   return level;
 }
 
-// land or sea at p: the imagery decides where it can, the globe's own field elsewhere
-bool openWater(vec3 p, float h) {
+// land or sea at p: the imagery decides where it can, the globe's own field elsewhere (`wet`: how
+// wet a skin is there, its water flag filtered: 1 open water, 0 land; lava glow never counts)
+bool openWater(vec3 p, float h, float wet) {
   vec3 rc;
   if (realColour(p, rc) && uRealRect.w > 1.5) return realWater(rc);
+#ifdef SKIN
+  return wet > 0.5;
+#else
   return uSeaLevel >= 0.0 && h < uSeaLevel;
+#endif
 }
 
 // height (km above the ellipsoid) and whether the spot is open water
 float groundHeight(vec2 xz, out bool water, out float hNoise) {
   vec3 p = noiseDir(xz);
-  float h = heightAt(p);
+#ifdef SKIN
+  Geo geo = geoAt(p);
+  float h = globeHeightG(p, geo);
+  float wet = uSkinWater > 0.0 ? skinColorG(p, geo).a : 0.0;
+#else
+  float h = globeHeight(p);
+  float wet = 0.0;
+#endif
   hNoise = h;
-  water = openWater(p, h);
-  if (water) return (uSeaLevel - 0.5) * uAmp;
+  water = openWater(p, h, wet);
+  // the water surface: the sea's one level, or (a skin's lakes) just under the land around it
+  float surface = SEA_LEVEL >= 0.0 ? SEA_LEVEL : h - 0.003;
+  if (water) return (surface - 0.5) * uAmp;
   // imagery land where the field says sea: a low plain just above it
-  if (uSeaLevel >= 0.0 && h < uSeaLevel) h = uSeaLevel + 0.02;
+  if (SEA_LEVEL >= 0.0 && h < SEA_LEVEL) h = SEA_LEVEL + 0.02;
   float g = (h - 0.5) * uAmp + groundDetail(xz, h);
   float lava;
   g += volcanoes(xz, lava);
   // the shore: the last metres of beach slope into the water instead of stepping down
-  if (uSeaLevel >= 0.0) g = max(g, (uSeaLevel - 0.5) * uAmp + 0.0005);
-  // lakes (not where real imagery decides land and water)
+  if (SEA_LEVEL >= 0.0 || wet > 0.02) g = max(g, (surface - 0.5) * uAmp + 0.0005);
+  // lakes (not where real imagery decides land and water, nor on a skin: it has its own)
+#ifndef SKIN
   if (uRealRect.w < 1.5) {
     float inside;
     float level = lakeAt(xz, inside);
@@ -151,6 +177,7 @@ float groundHeight(vec2 xz, out bool water, out float hNoise) {
       if (g < level - 0.0003) { water = true; return level; }
     }
   }
+#endif
   return g;
 }
 

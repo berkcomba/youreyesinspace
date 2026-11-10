@@ -17,13 +17,16 @@ import { Relief } from './render/Relief';
 import { MeteorShower } from './render/MeteorShower';
 import { raDecToScene } from './math/frames';
 import { BodyRenderer, type BodyView } from './render/BodyRenderer';
-import { generateGround, geodetic, groundRingSizes, groundSite, landable, warmGround } from './render/GroundGen';
+import { fitToShape, generateGround, geodetic, groundRingSizes, groundSite, landable, warmGround } from './render/GroundGen';
+import { warmBake } from './render/PlanetBake';
 import { BodyPoints } from './render/BodyPoints';
 import { OrbitLines } from './render/OrbitLines';
 import { StarPoints } from './render/StarPoints';
 import { ProcStarPoints } from './render/ProcStarPoints';
 import { GalaxySprites } from './render/GalaxySprites';
 import { LandmarkSprites } from './render/LandmarkSprites';
+import { NebulaBackdrop } from './render/NebulaBackdrop';
+import { NEBULA_BACKDROP_CREDIT } from './data/landmarkImages';
 import { ProcClouds } from './render/ProcClouds';
 import { Volumes } from './render/Volumes';
 import { ClusterStarPoints } from './render/ClusterStarPoints';
@@ -133,6 +136,9 @@ class App implements UIHost {
   /** selected deep-sky landmark (index into universe.landmarks) when nothing else is selected */
   selectedLandmark: number | null = null;
   readonly landmarkSprites: LandmarkSprites;
+  private readonly nebulaBackdrop: NebulaBackdrop;
+  /** the nebula the stood-on world lies in, re-checked now and then (the walk is over every landmark) */
+  private nebulaHome: { at: number; body: CelestialBody | null; l: Landmark | null } = { at: -Infinity, body: null, l: null };
   readonly nebulaClouds: NebulaClouds;
   readonly procClouds: ProcClouds;
   readonly volumes: Volumes;
@@ -203,6 +209,7 @@ class App implements UIHost {
 
     this.galaxySprites = new GalaxySprites(this.universe.galaxies, scene, this.maxPointPx);
     this.landmarkSprites = new LandmarkSprites(this.universe.landmarks, scene);
+    this.nebulaBackdrop = new NebulaBackdrop(scene);
     this.nebulaClouds = new NebulaClouds(this.universe.landmarks, scene, this.maxPointPx);
     this.nebulaClouds.onReady = () => this.landmarkSprites.setCloudHandover(true);
     this.volumes = new Volumes(scene);
@@ -242,7 +249,7 @@ class App implements UIHost {
     this.music = new Music(import.meta.env.BASE_URL);
     this.music.setKeys(['welcome', ...TOURS.map((t) => t.id)]);
     void this.music.load();
-    this.tours.onStart = (t) => this.music.play(t.id, t.music);
+    this.tours.onStart = (t) => { this.music.play(t.id, t.music); this.warmLanding(); };
     this.music.onStart = (t) => this.ui.showNowPlaying(t);
     this.tours.onSpeech = (speaking) => this.music.duck(speaking);
     this.tours.onEnd = (why) => {
@@ -319,8 +326,14 @@ class App implements UIHost {
   ready(): void {
     this.warmingUp = false;
     document.getElementById('loader')?.classList.add('done');
+    void warmBake(this.engine.renderer);
     // the landing programs link in the background a little after the start, while nothing else does
-    window.setTimeout(() => { void warmGround(this.engine.renderer).then(() => { this.groundReady = true; }); }, GROUND_WARM_DELAY_MS);
+    window.setTimeout(() => this.warmLanding(), GROUND_WARM_DELAY_MS);
+  }
+
+  /** Start linking the landing programs in the background (once; a tour's land cue cannot wait for them, so tours start it too) */
+  private warmLanding(): void {
+    void warmGround(this.engine.renderer).then(() => { this.groundReady = true; });
   }
 
   /** behind the loader a frame only draws once every program the scene needs has linked (shadersReady) */
@@ -702,9 +715,9 @@ class App implements UIHost {
    */
   land(b: CelestialBody | null = this.selected ?? this.camera.target ?? this.camera.nearest, at?: { lat: number; lon: number }): void {
     if (!b || !this.canLand(b)) return;
-    if (!this.groundReady) {
+    if (this.groundWaits(b)) {
       this.ui.showToast(_('{name} yüzeyine iniliyor…', { name: b.name }));
-      this.whenGroundReady(() => this.land(b, at));
+      this.whenGroundReady(b, () => this.land(b, at));
       return;
     }
     if (this.tours.active) this.tours.stop();
@@ -744,10 +757,10 @@ class App implements UIHost {
     const half = Math.max(...groundRingSizes(b)) / 2;
     const dLat = (half / b.radius) / DEG * 1.05;
     const groundAt = (lat: number, lon: number) => {
-      const site = groundSite(b, lat, lon);
+      const site = fitToShape(this.engine.renderer, b, groundSite(b, lat, lon));
       // real imagery where the globe has it: the patch must lie inside one tile
       const real = view.tiles?.tileCovering(lat, lon, dLat, Math.min(180, dLat / Math.max(0.05, Math.cos(lat * DEG)))) ?? null;
-      return { site, ground: generateGround(this.engine.renderer, b, view.surfaceMat!.uniforms, site, this.engine.renderer.capabilities.getMaxAnisotropy(), real) };
+      return { site, ground: generateGround(this.engine.renderer, b, view.surfaceMat!.uniforms, site, this.engine.renderer.capabilities.getMaxAnisotropy(), real, view.skinSettled() ? view.skin : null) };
     };
     // dry land wanted: when the aimed point is open sea, try a spiral of nearby spots (an ocean
     // world finds none and lands on the water)
@@ -801,20 +814,55 @@ class App implements UIHost {
   }
   private landingHintShown = false;
 
+  /** The glowing nebula the world we stand on lies in (emission and reflection clouds), if any. */
+  private nebulaAround(): Landmark | null {
+    const body = this.landedOn;
+    const now = performance.now();
+    const memo = this.nebulaHome;
+    if (body === memo.body && now - memo.at < 2000) return memo.l;
+    let best: Landmark | null = null, bestDepth = -0.1;
+    if (body) {
+      for (const l of this.universe.landmarks) {
+        if (l.def.kind !== 'nebula' || l.def.catalog) continue;
+        if (l.procKind && l.procKind !== 'hii' && l.procKind !== 'reflection') continue;
+        const c = l.def.color;
+        if (c[0] + c[1] + c[2] < 0.3) continue;   // dark nebulae: no glow to see
+        const depth = 1 - l.positionPc.distanceTo(this.camPc) / l.def.radiusPc;
+        if (depth > bestDepth) { bestDepth = depth; best = l; }
+      }
+    }
+    this.nebulaHome = { at: now, body, l: best };
+    return best;
+  }
+
   /** the ground programs have linked (warmGround): until then a landing waits for them instead of freezing the page */
   private groundReady = false;
   /** the landing that waits for them (only the latest request counts) */
   private groundWaiter: (() => void) | null = null;
+  /** a body whose library skin did not arrive in time: its ground is the procedural world */
+  private skinGaveUp: CelestialBody | null = null;
 
-  private whenGroundReady(fn: () => void): void {
+  /** whether landing on `b` must wait: for the ground programs, or for the skin the ground continues */
+  private groundWaits(b: CelestialBody): boolean {
+    if (!this.groundReady) return true;
+    return b !== this.skinGaveUp && !(this.bodies.view(b.id)?.skinSettled() ?? true);
+  }
+
+  private whenGroundReady(b: CelestialBody, fn: () => void): void {
     const first = !this.groundWaiter;
     this.groundWaiter = fn;
     if (!first) return;
+    const t0 = performance.now();
     void warmGround(this.engine.renderer).then(() => {
       this.groundReady = true;
-      const f = this.groundWaiter;
-      this.groundWaiter = null;
-      f?.();
+      const poll = () => {
+        if (this.groundWaits(b) && performance.now() - t0 < 8000) { window.setTimeout(poll, 100); return; }
+        if (this.groundWaits(b)) this.skinGaveUp = b;
+        const f = this.groundWaiter;
+        this.groundWaiter = null;
+        f?.();
+      };
+      poll();
     });
   }
 
@@ -828,7 +876,7 @@ class App implements UIHost {
     const ref = this.universe.get(refId);
     if (!ref || !this.canLand(ref)) { this.lookFrom(refId, toward, 400); return; }
     if (this.landedOn === ref) return;
-    if (!this.groundReady) { this.whenGroundReady(() => this.landFor(refId, toward, o)); return; }
+    if (this.groundWaits(ref)) { this.whenGroundReady(ref, () => this.landFor(refId, toward, o)); return; }
     const star = this.universe.hostStar(ref);
     const first = this.universe.get(toward[0]);
     const staged = o.sep !== undefined && !!first && first !== star;
@@ -1833,7 +1881,10 @@ class App implements UIHost {
   /** Outward unit vector of a surface point; gas-giant storms follow the shader's drifting spot. */
   private pinDirection(b: CelestialBody, lat: number, lon: number, storm: boolean, out: Vector3): Vector3 {
     const app = b.data.appearance;
-    if (storm && app.kind === 'gas' && app.storm) {
+    // a tour flies to the storm before the map has loaded: aim at the map's spot unless it failed
+    if (storm && app.kind === 'gas' && app.mapStorm && !this.bodies.view(b.id)?.skinFailed) {
+      [lat, lon] = app.mapStorm;
+    } else if (storm && app.kind === 'gas' && app.storm) {
       // gasgiant.frag: lon = atan(z, x), storm at uStorm.y + hours * 0.004 rad — our east longitude is the negative
       const hours = this.time.t / 3600;
       lat = app.storm[0];
@@ -3124,8 +3175,10 @@ class App implements UIHost {
     this.points.setDaylight(daylight);
     this.starPoints.setDaylight(daylight);
     this.procPoints.setDaylight(daylight);
-    this.nebulaClouds.setDaylight(daylight);
-    this.procClouds.setDaylight(daylight);
+    // on a world inside a nebula its glow is the sky's backdrop, not the cloud's particles
+    const veil = this.nebulaBackdrop.update(this.nebulaAround(), this.camPc, daylight);
+    this.nebulaClouds.setDaylight(Math.max(daylight, veil));
+    this.procClouds.setDaylight(Math.max(daylight, veil));
     this.clusterPoints.setDaylight(daylight);
     this.landmarkSprites.setDaylight(daylight);
     for (const c of this.clouds.values()) c.setDaylight(daylight);
@@ -3144,9 +3197,10 @@ class App implements UIHost {
     this.clusterPoints.update(this.camPc, pxPerRad, eng.pixelRatio, this.universe.current.starId, ls.mesh.visible, ls.distPc, ls.radiusPx);
     // bottom-left credit: streamed planetary imagery first, otherwise a resolved landmark photograph
     if (this.bodies.imageryCredit) this.ui.setImageryCredit(this.bodies.imageryCredit);
+    else if (this.bodies.skinCredit) this.ui.setImageryCredit(_('Yüzey haritası: {source}', { source: this.bodies.skinCredit }), true);
     else {
       this.camForward.set(0, 0, -1).applyQuaternion(this.camera.quaternion);
-      const photo = this.landmarkSprites.photoCredit(this.camForward);
+      const photo = this.landmarkSprites.photoCredit(this.camForward) ?? (this.nebulaBackdrop.visible ? NEBULA_BACKDROP_CREDIT : null);
       this.ui.setImageryCredit(photo ? _('Fotoğraf: {source}', { source: photo }) : null, true);
     }
     // LOD hand-over between the detailed local volume and the aggregated far-universe tiers
@@ -3258,7 +3312,11 @@ class App implements UIHost {
       }
     }
     const dim = daylight > 0.5;
-    const groundUp = stood && this.camera.surface ? { body: stood, up: this.standUp.set(0, 1, 0).applyQuaternion(this.tmpQ.copy(stood.rotation).multiply(this.camera.surface.siteQuat)) } : null;
+    const stoodView = stood ? this.bodies.view(stood.id) : null;
+    const groundUp = stood && this.camera.surface ? {
+      body: stood, up: this.standUp.set(0, 1, 0).applyQuaternion(this.tmpQ.copy(stood.rotation).multiply(this.camera.surface.siteQuat)),
+      hides: stoodView ? (dir: Vector3) => stoodView.skyMargin(dir) < 0 : undefined,
+    } : null;
     this.overlay.draw(this.bodies.views, eng.camera, this.selected, namedStars, starSel, this.uiVisible, s.galaxies && !dim ? this.galaxySprites.named : [], this.blackHoleMarkers(camPos), dim ? [] : this.landmarkSprites.named, pin.visible ? pin : null, this.overlay.scope && !this.overlay.scope.has('sun') ? null : this.sunMarker(camPos), groundUp);
     const selDist = this.selected ? this.bodies.byId.get(this.selected.id)?.distance ?? 0 : 0;
     this.ui.update(now, dt, selDist);
@@ -3305,9 +3363,17 @@ class App implements UIHost {
     const eng = this.engine;
     const shafts = this.settings.lightShafts && !eng.blackHole.enabled ? this.shaftMedium(camPos) : 0;
     eng.godRays.strength = 0;
-    if (!this.settings.lensFlare && shafts <= 0) { this.lensFlare.update(null, 0, 0, this.sunColor, eng.width / eng.height, dt); return; }
+    if (!this.settings.lensFlare && shafts <= 0) {
+      this.lensFlare.update(null, 0, 0, this.sunColor, eng.width / eng.height, dt);
+      this.lensFlare.updateGlow(null, 0, 1, this.sunColor, eng.width / eng.height, dt);
+      return;
+    }
     if (!this.settings.lensFlare || eng.blackHole.enabled) this.lensFlare.update(null, 0, 0, this.sunColor, eng.width / eng.height, dt);
-    let best: { ndc: Vector2; radius: number; intensity: number; color: Vector3; raw: number; depth: number } | null = null;
+    let best: { ndc: Vector2; radius: number; intensity: number; color: Vector3; raw: number; depth: number; glow: number } | null = null;
+    // standing on generated ground: its hills hide the stars behind them
+    const stood = this.landedOn;
+    const ground = stood ? this.bodies.view(stood.id) : null;
+    const airless = !stood?.data.atmosphere || stood.data.atmosphere.density < 0.05;
     for (const v of this.bodies.views) {
       const star = v.body;
       if (star.data.type !== 'star' || star.hidden || star.filtered) continue;
@@ -3321,9 +3387,15 @@ class App implements UIHost {
       const E = this.hostLuminosity(star) / Math.pow(d / AU_KM, 2);
       let vis = 1;
       const sunAng = star.radius / d;
+      // standing on generated ground the relief takes over from the sphere under our feet: its
+      // horizon (hills, and the curve of the world beyond them); just behind it, on an airless
+      // world, the star's corona glows over the skyline, fading as it sinks a few degrees further
+      const margin = ground ? ground.skyMargin(_v3.copy(_dir).divideScalar(d)) : Infinity;
+      const relief = Number.isFinite(margin);
       for (const o of this.bodies.views) {
         const b = o.body;
         if (b === star || b.hidden || b.filtered || b.data.type === 'star' || b.data.type === 'barycenter' || b.data.type === 'spacecraft') continue;
+        if (relief && b === stood) continue;
         _v3.copy(b.position).sub(camPos);
         const db = _v3.length();
         if (db >= d || b.radius / db < 2e-4) continue;
@@ -3333,19 +3405,26 @@ class App implements UIHost {
         vis *= smooth01((sep - (angR - sunAng)) / (2 * sunAng + 1e-9));
         if (vis < 0.002) break;
       }
+      let glow = 0;
+      if (relief) {
+        const clear = smooth01(margin / (2 * sunAng + 1e-9) + 0.5);
+        if (airless) glow = vis * (1 - clear) * Math.exp(-Math.max(0, -margin) / 0.08);
+        vis *= clear;
+      }
       const raw = Math.min(1.1, Math.pow(Math.max(E, 1e-6), 0.3));
       const intensity = raw * vis;
-      if (!best || intensity > best.intensity) {
+      if (!best || intensity + glow > best.intensity + best.glow) {
         // the star's depth as the logarithmic depth buffer encodes it (the shaft mask compares against it)
         // (taken at the near edge of the disc, so the disc itself always passes the test)
         const w = -_v3.copy(_dir).applyMatrix4(eng.camera.matrixWorldInverse).z - star.radius * 2;
         const depth = Math.log2(1 + Math.max(w, 0)) / Math.log2(CAMERA_FAR_KM + 1);
-        best = { ndc: this.flareNdc.set(_up.x, _up.y), radius: (star.radius / d) / Math.tan((eng.camera.fov * DEG) / 2) / (eng.width / eng.height), intensity, color: this.lightColorOf(star), raw, depth };
+        best = { ndc: this.flareNdc.set(_up.x, _up.y), radius: (star.radius / d) / Math.tan((eng.camera.fov * DEG) / 2) / (eng.width / eng.height), intensity, color: this.lightColorOf(star), raw, depth, glow: raw * glow };
       }
     }
     if (this.settings.lensFlare && !eng.blackHole.enabled) {
       this.lensFlare.update(best ? best.ndc : null, best ? best.radius : 0, best ? best.intensity : 0, best ? best.color : this.sunColor, eng.width / eng.height, dt);
     }
+    this.lensFlare.updateGlow(best && best.glow > 0.002 ? best.ndc : null, best?.glow ?? 0, 1 / Math.tan((eng.camera.fov * DEG) / 2), best ? best.color : this.sunColor, eng.width / eng.height, dt);
     // light shafts: the screen-space occlusion (ground, horizon, clouds) is the pass's own; here only
     // the medium and the star's brightness — and none once the disc is fully behind a body
     if (best && shafts > 0 && best.intensity > 0.002) {

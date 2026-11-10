@@ -11,6 +11,13 @@ dist
 # design briefs (not for the repo)
 THE_GREAT_EXPEDITION_SPEC*.md
 
+# ground materials baked from licensed Blender assets: deployed with the site, never redistributed
+public/ground/*
+!public/ground/cc0/
+!public/ground/rocks/
+public/skins/
+public/nebulae/gen/
+
 # relay build state
 .wrangler
 .dev.vars

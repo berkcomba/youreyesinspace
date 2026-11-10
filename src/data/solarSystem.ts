@@ -105,7 +105,10 @@ export const SOLAR_SYSTEM: BodyData[] = [
     // Within the Horizons table's span (scripts/fetch-horizons.mjs) the position is JPL's own,
     // accurate enough for eclipses; the mean elements miss the evection and variation (~1–2°).
     orbit: moonOrbit(384_400, 0.0549, 5.145, 27.554550, 134.96, { frame: 'ecliptic', node: 125.04, argPeri: 318.31, nodeRate: -0.0529539, periRate: 0.1643580, table: 'moon' }),
-    appearance: { kind: 'terrestrial', seed: 33, landLow: [0.22, 0.22, 0.23], landMid: [0.38, 0.38, 0.38], landHigh: [0.58, 0.57, 0.55], craters: 1.0, roughness: 1.0, variation: 0.6 },
+    appearance: {
+      kind: 'terrestrial', seed: 33, landLow: [0.22, 0.22, 0.23], landMid: [0.38, 0.38, 0.38], landHigh: [0.58, 0.57, 0.55], craters: 1.0, roughness: 1.0, variation: 0.6,
+      ground: { file: 'moon-regolith', slope: 0.8405, albedo: 1.8034, height: 0.02562 },
+    },
     description: 'Dünya\'nın tek doğal uydusu ve Güneş Sistemi\'nin beşinci büyük uydusu. Kilitli dönüş nedeniyle hep aynı yüzünü Dünya\'ya gösterir.',
     facts: { 'Yüzey çekimi': '1.62 m/s²', 'Ortalama uzaklık': '384 400 km' },
   },
@@ -148,9 +151,10 @@ export const SOLAR_SYSTEM: BodyData[] = [
     orbit: jpl(5.20288700, 0.04838624, 1.30439695, 34.39644051, 14.72847983, 100.47390909,
       -0.00011607, -0.00013253, -0.00183714, 3034.74612775, 0.21252668, 0.20469106),
     appearance: {
-      kind: 'gas', seed: 51, bandFreq: 13.0, turbulence: 0.9,
+      kind: 'gas', seed: 51, skin: 'map:jupiter', bandFreq: 13.0, turbulence: 0.9,
       bands: [[0.86, 0.78, 0.64], [0.58, 0.38, 0.26], [0.92, 0.86, 0.74], [0.42, 0.25, 0.17], [0.76, 0.62, 0.48], [0.52, 0.32, 0.22]],
       storm: [-22, 20, 0.11, 0.70, 0.28, 0.16],
+      mapStorm: [-21.2, -47.2],
     },
     atmosphere: { color: [0.9, 0.8, 0.7], height: 0.015, density: 0.5 },
     temperature: 165,
@@ -196,7 +200,7 @@ export const SOLAR_SYSTEM: BodyData[] = [
     orbit: jpl(9.53667594, 0.05386179, 2.48599187, 49.95424423, 92.59887831, 113.66242448,
       -0.00125060, -0.00050991, 0.00193609, 1222.49362201, -0.41897216, -0.28867794),
     appearance: {
-      kind: 'gas', seed: 61, bandFreq: 11.0, turbulence: 0.35, hexagon: true,
+      kind: 'gas', seed: 61, skin: 'map:saturn', bandFreq: 11.0, turbulence: 0.35, hexagon: true,
       bands: [[0.92, 0.84, 0.62], [0.78, 0.68, 0.46], [0.96, 0.90, 0.72], [0.70, 0.60, 0.42], [0.88, 0.80, 0.60]],
     },
     atmosphere: { color: [0.95, 0.9, 0.75], height: 0.015, density: 0.45 },
@@ -269,7 +273,7 @@ export const SOLAR_SYSTEM: BodyData[] = [
     orbit: jpl(19.18916464, 0.04725744, 0.77263783, 313.23810451, 170.95427630, 74.01692503,
       -0.00196176, -0.00004397, -0.00242939, 428.48202785, 0.40805281, 0.04240589),
     appearance: {
-      kind: 'gas', seed: 71, bandFreq: 4.0, turbulence: 0.15,
+      kind: 'gas', seed: 71, skin: 'map:uranus', bandFreq: 4.0, turbulence: 0.15,
       bands: [[0.60, 0.85, 0.90], [0.55, 0.80, 0.88], [0.66, 0.88, 0.92], [0.58, 0.82, 0.90]],
     },
     atmosphere: { color: [0.6, 0.9, 1.0], height: 0.02, density: 0.5 },
@@ -322,7 +326,7 @@ export const SOLAR_SYSTEM: BodyData[] = [
     orbit: jpl(30.06992276, 0.00859048, 1.77004347, -55.12002969, 44.96476227, 131.78422574,
       0.00026291, 0.00005105, 0.00035372, 218.45945325, -0.32241464, -0.00508664),
     appearance: {
-      kind: 'gas', seed: 81, bandFreq: 5.0, turbulence: 0.5,
+      kind: 'gas', seed: 81, skin: 'map:neptune', bandFreq: 5.0, turbulence: 0.5,
       bands: [[0.20, 0.35, 0.85], [0.25, 0.45, 0.95], [0.18, 0.30, 0.75], [0.35, 0.55, 1.0]],
       storm: [-25, 80, 0.09, 0.08, 0.12, 0.35],
     },
@@ -336,7 +340,7 @@ export const SOLAR_SYSTEM: BodyData[] = [
     id: 'triton', name: 'Triton', type: 'moon', parent: 'neptune',
     radius: 1353.4, mass: 2.1390e22, albedo: 0.76, rotationPeriod: 'sync',
     orbit: moonOrbit(354_760, 0.000016, 156.885, 5.876854, 90),
-    appearance: { kind: 'terrestrial', seed: 83, landLow: [0.60, 0.50, 0.48], landMid: [0.82, 0.78, 0.76], landHigh: [0.95, 0.94, 0.94], ice: [0.92, 0.90, 0.95], iceCaps: 0.55, craters: 0.1, roughness: 0.6, variation: 0.6 },
+    appearance: { kind: 'terrestrial', seed: 83, skin: 'map:triton', landLow: [0.60, 0.50, 0.48], landMid: [0.82, 0.78, 0.76], landHigh: [0.95, 0.94, 0.94], ice: [0.92, 0.90, 0.95], iceCaps: 0.55, craters: 0.1, roughness: 0.6, variation: 0.6 },
     // Voyager 2's dark nitrogen geysers (Hili, Mahilani): 8 km up, trailing 100+ km downwind
     activity: { kind: 'cryo', vents: [[-57, 35], [-50, 2], [-62, 60], [-48, 25]], height: 8, spread: 120, fall: 0.3, color: [0.25, 0.24, 0.26], intensity: 0.5 },
     atmosphere: { color: [0.7, 0.75, 0.9], height: 0.015, density: 0.15 },
@@ -363,7 +367,7 @@ export const SOLAR_SYSTEM: BodyData[] = [
     radius: 1188.3, mass: 1.303e22, albedo: 0.52, rotationPeriod: -153.2928,
     pole: { ra: 132.99, dec: -6.16 },
     orbit: moonOrbit(2_126, 0.0002, 0.08, 6.387230, 180, { node: 306, argPeri: 234 }),
-    appearance: { kind: 'terrestrial', seed: 91, landLow: [0.35, 0.22, 0.15], landMid: [0.72, 0.60, 0.50], landHigh: [0.95, 0.93, 0.90], ice: [0.97, 0.96, 0.95], iceCaps: 0.6, craters: 0.3, roughness: 0.8, variation: 1.0 },
+    appearance: { kind: 'terrestrial', seed: 91, skin: 'map:pluto', landLow: [0.35, 0.22, 0.15], landMid: [0.72, 0.60, 0.50], landHigh: [0.95, 0.93, 0.90], ice: [0.97, 0.96, 0.95], iceCaps: 0.6, craters: 0.3, roughness: 0.8, variation: 1.0 },
     atmosphere: { color: [0.55, 0.65, 0.95], height: 0.03, density: 0.2 },
     temperature: 44,
     description: 'Kuiper Kuşağı\'nın en ünlü cüce gezegeni. Azot buzundan oluşan kalp şeklindeki Sputnik Planitia, mavi katmanlı atmosfer ve Charon ile ikili sistem oluşturur.',
@@ -373,7 +377,7 @@ export const SOLAR_SYSTEM: BodyData[] = [
     id: 'charon', name: 'Charon', type: 'moon', parent: 'pluto-bary',
     radius: 606, mass: 1.586e21, albedo: 0.38, rotationPeriod: 'sync',
     orbit: moonOrbit(17_465, 0.0002, 0.08, 6.387230, 180, { node: 306, argPeri: 54 }),
-    appearance: { kind: 'terrestrial', seed: 92, landLow: [0.35, 0.34, 0.34], landMid: [0.55, 0.54, 0.54], landHigh: [0.78, 0.76, 0.75], craters: 0.5, roughness: 0.9, variation: 0.5 },
+    appearance: { kind: 'terrestrial', seed: 92, skin: 'map:charon', landLow: [0.35, 0.34, 0.34], landMid: [0.55, 0.54, 0.54], landHigh: [0.78, 0.76, 0.75], craters: 0.5, roughness: 0.9, variation: 0.5 },
     description: 'Plüton\'un yarısı büyüklüğündeki uydusu; kızılımsı kutup bölgesi (Mordor Macula) Plüton\'dan kaçan metanla oluşmuştur.',
   },
 
