@@ -1,0 +1,16 @@
+# Cloud Build's upload. Like .gitignore, but the site-only assets the deploy workflow copies into
+# public/ must go up with the source (without this file gcloud would take .gitignore and leave them out).
+.gcloudignore
+.git
+.gitignore
+node_modules
+dist
+.DS_Store
+*.local
+.env
+.env.*
+*.pdf
+THE_GREAT_EXPEDITION_SPEC*.md
+.wrangler
+.dev.vars
+worker/node_modules

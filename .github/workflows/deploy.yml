@@ -49,6 +49,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # licensed site-only assets (gitignored here, see NOTICE.md) from a private repository
+      - name: Site-only assets
+        uses: actions/checkout@v4
+        with:
+          repository: berkcomba/yeis-site-assets
+          ssh-key: ${{ secrets.SITE_ASSETS_KEY }}
+          path: site-assets
+      - run: |
+          rm -rf site-assets/.git site-assets/README.md
+          cp -r site-assets/. public/
+          rm -rf site-assets
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
