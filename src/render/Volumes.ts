@@ -1,5 +1,5 @@
 import {
-  BufferAttribute, BufferGeometry, CubeCamera, CustomBlending, Euler, HalfFloatType, LinearFilter, LinearMipmapLinearFilter, Matrix3, Matrix4, Mesh, OneFactor,
+  BufferAttribute, BufferGeometry, CubeCamera, CustomBlending, HalfFloatType, LinearFilter, LinearMipmapLinearFilter, Matrix3, Matrix4, Mesh, OneFactor,
   OrthographicCamera, Scene, ShaderMaterial, SrcAlphaFactor, Vector2, Vector3, Vector4, WebGLCoordinateSystem, WebGLCubeRenderTarget, WebGLRenderTarget, ZeroFactor,
   type IUniform, PerspectiveCamera, type WebGLRenderer,
 } from 'three';
@@ -10,8 +10,12 @@ import { Shaders } from './shaders';
 
 /** most volumes raymarched per frame (each costs a full-screen pass) */
 const MAX_GALAXIES = 2;
-/** ProcClouds keeps 5 slots plus the clouds still fading out of one; small ones cost only their scissored rect */
-const MAX_NEBULAE = 7;
+/**
+ * every resolved nebula is raymarched, down to a few pixels across (ProcClouds' slots plus the
+ * clouds still fading out of one): a small one costs only the few pixels of its screen rect, and
+ * all of them go to the buffer in one draw list
+ */
+const MAX_NEBULAE = 112;
 /** inside this many radii a galaxy is the backdrop, cached in a cube map */
 const CUBE_RATIO = 1.4;
 /** leaving a galaxy, its whole-sky mean fades out of the eye adaptation between CUBE_RATIO and this (galaxy radii) */
@@ -44,17 +48,14 @@ const DUST_PER_PC = 0.0028;
 const DUST_BY_TYPE: Record<string, number> = { E: 0, S0: 0.25, S: 1, SB: 1, Irr: 0.5 };
 const TYPE_CODE: Record<string, number> = { E: 0, S0: 1, S: 2, SB: 3, Irr: 4 };
 
-export type NebulaKind = 'emission' | 'reflection' | 'planetary' | 'remnant';
-const NEBULA_CODE: Record<NebulaKind, number> = { emission: 0, reflection: 1, planetary: 2, remnant: 3 };
-const NEBULA_EMIT: Record<NebulaKind, number> = { emission: 0.2, reflection: 0.22, planetary: 0.12, remnant: 0.12 };
 /** Nebula Engine 2.0: emission calibration per morphology (peak column ≈ the sprite's brightness) */
 const PROFILE_EMIT: Record<NebulaProfile['morphology'], number> = {
-  'hii-cavity': 1.6, 'hii-pillars': 1.6, 'molecular-dark': 1.0, 'reflection-wisps': 4.0,
-  'planetary-shell': 1.2, 'planetary-bipolar': 1.2, 'snr-filaments': 1.0, 'wind-bubble': 1.0,
+  'hii-cavity': 1.6, 'hii-pillars': 1.6, 'molecular-dark': 1.0, 'reflection-wisps': 2.6,
+  'planetary-shell': 0.9, 'planetary-bipolar': 0.9, 'snr-filaments': 1.0, 'wind-bubble': 1.0,
 };
 const PROFILE_STEPS: Record<NebulaProfile['morphology'], number> = {
   'hii-cavity': 80, 'hii-pillars': 80, 'molecular-dark': 64, 'reflection-wisps': 56,
-  'planetary-shell': 72, 'planetary-bipolar': 72, 'snr-filaments': 80, 'wind-bubble': 64,
+  'planetary-shell': 96, 'planetary-bipolar': 96, 'snr-filaments': 88, 'wind-bubble': 80,
 };
 
 /** A raymarched object: one full-screen pass into the volume buffer */
@@ -69,6 +70,10 @@ export class Volume {
   readonly lastOrigin = new Vector3(Infinity, 0, 0);
   /** frames left of reduced quality after the last fast frame */
   racing = 0;
+  /** the full step budget, while a frame's draw runs on a share of it */
+  steps = 0;
+  /** share of the full step budget this frame (ProcClouds: a nebula a few pixels across needs a fraction of it) */
+  stepScale = 1;
   constructor(readonly kind: 'galaxy' | 'nebula', readonly mat: ShaderMaterial, geo: BufferGeometry) {
     this.mesh = new Mesh(geo, mat);
     this.mesh.frustumCulled = false;
@@ -94,8 +99,6 @@ export class Volume {
  */
 export class Volumes {
   enabled = true;
-  /** Nebula Engine 2.0 (profile-driven medium) for the nebulae; off: the original per-kind shader */
-  nebulaEngine = true;
   /** debugging: raymarch the backdrop every frame instead of using the cached cube */
   forceDirect = false;
   /** Nebula Engine 2.0 debug view for profile nebulae: 0 off, 1 gas, 2 dust, 3 ionisation, 4 transmittance */
@@ -110,6 +113,8 @@ export class Volumes {
   private readonly scene = new Scene();
   private readonly cam = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
   private readonly geo: BufferGeometry;
+  /** unit quad of the nebulae: each is drawn into the screen rect of its bounding sphere (uRect) */
+  private readonly quad: BufferGeometry;
   private readonly composite: Mesh;
   private readonly compositeMat: ShaderMaterial;
   private readonly invProj = new Matrix4();
@@ -141,6 +146,9 @@ export class Volumes {
     this.geo = new BufferGeometry();
     this.geo.setAttribute('position', new BufferAttribute(new Float32Array([-1, -1, 0, 3, -1, 0, -1, 3, 0]), 3));
     this.geo.setAttribute('uv', new BufferAttribute(new Float32Array([0, 0, 2, 0, 0, 2]), 2));
+    this.quad = new BufferGeometry();
+    this.quad.setAttribute('position', new BufferAttribute(new Float32Array([-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, 1, 0, -1, 1, 0]), 3));
+    this.quad.setAttribute('uv', new BufferAttribute(new Float32Array([0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1]), 2));
     // mipmapped: its top level is the frame's mean glow (eye adaptation in the composite)
     this.rt = new WebGLRenderTarget(4, 4, { type: HalfFloatType, depthBuffer: false, generateMipmaps: true, minFilter: LinearMipmapLinearFilter, magFilter: LinearFilter });
     this.rt2 = new WebGLRenderTarget(4, 4, { type: HalfFloatType, depthBuffer: false, generateMipmaps: true, minFilter: LinearMipmapLinearFilter, magFilter: LinearFilter });
@@ -191,7 +199,7 @@ export class Volumes {
   warm(renderer: WebGLRenderer): void {
     if (this.warmMats.length) return;
     const scene = new Scene();
-    for (const frag of [Shaders.volumeGalaxyFrag, Shaders.volumeNebulaFrag, Shaders.volumeNebula2Frag]) {
+    for (const frag of [Shaders.volumeGalaxyFrag, Shaders.volumeNebula2Frag]) {
       const m = this.material(frag, frag === Shaders.volumeNebula2Frag ? profileUniforms() : {});
       this.warmMats.push(m);
       const mesh = new Mesh(this.geo, m);
@@ -207,9 +215,10 @@ export class Volumes {
 
   private material(frag: string, extra: Record<string, IUniform>): ShaderMaterial {
     return new ShaderMaterial({
-      vertexShader: Shaders.volumeVert,
+      vertexShader: RECT_VERT,
       fragmentShader: frag,
       uniforms: {
+        uRect: { value: new Vector4(-1, 1, -1, 1) },
         uInvProj: { value: this.invProj }, uCamRot: { value: this.camRot },
         uToLocal: { value: new Matrix3() }, uOrigin: { value: new Vector3() }, uBox: { value: new Vector3(1.4, 1.4, 1.4) },
         uSteps: { value: 64 }, uFade: { value: 0 }, uEmit: { value: 1 }, uSeed: { value: 0 },
@@ -262,38 +271,6 @@ export class Volumes {
     return v;
   }
 
-  /** Volume for a nebula of the given kind; `rng01` draws its structure */
-  nebula(kind: NebulaKind, color: readonly number[], rng01: () => number): Volume {
-    const clumps: Vector4[] = [];
-    const weights: number[] = [];
-    const n = 4 + Math.floor(rng01() * 3);
-    for (let i = 0; i < 6; i++) {
-      const v = ballPoint(rng01).multiplyScalar(i === 0 ? 0.3 : 0.6);
-      clumps.push(new Vector4(v.x, v.y, v.z, i === 0 ? 0.35 + rng01() * 0.15 : 0.22 + rng01() * 0.28));
-      weights.push(i === 0 ? 1 : 0.5 + rng01() * 0.5);
-    }
-    const axis = ballPoint(rng01).normalize();
-    const mat = this.material(Shaders.volumeNebulaFrag, {
-      uKind: { value: NEBULA_CODE[kind] },
-      uColor: { value: new Vector3(color[0], color[1], color[2]) },
-      uClumps: { value: clumps }, uClumpW: { value: weights }, uNClumps: { value: n },
-      uAxis: { value: axis }, uBipolar: { value: rng01() < 0.6 ? 1 : 0 },
-      uDust: { value: kind === 'emission' ? 2.5 : kind === 'reflection' ? 1.2 : 1.0 },
-    });
-    mat.uniforms.uSeed.value = rng01() * 100;
-    // peak column ≈ the sprite's brightness (uFade carries the physical / navigation level)
-    mat.uniforms.uEmit.value = NEBULA_EMIT[kind];
-    // the thin sheets of a remnant / planetary need the finer march
-    mat.uniforms.uSteps.value = kind === 'remnant' ? 80 : kind === 'planetary' ? 64 : 56;
-    mat.uniforms.uBox.value.set(1.3, 1.3, 1.3);
-    // random orientation: no two nebulae seen from the same side
-    const q = new Matrix4().makeRotationFromEuler(new Euler(rng01() * 6.28, rng01() * 6.28, rng01() * 6.28));
-    (mat.uniforms.uToLocal.value as Matrix3).setFromMatrix4(q);
-    const v = new Volume('nebula', mat, this.geo);
-    this.add(v);
-    return v;
-  }
-
   /**
    * Nebula Engine 2.0: a volume driven by a resolved profile (morphology family, salted structure
    * seeds, local star lights, palette). The object's orientation and lights come from the profile,
@@ -328,7 +305,7 @@ export class Volumes {
     mat.uniforms.uBox.value.set(1.3, 1.3, 1.3);
     const q = new Matrix4().makeRotationFromQuaternion(profile.orientation);
     (mat.uniforms.uToLocal.value as Matrix3).setFromMatrix4(q);
-    const v = new Volume('nebula', mat, this.geo);
+    const v = new Volume('nebula', mat, this.quad);
     this.add(v);
     return v;
   }
@@ -459,9 +436,22 @@ export class Volumes {
       renderer.setRenderTarget(rt);
       renderer.clear(true, false, false);
       let drawn = false;
+      const batch: Volume[] = [];
       for (const v of list) {
         const r = screenRect(v, this.camRot, tanX, tanY);
         if (!r) continue;
+        if (v.kind === 'nebula') {
+          // the nebulae (dozens, most of them a few pixels across) share one render call: each is
+          // a quad over its own rect, drawn in list order (far to near)
+          const padX = 4 / vw, padY = 4 / vh;
+          (v.u.uRect.value as Vector4).set(Math.max(-1, r[0] - padX), Math.min(1, r[1] + padX), Math.max(-1, r[2] - padY), Math.min(1, r[3] + padY));
+          v.mesh.renderOrder = batch.length;
+          v.steps = v.u.uSteps.value as number;
+          v.u.uSteps.value = Math.max(12, Math.round(v.steps * v.stepScale));
+          v.mesh.visible = true;
+          batch.push(v);
+          continue;
+        }
         const x0 = Math.max(0, Math.floor((r[0] + 1) * 0.5 * vw) - 2), x1 = Math.min(vw, Math.ceil((r[1] + 1) * 0.5 * vw) + 2);
         const y0 = Math.max(0, Math.floor((r[2] + 1) * 0.5 * vh) - 2), y1 = Math.min(vh, Math.ceil((r[3] + 1) * 0.5 * vh) + 2);
         if (x1 <= x0 || y1 <= y0) continue;
@@ -473,6 +463,13 @@ export class Volumes {
         renderer.render(this.scene, this.cam);
         v.mesh.visible = false;
         v.u.uSteps.value = steps;
+        drawn = true;
+      }
+      if (batch.length) {
+        rt.scissor.set(0, 0, vw, vh);
+        renderer.setRenderTarget(rt);
+        renderer.render(this.scene, this.cam);
+        for (const v of batch) { v.mesh.visible = false; v.u.uSteps.value = v.steps; }
         drawn = true;
       }
       rt.scissorTest = false;
@@ -569,9 +566,24 @@ export class Volumes {
     this.adaptMat.dispose();
     this.compositeMat.dispose();
     this.geo.dispose();
+    this.quad.dispose();
     this.gpu?.dispose();
   }
 }
+
+/**
+ * Vertex shader of the raymarched volumes: the geometry's uv spans the NDC rect `uRect`
+ * (x0, x1, y0, y1) at the far plane. The full-screen triangle of the galaxies keeps the whole view
+ * (its uv runs to 2); a nebula's quad covers only the rect of its bounding sphere.
+ */
+const RECT_VERT = /* glsl */ `
+varying vec2 vUv;
+uniform vec4 uRect;
+void main() {
+  vec2 ndc = mix(uRect.xz, uRect.yw, uv);
+  vUv = ndc * 0.5 + 0.5;
+  gl_Position = vec4(ndc, 1.0, 1.0);
+}`;
 
 /** uniforms of the profile-driven nebula shader (nebula_density / nebula_lighting) */
 function profileUniforms(): Record<string, IUniform> {
@@ -633,9 +645,3 @@ function hash01(seed: number, salt: number): number {
   return h / 4294967296;
 }
 
-function ballPoint(rng01: () => number): Vector3 {
-  for (;;) {
-    const v = new Vector3(rng01() * 2 - 1, rng01() * 2 - 1, rng01() * 2 - 1);
-    if (v.lengthSq() <= 1) return v;
-  }
-}

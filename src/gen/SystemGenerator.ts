@@ -89,13 +89,20 @@ export const JUPITER_RADIUS = 69_911;
 const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
 const LETTERS = 'bcdefghijklmnop';
 
-export type PlanetClass = 'lava' | 'venusian' | 'temperate' | 'ocean' | 'eyeball' | 'carbon' | 'desert' | 'ice' | 'barren' | 'subneptune' | 'gasgiant' | 'icegiant' | 'hotjupiter' | 'snowball' | 'tidal';
+export type PlanetClass = 'lava' | 'venusian' | 'temperate' | 'ocean' | 'eyeball' | 'carbon' | 'desert' | 'ice' | 'barren' | 'subneptune' | 'gasgiant' | 'icegiant' | 'hotjupiter' | 'snowball' | 'tidal'
+  | 'jungle' | 'dune' | 'salt' | 'toxic' | 'geothermal' | 'titan' | 'iron' | 'chthonian' | 'magmaeye' | 'hycean' | 'superpuff' | 'hotneptune';
 
 export const CLASS_LABEL: Record<PlanetClass, string> = {
   lava: 'Lav gezegeni', venusian: 'Venüs benzeri (sera)', temperate: 'Ilıman (okyanuslu)', ocean: 'Okyanus dünyası',
   eyeball: 'Göz küresi gezegeni (gelgit kilitli)', carbon: 'Karbon gezegeni', desert: 'Soğuk çöl gezegeni',
   ice: 'Buz dünyası', barren: 'Çorak kaya', subneptune: 'Mini-Neptün (kalın H/He zarfı)', gasgiant: 'Gaz devi', icegiant: 'Buz devi', hotjupiter: 'Sıcak Jüpiter',
   snowball: 'Kartopu gezegeni (küresel buzul çağı)', tidal: 'Gelgit ısıtmalı volkanik dünya (süper-Io)',
+  jungle: 'Orman dünyası (kesintisiz bitki örtüsü)', dune: 'Kum denizi gezegeni (sıcak çöl)', salt: 'Tuz gezegeni (kurumuş okyanuslar)',
+  toxic: 'Zehirli dünya (asit denizleri)', geothermal: 'Jeotermal dünya (sıcak kaynaklar ve gayzerler)',
+  titan: 'Titan benzeri dünya (hidrokarbon denizleri)', iron: 'Demir gezegeni (soyulmuş çekirdek)',
+  chthonian: 'Khthonik gezegen (buharlaşmış bir devin çekirdeği)', magmaeye: 'Lav gözü gezegeni (gündüz yüzü magma okyanusu)',
+  hycean: 'Hycean dünyası (hidrojen göğü altında okyanus)', superpuff: 'Süper-kabarık gezegen (pamuk şeker yoğunluğunda)',
+  hotneptune: 'Sıcak Neptün (buharlaşan atmosfer)',
 };
 
 /**
@@ -130,6 +137,18 @@ export const CLASS_NOTE: Partial<Record<PlanetClass, string>> = {
   subneptune: 'Kepler\'in en sık bulduğu gezegen türü: kayaç bir çekirdeğin üzerinde kalın bir hidrojen-helyum zarfı; yüzeyi yok, pus katmanları altında basınç yüzlerce bar.',
   snowball: 'Yaşanabilir kuşakta olduğu halde baştan sona buzla kaplı: parlak buz güneş ışığını geri yansıttıkça gezegen daha da soğudu (Dünya da 700 milyon yıl önce böyleydi). Buzun altında sıvı bir okyanus olabilir.',
   tidal: 'Komşu gezegenlerle yörünge rezonansında: yıldızın gelgiti iç kısmını sürekli yoğurup ısıtıyor (TRAPPIST-1 gezegenleri gibi). Yüzeyi kükürt lavları ve aktif volkanlarla kaplı.',
+  jungle: 'Karaların neredeyse tamamı bitki örtüsüyle kaplı: sıcak, nemli ve mevsimsiz bir iklim. Atmosferindeki oksijen ile metanın bir arada bulunması ancak yaşamla açıklanabilir.',
+  dune: 'Suyunun çoğunu uzaya kaçırmış sıcak bir çöl: kıtalar boyu kum denizleri ve rüzgârın oyduğu kayalıklar. Toz fırtınaları bazen bütün gezegeni sarıyor.',
+  salt: 'Okyanusları buharlaşıp gitti: geride kilometrelerce kalınlıkta tuz yatakları, göz kamaştıran düzlükler ve eski kıyı çizgileri kaldı.',
+  toxic: 'Kükürt ve klor bileşikleriyle yüklü bir atmosferin altında asit denizleri var: yağmuru sülfürik asit, kıyıları kükürt çökelleriyle sarı.',
+  geothermal: 'Kabuğu ince, iç ısısı yüksek: yüzeyi sıcak su kaynakları, mineral terasları ve turkuaz göllerle benekli. Gayzerleri yörüngeden görülecek kadar yükseğe fışkırıyor.',
+  titan: 'Kalın bir organik pus tabakasının altında metan yağmurları, etan nehirleri ve hidrokarbon denizleri var. Ana kayası su buzu, kumulları donmuş organik tanecikler.',
+  iron: 'Dev bir çarpışma ya da yıldızının ısısı kayaç mantosunu söküp almış: geriye neredeyse yalın bir demir-nikel çekirdek kaldı (Merkür\'ün uç örneği). Boyutuna göre çok yoğun.',
+  chthonian: 'Bir zamanlar gaz deviydi: yıldızına fazla yaklaşınca hidrojen-helyum zarfı uzaya savruldu, geriye çıplak, erimiş kaya-metal çekirdeği kaldı.',
+  magmaeye: 'Yıldıza hep aynı yüzünü dönüyor: gündüz tarafının ortası kalıcı bir magma okyanusu, gece tarafı katılaşmış kapkara kabuk. Buharlaşan kaya gece tarafına mineral karı olarak yağıyor.',
+  hycean: 'Kalın bir hidrojen atmosferinin altında gezegeni saran ılık bir su okyanusu olabilir (K2-18 b gibi). Bulutların arasından koyu mavi derinlik seçiliyor.',
+  superpuff: 'Kütlesi birkaç Dünya, çapı bir gaz devi kadar: yoğunluğu pamuk şekerinkine yakın (Kepler-51 gezegenleri gibi). Gördüğümüz, çok yükseklere uzanan bir pus tabakası.',
+  hotneptune: 'Yıldızına bu kadar yakın bir Neptün nadirdir ("sıcak Neptün çölü"): atmosferi buharlaşıyor, ardında kuyruklu yıldızınki gibi bir hidrojen kuyruğu bırakıyor.',
 };
 
 /* ------------------------------------------------------------------ */
@@ -602,9 +621,12 @@ function makePlanet(
       appearance: gasAppearance(rng, T, false, id),
       atmosphere: { color: sud >= 4 ? [0.6, 0.55, 0.7] : sud === 3 ? rng.tint([0.5, 0.65, 1.0]) : sud === 2 ? rng.tint([0.9, 0.92, 1.0]) : rng.tint([0.95, 0.88, 0.75]), height: 0.012, density: 0.45 },
       rings: varyRings(rings, id, radius, T, true), temperature: T,
-      description: `${_(label)}. ${_('{m} Jüpiter kütlesinde', { m: fixed(massJ, 2) })}; ${describeTemp(T)}.${CLASS_NOTE[cls] ? ` ${_(CLASS_NOTE[cls]!)}` : ''}`,
       facts: { 'Sınıf': label, 'Kaynak': 'Prosedürel (tahmini)' },
     };
+    const notes = CLASS_NOTE[cls] ? [_(CLASS_NOTE[cls]!)] : [];
+    if (T > 1300) notes.push(_('Gece tarafı karanlık değil: bulutları kendi ısısıyla kor gibi parlıyor.'));
+    if (data.rings && data.rings.outer > radius * 4) notes.push(_('Halka sistemi olağanüstü geniş: gezegenin çapının birkaç katına uzanıyor. İçinde oluşmakta olan uydular halkalarda geniş boşluklar açmış.'));
+    data.description = `${_(label)}. ${_('{m} Jüpiter kütlesinde', { m: fixed(massJ, 2) })}; ${describeTemp(T)}.${notes.length ? ` ${notes.join(' ')}` : ''}`;
     bodies.push(data);
     makeMoons(rng, data, beyondFrost, rng.int(2, 6), bodies, 'giant');
   } else if (cls === 'icegiant') {
@@ -629,15 +651,19 @@ function makePlanet(
     // 1.7–3.5 R⊕: a rocky core under a hydrogen–helium envelope a few per cent of the mass; the
     // top of the atmosphere is what we see — hazy, low-contrast, bluish when cold, tan when hot
     const massE = rng.logRange(3, 12);
-    const radius = EARTH_RADIUS * rng.range(1.7, 3.5);
+    let radius = EARTH_RADIUS * rng.range(1.7, 3.5);
     const albedo = rng.range(0.25, 0.5);
     const T = equilibriumT(host.luminosity, aAU, albedo);
+    // the rarer envelopes, by the id: a hycean world, a super-puff, a hot Neptune
+    cls = subRegime(T, id);
+    if (cls === 'superpuff') radius *= 1.9 + 0.8 * hashUnit(idSeed(id), 0x5c1);
     data = {
       id, name, type: 'planet', parent, radius, flattening: rng.range(0.005, 0.02), mass: massE * EARTH_MASS, albedo,
       rotationPeriod: tidallyLocked ? 'sync' : rng.range(10, 40) * (rng.chance(0.1) ? -1 : 1),
       tilt, orbit: orbit(rng, aKm, gmStar, 0.1, 3, 'parentEquator'),
-      appearance: subNeptuneAppearance(rng, T, id),
-      atmosphere: { color: T > 700 ? rng.tint([0.85, 0.75, 0.65]) : rng.tint([0.6, 0.75, 1.0], 0.08), height: 0.035, density: 0.7 },
+      appearance: subLook(subNeptuneAppearance(rng, T, id), cls, T, id),
+      atmosphere: cls === 'superpuff' ? { color: rng.tint([0.95, 0.82, 0.84], 0.08), height: 0.07, density: 0.9 }
+        : { color: T > 700 ? rng.tint([0.85, 0.75, 0.65]) : rng.tint([0.6, 0.75, 1.0], 0.08), height: 0.035, density: 0.7 },
       rings: varyRings(rng.chance(0.12) ? makeRings(rng, radius, 'dusty') : undefined, id, radius, T, false),
       temperature: T,
       description: `${_(CLASS_LABEL[cls])}. ${_('{m} Dünya kütlesinde', { m: fixed(massE, 1) })}; ${describeTemp(T)}${tidallyLocked ? `; ${_('yıldızına gelgitle kilitli')}` : ''}. ${_(CLASS_NOTE[cls]!)}`,
@@ -675,24 +701,31 @@ function makePlanet(
     let activity: Activity | undefined = cls === 'lava' && rng.chance(0.7)
       ? { kind: 'volcanic', count: rng.int(3, 7), height: radius * rng.range(0.03, 0.08), spread: radius * rng.range(0.06, 0.15), fall: 1, color: rng.tint([0.55, 0.5, 0.5], 0.05), intensity: rng.range(0.6, 1.0) }
       : undefined;
-    const rare = rareRegime(cls, T, id);
-    if (rare === 'snowball' || rare === 'tidal') {
+    const rare = rareRegime(cls, T, id, massE, tidallyLocked);
+    if (rare !== cls) {
       cls = rare;
       const look = regimeLook(rare, { appearance, atmosphere, clouds }, id, radius);
       appearance = look.appearance; atmosphere = look.atmosphere; clouds = look.clouds; activity = look.activity ?? activity;
-      if (rare === 'snowball') { albedo = 0.6; T = equilibriumT(host.luminosity, aAU, albedo) + 10; }
+      if (look.albedo !== undefined) { albedo = look.albedo; T = equilibriumT(host.luminosity, aAU, albedo) * (look.greenhouse ?? 1) + (look.warm ?? 0); }
     }
     if (cls === 'venusian') veilTint(atmosphere, clouds, id);
     varyRocky(appearance, atmosphere, id);
+    const notes = CLASS_NOTE[cls] ? [_(CLASS_NOTE[cls]!)] : [];
+    // plants need not be green: what they reflect is what their pigments leave of the star's light
+    if (appearance.kind === 'terrestrial' && appearance.life) {
+      const flora = weighted(FLORA, hashUnit(idSeed(id), 0x5f1));
+      if (flora.turn) { appearance.touch = { ...appearance.touch, flora: flora.turn }; notes.push(_(flora.note)); }
+    }
     data = {
       id, name, type, parent, radius, flattening: massE > 0.5 ? rng.range(0.001, 0.006) : undefined,
       mass: massE * EARTH_MASS, albedo, activity,
       rotationPeriod: tidallyLocked ? 'sync' : rng.logRange(9, 900) * (rng.chance(0.1) ? -1 : 1),
-      tilt, orbit: orbit(rng, aKm, gmStar, 0.18, 3.5, 'parentEquator'),
+      // (the tides that lock a world stand its axis up as well: the star stays over one point of it)
+      tilt: tidallyLocked ? 0 : tilt, orbit: orbit(rng, aKm, gmStar, 0.18, 3.5, 'parentEquator'),
       appearance, atmosphere, clouds, temperature: T,
       // a few rocky worlds keep a thin ring of debris (a shattered moon)
       rings: varyRings(massE > 0.5 && T < 400 && rng.chance(0.05) ? makeRings(rng, radius, 'dusty') : undefined, id, radius, T, false),
-      description: `${_(CLASS_LABEL[cls])}. ${_('{m} Dünya kütlesinde', { m: fixed(massE, 2) })}; ${describeTemp(T)}${tidallyLocked && cls !== 'eyeball' ? `; ${_('yıldızına gelgitle kilitli')}` : ''}.${CLASS_NOTE[cls] ? ` ${_(CLASS_NOTE[cls]!)}` : ''}`,
+      description: `${_(CLASS_LABEL[cls])}. ${_('{m} Dünya kütlesinde', { m: fixed(massE, 2) })}; ${describeTemp(T)}${tidallyLocked && cls !== 'eyeball' && cls !== 'magmaeye' ? `; ${_('yıldızına gelgitle kilitli')}` : ''}.${notes.length ? ` ${notes.join(' ')}` : ''}`,
       facts: { 'Sınıf': CLASS_LABEL[cls], 'Kaynak': 'Prosedürel (tahmini)' },
     };
     bodies.push(data);
@@ -738,7 +771,141 @@ export function gasAppearance(rng: Rng, T: number, iceGiant: boolean, id: string
   const storm = rng.chance(0.5)
     ? ([rng.range(-35, 35), rng.range(0, 360), rng.range(0.05, 0.13), ...rng.tint(bands[1], 0.15)] as [number, number, number, number, number, number])
     : undefined;
-  return { kind: 'gas', seed, bands, bandFreq: rng.range(5, 14), turbulence, storm, skin: iceGiant ? 'icegiant' : 'gas' };
+  const a: Appearance = { kind: 'gas', seed, bands, bandFreq: rng.range(5, 14), turbulence, storm, skin: iceGiant ? 'icegiant' : 'gas' };
+  varyGas(a, T, iceGiant, id);
+  return a;
+}
+
+type GasPalette = { w: number; bands: RGB[]; storm: RGB };
+
+/**
+ * Giants of one cloud chemistry still differ — in their chromophores (the unknown reddish stuff
+ * of Jupiter's belts, Saturn's butterscotch haze), in how deep the haze lies, in what the
+ * photochemistry of their star makes of the trace gases. A few decks per Sudarsky class, each
+ * with the colour of its great ovals.
+ */
+const GAS_PALETTES: Record<1 | 2 | 3 | 4 | 5, GasPalette[]> = {
+  1: [
+    { w: 3, bands: SUDARSKY_BANDS[1], storm: [0.72, 0.32, 0.2] },
+    { w: 2.5, bands: [[0.9, 0.8, 0.58], [0.8, 0.66, 0.42], [0.94, 0.87, 0.68], [0.72, 0.58, 0.38], [0.86, 0.74, 0.52]], storm: [0.96, 0.92, 0.82] },
+    { w: 1.5, bands: [[0.82, 0.6, 0.46], [0.6, 0.3, 0.2], [0.9, 0.74, 0.6], [0.45, 0.2, 0.14], [0.74, 0.48, 0.36]], storm: [0.36, 0.1, 0.08] },
+    { w: 1.2, bands: [[0.78, 0.76, 0.6], [0.5, 0.48, 0.3], [0.86, 0.85, 0.72], [0.38, 0.36, 0.24], [0.66, 0.64, 0.46]], storm: [0.62, 0.34, 0.14] },
+    { w: 1, bands: [[0.8, 0.8, 0.82], [0.5, 0.52, 0.6], [0.9, 0.9, 0.9], [0.36, 0.36, 0.46], [0.68, 0.66, 0.7]], storm: [0.94, 0.94, 0.97] },
+    { w: 0.8, bands: [[0.9, 0.78, 0.72], [0.66, 0.42, 0.42], [0.95, 0.88, 0.84], [0.5, 0.3, 0.34], [0.8, 0.6, 0.58]], storm: [0.5, 0.18, 0.28] },
+  ],
+  2: [
+    { w: 3, bands: SUDARSKY_BANDS[2], storm: [0.62, 0.68, 0.78] },
+    { w: 1.5, bands: [[0.86, 0.91, 0.95], [0.56, 0.7, 0.86], [0.93, 0.96, 0.98], [0.42, 0.58, 0.8], [0.74, 0.84, 0.92]], storm: [0.3, 0.42, 0.68] },
+    { w: 1.2, bands: [[0.93, 0.89, 0.8], [0.78, 0.68, 0.5], [0.96, 0.94, 0.88], [0.64, 0.52, 0.36], [0.86, 0.8, 0.66]], storm: [0.62, 0.4, 0.24] },
+    { w: 0.8, bands: [[0.88, 0.85, 0.94], [0.64, 0.58, 0.84], [0.94, 0.93, 0.98], [0.5, 0.44, 0.74], [0.78, 0.74, 0.9]], storm: [0.42, 0.32, 0.66] },
+  ],
+  3: [
+    { w: 3, bands: SUDARSKY_BANDS[3], storm: [0.86, 0.9, 0.98] },
+    { w: 1.5, bands: [[0.16, 0.3, 0.7], [0.1, 0.2, 0.58], [0.24, 0.4, 0.8], [0.12, 0.24, 0.62]], storm: [0.8, 0.86, 0.96] },
+    { w: 1.5, bands: [[0.25, 0.55, 0.7], [0.18, 0.45, 0.62], [0.34, 0.64, 0.76], [0.2, 0.5, 0.66]], storm: [0.9, 0.95, 0.95] },
+    { w: 1, bands: [[0.4, 0.45, 0.75], [0.3, 0.32, 0.66], [0.5, 0.56, 0.84], [0.34, 0.36, 0.7]], storm: [0.2, 0.18, 0.42] },
+  ],
+  4: [
+    { w: 3, bands: SUDARSKY_BANDS[4], storm: [0.36, 0.22, 0.2] },
+    { w: 1.5, bands: [[0.2, 0.12, 0.2], [0.13, 0.08, 0.14], [0.28, 0.16, 0.26], [0.16, 0.09, 0.17]], storm: [0.42, 0.2, 0.24] },
+    { w: 1.5, bands: [[0.1, 0.16, 0.2], [0.07, 0.11, 0.15], [0.15, 0.22, 0.27], [0.08, 0.13, 0.17]], storm: [0.3, 0.36, 0.4] },
+    { w: 1, bands: [[0.22, 0.14, 0.1], [0.14, 0.09, 0.07], [0.3, 0.2, 0.14], [0.17, 0.1, 0.08]], storm: [0.45, 0.26, 0.14] },
+  ],
+  5: [
+    { w: 3, bands: SUDARSKY_BANDS[5], storm: [0.86, 0.62, 0.38] },
+    { w: 1.5, bands: [[0.5, 0.3, 0.24], [0.36, 0.2, 0.17], [0.62, 0.4, 0.3], [0.3, 0.16, 0.14]], storm: [0.8, 0.5, 0.3] },
+    { w: 1.2, bands: [[0.66, 0.56, 0.46], [0.52, 0.44, 0.38], [0.76, 0.66, 0.54], [0.44, 0.36, 0.32]], storm: [0.34, 0.24, 0.22] },
+    { w: 0.8, bands: [[0.34, 0.3, 0.36], [0.24, 0.2, 0.27], [0.44, 0.38, 0.44], [0.2, 0.17, 0.23]], storm: [0.6, 0.4, 0.34] },
+  ],
+};
+
+/**
+ * Ice giants: methane takes the red out, the haze above it decides the rest — Uranus' pale cyan
+ * under a thick haze, Neptune's azure under a thin one, a deep indigo where the methane column is
+ * long, sea-green and teal where a sulphur haze yellows the blue, grey where the haze is all.
+ */
+const ICE_GIANT_PALETTES: GasPalette[] = [
+  { w: 3, bands: [[0.45, 0.72, 0.84], [0.52, 0.78, 0.86], [0.38, 0.64, 0.8], [0.62, 0.84, 0.9]], storm: [0.2, 0.42, 0.62] },
+  { w: 3, bands: [[0.2, 0.35, 0.85], [0.25, 0.45, 0.95], [0.18, 0.3, 0.75], [0.35, 0.55, 1.0]], storm: [0.08, 0.12, 0.4] },
+  { w: 1.2, bands: [[0.6, 0.68, 0.74], [0.66, 0.74, 0.8], [0.55, 0.62, 0.7], [0.7, 0.78, 0.84]], storm: [0.36, 0.42, 0.5] },
+  { w: 1.2, bands: [[0.14, 0.16, 0.5], [0.2, 0.24, 0.62], [0.1, 0.12, 0.42], [0.3, 0.34, 0.7]], storm: [0.05, 0.05, 0.22] },
+  { w: 1.2, bands: [[0.5, 0.82, 0.74], [0.6, 0.88, 0.8], [0.42, 0.74, 0.68], [0.7, 0.92, 0.86]], storm: [0.22, 0.5, 0.48] },
+  { w: 1, bands: [[0.15, 0.5, 0.6], [0.2, 0.6, 0.68], [0.12, 0.42, 0.52], [0.3, 0.68, 0.75]], storm: [0.06, 0.24, 0.32] },
+  { w: 0.6, bands: [[0.68, 0.7, 0.9], [0.74, 0.78, 0.94], [0.6, 0.62, 0.84], [0.8, 0.84, 0.96]], storm: [0.4, 0.4, 0.7] },
+];
+
+/** the glow of a deck at T (K), linear RGB: a dull red at 1000 K, orange by 2500 K */
+function thermalGlow(T: number): RGB {
+  const t = clamp01((T - 1000) / 1500);
+  return [0.035 + 0.25 * t, 0.004 + 0.09 * t * t, 0.001 + 0.025 * t * t * t];
+}
+
+/** one shade of a deck's colours per world: lightness, and a lean toward warm or cool */
+function shade(bands: RGB[], seed: number): RGB[] {
+  const l = 0.9 + 0.2 * hashUnit(seed, 0x9a2), w = (hashUnit(seed, 0x9a3) - 0.5) * 0.08;
+  return bands.map((c) => [clamp01(c[0] * l + w), clamp01(c[1] * l), clamp01(c[2] * l - w)]);
+}
+
+/**
+ * A giant's own deck, from its id (the draws of the generator's stream above stay, their colours
+ * are replaced): one of its chemistry's palettes in its own shade, the colour of its ovals, a
+ * swirled deck instead of a belted one on the hot and the stormy, the glow of the hottest.
+ */
+function varyGas(a: Appearance, T: number, iceGiant: boolean, id: string): void {
+  if (a.kind !== 'gas') return;
+  const seed = idSeed(id);
+  const sud = sudarskyClass(T);
+  const pal = weighted(iceGiant ? ICE_GIANT_PALETTES : GAS_PALETTES[sud], hashUnit(seed, 0x9a1));
+  a.bands = shade(pal.bands, seed);
+  if (a.storm) a.storm = [a.storm[0], a.storm[1], a.storm[2], ...pal.storm];
+  if (!iceGiant && hashUnit(seed, 0x9a5) < (sud >= 3 ? 0.4 : 0.12)) a.skin = 'gas-swirl';
+  if (T > 1000) a.glow = thermalGlow(T);
+}
+
+const tones = (c: RGB): RGB[] => [c, [c[0] * 0.92, c[1] * 0.92, c[2] * 0.92], [Math.min(1, c[0] * 1.06), Math.min(1, c[1] * 1.06), Math.min(1, c[2] * 1.06)], [c[0] * 0.86, c[1] * 0.86, c[2] * 0.86]];
+
+/** Sub-Neptune hazes: silicate and soot when hot, salts and sulphur when warm, methane blues when cold */
+const SUB_HAZES: Array<Array<{ w: number; c: RGB }>> = [
+  [{ w: 3, c: [0.78, 0.7, 0.6] }, { w: 1.5, c: [0.7, 0.7, 0.72] }, { w: 1, c: [0.7, 0.5, 0.4] }, { w: 0.8, c: [0.4, 0.36, 0.38] }],
+  [{ w: 3, c: [0.82, 0.82, 0.8] }, { w: 1.5, c: [0.88, 0.84, 0.62] }, { w: 1.2, c: [0.74, 0.86, 0.86] }, { w: 0.8, c: [0.86, 0.76, 0.7] }],
+  [{ w: 3, c: [0.45, 0.62, 0.8] }, { w: 1.5, c: [0.35, 0.66, 0.7] }, { w: 1, c: [0.56, 0.58, 0.84] }, { w: 1, c: [0.6, 0.84, 0.78] }],
+];
+/** super-puffs: a high, pale photochemical haze — peach, lilac, mint, ivory */
+const PUFF_HAZES: Array<{ w: number; c: RGB }> = [
+  { w: 2, c: [0.86, 0.56, 0.6] }, { w: 1.5, c: [0.64, 0.56, 0.86] }, { w: 1, c: [0.56, 0.84, 0.68] }, { w: 1, c: [0.88, 0.76, 0.5] },
+];
+
+function subRegime(T: number, id: string): PlanetClass {
+  const u = hashUnit(idSeed(id), 0x5a0);
+  if (T > 800 && u < 0.35) return 'hotneptune';
+  if (T > 240 && T < 400 && u < 0.3) return 'hycean';
+  if (T < 700 && u >= 0.3 && u < 0.37) return 'superpuff';
+  return 'subneptune';
+}
+
+/** The envelope's own haze, from the id; the rarer kinds their decks */
+function subLook(a: Appearance, cls: PlanetClass, T: number, id: string): Appearance {
+  if (a.kind !== 'gas') return a;
+  const seed = idSeed(id);
+  const u = hashUnit(seed, 0x9a1);
+  if (cls === 'hycean') {
+    // a deep blue world under streaks of white cloud; dark storms where the deck opens
+    a.bands = shade([[0.08, 0.2, 0.5], [0.12, 0.3, 0.62], [0.06, 0.16, 0.42], [0.55, 0.66, 0.8]], seed);
+    a.turbulence = 0.45 + 0.3 * hashUnit(seed, 0x9a6);
+    a.skin = 'hycean';
+  } else if (cls === 'superpuff') {
+    a.bands = shade(tones(weighted(PUFF_HAZES, u).c), seed);
+    a.turbulence = 0.1;
+    a.skin = 'superpuff';
+  } else if (cls === 'hotneptune') {
+    a.bands = shade(u < 0.5 ? [[0.2, 0.26, 0.42], [0.14, 0.19, 0.34], [0.28, 0.35, 0.5], [0.42, 0.38, 0.36]] : [[0.3, 0.2, 0.3], [0.22, 0.14, 0.24], [0.4, 0.28, 0.38], [0.5, 0.4, 0.36]], seed);
+    a.turbulence = 0.4 + 0.3 * hashUnit(seed, 0x9a6);
+    a.skin = 'icegiant';
+    if (T > 1000) a.glow = thermalGlow(T);
+  } else {
+    a.bands = shade(tones(weighted(SUB_HAZES[T > 700 ? 0 : T > 350 ? 1 : 2], u).c), seed);
+  }
+  return a;
 }
 
 /** Sub-Neptune: a hazy, nearly featureless envelope; cold ones bluish, hot ones tan or white */
@@ -802,7 +969,7 @@ export function rockyAppearance(rng: Rng, cls: PlanetClass, massE: number, id: s
           // mostly ice, a low sea level makes the "pupil" show where the terrain dips
           kind: 'terrestrial', seed, ocean: rng.tint([0.03, 0.14, 0.32], 0.04), landLow: rng.tint([0.7, 0.76, 0.84]), landMid: rng.tint([0.85, 0.88, 0.93]),
           landHigh: [0.96, 0.97, 1.0], ice: [0.96, 0.97, 1.0], seaLevel: rng.range(0.3, 0.45), iceCaps: rng.range(0.35, 0.5),
-          craters: 0.05, roughness: 0.8, variation: 0.4, skin: 'eyeball',
+          craters: 0.05, roughness: 0.8, variation: 0.4, skin: 'eyeball', touch: { eye: 'sea' },
         },
         atmosphere: { color: rng.tint([0.5, 0.65, 0.95], 0.08), height: 0.02, density: rng.range(0.5, 1.0), sunsetColor: [1.0, 0.55, 0.3] },
         clouds: { seed: seed + 1, color: [1, 1, 1], coverage: rng.range(0.2, 0.4), height: 0.006, speed: rng.range(1.5, 3), opacity: 0.8 },
@@ -906,10 +1073,56 @@ const SULPHUR_PALETTES: Palette[] = [
   { w: 1, low: [0.8, 0.78, 0.6], mid: [0.93, 0.92, 0.82], high: [0.55, 0.4, 0.25] },
 ];
 
+/** Sand seas: quartz gold, iron-stained red (the Namib, Arrakis), pale gypsum, dark basalt sand under ochre dust, feldspar pink */
+const DUNE_PALETTES: Palette[] = [
+  { w: 3, low: [0.55, 0.38, 0.16], mid: [0.82, 0.62, 0.32], high: [0.93, 0.8, 0.55] },
+  { w: 2.5, low: [0.5, 0.2, 0.08], mid: [0.78, 0.4, 0.16], high: [0.9, 0.62, 0.36] },
+  { w: 1.5, low: [0.6, 0.52, 0.4], mid: [0.85, 0.78, 0.62], high: [0.95, 0.9, 0.8] },
+  { w: 1.2, low: [0.2, 0.16, 0.13], mid: [0.5, 0.38, 0.24], high: [0.78, 0.62, 0.42] },
+  { w: 1, low: [0.55, 0.32, 0.26], mid: [0.8, 0.55, 0.45], high: [0.92, 0.76, 0.66] },
+];
+/** Evaporites: white halite, pink where iron or salt-loving microbes stain it, yellow sulphates, blue-grey sodium carbonate */
+const SALT_PALETTES: Palette[] = [
+  { w: 3, low: [0.7, 0.68, 0.66], mid: [0.88, 0.87, 0.85], high: [0.96, 0.96, 0.95] },
+  { w: 1.5, low: [0.72, 0.5, 0.48], mid: [0.9, 0.74, 0.72], high: [0.97, 0.92, 0.9] },
+  { w: 1.2, low: [0.7, 0.62, 0.42], mid: [0.9, 0.84, 0.64], high: [0.96, 0.94, 0.84] },
+  { w: 1, low: [0.5, 0.54, 0.58], mid: [0.76, 0.8, 0.84], high: [0.93, 0.95, 0.97] },
+];
+/** Bare metal: steel grey, rusted where oxygen ever reached it, dark sulphide gunmetal, bronze */
+const IRON_PALETTES: Palette[] = [
+  { w: 3, low: [0.2, 0.21, 0.23], mid: [0.34, 0.35, 0.38], high: [0.5, 0.51, 0.54] },
+  { w: 2, low: [0.26, 0.14, 0.09], mid: [0.42, 0.26, 0.18], high: [0.56, 0.42, 0.34] },
+  { w: 1.5, low: [0.1, 0.1, 0.11], mid: [0.2, 0.2, 0.22], high: [0.36, 0.36, 0.4] },
+  { w: 1, low: [0.28, 0.22, 0.12], mid: [0.45, 0.37, 0.22], high: [0.62, 0.54, 0.38] },
+];
+
 const PALETTES_BY_SKIN: Record<string, Palette[]> = {
   barren: ROCK_PALETTES, 'moon-rocky': ROCK_PALETTES, desert: DESERT_PALETTES,
   ice: ICE_PALETTES, 'moon-icy': ICE_PALETTES, 'moon-volcanic': SULPHUR_PALETTES,
+  dune: DUNE_PALETTES, salt: SALT_PALETTES, iron: IRON_PALETTES,
 };
+
+/**
+ * Photosynthesis elsewhere need not leave green: the pigments are tuned to the star's light and
+ * to what the air lets through. Most of the living worlds are green all the same; the turn is of
+ * the map's vegetation hue (rad, SkinLibrary).
+ */
+const FLORA: Array<{ w: number; turn: number; note: string }> = [
+  { w: 14, turn: 0, note: '' },
+  { w: 2.2, turn: -2.4, note: 'Bitki örtüsü yeşil değil mor: pigmentleri yeşil ışığı soğurup kırmızıyla maviyi yansıtıyor (ilk Dünya\'nın da böyle olduğu öne sürülür).' },
+  { w: 1.5, turn: 2.0, note: 'Bitki örtüsü kızıl: fotosentez pigmentleri yıldızının ışığına göre evrilmiş.' },
+  { w: 1.5, turn: -0.75, note: 'Bitki örtüsü mavi-yeşil: pigmentleri kırmızı ışığın tamamını soğuruyor.' },
+  { w: 1.2, turn: 1.0, note: 'Bitki örtüsü altın sarısı: ormanları yörüngeden sonbahar renginde görünüyor.' },
+];
+
+/** Titan-like hazes: tholin orange, a paler gold, salmon where nitriles dominate, blue-green where the haze is thin over methane */
+const TITAN_HAZES: Array<{ w: number; c: RGB }> = [
+  { w: 3, c: [0.92, 0.62, 0.28] }, { w: 1.5, c: [0.9, 0.78, 0.4] }, { w: 1, c: [0.88, 0.58, 0.5] }, { w: 0.8, c: [0.45, 0.7, 0.75] },
+];
+/** Acid seas: sulphur-yellow green, iron chloride rust, dark olive */
+const ACID_SEAS: Array<{ w: number; c: RGB }> = [
+  { w: 2, c: [0.3, 0.38, 0.06] }, { w: 1, c: [0.45, 0.2, 0.05] }, { w: 1, c: [0.12, 0.17, 0.04] },
+];
 
 /**
  * Give a rocky look its crust colour and its scars, from the id alone: a palette by composition
@@ -961,23 +1174,140 @@ function veilTint(atmosphere: Atmosphere | undefined, clouds: Clouds | undefined
  * a snowball (a temperate world locked in a global glaciation) and a tidally heated volcanic
  * world (a rocky planet kneaded by resonant neighbours, TRAPPIST-1 style).
  */
-function rareRegime(cls: PlanetClass, T: number, id: string): PlanetClass {
+function rareRegime(cls: PlanetClass, T: number, id: string, massE: number, locked: boolean): PlanetClass {
   const u = hashUnit(idSeed(id), 0x5a0);
-  if ((cls === 'temperate' || cls === 'ocean') && u < 0.12) return 'snowball';
-  if (cls === 'barren' && T > 350 && T < 1000 && u < 0.1) return 'tidal';
-  return cls;
+  switch (cls) {
+    case 'temperate':
+      return u < 0.12 ? 'snowball' : u < 0.22 ? 'jungle' : u < 0.29 ? 'dune' : u < 0.35 ? 'geothermal' : u < 0.39 ? 'salt' : cls;
+    case 'ocean':
+      return u < 0.12 ? 'snowball' : cls;
+    case 'barren':
+      if (T > 350 && T < 1000 && u < 0.1) return 'tidal';
+      if (T > 550 && u >= 0.1 && u < 0.24) return 'iron';
+      // warm, and massive enough to keep a thin air: the dry worlds with weather
+      if (T > 235 && T <= 420 && massE > 0.1) return u >= 0.24 && u < 0.5 ? 'dune' : u >= 0.5 && u < 0.6 ? 'salt' : cls;
+      return cls;
+    case 'venusian':
+      return u < 0.2 ? 'toxic' : cls;
+    case 'desert':
+      return u < 0.1 ? 'salt' : u < 0.2 ? 'geothermal' : u < 0.32 && T < 200 ? 'titan' : cls;
+    case 'ice':
+      return massE > 0.02 && u < 0.18 ? 'titan' : cls;
+    case 'lava':
+      if (massE > 2 && u < 0.45) return 'chthonian';
+      return locked && u < 0.75 ? 'magmaeye' : cls;
+    default:
+      return cls;
+  }
 }
 
-function regimeLook(cls: 'snowball' | 'tidal', base: { appearance: Appearance; atmosphere?: Atmosphere; clouds?: Clouds }, id: string, radius: number): { appearance: Appearance; atmosphere?: Atmosphere; clouds?: Clouds; activity?: Activity } {
+type Terrestrial = Extract<Appearance, { kind: 'terrestrial' }>;
+interface Look {
+  appearance: Appearance; atmosphere?: Atmosphere; clouds?: Clouds; activity?: Activity;
+  /** a Bond albedo of its own, then the equilibrium temperature times `greenhouse`, plus `warm` K */
+  albedo?: number; greenhouse?: number; warm?: number;
+}
+
+function regimeLook(cls: PlanetClass, base: { appearance: Appearance; atmosphere?: Atmosphere; clouds?: Clouds }, id: string, radius: number): Look {
   const seed = idSeed(id);
-  const s = (base.appearance as { seed: number }).seed;
-  if (cls === 'snowball') {
-    const p = weighted(ICE_PALETTES.slice(0, 2), hashUnit(seed, 0x5b1));
-    return {
-      appearance: { kind: 'terrestrial', seed: s, landLow: p.low, landMid: p.mid, landHigh: p.high, ice: [0.94, 0.96, 1.0], iceCaps: 0.2, craters: 0.05, roughness: 0.8, variation: 0.4, style: 'ice', skin: 'ice' },
-      atmosphere: base.atmosphere ? { ...base.atmosphere, density: base.atmosphere.density * 0.7 } : undefined,
-      clouds: base.clouds ? { ...base.clouds, coverage: base.clouds.coverage * 0.5 } : undefined,
-    };
+  const b = base.appearance as Terrestrial;
+  const s = b.seed;
+  const u = (salt: number): number => hashUnit(seed, salt);
+  // the colours of the dry kinds are varyRocky's (PALETTES_BY_SKIN), these are placeholders
+  const grey: Pick<Terrestrial, 'landLow' | 'landMid' | 'landHigh'> = { landLow: [0.3, 0.29, 0.28], landMid: [0.42, 0.41, 0.4], landHigh: [0.55, 0.54, 0.52] };
+  switch (cls) {
+    case 'snowball': {
+      const p = weighted(ICE_PALETTES.slice(0, 2), u(0x5b1));
+      return {
+        appearance: { kind: 'terrestrial', seed: s, landLow: p.low, landMid: p.mid, landHigh: p.high, ice: [0.94, 0.96, 1.0], iceCaps: 0.2, craters: 0.05, roughness: 0.8, variation: 0.4, style: 'ice', skin: 'ice' },
+        atmosphere: base.atmosphere ? { ...base.atmosphere, density: base.atmosphere.density * 0.7 } : undefined,
+        clouds: base.clouds ? { ...base.clouds, coverage: base.clouds.coverage * 0.5 } : undefined,
+        albedo: 0.6, warm: 10,
+      };
+    }
+    case 'jungle':
+      return {
+        appearance: {
+          ...b, landLow: [0.07, 0.2, 0.06], landMid: [0.16, 0.3, 0.1], landHigh: [0.36, 0.4, 0.26], seaLevel: 0.3 + 0.15 * u(0x5b5), iceCaps: 0.95,
+          style: 'temperate', life: true, cityLights: false, skin: 'jungle',
+        },
+        // a thinner veil than an ocean world's: the land is what there is to see
+        atmosphere: base.atmosphere ? { ...base.atmosphere, density: 0.28 + 0.17 * u(0x5b6) } : undefined,
+        clouds: base.clouds ? { ...base.clouds, coverage: 0.2 + 0.2 * u(0x5b7) } : undefined,
+      };
+    case 'dune': {
+      const sky: RGB = [0.86, 0.72, 0.5];
+      return {
+        appearance: { kind: 'terrestrial', seed: s, ...grey, craters: 0.15, roughness: 0.9, variation: 0.6, style: 'desert', skin: 'dune' },
+        atmosphere: { color: sky, height: 0.02, density: 0.2 + 0.25 * u(0x5b5), sunsetColor: [0.55, 0.68, 1.0] },
+        // dust storms on some: a tan veil over part of the globe
+        clouds: u(0x5b6) < 0.45 ? { seed: s + 1, color: [0.86, 0.72, 0.52], coverage: 0.15 + 0.2 * u(0x5b7), height: 0.004, speed: 1.5, opacity: 0.6 } : undefined,
+        albedo: 0.3,
+      };
+    }
+    case 'salt':
+      return {
+        appearance: { kind: 'terrestrial', seed: s, ...grey, craters: 0.1, roughness: 0.7, variation: 0.5, skin: 'salt' },
+        atmosphere: { color: [0.75, 0.8, 0.9], height: 0.02, density: 0.15 + 0.25 * u(0x5b5) },
+        albedo: 0.5,
+      };
+    case 'toxic': {
+      const sea = weighted(ACID_SEAS, u(0x5b5)).c;
+      return {
+        appearance: {
+          kind: 'terrestrial', seed: s, ocean: sea, landLow: [0.3, 0.28, 0.1], landMid: [0.55, 0.5, 0.2], landHigh: [0.7, 0.66, 0.4],
+          seaLevel: 0.42, craters: 0, roughness: 0.9, variation: 0.6, skin: 'toxic', touch: { sea },
+        },
+        atmosphere: { color: [0.78, 0.85, 0.4], height: 0.035, density: 0.8 + 0.2 * u(0x5b6), sunsetColor: [0.9, 0.5, 0.15] },
+        clouds: { seed: s + 1, color: [0.92, 0.93, 0.62], coverage: 0.35 + 0.25 * u(0x5b7), height: 0.01, speed: 4 + 8 * u(0x5b8), opacity: 0.85 },
+        albedo: 0.45, greenhouse: 1.35,
+      };
+    }
+    case 'geothermal':
+      return {
+        appearance: {
+          kind: 'terrestrial', seed: s, ocean: [0.1, 0.5, 0.5], landLow: [0.45, 0.2, 0.18], landMid: [0.8, 0.68, 0.45], landHigh: [0.9, 0.85, 0.7],
+          seaLevel: 0.36, craters: 0.05, roughness: 0.9, variation: 0.8, skin: 'geothermal',
+        },
+        atmosphere: base.atmosphere ?? { color: [0.7, 0.8, 0.95], height: 0.02, density: 0.4 },
+        // steam over the springs
+        clouds: { seed: s + 1, color: [1, 1, 1], coverage: 0.2 + 0.15 * u(0x5b5), height: 0.006, speed: 1, opacity: 0.8 },
+        activity: { kind: 'volcanic', count: 4 + (hashSeed(seed, 0x5b6) % 5), height: radius * (0.012 + 0.02 * u(0x5b7)), spread: radius * 0.02, fall: 1, color: [0.95, 0.97, 1.0], intensity: 0.7 },
+      };
+    case 'titan': {
+      const haze = weighted(TITAN_HAZES, u(0x5b5)).c;
+      const sea: RGB = [0.035, 0.03, 0.025];
+      return {
+        appearance: {
+          kind: 'terrestrial', seed: s, ocean: sea, landLow: [0.3, 0.2, 0.1], landMid: [0.55, 0.4, 0.22], landHigh: [0.75, 0.65, 0.5],
+          seaLevel: 0.34, craters: 0.05, roughness: 0.8, variation: 0.5, skin: 'titan', touch: { sea },
+        },
+        // thick enough to veil the ground from orbit, thin enough to make out the seas
+        atmosphere: { color: haze, height: 0.06, density: 1.12 + 0.3 * u(0x5b6), sunsetColor: [0.5, 0.4, 0.3] },
+        albedo: 0.22,
+      };
+    }
+    case 'iron':
+      return {
+        appearance: { kind: 'terrestrial', seed: s, ...grey, craters: 0.8, roughness: 1.2, variation: 0.6, skin: 'iron' },
+        albedo: 0.12,
+      };
+    case 'chthonian':
+      return {
+        appearance: b,
+        atmosphere: { color: [0.9, 0.6, 0.35], height: 0.02, density: 0.3 },
+      };
+    case 'magmaeye':
+      return {
+        appearance: {
+          kind: 'terrestrial', seed: s, landLow: [0.05, 0.04, 0.04], landMid: [0.1, 0.09, 0.09], landHigh: [0.2, 0.18, 0.17],
+          craters: 0.2, roughness: 1.1, volcanic: true, variation: 0.5, style: 'lava', skin: 'magmaeye', touch: { eye: 'magma' },
+        },
+        // rock vapour over the day side
+        atmosphere: { color: [0.85, 0.5, 0.3], height: 0.012, density: 0.2 },
+      };
+    default:
+      break;
   }
   const p = weighted(SULPHUR_PALETTES, hashUnit(seed, 0x5b2));
   const vents = 4 + (hashSeed(seed, 0x5b3) % 5);
@@ -1008,6 +1338,15 @@ function varyRings(rings: Rings | undefined, id: string, radius: number, T: numb
     rings.outer = rings.inner + radius * (0.5 + 0.7 * hashUnit(seed, 0x61c));
     rings.opacity = 0.6 + 0.3 * hashUnit(seed, 0x61d);
     rings.gaps = [[rings.inner + (rings.outer - rings.inner) * (0.4 + 0.4 * hashUnit(seed, 0x61e)), (rings.outer - rings.inner) * 0.03]];
+  }
+  // a very few wear a ring system out of all proportion (J1407 b's spans tens of millions of km):
+  // the disc of a moon system still forming, its gaps swept by the moons inside it
+  if (giant && hashUnit(seed, 0x62a) < 0.05) {
+    rings.inner = radius * (1.3 + 0.3 * hashUnit(seed, 0x62b));
+    rings.outer = radius * (4.5 + 3.5 * hashUnit(seed, 0x62c));
+    rings.opacity = 0.7 + 0.2 * hashUnit(seed, 0x62d);
+    const span = rings.outer - rings.inner;
+    rings.gaps = [0.2, 0.42, 0.63, 0.82].map((f, k) => [rings.inner + span * (f + 0.06 * (hashUnit(seed, 0x630 + k) - 0.5)), span * (0.02 + 0.04 * hashUnit(seed, 0x634 + k))]);
   }
   const u = hashUnit(seed, 0x61f);
   const icy: Array<{ w: number; c: [number, number, number] }> = [

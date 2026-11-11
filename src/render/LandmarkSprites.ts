@@ -90,6 +90,7 @@ export class LandmarkSprites {
         uAtlasReady: { value: 0 },
         uAtlasGrid: { value: LANDMARK_ATLAS_GRID },
         uCloudOn: { value: 0 },
+        uShapes: { value: 0 },
         uDaylight: { value: 0 },
       },
       transparent: true,
@@ -113,7 +114,7 @@ export class LandmarkSprites {
     const n = landmarks.length;
     const pos = new Float32Array(n * 3), col = new Float32Array(n * 3);
     const rad = new Float32Array(n), kind = new Float32Array(n), mag = new Float32Array(n), seed = new Float32Array(n), idx = new Float32Array(n);
-    const img = new Float32Array(n), span = new Float32Array(n), cloud = new Float32Array(n), cat = new Float32Array(n);
+    const img = new Float32Array(n), span = new Float32Array(n), cloud = new Float32Array(n), cat = new Float32Array(n), reach = new Float32Array(n);
     const files = this.files;
     this.distPc = new Float32Array(n); this.radiusPx = new Float32Array(n);
     this.listDirty = true;
@@ -130,6 +131,7 @@ export class LandmarkSprites {
       kind[i] = KIND_CODE[l.def.kind];
       mag[i] = l.def.absMag;
       cat[i] = l.def.catalog ? 1 : 0;
+      reach[i] = l.reachPc ?? 0;
       seed[i] = l.def.procedural ? (hashStr(l.def.id) % 1000) / 77 : (i * 7.31) % 13;
       idx[i] = i;
       const photo = LANDMARK_IMAGES[l.def.id];
@@ -158,6 +160,7 @@ export class LandmarkSprites {
     geo.setAttribute('iSpan', new InstancedBufferAttribute(span, 1));
     geo.setAttribute('iCloud', new InstancedBufferAttribute(cloud, 1));
     geo.setAttribute('iCat', new InstancedBufferAttribute(cat, 1));
+    geo.setAttribute('iReach', new InstancedBufferAttribute(reach, 1));
     geo.instanceCount = n;
     const old = this.geo;
     this.geo = geo;
@@ -171,8 +174,11 @@ export class LandmarkSprites {
   /** indices currently holding a non-zero cloud weight */
   private readonly cloudSet = new Set<number>();
 
-  /** Mark the landmarks that currently have a volumetric cloud (their sprite yields to it when resolved) */
-  /** @param weights landmark index → 0…1 share with which a volumetric cloud stands in for it right now */
+  /**
+   * @param weights landmark index → 0…1: the share of a nebula its raymarched cloud carries right
+   * now (the sprite gives up as much), or how far a cluster's member stars have faded in (its glow
+   * steps back)
+   */
   setCloudFlags(weights: Iterable<[number, number]>): void {
     const f = this.cloudFlags;
     // a handful of weights among ten thousand zeros: only an actual change is worth the upload
@@ -235,6 +241,13 @@ export class LandmarkSprites {
 
   /** number of landmarks the buffers were built for */
   get count(): number { return this.geo.instanceCount; }
+
+  /**
+   * The drawn shell / ring / filament shapes of the sprites: only while the gas is not raymarched
+   * (volumetrics off). With the volumes every nebula larger than a blob is its own cloud, and a
+   * sprite still waiting for a slot stays the blob it was from afar.
+   */
+  setShapes(on: boolean): void { this.mat.uniforms.uShapes.value = on ? 1 : 0; }
 
   /** Once the volumetric clouds exist, photographed sprites fade out as they get resolved */
   setCloudHandover(on: boolean): void { this.mat.uniforms.uCloudOn.value = on ? 1 : 0; }
@@ -358,32 +371,39 @@ export class LandmarkSprites {
     }
   }
 
-  /** The sprite's alpha as the vertex shader computes it (landmark.vert), for "is it on screen?" */
-  private alphaAt(i: number, radiusPx: number, ratio: number, distPc: number): number {
+  /**
+   * How bright landmark i is drawn (0…1) at an apparent radius (px), a distance in its own radii
+   * and in parsecs: the law of landmark.vert without its fly-through and hand-over terms. The
+   * raymarched clouds (ProcClouds) take their brightness from it too, so an object is as bright
+   * resolved as it was as a sprite.
+   */
+  brightness(i: number, radiusPx: number, ratio: number, distPc: number): number {
     const l = this.landmarks[i];
     const flux = (this.flux0[i] * 100) / (distPc * distPc);   // 10^(−0.4·(M + 5 log d − 5))
+    const reach = l.reachPc ? 1 - smooth01((distPc - 0.8 * l.reachPc) / (0.2 * l.reachPc)) : 1;
     if (l.def.kind === 'star' || l.def.kind === 'pulsar') {
       let nav = 1 - smooth01((distPc - 8000) / 32000);
       if (l.def.catalog) nav *= 1 - smooth01((distPc - 150) / 250);
-      return Math.min(1, 0.2 * nav + 0.9 * Math.pow(flux, 0.45)) * smooth01((ratio - 0.8) / 1.4);
+      return Math.min(1, 0.2 * nav + 0.9 * Math.pow(flux, 0.45)) * reach;
     }
+    const cluster = l.def.kind === 'cluster' || l.def.kind === 'globular';
     const pxc = Math.max(radiusPx, 1.2);
-    let physical = Math.min(((this.mat.uniforms.uK.value as number) * flux) / (0.61 * pxc * pxc), 1);
+    let physical = Math.min(((this.mat.uniforms.uK.value as number) * flux) / (0.61 * pxc * pxc), cluster ? 1 : 0.8);
     const shell = l.def.kind === 'remnant' || l.def.kind === 'planetary';
     const nearR = l.def.kind === 'globular' ? 150 : shell ? 400 : 600;
-    const floorA = shell ? 0.4 * (0.5 + 0.5 * smooth01((radiusPx - 1.5) / 6.5)) + 0.45 * (1 - smooth01((ratio - 12) / 48)) : 0.6;
+    const floorA = cluster ? 0.3 : shell ? 0.4 * (0.5 + 0.5 * smooth01((radiusPx - 1.5) / 6.5)) + 0.45 * (1 - smooth01((ratio - 12) / 48)) : 0.6;
     let near = floorA * (1 - smooth01((ratio - nearR * 0.1) / (nearR * 0.9)));
     if (l.def.catalog) {
       // survey objects: star-like brightness while unresolved, a short navigation floor (landmark.vert)
       physical = Math.min(1, 0.9 * Math.pow((flux * 4) / Math.max(radiusPx * radiusPx, 4), 0.45));
-      near *= 0.5 * (1 - smooth01((ratio - 6) / 54));
-      if (l.def.kind === 'cluster' || l.def.kind === 'globular') {
-        const h = smooth01((radiusPx - 10) / 20);
-        physical *= 1 - (l.def.kind === 'globular' ? 0.65 : 0.9) * h;
-        near *= 1 - 0.9 * h;
-      }
+      near *= cluster ? 0.5 * (1 - smooth01((ratio - 6) / 54)) : 1 - smooth01((ratio - 30) / 120);
     }
-    return Math.max(physical, near) * smooth01((ratio - 0.8) / 1.4);
+    return Math.max(physical, near) * reach;
+  }
+
+  /** The sprite's alpha as the vertex shader computes it (landmark.vert), for "is it on screen?" */
+  private alphaAt(i: number, radiusPx: number, ratio: number, distPc: number): number {
+    return this.brightness(i, radiusPx, ratio, distPc) * smooth01((ratio - 0.8) / 1.4);
   }
 
   /** Landmark nearest to a screen point (px): the labelled ones first, then any visible sprite */

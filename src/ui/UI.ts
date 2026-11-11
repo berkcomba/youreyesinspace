@@ -167,7 +167,6 @@ const SETTING_DEFS: SettingDef[] = [
   { key: 'deepCatalog', label: 'Derin yıldız kataloğu (Gaia + Tycho-2, ~2,8 milyon yıldız; ~60 MB indirme)', kind: 'bool' },
   { key: 'milkyWay', label: 'Galaksi yıldız bulutları', kind: 'bool' },
   { key: 'volumetrics', label: 'Hacimsel galaksiler ve bulutsular (toz, parlayan gaz)', kind: 'bool' },
-  { key: 'nebulaEngine', label: 'Bulutsu motoru 2.0 (yıldızların aydınlattığı gaz ve toz ortamı)', kind: 'bool' },
   { key: 'galaxies', label: 'Uzak galaksiler', kind: 'bool' },
   { key: 'procedural', label: 'Prosedürel nesneler (üretilmiş yıldızlar, galaksiler, kozmik ağ)', kind: 'bool' },
   { key: 'proceduralNames', label: 'Prosedürel yıldız isimleri (YE …)', kind: 'bool' },

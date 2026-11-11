@@ -20,8 +20,8 @@ uniform float uSkinFrozen;   // 1: the map's seas are frozen over (icy worlds: p
 
 // The body's own geology over the skin (SkinLibrary.ts: geology), so that no two worlds that draw
 // the same map look alike: the map bent at the scale of continents, its colours turned, provinces,
-// and the landforms of its kind of world. Directions are the body's (Y = its pole). Left out
-// with SKIN_FLAT (gas giants: their maps are taken as they are).
+// and the landforms of its kind of world. Directions are the body's (Y = its pole; +X faces the
+// star on a tidally locked world). With SKIN_FLAT (gas giants) the deck has its own, further down.
 uniform float uGeoSeed;
 uniform float uGeoWarp;      // bend of the map (unit-sphere offset; 0 none)
 uniform vec3 uGeoTintA;      // albedo gains of two provinces
@@ -37,6 +37,22 @@ uniform vec3 uGeoCap;        // polar caps: sin(latitude) of their edge (0 none)
 uniform vec4 uGeoHemi;       // a hemisphere apart: its apex (unit), strength (w; 0 none)
 uniform vec3 uGeoHemiTint;   // that hemisphere's albedo gain
 uniform float uGeoHemiDrop;  // and how far it lies below the rest (lowlands)
+uniform float uGeoFlora;     // a further turn of hue where the map is green: vegetation of another pigment
+uniform vec4 uGeoSea;        // the seas' own colour and how far they take it (a; 0: the map's water)
+uniform vec4 uGeoBasin;      // a giant impact basin: its centre (unit), radius (rad; 0 none)
+uniform vec3 uGeoBasinLook;  // its depth (height units), its floor's albedo gain, the strength of its rays
+uniform vec3 uGeoEye;        // a locked world's sub-stellar pupil: radius (rad; 0 none), kind (1 thawed sea, 2 magma ocean), raggedness
+uniform vec3 uGeoEyeCol;     // the colour of the sea there
+
+// A gas giant's deck (SKIN_FLAT): the map's latitudes stretched and squeezed, the world's own
+// belts and zones (gas_common.glsl: its band colours) under the map's streaks and eddies, polar
+// hoods, ovals that wind the clouds around them
+uniform vec3 uGasRemap;      // latitude shift: amplitude (0 none), frequency, phase
+uniform float uGasBelts;     // how far the deck takes the world's own belts (0: the map as tinted)
+uniform vec3 uGasBright;     // the brightest of its colours (companion clouds)
+uniform vec4 uGasPolar;      // the polar hoods' colour, strength (a)
+uniform vec4 uGasStorm[3];   // ovals: latitude, longitude, half-height (rad), tone (0 none, > 0 coloured, < 0 a dark spot)
+uniform vec3 uGasStormCol;
 
 // Everything the geology lays on one point, taken once: the bake's two passes and the ground's
 // height, water and colour all read it (each landform inlined once more would cost seconds of
@@ -53,6 +69,9 @@ struct Geo {
   float cap;     // polar ice
   float trough;  // the cap's spiral troughs
   float hemi;    // the hemisphere apart
+  float basin;   // the floor of the giant basin
+  float rays;    // its ejecta rays
+  float eye;     // the pupil: open water, or how far the magma glows
 };
 
 #ifndef SKIN_FLAT
@@ -174,6 +193,49 @@ float hemiAt(vec3 p) {
   return smoothstep(-0.12, 0.22, dot(p, uGeoHemi.xyz) + 0.18 * fbm(p * 2.6 + uGeoSeed, 3)) * uGeoHemi.w;
 }
 
+// One giant impact (Caloris, Herschel on Mimas, Valhalla): a bowl with a central peak inside a
+// raised rim and a fainter outer ring, bright rays thrown across the globe. Returns its floor
+// (0 … 1), its height in `dh`, the rays in `rays`.
+float basinAt(vec3 p, out float rays, out float dh) {
+  rays = 0.0;
+  dh = 0.0;
+  if (uGeoBasin.w <= 0.0) return 0.0;
+  float cd = dot(p, uGeoBasin.xyz);
+  if (cd < cos(min(uGeoBasin.w * 5.0, 3.1))) return 0.0;
+  float t = acos(clamp(cd, -1.0, 1.0)) / uGeoBasin.w + 0.05 * snoise(p * 6.0 + uGeoSeed);
+  float r1 = (t - 1.0) * 5.0, r2 = (t - 1.45) * 6.0, pk = t * 6.0;
+  dh = ((smoothstep(0.0, 1.0, t) - 1.0) * 0.8 + exp(-r1 * r1) * 0.45 + exp(-r2 * r2) * 0.18 + exp(-pk * pk) * 0.3) * uGeoBasinLook.x;
+  if (t > 1.0 && uGeoBasinLook.z > 0.0) {
+    vec3 side = normalize(p - uGeoBasin.xyz * cd + 1e-5);
+    float streak = smoothstep(0.55, 0.9, snoise(side * 8.0 + uGeoSeed) * 0.5 + 0.5 + 0.2 * snoise(p * 14.0 + uGeoSeed));
+    rays = streak * exp(-(t - 1.0) * 0.6) * smoothstep(1.0, 1.3, t);
+  }
+  return 1.0 - smoothstep(0.75, 1.0, t);
+}
+
+// The pupil of a world that keeps one face to its star (+X): where the star stands overhead the
+// ice thaws to a sea ringed by floes, or the rock itself melts to a magma ocean rafted with
+// crust. Returns open water (0 / the depth toward the middle) or the glow of the magma (0 … 1);
+// `sink`: how far the ground lies under the rest.
+float eyeAt(vec3 p, out float sink) {
+  sink = 0.0;
+  if (uGeoEye.x <= 0.0) return 0.0;
+  float ang = acos(clamp(p.x, -1.0, 1.0)) + uGeoEye.z * fbm(p * 3.5 + uGeoSeed, 3);
+  float inner = (uGeoEye.x - ang) / uGeoEye.x;   // 0 on the edge, 1 under the star
+  if (inner <= 0.0) return 0.0;
+  if (uGeoEye.y < 1.5) {
+    float open = smoothstep(-0.05, 0.05, snoise(p * 24.0 + uGeoSeed) * 0.5 + inner * 1.6 - 0.35);
+    sink = open * 0.02;
+    return open * max(inner, 0.08);
+  }
+  float n1 = snoise(p * 6.0 + uGeoSeed), n2 = snoise(p * 15.0 + uGeoSeed * 1.7);
+  float cracks = (1.0 - smoothstep(0.0, 0.05, abs(n1))) * 0.9 + (1.0 - smoothstep(0.0, 0.035, abs(n2))) * 0.6;
+  float rafts = smoothstep(0.25, 0.6, fbm(p * 3.0 + uGeoSeed * 2.1, 3) * 0.5 + 0.5);
+  float open = smoothstep(0.3, 0.75, inner + 0.3 * (0.5 - rafts));
+  sink = open * 0.03;
+  return clamp(open + cracks * smoothstep(0.0, 0.25, inner), 0.0, 1.0);
+}
+
 Geo geoAt(vec3 p) {
   Geo g;
   g.dir = skinDir(p);
@@ -182,12 +244,36 @@ Geo geoAt(vec3 p) {
   g.h = volcanoesAt(p, g.flows, g.flank);
   g.cap = capAt(p, g.trough);
   g.hemi = hemiAt(p);
-  g.h += -g.rift * uGeoRift.w + g.ridge * 0.012 + (g.cap - g.trough * 0.5) * uGeoCap.z - g.hemi * uGeoHemiDrop;
+  float dh, sink;
+  g.basin = basinAt(p, g.rays, dh);
+  g.eye = eyeAt(p, sink);
+  g.h += -g.rift * uGeoRift.w + g.ridge * 0.012 + (g.cap - g.trough * 0.5) * uGeoCap.z - g.hemi * uGeoHemiDrop + dh - sink;
   return g;
 }
 #else
+vec3 gasStormCentre(vec4 st) {
+  return vec3(cos(st.x) * cos(st.y), sin(st.x), cos(st.x) * sin(st.y));
+}
+
 Geo geoAt(vec3 p) {
-  return Geo(uSkinRot * p, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+  vec3 q = p;
+  // the ovals wind the deck around them
+  for (int k = 0; k < 3; k++) {
+    vec4 st = uGasStorm[k];
+    if (st.w == 0.0) continue;
+    vec3 c = gasStormCentre(st);
+    float d = acos(clamp(dot(p, c), -1.0, 1.0)) / (st.z * 2.2);
+    if (d >= 1.0) continue;
+    float a = 2.2 * (1.0 - d) * (1.0 - d) * sign(st.x + 1e-4);
+    q = q * cos(a) + cross(c, q) * sin(a) + c * dot(c, q) * (1.0 - cos(a));
+  }
+  // belts and zones at other latitudes on every world: the latitude scale stretched and squeezed
+  if (uGasRemap.x > 0.0) {
+    float y = clamp(q.y + uGasRemap.x * (1.0 - q.y * q.y) * sin(q.y * uGasRemap.y + uGasRemap.z), -1.0, 1.0);
+    float s = sqrt(max(1.0 - y * y, 0.0) / max(1.0 - q.y * q.y, 1e-6));
+    q = vec3(q.x * s, y, q.z * s);
+  }
+  return Geo(uSkinRot * q, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 }
 #endif
 
@@ -210,13 +296,17 @@ void geoColor(vec3 p, Geo g, inout vec4 c) {
 #ifndef SKIN_FLAT
   bool sea = uSkinWater > 0.0 && c.a > 0.5;
   vec3 col = c.rgb;
-  // hue and saturation turned in YIQ: the vegetation olive or teal, the sea navy or turquoise
-  float turn = sea ? uGeoChroma.z : uGeoChroma.x;
+  // hue and saturation turned in YIQ: the vegetation olive or teal, the sea navy or turquoise;
+  // what is green on the map (its plants) may wear another pigment altogether
+  float veg = clamp((col.g - max(col.r, col.b)) / max(col.g, 1e-3) * 4.0, 0.0, 1.0);
+  float turn = sea ? uGeoChroma.z : uGeoChroma.x + uGeoFlora * veg;
   float sat = sea ? 1.0 : uGeoChroma.y;
   float Y = dot(col, vec3(0.299, 0.587, 0.114));
   vec2 iq = vec2(dot(col, vec3(0.596, -0.274, -0.322)), dot(col, vec3(0.211, -0.523, 0.312)));
   iq = vec2(iq.x * cos(turn) - iq.y * sin(turn), iq.x * sin(turn) + iq.y * cos(turn)) * sat;
   col = max(vec3(Y + 0.956 * iq.x + 0.621 * iq.y, Y - 0.272 * iq.x - 0.647 * iq.y, Y - 1.106 * iq.x + 1.703 * iq.y), 0.0);
+  // seas that are not water (hydrocarbons, acid): their own colour, the map's depths kept as tone
+  if (sea && uGeoSea.a > 0.0) col = mix(col, uGeoSea.rgb * clamp(Y / 0.05, 0.5, 1.8), uGeoSea.a);
   if (!sea) {
     col *= mix(uGeoTintA, uGeoTintB, smoothstep(-0.3, 0.3, fbm(p * 1.5 + uGeoSeed * 1.7, 3)));
     col *= mix(vec3(1.0), uGeoHemiTint, g.hemi);
@@ -228,11 +318,63 @@ void geoColor(vec3 p, Geo g, inout vec4 c) {
     float Yc = dot(col, vec3(0.299, 0.587, 0.114));
     col = mix(col, mix(vec3(Yc), col, 0.6) * 0.62, g.flank * 0.8);
     col *= 1.0 + 0.3 * g.flows;
+    // the great basin: its floor flooded dark or lined with fresh ice, its rays
+    col *= mix(1.0, uGeoBasinLook.y, g.basin) * (1.0 + g.rays * uGeoBasinLook.z);
   }
   if (g.cap > 0.0) {
     vec3 ice = mix(vec3(0.93, 0.92, 0.9), col, 0.12) * (0.94 + 0.06 * snoise(p * 30.0 + uGeoSeed));
     col = mix(col, mix(ice, col * 0.7, g.trough), g.cap);
     if (g.cap > 0.5) c.a = 0.0;
+  }
+  if (uGeoEye.x > 0.0) {
+    if (uGeoEye.y < 1.5) {
+      // the thawed sea: turquoise over the shallows at the ice edge, deep under the star
+      if (g.eye > 0.0) {
+        col = mix(uGeoEyeCol * 2.4 + vec3(0.0, 0.05, 0.045), uGeoEyeCol, smoothstep(0.08, 0.5, g.eye));
+        c.a = 1.0;
+      }
+    } else {
+      col = mix(col, vec3(0.05, 0.03, 0.025), g.eye);
+      c.a = max(c.a, g.eye * 0.5);
+    }
+  }
+  c.rgb = col;
+#else
+  vec3 col = c.rgb;
+  const vec3 LUM = vec3(0.299, 0.587, 0.114);
+  if (uGasBelts > 0.0) {
+    // the map's tone, 1 at its mean: it carries the streaks, the eddies and the ovals
+    float l = dot(col, LUM) / max(dot(uSkinMean * uSkinTint, LUM), 1e-3);
+    // the world's belts and zones by the deck's own latitude (wound round the ovals with it),
+    // of uneven width, their edges pushed about by the map's tones
+    float t = asin(clamp(g.dir.y, -1.0, 1.0)) / 1.5707963;
+    float tw = t + 0.10 * snoise(vec3(t * 2.5 + 3.0, uGeoSeed * 0.13, 1.0)) + 0.045 * snoise(vec3(t * 6.0, uGeoSeed * 0.29, 5.0));
+    float k = (sign(tw) * pow(abs(tw), 1.25) * 0.5 + 0.5) * uBandFreq + clamp(l - 1.0, -0.5, 0.5) * 0.4;
+    // (two taps: the edge of a belt is a soft one, the map's grain does not chalk it)
+    vec3 belt = 0.5 * (bandColor(k - 0.11) + bandColor(k + 0.11));
+    col = mix(col, belt * clamp(0.4 + 0.6 * l, 0.6, 1.18), uGasBelts);
+  }
+  if (uGasPolar.a > 0.0) {
+    float hood = smoothstep(0.74, 0.93, abs(p.y) + 0.04 * snoise(p * 5.0 + uGeoSeed));
+    col = mix(col, uGasPolar.rgb * (0.92 + 0.16 * fbm(p * 9.0 + uGeoSeed, 3)), hood * uGasPolar.a);
+  }
+  float lat = asin(clamp(p.y, -1.0, 1.0)), lon = atan(p.z, p.x);
+  for (int k = 0; k < 3; k++) {
+    vec4 st = uGasStorm[k];
+    if (st.w == 0.0) continue;
+    float dLon = mod(lon - st.y + 3.14159265, 6.2831853) - 3.14159265;
+    vec2 d = vec2(dLon * cos(st.x) / 1.7, lat - st.x) / st.z;
+    float r = length(d);
+    if (r > 2.2) continue;
+    float arms = 0.5 + 0.5 * sin(atan(d.y, d.x) * 2.0 - r * 8.0 + 2.0 * snoise(vec3(d * 3.0, uGeoSeed + float(k))));
+    float mask = smoothstep(1.05, 0.7, r + 0.14 * (arms - 0.5));
+    // a coloured anticyclone (the Great Red Spot), or a dark hole in the deck with bright
+    // companion clouds on its rim (Neptune's Great Dark Spot)
+    vec3 sc = st.w > 0.0 ? uGasStormCol * (0.8 + 0.3 * arms) * (0.8 + 0.35 * smoothstep(0.8, 0.2, r))
+                         : col * (0.4 + 0.15 * arms);
+    col *= 1.0 - 0.2 * smoothstep(1.7, 1.05, r) * (1.0 - mask);
+    col = mix(col, sc, mask * min(abs(st.w), 1.0) * 0.92);
+    if (st.w < 0.0) col = mix(col, uGasBright * 1.15, smoothstep(0.25, 0.0, abs(r - 1.05) + 0.25 * (1.0 - arms)) * step(0.0, d.y * sign(st.x)) * 0.7);
   }
   c.rgb = col;
 #endif

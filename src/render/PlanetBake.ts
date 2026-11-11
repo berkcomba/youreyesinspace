@@ -90,12 +90,27 @@ export class SurfaceBaker {
     return view.apparentRadiusPx > CLOSE_PX ? BAKE_RES_CLOSE : BAKE_RES;
   }
 
-  /** Advance the current bake by a few faces, start the next most urgent one. */
-  update(views: readonly BodyView[], now: number): void {
+  /**
+   * Advance the current bake by a few faces, start the next most urgent one.
+   *
+   * @param ahead the bodies the visitor is about to see, most urgent first (the one flown to, the
+   *   one picked, those a tour step is about): baked first and before they are even a pixel
+   *   wide. A flight shows its target as a point until its last second or two, and a map asked
+   *   for only then (its fetch, the bake, the fade) arrives over a disc that has grown large in
+   *   the plain procedural colours meanwhile
+   */
+  update(views: readonly BodyView[], now: number, ahead: readonly BodyView[] = []): void {
     for (const v of views) if (v.meshVisible && v.apparentRadiusPx >= BAKE_PX) this.lastSeen.set(v, now);
+    let next: BodyView | null = null;
+    for (const v of ahead) {
+      if (v.bakeKind === null || v.imageryActive) continue;
+      this.lastSeen.set(v, now);
+      if (!next && !this.done.has(v)) next = v;
+    }
     if (!this.job) {
       let best: BodyView | null = null, bestPx = 0, bestRes = 0;
-      for (const v of views) {
+      if (next) { best = next; bestRes = BAKE_RES; }
+      else for (const v of views) {
         const res = SurfaceBaker.wanted(v);
         if (!res) continue;
         const have = this.done.get(v);

@@ -299,6 +299,7 @@ export class BodyView {
           uStorm: { value: a.storm ? new Vector4(a.storm[0] * DEG, a.storm[1] * DEG, a.storm[2], 1) : new Vector4(0, 0, 0, 0) },
           uStormColor: { value: a.storm ? new Vector3(a.storm[3], a.storm[4], a.storm[5]) : new Vector3() },
           uHexagon: { value: a.hexagon ? 1 : 0 },
+          uGlow: { value: a.glow ? new Vector4(a.glow[0], a.glow[1], a.glow[2], Math.max(0.02, a.bands.reduce((s, b) => s + 0.299 * b[0] + 0.587 * b[1] + 0.114 * b[2], 0) / a.bands.length)) : new Vector4(0, 0, 0, 0) },
           uAtmColor: { value: d.atmosphere ? vec3(d.atmosphere.color) : new Vector3(1, 1, 1) },
           uAtmDensity: { value: d.atmosphere ? d.atmosphere.density : 0 },
         },
@@ -862,7 +863,8 @@ export class BodyView {
         const dtReal = this.bakeLast ? Math.min(0.1, (now - this.bakeLast) / 1000) : 0;
         this.bakeLast = now;
         const target = this.bake ? 1 : 0;
-        this.bakeFade = this.bakeFade < target ? Math.min(target, this.bakeFade + dtReal / BAKE_FADE_S) : target;
+        // maps that came while the body was a speck are simply there: nothing to fade from
+        this.bakeFade = this.bakeFade < target && this.apparentRadiusPx > 3 ? Math.min(target, this.bakeFade + dtReal / BAKE_FADE_S) : target;
         this.surfaceMat.uniforms.uBaked.value = this.bakeFade;
       }
     }
@@ -1015,6 +1017,8 @@ export class BodyRenderer {
   skinCredit: string | null = null;
   /** bakes the procedural surfaces into cube maps (null without a renderer: tests) */
   private readonly baker: SurfaceBaker | null;
+  /** the bodies about to be seen, most urgent first (flown to, picked, a tour step's): their surface maps are made ready ahead of the arrival (PlanetBake) */
+  ahead: readonly (CelestialBody | null | undefined)[] = [];
   /** true while the planets in view are still being baked (warm-up waits for this to clear) */
   get baking(): boolean { return this.baker?.pending(this.views) ?? false; }
 
@@ -1174,6 +1178,11 @@ export class BodyRenderer {
     this.imageryCredit = credit;
     this.skinCredit = credit ? null : skinCredit;
     if (this.renderer) for (const v of this.views) v.bakeSunlight(this.renderer);
-    this.baker?.update(this.views, performance.now());
+    const ahead: BodyView[] = [];
+    for (const b of this.ahead) {
+      const v = b && !b.hidden && !b.filtered ? this.view(b.id) : undefined;
+      if (v && !ahead.includes(v)) ahead.push(v);
+    }
+    this.baker?.update(this.views, performance.now(), ahead);
   }
 }

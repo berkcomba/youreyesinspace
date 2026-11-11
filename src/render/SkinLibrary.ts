@@ -1,5 +1,5 @@
 import {
-  ClampToEdgeWrapping, ImageBitmapLoader, LinearFilter, Matrix3, Matrix4, NoColorSpace, RepeatWrapping, SRGBColorSpace, Texture, Vector3, Vector4, type IUniform,
+  ClampToEdgeWrapping, DataTexture, ImageBitmapLoader, LinearFilter, Matrix3, Matrix4, NoColorSpace, RepeatWrapping, SRGBColorSpace, Texture, Vector3, Vector4, type IUniform,
 } from 'three';
 import type { Appearance } from '../data/types';
 
@@ -34,13 +34,14 @@ interface Family {
 }
 
 const BRENT = ['brent-gas-giant', 'brent-gas-giant-2', 'brent-gas-giant-3'];
-const GAS = [...BRENT, 'gas-giant', 'gas-giant-2'];
+const SWIRL = ['gas-giant', 'gas-giant-2'];
+const GAS = [...BRENT, ...SWIRL];
 
 const FAMILIES: Record<string, Family> = {
   'temperate-life': { from: ['earth-like-planet', 'green-planet', 'island-planet', 'swamp-planet', 'tundra-planet'], tint: 0 },
   temperate: { from: ['beach-planet', 'tundra-planet', 'earth-like-planet'], tint: 0 },
   ocean: { from: ['island-planet', 'earth-like-planet'], tint: 0, minWater: 0.45 },
-  eyeball: { from: ['ice-planet', 'tundra-planet'], tint: 0 },
+  eyeball: { from: ['ice-planet', 'tundra-planet'], tint: 0, frozen: true },
   // the generator's crust palettes (SystemGenerator: varyRocky) carry the variety of these
   desert: { from: ['desert-planet', 'red-planet', 'dust-planet'], tint: 0.5 },
   ice: { from: ['ice-planet', 'salt-planet'], tint: 0.6, frozen: true },
@@ -53,23 +54,70 @@ const FAMILIES: Record<string, Family> = {
   'moon-icy': { from: ['ice-planet', 'salt-planet'], tint: 0.7, frozen: true },
   // sulphur plains: no water skins here (a volcanic world reads the map's flag as glow)
   'moon-volcanic': { from: ['desert-planet', 'red-planet'], tint: 0.85 },
+  // the rarer worlds (SystemGenerator: regimeLook)
+  jungle: { from: ['green-planet', 'swamp-planet'], tint: 0 },
+  dune: { from: ['desert-planet', 'dust-planet', 'simple-rocky-planet'], tint: 0.75 },
+  salt: { from: ['salt-planet'], tint: 0.45 },
+  toxic: { from: ['toxic-planet'], tint: 0 },
+  geothermal: { from: ['thermal-planet'], tint: 0 },
+  titan: { from: ['beach-planet', 'tundra-planet'], tint: 0.8 },
+  iron: { from: ['tectonic-planet'], tint: 0.85 },
+  magmaeye: { from: ['tectonic-planet', 'lava-planet'], tint: 0.35 },
   gas: { from: BRENT, tint: 1 },
+  // decks without neat belts: the hot giants' and the stormiest
+  'gas-swirl': { from: SWIRL, tint: 1, contrast: 0.8 },
   icegiant: { from: GAS, tint: 1, contrast: 0.7 },
   subneptune: { from: GAS, tint: 1, contrast: 0.3 },
+  hycean: { from: ['gas-giant'], tint: 1, contrast: 0.75 },
+  superpuff: { from: GAS, tint: 1, contrast: 0.18 },
 };
 
 /**
- * Real global maps of solar-system worlds the imagery tiles do not cover (public/maps, see
- * NOTICE): `skin: 'map:<name>'` dresses the body in `<name>-c.webp` / `<name>-n.webp`, as they are.
+ * Global maps of single worlds (public/maps, see NOTICE): the real ones of solar-system bodies the
+ * imagery tiles do not cover, and the ones made here for the famous planets of other stars, after
+ * the artist's impressions they are known by (scripts/exo-maps.py). `skin: 'map:<name>'` dresses
+ * the body in `<name>-c.webp`, as it is.
  */
 const MAPS = `${import.meta.env.BASE_URL}maps/`;
-const MAP_CREDITS: Record<string, string> = {
-  pluto: 'NASA/JHUAPL/SwRI New Horizons, USGS',
-  charon: 'NASA/JHUAPL/SwRI New Horizons, USGS',
-  triton: 'NASA/JPL Voyager 2, USGS',
-  hd189733b: 'Your Eyes In Space, after NASA/ESA/M. Kornmesser',
-};
+interface MapInfo {
+  credit: string;
+  /** it comes with `<name>-n.webp`, normals and heights; without one the globe is smooth */
+  relief?: boolean;
+  /** fraction of open water: its flag marks seas, their surface at half the height scale */
+  water?: number;
+}
 const SSS_CREDIT = 'Solar System Scope (CC BY 4.0)';
+const NEW_HORIZONS = 'NASA/JHUAPL/SwRI New Horizons, USGS';
+const AFTER = 'Your Eyes In Space, after ';
+const MAP_INFO: Record<string, MapInfo> = {
+  pluto: { credit: NEW_HORIZONS },
+  charon: { credit: NEW_HORIZONS },
+  triton: { credit: 'NASA/JPL Voyager 2, USGS' },
+  hd189733b: { credit: `${AFTER}NASA/ESA/M. Kornmesser` },
+  '51pegb': { credit: `${AFTER}ESO/M. Kornmesser/N. Risinger` },
+  hd209458b: { credit: `${AFTER}ESA/A. Vidal-Madjar (IAP, CNRS)/NASA` },
+  kelt9b: { credit: `${AFTER}NASA/JPL-Caltech` },
+  betpicb: { credit: `${AFTER}ESO/L. Calçada/N. Risinger` },
+  hr8799e: { credit: `${AFTER}ESO/L. Calçada` },
+  hd80606b: { credit: `${AFTER}NASA/JPL-Caltech/J. Langton (UC Santa Cruz)` },
+  k218b: { credit: `${AFTER}ESA/Hubble/M. Kornmesser` },
+  '55cnce': { credit: `${AFTER}NASA/JPL-Caltech`, relief: true },
+  proximab: { credit: `${AFTER}ESO/M. Kornmesser`, relief: true },
+  trappist1e: { credit: `${AFTER}NASA/JPL-Caltech`, relief: true, water: 0.37 },
+  kepler186f: { credit: `${AFTER}NASA Ames/SETI Institute/JPL-Caltech`, relief: true, water: 0.22 },
+  lhs3844b: { credit: `${AFTER}NASA/JPL-Caltech/R. Hurt (IPAC)`, relief: true },
+  kepler452b: { credit: `${AFTER}NASA/Ames/JPL-Caltech/T. Pyle`, relief: true, water: 0.1 },
+};
+
+/** the relief of a map that has none: any normal (its slopes are not read), mid height */
+let smooth: Texture | null = null;
+function smoothRelief(): Texture {
+  if (!smooth) {
+    smooth = new DataTexture(new Uint8Array([128, 128, 255, 128]), 1, 1);
+    smooth.needsUpdate = true;
+  }
+  return smooth;
+}
 const BRENT_CREDIT = 'Brent Patterson (CC BY 3.0)';
 
 export interface Skin {
@@ -85,6 +133,8 @@ export interface Skin {
   water: number;
   /** whether the body's own craters go over it (not over a real map) */
   craters: boolean;
+  /** false: `n` holds no relief, the globe is smooth */
+  relief: boolean;
   /** its seas are frozen over */
   frozen: boolean;
   /** source to credit on screen while the body is in view (null: none owed) */
@@ -112,6 +162,18 @@ interface Geology {
   hemi: Vector4;
   hemiTint: Vector3;
   hemiDrop: number;
+  flora: number;
+  sea: Vector4;
+  basin: Vector4;
+  basinLook: Vector3;
+  eye: Vector3;
+  eyeCol: Vector3;
+  gasRemap: Vector3;
+  gasBelts: number;
+  gasBright: Vector3;
+  gasPolar: Vector4;
+  gasStorm: Vector4[];
+  gasStormCol: Vector3;
 }
 
 const zero4 = (): Vector4 => new Vector4(0, 0, 0, 0);
@@ -119,28 +181,37 @@ const flat = (): Geology => ({
   seed: 0, warp: 0, tintA: new Vector3(1, 1, 1), tintB: new Vector3(1, 1, 1), chroma: new Vector3(0, 1, 0),
   rift: zero4(), riftMid: zero4(), riftWidth: 0, lineae: 0, volc: [zero4(), zero4(), zero4()], volcH: 0,
   cap: new Vector3(), hemi: zero4(), hemiTint: new Vector3(1, 1, 1), hemiDrop: 0,
+  flora: 0, sea: zero4(), basin: zero4(), basinLook: new Vector3(0, 1, 0), eye: new Vector3(), eyeCol: new Vector3(),
+  gasRemap: new Vector3(), gasBelts: 0, gasBright: new Vector3(1, 1, 1), gasPolar: zero4(),
+  gasStorm: [zero4(), zero4(), zero4()], gasStormCol: new Vector3(1, 1, 1),
 });
 
 /** albedo gains of icy provinces: tholin-stained, blue, dirty grey, pink nitrogen frost, clean, sulphur-yellow */
 const ICE_TINTS: [number, number, number][] = [[1.15, 0.86, 0.66], [0.9, 1.0, 1.12], [0.78, 0.78, 0.8], [1.08, 0.93, 0.92], [1.1, 1.1, 1.1], [1.08, 1.02, 0.8]];
 
-type GeoKind = 'wet' | 'red' | 'rock' | 'ice' | 'hot' | 'none';
+type GeoKind = 'wet' | 'red' | 'rock' | 'ice' | 'hot' | 'gas' | 'none';
 const GEO_KIND: Record<string, GeoKind> = {
-  temperate: 'wet', 'temperate-life': 'wet', ocean: 'wet', eyeball: 'wet',
-  desert: 'red', 'dwarf-red': 'red',
-  barren: 'rock', 'moon-rocky': 'rock', carbon: 'rock',
+  temperate: 'wet', 'temperate-life': 'wet', ocean: 'wet', eyeball: 'wet', jungle: 'wet', toxic: 'wet', geothermal: 'wet', titan: 'wet',
+  desert: 'red', 'dwarf-red': 'red', dune: 'red',
+  barren: 'rock', 'moon-rocky': 'rock', carbon: 'rock', iron: 'rock', salt: 'rock',
   ice: 'ice', 'moon-icy': 'ice',
-  lava: 'hot', 'moon-volcanic': 'hot', venusian: 'hot',
+  lava: 'hot', 'moon-volcanic': 'hot', venusian: 'hot', magmaeye: 'hot',
+  gas: 'gas', 'gas-swirl': 'gas', icegiant: 'gas', subneptune: 'gas', hycean: 'gas', superpuff: 'gas',
 };
+/** worlds too warm, or too strange, for polar ice */
+const NO_CAPS = new Set(['jungle', 'toxic', 'geothermal', 'titan', 'dune']);
 
 /**
  * What a body lays over the skin it draws, from its seed: so the worlds that share one of the
  * library's few maps of their kind still differ — the map bent at the scale of continents, its
  * colours turned, provinces; rift valleys and shield volcanoes on the dry worlds, fracture bands
- * and dark hemispheres on the icy ones, polar caps of any size.
+ * and dark hemispheres on the icy ones, polar caps of any size; now and then one giant impact
+ * basin with its rays. A gas giant's deck gets its belts at other latitudes, the body's own
+ * colours on the map's tones, polar hoods and great ovals.
  */
-function geology(family: string, seed: number): Geology {
+function geology(a: Appearance & { kind: 'terrestrial' | 'gas' }, family: string): Geology {
   const g = flat();
+  const seed = a.seed;
   const kind = GEO_KIND[family] ?? 'none';
   if (kind === 'none') return g;
   let salt = 0x3a7;
@@ -182,6 +253,10 @@ function geology(family: string, seed: number): Geology {
     g.volcH = range(...h);
   };
   g.seed = (hash(seed, 0x9e01) % 10000) / 100;
+  if (kind === 'gas') {
+    if (a.kind === 'gas') gasDeck(g, a, family, seed);
+    return g;
+  }
   g.warp = range(0.04, 0.09);
   switch (kind) {
     case 'wet':
@@ -241,7 +316,71 @@ function geology(family: string, seed: number): Geology {
       }
       break;
   }
+  if (NO_CAPS.has(family)) g.cap.set(0, 0, 0);
+  // a forest is dark from orbit, under a blue sky it would read as sea: these are the lush, bright greens
+  if (family === 'jungle') {
+    g.tintA.multiplyScalar(1.7);
+    g.tintB.multiplyScalar(1.5);
+    g.chroma.y = Math.max(g.chroma.y, 1.1);
+  }
+  // touches of their own stream: the draws above stay as they were
+  let salt2 = 0x7c1;
+  const r2 = (): number => hash(seed, salt2++) / 4294967296;
+  const range2 = (lo: number, hi: number): number => lo + (hi - lo) * r2();
+  // one giant impact on the worlds that keep their scars: a flooded mare basin on rock, a bright
+  // fresh one on ice, a dusty one on a desert
+  const scarred = kind === 'rock' ? 0.4 : kind === 'ice' ? 0.35 : kind === 'red' ? 0.25 : 0;
+  if (r2() < scarred) {
+    const z = 1.6 * r2() - 0.8, phi = 2 * Math.PI * r2(), s = Math.sqrt(1 - z * z);
+    g.basin.set(s * Math.cos(phi), z, s * Math.sin(phi), range2(0.1, 0.3));
+    const fresh = r2() < (kind === 'ice' ? 0.6 : 0.35);
+    g.basinLook.set(range2(0.08, 0.16), fresh ? range2(1.05, 1.2) : range2(0.55, 0.8), fresh ? range2(0.25, 0.5) : range2(0, 0.15));
+  }
+  const t = a.kind === 'terrestrial' ? a.touch : undefined;
+  if (t?.flora) g.flora = t.flora;
+  if (t?.sea) g.sea.set(t.sea[0], t.sea[1], t.sea[2], 0.9);
+  if (t?.eye) {
+    const sea = t.eye === 'sea';
+    g.eye.set(sea ? range2(0.5, 0.95) : range2(0.8, 1.25), sea ? 1 : 2, range2(0.06, 0.14));
+    const o = a.kind === 'terrestrial' && a.ocean ? a.ocean : [0.03, 0.14, 0.32];
+    g.eyeCol.set(o[0], o[1], o[2]);
+    // nothing else of its own there
+    g.cap.set(0, 0, 0);
+  }
   return g;
+}
+
+const luma = (c: Vector3): number => 0.299 * c.x + 0.587 * c.y + 0.114 * c.z;
+
+/** A giant's deck (skin_common.glsl, SKIN_FLAT), from its seed and its own band colours */
+function gasDeck(g: Geology, a: Appearance & { kind: 'gas' }, family: string, seed: number): void {
+  let salt = 0x51d;
+  const r = (): number => hash(seed, salt++) / 4294967296;
+  const range = (lo: number, hi: number): number => lo + (hi - lo) * r();
+  const cols = a.bands.map((b) => new Vector3(b[0], b[1], b[2]));
+  let dark = cols[0], bright = cols[0];
+  for (const c of cols) { if (luma(c) < luma(dark)) dark = c; if (luma(c) > luma(bright)) bright = c; }
+  const hazy = family === 'subneptune' || family === 'superpuff';
+  g.gasRemap.set(range(0.05, 0.16), range(2.5, 5.5), range(0, 2 * Math.PI));
+  // a swirled deck has no belts to speak of: its marbling takes the colours
+  g.gasBelts = hazy ? 0.35 : family === 'gas-swirl' ? range(0.3, 0.5) : range(0.6, 0.85);
+  g.gasBright.copy(bright);
+  // hoods: the ice giants' bright ones, the banded giants' grey-blue mottled ones
+  if (r() < (family === 'icegiant' ? 0.6 : 0.45)) {
+    const hood = family === 'icegiant' || hazy ? bright.clone().multiplyScalar(1.08) : dark.clone().lerp(new Vector3(0.45, 0.5, 0.6), 0.5);
+    g.gasPolar.set(hood.x, hood.y, hood.z, range(0.35, 0.75));
+  }
+  if (hazy) return;
+  // ovals: most giants have one or two, a few none, the stormy three
+  const n = r() < 0.2 ? 0 : 1 + Math.floor(r() * (0.4 + 2.2 * Math.min(a.turbulence, 1)));
+  const darkSpots = family === 'icegiant' || family === 'hycean';
+  for (let k = 0; k < Math.min(n, 3); k++) {
+    const lat = (r() < 0.5 ? -1 : 1) * range(0.15, 0.75);
+    const size = range(0.06, 0.15) * (k ? 0.6 : 1);
+    g.gasStorm[k].set(lat, range(0, 2 * Math.PI), size, darkSpots ? -range(0.6, 1) : range(0.6, 1));
+  }
+  if (a.storm) g.gasStormCol.set(a.storm[3], a.storm[4], a.storm[5]);
+  else g.gasStormCol.copy(dark).lerp(new Vector3(0.75, 0.3, 0.18), 0.55);
 }
 
 /** The skin uniforms of skin_common.glsl (`gas`: the slopes of a gas giant's map are gentler). */
@@ -251,13 +390,17 @@ export function skinUniforms(skin: Skin, gas: boolean): Record<string, IUniform>
     uSkinC: { value: skin.c }, uSkinN: { value: skin.n }, uSkinRot: { value: skin.rot },
     uSkinMean: { value: skin.mean }, uSkinTint: { value: skin.tint }, uSkinContrast: { value: skin.contrast },
     // slopes in the surface shaders' units: the normal's tilt over their bump scale
-    uSkinSlope: { value: gas ? 1 / 0.012 : 1 / 0.02 },
+    uSkinSlope: { value: !skin.relief ? 0 : gas ? 1 / 0.012 : 1 / 0.02 },
     uSkinSea: { value: skin.sea }, uSkinWater: { value: skin.water }, uSkinCraters: { value: skin.craters ? 1 : 0 },
     uSkinFrozen: { value: skin.frozen ? 1 : 0 },
     uGeoSeed: { value: g.seed }, uGeoWarp: { value: g.warp }, uGeoTintA: { value: g.tintA }, uGeoTintB: { value: g.tintB },
     uGeoChroma: { value: g.chroma }, uGeoRift: { value: g.rift }, uGeoRiftMid: { value: g.riftMid }, uGeoRiftWidth: { value: g.riftWidth },
     uGeoLineae: { value: g.lineae }, uGeoVolc: { value: g.volc }, uGeoVolcH: { value: g.volcH }, uGeoCap: { value: g.cap },
     uGeoHemi: { value: g.hemi }, uGeoHemiTint: { value: g.hemiTint }, uGeoHemiDrop: { value: g.hemiDrop },
+    uGeoFlora: { value: g.flora }, uGeoSea: { value: g.sea }, uGeoBasin: { value: g.basin }, uGeoBasinLook: { value: g.basinLook },
+    uGeoEye: { value: g.eye }, uGeoEyeCol: { value: g.eyeCol },
+    uGasRemap: { value: g.gasRemap }, uGasBelts: { value: g.gasBelts }, uGasBright: { value: g.gasBright }, uGasPolar: { value: g.gasPolar },
+    uGasStorm: { value: g.gasStorm }, uGasStormCol: { value: g.gasStormCol },
   };
 }
 
@@ -308,7 +451,7 @@ function evict(): void {
     entries.delete(victim.key);
     for (const s of victim.skins) s.alive = false;
     victim.maps.then(([c, n]) => {
-      for (const t of [c, n]) { (t.image as ImageBitmap).close?.(); t.dispose(); }
+      for (const t of [c, n]) if (t !== smooth) { (t.image as ImageBitmap).close?.(); t.dispose(); }
     }).catch(() => {});
   }
 }
@@ -340,14 +483,16 @@ export async function loadSkin(a: Appearance): Promise<Skin | null> {
   if (!fam || (!real && !idx)) return null;
   const pool: Array<{ slug: string; v: Variant }> = [];
   for (const slug of fam.from) for (const v of idx![slug] ?? []) if (v.water >= (fam.minWater ?? 0)) pool.push({ slug, v });
-  if (real) pool.push({ slug: real, v: { v: -1, mean: [0.5, 0.5, 0.5], water: 0, glow: 0 } });
+  const info = real ? MAP_INFO[real] : undefined;
+  if (real) pool.push({ slug: real, v: { v: -1, mean: [0.5, 0.5, 0.5], water: info?.water ?? 0, glow: 0, sea: info?.water ? 0.5 : undefined } });
   if (!pool.length) return null;
   const pick = pool[hash(a.seed, 0x5157) % pool.length];
   const key = real ? `map:${real}` : `${pick.slug}-${pick.v.v}`;
   const url = real ? `${MAPS}${real}` : `${BASE}${key}`;
   let e = entries.get(key);
   if (!e) {
-    e = { key, maps: Promise.all([loadMap(`${url}-c.webp`, true), loadMap(`${url}-n.webp`, false)]), lastUsed: performance.now(), skins: [] };
+    const relief = !real || info?.relief ? loadMap(`${url}-n.webp`, false) : Promise.resolve(smoothRelief());
+    e = { key, maps: Promise.all([loadMap(`${url}-c.webp`, true), relief]), lastUsed: performance.now(), skins: [] };
     entries.set(key, e);
     evict();
   }
@@ -373,14 +518,18 @@ export async function loadSkin(a: Appearance): Promise<Skin | null> {
   const turn = real ? 0 : ((hash(a.seed, 0x7a11) % 3600) / 3600) * Math.PI * 2;
   const rot = new Matrix4().makeRotationY(turn);
   if (!real && hash(a.seed, 0x3171) & 1) rot.multiply(new Matrix4().makeScale(1, 1, -1));
+  // a deck is as good upside down: north and south swapped on half the giants
+  if (!real && a.kind === 'gas' && hash(a.seed, 0x3172) & 1) rot.multiply(new Matrix4().makeScale(1, -1, 1));
+  // the pupil of a locked world is open water in a map of ice
+  const eyeSea = a.kind === 'terrestrial' && a.touch?.eye === 'sea';
   const skin: Skin = {
     c: maps[0], n: maps[1], rot: new Matrix3().setFromMatrix4(rot),
     mean, tint, contrast: fam.contrast ?? 1,
     // a "sea" at the top of the height range is lakes and frozen ponds on the uplands
     sea: !fam.frozen && pick.v.water > 0 && (pick.v.sea ?? 1) < 0.9 ? pick.v.sea! : -1,
-    water: fam.frozen ? 0 : pick.v.water, craters: !real, frozen: !!fam.frozen, alive: entries.has(key),
-    credit: real ? MAP_CREDITS[real] ?? SSS_CREDIT : BRENT.includes(pick.slug) ? BRENT_CREDIT : null,
-    geo: real ? flat() : geology(a.skin, a.seed),
+    water: fam.frozen ? (eyeSea ? 0.2 : 0) : pick.v.water, craters: !real, relief: !real || !!info?.relief, frozen: !!fam.frozen, alive: entries.has(key),
+    credit: real ? info?.credit ?? SSS_CREDIT : BRENT.includes(pick.slug) ? BRENT_CREDIT : null,
+    geo: real ? flat() : geology(a, a.skin),
   };
   e.skins.push(skin);
   return skin;

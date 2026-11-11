@@ -12,38 +12,7 @@ uniform float uTime;
 uniform sampler2D uAtlas;
 uniform float uAtlasReady;
 uniform float uAtlasGrid;
-
-// Member stars of a cluster: one candidate per cell of a cells×cells grid over the sprite, kept
-// with the probability of the cluster's own density profile. Each star is a ~1 px gaussian that
-// carries its cell's share of the light (so resolving conserves the total). Returns rgb.
-vec3 memberStars(vec2 p, float cells, float pxP, float globular) {
-  vec2 g = (p * 0.5 + 0.5) * cells;
-  vec2 id = floor(g);
-  vec3 acc = vec3(0.0);
-  float sig2 = max(pxP * pxP * 0.7, 1e-8);
-  for (int j = -1; j <= 1; j++) {
-    for (int i = -1; i <= 1; i++) {
-      vec2 c = id + vec2(float(i), float(j));
-      vec3 h = hash33(vec3(c, vSeed * 7.31));
-      vec2 sp = (c + 0.1 + 0.8 * h.xy) / cells * 2.0 - 1.0;
-      float rs = length(sp) * vSpan;
-      float dens = globular > 0.5
-        ? 1.0 / (1.0 + rs * rs * 18.0) * smoothstep(1.15, 0.35, rs)
-        : 0.55 * exp(-rs * rs * 1.6) * smoothstep(1.3, 0.6, rs);
-      float keep = min(dens * 1.6, 1.0);
-      if (fract(h.z * 61.7) >= keep) continue;
-      // steep luminosity function: a handful of bright giants, many faint members
-      float lum = 0.15 + 4.0 * pow(fract(h.z * 13.9), 8.0);
-      float hue = fract(h.y * 53.1 + h.x * 7.7);
-      vec3 sc = globular > 0.5
-        ? (hue > 0.93 ? vec3(0.78, 0.86, 1.0) : mix(vec3(1.0, 0.9, 0.75), vec3(1.0, 0.75, 0.5), smoothstep(1.0, 3.0, lum)))
-        : (hue > 0.88 ? vec3(1.0, 0.82, 0.6) : vec3(0.8, 0.88, 1.0));
-      vec2 dd = p - sp;
-      acc += sc * (lum * dens / keep) * exp(-dot(dd, dd) / sig2);
-    }
-  }
-  return acc;
-}
+uniform float uShapes;   // 1: draw the shell / ring / filament shapes (no raymarched clouds); 0: gas is the unresolved blob only
 
 void main() {
   #include <logdepthbuf_fragment>
@@ -56,7 +25,8 @@ void main() {
   // footprint rather than aliasing into a crisp drawn circle
   float pxP = length(fwidth(p)) * 0.7071;   // sprite units per pixel
   float blur = pxP * vSpan * 1.2;           // in object radii
-  float res = smoothstep(2.5, 10.0, vPx);
+  float res0 = smoothstep(2.5, 10.0, vPx);
+  float res = res0 * uShapes;
   float rr = length(p);
   float blob = exp(-rr * rr * 6.0);
   if (vImg >= 0.0 && uAtlasReady > 0.5) {
@@ -87,15 +57,11 @@ void main() {
     // ionised core slightly whiter than the Hα rim
     col = mix(col, vec3(1.0, 0.95, 0.95), core * 0.5 * res);
   } else if (vKind < 1.5) {
-    // open cluster: a loose group of resolved blue-white stars over a barely visible glow
-    float pxP = length(fwidth(p)) * 0.7071;
-    float cells = 9.0;
-    float cellPx = 2.0 / (cells * pxP);
-    float res = smoothstep(1.0, 3.0, cellPx);
-    float glow = 0.55 * exp(-r * r * 1.6) * smoothstep(1.3, 0.6, r);
-    vec3 stars = memberStars(p, cells, pxP, 0.0) * min(cellPx * cellPx * 0.9, 100.0);
-    gl_FragColor = vec4((col * glow * (1.0 - 0.85 * res) + stars * res) * vAlpha, 1.0);
-    return;
+    // open cluster: the unresolved light of its stars, a Plummer sphere like the members drawn
+    // one by one on top of it (ClusterStars: a = 0.45 R). No stars are painted here: the only
+    // stars a cluster shows are its real, selectable members
+    float pl = 1.0 + r * r * 5.0;
+    a = mix(blob, 0.7 / (pl * pl) * smoothstep(1.5, 0.8, r), res0);
   } else if (vKind < 2.5) {
     // remnant: a shocked shell that is neither round nor complete — the rim wanders with
     // azimuth, whole arcs have faded where the blast ran into thin gas, the bright arcs are
@@ -145,18 +111,11 @@ void main() {
     col = mix(col, vec3(0.75, 0.85, 1.0), clamp(cs, 0.0, 1.0));
     a += cs;
   } else if (vKind > 5.5 && vKind < 6.5) {
-    // globular cluster: King profile truncated at the tidal radius. The dense core stays an
-    // unresolved glow; outwards it breaks up into individual giants
-    float pxP = length(fwidth(p)) * 0.7071;
-    float cells = 22.0;
-    float cellPx = 2.0 / (cells * pxP);
-    float king = 1.0 / (1.0 + r * r * 18.0) * smoothstep(1.15, 0.35, r);
-    // the crowded core resolves last
-    float res = smoothstep(1.0, 3.0, cellPx) * smoothstep(0.0, 0.35, r * min(cellPx / 6.0, 1.0) + 0.05);
-    vec3 stars = memberStars(p, cells, pxP, 1.0) * min(cellPx * cellPx * 0.9, 100.0);
-    vec3 glowCol = mix(col, vec3(1.0, 0.93, 0.8), 0.5);
-    gl_FragColor = vec4((glowCol * king * (1.0 - 0.85 * res) + stars * res) * vAlpha, 1.0);
-    return;
+    // globular cluster: King profile truncated at the tidal radius, as concentrated as its
+    // member stars are (ClusterStars: core ≈ 0.07 R), with the faint halo of the outer members
+    float king = (1.0 / (1.0 + r * r * 70.0) + 0.05 / (1.0 + r * r * 6.0)) * smoothstep(1.15, 0.35, r);
+    a = mix(blob, king, res0);
+    col = mix(col, vec3(1.0, 0.93, 0.8), 0.5);
   } else {
     // pulsar: gaussian point with a sharp periodic flash and a faint cross-shaped glint
     float rr = length(p);

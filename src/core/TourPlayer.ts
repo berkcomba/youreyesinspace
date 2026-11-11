@@ -80,6 +80,8 @@ export interface TourHost {
    * from the star); already standing there, only the gaze turns to them. See the `land` cue.
    */
   landFor(refId: string, toward: string[], o: { elev: number; sep?: number; starElev?: number; seconds?: number }): void;
+  /** whether a landing on `refId` can begin now (asking starts loading what it waits for: ground programs, surface maps) */
+  landReady(refId: string): boolean;
   /** on the ground: ease the gaze onto the `toward` bodies (called every frame while a `land` cue holds) */
   aimOnSurface(toward: string[], dt: number): void;
   /** formatted live measurement between two bodies ('' when one is missing) */
@@ -212,6 +214,12 @@ export class TourPlayer {
   private look: Extract<TourCue, { action: 'lookFrom' }> | null = null;
   /** `land` cue in effect: the bodies the gaze follows from the ground */
   private stand: string[] | null = null;
+  /**
+   * `land` cue held back until the ground can be made (see `landReady`). Fired blind, the host
+   * would start the descent on its own a moment later: a flight that is not ours, which reads as
+   * the visitor steering away and ends the tour
+   */
+  private landWait: TourCue | null = null;
   /** cinematic drift while dwelling: auto-orbit (rad/s; null = the step's) and push-in (ln/s) */
   private driftRate: number | null = null;
   private dollyRate = 0;
@@ -365,9 +373,17 @@ export class TourPlayer {
     }
 
     // timed cues (surface pins, overviews, cloud toggles…)
+    if (this.landWait) {
+      // a landing that waited for its ground (held again if it is still not there)
+      const c = this.landWait;
+      this.landWait = null;
+      this.fire(step, c, timing, duration);
+    }
     if (step.cues) {
       for (const cue of step.cues) {
         if (this.fired.has(cue)) continue;
+        // the flights that follow a held landing are composed from the ground: they wait with it
+        if (this.landWait && isFlightCue(cue)) continue;
         let at = this.cueTimes.get(cue);
         // times are only final once the manifest is in; until then re-derive each frame
         if (at === undefined) {
@@ -418,7 +434,7 @@ export class TourPlayer {
     if (narrationDone) {
       this.sinceEnd = this.sinceEnd < 0 ? 0 : this.sinceEnd + dt;
     }
-    const arrived = cam.autopilot === null;
+    const arrived = cam.autopilot === null && !this.landWait;
     if (s.phase === 'flying' && arrived) s.phase = 'dwell';
     // a pinned feature should stay put on screen: barely drift while one is shown
     if (arrived) {
@@ -499,6 +515,8 @@ export class TourPlayer {
     // follow a first look from the approach
     this.navigate(step.target); // selects the target and switches star systems as needed
     this.host.setTourScope(this.scopeOf(step)); // after navigate: the ids live in the step's system
+    // a landing later in the step: its ground programs and the body's maps start loading now
+    for (const c of step.cues ?? []) if (c.action === 'land') this.host.landReady(this.bodyRef(c.ref));
     const early = step.cues?.find((c) => isFlightCue(c) && c.action !== 'return' && c.at <= 1 && c.delay === undefined);
     if (early) {
       this.fired.add(early);
@@ -690,6 +708,7 @@ export class TourPlayer {
         this.flight = h.camera.autopilot;
         break;
       case 'land':
+        if (!h.landReady(cue.ref)) { this.landWait = raw; break; }
         this.look = null;
         this.pinned = true;
         if (cue.fov !== undefined) { this.overrides = { ...this.overrides, fov: cue.fov }; h.setTourOverrides(this.overrides); }
@@ -788,6 +807,7 @@ export class TourPlayer {
     this.readoutText = '';
     this.look = null;
     this.stand = null;
+    this.landWait = null;
     this.driftRate = null;
     this.dollyRate = 0;
     this.fovTween = null;

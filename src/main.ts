@@ -749,7 +749,7 @@ class App implements UIHost {
    * east, pitch up) or, by default, toward the star. Returns the stand, null when `b` cannot be
    * stood on.
    */
-  private standOn(b: CelestialBody, aim: { lat: number; lon: number }, dryLand: boolean, heading?: { yaw: number; pitch: number }, seconds?: number): SurfaceStand | null {
+  private standOn(b: CelestialBody, aim: { lat: number; lon: number }, dryLand: boolean, heading?: { yaw: number; pitch: number }, seconds?: number, others: { lat: number; lon: number }[] = []): SurfaceStand | null {
     const view = this.bodies.view(b.id);
     if (!view?.surfaceMat) return null;
     const cam = this.camera;
@@ -765,6 +765,14 @@ class App implements UIHost {
     // dry land wanted: when the aimed point is open sea, try a spiral of nearby spots (an ocean
     // world finds none and lands on the water)
     let { site, ground } = groundAt(aim.lat, aim.lon);
+    // spots that would do as well as the aimed one (a tour's shot has a mirror image): the first on dry land
+    for (const o of ground.water > 0.5 ? others : []) {
+      const cand = groundAt(o.lat, o.lon);
+      if (cand.ground.water > 0.5) { cand.ground.dispose(); continue; }
+      ground.dispose();
+      ({ site, ground } = cand);
+      break;
+    }
     if (dryLand && ground.water > 0.5) {
       const steps: Array<[number, number]> = [];
       for (const r of [3, 8, 16, 30]) for (let k = 0; k < 6; k++) steps.push([r * Math.cos((k / 6) * Math.PI * 2 + r), r * Math.sin((k / 6) * Math.PI * 2 + r)]);
@@ -872,6 +880,17 @@ class App implements UIHost {
    * first runs the clock to the next moment the first of them is that many degrees from the star
    * on `refId`'s sky. Already standing on `refId`, only the gaze turns (see `aimOnSurface`).
    */
+  /**
+   * Whether a landing on `refId` can begin right now. Asking starts what it would wait for (the
+   * ground programs, the body's surface maps), so a tour asks ahead of its `land` cue.
+   */
+  landReady(refId: string): boolean {
+    const ref = this.universe.get(refId);
+    if (!ref || !this.canLand(ref) || this.landedOn === ref || !this.groundWaits(ref)) return true;
+    this.whenGroundReady(ref, () => {});
+    return false;
+  }
+
   landFor(refId: string, toward: string[], o: { elev: number; sep?: number; starElev?: number; seconds?: number }): void {
     const ref = this.universe.get(refId);
     if (!ref || !this.canLand(ref)) { this.lookFrom(refId, toward, 400); return; }
@@ -895,24 +914,29 @@ class App implements UIHost {
     if (plane.lengthSq() < 1e-6) plane.set(0, 1, 0).addScaledVector(mid, -mid.y);
     plane.normalize();
     if (plane.dot(ref.pole) < 0) plane.negate(); // walk toward the north pole, the bodies to the south
-    const n = new Vector3();
     const s1 = Math.sin(o.elev * DEG), s2 = Math.sin((o.starElev ?? o.elev) * DEG);
     const c = dirs.length > 1 ? dirs[0].dot(dirs[1]) : 1;
-    if (dirs.length > 1 && Math.abs(c) < 0.999) {
-      // the stand n with n·d0 = sin e0 and n·d1 = sin e1: n = α d0 + β d1 + γ (d0 × d1)
-      const det = 1 - c * c;
-      const al = (s1 - c * s2) / det, be = (s2 - c * s1) / det;
-      const ga = Math.sqrt(Math.max(0, 1 - al * al - be * be - 2 * al * be * c));
-      n.addScaledVector(dirs[0], al).addScaledVector(dirs[1], be).addScaledVector(plane, ga).normalize();
-    } else {
-      // the stand tilted away from the body until it sits `elev` over the horizon
-      const tilt = Math.acos(Math.min(1, s1));
-      n.copy(mid).multiplyScalar(Math.cos(tilt)).addScaledVector(plane, Math.sin(tilt)).normalize();
-    }
-    const obj = n.multiplyScalar(ref.radius).applyQuaternion(new Quaternion().copy(ref.rotation).invert());
-    const at = geodetic(ref, obj);
-    at.lat = Math.max(-85, Math.min(85, at.lat));
-    const stand = this.standOn(ref, at, false, { yaw: 0, pitch: 0 }, o.seconds);
+    const unspin = new Quaternion().copy(ref.rotation).invert();
+    // the same sky is seen from two stands, mirror images in the plane of the bodies: `side` picks one
+    const standAt = (side: number): { lat: number; lon: number } => {
+      const n = new Vector3();
+      if (dirs.length > 1 && Math.abs(c) < 0.999) {
+        // the stand n with n·d0 = sin e0 and n·d1 = sin e1: n = α d0 + β d1 + γ (d0 × d1)
+        const det = 1 - c * c;
+        const al = (s1 - c * s2) / det, be = (s2 - c * s1) / det;
+        const ga = Math.sqrt(Math.max(0, 1 - al * al - be * be - 2 * al * be * c));
+        n.addScaledVector(dirs[0], al).addScaledVector(dirs[1], be).addScaledVector(plane, side * ga).normalize();
+      } else {
+        // the stand tilted away from the body until it sits `elev` over the horizon
+        const tilt = Math.acos(Math.min(1, s1));
+        n.copy(mid).multiplyScalar(Math.cos(tilt)).addScaledVector(plane, side * Math.sin(tilt)).normalize();
+      }
+      const at = geodetic(ref, n.multiplyScalar(ref.radius).applyQuaternion(unspin));
+      at.lat = Math.max(-85, Math.min(85, at.lat));
+      return at;
+    };
+    // open sea is a poor place to stand for a view: the mirrored stand, if that one is on land
+    const stand = this.standOn(ref, standAt(1), false, { yaw: 0, pitch: 0 }, o.seconds, [standAt(-1)]);
     if (!stand) return;
     const h = this.surfaceHeading(stand, toward);
     if (h) { stand.yaw = h.yaw; stand.pitch = h.pitch; }
@@ -1900,7 +1924,8 @@ class App implements UIHost {
    * the scoping.
    */
   setTourScope(ids: string[] | null): void {
-    if (!ids) { this.overlay.scope = null; this.tourScope = null; return; }
+    if (!ids) { this.overlay.scope = null; this.tourScope = null; this.tourAhead = []; return; }
+    this.tourAhead = ids.map((id) => this.universe.get(id));
     const tags = new Set<string>(['tour-ghost']);
     const scope = new Set<string>(['tour-ghost']);
     const u = this.universe;
@@ -1925,6 +1950,8 @@ class App implements UIHost {
     this.overlay.scope = tags;
   }
   private tourScope: Set<string> | null = null;
+  /** the bodies the tour step names: their surface maps are made before the step's cues show them */
+  private tourAhead: (CelestialBody | undefined)[] = [];
 
   setTourOverrides(o: TourOverrides): void {
     this.tourOverrides = o;
@@ -2327,7 +2354,7 @@ class App implements UIHost {
     if (s.autoExposure && !this.engine.autoExposure.active) this.engine.autoExposure.resetAdaptation();
     this.engine.autoExposure.active = s.autoExposure;
     this.volumes.enabled = s.volumetrics;
-    this.volumes.nebulaEngine = s.nebulaEngine;
+    this.landmarkSprites.setShapes(!s.volumetrics);
     this.volumes.scale = this.engine.mobile ? 0.35 : 0.5;
     this.engine.setRenderScale(s.renderScale * (s.autoResolution ? this.autoScale : 1));
     this.resizeOverlay();
@@ -2670,7 +2697,10 @@ class App implements UIHost {
     if (u.procLandmarks.update(camPc, this.settings.procedural ? inside : null) || this.landmarkSprites.count !== u.landmarks.length) {
       u.setProcLandmarks(u.procLandmarks.list);
       if (selectedId) {
-        const idx = u.landmarks.findIndex((l) => l.def.id === selectedId);
+        let idx = u.landmarks.findIndex((l) => l.def.id === selectedId);
+        // a generated object selected from beyond the neighbourhood (a destination, a saved place)
+        // stays in the list: it must not vanish from under the flight to it
+        if (idx < 0 && this.settings.procedural && u.landmark(selectedId)) idx = u.landmarks.findIndex((l) => l.def.id === selectedId);
         this.selectedLandmark = idx >= 0 ? idx : null;
       }
       this.landmarkSprites.rebuild();
@@ -3159,6 +3189,7 @@ class App implements UIHost {
     this.updateFill(dt);
     this.applyBodyFilter();
     const g = this.ghost;
+    this.bodies.ahead = [this.camera.autopilot?.target, this.selected, ...this.tourAhead];
     this.bodies.update(camPos, this.camera.quaternion, eng.camera, eng.height, fovRad, star.position, star.radius, this.sunColor, this.time.t / 3600, {
       atmospheres: s.atmospheres, clouds: ov.clouds ?? s.clouds, rings: s.rings, ringParticles: s.ringParticles, shadows: s.shadows, imagery: s.imagery,
       fill: this.fillOut.size ? this.fillOut : null,
@@ -3193,8 +3224,12 @@ class App implements UIHost {
     this.landmarkSprites.update(this.camPc, pxPerRad, this.universe.current.starId, (gi) => this.galaxySprites.apparent(gi).ratio);
     this.nebulaClouds.update(this.camPc, pxPerRad, eng.pixelRatio, this.landmarkSprites.k, this.landmarkSprites.mesh.visible);
     const ls = this.landmarkSprites;
-    this.landmarkSprites.setCloudFlags(this.procClouds.update(this.camPc, pxPerRad, eng.pixelRatio, ls.k, ls.mesh.visible, ls.distPc, ls.radiusPx));
-    this.clusterPoints.update(this.camPc, pxPerRad, eng.pixelRatio, this.universe.current.starId, ls.mesh.visible, ls.distPc, ls.radiusPx);
+    this.camForward.set(0, 0, -1).applyQuaternion(this.camera.quaternion);
+    // half the view's diagonal plus a margin: a nebula is built before a turn brings it on screen
+    const viewAngle = Math.atan(Math.hypot(1, eng.camera.aspect) * Math.tan(fovRad / 2)) + 0.45;
+    const clouds = this.procClouds.update(this.camPc, pxPerRad, eng.pixelRatio, ls.mesh.visible, ls, this.camForward, viewAngle);
+    const members = this.clusterPoints.update(this.camPc, pxPerRad, eng.pixelRatio, this.universe.current.starId, ls.mesh.visible, ls.distPc, ls.radiusPx);
+    ls.setCloudFlags(members.size ? [...clouds, ...members] : clouds);
     // bottom-left credit: streamed planetary imagery first, otherwise a resolved landmark photograph
     if (this.bodies.imageryCredit) this.ui.setImageryCredit(this.bodies.imageryCredit);
     else if (this.bodies.skinCredit) this.ui.setImageryCredit(_('Yüzey haritası: {source}', { source: this.bodies.skinCredit }), true);

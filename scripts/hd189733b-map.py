@@ -4,8 +4,8 @@
 #   blender -b --factory-startup --python scripts/hd189733b-map.py -- map <out.png> 2048 3.7 1.0 3.4
 #   blender -b --factory-startup --python scripts/hd189733b-map.py -- preview <map.png> <out.png> [save.blend]
 #
-# public/maps/hd189733b-c.webp is the map with a zero alpha channel (lossy WebP, q88);
-# hd189733b-n.webp is the same flat normal map as the other gas giants.
+# public/maps/hd189733b-c.webp is the map with a zero alpha channel (lossy WebP, q88). It has no
+# relief map, like the other gas giants (SkinLibrary.ts: MAP_INFO).
 import bpy
 import math
 import os

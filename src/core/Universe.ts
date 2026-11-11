@@ -76,6 +76,12 @@ export interface Landmark {
   systemId: StarId | null;
   /** generator class of a procedural object (its nebula morphology is derived from this, not from the colour) */
   procKind?: ProcKind;
+  /**
+   * generated objects of the camera's neighbourhood: the distance (pc) the neighbourhood is
+   * complete to. They fade out toward it (0 / undefined: no fade — real objects, and a generated
+   * one restored from its id as a destination)
+   */
+  reachPc?: number;
 }
 
 /**
@@ -231,7 +237,8 @@ export class Universe {
         }
         this.procSystemIds.add(systemId);
       }
-      this.landmarks.push({ def: o.def, positionPc: o.positionPc, galaxy: o.galaxy, systemId, procKind: o.procKind });
+      const reachPc = o.procKind === 'globular' ? this.procLandmarks.globularReachPc : this.procLandmarks.reachPc;
+      this.landmarks.push({ def: o.def, positionPc: o.positionPc, galaxy: o.galaxy, systemId, procKind: o.procKind, reachPc });
     }
     for (const id of this.procSystemIds) {
       if (keep.has(id) || id === this.current?.starId) continue;
@@ -249,7 +256,8 @@ export class Universe {
       this.extraSystems.set(systemId, { id: systemId, name: o.def.name, positionPc: o.positionPc, galaxy: o.galaxy, info: landmarkStarInfo(o.def, o.positionPc), bodies: () => landmarkStarBodies(o.def) });
       this.procSystemIds.add(systemId);
     }
-    const l: Landmark = { def: o.def, positionPc: o.positionPc, galaxy: o.galaxy, systemId };
+    // with its class: the nebula's family follows it (without, the colour would pick another one)
+    const l: Landmark = { def: o.def, positionPc: o.positionPc, galaxy: o.galaxy, systemId, procKind: o.procKind };
     this.landmarks.push(l);
     return l;
   }

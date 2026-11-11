@@ -1,0 +1,203 @@
+// Surfaces of the famous rocky planets of other stars, after the artist's impressions they are
+// known by (scripts/exo-maps.py). Evaluated per pixel of an equirectangular map: u → east
+// longitude (0.5 faces the star on a locked world), v → latitude.
+//   Col   albedo
+//   Data  r height 0 … 1 (the sea surface at 0.5), g flag: 1 open water, < 0.5 lava glow / 2
+//   Kind 0  55 Cnc e      a crust of dark plates, lava between them; molten under the star
+//   Kind 1  Proxima b     arid rock: rust plains, dark ranges, pale haze-filled basins
+//   Kind 2  TRAPPIST-1 e  an ocean with continents on the day side, ice over the night side
+//   Kind 3  Kepler-186 f  ochre land, small dark seas, polar caps
+//   Kind 4  LHS 3844 b    bare dark basalt, pale crust along its fractures, craters
+//   Kind 5  Kepler-452 b  pale highlands under snow, rust plains, teal seas and channels
+
+float fbm(point x, int oct) {
+  float s = 0.0, a = 0.5;
+  point y = x;
+  for (int i = 0; i < oct; i++) {
+    s += a * noise("snoise", y);
+    y = y * 2.03 + point(1.7, 9.2, 3.1);
+    a *= 0.5;
+  }
+  return s;
+}
+
+float ridged(point x, int oct) {
+  float s = 0.0, a = 0.5;
+  point y = x;
+  for (int i = 0; i < oct; i++) {
+    float n = 1.0 - abs(noise("snoise", y));
+    s += a * n * n;
+    y = y * 2.07 + point(5.3, 1.1, 7.9);
+    a *= 0.5;
+  }
+  return s;
+}
+
+// a colour as it should look on screen → linear albedo
+color S(float r, float g, float b) {
+  return color(pow(r, 2.2), pow(g, 2.2), pow(b, 2.2));
+}
+
+vector warp(point x, int oct) {
+  return vector(fbm(x + point(1.7, 0, 0), oct), fbm(x + point(9.2, 3, 1), oct), fbm(x + point(4.1, 7, 2), oct));
+}
+
+// Impact craters scattered over the sphere: a bowl, a raised rim; `fresh` the bright halo of the
+// young ones. Heights in units of the map's height scale.
+float craters(point p, float seed, int n, float rmin, float rmax, float relief, output float fresh) {
+  float h = 0.0;
+  fresh = 0.0;
+  for (int k = 0; k < n; k++) {
+    point kk = point(k + 0.5, seed * 7.3 + 0.5, 0.5);
+    vector c = vector(noise("cell", kk + point(0, 0, 1)) - 0.5, noise("cell", kk + point(0, 0, 2)) - 0.5, noise("cell", kk + point(0, 0, 3)) - 0.5);
+    c = normalize(c + vector(1e-4, 0, 0));
+    float u = noise("cell", kk + point(0, 0, 4));
+    float rad = rmin * pow(rmax / rmin, u * u * u);
+    float cosd = dot(vector(p), c);
+    if (cosd < cos(min(rad * 2.8, 3.0))) continue;
+    // the rim is not a circle
+    float d = acos(clamp(cosd, -1.0, 1.0)) / rad * (1.0 + 0.1 * noise("snoise", p * (2.0 / rad) + kk));
+    float age = noise("cell", kk + point(0, 0, 5));
+    float depth = relief * rad * (0.5 + 0.8 * age);
+    if (d < 1.0) h += depth * (d * d - 1.0) + depth * 0.35 * exp(-pow((d - 1.0) / 0.16, 2.0));
+    else h += depth * 0.35 * exp(-pow((d - 1.0) / 0.3, 2.0));
+    if (age > 0.72 && d > 0.85) fresh += (age - 0.72) / 0.28 * exp(-(d - 0.85) / 0.7) * (1.0 - smoothstep(1.2, 2.8, d));
+  }
+  return h;
+}
+
+shader exo_rocky(
+  point UV = point(0.5, 0.5, 0),
+  int Kind = 0,
+  float Seed = 0.0,
+  output color Col = 0,
+  output color Data = 0)
+{
+  float lon = (UV[0] - 0.5) * M_2PI;
+  float lat = (UV[1] - 0.5) * M_PI;
+  point p = point(cos(lat) * cos(lon), cos(lat) * sin(lon), sin(lat));
+  point ps = p + point(Seed, 2.0 * Seed, -Seed);
+  float cz = p[0];   // cosine of the angle from the point under the star
+  vector q = warp(ps * 1.2, 5);
+  float fine = fbm(ps * 13.0 + 2.0 * q, 6);
+  float h = 0.5, flag = 0.0;
+  color c = 0.5;
+
+  if (Kind == 0) {
+    // lava drawn out into streams along the east–west
+    point pl = point(ps[0], ps[1], ps[2] * 2.3);
+    vector r = warp(pl * 1.6 + 1.4 * q, 5);
+    float plates = fbm(ps * 2.6 + 1.3 * q, 7);
+    float cracks = ridged(pl * 2.4 + 1.7 * r, 7);
+    float pools = fbm(pl * 1.9 + 2.2 * r + point(7, 1, 3), 6);
+    float day = smoothstep(-0.35, 0.85, cz);
+    float t1 = 0.7 - 0.07 * day, t2 = 0.34 - 0.16 * day;
+    float melt = max(smoothstep(t1, t1 + 0.1, cracks), smoothstep(t2, t2 + 0.13, pools));
+    float halo = max(smoothstep(t1 - 0.14, t1 + 0.1, cracks), smoothstep(t2 - 0.2, t2 + 0.13, pools));
+    // far round the night side the crust has closed
+    float open = 0.2 + 0.8 * smoothstep(-0.8, -0.1, cz + 0.3 * q[0]);
+    melt *= open;
+    color crust = mix(S(0.13, 0.19, 0.22), S(0.3, 0.41, 0.45), smoothstep(-0.3, 0.3, plates + 0.5 * fine));
+    crust = mix(crust, S(0.5, 0.6, 0.6), 0.55 * smoothstep(0.2, 0.45, fine + 0.4 * plates));
+    crust = mix(crust, S(0.3, 0.1, 0.05), 0.75 * halo * open);
+    // the melt is dark where it is not glowing: its colour on the globe is the glow the flag
+    // asks for (terrestrial.frag), brightest down the middle of a stream
+    float hot = smoothstep(0.55, 1.0, melt) * (0.4 + 0.6 * smoothstep(-0.25, 0.25, fine));
+    color lava = mix(S(0.2, 0.05, 0.03), S(0.34, 0.1, 0.04), hot);
+    c = mix(crust, lava, melt);
+    h = 0.58 + 0.4 * plates + 0.07 * fine - 0.22 * halo * open;
+    flag = 0.19 * melt * (0.4 + 0.6 * hot);
+  } else if (Kind == 1) {
+    float e = fbm(ps * 1.5 + 0.9 * q, 8);
+    float mask = smoothstep(-0.08, 0.25, fbm(ps * 1.1 + point(5, 2, 8), 4) + 0.3 * q[1]);
+    float m = ridged(ps * 3.2 + 1.4 * q, 7);
+    float cn = smoothstep(0.66, 0.8, ridged(ps * 4.5 + 2.2 * q + point(3, 9, 1), 6)) * smoothstep(-0.1, 0.15, e);
+    h = 0.44 + 0.6 * e + 0.42 * (m - 0.38) * mask - 0.09 * cn + 0.03 * fine;
+    float prov = smoothstep(-0.2, 0.25, fbm(ps * 0.9 + point(8, 8, 1), 4));
+    color plain = mix(S(0.56, 0.31, 0.2), S(0.5, 0.36, 0.29), prov);
+    color upland = mix(S(0.38, 0.2, 0.13), S(0.33, 0.24, 0.2), prov);
+    c = mix(S(0.64, 0.52, 0.48), plain, smoothstep(0.22, 0.4, h + 0.05 * fine));   // the basins' pale fill
+    c = mix(c, upland, smoothstep(0.5, 0.68, h));
+    c = mix(c, S(0.2, 0.13, 0.1), smoothstep(0.7, 0.9, h));
+    // beds showing on the slopes, dark canyon floors
+    c *= 1.0 + 0.07 * sin(h * 95.0 + 4.0 * fine) * smoothstep(0.42, 0.6, h);
+    c = mix(c, S(0.22, 0.13, 0.1), 0.6 * cn);
+    c *= 0.9 + 0.35 * fine;
+  } else if (Kind == 2 || Kind == 3 || Kind == 5) {
+    float e = fbm(ps * 1.35 + 1.0 * q, 8);
+    float mask = smoothstep(-0.05, 0.2, fbm(ps * 1.0 + point(5, 2, 8), 4));
+    float m = ridged(ps * 3.0 + 1.3 * q, 7);
+    float bias = Kind == 2 ? 0.075 : Kind == 3 ? -0.115 : -0.2;
+    h = 0.5 + 1.25 * (e - bias) + 0.3 * (m - 0.38) * mask * smoothstep(-0.05, 0.1, e - bias);
+    h = clamp(h + 0.02 * fine, 0.0, 1.0);
+    int water = h < 0.5;
+    float up = clamp((h - 0.5) / 0.5, 0.0, 1.0);        // 0 at the shore … 1 the summits
+    float depth = clamp((0.5 - h) / 0.3, 0.0, 1.0);
+    float prov = smoothstep(-0.2, 0.25, fbm(ps * 0.9 + point(8, 8, 1), 4));
+    float ice = 0.0;
+    if (Kind == 2) {
+      c = mix(mix(S(0.6, 0.55, 0.45), S(0.52, 0.47, 0.4), prov), mix(S(0.46, 0.38, 0.29), S(0.4, 0.37, 0.33), prov), smoothstep(0.03, 0.3, up));
+      c = mix(c, S(0.3, 0.28, 0.27), smoothstep(0.45, 0.8, up));
+      if (water) c = mix(S(0.14, 0.34, 0.47), S(0.04, 0.12, 0.27), smoothstep(0.0, 0.5, depth));
+      // the night side under ice, broken pack along the terminator, small polar caps
+      float s = cz + 0.2 * fbm(ps * 2.4 + q, 5);
+      ice = 1.0 - smoothstep(-0.2, -0.02, s);
+      ice = max(ice, (1.0 - smoothstep(-0.05, 0.16, s)) * smoothstep(0.05, 0.3, fbm(ps * 8.0 + 2.0 * q, 5)));
+      ice = max(ice, smoothstep(0.93, 0.97, abs(p[2]) + 0.05 * fine));
+    } else if (Kind == 3) {
+      color low = mix(S(0.64, 0.52, 0.3), S(0.56, 0.5, 0.3), prov);
+      c = mix(low, S(0.72, 0.62, 0.43), smoothstep(0.05, 0.3, up + 0.1 * fine));
+      c = mix(c, S(0.44, 0.33, 0.22), smoothstep(0.3, 0.6, up));
+      c = mix(c, S(0.29, 0.24, 0.2), smoothstep(0.6, 0.95, up));
+      if (water) c = mix(S(0.17, 0.22, 0.22), S(0.06, 0.085, 0.11), smoothstep(0.0, 0.35, depth));
+      ice = smoothstep(0.9, 0.94, abs(p[2]) + 0.07 * fbm(ps * 4.0, 4) + 0.1 * up);
+    } else {
+      color low = mix(S(0.6, 0.38, 0.27), S(0.66, 0.52, 0.42), prov);
+      c = mix(low, S(0.72, 0.62, 0.54), smoothstep(0.1, 0.4, up + 0.1 * fine));
+      c = mix(c, S(0.5, 0.42, 0.38), smoothstep(0.5, 0.9, up));
+      // channels wind down to the seas
+      float river = smoothstep(0.74, 0.8, ridged(ps * 3.6 + 2.0 * q + point(2, 6, 4), 6)) * (1.0 - smoothstep(0.12, 0.22, up));
+      if (!water && river > 0.5) { water = 1; h = 0.495; depth = 0.05; }
+      if (water) c = mix(S(0.38, 0.56, 0.5), S(0.12, 0.31, 0.33), smoothstep(0.0, 0.3, depth));
+      // a few old shield volcanoes: dark rings on the plains
+      for (int k = 0; k < 6; k++) {
+        point kk = point(k + 0.5, Seed * 3.1 + 0.5, 0.5);
+        vector vc = normalize(vector(noise("cell", kk + point(0, 0, 1)) - 0.5, noise("cell", kk + point(0, 0, 2)) - 0.5, 0.6 * (noise("cell", kk + point(0, 0, 3)) - 0.5)));
+        float rad = 0.05 + 0.07 * noise("cell", kk + point(0, 0, 4));
+        float d = acos(clamp(dot(vector(p), vc), -1.0, 1.0)) / rad * (1.0 + 0.5 * q[k % 3]) + 0.3 * fine;
+        if (d < 1.6 && !water) {
+          float ring = exp(-pow((d - 1.0) / 0.22, 2.0)) + 0.8 * (1.0 - smoothstep(0.15, 0.4, d));
+          c = mix(c, S(0.24, 0.18, 0.16), 0.55 * clamp(ring, 0.0, 1.0));
+          h += 0.05 * (1.0 - smoothstep(0.0, 1.0, d)) - 0.03 * (1.0 - smoothstep(0.15, 0.4, d));
+        }
+      }
+      float snow = smoothstep(0.6, 0.82, 0.8 * abs(p[2]) + 0.5 * up + 0.34 * fbm(ps * 1.6 + point(3, 3, 9), 5) + 0.1 * fine);
+      if (!water) c = mix(c, S(0.86, 0.84, 0.8) * (0.94 + 0.2 * fine), 0.9 * snow);
+      ice = smoothstep(0.95, 0.985, abs(p[2]) + 0.04 * fine);
+    }
+    if (ice > 0.0) {
+      float crack = smoothstep(0.7, 0.85, ridged(ps * 7.0 + 2.0 * q, 5));
+      color white = mix(S(0.9, 0.92, 0.94), S(0.66, 0.76, 0.86), 0.7 * crack) * (0.93 + 0.2 * fine);
+      c = mix(c, white, ice);
+      if (ice > 0.5) { water = 0; h = max(h, 0.505 + 0.02 * fine); }
+    }
+    if (!water) c *= 0.92 + 0.3 * fine;
+    flag = water ? 1.0 : 0.0;
+  } else {
+    float base = fbm(ps * 2.0 + q, 7);
+    float fresh;
+    float cr = craters(p, Seed, 150, 0.012, 0.17, 1.1, fresh);
+    float cracks = ridged(ps * 3.4 + 1.8 * q, 7);
+    float patch = smoothstep(-0.05, 0.25, fbm(ps * 1.7 + point(4, 4, 4), 5));
+    float fleck = smoothstep(0.7, 0.78, ridged(ps * 6.5 + 2.4 * q + point(6, 2, 5), 6) + 0.12 * fine) * patch * smoothstep(-0.12, 0.15, fbm(ps * 11.0 + q, 4));
+    float prov = smoothstep(-0.2, 0.25, fbm(ps * 0.9 + point(8, 8, 1), 4));
+    c = mix(S(0.17, 0.155, 0.15), S(0.28, 0.24, 0.225), smoothstep(-0.3, 0.3, base + 0.4 * fine));
+    c = mix(c, S(0.27, 0.165, 0.135), 0.6 * prov);                    // oxidised provinces
+    c = mix(c, S(0.34, 0.3, 0.275), clamp(0.5 * fresh, 0.0, 0.6));   // ejecta, a shade paler
+    c = mix(c, mix(S(0.62, 0.43, 0.27), S(0.74, 0.64, 0.5), smoothstep(-0.2, 0.2, fine)), 0.9 * fleck);
+    c *= 0.9 + 0.4 * fine;
+    h = 0.52 + 0.3 * base + 0.035 * fine + cr + 0.03 * fleck;
+  }
+  Col = c;
+  Data = color(clamp(h, 0.0, 1.0), flag, 0.0);
+}

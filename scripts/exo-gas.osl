@@ -1,0 +1,161 @@
+// Cloud decks of the famous gas giants of other stars, after the artist's impressions and
+// simulations they are known by (scripts/exo-maps.py holds each planet's settings). Evaluated per
+// pixel of an equirectangular map: u → east longitude (0.5 faces the star on a locked world),
+// v → latitude.
+//   Style 0  banded deck: irregular belts and zones from a five-colour ramp, streaks, ovals
+//   Style 1  HD 80606 b: a bright equatorial jet, dark polar vortices (Langton & Laughlin's model)
+//   Style 2  broken cloud over a deep haze, combed by the wind (as scripts/hd189733b-map.osl)
+
+float fbm(point x, int oct) {
+  float s = 0.0, a = 0.5;
+  point y = x;
+  for (int i = 0; i < oct; i++) {
+    s += a * noise("snoise", y);
+    y = y * 2.03 + point(1.7, 9.2, 3.1);
+    a *= 0.5;
+  }
+  return s;
+}
+
+float ridged(point x, int oct) {
+  float s = 0.0, a = 0.5;
+  point y = x;
+  for (int i = 0; i < oct; i++) {
+    float n = 1.0 - abs(noise("snoise", y));
+    s += a * n * n;
+    y = y * 2.07 + point(5.3, 1.1, 7.9);
+    a *= 0.5;
+  }
+  return s;
+}
+
+color ramp5(color a, color b, color c, color d, color e, float t) {
+  float x = clamp(t, 0.0, 1.0) * 4.0;
+  int i = (int)floor(x);
+  float f = x - i;
+  if (i <= 0) return mix(a, b, f);
+  if (i == 1) return mix(b, c, f);
+  if (i == 2) return mix(c, d, f);
+  if (i == 3) return mix(d, e, f);
+  return e;
+}
+
+shader exo_gas(
+  point UV = point(0.5, 0.5, 0),
+  int Style = 0,
+  float Seed = 0.0,
+  // the ramp, dark belts → bright zones (Style 2: deep, navy, haze, cloud low, cloud high)
+  color C0 = 0.1, color C1 = 0.3, color C2 = 0.5, color C3 = 0.7, color C4 = 0.9,
+  float Bands = 8.0,        // belts pole to pole
+  float Fine = 1.0,         // thin belts inside them
+  float Wave = 0.08,        // how far the belt edges wander
+  float Turb = 0.5,         // marbling across the belts
+  float Jet = 1.0,          // shear of the equatorial jet (rad)
+  float Warp = 3.0,
+  float Stretch = 3.0,      // features this much longer along the wind than across it
+  float Tilt = 0.0,         // the streak field's axis off the pole (rad): diagonal sweeps
+  color CStreak = 1.0, float Streak = 0.0,      // bright filaments
+  float StreakDark = 0.0,                       // dark ones
+  color CBlotch = 0.0, float Blotch = 0.0,      // broad darker cloud
+  color CAccent = 0.5, float Accent = 0.0, float AccentLat = 0.0, float AccentWidth = 0.1,
+  color CPole = 0.2, float Pole = 0.0, float PoleLat = 0.75,
+  color CSpot = 0.5, color CSpotRim = 0.8, int Spots = 0, float SpotSize = 0.1, float SpotLat = 0.6, float SpotRings = 0.0, float SpotMix = 0.8,
+  float Cover = 0.0,        // Style 2: more (+) or less (−) cloud
+  output color Col = 0)
+{
+  float lon = (UV[0] - 0.5) * M_2PI;
+  float lat = (UV[1] - 0.5) * M_PI;
+  point P0 = point(cos(lat) * cos(lon), cos(lat) * sin(lon), sin(lat));
+  // the frame the wind blows in
+  float ct = cos(Tilt), st = sin(Tilt);
+  point Pt = point(P0[0], ct * P0[1] - st * P0[2], st * P0[1] + ct * P0[2]);
+  float latf = asin(clamp(Pt[2], -1.0, 1.0));
+  float lonf = atan2(Pt[1], Pt[0]);
+  float jet = Jet * (exp(-pow(latf / 0.45, 2.0)) + 0.2 * sin(3.0 * latf + 0.4 + Seed) + 0.08 * sin(7.0 * latf + 1.3));
+  float lo = lonf + jet;
+  point p = point(cos(latf) * cos(lo), cos(latf) * sin(lo), sin(latf)) + point(Seed, 2.0 * Seed, -Seed);
+  point ps = point(p[0], p[1], p[2] * Stretch);
+
+  // nested domain warp: the marbling of turbulent cloud
+  vector q = vector(fbm(ps * 0.9 + point(1.7, 0, 0), 5), fbm(ps * 0.9 + point(9.2, 3, 1), 5), fbm(ps * 0.9 + point(4.1, 7, 2), 5));
+  point pr = ps * 1.5 + Warp * q;
+  vector r = vector(fbm(pr + point(1.3, 2, 0), 5), fbm(pr + point(7.7, 1, 4), 5), fbm(pr + point(2.9, 6, 3), 5));
+  point pf = ps * 2.2 + Warp * 1.1 * r;
+  float f = fbm(pf, 8);
+  float fil = ridged(ps * point(4.0, 4.0, 6.0) + 1.8 * r + 0.8 * q, 6);
+  float fil2 = ridged(ps * point(3.1, 3.1, 7.0) + 1.5 * q + point(21, 4, 9), 5);
+  float thick = smoothstep(-0.1, 0.4, fbm(p * 1.1 + point(11, 3, 5), 4) + 0.35 * q[0]);
+  float b = latf / M_PI_2;   // −1 … 1 pole to pole
+  color c;
+
+  if (Style == 1) {
+    // the jet: a bright ribbon along the equator that wanders and, on one side, fans out
+    float eq = latf + 0.09 * sin(2.0 * lonf + 1.0 + Seed) + 0.07 * q[0];
+    float fan = 0.5 + 0.5 * cos(lonf - 1.0 + 0.6 * q[1]);
+    float J = exp(-pow(eq / 0.17, 2.0));
+    J = max(J, 0.75 * fan * exp(-pow(eq / (0.17 + 0.3 * fan * fan), 2.0)));
+    // fainter belts either side, broken into eddies
+    float mid = exp(-pow((abs(latf + 0.05 * q[2]) - 0.78) / 0.13, 2.0)) * smoothstep(-0.25, 0.3, f + 0.4 * sin(2.0 * lonf + 2.0));
+    float lum = 0.1 + 0.72 * J * (0.72 + 0.28 * smoothstep(-0.3, 0.3, f)) + 0.26 * mid + 0.1 * f;
+    // the polar vortices: a dark eye, a brighter collar wound around it
+    float pd = M_PI_2 - abs(latf) + 0.03 * q[2];
+    float eye = 1.0 - smoothstep(0.07, 0.19, pd);
+    float collar = exp(-pow((pd - 0.3) / 0.075, 2.0)) * (0.55 + 0.45 * sin(lonf * 2.0 - pd * 16.0 + 3.0 * q[0]));
+    lum = (lum + 0.3 * collar) * (1.0 - 0.96 * eye);
+    // a curl shed by the jet at mid-latitudes
+    float curl = exp(-pow((abs(latf) - 0.45) / 0.1, 2.0)) * smoothstep(0.55, 0.8, fil) * 0.25;
+    lum += curl;
+    c = ramp5(C0, C1, C2, C3, C4, lum);
+  } else if (Style == 2) {
+    float cells = smoothstep(0.2, 0.5, fbm(ps * 9.0 + 0.6 * r, 5));
+    color gap = mix(C0, C1, smoothstep(-0.65, -0.15, f + 0.25 * q[2]));
+    gap = mix(gap, C2, 0.7 * smoothstep(-0.35, 0.05, f + 0.3 * r[1]));
+    float streak = smoothstep(0.48, 0.78, fil);
+    color cloud = mix(C3, C4, smoothstep(0.05, 0.55, f + 0.2 * thick));
+    cloud = mix(cloud, CStreak, clamp(streak * (0.25 + 0.45 * thick) + cells * thick * 0.45, 0.0, 1.0) * Streak);
+    float cover = smoothstep(-0.04, 0.22, f + 0.18 * thick - 0.06 + Cover);
+    c = mix(gap, cloud, cover);
+    float rim = exp(-pow((f + 0.18 * thick - 0.09 + Cover) / 0.035, 2.0));
+    c = mix(c, CStreak, rim * 0.3 * Streak * (0.4 + 0.6 * thick));
+  } else {
+    // belts and zones of uneven width: smooth 1-D noise down the latitude, the edges wandering
+    float bw = b + Wave * (0.6 * q[0] + 0.5 * f);
+    float n1 = noise("snoise", point(bw * Bands * 0.5 + Seed * 3.1, 0.5, 0.0));
+    float n2 = noise("snoise", point(bw * Bands * 1.45 + Seed * 1.7, 4.5, 0.0));
+    float n3 = noise("snoise", point(bw * Bands * 3.7 + Seed, 9.5, 0.0));
+    float t = 0.5 + 0.62 * n1 + 0.26 * n2 + 0.11 * Fine * n3 + Turb * 0.3 * f;
+    c = ramp5(C0, C1, C2, C3, C4, t);
+  }
+
+  if (Style != 2) {
+    c = mix(c, CBlotch, Blotch * smoothstep(-0.05, 0.4, fbm(p * 1.3 + 0.7 * q + point(11, 5, 2), 5) + 0.3 * r[2]));
+    c = mix(c, CStreak, Streak * smoothstep(0.5, 0.8, fil) * (0.45 + 0.55 * thick));
+    c *= 1.0 - StreakDark * smoothstep(0.5, 0.8, fil2) * (1.0 - 0.5 * thick);
+  }
+  // one belt of another colour
+  if (Accent > 0.0) {
+    float a = exp(-pow((b - AccentLat + 0.04 * q[1]) / AccentWidth, 2.0));
+    c = mix(c, CAccent, Accent * a * (0.55 + 0.45 * smoothstep(-0.3, 0.3, f)));
+  }
+  // ovals: storms that the belts flow around
+  for (int k = 0; k < Spots; k++) {
+    float h1 = noise("cell", point(k + 0.5, Seed * 13.7 + 0.5, 1.5));
+    float h2 = noise("cell", point(k + 0.5, Seed * 13.7 + 0.5, 2.5));
+    float h3 = noise("cell", point(k + 0.5, Seed * 13.7 + 0.5, 3.5));
+    float slat = (h1 - 0.5) * 2.0 * SpotLat;
+    float slon = (h2 - 0.5) * M_2PI;
+    float size = SpotSize * (0.45 + 0.9 * h3);
+    float dl = atan2(sin(lonf - slon), cos(lonf - slon)) * cos(slat);
+    float dy = latf - slat;
+    float d = sqrt(dl * dl / 2.9 + dy * dy) / size + 0.12 * f;
+    if (d < 1.4) {
+      float w = 1.0 - smoothstep(0.7, 1.0, d);
+      float rings = SpotRings > 0.0 ? 0.5 + 0.5 * sin(d * SpotRings * M_PI + 2.0 * f + atan2(dy, dl) * 2.0) : smoothstep(0.2, 0.9, d);
+      c = mix(c, mix(CSpot, CSpotRim, rings), w * SpotMix);
+      // a thin bright collar
+      c = mix(c, CSpotRim, 0.35 * SpotMix * exp(-pow((d - 1.0) / 0.1, 2.0)));
+    }
+  }
+  if (Pole > 0.0) c = mix(c, CPole, Pole * smoothstep(PoleLat, 1.0, abs(b) + 0.05 * f));
+  Col = c;
+}

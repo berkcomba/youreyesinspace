@@ -62,7 +62,6 @@ import potatoFrag from './potato.frag?raw';
 import volumeVert from './volume.vert?raw';
 import volumeCommon from './volume_common.glsl?raw';
 import volumeGalaxyFrag from './volume_galaxy.frag?raw';
-import volumeNebulaFrag from './volume_nebula.frag?raw';
 import nebulaDensity from './nebula_density.glsl?raw';
 import nebulaLighting from './nebula_lighting.glsl?raw';
 import volumeNebula2Frag from './volume_nebula2.frag?raw';
@@ -107,7 +106,6 @@ export const Shaders = {
   potatoFrag: common + '\n' + potatoFrag,
   volumeVert,
   volumeGalaxyFrag: common + '\n' + volumeCommon + '\n' + volumeGalaxyFrag,
-  volumeNebulaFrag: common + '\n' + volumeCommon + '\n' + volumeNebulaFrag,
   volumeNebula2Frag: common + '\n' + volumeCommon + '\n' + nebulaDensity + '\n' + nebulaLighting + '\n' + volumeNebula2Frag,
   volumeCompositeFrag,
   volumeAdaptFrag,

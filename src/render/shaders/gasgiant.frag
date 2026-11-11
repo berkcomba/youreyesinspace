@@ -4,6 +4,7 @@ uniform mat4 modelMatrix;
 uniform float uTime;
 uniform vec3 uAtmColor;
 uniform float uAtmDensity;
+uniform vec4 uGlow;   // a deck that shines by its own heat: its colour, the palette's mean luminance (a)
 
 varying vec3 vObjPos;
 varying vec3 vWorldPos;
@@ -92,6 +93,13 @@ void main() {
   float dayFactor = smoothstep(-0.2, 0.3, NdotLgeo);
   color += uAtmColor * rim * dayFactor * uAtmDensity * 0.35 * shadow;
   color *= uSunColor;
+
+  // Thermal glow (the hottest giants, 1000 K and up): the night side is not dark but embers,
+  // brightest where the deck is thin and the eye reaches deeper, hotter gas — the dark belts
+  if (uGlow.a > 0.0) {
+    float thin = clamp(1.4 - dot(albedo, vec3(0.299, 0.587, 0.114)) / uGlow.a * 0.8, 0.25, 1.3);
+    color += uGlow.rgb * thin * (0.45 + 0.55 * NdotV) * (1.0 - 0.85 * smoothstep(-0.15, 0.35, NdotLgeo));
+  }
 
   gl_FragColor = vec4(color * uAlpha, 1.0);
   #include <tonemapping_fragment>

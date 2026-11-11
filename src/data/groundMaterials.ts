@@ -67,6 +67,8 @@ const BY_SKIN: Record<string, Regime> = {
   lava: 'lava', 'moon-volcanic': 'lava', venusian: 'venus', temperate: 'temperate', 'temperate-life': 'temperate',
   ocean: 'temperate', eyeball: 'desert', carbon: 'carbon', desert: 'mars', ice: 'icy', barren: 'airless',
   'dwarf-red': 'desert', 'moon-icy': 'icy', 'moon-rocky': 'airless',
+  jungle: 'temperate', dune: 'dunes', salt: 'venus', toxic: 'venus', geothermal: 'desert', titan: 'titan',
+  iron: 'airless', magmaeye: 'lava',
 };
 
 /**

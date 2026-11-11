@@ -28,14 +28,6 @@ export type NebulaMorphology =
   | 'snr-filaments'     // supernova remnant: shocked filamentary shell, hot interior
   | 'wind-bubble';      // Wolf–Rayet / O-star wind bubble: smoother, [O III]-bright shell
 
-/**
- * Families rendered by the new engine. Rolled out one at a time, each after it has shown a clear
- * gain over the original shader in a controlled scene (phase-1 checkpoint): the H II families so
- * far. Planetaries, remnants, bubbles and reflection nebulae still use the original per-kind
- * shader (their new density models exist but are not yet convincingly better).
- */
-export const ENGINE2_FAMILIES: ReadonlySet<NebulaMorphology> = new Set<NebulaMorphology>(['hii-cavity', 'hii-pillars', 'molecular-dark']);
-
 export const MORPHOLOGY_CODE: Record<NebulaMorphology, number> = {
   'hii-cavity': 0, 'hii-pillars': 1, 'molecular-dark': 2, 'reflection-wisps': 3,
   'planetary-shell': 4, 'planetary-bipolar': 5, 'snr-filaments': 6, 'wind-bubble': 7,
@@ -192,7 +184,10 @@ export function resolveNebulaProfile(def: LandmarkDef, procKind?: ProcKind): Neb
     case 'planetary-shell':
     case 'planetary-bipolar':
       lights.push({ position: new Vector3(0, 0, 0), color: STAR_WD.clone(), intensity: 1 });
-      paletteId = shape.chance(0.25) ? 'halpha-sii' : 'oiii-blue';
+      // (the draw stays: the shape stream's later values must not move) every planetary is
+      // stratified from its interior to its rim; the variety comes from the tint and the family
+      shape.chance(0.25);
+      paletteId = 'oiii-blue';
       doubleShell = morphology === 'planetary-shell' && shape.chance(0.4) ? 1 : 0;
       emissionScale = micro.range(0.85, 1.2);
       extinctionScale = dust.range(0.6, 1.2);

@@ -18,8 +18,10 @@ import { lightPositionPc, resolveNebulaProfile } from '../render/nebula/NebulaPr
  * (COVERAGE_EXCLUDE_PC).
  */
 export const PROC_LANDMARK_CELL_PC = 600;
-const REACH = 2;
-const MAX_TOTAL = 480;
+/** cells generated around the camera's, per axis: everything within REACH cells of the camera exists */
+const REACH = 3;
+/** generated objects kept at once (the nearest cells first), globulars aside */
+const MAX_TOTAL = 1600;
 /**
  * Globular clusters are generated on a coarser grid with a far longer reach: a −8 mag globular
  * is a naked-eye object from 10 kpc, so (unlike a planetary nebula) it must not pop out of
@@ -27,6 +29,10 @@ const MAX_TOTAL = 480;
  */
 export const GLOBULAR_CELL_PC = 2400;
 const GLOBULAR_REACH = 6;
+/** the cell offsets of the neighbourhood, nearest first: shell by shell (Chebyshev), so a cap leaves a complete cube */
+const CELL_ORDER: Array<[number, number, number, number]> = [];
+for (let i = -REACH; i <= REACH; i++) for (let j = -REACH; j <= REACH; j++) for (let k = -REACH; k <= REACH; k++) CELL_ORDER.push([i, j, k, Math.max(Math.abs(i), Math.abs(j), Math.abs(k))]);
+CELL_ORDER.sort((a, b) => a[3] - b[3] || (a[0] * a[0] + a[1] * a[1] + a[2] * a[2]) - (b[0] * b[0] + b[1] * b[1] + b[2] * b[2]));
 const MAX_GLOBULARS = 320;
 export type ProcKind = 'hii' | 'reflection' | 'planetary' | 'open' | 'globular' | 'snr' | 'bubble' | 'hypergiant' | 'wr' | 'magnetar';
 
@@ -108,6 +114,13 @@ const _tmp = new Vector3();
 export class ProcLandmarks {
   /** currently generated objects (camera neighbourhood) */
   readonly list: ProcLandmark[] = [];
+  /**
+   * Camera distance (pc) within which the list is complete, whichever way the camera moves inside
+   * its cell: the layers drawing the objects fade them out toward it, so nothing pops in or out
+   * when the neighbourhood is regenerated. Globulars have their own, far longer one.
+   */
+  reachPc = REACH * PROC_LANDMARK_CELL_PC;
+  readonly globularReachPc = GLOBULAR_REACH * GLOBULAR_CELL_PC;
   private galaxy = -1;
   private cell = [NaN, NaN, NaN];
   /** generated cells, remembered: a crossing only generates the new slab (descriptions are the cost) */
@@ -142,14 +155,18 @@ export class ProcLandmarks {
       globulars.sort((a, b) => a.positionPc.distanceToSquared(camPc) - b.positionPc.distanceToSquared(camPc)).length = MAX_GLOBULARS;
     }
     this.list.push(...globulars);
-    for (let i = ci - REACH; i <= ci + REACH; i++) {
-      for (let j = cj - REACH; j <= cj + REACH; j++) {
-        for (let k = ck - REACH; k <= ck + REACH; k++) {
-          this.list.push(...this.cached(`${galaxy}:${i}:${j}:${k}`, () => { const o: ProcLandmark[] = []; this.generateCell(model, galaxy, i, j, k, o); return o; }));
-          if (this.list.length >= MAX_TOTAL + globulars.length) return true;
-        }
+    // nearest cells first, whole shells: in a crowded region the cap gives up the far shells (and
+    // the reach shrinks with it) instead of a slab on one side of the camera
+    let shell = 0, done = REACH;
+    for (const [oi, oj, ok, ring] of CELL_ORDER) {
+      if (ring !== shell) {
+        if (this.list.length >= MAX_TOTAL + globulars.length) { done = shell; break; }
+        shell = ring;
       }
+      const i = ci + oi, j = cj + oj, k = ck + ok;
+      this.list.push(...this.cached(`${galaxy}:${i}:${j}:${k}`, () => { const o: ProcLandmark[] = []; this.generateCell(model, galaxy, i, j, k, o); return o; }));
     }
+    this.reachPc = Math.max(done, 1) * s;
     return true;
   }
 

@@ -20,7 +20,10 @@ uniform int uNLights;
 struct Medium {
   float gas;   // glowing gas density (0 … ~2)
   float dust;  // extinguishing dust density (0 … ~2)
-  float hot;   // 0 … 1: share of the gas that sits on an ionisation / shock front (palette shift)
+  // 0 … 1, the palette coordinate of the gas. H II: share sitting on an ionisation front.
+  // Shells (planetaries, bubbles): 0 the hot interior … 1 the low-ionisation outer rim.
+  // Remnants: 0 red ([S II] / Hα) filaments … 0.8 teal ([O III]) ones … 1 the blue shock front.
+  float hot;
 };
 
 // three-channel domain warp: turns blobs into wisps, pillars and sheets
@@ -46,6 +49,8 @@ Medium sampleMedium(vec3 p) {
   vec3 c0 = uLights[0].xyz;
   vec3 toC = p - c0;
   float d0 = length(toC);
+  // nothing reaches the marched sphere's surface: no family shows a cut edge
+  float edge = 1.0 - smoothstep(1.08, 1.28, r);
 
   if (uMorph < 2.5) {
     // ----- H II region / dark molecular cloud -----
@@ -87,83 +92,119 @@ Medium sampleMedium(vec3 p) {
     return m;
   }
   if (uMorph < 3.5) {
-    // ----- reflection nebula: fibrous dust around a few stars -----
+    // ----- reflection nebula: fibrous dust lit by a few stars, the rest of the cloud dark -----
     float env = nebEnvelope(p, 1.25);
     if (env < 1e-3) return m;
-    vec3 q = nebWarp(p * uFilScale, uTurb * 0.5, 1.5);
-    // fibres: elongated along the warp, two scales
-    vec3 s = vec3(q.x * 3.2, q.y * 1.1, q.z * 3.2);
-    float fib = 0.55 + 0.6 * snoise(s * 1.6 + uSeed) + 0.35 * fbm(q * 3.0, 3);
-    fib = pow(max(fib, 0.0), 2.2);
-    float dust = env * fib * 1.3;
-    m.dust = dust;
+    vec3 q = nebWarp(p * uFilScale, uTurb * 0.6, 1.4);
+    // fibres: combed along one direction (the local magnetic field), two scales
+    vec3 s = vec3(q.x * 3.4, q.y * 0.9, q.z * 3.4);
+    float fib = 0.5 + 0.65 * snoise(s * 1.5 + uSeed) + 0.4 * fbm(q * 3.2, 3);
+    fib = pow(max(fib, 0.0), 2.4);
+    // the denser parent cloud: lanes that stay dark away from the stars and cut into the glow
+    float lane = smoothstep(0.12, 0.5, fbm(q * 1.2 + vec3(9.0, 4.0, 1.0), 2));
+    m.dust = env * (fib * 1.2 + lane * 0.9);
     // the star's immediate surroundings are swept clean
-    m.dust *= smoothstep(0.04, 0.12, d0);
+    m.dust *= smoothstep(0.03, 0.11, d0);
     m.gas = 0.0;
     return m;
   }
   if (uMorph < 5.5) {
     // ----- planetary nebula -----
-    float mu = abs(dot(p, uAxis)) / max(r, 1e-4);
-    float bip = uMorph > 4.5 ? 1.0 : 0.0;
-    float lobe = 1.0 + bip * 0.9 * pow(mu, 4.0);
-    float shellR = uCavity * lobe;
-    float x = r / shellR;
-    vec3 q = nebWarp(p * 3.0, uTurb * 0.25, 2.2);
-    float n = fbm(q * 2.4, 4);
-    // thin bright shell, thinner at the poles when bipolar; the equator carries the dense torus
-    float equ = 1.0 - bip * 0.5 * mu;
-    float n01 = n * 0.5 + 0.5;
-    float shell = exp(-sq((x - 1.0) / 0.08)) * (0.15 + 1.6 * n01 * n01) * equ;
-    // a second, older shell farther out (concentric)
-    float shell2 = uDoubleShell * exp(-sq((x - 1.45) / 0.09)) * (0.2 + 0.8 * n01 * n01) * 0.4;
-    // hot thin interior gas (the [O III] glow), cometary knots in the shell
-    float inner = (1.0 - smoothstep(0.3, 1.0, x)) * 0.05;
-    float halo = exp(-sq((x - 1.2) / 0.22)) * 0.04;
-    float knots = pow(max(snoise(q * 6.0 + 3.0), 0.0), 2.0) * shell;
-    float gas = shell * 1.6 + knots * 1.5 + shell2 + inner + halo;
-    // equatorial dust torus pinching the lobes
-    vec3 e = p - uAxis * dot(p, uAxis);
-    float rho = length(e), z = dot(p, uAxis);
-    float torus = bip * exp(-(sq((rho - uCavity * 0.85) / (0.18 * uCavity)) + sq(z / (0.2 * uCavity))));
-    m.gas = gas;
-    m.dust = knots * 0.5 + torus * 1.6 * (0.6 + 0.6 * n01);
-    m.hot = clamp(shell * 0.9 * smoothstep(0.95, 1.08, x), 0.0, 1.0);   // the rim (outer edge) is the low-ionisation side
+    float z = dot(p, uAxis);
+    float rs = max(r, 1e-4);
+    float mu = abs(z) / rs;
+    vec3 dir = p / rs;
+    // structure laid out on the direction from the star: spokes, cometary knots, streaks
+    float spoke = snoise(dir * 6.5 + uSeed * 1.3);
+    float tex = fbm(nebWarp(p * 1.7, uTurb * 0.22, 2.0) * 1.9, 3) * 0.5 + 0.5;
+    if (uMorph < 4.5) {
+      // round / elliptical: a bright main shell around a hot thin interior, a faint streaked halo
+      float shellR = uCavity * (0.92 + 0.2 * mu * mu + 0.06 * snoise(dir * 1.7 + uSeed));
+      float x = r / shellR;
+      if (x > 2.2) return m;
+      float w = 0.08 + 0.03 * (spoke * 0.5 + 0.5);
+      // a barrel rather than a ball: dense around the equator, thin over the poles (a ring seen
+      // along the axis, two bright bars from the side)
+      float barrel = 1.0 - 0.7 * smoothstep(0.35, 0.95, mu);
+      float shell = exp(-sq((x - 1.0) / w)) * (0.3 + 1.5 * tex * tex) * (0.75 + 0.45 * spoke) * barrel;
+      // the [O III] glow filling the cavity, brighter toward the inner edge of the shell
+      float inner = (1.0 - smoothstep(0.6, 1.0, x)) * (0.1 + 0.16 * smoothstep(0.2, 0.9, x)) * (0.6 + 0.8 * tex);
+      // knots just inside the rim with tails pointing away from the star (Helix)
+      float knot = pow(max(spoke, 0.0), 3.0) * exp(-sq((x - 0.86) / 0.1));
+      // the older, slower wind outside: radial streaks fading out
+      float halo = smoothstep(1.0, 1.08, x) * exp(-(x - 1.0) / 0.2) * (0.05 + 0.12 * max(spoke, 0.0)) * (0.5 + tex);
+      // a second, older shell farther out (concentric)
+      float shell2 = uDoubleShell * exp(-sq((x - 1.42) / 0.08)) * (0.2 + 0.7 * tex) * 0.45;
+      m.gas = (shell * 1.5 + inner + knot * 0.9 + halo + shell2) * edge;
+      m.dust = knot * 0.5 * edge;
+      m.hot = 0.45 * smoothstep(0.45, 0.9, x) + 0.55 * smoothstep(0.93, 1.1, x);
+      return m;
+    }
+    // bipolar: two lobes blown out through a dense equatorial waist (an hourglass)
+    vec3 e = p - uAxis * z;
+    float rho = length(e);
+    float lobeR = uCavity * (0.3 + 1.15 * pow(mu, 1.3)) * (1.0 + 0.07 * snoise(dir * 2.1 + uSeed));
+    float x = r / lobeR;
+    if (x > 2.4) return m;
+    // streaks running along the lobe walls from the waist to the tips
+    float streak = snoise(e / max(rho, 1e-4) * 4.5 + uAxis * (mu * 1.4) + uSeed * 0.7) * 0.5 + 0.5;
+    float wall = exp(-sq((r - lobeR) / 0.055)) * (0.25 + 1.3 * tex * streak + 0.5 * streak * streak);
+    wall *= 1.0 - 0.7 * smoothstep(0.82, 1.0, mu);            // the tips are open
+    float inner = (1.0 - smoothstep(0.4, 1.0, x)) * 0.14 * (0.5 + tex);
+    float halo = smoothstep(0.0, 0.05, r - lobeR) * exp(-(r - lobeR) / 0.13) * 0.06 * (0.4 + streak);
+    // the waist: a bright dusty ring the lobes are pinched by
+    float torus = exp(-(sq((rho - uCavity * 0.34) / (0.13 * uCavity)) + sq(z / (0.12 * uCavity))));
+    m.gas = (wall * 1.4 + inner + halo + torus * (0.8 + 1.2 * tex)) * edge;
+    m.dust = (torus * 1.3 * (0.5 + tex) + wall * pow(max(spoke, 0.0), 3.0) * 0.4) * edge;
+    m.hot = max(0.45 * smoothstep(0.4, 0.85, x) + 0.55 * smoothstep(0.9, 1.1, x), torus * 0.9);
     return m;
   }
   if (uMorph < 6.5) {
-    // ----- supernova remnant: shocked filamentary shell, hot interior -----
-    float side = dot(p, uAxis) / max(r, 1e-4);
-    float shellR = uCavity * (1.0 - 0.1 * side);          // squashed toward the denser ISM
-    vec3 q = nebWarp(p * 2.2 * uFilScale, uTurb * 0.55, 1.3);
-    float ridge = 1.0 - abs(snoise(q * 2.0));
-    float ridge2 = 1.0 - abs(snoise(q * 5.3 + 3.3));
-    float ridge3 = 1.0 - abs(snoise(q * 11.0 + 9.1));
-    float shell = exp(-sq((r - shellR) / 0.055));
-    float thick = exp(-sq((r - shellR * 0.93) / 0.12));
-    float fil = pow(ridge, 8.0) * 2.4 + pow(ridge2, 10.0) * 1.4 + pow(ridge3, 12.0) * 0.7;
-    // the shock front: a smooth faint rim just outside the filaments
-    float front = exp(-sq((r - shellR * 1.04) / 0.025)) * 0.35;
-    float gas = (shell * fil + thick * fil * 0.35) * (0.6 + 0.6 * side) + front;
+    // ----- supernova remnant: a thin shocked shell seen as a net of filaments -----
+    float rs = max(r, 1e-4);
+    vec3 dir = p / rs;
+    float side = dot(dir, uAxis);
+    float shellR = uCavity * (0.97 - 0.08 * side + 0.09 * snoise(dir * 1.9 + uSeed));   // squashed toward the denser ISM
+    float x = r - shellR;
     // hot X-ray / synchrotron interior
-    float interior = (1.0 - smoothstep(0.4, shellR, r)) * 0.02;
-    m.gas = gas + interior;
+    float interior = (1.0 - smoothstep(0.3, 0.95, r / shellR)) * 0.012;
+    if (x < -0.34 || x > 0.14) { m.gas = interior; m.hot = 1.0; return m; }
+    // the shell is a crumpled sheet: where the sheets of the noise cut it we look along the gas
+    vec3 q = nebWarp(p * 1.5 * uFilScale, uTurb * 0.5, 1.2);
+    float f1 = pow(1.0 - abs(snoise(q * 1.7)), 10.0);
+    float f2 = pow(1.0 - abs(snoise(q * 3.9 + 3.3)), 14.0);
+    // whole arcs have faded where the blast ran into thin gas
+    float lit = 0.12 + smoothstep(-0.3, 0.35, snoise(q * 0.8 + 11.0));
+    float layer = exp(-sq(x / 0.05));
+    float thick = exp(-sq((x + 0.08) / 0.12));
+    float fil = f1 * 2.2 + f2 * 1.3;
+    // the shock front: a smooth faint rim just ahead of the filaments
+    float front = exp(-sq((x - 0.045) / 0.022)) * 0.2 * lit;
+    m.gas = ((layer * fil + thick * f1 * 0.45) * lit * (0.75 + 0.45 * side) + front) * edge + interior;
     // dust: a little swept-up ISM on the dense side
-    m.dust = thick * smoothstep(0.3, 0.9, ridge2) * 0.35 * max(side, 0.0);
-    m.hot = clamp(fil * 0.4 + front * 2.0, 0.0, 1.0);
+    m.dust = thick * f2 * 0.5 * max(side, 0.0) * edge;
+    // red and teal strands side by side, the smooth front blue
+    float hue = clamp(0.4 + 0.9 * snoise(q * 0.65 + 5.0), 0.0, 0.8);
+    m.hot = mix(hue, 1.0, clamp(front * 5.0 / max(m.gas, 1e-3), 0.0, 1.0));
     return m;
   }
-  // ----- wind bubble: smoother, slightly lumpy thin shell around the star -----
-  float shellR = uCavity;
-  vec3 q = nebWarp(p * 2.0, uTurb * 0.4, 1.6);
-  float n = fbm(q * 3.0, 3);
-  float shell = exp(-sq((d0 - shellR) / 0.07)) * (0.6 + 0.6 * (n * 0.5 + 0.5));
-  // the bubble is leaking on one side (blow-out)
-  float blow = smoothstep(0.55, 0.95, dot(toC / max(d0, 1e-4), uAxis));
-  shell *= 1.0 - 0.7 * blow;
-  float inner = (1.0 - smoothstep(0.3, shellR, d0)) * 0.05;
-  m.gas = shell * 1.4 + inner;
-  m.dust = shell * pow(max(snoise(q * 5.0), 0.0), 2.0) * 0.5;
-  m.hot = clamp(shell, 0.0, 1.0);
+  // ----- wind bubble: a thin [O III] skin around a wrinkled layer of red filaments -----
+  vec3 dir0 = toC / max(d0, 1e-4);
+  // the bubble is leaking on one side (blow-out): it bulges there and its shell thins out
+  float blow = smoothstep(0.45, 0.95, dot(dir0, uAxis));
+  float shellR = uCavity * (0.93 + 0.1 * snoise(dir0 * 2.1 + uSeed) + 0.14 * blow);
+  float x = d0 / shellR;
+  if (x > 1.25) return m;
+  float inner = (1.0 - smoothstep(0.3, 1.0, x)) * 0.03;
+  if (x < 0.6) { m.gas = inner; m.hot = 0.2; return m; }
+  vec3 q = nebWarp(p * 1.5 * uFilScale, uTurb * 0.45, 1.5);
+  float c1 = pow(1.0 - abs(snoise(q * 2.0)), 9.0);
+  float c2 = pow(1.0 - abs(snoise(q * 4.4 + 2.0)), 12.0);
+  float skin = exp(-sq((x - 1.0) / 0.05)) * (0.6 + 0.5 * c1);
+  float layer = exp(-sq((x - 0.86) / 0.1)) * (c1 * 1.3 + c2 * 0.8);
+  float thin = 1.0 - 0.75 * blow;
+  m.gas = ((skin * 0.7 + layer * 1.2) * thin + inner) * edge;
+  m.dust = layer * c2 * 0.4 * edge;
+  m.hot = clamp((skin * 0.25 + layer * 1.2) / max(skin + layer * 1.2, 1e-3), 0.0, 1.0);
   return m;
 }

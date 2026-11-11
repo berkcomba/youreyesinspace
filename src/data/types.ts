@@ -142,6 +142,13 @@ export type Appearance =
       ground?: GroundMaterial;
       /** generated worlds: the family of baked surface maps that dresses the globe (SkinLibrary) */
       skin?: string;
+      /**
+       * What the generator decides about a skinned world's face and its geology follows
+       * (SkinLibrary): the sub-stellar "pupil" of a tidally locked one (a thawed sea in the ice,
+       * a magma ocean in the crust), the turn of hue of its vegetation (rad), the colour of its
+       * seas where they are not water's.
+       */
+      touch?: { eye?: 'sea' | 'magma'; flora?: number; sea?: [number, number, number] };
     }
   | {
       kind: 'gas';
@@ -158,6 +165,8 @@ export type Appearance =
       hazeColor?: [number, number, number];
       /** generated worlds: the family of baked cloud decks (SkinLibrary), recoloured to `bands` */
       skin?: string;
+      /** thermal glow of a deck hot enough to shine by itself (linear RGB): it shows on the night side */
+      glow?: [number, number, number];
     }
   | {
       kind: 'star';

@@ -32,8 +32,10 @@ vec2 boxHit(vec3 o, vec3 d, vec3 b) {
 // ray ∩ sphere of radius R about the origin: (tNear, tFar), tFar < tNear on a miss
 vec2 sphereHit(vec3 o, vec3 d, float R) {
   float b = dot(o, d);
-  float c = dot(o, o) - R * R;
-  float h = b * b - c;
+  // from the line's closest point to the centre: b² − (|o|² − R²) loses the sphere to rounding once
+  // the camera is hundreds of radii away (the small, distant nebulae)
+  vec3 q = o - b * d;
+  float h = R * R - dot(q, q);
   if (h < 0.0) return vec2(1.0, -1.0);
   h = sqrt(h);
   return vec2(max(-b - h, 0.0), -b + h);

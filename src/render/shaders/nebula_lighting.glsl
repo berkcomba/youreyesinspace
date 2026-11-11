@@ -51,15 +51,21 @@ vec3 gasColor(float U, float hot) {
     col = mix(L_SII, L_HA, smoothstep(0.05, 0.6, ion));
     col = mix(col, vec3(1.0, 0.75, 0.6), hot * 0.4);
   } else if (uPalette < 2.5) {
-    // [O III]-blue (planetaries, bubbles): teal inside, red [N II] rim
-    col = mix(L_HA, L_OIII, smoothstep(0.1, 0.7, ion));
-    col = mix(col, L_HA, hot * 0.8);
+    // shells (planetaries, bubbles) are stratified: `hot` runs from the high-excitation interior
+    // (He II / [O III], carrying the object's own tint) through the teal [O III] zone and the
+    // orange inner edge of the shell to the red [N II] / Hα rim
+    vec3 inner = mix(vec3(0.22, 0.5, 1.0), uTint, 0.45);
+    col = mix(inner, L_OIII, smoothstep(0.0, 0.45, hot));
+    col = mix(col, vec3(1.0, 0.55, 0.22), smoothstep(0.45, 0.8, hot));
+    col = mix(col, L_HA, smoothstep(0.75, 1.0, hot));
+    return col;
   } else if (uPalette < 3.5) {
     col = L_HB;   // reflection: the gas (if any) is a faint blue haze
   } else {
-    // remnant: [S II]/Hα red filaments, [O III] green ones, blue shock front
-    col = mix(mix(L_SII, L_HA, 0.5), L_OIII, smoothstep(0.3, 0.8, hot));
+    // remnant: [S II]/Hα red filaments, [O III] teal ones, blue shock front
+    col = mix(mix(L_SII, L_HA, 0.5), L_OIII, smoothstep(0.25, 0.6, hot));
     col = mix(col, L_SYNC, smoothstep(0.85, 1.0, hot));
+    return mix(col, uTint, 0.06);
   }
   return mix(col, uTint, 0.12);
 }
@@ -78,9 +84,12 @@ vec3 nebulaSource(vec3 p, Medium m) {
     // single scattering of the local stars (reflection), bluer than the stars themselves
     // (normalised like the ionisation; in emission nebulae the scattered light is a faint sheen)
     bool refl = uPalette > 2.5 && uPalette < 3.5;
-    vec3 scatterTint = refl ? vec3(0.75, 0.85, 1.0) : vec3(0.9, 0.9, 1.0);
+    vec3 scatterTint = refl ? vec3(0.5, 0.72, 1.0) : vec3(0.9, 0.9, 1.0);
     float k = refl ? 0.5 : 0.06;
     src += starlight * sq(max(uCavity, 0.08)) * scatterTint * m.dust * DUST_ALBEDO * k * uEmission;
+    // the rest of a reflection nebula's cloud is not black: the galaxy's own starlight gives the
+    // dust the faint brown glow deep photographs show around the blue core
+    if (refl) src += vec3(0.42, 0.33, 0.26) * m.dust * 0.012 * uEmission;
   }
   return src;
 }
