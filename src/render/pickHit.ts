@@ -1,3 +1,5 @@
+import { scaledStarSize } from './starTrail';
+
 /**
  * A pick candidate: what a click near a drawn object would hit. Every picker reports what it
  * actually draws (size on screen, alpha) so candidates from different layers compare fairly.
@@ -28,8 +30,8 @@ export function better<T>(a: PickHit<T> | null, b: PickHit<T> | null): PickHit<T
   return pickScore(b) < pickScore(a) ? b : a;
 }
 
-/** Drawn point-star diameter (px) and alpha for a flux, as in stars.vert */
+/** Drawn point-star diameter (px) and alpha for a flux, as in stars.vert (star size setting included) */
 export function starLook(m: number): { size: number; alpha: number } {
   const flux = Math.pow(10, -0.4 * m);
-  return { size: Math.min(30, 1.3 + 3 * Math.pow(flux, 0.4)), alpha: Math.min(1, 0.16 + 0.9 * Math.pow(flux, 0.45)) };
+  return { size: scaledStarSize(Math.min(30, 1.3 + 3 * Math.pow(flux, 0.4))), alpha: Math.min(1, 0.16 + 0.9 * Math.pow(flux, 0.45)) };
 }

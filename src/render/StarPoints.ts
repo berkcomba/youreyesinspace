@@ -5,6 +5,7 @@ import { PARSEC_KM, SKY_RADIUS_KM } from '../core/constants';
 import type { StarCatalog, TierAttributes } from '../data/StarCatalog';
 import { bvToRgb } from '../astro/stellar';
 import { Shaders } from './shaders';
+import { STAR_SHARED_UNIFORMS } from './starTrail';
 import { better, PICK_MIN_VIS, starLook, type PickHit } from './pickHit';
 import { presetBounds } from './Bounds';
 
@@ -70,7 +71,7 @@ export class StarPoints {
   constructor(readonly catalog: StarCatalog, private readonly scene: Scene) {
     this.mat = new ShaderMaterial({
       vertexShader: Shaders.starsVert,
-      fragmentShader: Shaders.pointsFrag,
+      fragmentShader: Shaders.starsFrag,
       uniforms: {
         uDrift: { value: 0 },
         // every material sharing stars.vert must set every uniform: the three materials share one
@@ -85,6 +86,7 @@ export class StarPoints {
         uDaylight: { value: 0 },
         uSoftness: { value: 0.0 },
         uTint: { value: new Vector4(0, 0, 0, 0) },
+        ...STAR_SHARED_UNIFORMS,
       },
       transparent: true,
       blending: AdditiveBlending,

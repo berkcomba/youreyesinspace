@@ -6,6 +6,7 @@ import { PARSEC_KM, SKY_RADIUS_KM } from '../core/constants';
 import { ProcStars, type ProcTier } from '../galaxy/ProcStars';
 import type { NamedStarScreen } from './StarPoints';
 import { Shaders } from './shaders';
+import { STAR_SHARED_UNIFORMS } from './starTrail';
 import { better, PICK_MIN_VIS, starLook, type PickHit } from './pickHit';
 import { presetBounds } from './Bounds';
 
@@ -59,7 +60,7 @@ export class ProcStarPoints {
       geo.setDrawRange(0, 0);
       const mat = new ShaderMaterial({
         vertexShader: Shaders.starsVert,
-        fragmentShader: Shaders.pointsFrag,
+        fragmentShader: Shaders.starsFrag,
         uniforms: {
           uDrift: { value: 0 },      // shared program with StarPoints / ClusterStarPoints: set every uniform
           uMagBoost: { value: 0 },
@@ -72,6 +73,7 @@ export class ProcStarPoints {
           uDaylight: { value: 0 },
           uSoftness: { value: 0.0 },
           uTint: { value: new Vector4(...PROCEDURAL_TINT, 0) },
+          ...STAR_SHARED_UNIFORMS,
         },
         transparent: true,
         blending: AdditiveBlending,

@@ -30,6 +30,13 @@ export interface Settings {
   nightLight: number;
   /** lens flare and glare of the star in view */
   lensFlare: boolean;
+  /** motion blur of the stars: flying fast between them, they stretch into streaks */
+  starTrails: boolean;
+  /**
+   * how large the stars of the sky are drawn: 1 = the plain magnitude-to-size scale (the faintest a
+   * pixel or so), up to 3. A drawing aid, not physics: every star is far smaller than a pixel.
+   */
+  starSize: number;
   /** crepuscular rays: the star's light shafts in an atmosphere, carved by the horizon and the clouds */
   lightShafts: boolean;
   /** NASA satellite imagery on Earth / Moon / Mars (streamed) */
@@ -90,6 +97,8 @@ export const DEFAULT_SETTINGS: Settings = {
   shadows: true,
   nightLight: 0.12,
   lensFlare: true,
+  starTrails: true,
+  starSize: 1.5,
   lightShafts: true,
   imagery: true,
   belts: false,

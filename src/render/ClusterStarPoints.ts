@@ -7,6 +7,7 @@ import type { Landmark } from '../core/Universe';
 import { drawsMembers, memberId, type ClusterMember, type ClusterStars } from '../galaxy/ClusterStars';
 import { PROCEDURAL_TINT } from './ProcStarPoints';
 import { Shaders } from './shaders';
+import { STAR_SHARED_UNIFORMS } from './starTrail';
 import { better, PICK_MIN_VIS, starLook, type PickHit } from './pickHit';
 import { presetBounds } from './Bounds';
 
@@ -131,7 +132,7 @@ export class ClusterStarPoints {
     geo.setAttribute('starIndex', new BufferAttribute(idx, 1));
     const mat = new ShaderMaterial({
       vertexShader: Shaders.starsVert,
-      fragmentShader: Shaders.pointsFrag,
+      fragmentShader: Shaders.starsFrag,
       uniforms: {
         uDrift: { value: 0 },      // shared program with StarPoints / ProcStarPoints: set every uniform
         uCamPc: { value: new Vector3() },
@@ -144,6 +145,7 @@ export class ClusterStarPoints {
         uDaylight: { value: this.daylight * 0.6 },
         uSoftness: { value: 0.0 },
         uTint: { value: new Vector4(...PROCEDURAL_TINT, this.highlight ? 0.85 : 0) },
+        ...STAR_SHARED_UNIFORMS,
       },
       transparent: true,
       blending: AdditiveBlending,

@@ -39,6 +39,7 @@ import { NebulaClouds } from './render/NebulaClouds';
 import { GalaxyCloud } from './render/GalaxyCloud';
 import { FarUniverse, localFade, UNIVERSE_RADIUS_PC } from './galaxy/FarUniverse';
 import { LensFlare } from './render/LensFlare';
+import { STAR_SHARED_UNIFORMS, StarTrail } from './render/starTrail';
 import { better, type PickHit } from './render/pickHit';
 import { ADOPT_RATIO, FarCluster, RESOLVE_RATIO, farKey, farKindLabel, nearestFarPoint, type FarRef } from './galaxy/FarClusters';
 import { Belts, type BeltParticle } from './render/Belts';
@@ -175,6 +176,8 @@ class App implements UIHost {
   private last = performance.now();
   private readonly camPosTmp = new Vector3();
   private readonly camPc = new Vector3();
+  /** motion blur of the stars: at speed they stretch into streaks */
+  private readonly starTrail = new StarTrail();
   private readonly camForward = new Vector3();
   private readonly sunColor = new Vector3(1, 1, 1);
   private starLuminosity = 1;
@@ -3195,7 +3198,7 @@ class App implements UIHost {
       fill: this.fillOut.size ? this.fillOut : null,
       ghost: g ? { id: g.body.id, alpha: g.alpha * g.alpha * (3 - 2 * g.alpha) } : null,
     }, this.multiple ? (b) => b.hostStar : undefined);
-    this.updateLensing(fovRad);
+    this.updateLensing(fovRad, dt);
     this.updateLensFlare(camPos, dt);
     // ground left behind: drop the generated patch once we are well away from it
     const stood = this.landedOn;
@@ -3217,6 +3220,8 @@ class App implements UIHost {
     this.points.setPixelRatio(eng.pixelRatio);
     this.points.update(star.position, camPos, this.starLuminosity);
     this.starPoints.setPixelRatio(eng.pixelRatio);
+    this.starTrail.update(this.camPc, dt, s.starTrails, eng.width * eng.pixelRatio, eng.height * eng.pixelRatio, this.maxPointPx * eng.pixelRatio);
+    STAR_SHARED_UNIFORMS.uStarScale.value = Math.min(3, Math.max(1, s.starSize));
     this.starPoints.update(this.camPc, this.universe.current.catalogIndex);
     this.procPoints.update(this.camPc, eng.pixelRatio, this.universe.current.starId, dt);
     for (const c of this.clouds.values()) c.update(this.camPc, pxPerRad, eng.pixelRatio, s.milkyWay, fovRad / DEG);
@@ -3503,7 +3508,7 @@ class App implements UIHost {
     return c;
   }
 
-  private updateLensing(fovRad: number): void {
+  private updateLensing(fovRad: number, dt: number): void {
     const eng = this.engine;
     let best: BodyView | null = null;
     let bestScore = 0;
@@ -3514,7 +3519,7 @@ class App implements UIHost {
       if (score > bestScore) { bestScore = score; best = v; }
     }
     if (!best) { eng.blackHole.enabled = false; return; }
-    eng.blackHole.target(best.body, best.relPos, this.camera.quaternion, fovRad, eng.camera.aspect, eng.height, this.time.t / 3600);
+    eng.blackHole.target(best.body, best.relPos, this.camera.quaternion, fovRad, eng.camera.aspect, eng.height, dt, this.time.effectiveRate);
   }
 
   /**

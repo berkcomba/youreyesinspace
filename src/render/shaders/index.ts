@@ -24,6 +24,7 @@ import billboardVert from './billboard.vert?raw';
 import pointsVert from './points.vert?raw';
 import pointsFrag from './points.frag?raw';
 import starsVert from './stars.vert?raw';
+import starsFrag from './stars.frag?raw';
 import orbitVert from './orbit.vert?raw';
 import orbitFrag from './orbit.frag?raw';
 import beltVert from './belt.vert?raw';
@@ -139,6 +140,7 @@ export const Shaders = {
   pointsVert,
   pointsFrag,
   starsVert,
+  starsFrag,
   orbitVert,
   orbitFrag,
   beltVert,

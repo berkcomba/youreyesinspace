@@ -12,9 +12,27 @@ export interface Release {
   items: Array<{ text: string }>;
 }
 
-export const CURRENT_VERSION = '0.9.2';
+export const CURRENT_VERSION = '0.9.3';
 
 export const CHANGELOG: Release[] = [
+  {
+    version: '0.9.3', date: '2026-11-11', title: 'Dönen kara delik diskleri, teleskop görünümü ve yeni dünyalar',
+    items: [
+      { text: 'Kara delikler: yığılma diskleri artık dönüyor; gaz iç kenarda daha hızlı akıyor, ağır delikler daha yavaş dönüyor ve disk simülasyon saatine uyuyor. İnce parlak gaz iplikleri; içte akkor beyaz, dışta kızıl, bize doğru gelen yanı daha mavi ve daha parlak' },
+      { text: 'Yıldız izleri: yıldızlar arasında hızla uçarken yıldızlar çizgiye uzuyor; ayarlardan kapatılabiliyor' },
+      { text: 'Yıldız boyutu ayarı: gökyüzündeki yıldızlar 3 kata kadar büyütülebiliyor' },
+      { text: 'Teleskop görünümü: seçilen cismin Dünya\'dan dürbünle, amatör ve akıllı teleskoplarla, Hubble ve JWST ile, radyo teleskoplarıyla nasıl göründüğü; filtreler, göz mercekleri, pozlama süresi, radyo bantları ve VLA dizilimleri. Bilgi kartında ve ansiklopedide' },
+      { text: 'On iki yeni gezegen türü: orman, kum denizi, tuz, zehirli, jeotermal, Titan benzeri, demir, khthonik, lav gözü, hycean, süper-kabarık ve sıcak Neptün' },
+      { text: 'Gaz devleri: her birine kendi renkleri, kuşakları, fırtınaları ve kutup başlıkları; en sıcaklarının gece yüzü kor gibi parlıyor' },
+      { text: 'Her dünyaya kendi jeolojisi: yarık vadileri, kalkan volkanları, kutup başlıkları ve buz çatlakları; iniş alanlarında yeni kaya türleri ve ufukta pus' },
+      { text: 'Ünlü öte gezegenlere kendi haritaları; HD 189733 b kobalt mavisi pusu ve rüzgârın savurduğu bulutlarıyla' },
+      { text: 'Bulutsular ve kümeler uzaktan da yakından da aynı görünüyor; üretilmiş bulutsular yaklaşırken artık kaybolmuyor' },
+      { text: 'Etkinlikler: her etkinlik beş dilde seslendirildi; 2027\'nin yarı gölge Ay tutulması ve Luksor\'da altı dakikadan uzun süren tam Güneş tutulması eklendi' },
+      { text: 'Renkli beyaz cüceler: yeşil yıldız WD J1330+6435 ve altı benzeri (Hollands ve ark. 2026)' },
+      { text: 'Ay, JPL Horizons efemerisiyle kendi yörünge çizgisinin üzerinde; her kuyruklu yıldız Güneş\'ten uzakta da sönük bir kuyruk taşıyor; Jüpiter\'in Büyük Kırmızı Lekesi geri döndü' },
+      { text: 'Telefonlar: iki satırlı üst çubuk ve yatay ekran düzeni; en yüksek grafik seviyesiyle açılıyor, ilk saniyelerde takılırsa düşük seviyeye iniyor' },
+    ],
+  },
   {
     version: '0.9.2', date: '2026-11-07', title: 'Ansiklopedi ve sinematik turlar',
     items: [

@@ -178,6 +178,8 @@ const SETTING_DEFS: SettingDef[] = [
   { key: 'shadows', label: 'Tutulma / halka gölgeleri', kind: 'bool' },
   { key: 'nightLight', label: 'Gece tarafı dolgu ışığı (yakındayken)', kind: 'range', min: 0, max: 1, step: 0.05 },
   { key: 'lensFlare', label: 'Yıldız parlaması (lens flare)', kind: 'bool' },
+  { key: 'starTrails', label: 'Yıldız izleri (yüksek hızda yıldızlar çizgiye uzar)', kind: 'bool' },
+  { key: 'starSize', label: 'Yıldız boyutu (gökyüzündeki yıldızları büyüt)', kind: 'range', min: 1, max: 3, step: 0.1, format: (v) => `${fixed(v, 1)}×` },
   { key: 'lightShafts', label: 'Işık huzmeleri (atmosferde güneş ışınları)', kind: 'bool' },
   { key: 'imagery', label: 'Uydu görüntüleri (NASA)', kind: 'bool' },
   { key: 'bloom', label: 'Bloom (parıltı)', kind: 'bool' },
