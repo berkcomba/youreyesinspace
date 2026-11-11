@@ -6,8 +6,10 @@
 #
 # Required env:
 #   CF_API_TOKEN        API token with Zone:Zone Settings:Edit, Zone:Firewall Services:Edit,
-#                       Zone:Cache Rules:Edit, Zone:Transform Rules:Edit, Zone:Bot Management:Edit
+#                       Zone:Cache Rules:Edit, Zone:Transform Rules:Edit, Zone:Bot Management:Edit,
+#                       Account:Account Rum:Edit (Web Analytics; the beacon is switched off)
 #   CF_ZONE_ID          zone id of the domain
+#   CF_ACCOUNT_ID       optional: read from the zone when not given
 #   SITE_HOST           e.g. example.com (www.<SITE_HOST> is covered too)
 #   ORIGIN_AUTH_SECRET  same value passed to Cloud Run (X-Origin-Auth header) – optional
 #
@@ -55,7 +57,9 @@ echo "▶ TLS / HTTPS"
 setting ssl '"strict"'                       # Full (strict): Cloud Run has a valid cert
 # Off on purpose. Cloud Run renews its certificate over http (/.well-known/acme-challenge/), and
 # Cloudflare's redirect would swallow that request: the renewal fails and, with Full (strict),
-# the site goes down when the certificate runs out. nginx redirects visitors instead (CF-Visitor).
+# the site goes down when the certificate runs out. Visitors are still redirected: Cloudflare
+# passes an http request on over http and Google's front end answers it with a redirect (nginx
+# has the same rule on CF-Visitor as a fallback).
 # https://cloud.google.com/run/docs/mapping-custom-domains#dns_update
 setting always_use_https '"off"'
 setting automatic_https_rewrites '"on"'
@@ -70,13 +74,54 @@ setting early_hints '"on"'
 setting http3 '"on"'
 setting 0rtt '"on"'
 
+echo "▶ Sayfaya ekleme yok"
+# Cloudflare rewrites the HTML it proxies unless told otherwise. Both of these add a script to
+# every page: the e-mail one for nothing, and the Web Analytics beacon (switched on by itself for
+# a new Free zone) only to be refused by the CSP (deploy/nginx/security-headers.conf), where it
+# measures nothing and leaves an error in every visitor's console.
+setting email_obfuscation '"off"'
+web_analytics_off() {
+  local acct sites tag
+  acct="${CF_ACCOUNT_ID:-$(curl -sS "${API}/zones/${CF_ZONE_ID}" "${AUTH[@]}" 2>/dev/null \
+    | tr -d ' \t\r\n' | grep -o '"account":{[^}]*}' | grep -o '[0-9a-f]\{32\}' | head -n1)}" || true
+  if [[ -z "$acct" ]]; then
+    FAILED+=("web analytics (hesap kimliği okunamadı; CF_ACCOUNT_ID verin)")
+    echo "    ✖ web analytics: hesap kimliği okunamadı" >&2
+    return 0
+  fi
+  # (this answer comes pretty-printed: the white space goes first)
+  sites="$(curl -sS "${API}/accounts/${acct}/rum/site_info/list?per_page=100" "${AUTH[@]}" 2>/dev/null \
+    | tr -d ' \t\r\n')" || true
+  if [[ "$sites" != *'"success":true'* ]]; then
+    FAILED+=("web analytics (liste okunamadı)")
+    echo "    ✖ web analytics: ${sites:0:300}" >&2
+    return 0
+  fi
+  # one line per site, then the one that names this zone
+  tag="$(printf '%s' "$sites" | sed 's/"site_tag":"/\n&/g' | grep "\"zone_tag\":\"${CF_ZONE_ID}\"" \
+    | grep -o '^"site_tag":"[0-9a-f]*"' | grep -o '[0-9a-f]\{32\}' | head -n1)" || true
+  if [[ -z "$tag" ]]; then
+    echo "  · web analytics: bu zone için kayıt yok"
+    return 0
+  fi
+  echo "  · web analytics beacon = off"
+  call "web analytics" PUT "/accounts/${acct}/rum/site_info/${tag}" \
+    "{\"auto_install\":false,\"zone_tag\":\"${CF_ZONE_ID}\"}"
+}
+web_analytics_off
+
 echo "▶ Güvenlik seviyesi / bot"
 setting security_level '"medium"'
 setting browser_check '"on"'
 setting challenge_ttl '1800'
-# Bot Fight Mode (free plan) – Super Bot Fight Mode planlarda otomatik devreye girer
-echo "  · bot fight mode"
-call "bot fight mode" PUT "/zones/${CF_ZONE_ID}/bot_management" '{"fight_mode":true}'
+# Bot Fight Mode is opt-in (BOT_FIGHT_MODE=1). It needs Cloudflare's JavaScript detections, a
+# script injected into every HTML page (to be checked against the CSP first), it cannot be
+# switched off per path on the Free plan, and it may challenge the validator that renews the
+# Cloud Run certificate.
+if [[ "${BOT_FIGHT_MODE:-}" == "1" ]]; then
+  echo "  · bot fight mode"
+  call "bot fight mode" PUT "/zones/${CF_ZONE_ID}/bot_management" '{"fight_mode":true,"enable_js":true}'
+fi
 
 # ---------------------------------------------------------------------------
 # Rulesets helper: create-or-update the zone entrypoint ruleset for a phase
@@ -85,7 +130,7 @@ put_phase() { # phase rules-json [secret]
   local phase="$1" rules="$2"
   echo "  · ruleset phase ${phase}"
   call "kurallar ${phase}" PUT "/zones/${CF_ZONE_ID}/rulesets/phases/${phase}/entrypoint" \
-    "{\"name\":\"yeits ${phase}\",\"kind\":\"zone\",\"phase\":\"${phase}\",\"rules\":${rules}}" "${3:-}"
+    "{\"description\":\"yeits ${phase}\",\"rules\":${rules}}" "${3:-}"
 }
 
 echo "▶ WAF özel kuralları (http_request_firewall_custom)"

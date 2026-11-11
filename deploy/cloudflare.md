@@ -51,7 +51,7 @@ Alternatif: **Global HTTPS Load Balancer + serverless NEG** — Cloud Armor vb. 
 ## 3. Cloudflare güvenlik
 
 Cloudflare panelinde **My Profile → API Tokens → Create Token** ile şu izinleri taşıyan bir token oluştur:
-Zone Settings:Edit, Zone WAF:Edit, Cache Rules:Edit, Transform Rules:Edit, Bot Management:Edit (zone: ilgili alan adı).
+Zone Settings:Edit, Zone WAF:Edit, Cache Rules:Edit, Transform Rules:Edit, Bot Management:Edit (zone: ilgili alan adı); Web Analytics işaretçisini kapatabilmesi için hesap düzeyinde Account Rum:Edit.
 
 ```bash
 export CF_API_TOKEN=...            # asla repoya yazma
@@ -65,9 +65,10 @@ Script (idempotent) şunları kurar:
 
 | Alan | Ayar |
 |---|---|
-| TLS | SSL **Full (strict)**, min TLS 1.2, TLS 1.3, HSTS 1 yıl + preload. **Always Use HTTPS kapalı**: Cloud Run sertifikasını http üzerinden yeniler, Cloudflare'in yönlendirmesi bu isteği yutar ([Google'ın notu](https://cloud.google.com/run/docs/mapping-custom-domains#dns_update)); http → https yönlendirmesini nginx yapar (`CF-Visitor`) |
+| TLS | SSL **Full (strict)**, min TLS 1.2, TLS 1.3, HSTS 1 yıl + preload. **Always Use HTTPS kapalı**: Cloud Run sertifikasını http üzerinden yeniler, Cloudflare'in yönlendirmesi bu isteği yutar ([Google'ın notu](https://cloud.google.com/run/docs/mapping-custom-domains#dns_update)); http → https yönlendirmesini Google'ın ön yüzü yapar (Cloudflare http isteğini http olarak iletir), nginx'teki `CF-Visitor` kuralı yedektir |
 | Performans | HTTP/3, 0-RTT, Early Hints (Brotli zaten hep açık) |
-| Bot | Bot Fight Mode, Browser Integrity Check, security level *medium* |
+| Sayfaya ekleme | E-posta gizleme ve Web Analytics işaretçisi **kapalı**: ikisi de her HTML sayfasına betik ekler; işaretçiyi CSP zaten reddeder ve konsola hata düşer |
+| Bot | Browser Integrity Check, security level *medium*. Bot Fight Mode isteğe bağlı (`BOT_FIGHT_MODE=1`): her HTML sayfasına Cloudflare'in betiğini ekler (önce CSP ile denenmeli) ve sertifika yenilemesini engelleyebilir |
 | WAF | Sadece GET/HEAD/OPTIONS; `.map`, `.env`, `.git`, gizli dosya yolları blok (`/.well-known/` hariç: sertifika yenilemesi oradan geçer) |
 | Rate limit | Genel 2000 istek/10 sn/IP, 10 sn blok (Free planın tek kuralı; önbellekten dönen istekler de sayılır) |
 | Cache | Statik klasörlerin tamamı (`/assets`, `/data`, `/models`, `/maps`, `/skins`, `/ground`, `/nebulae`, `/tours`, `/tour-media`, `/lessons`, `/music`, `/expedition`, `/scope`, `/wiki`, `/events`, `/ephem`) dosya türü ne olursa olsun edge'de tutulur; süreyi yalnızca nginx'in `Cache-Control` başlığı belirler. HTML edge'de tutulmaz; `/_b.gif` cache dışı |

@@ -44,8 +44,10 @@ server {
   if ($request_method !~ ^(GET|HEAD|OPTIONS)$) { return 405; }
 
   # http → https. Cloudflare is told not to do it (its redirect would swallow the request that
-  # renews the Cloud Run certificate, see deploy/cloudflare-security.sh) and it always reaches us
-  # over https, so the visitor's own scheme arrives in CF-Visitor.
+  # renews the Cloud Run certificate, see deploy/cloudflare-security.sh). With Full (strict) it
+  # passes an http request on over http, and Google's front end answers that with a redirect
+  # before it gets here; this is the fallback for a request that does arrive over https with
+  # the visitor's own scheme, http, in CF-Visitor.
   if ($http_cf_visitor ~ '"scheme":"http"') { return 301 https://$host$request_uri; }
 
   # Origin protection (see Dockerfile / deploy/cloudflare.md)
