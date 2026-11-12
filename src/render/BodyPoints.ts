@@ -2,6 +2,7 @@ import { AdditiveBlending, BufferAttribute, BufferGeometry, Points, Scene, Shade
 import type { BodyView } from './BodyRenderer';
 import { Shaders } from './shaders';
 import { presetBounds } from './Bounds';
+import { scaledPointSize, STAR_SHARED_UNIFORMS } from './starTrail';
 
 /**
  * Point-sprite layer: every body is drawn as a small glow whose size follows an
@@ -62,6 +63,8 @@ export class BodyPoints {
   update(sunPos: Vector3, camPos: Vector3, starLuminosity = 1): void {
     const views = this.views;
     if (!views.length) return;
+    // object size setting: how much later the sprite hands over to the disc
+    const grow = Math.sqrt(STAR_SHARED_UNIFORMS.uStarScale.value);
     for (let i = 0; i < views.length; i++) {
       const v = views[i];
       const b = v.body;
@@ -82,8 +85,8 @@ export class BodyPoints {
         const mag = b.data.appearance.diskAbsMag + 5 * Math.log10(dCam / (10 * 3.0857e13));
         const size = Math.max(1.1, Math.min(7.5, 6.8 - 0.55 * mag));
         const gone = 1 - Math.min(1, Math.max(0, (mag - 11) / 4));
-        const discFade = 1 - Math.min(1, Math.max(0, (v.apparentRadiusPx * 6 - 1.0) / 3.0));
-        this.size[i] = size;
+        const discFade = 1 - Math.min(1, Math.max(0, (v.apparentRadiusPx * 6 - grow) / (3.0 * grow)));
+        this.size[i] = scaledPointSize(size, 7.5);
         this.alpha[i] = gone * discFade;
         const T = b.data.appearance.disk.temperature;
         const warm = T < 8000 ? 1 : 0.85, cool = T > 12000 ? 1 : 0.85;
@@ -98,9 +101,9 @@ export class BodyPoints {
       const flux = (starLuminosity * albedo * b.radius * b.radius) / (dSun * dSun * dCam * dCam);
       const mag = -2.5 * Math.log10(flux + 1e-40) - 67.6;
       const size = Math.max(1.6, Math.min(8, 7.2 - 0.6 * mag));
-      // Fade the sprite as the actual disc grows past ~2 px
-      const discFade = 1 - Math.min(1, Math.max(0, (v.apparentRadiusPx - 1.5) / 3.0));
-      this.size[i] = size;
+      // Fade the sprite as the actual disc grows past ~2 px (later when the sprite is drawn larger)
+      const discFade = 1 - Math.min(1, Math.max(0, (v.apparentRadiusPx - 1.5 * grow) / (3.0 * grow)));
+      this.size[i] = scaledPointSize(size, 8);
       // faint planets stay findable (floor 0.5) until they would be far below naked-eye
       // visibility, then vanish (otherwise a whole system piles up into a blob from far away)
       const faint = mag < 6 ? 1 : Math.max(0.5, 1 - (mag - 6) * 0.1);

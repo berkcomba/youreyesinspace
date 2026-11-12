@@ -178,6 +178,7 @@ class App implements UIHost {
   private readonly camPc = new Vector3();
   /** motion blur of the stars: at speed they stretch into streaks */
   private readonly starTrail = new StarTrail();
+  private readonly pivotPc = new Vector3();
   private readonly camForward = new Vector3();
   private readonly sunColor = new Vector3(1, 1, 1);
   private starLuminosity = 1;
@@ -3217,11 +3218,14 @@ class App implements UIHost {
     this.landmarkSprites.setDaylight(daylight);
     for (const c of this.clouds.values()) c.setDaylight(daylight);
     this.volumes.setDaylight(daylight);
+    STAR_SHARED_UNIFORMS.uStarScale.value = Math.min(10, Math.max(1, s.objectSize));
     this.points.setPixelRatio(eng.pixelRatio);
     this.points.update(star.position, camPos, this.starLuminosity);
     this.starPoints.setPixelRatio(eng.pixelRatio);
-    this.starTrail.update(this.camPc, dt, s.starTrails, eng.width * eng.pixelRatio, eng.height * eng.pixelRatio, this.maxPointPx * eng.pixelRatio);
-    STAR_SHARED_UNIFORMS.uStarScale.value = Math.min(3, Math.max(1, s.starSize));
+    const cam = this.camera;
+    const pivot = cam.mode === 'orbit' && !cam.autopilot ? (cam.target ?? cam.anchor) : null;
+    const pivotPc = pivot ? this.universe.toParsecs(pivot.position, this.pivotPc) : null;
+    this.starTrail.update(this.camPc, dt, s.starTrails, eng.width * eng.pixelRatio, eng.height * eng.pixelRatio, this.maxPointPx * eng.pixelRatio, pivotPc);
     this.starPoints.update(this.camPc, this.universe.current.catalogIndex);
     this.procPoints.update(this.camPc, eng.pixelRatio, this.universe.current.starId, dt);
     for (const c of this.clouds.values()) c.update(this.camPc, pxPerRad, eng.pixelRatio, s.milkyWay, fovRad / DEG);

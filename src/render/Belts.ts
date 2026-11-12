@@ -6,6 +6,7 @@ import { Rng } from '../gen/SystemGenerator';
 import { Shaders } from './shaders';
 import { disposeOrPin } from './ProgramPins';
 import { presetBounds } from './Bounds';
+import { STAR_SHARED_UNIFORMS } from './starTrail';
 
 /** Orbital elements of one belt particle (km, rad, rad/s; mean anomaly at J2000) */
 export interface BeltParticle {
@@ -123,6 +124,7 @@ export class Belts {
         uBasis: { value: this.bases[b].clone() },
         uColor: { value: new Color(s.color[0], s.color[1], s.color[2]) },
         uOpacity: { value: s.opacity },
+        uStarScale: STAR_SHARED_UNIFORMS.uStarScale,
       },
       transparent: true,
       blending: AdditiveBlending,

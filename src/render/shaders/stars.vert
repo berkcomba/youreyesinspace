@@ -20,7 +20,7 @@ uniform float uMagBoost;   // magnitudes added to every star's brightness (0 for
 uniform vec3 uStreak;
 uniform vec2 uViewport;    // drawing buffer size (px)
 uniform float uMaxPoint;   // largest point the GPU draws (px)
-uniform float uStarScale;  // star size setting: 1 = the plain magnitude-to-size scale
+uniform float uStarScale;  // object size setting: 1 = the plain magnitude-to-size scale
 varying vec3 vColor;
 varying float vAlpha;
 varying vec4 vTrail;       // xy: trail direction on screen (unit, y up), z: half its length (px), w: the star's own diameter (px)
@@ -36,7 +36,7 @@ void main() {
   gl_Position = projectionMatrix * mv;
   float flux = pow(10.0, -0.4 * m);
   float size = min(30.0, 1.3 + 3.0 * pow(flux, 0.4));
-  // star size setting: the faint stars grow in full; the brightest, already large discs, only a little
+  // object size setting: the faint stars grow in full; the brightest, already large discs, only a little
   size = min(30.0 * pow(uStarScale, 0.4), size * uStarScale);
   float alpha = min(1.0, 0.16 + 0.9 * pow(flux, 0.45)) * uFade;
   if (abs(starIndex - uHideIndex) < 0.5 || m > uMagLimit) {

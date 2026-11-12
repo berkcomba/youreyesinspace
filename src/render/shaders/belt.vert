@@ -6,6 +6,7 @@ uniform float uTime;   // seconds since J2000
 uniform vec3 uSunPos;  // camera-relative
 uniform float uPixelRatio;
 uniform mat3 uBasis;   // orbit reference plane → scene (identity = ecliptic)
+uniform float uStarScale; // object size setting: 1 = plain
 varying float vBright;
 varying float vFade;
 
@@ -32,11 +33,12 @@ void main() {
   float dist = length(mv.xyz);
   // Points shrink when very close (they are km-scale rocks) and stay ~1px far away
   float px = clamp(1.6 - dist / a * 0.6, 0.6, 1.8) * (0.7 + 0.6 * abs(elems1.w));
-  gl_PointSize = px * uPixelRatio;
+  gl_PointSize = px * uStarScale * uPixelRatio;
   vBright = abs(elems1.w);
-  // fade out when the camera is far outside the belt so it doesn't become a solid disc
+  // fade out when the camera is far outside the belt so it doesn't become a solid disc; drawn
+  // larger, each particle is dimmed so thousands of them do not pile up into one either
   float camToStar = length(uSunPos);
-  vFade = 1.0 - smoothstep(a * 15.0, a * 80.0, camToStar);
+  vFade = (1.0 - smoothstep(a * 15.0, a * 80.0, camToStar)) / uStarScale;
   // crowding: from far away the belt's screen area shrinks as 1/ratio² while the particle count
   // does not, and the additive points pile up into a solid white ring; scale each one down by the
   // same factor so the band keeps its surface brightness (a faint haze, as it should be)

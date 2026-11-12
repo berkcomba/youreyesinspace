@@ -33,10 +33,11 @@ export interface Settings {
   /** motion blur of the stars: flying fast between them, they stretch into streaks */
   starTrails: boolean;
   /**
-   * how large the stars of the sky are drawn: 1 = the plain magnitude-to-size scale (the faintest a
-   * pixel or so), up to 3. A drawing aid, not physics: every star is far smaller than a pixel.
+   * how large the point-sized objects are drawn (the stars of the sky, planets, moons, asteroids and
+   * comets too far to show a disc): 1 = the plain magnitude-to-size scale (the faintest a pixel or
+   * so), up to 10. A drawing aid, not physics: every one of them is far smaller than a pixel.
    */
-  starSize: number;
+  objectSize: number;
   /** crepuscular rays: the star's light shafts in an atmosphere, carved by the horizon and the clouds */
   lightShafts: boolean;
   /** NASA satellite imagery on Earth / Moon / Mars (streamed) */
@@ -98,7 +99,7 @@ export const DEFAULT_SETTINGS: Settings = {
   nightLight: 0.12,
   lensFlare: true,
   starTrails: true,
-  starSize: 1.5,
+  objectSize: 3,
   lightShafts: true,
   imagery: true,
   belts: false,
