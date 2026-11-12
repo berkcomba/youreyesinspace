@@ -632,6 +632,15 @@ input[type=range] { width: 120px; accent-color: var(--accent); }
 .about-actions .text-btn { text-decoration: none; display: inline-flex; align-items: center; font-size: 12px; color: var(--text-2); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 5px 11px; line-height: 1.2; }
 .about-actions .text-btn:hover { color: var(--text); background: var(--surface-2); border-color: var(--border-strong); }
 .about-foot { font-size: 10.5px; color: var(--text-3); margin: 0 !important; }
+/* Community: Discord, YouTube, Reddit — the mark in the text colour, in its brand colour on hover */
+.social-links { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; }
+.social-link { display: inline-flex; align-items: center; gap: 7px; color: inherit !important; text-decoration: none !important; }
+.social-link svg { width: 17px; height: 17px; flex: none; fill: currentColor; opacity: 0.85; transition: color 0.15s, opacity 0.15s; }
+.social-link:hover span { text-decoration: underline; text-underline-offset: 3px; }
+.social-link:hover svg { opacity: 1; }
+.social-link[data-brand="discord"]:hover svg { color: #5865f2; }
+.social-link[data-brand="youtube"]:hover svg { color: #ff0033; }
+.social-link[data-brand="reddit"]:hover svg { color: #ff4500; }
 #imagery-credit { left: 8px; pointer-events: none; }
 #imagery-credit[hidden] { display: none; }
 
