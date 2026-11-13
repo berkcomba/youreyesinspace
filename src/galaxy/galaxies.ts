@@ -422,14 +422,20 @@ export class GalaxyIndex {
 
   /**
    * Copy member `m` of `src` into a guest slot (or return the slot it already has).
-   * Returns -1 when every slot is taken by a key not in `keep`.
+   * Returns -1 when every slot is taken by a key in `keep`. A slot taken from a guest that is not
+   * is handed to `evict` first: whatever was built for the galaxy that had it (its star cloud)
+   * must go, or it would stand where the new one is expected.
    */
-  adopt(src: GalaxySource, m: number, key: string, name: string, keep: Set<string>): number {
+  adopt(src: GalaxySource, m: number, key: string, name: string, keep: Set<string>, evict: (slot: number) => void): number {
     const have = this.guestOf(key);
     if (have >= 0) return have;
     let k = this.guestKey.indexOf(null);
-    if (k < 0) k = this.guestKey.findIndex((x) => x !== null && !keep.has(x));
-    if (k < 0) return -1;
+    if (k < 0) {
+      k = this.guestKey.findIndex((x) => x !== null && !keep.has(x));
+      if (k < 0) return -1;
+      evict(this.guestBase + k);
+      this.release(this.guestBase + k);
+    }
     const slot = this.guestBase + k;
     this.guestKey[k] = key;
     this.guestName.set(slot, name);

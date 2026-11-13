@@ -132,6 +132,8 @@ class App implements UIHost {
   private farCluster: FarCluster | null = null;
   private farClusterSprites: GalaxySprites | null = null;
   private farCheckAcc = 1;
+  /** guest slot of the galaxy index → the member of the resolved cluster adopted there */
+  private readonly guestMember = new Map<number, number>();
   /** clusters built for info panels of selected-but-unresolved knots */
   private readonly farCache = new Map<string, FarCluster>();
   /** selected deep-sky landmark (index into universe.landmarks) when nothing else is selected */
@@ -627,7 +629,10 @@ class App implements UIHost {
       const ratio = Math.hypot(p[m * 3] - this.camPc.x, p[m * 3 + 1] - this.camPc.y, p[m * 3 + 2] - this.camPc.z) / Math.max(c.radius[m], 1);
       if (ratio < ADOPT_RATIO) near.push({ m, ratio });
     }
-    near.sort((a, b) => a.ratio - b.ratio).length = Math.min(near.length, g.guestSlots);
+    // the nearest in radii; the one selected (flown to) first: a dwarf among giants is further
+    // off in its own radii than they are in theirs, and would never get a slot
+    const pin = this.pinnedMember(c);
+    near.sort((a, b) => (a.m === pin ? -1 : b.m === pin ? 1 : a.ratio - b.ratio)).length = Math.min(near.length, g.guestSlots);
     const keep = new Set(near.map((n) => farKey({ tier: c.tierIndex, index: c.index, member: n.m })));
     // release guests we have left (hysteresis: a bit beyond the adoption distance)
     for (let k = 0; k < g.guestSlots; k++) {
@@ -638,8 +643,17 @@ class App implements UIHost {
     }
     for (const n of near) {
       const ref = { tier: c.tierIndex, index: c.index, member: n.m };
-      if (g.adopt(c, n.m, farKey(ref), c.name(n.m), keep) >= 0 && n.ratio < 6) this.noteDiscovery(farKey(ref), c.name(n.m), false, 'Küme üyesi galaksi');
+      const slot = g.adopt(c, n.m, farKey(ref), c.name(n.m), keep, (s) => this.releaseGuest(s));
+      if (slot >= 0) this.guestMember.set(slot, n.m);
+      if (slot >= 0 && n.ratio < 6) this.noteDiscovery(farKey(ref), c.name(n.m), false, 'Küme üyesi galaksi');
     }
+  }
+
+  /** the member of the resolved cluster `c` that is selected (as a far member, or as the galaxy it was adopted as), or -1 */
+  private pinnedMember(c: FarCluster): number {
+    const sel = this.selectedFar;
+    if (sel && sel.member >= 0 && sel.tier === c.tierIndex && sel.index === c.index) return sel.member;
+    return this.selectedGalaxy !== null ? this.guestMember.get(this.selectedGalaxy) ?? -1 : -1;
   }
 
   /** distance to the nearest member galaxy of a resolved far cluster, in its radii */
@@ -658,6 +672,7 @@ class App implements UIHost {
     if (this.selectedGalaxy === slot) this.selectGalaxy(null);
     const cloud = this.clouds.get(slot);
     if (cloud) { cloud.dispose(this.engine.scene); this.clouds.delete(slot); }
+    this.guestMember.delete(slot);
     g.release(slot);
   }
 
@@ -2692,7 +2707,10 @@ class App implements UIHost {
       const ratio = Math.sqrt(dx * dx + dy * dy + dz * dz) / g.radius[i];
       if (ratio < 18) close.push([i, ratio]);
     }
-    close.sort((a, b) => a[1] - b[1]);
+    // (the selected one first: a small galaxy beside giants is the further off in radii)
+    const sel = this.selectedFar;
+    const pin = this.selectedGalaxy ?? (sel && sel.member >= 0 ? g.guestOf(farKey(sel)) : -1);
+    close.sort((a, b) => (a[0] === pin ? -1 : b[0] === pin ? 1 : a[1] - b[1]));
     const wanted = new Set(close.slice(0, 3).map(([i]) => i));
     for (const [i, c] of this.clouds) if (!wanted.has(i)) { c.dispose(scene); this.clouds.delete(i); }
     for (const i of wanted) {
@@ -3238,6 +3256,8 @@ class App implements UIHost {
     this.starPoints.update(this.camPc, this.universe.current.catalogIndex);
     this.procPoints.update(this.camPc, eng.pixelRatio, this.universe.current.starId, dt);
     for (const c of this.clouds.values()) c.update(this.camPc, pxPerRad, eng.pixelRatio, s.milkyWay, fovRad / DEG);
+    // a sprite gives way up close only where a cloud stands in for it
+    this.galaxySprites.setClouded([...this.clouds.keys()]);
     this.galaxySprites.update(this.camPc, pxPerRad, eng.pixelRatio, this.galaxyBoost, this.universe.currentGalaxy ?? -1);
     this.landmarkSprites.update(this.camPc, pxPerRad, this.universe.current.starId, (gi) => this.galaxySprites.apparent(gi).ratio);
     this.nebulaClouds.update(this.camPc, pxPerRad, eng.pixelRatio, this.landmarkSprites.k, this.landmarkSprites.mesh.visible);
@@ -3270,6 +3290,7 @@ class App implements UIHost {
       const ratio = fc.ratio(this.camPc);
       this.farClusterSprites.setFade(Math.min(1, Math.max(0, (RESOLVE_RATIO - ratio) / (RESOLVE_RATIO * 0.4))) * (1 - daylight));
       this.farClusterSprites.setVisible(s.galaxies && s.procedural);
+      this.farClusterSprites.setClouded([...this.clouds.keys()].map((slot) => this.guestMember.get(slot) ?? -1));
       this.farClusterSprites.update(this.camPc, pxPerRad, eng.pixelRatio, this.galaxyBoost, -1);
     }
     // on the ground the sky is the sky: no orbit lines across it (the switch comes back on take-off)

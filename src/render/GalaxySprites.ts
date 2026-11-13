@@ -68,6 +68,7 @@ export class GalaxySprites {
         uHideIndex: { value: -1 },
         uTierFade: { value: 1 },
         uNearLod: { value: 1 },
+        uCloudIdx: { value: new Vector3(-1, -1, -1) },
         uBoostMag: { value: boostMag },
         uCatalogCount: { value: galaxies.catalogCount },
         uSurvey: { value: new Vector2(galaxies.surveyStart ?? 0, galaxies.surveyEnd ?? 0) },
@@ -103,6 +104,19 @@ export class GalaxySprites {
 
   /** Keep the sprite when the camera is close (no point cloud takes over, e.g. far-cluster members) */
   setNearLod(on: boolean): void { this.mat.uniforms.uNearLod.value = on ? 1 : 0; }
+
+  /**
+   * The galaxies (at most 3) a point cloud stands in for: only their sprites fade out up close.
+   * Clouds are few; a galaxy that got none, among nearer neighbours, must not vanish.
+   */
+  setClouded(indices: readonly number[]): void {
+    (this.mat.uniforms.uCloudIdx.value as Vector3).set(indices[0] ?? -1, indices[1] ?? -1, indices[2] ?? -1);
+  }
+
+  private clouded(i: number): boolean {
+    const c = this.mat.uniforms.uCloudIdx.value as Vector3;
+    return i === c.x || i === c.y || i === c.z;
+  }
 
   /** Tint procedural (non-catalogue) galaxies green */
   setHighlight(on: boolean): void { this.mat.uniforms.uTint.value.w = on ? 0.85 : 0; }
@@ -231,7 +245,7 @@ export class GalaxySprites {
       const pxc = Math.max(px, 0.75);
       const physical = Math.min((K * Math.pow(10, -0.4 * m)) / (0.61 * pxc * pxc), 1);
       const boostA = Math.min(1, Math.max(0, 1 - (m - boostMag - 7) / 10));
-      const lod = nearLod > 0.5 ? smooth01((ratio - 6) / 6) : 1;
+      const lod = nearLod > 0.5 && this.clouded(i) ? smooth01((ratio - 6) / 6) : 1;
       let vis = (physical + (Math.max(physical, boostA) - physical) * boost) * lod * this.fade;
       // the cloud that replaced the sprite is as clickable as the sprite was (from outside it)
       if (clouds?.has(i) && ratio > 1.3) vis = Math.max(vis, 0.5);
