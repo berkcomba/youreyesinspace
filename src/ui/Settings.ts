@@ -99,7 +99,7 @@ export const DEFAULT_SETTINGS: Settings = {
   nightLight: 0.12,
   lensFlare: true,
   starTrails: true,
-  objectSize: 3,
+  objectSize: 1,
   lightShafts: true,
   imagery: true,
   belts: false,

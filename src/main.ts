@@ -179,6 +179,8 @@ class App implements UIHost {
   /** motion blur of the stars: at speed they stretch into streaks */
   private readonly starTrail = new StarTrail();
   private readonly pivotPc = new Vector3();
+  /** the object size hint has been shown on entering free roam this session */
+  private objectSizeHinted = false;
   private readonly camForward = new Vector3();
   private readonly sunColor = new Vector3(1, 1, 1);
   private starLuminosity = 1;
@@ -1158,6 +1160,13 @@ class App implements UIHost {
     this.overlay.crosshair = locked;
     if (locked) {
       this.ui.showToast(_('Serbest dolaşım: fare ile bak · W A S D uç · R F yukarı/aşağı · Q E yatış · tekerlek hız · Esc çık'), 4200);
+      // at the plain size every star and planet is a pixel or so: once a session, point at the setting
+      if (!this.landedOn && !this.objectSizeHinted && this.settings.objectSize <= 1) {
+        this.objectSizeHinted = true;
+        window.setTimeout(() => {
+          if (this.input.locked) this.ui.showToast(_('Yıldızları ve gezegenleri daha iyi görebilmek için Ayarlar › Nesne boyutu ile büyütebilirsiniz'), 7000);
+        }, 4300);
+      }
     } else {
       this.ui.showToast(_('Serbest dolaşım kapatıldı'));
     }
