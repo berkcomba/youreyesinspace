@@ -1,5 +1,5 @@
 import {
-  ClampToEdgeWrapping, DataTexture, ImageBitmapLoader, LinearFilter, Matrix3, Matrix4, NoColorSpace, RepeatWrapping, SRGBColorSpace, Texture, Vector3, Vector4, type IUniform,
+  ClampToEdgeWrapping, DataTexture, ImageBitmapLoader, ImageLoader, LinearFilter, Matrix3, Matrix4, NoColorSpace, RepeatWrapping, SRGBColorSpace, Texture, Vector3, Vector4, type IUniform,
 } from 'three';
 import type { Appearance } from '../data/types';
 
@@ -425,11 +425,52 @@ function loadIndex(): Promise<Record<string, Variant[]> | null> {
   return index;
 }
 
+// straight alpha: the flag / height in A must not wipe the colour where it is 0
+const BITMAP_OPTIONS: ImageBitmapOptions = { premultiplyAlpha: 'none', colorSpaceConversion: 'none' };
+/** a 2 × 2 lossless WebP, every texel (255, 128, 0, 0): colour under an alpha of 0, like a dry world's map */
+const PROBE = 'UklGRhwAAABXRUJQVlA4TA8AAAAvAUAAEAdQwP5HBCKi/wEA';
+let bitmapsOk: Promise<boolean> | null = null;
+
+/**
+ * Whether a bitmap decoded with BITMAP_OPTIONS still has the colour of its transparent texels
+ * once it is a texture. Not every browser honours `premultiplyAlpha: 'none'`: one that multiplies
+ * anyway hands the bake a black map wherever A is 0, which is the whole of a world without seas
+ * or lava (a black globe, only the rays of its craters left). Tried once, on what a map is.
+ */
+function bitmapsKeepColour(): Promise<boolean> {
+  bitmapsOk ??= (async () => {
+    try {
+      const bytes = Uint8Array.from(atob(PROBE), (c) => c.charCodeAt(0));
+      const bmp = await createImageBitmap(new Blob([bytes], { type: 'image/webp' }), BITMAP_OPTIONS);
+      const canvas = document.createElement('canvas');
+      canvas.width = canvas.height = 1;
+      const gl = canvas.getContext('webgl2');
+      if (!gl) return false;
+      const tex = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, false);
+      gl.pixelStorei(gl.UNPACK_COLORSPACE_CONVERSION_WEBGL, gl.NONE);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, bmp);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, gl.createFramebuffer());
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+      const px = new Uint8Array(4);
+      gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+      bmp.close();
+      gl.getExtension('WEBGL_lose_context')?.loseContext();
+      return px[0] > 200 && Math.abs(px[1] - 128) < 40 && px[2] < 50 && px[3] < 8;
+    } catch {
+      return false;
+    }
+  })();
+  return bitmapsOk;
+}
+
 function loadMap(url: string, srgb: boolean): Promise<Texture> {
-  const loader = new ImageBitmapLoader();
-  // straight alpha: the flag / height in A must not wipe the colour where it is 0
-  loader.setOptions({ premultiplyAlpha: 'none', colorSpaceConversion: 'none' });
-  return loader.loadAsync(url).then((bmp) => {
+  // a bitmap is decoded off the main thread; where it cannot be trusted, an image element: the
+  // texture upload reads that one unpremultiplied itself, in every browser
+  const image = bitmapsKeepColour().then((ok): Promise<ImageBitmap | HTMLImageElement> =>
+    ok ? new ImageBitmapLoader().setOptions(BITMAP_OPTIONS).loadAsync(url) : new ImageLoader().loadAsync(url));
+  return image.then((bmp) => {
     const t = new Texture(bmp);
     t.flipY = false;
     t.generateMipmaps = false;
@@ -451,7 +492,7 @@ function evict(): void {
     entries.delete(victim.key);
     for (const s of victim.skins) s.alive = false;
     victim.maps.then(([c, n]) => {
-      for (const t of [c, n]) if (t !== smooth) { (t.image as ImageBitmap).close?.(); t.dispose(); }
+      for (const t of [c, n]) if (t !== smooth) { (t.image as Partial<ImageBitmap>).close?.(); t.dispose(); }
     }).catch(() => {});
   }
 }
@@ -527,7 +568,9 @@ export async function loadSkin(a: Appearance): Promise<Skin | null> {
     mean, tint, contrast: fam.contrast ?? 1,
     // a "sea" at the top of the height range is lakes and frozen ponds on the uplands
     sea: !fam.frozen && pick.v.water > 0 && (pick.v.sea ?? 1) < 0.9 ? pick.v.sea! : -1,
-    water: fam.frozen ? (eyeSea ? 0.2 : 0) : pick.v.water, craters: !real, relief: !real || !!info?.relief, frozen: !!fam.frozen, alive: entries.has(key),
+    water: fam.frozen ? (eyeSea ? 0.2 : 0) : pick.v.water, craters: !real, relief: !real || !!info?.relief, frozen: !!fam.frozen,
+    // (this very entry: one dropped while its maps were on the way, and asked for again since, is another)
+    alive: entries.get(key) === e,
     credit: real ? info?.credit ?? SSS_CREDIT : BRENT.includes(pick.slug) ? BRENT_CREDIT : null,
     geo: real ? flat() : geology(a, a.skin),
   };
