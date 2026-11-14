@@ -2,6 +2,7 @@ import type { CelestialBody } from '../core/CelestialBody';
 import { MissionPanel, type MissionPanelHost } from './MissionPanel';
 import { TourPanel } from './TourPanel';
 import { RadioWidget } from './RadioWidget';
+import { SystemStrip } from './SystemStrip';
 import { EventPanel } from './EventPanel';
 import type { SkyEvent } from '../data/events';
 import type { SmallBodyCatalog } from '../data/SmallBodies';
@@ -238,6 +239,7 @@ export class UI {
   readonly radio: RadioWidget;
   readonly eventPanel: EventPanel;
   readonly lessonPanel: LessonPanel;
+  private readonly systemStrip: SystemStrip;
   private lastInfoUpdate = 0;
   private toastTimer = 0;
   private searchIndex = -1;
@@ -293,6 +295,7 @@ export class UI {
     });
     $('btn-tours').addEventListener('click', () => this.toggleTours());
     this.radio = new RadioWidget(host);
+    this.systemStrip = new SystemStrip(host);
     this.eventPanel = new EventPanel(
       { playEvent: (e) => host.playEvent(e), showToast: (m, ms) => this.showToast(m, ms), hasBody: (id) => host.hasBody(id) },
       (show) => { if (show) { this.toggleSettings(false); this.missionPanel.toggle(false); this.tourPanel.toggle(false); this.lessonPanel.toggle(false); } },
@@ -966,6 +969,7 @@ export class UI {
       }
     }
     this.missionPanel.update(now);
+    this.systemStrip.update(now);
 
     const pointSel = this.host.selectedGalaxy !== null || this.host.selectedLandmark !== null || this.host.selectedFar !== null;
     this.followBtn.classList.toggle('active', camera.mode === 'orbit' && (selected ? camera.target === selected : pointSel && camera.anchor !== null));

@@ -23,12 +23,14 @@ void main() {
   if (alpha < 0.003) discard;
 
   vec3 P = vWorldPos;
+  vec3 V = normalize(-P);
+  // seen obliquely, the line of sight crosses the sheet along a longer path: α = 1 − e^(−τ/μ)
+  alpha = 1.0 - pow(1.0 - min(alpha, 0.999), 1.0 / max(abs(dot(uNormal, V)), 0.05));
   if (uLocalFade.x > 0.0) {
     float q = length(P) / uLocalFade.y;
     alpha *= 1.0 - uLocalFade.x * exp(-q * q);
   }
   vec3 L = normalize(uSunPos - P);
-  vec3 V = normalize(-P);
   float sunAng = uSunRadius / max(length(uSunPos - P), 1.0);
   float shadow = sphereShadow(P, L, uBodyPos, uBodyRadius, sunAng);
 
@@ -44,11 +46,17 @@ void main() {
   float direct = sameSide ? lit : lit * mix(0.85, 0.5, dens);
   // Opposition surge / backscatter
   float back = pow(max(dot(-L, -V), 0.0), 3.0) * 0.15;
+  // Faint rings are mostly micron-sized dust, which scatters forward (Henyey–Greenstein, g ≈ 0.7):
+  // seen against the Sun they light up many times over, as Jupiter's ring and Saturn's E ring do
+  // (Uranus' narrow rings, 0.35, are dust-poor boulders; Neptune's, 0.25, largely dust)
+  float dusty = 1.0 - smoothstep(0.22, 0.4, uOpacity);
+  float g = 0.7;
+  float fwd = dusty * 0.3 * (1.0 - g * g) / pow(1.0 + g * g - 2.0 * g * dot(-L, V), 1.5);
   // colour variation with radius (icy vs dusty)
   vec3 tint = uColor * (0.85 + 0.3 * snoise(vec3(r01 * 12.0, uSeed * 2.0, 3.0)));
   tint = mix(tint, tint * vec3(0.9, 0.8, 0.7), smoothstep(0.0, 0.2, r01) * (1.0 - smoothstep(0.2, 0.4, r01)) * 0.5);
 
-  vec3 col = (tint * fillLit((direct + back) * shadow) + tint * 0.003) * uSunColor;
+  vec3 col = (tint * fillLit((direct + back + fwd) * shadow) + tint * 0.003) * uSunColor;
   gl_FragColor = vec4(col, alpha * uAlpha);
   #include <tonemapping_fragment>
   #include <colorspace_fragment>

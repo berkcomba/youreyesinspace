@@ -524,6 +524,8 @@ function populateHost(rng: Rng, star: StarInfo, host: Host, sysId: string, bodie
         facts: { 'Sınıf': 'Cüce gezegen', 'Kaynak': 'Prosedürel (tahmini)' },
       };
       varyRocky(data.appearance, data.atmosphere, id, false);
+      data.rings = dwarfRing(id, radius);
+      if (data.rings) data.description += ` ${_('Dar, buzlu halkaları var: Haumea, Quaoar ve Chariklo gibi küçük buzlu cisimlerde de yıldız örtülmeleriyle keşfedilen türden.')}`;
       bodies.push(data);
       if (rng.chance(0.5)) makeMoons(rng, data, true, 1, bodies, 'rocky');
     }
@@ -611,7 +613,8 @@ function makePlanet(
     const flattening = rng.range(0.03, 0.09);
     const rotation = rng.range(8, 16);
     // every giant of the solar system has rings; only Saturn's are bright and broad. A hot
-    // Jupiter keeps none (its ice sublimates, the Roche zone sits inside the inflated planet).
+    // Jupiter keeps none (its ice sublimates, the Roche zone sits inside the inflated planet;
+    // searches of the Kepler light curves found none).
     const rings = cls === 'hotjupiter' || !rng.chance(0.85) ? undefined : makeRings(rng, radius, rng.chance(0.3) ? 'bright' : 'dusty');
     const sud = sudarskyClass(T);
     const label = cls === 'hotjupiter' ? CLASS_LABEL[cls] : SUDARSKY_LABEL[sud];
@@ -723,11 +726,17 @@ function makePlanet(
       // (the tides that lock a world stand its axis up as well: the star stays over one point of it)
       tilt: tidallyLocked ? 0 : tilt, orbit: orbit(rng, aKm, gmStar, 0.18, 3.5, 'parentEquator'),
       appearance, atmosphere, clouds, temperature: T,
-      // a few rocky worlds keep a thin ring of debris (a shattered moon)
+      // a few rocky worlds keep a thin ring of dust
       rings: varyRings(massE > 0.5 && T < 400 && rng.chance(0.05) ? makeRings(rng, radius, 'dusty') : undefined, id, radius, T, false),
-      description: `${_(CLASS_LABEL[cls])}. ${_('{m} Dünya kütlesinde', { m: fixed(massE, 2) })}; ${describeTemp(T)}${tidallyLocked && cls !== 'eyeball' && cls !== 'magmaeye' ? `; ${_('yıldızına gelgitle kilitli')}` : ''}.${notes.length ? ` ${notes.join(' ')}` : ''}`,
+      description: '',
       facts: { 'Sınıf': CLASS_LABEL[cls], 'Kaynak': 'Prosedürel (tahmini)' },
     };
+    // a few more the debris of a shattered moon
+    if (!data.rings) {
+      data.rings = debrisRing(id, radius, T);
+      if (data.rings) notes.push(_('Halkası, Roche sınırının içine düşüp parçalanmış bir uydunun enkazı; böyle halkalar jeolojik ölçekte kısa ömürlüdür.'));
+    }
+    data.description = `${_(CLASS_LABEL[cls])}. ${_('{m} Dünya kütlesinde', { m: fixed(massE, 2) })}; ${describeTemp(T)}${tidallyLocked && cls !== 'eyeball' && cls !== 'magmaeye' ? `; ${_('yıldızına gelgitle kilitli')}` : ''}.${notes.length ? ` ${notes.join(' ')}` : ''}`;
     bodies.push(data);
     if (massE > 0.4 && rng.chance(0.45)) makeMoons(rng, data, beyondFrost, rng.int(1, 2), bodies, 'rocky');
   }
@@ -1348,23 +1357,70 @@ function varyRings(rings: Rings | undefined, id: string, radius: number, T: numb
     const span = rings.outer - rings.inner;
     rings.gaps = [0.2, 0.42, 0.63, 0.82].map((f, k) => [rings.inner + span * (f + 0.06 * (hashUnit(seed, 0x630 + k) - 0.5)), span * (0.02 + 0.04 * hashUnit(seed, 0x634 + k))]);
   }
-  const u = hashUnit(seed, 0x61f);
-  const icy: Array<{ w: number; c: [number, number, number] }> = [
-    { w: 4, c: [0.85, 0.8, 0.7] },    // Saturn's cream (ice with a little tholin and silicate)
-    { w: 2, c: [0.88, 0.9, 0.95] },   // clean water ice
-    { w: 1.5, c: [0.8, 0.68, 0.54] }, // tan, dirtier ice
-    { w: 1, c: [0.72, 0.56, 0.46] },  // reddish organics
-  ];
-  const rocky: Array<{ w: number; c: [number, number, number] }> = [
-    { w: 3, c: [0.42, 0.4, 0.38] },   // dark silicate dust
-    { w: 2, c: [0.5, 0.42, 0.34] },   // brown
-    { w: 1, c: [0.36, 0.36, 0.4] },   // carbonaceous grey
-  ];
-  const base = weighted(T < 170 ? icy : rocky, u).c;
+  const base = weighted(T < 170 ? ICY_RING : ROCKY_RING, hashUnit(seed, 0x61f)).c;
   const mix = rings.opacity >= 0.6 ? 0.8 : 0.45;
   rings.color = rings.color.map((v, k) => v * (1 - mix) + base[k] * mix) as [number, number, number];
   if (T >= 170 && rings.opacity >= 0.6) rings.opacity *= 0.8;
   return rings;
+}
+
+const ICY_RING: Array<{ w: number; c: [number, number, number] }> = [
+  { w: 4, c: [0.85, 0.8, 0.7] },    // Saturn's cream (ice with a little tholin and silicate)
+  { w: 2, c: [0.88, 0.9, 0.95] },   // clean water ice
+  { w: 1.5, c: [0.8, 0.68, 0.54] }, // tan, dirtier ice
+  { w: 1, c: [0.72, 0.56, 0.46] },  // reddish organics
+  { w: 1, c: [0.8, 0.87, 1.0] },    // fresh frost from a geyser moon (Saturn's E ring)
+];
+const ROCKY_RING: Array<{ w: number; c: [number, number, number] }> = [
+  { w: 3, c: [0.42, 0.4, 0.38] },   // dark silicate dust
+  { w: 2, c: [0.5, 0.42, 0.34] },   // brown
+  { w: 1, c: [0.36, 0.36, 0.4] },   // carbonaceous grey
+  { w: 1.5, c: [0.58, 0.38, 0.27] }, // iron oxides, rust red
+  { w: 1, c: [0.24, 0.23, 0.24] },  // soot-dark carbon (Uranus' rings)
+];
+
+/**
+ * The ring a rocky world gets from a moon that strayed inside its Roche limit and broke up
+ * (Phobos will, in some tens of millions of years): narrow and dense, a debris ring lasts only
+ * a geologically short while, so a few worlds in any large sample wear one. Silicate dust
+ * survives up to ~1200 K. Drawn from the id, so the generator's stream is untouched.
+ */
+function debrisRing(id: string, radius: number, T: number): Rings | undefined {
+  const seed = idSeed(id);
+  if (T > 1200 || hashUnit(seed, 0x640) >= 0.08) return undefined;
+  const h = (k: number) => hashUnit(seed, 0x641 + k);
+  // inside the Roche limit of a rocky moon (1.3–2.4 planet radii, rigid to fluid)
+  const inner = radius * (1.25 + 0.45 * h(0));
+  const outer = Math.min(radius * 2.45, inner + radius * (0.2 + 0.6 * h(1)));
+  const span = outer - inner;
+  const gaps: Array<[number, number]> = [];
+  const n = Math.floor(h(2) * 4);
+  for (let i = 0; i < n; i++) gaps.push([inner + span * (0.15 + 0.7 * h(3 + i)), span * (0.02 + 0.06 * h(7 + i))]);
+  // a far, cold world's moon may have been half ice
+  const c = weighted(T < 150 && h(11) < 0.4 ? ICY_RING : ROCKY_RING, h(12)).c;
+  return { inner, outer, color: [c[0], c[1], c[2]], opacity: 0.45 + 0.4 * h(13), seed: 1 + Math.floor(h(14) * 998), gaps };
+}
+
+/**
+ * Rings of a small icy world. Stellar occultations found them around Haumea (one ring at 2.3
+ * radii), Chariklo (two narrow rings at ~3.1 radii) and Quaoar (its main ring at 7.4 radii, far
+ * outside the Roche limit, held by a spin–orbit resonance), and ruled them out for Pluto: about
+ * a quarter of the well-observed ones. Narrow, a few per cent of the radius wide, of dirty ice.
+ */
+function dwarfRing(id: string, radius: number): Rings | undefined {
+  const seed = idSeed(id);
+  if (hashUnit(seed, 0x650) >= 0.25) return undefined;
+  const h = (k: number) => hashUnit(seed, 0x651 + k);
+  const style = h(0);
+  let r1: number, r2: number;
+  if (style < 0.55) { r1 = radius * (2.0 + 1.4 * h(1)); r2 = r1; }                       // Haumea
+  else if (style < 0.8) { r1 = radius * (2.6 + 0.8 * h(1)); r2 = r1 * (1.04 + 0.04 * h(2)); } // Chariklo
+  else { r1 = radius * (6.8 + 0.8 * h(1)); r2 = r1; }                                      // Quaoar's outer ring
+  const w = radius * (0.03 + 0.05 * h(3));
+  const inner = r1 - w, outer = r2 + w;
+  const gaps: Array<[number, number]> = r2 > r1 ? [[(r1 + r2) / 2, r2 - r1]] : [];
+  const c = weighted(ICY_RING, h(4)).c;
+  return { inner, outer, color: [c[0] * 0.8, c[1] * 0.8, c[2] * 0.8], opacity: 0.35 + 0.35 * h(5), seed: 1 + Math.floor(h(6) * 998), gaps };
 }
 
 function makeRings(rng: Rng, radius: number, style: 'bright' | 'dusty' | 'narrow'): Rings {

@@ -1,6 +1,6 @@
 import { Vector3 } from 'three';
 import { PARSEC_KM } from '../core/constants';
-import type { LandmarkDef, LandmarkKind } from '../data/landmarks';
+import type { LandmarkDef, LandmarkKind, NebulaGas, RemnantClass } from '../data/landmarks';
 import { Rng, hashSeed } from '../gen/SystemGenerator';
 import { _, fixed, fmtNum } from '../i18n';
 import { fmtLightYears } from '../ui/format';
@@ -74,9 +74,22 @@ const ORDER: ProcKind[] = ['hii', 'reflection', 'planetary', 'open', 'globular',
 /* ---------------- naming ---------------- */
 
 const ADJ = [
-  'Kızıl', 'Mavi', 'Zümrüt', 'Kehribar', 'Gümüş', 'Altın', 'Uyuyan', 'Kayıp', 'Fısıldayan', 'Donmuş', 'Kırık', 'Sessiz',
+  'Kızıl', 'Mavi', 'Zümrüt', 'Kehribar', 'Gümüş', 'Altın', 'Uyuyan', 'Yitik', 'Fısıldayan', 'Donmuş', 'Kırık', 'Sessiz',
   'Yalnız', 'Çifte', 'Ters', 'Gölge', 'Yanık', 'Soluk', 'Parlak', 'Gizli', 'Uzak', 'Dönen', 'Ağlayan', 'Kör', 'Uyanan', 'Yırtık',
 ];
+/** adjectives that name a colour: a drawn one is swapped for the one matching the object's actual tint */
+const COLOUR_ADJ = ['Kızıl', 'Mavi', 'Zümrüt', 'Kehribar', 'Gümüş', 'Altın'];
+
+function colourAdjective(c: readonly number[] | undefined): string {
+  if (!c) return 'Gümüş';
+  const [r, g, b] = c, max = Math.max(r, g, b), min = Math.min(r, g, b);
+  if (max - min < 0.14 * max) return 'Gümüş';
+  if (b >= r && b >= g) return 'Mavi';
+  if (g >= r) return 'Zümrüt';
+  if (g < 0.62 * r) return 'Kızıl';
+  return b < 0.55 * r && g < 0.82 * r ? 'Kehribar' : 'Altın';
+}
+
 const NOUN = [
   'Kelebek', 'Göz', 'Taç', 'Yelken', 'Fener', 'Çan', 'Kalp', 'Kuğu', 'Yılan', 'Kılıç', 'Kapı', 'Ayna', 'Kanat', 'Çiçek', 'Kum Saati',
   'Örümcek', 'Halka', 'Mızrak', 'Deniz Kabuğu', 'Ejderha', 'Kule', 'Balina', 'Köpük', 'Mum', 'Pusula', 'Köprü', 'Tilki', 'Baykuş', 'Nar', 'Lamba',
@@ -91,14 +104,86 @@ const NAME_TEMPLATE: Record<ProcKind, string> = {
 /* ---------------- colours ---------------- */
 
 const C = {
-  hii: [[1.0, 0.45, 0.55], [1.0, 0.55, 0.5], [0.95, 0.5, 0.75], [0.85, 0.6, 0.85]] as Array<[number, number, number]>,
-  reflection: [[0.55, 0.7, 1.0], [0.65, 0.78, 1.0], [0.5, 0.65, 0.95]] as Array<[number, number, number]>,
-  planetary: [[0.5, 0.95, 0.9], [0.45, 0.95, 0.6], [1.0, 0.5, 0.4], [0.6, 0.85, 1.0]] as Array<[number, number, number]>,
   open: [[0.75, 0.85, 1.0], [0.9, 0.93, 1.0], [1.0, 0.95, 0.85]] as Array<[number, number, number]>,
   globular: [[1.0, 0.9, 0.7], [1.0, 0.86, 0.62], [0.98, 0.93, 0.8]] as Array<[number, number, number]>,
-  snr: [[0.9, 0.8, 1.0], [1.0, 0.6, 0.5], [0.7, 0.85, 1.0]] as Array<[number, number, number]>,
-  bubble: [[0.55, 0.9, 1.0], [0.5, 0.95, 0.85]] as Array<[number, number, number]>,
 };
+
+type RGB = [number, number, number];
+const mixRgb = (a: RGB, b: RGB, t: number): RGB => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
+
+/** sprite colour of an H II region: Hα pink, whiter where [O III] reaches far, orange where [S II] is strong */
+function hiiTint(gas: NebulaGas): RGB {
+  let c = mixRgb([1.0, 0.4, 0.48], [0.78, 0.74, 0.86], clamp01((gas.excitation - 0.4) / 0.55));
+  c = mixRgb(c, [1.0, 0.5, 0.32], 0.8 * Math.max(gas.lowIon - 0.5, 0));
+  return mixRgb(c, [0.62, 0.7, 1.0], 0.3 * (gas.scatter ?? 0));
+}
+
+/**
+ * Stars lighting reflection nebulae, weighted roughly as in van den Bergh's catalogue: mostly B,
+ * some A, a few cool giants and supergiants. `e`: the colour they give the dust (see NebulaGas).
+ */
+const REFLECTION_STARS: Array<{ type: string; w: number; e: number }> = [
+  { type: 'B1 V', w: 2, e: 1.0 }, { type: 'B2 V', w: 3, e: 0.92 }, { type: 'B5 V', w: 3, e: 0.82 },
+  { type: 'B8 III', w: 2, e: 0.72 }, { type: 'A0 V', w: 2, e: 0.62 }, { type: 'A2 Ia', w: 1, e: 0.55 },
+  { type: 'F0 Ib', w: 1, e: 0.38 }, { type: 'G8 Ib', w: 0.6, e: 0.22 }, { type: 'K1 III', w: 0.6, e: 0.12 },
+  { type: 'M1 Iab', w: 0.6, e: 0.03 },
+];
+
+/** Wolf–Rayet stars of wind-blown bubbles: excitation `e` and nitrogen-rich ejecta `n` */
+const WOLF_RAYET: Array<{ type: string; e: number; n: number }> = [
+  { type: 'WN4', e: 0.85, n: 0.4 }, { type: 'WN5', e: 0.75, n: 0.5 }, { type: 'WN8', e: 0.35, n: 0.85 },
+  { type: 'WC6', e: 0.65, n: 0.3 }, { type: 'WO2', e: 0.98, n: 0.2 },
+];
+
+function weightedPick<T extends { w: number }>(list: readonly T[], u: number): T {
+  let total = 0;
+  for (const x of list) total += x.w;
+  let t = u * total;
+  for (const x of list) { t -= x.w; if (t < 0) return x; }
+  return list[list.length - 1];
+}
+
+/** sprite colour of a reflection nebula: its star's colour, bluer from the scattering */
+function reflectionTint(e: number): RGB {
+  const c = mixRgb([1.0, 0.78, 0.5], [0.58, 0.74, 1.0], clamp01(e / 0.5));
+  return mixRgb(c, [0.48, 0.66, 1.0], clamp01((e - 0.5) / 0.5));
+}
+
+/** sprite colour of a planetary / wind bubble: red-orange at low excitation, teal, then blue as it rises */
+function shellTint(gas: NebulaGas): RGB {
+  let c = mixRgb([1.0, 0.56, 0.45], [0.5, 0.95, 0.82], clamp01((gas.excitation - 0.1) / 0.4));
+  c = mixRgb(c, [0.58, 0.78, 1.0], clamp01((gas.excitation - 0.55) / 0.4));
+  return mixRgb(c, [1.0, 0.45, 0.42], 0.8 * Math.max(gas.lowIon - 0.5, 0));
+}
+
+const REMNANT_TINT: Record<Exclude<RemnantClass, 'radiative'>, RGB> = {
+  balmer: [1.0, 0.42, 0.5],
+  oxygen: [0.55, 0.88, 0.86],
+  plerion: [0.78, 0.82, 1.0],
+  faded: [0.95, 0.42, 0.36],
+};
+
+/**
+ * What a remnant shows, from how it exploded and how old it is: a Type Ia shell runs into neutral
+ * gas and glows in Balmer lines for its first few thousand years; a core-collapse one shows its
+ * oxygen-rich ejecta, or the synchrotron nebula of the pulsar it left. Once the shock slows below
+ * a few hundred km/s it cools and radiates in filaments, [O III] only behind the faster parts
+ * (≳ 100 km/s); after some tens of thousands of years only a faint red web remains.
+ */
+function remnantGas(rng: Rng, typeIa: boolean, age: number, v: number): NebulaGas {
+  let remnant: RemnantClass;
+  if (age > 30_000) remnant = 'faded';
+  else if (typeIa) remnant = age < 4000 ? 'balmer' : 'radiative';
+  else if (age < 3000) remnant = rng.chance(0.5) ? 'oxygen' : 'plerion';
+  else remnant = age < 15_000 && rng.chance(0.3) ? 'plerion' : 'radiative';
+  const excitation = 0.1 + 0.8 * clamp01(Math.log10(v / 80) / Math.log10(1500 / 80));
+  return { excitation, lowIon: rng.range(0.3, 0.8), remnant };
+}
+
+function remnantTint(gas: NebulaGas): RGB {
+  return gas.remnant && gas.remnant !== 'radiative' ? REMNANT_TINT[gas.remnant] : mixRgb([1.0, 0.55, 0.5], [0.7, 0.85, 0.95], gas.excitation);
+}
 
 export interface ProcLandmark {
   def: LandmarkDef;
@@ -243,11 +328,12 @@ export class ProcLandmarks {
       if (local.distanceTo(_sunLocal) < COVERAGE_EXCLUDE_PC[kind]) positionPc.set(0, 0, 0);
     }
     const code = (hashSeed(g, i, j, k, q, 0x9e37) & 0x7fffffff).toString(36).toUpperCase().slice(0, 5);
-    const adj = _(ADJ[rng.int(0, ADJ.length - 1)]);
+    const adjKey = ADJ[rng.int(0, ADJ.length - 1)];
     const noun = _(NOUN[rng.int(0, NOUN.length - 1)]);
-    const name = _(NAME_TEMPLATE[kind], { adj, noun, code });
     const distKm = positionPc.length() * PARSEC_KM;
-    const def = this.describe(rng, kind, id, name, distKm);
+    const def = this.describe(rng, kind, id, '', distKm);
+    const adj = _(COLOUR_ADJ.includes(adjKey) ? colourAdjective(def.color) : adjKey);
+    def.name = _(NAME_TEMPLATE[kind], { adj, noun, code });
     return { def, positionPc, galaxy: g, procKind: kind };
   }
 
@@ -262,8 +348,13 @@ export class ProcLandmarks {
         const mass = Math.round(R * R * rng.range(8, 30) / 10) * 10;
         const age = rng.range(0.5, 6);
         const variant = rng.int(0, 2);
+        const absMag = -4 - 6.5 * Math.log10(R / 6) + rng.range(-0.6, 0.6);
+        // a rich cluster holds the hottest O stars, whose light ionises oxygen twice over far out
+        const gas: NebulaGas = { excitation: clamp01(0.05 + 0.28 * Math.log10(stars) + rng.range(-0.15, 0.15)), lowIon: rng.range(0.15, 0.9) };
+        // where dust still lies beside the cluster it scatters the blue starlight (the Trifid's blue lobe)
+        if (rng.chance(0.35)) gas.scatter = rng.range(0.3, 1);
         const def: LandmarkDef = {
-          ...base, kind: 'nebula', radiusPc: R, absMag: -4 - 6.5 * Math.log10(R / 6) + rng.range(-0.6, 0.6), color: rng.pick(C.hii),
+          ...base, kind: 'nebula', radiusPc: R, absMag, color: hiiTint(gas), gas,
           summary: _('Genç yıldızların iyonize ettiği yıldız oluşum bölgesi'),
           description: [
             _('{n} sıcak O/B yıldızının morötesi ışığıyla parlayan {d} genişliğinde bir hidrojen bulutu. Kenarlarındaki karanlık toz sütunlarında hâlâ yeni yıldızlar doğuyor.', { n: stars, d: ly(R * 2) }),
@@ -283,11 +374,17 @@ export class ProcLandmarks {
       }
       case 'reflection': {
         const R = rng.logRange(0.8, 5);
+        const absMag = -1.5 - 5 * Math.log10(R / 2) + rng.range(-0.5, 0.5);
+        const star = weightedPick(REFLECTION_STARS, rng.next());
+        const gas: NebulaGas = { excitation: star.e, lowIon: 0.5 };
+        const cool = star.e < 0.3;
         return {
-          ...base, kind: 'nebula', radiusPc: R, absMag: -1.5 - 5 * Math.log10(R / 2) + rng.range(-0.5, 0.5), color: rng.pick(C.reflection),
-          summary: _('Yakındaki yıldızların ışığını saçan mavi toz bulutu'),
-          description: _('Kendi ışığı olmayan bir toz bulutu: içine gömülü birkaç parlak yıldızın ışığını saçıyor, mavi ışığı daha çok saçtığı için gökyüzünün mavisi gibi görünüyor. {d} genişliğinde; yıldızları onu iyonize edecek kadar sıcak değil.', { d: ly(R * 2) }),
-          facts: { 'Uzaklık': dist, 'Çap': ly(R * 2), 'Aydınlatan yıldız': rng.pick(['B2 V', 'B5 V', 'A0 V', 'B8 III', 'A2 Ia']), 'Kaynak': _('Prosedürel (keşif)') },
+          ...base, kind: 'nebula', radiusPc: R, absMag, color: reflectionTint(star.e), gas,
+          summary: cool ? _('Soğuk dev bir yıldızın ışığını saçan sarımsı toz bulutu') : _('Yakındaki yıldızların ışığını saçan mavi toz bulutu'),
+          description: cool
+            ? _('Kendi ışığı olmayan bir toz bulutu: içindeki soğuk dev yıldızın ışığını saçıyor. Toz mavi ışığı daha çok saçsa da yıldızın kendisi sarı-turuncu olduğu için bulut da sarımsı görünüyor (Antares bulutsusu gibi). {d} genişliğinde.', { d: ly(R * 2) })
+            : _('Kendi ışığı olmayan bir toz bulutu: içine gömülü birkaç parlak yıldızın ışığını saçıyor, mavi ışığı daha çok saçtığı için gökyüzünün mavisi gibi görünüyor. {d} genişliğinde; yıldızları onu iyonize edecek kadar sıcak değil.', { d: ly(R * 2) }),
+          facts: { 'Uzaklık': dist, 'Çap': ly(R * 2), 'Aydınlatan yıldız': star.type, 'Kaynak': _('Prosedürel (keşif)') },
         };
       }
       case 'planetary': {
@@ -295,8 +392,12 @@ export class ProcLandmarks {
         const T = Math.round(rng.range(60, 180)) * 1000;
         const age = Math.round(R / rng.range(15, 35) * 978_000 / 1000) * 1000; // expansion age at 15–35 km/s
         const shape = rng.int(0, 2);
+        const absMag = -0.8 + rng.range(-0.6, 1.6);
+        // the central star's temperature sets the excitation; bipolar shells come from more massive,
+        // nitrogen-enriched progenitors (Peimbert type I) and glow red in [N II]
+        const gas: NebulaGas = { excitation: clamp01((T - 50_000) / 140_000 + rng.range(-0.08, 0.08)), lowIon: shape === 1 ? rng.range(0.65, 0.95) : rng.range(0.2, 0.6) };
         return {
-          ...base, kind: 'planetary', radiusPc: R, absMag: -0.8 + rng.range(-0.6, 1.6), color: C.planetary[shape === 2 ? 2 : rng.int(0, 1)],
+          ...base, kind: 'planetary', radiusPc: R, absMag, color: shellTint(gas), gas,
           summary: _('Ölmekte olan bir yıldızın savurduğu parlayan kabuk'),
           description: [
             _('Güneş benzeri bir yıldızın son nefesi: dış katmanlarını saniyede onlarca kilometreyle savurmuş, ortada kalan {T} K sıcaklığındaki çıplak çekirdek bu kabuğu iyonize edip parlatıyor. Halka biçimli, {d} genişliğinde.', { T: fmtNum(T), d: ly(R * 2) }),
@@ -339,8 +440,10 @@ export class ProcLandmarks {
         const v = Math.round(rng.range(200, 6000) / (R / 5) / 10) * 10;
         const age = Math.round(R * 3.086e13 / (v * 3.156e7) / 100) * 100;
         const typeIa = rng.chance(0.35);
+        const absMag = -3 - 3 * Math.log10(R / 5) + rng.range(-0.6, 0.6);
+        const gas = remnantGas(rng, typeIa, age, v);
         return {
-          ...base, kind: 'remnant', radiusPc: R, absMag: -3 - 3 * Math.log10(R / 5) + rng.range(-0.6, 0.6), color: C.snr[age < 5000 ? 2 : rng.int(0, 1)],
+          ...base, kind: 'remnant', radiusPc: R, absMag, color: remnantTint(gas), gas,
           summary: typeIa ? _('Bir beyaz cücenin termonükleer patlamasının genişleyen kabuğu') : _('Çökmüş bir dev yıldızın süpernova kalıntısı'),
           description: typeIa
             ? _('Yaklaşık {a} yıl önce bir beyaz cüce eşinden çaldığı maddeyle sınırı aşıp tümüyle patladı. Geriye yıldız kalmadı: yalnızca saniyede {v} km ile genişleyen, demir ve silisyumca zengin, {d} çapında bir kabuk.', { a: fmtNum(age), v: fmtNum(v), d: ly(R * 2) })
@@ -350,11 +453,16 @@ export class ProcLandmarks {
       }
       case 'bubble': {
         const R = rng.logRange(1.5, 9);
+        const absMag = -2.5 - 3 * Math.log10(R / 3) + rng.range(-0.5, 0.5);
+        // an early, hot WN / WO star lights its bubble in [O III] and He II (Thor's Helmet); a late
+        // WN star's is cooler and full of the nitrogen-rich gas it shed, red in Hα and [N II]
+        const wr = rng.pick(WOLF_RAYET);
+        const gas: NebulaGas = { excitation: clamp01(wr.e + rng.range(-0.1, 0.1)), lowIon: wr.n + rng.range(-0.1, 0.1) };
         return {
-          ...base, kind: 'remnant', radiusPc: R, absMag: -2.5 - 3 * Math.log10(R / 3) + rng.range(-0.5, 0.5), color: rng.pick(C.bubble),
+          ...base, kind: 'remnant', radiusPc: R, absMag, color: shellTint(gas), gas,
           summary: _('Bir Wolf–Rayet yıldızının rüzgârının şişirdiği kabarcık'),
           description: _('Merkezdeki dev yıldız dış katmanlarını saniyede binlerce kilometreyle üflüyor; bu rüzgâr daha önce savurduğu yavaş gazı önüne katıp {d} çapında parlayan bir kabarcık oluşturdu. Yıldız birkaç yüz bin yıl içinde süpernova olacak.', { d: ly(R * 2) }),
-          facts: { 'Uzaklık': dist, 'Çap': ly(R * 2), 'Merkez yıldız': rng.pick(['WN5', 'WN8', 'WC6', 'WO2', 'WN4']), 'Rüzgâr hızı': `${fmtNum(rng.int(12, 30) * 100)} km/s`, 'Kaynak': _('Prosedürel (keşif)') },
+          facts: { 'Uzaklık': dist, 'Çap': ly(R * 2), 'Merkez yıldız': wr.type, 'Rüzgâr hızı': `${fmtNum(rng.int(12, 30) * 100)} km/s`, 'Kaynak': _('Prosedürel (keşif)') },
         };
       }
       case 'hypergiant': {

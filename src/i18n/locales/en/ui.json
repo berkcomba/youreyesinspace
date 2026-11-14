@@ -764,6 +764,7 @@
   "Gümüş": "Silver",
   "Altın": "Golden",
   "Uyuyan": "Sleeping",
+  "Yitik": "Lost",
   "Fısıldayan": "Whispering",
   "Donmuş": "Frozen",
   "Kırık": "Broken",
@@ -1455,5 +1456,10 @@
   "Bitki örtüsü yeşil değil mor: pigmentleri yeşil ışığı soğurup kırmızıyla maviyi yansıtıyor (ilk Dünya'nın da böyle olduğu öne sürülür).": "Its vegetation is purple, not green: the pigments absorb green light and reflect red and blue (the early Earth is thought to have been like this too).",
   "Bitki örtüsü kızıl: fotosentez pigmentleri yıldızının ışığına göre evrilmiş.": "Its vegetation is red: the photosynthetic pigments evolved to suit its star's light.",
   "Bitki örtüsü mavi-yeşil: pigmentleri kırmızı ışığın tamamını soğuruyor.": "Its vegetation is blue-green: the pigments absorb all of the red light.",
-  "Bitki örtüsü altın sarısı: ormanları yörüngeden sonbahar renginde görünüyor.": "Its vegetation is golden yellow: from orbit its forests look the colour of autumn."
+  "Bitki örtüsü altın sarısı: ormanları yörüngeden sonbahar renginde görünüyor.": "Its vegetation is golden yellow: from orbit its forests look the colour of autumn.",
+  "Halkası, Roche sınırının içine düşüp parçalanmış bir uydunun enkazı; böyle halkalar jeolojik ölçekte kısa ömürlüdür.": "Its ring is the debris of a moon that strayed inside the Roche limit and broke apart; rings like this are short-lived on geological timescales.",
+  "Dar, buzlu halkaları var: Haumea, Quaoar ve Chariklo gibi küçük buzlu cisimlerde de yıldız örtülmeleriyle keşfedilen türden.": "It has narrow icy rings, of the kind stellar occultations revealed around small icy bodies such as Haumea, Quaoar and Chariklo.",
+  "Soğuk dev bir yıldızın ışığını saçan sarımsı toz bulutu": "A yellowish dust cloud scattering the light of a cool giant star",
+  "Kendi ışığı olmayan bir toz bulutu: içindeki soğuk dev yıldızın ışığını saçıyor. Toz mavi ışığı daha çok saçsa da yıldızın kendisi sarı-turuncu olduğu için bulut da sarımsı görünüyor (Antares bulutsusu gibi). {d} genişliğinde.": "A dust cloud with no light of its own: it scatters the light of the cool giant inside it. The dust scatters blue light more, but the star itself is yellow-orange, so the cloud looks yellowish too (like the nebula around Antares). {d} across.",
+  "Sistemdeki gökcisimleri": "Bodies in this system"
 }

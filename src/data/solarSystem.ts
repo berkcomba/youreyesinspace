@@ -410,6 +410,8 @@ export const SOLAR_SYSTEM: BodyData[] = [
     radius: 780, flattening: 0.45, mass: 4.006e21, albedo: 0.66, rotationPeriod: 3.9155, tilt: 15,
     orbit: helio(43.116, 0.19642, 28.2137, 122.167, 239.041, 218.205, 103_468),
     appearance: { kind: 'terrestrial', seed: 104, landLow: [0.70, 0.70, 0.72], landMid: [0.85, 0.85, 0.87], landHigh: [0.98, 0.98, 1.0], craters: 0.1, roughness: 0.5, variation: 0.3 },
+    // Ortiz et al. 2017 (occultation): r ≈ 2287 km, ~70 km wide, normal optical depth ≈ 0.5
+    rings: { inner: 2252, outer: 2322, color: [0.6, 0.6, 0.62], opacity: 0.4, seed: 104 },
     description: 'Yalnızca 3.9 saatte dönen, bu yüzden elipsoid şeklinde uzamış cüce gezegen. Kendi halka sistemine sahip bilinen ilk trans-Neptün cismi.',
   },
   {
@@ -432,6 +434,9 @@ export const SOLAR_SYSTEM: BodyData[] = [
     radius: 545, mass: 1.2e21, albedo: 0.11, rotationPeriod: 17.68, tilt: 14,
     orbit: helio(43.69, 0.0392, 7.99, 188.8, 147.5, 272.0, 105_500),
     appearance: { kind: 'terrestrial', seed: 107, landLow: [0.30, 0.20, 0.16], landMid: [0.50, 0.38, 0.32], landHigh: [0.72, 0.64, 0.58], craters: 0.4, roughness: 0.8, variation: 0.4 },
+    // the outer ring Q1R (Morgado et al. 2023): r ≈ 4057 km, uneven, a few to ~300 km wide and
+    // tenuous; the inner Q2R (2520 km, τ ≈ 0.004) is too faint to draw
+    rings: { inner: 4020, outer: 4095, color: [0.55, 0.5, 0.47], opacity: 0.15, seed: 107 },
     description: 'Neredeyse dairesel bir yörüngede dolaşan klasik Kuiper Kuşağı cismi. Roche sınırının çok dışında, beklenmedik uzaklıkta iki halkaya sahip olmasıyla halka oluşum kuramlarını zorladı.',
     facts: { 'Keşif': '2002, Trujillo & Brown', 'Uydu': 'Weywot', 'Halkalar': '2 (2023)' },
   },

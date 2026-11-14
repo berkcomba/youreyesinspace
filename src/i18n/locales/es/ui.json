@@ -764,6 +764,7 @@
   "Gümüş": "de Plata",
   "Altın": "de Oro",
   "Uyuyan": "Durmiente",
+  "Yitik": "Perdido",
   "Fısıldayan": "Susurrante",
   "Donmuş": "Glacial",
   "Kırık": "Quebrado",
@@ -1455,5 +1456,10 @@
   "Bitki örtüsü yeşil değil mor: pigmentleri yeşil ışığı soğurup kırmızıyla maviyi yansıtıyor (ilk Dünya'nın da böyle olduğu öne sürülür).": "Su vegetación es púrpura, no verde: los pigmentos absorben la luz verde y reflejan el rojo y el azul (se cree que la Tierra primitiva también fue así).",
   "Bitki örtüsü kızıl: fotosentez pigmentleri yıldızının ışığına göre evrilmiş.": "Su vegetación es roja: los pigmentos fotosintéticos evolucionaron según la luz de su estrella.",
   "Bitki örtüsü mavi-yeşil: pigmentleri kırmızı ışığın tamamını soğuruyor.": "Su vegetación es verde azulada: los pigmentos absorben toda la luz roja.",
-  "Bitki örtüsü altın sarısı: ormanları yörüngeden sonbahar renginde görünüyor.": "Su vegetación es amarillo dorado: desde la órbita sus bosques se ven de color otoñal."
+  "Bitki örtüsü altın sarısı: ormanları yörüngeden sonbahar renginde görünüyor.": "Su vegetación es amarillo dorado: desde la órbita sus bosques se ven de color otoñal.",
+  "Halkası, Roche sınırının içine düşüp parçalanmış bir uydunun enkazı; böyle halkalar jeolojik ölçekte kısa ömürlüdür.": "Su anillo son los restos de una luna que cruzó el límite de Roche y se fragmentó; anillos así duran poco a escala geológica.",
+  "Dar, buzlu halkaları var: Haumea, Quaoar ve Chariklo gibi küçük buzlu cisimlerde de yıldız örtülmeleriyle keşfedilen türden.": "Tiene anillos estrechos y helados, como los que las ocultaciones estelares revelaron en pequeños cuerpos helados como Haumea, Quaoar y Cariclo.",
+  "Soğuk dev bir yıldızın ışığını saçan sarımsı toz bulutu": "Una nube de polvo amarillenta que dispersa la luz de una estrella gigante fría",
+  "Kendi ışığı olmayan bir toz bulutu: içindeki soğuk dev yıldızın ışığını saçıyor. Toz mavi ışığı daha çok saçsa da yıldızın kendisi sarı-turuncu olduğu için bulut da sarımsı görünüyor (Antares bulutsusu gibi). {d} genişliğinde.": "Una nube de polvo sin luz propia: dispersa la luz de la gigante fría que lleva dentro. El polvo dispersa más la luz azul, pero la estrella es amarillo-anaranjada, así que la nube también se ve amarillenta (como la nebulosa de Antares). Mide {d}.",
+  "Sistemdeki gökcisimleri": "Cuerpos del sistema"
 }

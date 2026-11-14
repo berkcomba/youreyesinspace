@@ -1,5 +1,5 @@
 import { Quaternion, Vector3 } from 'three';
-import type { LandmarkDef } from '../../data/landmarks';
+import type { LandmarkDef, RemnantClass } from '../../data/landmarks';
 import type { ProcKind } from '../../galaxy/ProcLandmarks';
 import { Rng } from '../../gen/SystemGenerator';
 
@@ -36,6 +36,7 @@ export const MORPHOLOGY_CODE: Record<NebulaMorphology, number> = {
 /** Emission-line palettes (linear RGB, roughly the colours photographic Hα / [O III] / [S II] composites give) */
 export type NebulaPalette = 'halpha-oiii' | 'halpha-sii' | 'oiii-blue' | 'reflection-blue' | 'snr-mixed';
 export const PALETTE_CODE: Record<NebulaPalette, number> = { 'halpha-oiii': 0, 'halpha-sii': 1, 'oiii-blue': 2, 'reflection-blue': 3, 'snr-mixed': 4 };
+export const REMNANT_CODE: Record<RemnantClass, number> = { radiative: 0, balmer: 1, oxygen: 2, plerion: 3, faded: 4 };
 
 /** A star lighting the medium from inside; positions in object radii, the object centre at 0 */
 export interface NebulaLight {
@@ -69,6 +70,8 @@ export interface NebulaProfile {
   paletteId: NebulaPalette;
   /** catalogue tint (the sprite's colour), blended into the palette */
   tint: [number, number, number];
+  /** line mix: excitation, low-ionisation share, remnant class code (REMNANT_CODE), dust scattering share */
+  lines: [number, number, number, number];
   /** 1 … 4 local lights, brightest first */
   lights: NebulaLight[];
   /** second concentric shell (planetaries) / the denser side of the ISM (remnants): a unit axis */
@@ -216,6 +219,7 @@ export function resolveNebulaProfile(def: LandmarkDef, procKind?: ProcKind): Neb
     extentPc: def.radiusPc,
     orientation, emissionScale, extinctionScale, turbulence, filamentScale, cavityScale, paletteId,
     tint: [def.color[0], def.color[1], def.color[2]],
+    lines: [def.gas?.excitation ?? 0.5, def.gas?.lowIon ?? 0.5, REMNANT_CODE[def.gas?.remnant ?? 'radiative'], def.gas?.scatter ?? 0],
     lights, axis, doubleShell,
   };
 }

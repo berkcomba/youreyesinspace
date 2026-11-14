@@ -281,6 +281,7 @@ export class Volumes {
     extra.uMorph.value = MORPHOLOGY_CODE[profile.morphology];
     extra.uPalette.value = PALETTE_CODE[profile.paletteId];
     (extra.uTint.value as Vector3).set(profile.tint[0], profile.tint[1], profile.tint[2]);
+    (extra.uLines.value as Vector4).set(profile.lines[0], profile.lines[1], profile.lines[2], profile.lines[3]);
     extra.uEmission.value = profile.emissionScale;
     extra.uExtinction.value = profile.extinctionScale;
     extra.uTurb.value = profile.turbulence;
@@ -593,7 +594,7 @@ function profileUniforms(): Record<string, IUniform> {
     uLights: { value: Array.from({ length: 4 }, () => new Vector4(0, 0, 0, 0)) },
     uLightCol: { value: Array.from({ length: 4 }, () => new Vector3(1, 1, 1)) },
     uNLights: { value: 1 },
-    uPalette: { value: 0 }, uTint: { value: new Vector3(1, 1, 1) }, uEmission: { value: 1 }, uExtinction: { value: 1 },
+    uPalette: { value: 0 }, uTint: { value: new Vector3(1, 1, 1) }, uLines: { value: new Vector4(0.5, 0.5, 0, 0) }, uEmission: { value: 1 }, uExtinction: { value: 1 },
     uDebug: { value: 0 },
   };
 }

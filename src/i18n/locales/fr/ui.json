@@ -764,6 +764,7 @@
   "Gümüş": "d'Argent",
   "Altın": "d'Or",
   "Uyuyan": "Endormi",
+  "Yitik": "Perdu",
   "Fısıldayan": "Murmurant",
   "Donmuş": "Gelé",
   "Kırık": "Brisé",
@@ -1455,5 +1456,10 @@
   "Bitki örtüsü yeşil değil mor: pigmentleri yeşil ışığı soğurup kırmızıyla maviyi yansıtıyor (ilk Dünya'nın da böyle olduğu öne sürülür).": "Sa végétation est violette et non verte : ses pigments absorbent la lumière verte et réfléchissent le rouge et le bleu (la Terre primitive aurait été ainsi).",
   "Bitki örtüsü kızıl: fotosentez pigmentleri yıldızının ışığına göre evrilmiş.": "Sa végétation est rouge : ses pigments photosynthétiques ont évolué en fonction de la lumière de son étoile.",
   "Bitki örtüsü mavi-yeşil: pigmentleri kırmızı ışığın tamamını soğuruyor.": "Sa végétation est bleu-vert : ses pigments absorbent toute la lumière rouge.",
-  "Bitki örtüsü altın sarısı: ormanları yörüngeden sonbahar renginde görünüyor.": "Sa végétation est jaune d'or : vues de l'orbite, ses forêts ont les couleurs de l'automne."
+  "Bitki örtüsü altın sarısı: ormanları yörüngeden sonbahar renginde görünüyor.": "Sa végétation est jaune d'or : vues de l'orbite, ses forêts ont les couleurs de l'automne.",
+  "Halkası, Roche sınırının içine düşüp parçalanmış bir uydunun enkazı; böyle halkalar jeolojik ölçekte kısa ömürlüdür.": "Son anneau est fait des débris d'une lune passée sous la limite de Roche et brisée ; de tels anneaux sont éphémères à l'échelle géologique.",
+  "Dar, buzlu halkaları var: Haumea, Quaoar ve Chariklo gibi küçük buzlu cisimlerde de yıldız örtülmeleriyle keşfedilen türden.": "Il porte des anneaux étroits et glacés, du type que les occultations stellaires ont révélé autour de petits corps glacés comme Haumea, Quaoar et Chariklo.",
+  "Soğuk dev bir yıldızın ışığını saçan sarımsı toz bulutu": "Un nuage de poussière jaunâtre qui diffuse la lumière d'une étoile géante froide",
+  "Kendi ışığı olmayan bir toz bulutu: içindeki soğuk dev yıldızın ışığını saçıyor. Toz mavi ışığı daha çok saçsa da yıldızın kendisi sarı-turuncu olduğu için bulut da sarımsı görünüyor (Antares bulutsusu gibi). {d} genişliğinde.": "Un nuage de poussière sans lumière propre : il diffuse la lumière de la géante froide qu'il abrite. La poussière diffuse davantage le bleu, mais l'étoile elle-même est jaune-orangé, si bien que le nuage paraît jaunâtre (comme la nébuleuse d'Antarès). {d} de diamètre.",
+  "Sistemdeki gökcisimleri": "Corps du système"
 }

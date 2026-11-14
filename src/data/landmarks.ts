@@ -59,6 +59,30 @@ export interface LandmarkDef {
   catalog?: true;
   /** star clusters: age / population, from which the selectable member stars are generated */
   cluster?: ClusterParams;
+  /** generated emission nebulae: what sets their mix of emission lines (catalogue objects: the reference mix) */
+  gas?: NebulaGas;
+}
+
+/**
+ * How a remnant shines: young Type Ia shells show almost nothing but Balmer lines (Tycho), young
+ * core-collapse ones the oxygen of the star's interior (Cas A), a pulsar fills one with synchrotron
+ * light (the Crab); later a radiative shock lights red and teal filaments (the Veil) until the
+ * shell fades into a faint red web (Simeis 147).
+ */
+export type RemnantClass = 'radiative' | 'balmer' | 'oxygen' | 'plerion' | 'faded';
+
+export interface NebulaGas {
+  /**
+   * 0 … 1: how hard the ionising light is (the hottest O stars, a hotter central star, fast
+   * shocks); sets how far [O III] reaches. Reflection nebulae: the colour of the lighting star
+   * (0 a cool K–M supergiant, yellow-orange; 1 an early B star, deep blue).
+   */
+  excitation: number;
+  /** 0 … 1: share of the low-ionisation lines [S II] / [N II] (metals, shocks, nitrogen-rich ejecta) */
+  lowIon: number;
+  /** 0 … 1: how much of the stars' light the dust scatters back to us (blue reflection lanes, as in M20) */
+  scatter?: number;
+  remnant?: RemnantClass;
 }
 
 /** landmark is a visitable system (`l{n}` id) */

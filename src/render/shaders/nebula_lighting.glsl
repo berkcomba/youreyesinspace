@@ -7,6 +7,7 @@
 // ---------------------------------------------------------------------------
 uniform float uPalette;    // PALETTE_CODE
 uniform vec3 uTint;        // catalogue tint, blended lightly into the palette
+uniform vec4 uLines;       // excitation 0…1, low-ionisation share 0…1, remnant class (REMNANT_CODE), dust scattering 0…1; 0.5, 0.5, 0, 0 = reference mix
 uniform float uEmission;   // profile emissionScale
 uniform float uExtinction; // profile extinctionScale
 uniform float uDebug;      // 0 off, 1 gas, 2 dust, 3 ionisation, 4 transmittance
@@ -41,30 +42,62 @@ float ionisation(vec3 p, out vec3 starlight) {
 // gas colour for ionisation U (0 far / shielded … ≫1 next to the stars) and front share `hot`
 vec3 gasColor(float U, float hot) {
   float ion = U / (U + 1.0);                      // 0 … 1
+  // metal-rich gas puts more of its light into [S II] / [N II]
+  float lowIon = 0.5 * max(uLines.y - 0.5, 0.0);
   vec3 col;
   if (uPalette < 0.5) {
-    // Hα–[O III]: red over most of the cloud, teal only next to the exciting stars, pink-white fronts
-    col = mix(mix(L_SII, L_HA, smoothstep(0.0, 0.12, ion)), L_OIII, smoothstep(0.62, 0.95, ion));
+    // Hα–[O III]: red over most of the cloud, teal next to the exciting stars (further out the
+    // hotter they are), pink-white fronts
+    float o3 = mix(0.88, 0.36, uLines.x);
+    col = mix(mix(L_SII, L_HA, smoothstep(0.0, max(0.24 * uLines.y, 0.02), ion)), L_OIII, smoothstep(o3, o3 + 0.33, ion));
+    col = mix(col, L_SII, lowIon);
     col = mix(col, vec3(0.9, 0.75, 0.8), hot * 0.22);
   } else if (uPalette < 1.5) {
     // Hα–[S II]: the low-excitation, dusty variant — red to orange
     col = mix(L_SII, L_HA, smoothstep(0.05, 0.6, ion));
+    col = mix(col, L_SII, lowIon);
     col = mix(col, vec3(1.0, 0.75, 0.6), hot * 0.4);
   } else if (uPalette < 2.5) {
     // shells (planetaries, bubbles) are stratified: `hot` runs from the high-excitation interior
     // (He II / [O III], carrying the object's own tint) through the teal [O III] zone and the
     // orange inner edge of the shell to the red [N II] / Hα rim
-    vec3 inner = mix(vec3(0.22, 0.5, 1.0), uTint, 0.45);
-    col = mix(inner, L_OIII, smoothstep(0.0, 0.45, hot));
-    col = mix(col, vec3(1.0, 0.55, 0.22), smoothstep(0.45, 0.8, hot));
-    col = mix(col, L_HA, smoothstep(0.75, 1.0, hot));
-    return col;
+    // A hotter central star pushes every zone outward: the blue-teal interior grows, the red rim thins
+    // Below ~60 kK the star barely ionises O⁺ to O²⁺: no [O III] zone, the shell is Hα / [N II] pink
+    // throughout (IC 418, M2-9); above ~150 kK He II deepens the interior to violet-blue
+    float x = uLines.x;
+    float o3w = smoothstep(0.1, 0.45, x);
+    vec3 he2 = mix(vec3(0.22, 0.5, 1.0), vec3(0.32, 0.36, 1.0), smoothstep(0.7, 1.0, x));
+    vec3 inner = mix(mix(vec3(1.0, 0.68, 0.7), he2, o3w), uTint, 0.45);
+    vec3 zone = mix(vec3(1.0, 0.4, 0.48), L_OIII, o3w);
+    float a = mix(0.2, 0.7, x);
+    col = mix(inner, zone, smoothstep(0.0, a, hot));
+    col = mix(col, vec3(1.0, 0.55, 0.22), smoothstep(a, a + 0.35, hot));
+    col = mix(col, L_HA, smoothstep(a + 0.3, 1.0, hot));
+    // nitrogen-rich shells (the bipolar ones of massive progenitors) glow red in [N II]
+    return mix(col, mix(L_HA, L_SII, 0.3), lowIon * smoothstep(0.2, 0.7, hot));
   } else if (uPalette < 3.5) {
     col = L_HB;   // reflection: the gas (if any) is a faint blue haze
   } else {
-    // remnant: [S II]/Hα red filaments, [O III] teal ones, blue shock front
-    col = mix(mix(L_SII, L_HA, 0.5), L_OIII, smoothstep(0.25, 0.6, hot));
-    col = mix(col, L_SYNC, smoothstep(0.85, 1.0, hot));
+    // remnants (`hot`: 0 … 0.8 the strands, 1 the shock front and the interior)
+    if (uLines.z < 0.5) {
+      // radiative: [S II]/Hα red filaments, [O III] teal ones (more of them behind a faster shock), blue front
+      float o3 = mix(0.45, 0.05, uLines.x);
+      col = mix(mix(L_SII, L_HA, 0.5), L_OIII, smoothstep(o3, o3 + 0.35, hot));
+      col = mix(col, L_SYNC, smoothstep(0.85, 1.0, hot));
+    } else if (uLines.z < 1.5) {
+      // Balmer-dominated: the shock runs into neutral gas, almost nothing but Hα and Hβ
+      col = mix(L_HA, L_HB, 0.2 + 0.25 * smoothstep(0.85, 1.0, hot));
+    } else if (uLines.z < 2.5) {
+      // oxygen-rich ejecta: green-blue [O III] knots beside red-orange [S II] ones
+      col = mix(L_SII, mix(L_OIII, L_HB, 0.35), smoothstep(0.2, 0.45, hot));
+      col = mix(col, L_SYNC, smoothstep(0.9, 1.0, hot));
+    } else if (uLines.z < 3.5) {
+      // pulsar wind nebula: red-orange Hα / [S II] filaments around blue-white synchrotron light
+      col = mix(mix(L_HA, L_SII, 0.35), vec3(0.75, 0.8, 1.0), smoothstep(0.8, 1.0, hot));
+    } else {
+      // faded: slow shocks light only Hα and [S II], a faint red web
+      col = mix(mix(L_HA, L_SII, 0.3), L_HA, smoothstep(0.85, 1.0, hot));
+    }
     return mix(col, uTint, 0.06);
   }
   return mix(col, uTint, 0.12);
@@ -78,14 +111,20 @@ vec3 nebulaSource(vec3 p, Medium m) {
   if (m.gas > 1e-4) {
     // recombination ∝ n², and only the ionised share glows: the gas deep in the shadow is dark
     float ion = uPalette > 3.5 ? 1.0 : (0.3 + 0.7 * U / (U + 0.4));
-    src += gasColor(U, m.hot) * m.gas * (0.6 + 0.4 * m.gas) * ion * uEmission;
+    // a pulsar's synchrotron nebula fills the interior a shell remnant leaves dark
+    // (the interior is the thin gas inside the shell, ≤ 0.012; the shock front is denser)
+    float fill = uPalette > 3.5 && abs(uLines.z - 3.0) < 0.5 ? mix(1.0, 10.0, step(0.999, m.hot) * step(m.gas, 0.013)) : 1.0;
+    src += gasColor(U, m.hot) * m.gas * (0.6 + 0.4 * m.gas) * ion * fill * uEmission;
   }
   if (m.dust > 1e-4) {
     // single scattering of the local stars (reflection), bluer than the stars themselves
     // (normalised like the ionisation; in emission nebulae the scattered light is a faint sheen)
     bool refl = uPalette > 2.5 && uPalette < 3.5;
-    vec3 scatterTint = refl ? vec3(0.5, 0.72, 1.0) : vec3(0.9, 0.9, 1.0);
-    float k = refl ? 0.5 : 0.06;
+    // a reflection nebula takes the colour of its star, bluer for the scattering: deep blue around
+    // an early B star, yellow-orange around a cool supergiant (the Antares nebula)
+    vec3 starTint = mix(mix(vec3(1.0, 0.6, 0.28), vec3(0.5, 0.72, 1.0), smoothstep(0.25, 0.6, uLines.x)), vec3(0.4, 0.62, 1.0), smoothstep(0.6, 1.0, uLines.x));
+    vec3 scatterTint = refl ? starTint : mix(vec3(0.9, 0.9, 1.0), vec3(0.5, 0.72, 1.0), uLines.w);
+    float k = refl ? 0.5 : 0.06 + 0.4 * uLines.w;
     src += starlight * sq(max(uCavity, 0.08)) * scatterTint * m.dust * DUST_ALBEDO * k * uEmission;
     // the rest of a reflection nebula's cloud is not black: the galaxy's own starlight gives the
     // dust the faint brown glow deep photographs show around the blue core

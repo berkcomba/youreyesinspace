@@ -764,6 +764,7 @@
   "Gümüş": "Silberner",
   "Altın": "Goldener",
   "Uyuyan": "Schlafender",
+  "Yitik": "Verlorener",
   "Fısıldayan": "Flüsternder",
   "Donmuş": "Gefrorener",
   "Kırık": "Zerbrochener",
@@ -1455,5 +1456,10 @@
   "Bitki örtüsü yeşil değil mor: pigmentleri yeşil ışığı soğurup kırmızıyla maviyi yansıtıyor (ilk Dünya'nın da böyle olduğu öne sürülür).": "Seine Vegetation ist violett statt grün: Die Pigmente absorbieren grünes Licht und reflektieren Rot und Blau (so soll auch die frühe Erde ausgesehen haben).",
   "Bitki örtüsü kızıl: fotosentez pigmentleri yıldızının ışığına göre evrilmiş.": "Seine Vegetation ist rot: Die Photosynthesepigmente haben sich an das Licht seines Sterns angepasst.",
   "Bitki örtüsü mavi-yeşil: pigmentleri kırmızı ışığın tamamını soğuruyor.": "Seine Vegetation ist blaugrün: Die Pigmente absorbieren das gesamte rote Licht.",
-  "Bitki örtüsü altın sarısı: ormanları yörüngeden sonbahar renginde görünüyor.": "Seine Vegetation ist goldgelb: Aus der Umlaufbahn erscheinen seine Wälder in Herbstfarben."
+  "Bitki örtüsü altın sarısı: ormanları yörüngeden sonbahar renginde görünüyor.": "Seine Vegetation ist goldgelb: Aus der Umlaufbahn erscheinen seine Wälder in Herbstfarben.",
+  "Halkası, Roche sınırının içine düşüp parçalanmış bir uydunun enkazı; böyle halkalar jeolojik ölçekte kısa ömürlüdür.": "Sein Ring sind die Trümmer eines Mondes, der innerhalb der Roche-Grenze zerbrach; solche Ringe sind geologisch gesehen kurzlebig.",
+  "Dar, buzlu halkaları var: Haumea, Quaoar ve Chariklo gibi küçük buzlu cisimlerde de yıldız örtülmeleriyle keşfedilen türden.": "Es hat schmale, eisige Ringe – von der Art, wie Sternbedeckungen sie bei kleinen Eiskörpern wie Haumea, Quaoar und Chariklo enthüllt haben.",
+  "Soğuk dev bir yıldızın ışığını saçan sarımsı toz bulutu": "Eine gelbliche Staubwolke, die das Licht eines kühlen Riesensterns streut",
+  "Kendi ışığı olmayan bir toz bulutu: içindeki soğuk dev yıldızın ışığını saçıyor. Toz mavi ışığı daha çok saçsa da yıldızın kendisi sarı-turuncu olduğu için bulut da sarımsı görünüyor (Antares bulutsusu gibi). {d} genişliğinde.": "Eine Staubwolke ohne eigenes Licht: Sie streut das Licht des kühlen Riesen in ihrem Inneren. Der Staub streut blaues Licht zwar stärker, doch der Stern selbst ist gelborange, darum wirkt auch die Wolke gelblich (wie der Nebel um Antares). {d} groß.",
+  "Sistemdeki gökcisimleri": "Himmelskörper im System"
 }
