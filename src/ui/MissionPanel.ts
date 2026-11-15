@@ -206,8 +206,7 @@ export class MissionPanel {
     const gGal = document.createElement('optgroup');
     gGal.label = _('Galaksiler (FTL)');
     for (const name of GALAXY_TARGETS) {
-      let i = -1;
-      for (let k = 1; k < u.galaxies.catalogCount; k++) if (u.galaxies.rawName(k).includes(name)) { i = k; break; }
+      const i = u.galaxies.findHandmade(name);
       if (i < 1) continue;
       const pos = u.galaxies.position(i).multiplyScalar(PARSEC_KM);
       far(gGal, { key: `gal:${i}`, label: u.galaxies.name(i), make: () => ({ kind: 'point', name: u.galaxies.name(i), positionKm: pos }) });

@@ -11,10 +11,19 @@
   "durable_objects": {
     "bindings": [
       { "name": "ROOM", "class_name": "Room" },
-      { "name": "SHARD", "class_name": "Shard" }
+      { "name": "SHARD", "class_name": "Shard" },
+      // multiplayer: the public room list, and one object per room
+      { "name": "LOBBY", "class_name": "Lobby" },
+      { "name": "PARTY", "class_name": "Party" }
     ]
   },
-  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Room", "Shard"] }],
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["Room", "Shard"] },
+    { "tag": "v2", "new_sqlite_classes": ["Lobby", "Party"] }
+  ],
+  // multiplayer screenshots: `wrangler r2 bucket create yeis-party-shots` once, plus a lifecycle
+  // rule that deletes objects under party/ after 90 days
+  "r2_buckets": [{ "binding": "SHOTS", "bucket_name": "yeis-party-shots" }],
   "vars": {
     // exact origins, or a trailing * for a prefix (dev servers on any port / LAN address)
     "ALLOWED_ORIGINS": "https://stream.youreyesinspace.com,https://youreyesinspace.com,https://www.youreyesinspace.com,http://localhost:*,http://stream.localhost:*,http://127.0.0.1:*,http://192.168.*"

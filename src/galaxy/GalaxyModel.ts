@@ -1,5 +1,6 @@
 import { Matrix3, Vector3 } from 'three';
 import type { Rng } from '../gen/SystemGenerator';
+import { Peculiar, type PeculiarSpec } from './peculiar';
 
 export type GalaxyType = 'E' | 'S0' | 'S' | 'SB' | 'Irr';
 
@@ -31,6 +32,8 @@ export interface GalaxyParams {
   catalog: boolean;
   /** distance from the Sun (pc) – cached */
   distancePc: number;
+  /** hand-drawn rings / tails / warp; `radius` is then the whole system's and the host is smaller */
+  peculiar?: PeculiarSpec;
 }
 
 export type Population = 'bulge' | 'disc' | 'arm' | 'hii' | 'halo';
@@ -44,6 +47,7 @@ export const POPULATION_COLOR: Record<Population, [number, number, number]> = {
 };
 
 const _tmp = new Vector3();
+const _young = { v: 0 };
 
 /**
  * Analytic galaxy model: density field for procedural star placement and a sampler that
@@ -60,12 +64,19 @@ export class GalaxyModel {
   readonly armWeight: number[] = [];
   private readonly armCdf: number[] = [];
   readonly blobs: Array<{ c: Vector3; s: number; w: number }> = [];
+  /** rings, tails, warp of a peculiar galaxy (null: an ordinary one) */
+  readonly pec: Peculiar | null;
+  /** radius of the host galaxy (pc): the whole radius, unless the galaxy is peculiar */
+  readonly bodyRadius: number;
   private integralCache = 0;
 
   constructor(params: GalaxyParams) {
     this.p = params;
     this.luminosity = Math.pow(10, (4.83 - params.absMag) / 2.5);
-    const R = params.radius;
+    this.pec = params.peculiar ? new Peculiar(params.peculiar) : null;
+    // everything below describes the host, which a peculiar galaxy's rings and tails surround
+    const R = params.radius * (this.pec?.body ?? 1);
+    this.bodyRadius = R;
     this.scaleLength = R / 3.6;
     this.scaleHeight = params.type === 'E' ? R * params.axisRatio : R * 0.022;
     this.bulgeRadius = params.type === 'E' ? R * 0.45 : params.type === 'S0' ? R * 0.3 : R * 0.09;
@@ -89,6 +100,8 @@ export class GalaxyModel {
         s: R * (0.2 + rnd() * 0.3), w: 0.4 + rnd(),
       });
     }
+    // the components' amplitudes come from the host's light, and density() needs them at once
+    if (this.pec) this.densityIntegral();
   }
 
   get radius(): number { return this.p.radius; }
@@ -126,45 +139,59 @@ export class GalaxyModel {
     return best;
   }
 
+  /** height (pc) of a warped host's disc above its plane at a local point */
+  private warpY(x: number, z: number): number {
+    if (!this.pec || this.pec.bend === 0) return 0;
+    const R = this.p.radius;
+    return this.pec.bendY(Math.hypot(x, z) / R, Math.atan2(z, x)) * R;
+  }
+
   /**
    * Relative stellar density at a local point. Normalised so that a Milky-Way-like disc has
-   * ≈1 at the solar radius (8.2 kpc) in the mid-plane.
+   * ≈1 at the solar radius (8.2 kpc) in the mid-plane. Peculiar galaxies add their rings and tails.
    */
   density(local: Vector3): number {
-    const t = this.p.type;
+    if (!this.pec) return this.hostDensity(local.x, local.y, local.z);
     const R = this.p.radius;
+    return this.hostDensity(local.x, local.y - this.warpY(local.x, local.z), local.z) + this.pec.density(local.x / R, local.y / R, local.z / R);
+  }
+
+  /** the host galaxy's density, in its own (unwarped) frame */
+  private hostDensity(x: number, y: number, z: number): number {
+    const t = this.p.type;
+    const R = this.bodyRadius;
     if (t === 'Irr') {
       let d = 0;
       for (const b of this.blobs) {
-        const dx = local.x - b.c.x, dy = (local.y - b.c.y) * 2.0, dz = local.z - b.c.z;
+        const dx = x - b.c.x, dy = (y - b.c.y) * 2.0, dz = z - b.c.z;
         d += b.w * Math.exp(-(dx * dx + dy * dy + dz * dz) / (2 * b.s * b.s));
       }
       return d * 3;
     }
-    const r = Math.hypot(local.x, local.z);
+    const r = Math.hypot(x, z);
     if (t === 'E') {
       const q = Math.max(0.3, this.p.axisRatio);
-      const rr = Math.hypot(r, local.y / q) / this.bulgeRadius + 1e-3;
+      const rr = Math.hypot(r, y / q) / this.bulgeRadius + 1e-3;
       return 6 / (rr * Math.pow(1 + rr, 3));
     }
     // disc
     const h = this.scaleLength, hz = this.scaleHeight;
-    const sech = 1 / Math.cosh(local.y / hz);
+    const sech = 1 / Math.cosh(y / hz);
     let disc = Math.exp(-(r - 8200 * (R / 15000)) / h) * sech * sech;
     if (r > R * 1.25) disc *= Math.exp(-(r - R * 1.25) / (R * 0.1));
     if (t === 'S' || t === 'SB') {
-      const theta = Math.atan2(local.z, local.x);
+      const theta = Math.atan2(z, x);
       const da = this.armDistance(r, theta);
       const armW = 0.34;
       const arm = Math.exp(-(da * da) / (2 * armW * armW));
       disc *= 0.55 + 1.6 * arm;
       if (this.barLength > 0 && r < this.barLength) {
-        const bar = Math.exp(-Math.pow(local.z / (this.barLength * 0.25), 2));
+        const bar = Math.exp(-Math.pow(z / (this.barLength * 0.25), 2));
         disc *= 0.6 + 2.5 * bar;
       }
     }
     // bulge (Hernquist-like), flattened
-    const rb = Math.hypot(r, local.y / 0.7) / this.bulgeRadius + 1e-3;
+    const rb = Math.hypot(r, y / 0.7) / this.bulgeRadius + 1e-3;
     const bulge = 12 / (rb * Math.pow(1 + rb, 3));
     return disc + bulge;
   }
@@ -176,7 +203,7 @@ export class GalaxyModel {
   densityIntegral(): number {
     if (this.integralCache > 0) return this.integralCache;
     const t = this.p.type;
-    const R = this.p.radius;
+    const R = this.bodyRadius;
     const hernquist = (a: number, X: number) => 4 * Math.PI * a * a * a * (X * X) / (2 * (1 + X) * (1 + X));
     let total: number;
     if (t === 'Irr') {
@@ -193,11 +220,12 @@ export class GalaxyModel {
         for (let j = 0; j < n; j++) {
           v.set(-ext + (i + 0.5) * cell, 0, -ext + (j + 0.5) * cell);
           const rb = Math.hypot(v.x, v.z) / this.bulgeRadius + 1e-3;
-          disc += this.density(v) - 12 / (rb * Math.pow(1 + rb, 3));
+          disc += this.hostDensity(v.x, 0, v.z) - 12 / (rb * Math.pow(1 + rb, 3));
         }
       }
       total = disc * cell * cell * 2 * this.scaleHeight + 12 * 0.7 * hernquist(this.bulgeRadius, (R * 1.4) / this.bulgeRadius);
     }
+    if (this.pec) total = this.pec.normalise(Math.max(total, 1e-6), this.p.radius);
     this.integralCache = Math.max(total, 1e-6);
     return this.integralCache;
   }
@@ -208,22 +236,43 @@ export class GalaxyModel {
    * objects (H II regions, open clusters, supernova remnants) are generated.
    */
   youth(local: Vector3): number {
+    if (!this.pec) return this.hostYouth(local.x, local.y, local.z);
+    // the rings' and tails' share of the stars here, at their own youth
+    const R = this.p.radius;
+    const y = local.y - this.warpY(local.x, local.z);
+    const host = this.hostYouth(local.x, y, local.z);
+    const comp = this.pec.density(local.x / R, local.y / R, local.z / R, _young);
+    if (comp <= 0) return host;
+    const hd = this.hostDensity(local.x, y, local.z);
+    return (host * hd + _young.v) / (hd + comp);
+  }
+
+  private hostYouth(x: number, y: number, z: number): number {
     const t = this.p.type;
     if (t === 'E') return 0.03;
     if (t === 'S0') return 0.12;
     if (t === 'Irr') return 0.7;
-    const r = Math.hypot(local.x, local.z);
-    const da = this.armDistance(r, Math.atan2(local.z, local.x));
+    const r = Math.hypot(x, z);
+    const da = this.armDistance(r, Math.atan2(z, x));
     const arm = Math.exp(-(da * da) / (2 * 0.34 * 0.34));
-    const thin = 1 / Math.cosh(local.y / (this.scaleHeight * 0.7));
+    const thin = 1 / Math.cosh(y / (this.scaleHeight * 0.7));
     const inner = r < this.bulgeRadius * 1.2 ? 0.3 : 1;
     return (0.15 + 0.85 * arm) * thin * inner;
   }
 
   /** Sample one point of the far-tier cloud. Returns local pc and the population. */
   sample(rng: Rng, out: Vector3): Population {
+    if (!this.pec) return this.sampleHost(rng, out);
+    const pop = this.pec.sample(rng, out);
+    if (pop) { out.multiplyScalar(this.p.radius); return pop; }
+    const host = this.sampleHost(rng, out);
+    out.y += this.warpY(out.x, out.z);
+    return host;
+  }
+
+  private sampleHost(rng: Rng, out: Vector3): Population {
     const t = this.p.type;
-    const R = this.p.radius;
+    const R = this.bodyRadius;
     if (t === 'Irr') {
       if (rng.chance(0.55)) {
         // diffuse old population

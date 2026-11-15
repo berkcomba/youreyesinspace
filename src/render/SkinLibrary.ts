@@ -174,6 +174,12 @@ interface Geology {
   gasPolar: Vector4;
   gasStorm: Vector4[];
   gasStormCol: Vector3;
+  /** hot spots and festoons at the equatorial zone's edge: its latitude (rad), how many round, strength (0 none), phase */
+  gasFest: Vector4;
+  /** a string of small white ovals: latitude (rad), how many round, half-height (rad), strength (0 none) */
+  gasPearls: Vector4;
+  /** circumpolar cyclones: how many in the north ring, in the south ring, the rings' colatitude, a cyclone's radius (rad; 0 none) */
+  gasPoleCyc: Vector4;
 }
 
 const zero4 = (): Vector4 => new Vector4(0, 0, 0, 0);
@@ -184,6 +190,7 @@ const flat = (): Geology => ({
   flora: 0, sea: zero4(), basin: zero4(), basinLook: new Vector3(0, 1, 0), eye: new Vector3(), eyeCol: new Vector3(),
   gasRemap: new Vector3(), gasBelts: 0, gasBright: new Vector3(1, 1, 1), gasPolar: zero4(),
   gasStorm: [zero4(), zero4(), zero4()], gasStormCol: new Vector3(1, 1, 1),
+  gasFest: zero4(), gasPearls: zero4(), gasPoleCyc: zero4(),
 });
 
 /** albedo gains of icy provinces: tholin-stained, blue, dirty grey, pink nitrogen frost, clean, sulphur-yellow */
@@ -381,6 +388,19 @@ function gasDeck(g: Geology, a: Appearance & { kind: 'gas' }, family: string, se
   }
   if (a.storm) g.gasStormCol.set(a.storm[3], a.storm[4], a.storm[5]);
   else g.gasStormCol.copy(dark).lerp(new Vector3(0.75, 0.3, 0.18), 0.55);
+  // the finer weather of an active banded giant (Voyager, Cassini, Juno at Jupiter): hot spots
+  // and festoons along one edge of the equatorial zone, a string of white ovals at one
+  // mid-latitude, clusters of cyclones round the poles. The quiet ice giants show none of it.
+  if (darkSpots) return;
+  const turb = Math.min(a.turbulence, 1);
+  const side = (): number => (r() < 0.5 ? -1 : 1);
+  if (family === 'gas' && turb > 0.45 && r() < 0.6) g.gasFest.set(side() * range(0.09, 0.15), Math.floor(range(9, 15)), range(0.5, 0.9), r());
+  if (turb > 0.4 && r() < 0.35) g.gasPearls.set(side() * range(0.5, 0.8), Math.floor(range(7, 12)), range(0.022, 0.036), range(0.6, 0.9));
+  if (turb > 0.5 && r() < 0.4) {
+    const north = Math.floor(range(5, 9)), south = r() < 0.7 ? Math.floor(range(5, 8)) : 0;
+    const ring = range(0.12, 0.17);
+    g.gasPoleCyc.set(north, south, ring, ring * Math.sin(Math.PI / north) * range(0.6, 0.8));
+  }
 }
 
 /** The skin uniforms of skin_common.glsl (`gas`: the slopes of a gas giant's map are gentler). */
@@ -401,6 +421,7 @@ export function skinUniforms(skin: Skin, gas: boolean): Record<string, IUniform>
     uGeoEye: { value: g.eye }, uGeoEyeCol: { value: g.eyeCol },
     uGasRemap: { value: g.gasRemap }, uGasBelts: { value: g.gasBelts }, uGasBright: { value: g.gasBright }, uGasPolar: { value: g.gasPolar },
     uGasStorm: { value: g.gasStorm }, uGasStormCol: { value: g.gasStormCol },
+    uGasFest: { value: g.gasFest }, uGasPearls: { value: g.gasPearls }, uGasPoleCyc: { value: g.gasPoleCyc },
   };
 }
 

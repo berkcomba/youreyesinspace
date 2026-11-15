@@ -8,7 +8,7 @@ import { EVENTS } from '../../src/data/events';
 import type { ExoHost } from '../../src/data/Exoplanets';
 import { LANDMARKS, type LandmarkDef } from '../../src/data/landmarks';
 import { SOLAR_SYSTEM } from '../../src/data/solarSystem';
-import { CATALOG, TYPE_BY_CODE, type SurveyGalaxies } from '../../src/galaxy/galaxies';
+import { HANDMADE, TYPE_BY_CODE, type SurveyGalaxies } from '../../src/galaxy/galaxies';
 import { CONSTELLATIONS, constellationAt, setBoundaries, setReferenceStars, slugify, unitRaDec } from './astro';
 import { SEARCH_PATH, azEntries, azPages, searchJson } from './az';
 import { CoreCatalog } from './catalog';
@@ -103,11 +103,11 @@ async function buildSite(root: string, buildDate: string): Promise<{ site: Site;
   // galaxies: the hand-made list, every UNGC galaxy, the NGC/IC/Messier ones of 2MRS
   const survey = json<SurveyGalaxies>(path.join(data, 'galaxies.json'));
   const galSlug = slugger();
-  const galaxies: GalaxyEntry[] = CATALOG.map((g) => ({
+  const galaxies: GalaxyEntry[] = HANDMADE.map((g) => ({
     name: g.name, slug: galSlug(t(g.name), g.name), con: constellationAt(g.ra, g.dec), ra: g.ra, dec: g.dec, distMpc: g.distMpc,
     type: g.type, typeGuessed: false, diameterKpc: g.diameterKpc, absMag: g.absMag, axis: g.axis, desc: g.desc, source: 'curated' as const,
   }));
-  const curatedU = CATALOG.map((g) => unitRaDec(g.ra, g.dec));
+  const curatedU = HANDMADE.map((g) => unitRaDec(g.ra, g.dec));
   for (const [ra, dec, dMpc, rKpc, absMag, type, axis, name, src] of survey.rows) {
     if (src !== 0 && !/^(NGC|IC|M)\s?\d/.test(name)) continue;
     const u = unitRaDec(ra, dec);

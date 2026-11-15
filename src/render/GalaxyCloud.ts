@@ -46,7 +46,8 @@ export class GalaxyCloud {
     const pos = new Float32Array(count * 3);
     const col = new Float32Array(count * 3);
     const w = new Float32Array(count);
-    this.blobRadius = model.radius / 140;
+    // a peculiar galaxy's radius spans its tails: the blobs keep to the scale of the host and its rings
+    this.blobRadius = Math.max(model.bodyRadius, model.radius * 0.35) / 140;
     // per-blob alpha: total light ∝ L/N, spread over the blob area
     this.volumes = volumes;
     this.volume = volumes ? volumes.galaxy(model, GalaxyCloud.gain, POINT_SHARE) : null;
@@ -149,12 +150,13 @@ export class GalaxyCloud {
     if (!this.complete) this.fill(fade > 0.3 ? 12 : 4);
     // inside a disc: dust limits the view to the nearest few kpc (≈1 mag/kpc)
     let ext = 0;
+    const Rb = this.model.bodyRadius;
     if (this.model.p.type !== 'E' && ratio < 1.3) {
       this.model.toLocal(camPc, _local);
       const hz = this.model.scaleHeight;
       const r = Math.hypot(_local.x, _local.z);
-      const inPlane = (1 - smoothstep(hz * 1.5, hz * 6, Math.abs(_local.y))) * (1 - smoothstep(this.model.radius, this.model.radius * 1.3, r));
-      ext = inPlane / (this.model.radius * 0.33);
+      const inPlane = (1 - smoothstep(hz * 1.5, hz * 6, Math.abs(_local.y))) * (1 - smoothstep(Rb, Rb * 1.3, r));
+      ext = inPlane / (Rb * 0.33);
     }
     u.uExtinction.value = ext;
     this.points.visible = visible && fade > 0.001;
@@ -166,7 +168,8 @@ export class GalaxyCloud {
       v.place(camPc, this.center, this.model.radius, v.u.uToLocal.value, pxPerRad);
       v.u.uFade.value = fade;
       v.u.uCoreFade.value = coreFade;
-      v.u.uSteps.value = ratio < 1.4 ? 88 : 60;
+      // thin rings and tails across a whole cube of a box need the finer march
+      v.u.uSteps.value = this.model.pec ? (ratio < 1.4 ? 112 : 84) : ratio < 1.4 ? 88 : 60;
       v.active = visible && volumetric;
     }
   }

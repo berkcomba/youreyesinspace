@@ -431,9 +431,8 @@ export class UI {
     menu.appendChild(this.discoveriesGroup);
     const resolveGalaxy = (ref: string): number | null => {
       if (ref.startsWith('#')) return parseInt(ref.slice(1), 10);
-      const g = u.galaxies;
-      for (let i = 1; i < g.catalogCount; i++) if (g.rawName(i).includes(ref)) return i;
-      return null;
+      const i = u.galaxies.findHandmade(ref);
+      return i < 0 ? null : i;
     };
     for (const group of PLACES) {
       const head = document.createElement('div');
@@ -596,7 +595,7 @@ export class UI {
       for (const i of gals) {
         const li = document.createElement('li');
         const dist = fmtLightYears(u.galaxies.distancePc(i) * PARSEC_KM);
-        li.innerHTML = `<span>${u.galaxies.name(i)}</span><span class="t">${_('Galaksi')} · ${_(GALAXY_TYPE_LABEL[u.galaxies.typeOf(i)])} · ${dist}</span>`;
+        li.innerHTML = `<span>${u.galaxies.name(i)}</span><span class="t">${_('Galaksi')} · ${_(u.galaxies.typeLabel(i))} · ${dist}</span>`;
         li.addEventListener('click', () => { this.host.selectGalaxy(i); this.host.goToGalaxy(i); this.closeSearch(); });
         list.appendChild(li);
       }
@@ -1061,8 +1060,9 @@ export class UI {
     const g = u.galaxies;
     const type = g.typeOf(i);
     this.infoName.textContent = g.name(i);
-    this.infoType.textContent = `${_('Galaksi')} · ${_(GALAXY_TYPE_LABEL[type])}`;
+    this.infoType.textContent = `${_('Galaksi')} · ${_(g.typeLabel(i))}`;
     const source = g.sourceOf(i);
+    const peculiar = !!g.handmade(i)?.pec;
     this.infoParent.textContent = i === 0 ? _('Ev galaksimiz') : g.isReal(i) ? _('Gerçek galaksi kataloğu') : _('Prosedürel kozmik ağ');
 
     const rel = u.galaxyRelative(i, this.host.camera.position);
@@ -1082,7 +1082,8 @@ export class UI {
     rows.push(['Mutlak kadir', fixed(absMag, 1)]);
     rows.push(['Parlaklık', `${lum.toExponential(2)} L☉`]);
     rows.push(['Yıldız sayısı (tahmini)', `~${(lum * 3).toExponential(1).replace('e+', '×10^')}`]);
-    if (source === 'handmade') rows.push(['Kaynak', 'Messier / NGC (yaklaşık parametreler)']);
+    if (peculiar) rows.push(['Kaynak', 'Yayımlanmış görüntülere göre elle çizildi (yaklaşık)']);
+    else if (source === 'handmade') rows.push(['Kaynak', 'Messier / NGC (yaklaşık parametreler)']);
     else if (source === 'ungc') rows.push(['Kaynak', 'Updated Nearby Galaxy Catalog (Karachentsev+ 2013)']);
     else if (source === '2mrs' || source === '2mrs-cluster') rows.push(['Kaynak', '2MASS Redshift Survey (Huchra+ 2012)']);
     rows.push(['Işık gecikmesi', fmtDuration(camDist / 299_792.458)]);

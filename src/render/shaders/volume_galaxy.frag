@@ -22,6 +22,25 @@ uniform float uCoreFade;  // share of the bulge glow left, from the camera's dep
 uniform vec4 uBlobs[6];   // irregulars: centre, size
 uniform float uBlobW[6];
 uniform float uNBlobs;
+// peculiar galaxies (src/galaxy/peculiar.ts): the host above is drawn in its own radius `uBody`
+// (the uniforms above are in host radii), the rings and tails below in the whole galaxy's
+uniform float uPec;       // 1: rings / tails / warp present
+uniform float uBody;
+uniform float uBend;
+uniform float uPecFlat;   // 1: every component lies near the host's plane (mid-plane bunching still works)
+uniform float uPecH;      // their thickness there
+uniform float uDustR;     // components' dust opacity per unit length at profile 1
+uniform vec4 uRingA[2];   // offset x, z, radius, width
+uniform vec4 uRingB[2];   // thickness, cos/sin tilt azimuth, amplitude
+uniform vec4 uRingC[2];   // cos/sin tilt, arc, bright side
+uniform vec4 uRingD[2];   // spokes, spoke start, spoke width, young
+uniform vec4 uRingE[2];   // knots, dust, inner / outer width
+uniform vec4 uRingF[2];   // wobble, strands, twist, strand amplitude
+uniform float uNRings;
+uniform vec4 uTailA[2];   // phase, sweep, r0, r1
+uniform vec4 uTailB[2];   // width start, end, lift, amplitude
+uniform vec4 uTailC[2];   // young, knots, dust
+uniform float uNTails;
 
 const float BULGE_C = 0.5;
 const float BULGE_CORE = 0.3;
@@ -50,7 +69,7 @@ float sech2(float x) { float c = cosh(clamp(x, -15.0, 15.0)); return 1.0 / (c * 
 float lod(float f, float dt) { return 1.0 - smoothstep(0.8, 2.0, f * dt); }
 
 // e: emitted light (density units × colour), k: dust opacity; dt: step length here
-void galaxyAt(vec3 p, float t, float dt, out vec3 e, out float k) {
+void bodyAt(vec3 p, float t, float dt, out vec3 e, out float k) {
   e = vec3(0.0); k = 0.0;
   float r = length(p.xz);
   if (uType < 0.5) {
@@ -138,6 +157,98 @@ void galaxyAt(vec3 p, float t, float dt, out vec3 e, out float k) {
   }
 }
 
+vec3 starColour(float young) {
+  return mix(mix(OLD, DISC, clamp(young * 2.0, 0.0, 1.0)), YOUNG, clamp(young * 2.0 - 1.0, 0.0, 1.0));
+}
+
+// a component's stars: `f` its smooth density, `q` where to read its clumps (its own frame, so
+// they ride along it), young / knots / dust its make-up, `prof` its unit-crest profile for the dust
+void componentLight(float f, float prof, vec3 q, float young, float knots, float dust, float salt, float t, float dt, inout vec3 e, inout float k) {
+  float n1 = snoise(q * 22.0 + uSeed + salt);
+  float w2 = lod(60.0, dt);
+  float n2 = w2 > 0.0 ? snoise(q * 60.0 - uSeed * 0.7 + salt) * w2 : 0.0;
+  // star-forming complexes: a beaded string rather than a smooth band
+  float clump = mix(0.9 + 0.1 * n1, clamp(0.45 + 0.85 * n1 + 0.35 * n2, 0.0, 2.6), knots);
+  e += starColour(young) * f * clump;
+  float hiiW = f * young * knots * smoothstep(uNear * 1.5, uNear * 4.0, t);
+  if (hiiW > 1e-5) e += HII * hiiW * pow(max(snoise(q * 75.0 + uSeed * 2.3 + salt) + 0.3 * n2 + 0.2 * n1, 0.0), 3.0) * 7.0;
+  if (dust > 0.0) {
+    float fil = max(0.0, 0.4 + 0.6 * n1 + 0.35 * n2);
+    k += uDustR * dust * prof * fil * fil;
+  }
+}
+
+// a ring's strands (Peculiar.strand): F = wobble, count, twist, amplitude; x widths off the crest
+float strandAt(vec4 F, float x, float phi) {
+  if (F.y < 0.5) return 1.0;
+  float c = 1.0 + cos(F.y * phi + F.z * x + 1.2 * sin(2.0 * phi + 0.5));
+  float seg = 0.3 + 0.35 * (1.0 + sin(3.0 * phi + 2.1 + 0.9 * sin(5.0 * phi + 0.3)));
+  return 1.0 + F.w * seg * exp(-0.5 * x * x) * (c * c / 1.5 - 1.0);
+}
+
+// rings and tidal tails (p in galaxy radii, host-local)
+void pecAt(vec3 p, float t, float dt, inout vec3 e, inout float k) {
+  for (int i = 0; i < 2; i++) {
+    if (float(i) >= uNRings) break;
+    vec4 A = uRingA[i], B = uRingB[i], C = uRingC[i], D = uRingD[i], E = uRingE[i], F = uRingF[i];
+    float qx = p.x - A.x, qz = p.z - A.y;
+    float x1 = B.y * qx + B.z * qz, z1 = -B.z * qx + B.y * qz;
+    vec3 q = vec3(x1, C.x * p.y + C.y * z1, -C.y * p.y + C.x * z1);
+    float v = exp(-q.y * q.y / (2.0 * B.x * B.x));
+    if (v < 1e-4) continue;
+    float rho = length(q.xz);
+    float phi = rho > 1e-6 ? atan(q.z, q.x) : 0.0;
+    // the width wobbles round the ring and its crest wanders (Peculiar.widthAt / crestAt)
+    float wf = 1.0 + F.x * sin(3.0 * phi + 0.4);
+    float dr = rho - (A.z + F.x * A.w * sin(2.0 * phi + 1.9));
+    float sp = 0.0;
+    if (D.x > 0.5 && rho > D.y && rho < A.z) {
+      float kk = phi * D.x / 6.2831853;
+      float across = rho * (kk - floor(kk + 0.5)) * 6.2831853 / D.x;
+      float win = smoothstep(D.y, D.y + 0.06, rho) * (1.0 - smoothstep(A.z - 2.5 * A.w, A.z - A.w, rho));
+      sp = exp(-across * across / (2.0 * D.z * D.z)) * win;
+    }
+    float ws = (dr < 0.0 ? E.z : E.w) * wf;
+    if (abs(dr) > 4.5 * ws && sp < 1e-3) continue;
+    float side = 1.0 - (1.0 - C.z) * 0.5 * (1.0 - cos(phi - C.w));
+    float st = strandAt(F, dr / (A.w * wf), phi);
+    float prof = exp(-dr * dr / (2.0 * ws * ws)) * side * st + 0.35 * sp;
+    // the dust sits in a thinner layer than the stars
+    float vd = exp(-q.y * q.y / (0.72 * B.x * B.x));
+    // the strands are where the young stars are; between them the light is older
+    float young = clamp(D.w * (0.75 + 0.25 * st), 0.0, 1.0);
+    componentLight(B.w * v * prof, vd * prof, q, young, E.x, E.y, float(i) * 17.0, t, dt, e, k);
+  }
+  for (int i = 0; i < 2; i++) {
+    if (float(i) >= uNTails) break;
+    vec4 A = uTailA[i], B = uTailB[i], C = uTailC[i];
+    float rho = length(p.xz);
+    float dr = A.w - A.z;
+    float s = (rho - A.z) / dr;
+    if (s < -0.15 || s > 1.0) continue;
+    float sc = max(s, 0.0);
+    float w = mix(B.x, B.y, sc);
+    float dd = atan(p.z, p.x) - (A.x + A.y * s);
+    dd = atan(sin(dd), cos(dd));
+    float across = rho * dd * dr / length(vec2(dr, rho * A.y));
+    float dy = p.y - B.z * sc * sc;
+    float g2 = (across * across + dy * dy) / (2.0 * w * w);
+    if (g2 > 9.0) continue;
+    float env = smoothstep(-0.15, 0.08, s) * pow(1.0 - clamp(s, 0.0, 1.0), 0.7);
+    float prof = env * exp(-g2);
+    componentLight(B.w * prof, prof, p, C.x, C.y, C.z, 41.0 + float(i) * 23.0, t, dt, e, k);
+  }
+}
+
+void galaxyAt(vec3 p, float t, float dt, out vec3 e, out float k) {
+  if (uPec < 0.5) { bodyAt(p, t, dt, e, k); return; }
+  vec3 pb = p;
+  // integral-sign warp: the rim rises on one side of the major axis and sinks on the other
+  if (uBend != 0.0) { float r = length(p.xz); pb.y -= uBend * (r > 0.0 ? p.x / r : 0.0) * sq(max(0.0, r / uBody - 0.4) / 0.6); }
+  bodyAt(pb / uBody, t, dt / uBody, e, k);
+  pecAt(p, t, dt, e, k);
+}
+
 void main() {
   vec3 d = viewRay();
   vec2 hit = boxHit(uOrigin, d, uBox);
@@ -151,8 +262,10 @@ void main() {
   float tmin = max(uNear * 0.05, 1e-4);
   float lg = log(max(t1, tmin * 1.01) / tmin);
   float tc = abs(d.y) > 1e-4 ? -uOrigin.y / d.y : -1.0;
-  bool bunch = !inside && uType > 0.5 && uType < 3.5 && tc > t0 && tc < t1;
-  float a = max(uHz * 1.5 / max(abs(d.y), 1e-3), (t1 - t0) * 0.02);
+  bool planar = uPec > 0.5 ? uPecFlat > 0.5 : uType > 0.5 && uType < 3.5;
+  bool bunch = !inside && planar && tc > t0 && tc < t1;
+  float hz = uPec > 0.5 ? max(uType > 0.5 && uType < 3.5 ? uHz * uBody : 0.0, uPecH) : uHz;
+  float a = max(hz * 1.5 / max(abs(d.y), 1e-3), (t1 - t0) * 0.02);
   float u0 = bunch ? asinh((t0 - tc) / a) : 0.0, u1 = bunch ? asinh((t1 - tc) / a) : 1.0;
   vec3 L = vec3(0.0);
   float T = 1.0;

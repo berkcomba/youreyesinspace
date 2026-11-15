@@ -2,14 +2,17 @@ import { Matrix3, Vector3 } from 'three';
 import { _ } from '../i18n';
 import { raDecToScene } from '../math/frames';
 import { Rng, hashSeed } from '../gen/SystemGenerator';
-import { GalaxyModel, type GalaxyParams, type GalaxyType } from './GalaxyModel';
+import { GALAXY_TYPE_LABEL, GalaxyModel, type GalaxyParams, type GalaxyType } from './GalaxyModel';
 import { galaxyBasisFromSky, milkyWayBasis, milkyWayCenterPc } from './frames';
+import { PEC_TEXELS, Peculiar, type PeculiarSpec } from './peculiar';
 
 const MPC = 1e6;
 
 export interface CatalogGalaxy {
   name: string; ra: number; dec: number; distMpc: number; type: GalaxyType;
+  /** for a peculiar galaxy: the whole system's, rings and tails included */
   diameterKpc: number; absMag: number; pa?: number; inc?: number; axis?: number; desc?: string;
+  pec?: PeculiarSpec;
 }
 
 /** Real galaxies: Local Group + bright Messier/NGC objects (approximate parameters). */
@@ -67,8 +70,151 @@ export const CATALOG: CatalogGalaxy[] = [
   { name: 'Fornax A (NGC 1316)', ra: 50.674, dec: -37.208, distMpc: 19.0, type: 'S0', diameterKpc: 45, absMag: -22.8, axis: 0.7 },
   { name: 'NGC 1365', ra: 53.402, dec: -36.140, distMpc: 17.9, type: 'SB', diameterKpc: 60, absMag: -22.3, pa: 32, inc: 40 },
   { name: 'M58', ra: 189.431, dec: 11.818, distMpc: 19.1, type: 'SB', diameterKpc: 34, absMag: -21.5, pa: 95, inc: 40 },
-  { name: 'Antenler (NGC 4038/4039)', ra: 180.470, dec: -18.867, distMpc: 22, type: 'Irr', diameterKpc: 30, absMag: -21.0, desc: 'Birleşmekte olan iki sarmal galaksi.' },
+  {
+    name: 'Antenler (NGC 4038)', ra: 180.4708, dec: -18.8694, distMpc: 22, type: 'S', diameterKpc: 120, absMag: -21.4, pa: 0, inc: 25,
+    desc: 'Birleşmekte olan iki sarmal galaksiden kuzeydeki. Çarpışmanın sıkıştırdığı gaz milyarlarca yeni yıldız doğuruyor; gelgit kuvvetleri iki galaksiden de upuzun birer yıldız kuyruğu çekip çıkarmış. Böcek antenlerine benzeyen bu kuyruklar galaksilere adını verir.',
+    pec: { label: 'Birleşen galaksi', body: 0.14, tails: [{ phase: 200, sweep: 45, r0: 0.12, r1: 1.2, lift: 0.18, w0: 0.035, w1: 0.08, light: 0.16, young: 0.45, knots: 0.55 }] },
+  },
 ];
+
+/**
+ * Peculiar galaxies drawn by hand after published images: rings, tidal tails, warps (shapes and
+ * numbers approximate). Members of a pair share one distance, so they stand side by side. They
+ * come after the survey galaxies in the index: adding them moves no existing galaxy's index.
+ */
+export const PECULIAR_CATALOG: CatalogGalaxy[] = [
+  {
+    name: 'Hoag Nesnesi', ra: 229.3100, dec: 21.5856, distMpc: 183, type: 'E', diameterKpc: 46, absMag: -21.1, pa: 0, inc: 20, axis: 0.9,
+    desc: 'Neredeyse kusursuz bir halka galaksi: yaşlı, sarı yıldızlardan oluşan yuvarlak çekirdeği karanlık bir boşluk ve genç, mavi yıldızlardan bir halka çevreliyor. Bu biçimin nasıl oluştuğu hâlâ tartışmalı. Boşluğun içinden, çok daha uzaktaki ikinci bir halka galaksi görünür.',
+    pec: {
+      label: 'Halka galaksi', body: 0.3,
+      rings: [
+        // tightly wound blue strands, a sharp inner edge and a fluffy outside
+        { r: 0.76, w: 0.09, h: 0.035, skew: 1.8, wobble: 0.22, strands: 9, twist: 7, strandAmp: 0.6, light: 0.32, young: 0.85, knots: 0.9, dust: 0.15 },
+        // the faint red inner ring deep images show in the gap
+        { r: 0.46, w: 0.03, h: 0.03, arc: 0.35, arcPhase: 130, wobble: 0.15, light: 0.02, young: 0.12, knots: 0.1, dust: 0.05 },
+      ],
+    },
+  },
+  {
+    name: 'Araba Tekerleği (ESO 350-40)', ra: 9.4213, dec: -33.7164, distMpc: 129, type: 'S0', diameterKpc: 50, absMag: -21.0, pa: 15, inc: 40,
+    desc: 'Birkaç yüz milyon yıl önce küçük bir galaksi bu sarmalın tam ortasından geçti. Çarpışmanın yarattığı dalga, suya atılan taşın halkası gibi dışa yayıldı ve geçtiği yerde gazı sıkıştırarak genç, mavi yıldızlardan dev bir halka yaktı. İç halkayı dış halkaya tekerlek parmaklıkları gibi ince kollar bağlar.',
+    pec: {
+      label: 'Çarpışma halkası galaksisi', body: 0.2,
+      rings: [
+        { r: 0.9, w: 0.055, h: 0.03, ox: 0.08, oz: -0.06, spokes: 14, spokeIn: 0.32, light: 0.42, young: 0.95, knots: 0.95, dust: 0.3 },
+        { r: 0.27, w: 0.04, h: 0.03, light: 0.1, young: 0.15, knots: 0.35, dust: 0.9 },
+      ],
+    },
+  },
+  {
+    name: 'Lindsay-Shapley Halkası (AM 0644-741)', ra: 100.7751, dec: -74.2362, distMpc: 92.9, type: 'S0', diameterKpc: 56, absMag: -22.3, pa: 90, inc: 55,
+    desc: 'Yaklaşık 150 bin ışık yılı çapında bir çarpışma halkası. Halkadaki pembe düğümler, çarpışmanın sıkıştırdığı gazda yeni doğan yıldızların aydınlattığı dev hidrojen bulutları. Eski çekirdek halkanın merkezinden belirgin biçimde kaymış duruyor.',
+    pec: { label: 'Çarpışma halkası galaksisi', body: 0.22, rings: [{ r: 0.75, w: 0.06, h: 0.03, ox: 0.3, oz: 0.05, arc: 0.7, arcPhase: 0, light: 0.55, young: 0.95, knots: 1, dust: 0.35 }] },
+  },
+  {
+    name: 'Arp 147 (halka)', ra: 47.8266, dec: 1.3150, distMpc: 138, type: 'S0', diameterKpc: 30, absMag: -20.0, pa: 0, inc: 35,
+    desc: 'Komşusu tam içinden geçince ortaya çıkan neredeyse kusursuz bir halka. Mavi halkada yeni yıldızlar doğuyor; halkanın kenarındaki kızıl düğüm galaksinin eski çekirdeği olabilir.',
+    pec: { label: 'Çarpışma halkası galaksisi', body: 0.12, rings: [{ r: 0.6, w: 0.07, h: 0.035, ox: 0.35, oz: -0.25, light: 0.72, young: 0.95, knots: 1, dust: 0.3 }] },
+  },
+  {
+    name: 'Arp 147 (eşlikçi)', ra: 47.8349, dec: 1.3135, distMpc: 138, type: 'E', diameterKpc: 18, absMag: -20.6, axis: 0.75,
+    desc: 'Komşusunun içinden geçerek onu bir halkaya dönüştüren galaksi. Kendisi de çarpışmadan nasibini almış: çevresinde soluk bir yıldız halesi var.',
+  },
+  {
+    name: 'NGC 922', ra: 36.2684, dec: -24.7882, distMpc: 43.9, type: 'SB', diameterKpc: 32, absMag: -20.6, pa: 0, inc: 30,
+    desc: 'Cüce bir galaksinin diskin içinden geçmesiyle oluşmuş, C harfine benzeyen yarım bir halka. Halka boyunca yoğun, pembe yıldız oluşum bölgeleri sıralanır; çarpan cüce galaksi bugün biraz ötede duruyor.',
+    pec: { label: 'Çarpışma halkası galaksisi', body: 0.4, rings: [{ r: 0.72, w: 0.08, h: 0.035, ox: -0.1, oz: 0.05, arc: 0.12, arcPhase: 200, light: 0.42, young: 0.95, knots: 0.95, dust: 0.3 }] },
+  },
+  {
+    name: 'NGC 4650A', ra: 191.2044, dec: -40.7143, distMpc: 41.8, type: 'S0', diameterKpc: 34, absMag: -19.6, pa: 120, inc: 75,
+    desc: 'Kutup halkalı galaksilerin en ünlüsü: yaşlı yıldızlardan oluşan lentiküler bir galaksinin çevresinde, kutuplarının üzerinden geçen geniş bir gaz, toz ve genç yıldız halkası döner. Halka başka bir galaksiden koparılmış ya da kozmik ağdan süzülen gazdan oluşmuş olabilir.',
+    pec: { label: 'Kutup halkalı galaksi', body: 0.32, rings: [{ r: 0.55, w: 0.2, h: 0.03, tilt: 90, tiltAz: 90, light: 0.45, young: 0.75, knots: 0.6, dust: 1 }] },
+  },
+  {
+    name: 'NGC 660', ra: 25.7598, dec: 13.6457, distMpc: 12.2, type: 'S', diameterKpc: 36, absMag: -20.4, pa: 135, inc: 80,
+    desc: 'Kenardan gördüğümüz bir diski, ona eğik duran geniş bir yıldız, gaz ve toz halkası sarıyor. Halkanın geçmişteki bir galaksi karşılaşmasından kaldığı düşünülüyor.',
+    pec: { label: 'Kutup halkalı galaksi', body: 0.5, rings: [{ r: 0.7, w: 0.12, h: 0.035, tilt: 55, tiltAz: 90, arc: 0.6, arcPhase: 30, light: 0.35, young: 0.6, knots: 0.6, dust: 1 }] },
+  },
+  {
+    name: 'Fareler (NGC 4676A)', ra: 191.5421, dec: 30.7319, distMpc: 93.6, type: 'S0', diameterKpc: 100, absMag: -21.6, pa: 0, inc: 65,
+    desc: 'Birbirinin çevresinde dönen iki galaksiden kuzeydeki. Kütle çekimi yıldızlarının bir bölümünü upuzun, dümdüz bir kuyruk hâlinde dışarı çekmiş; fare benzetmesi buradan geliyor. İkisi sonunda tek bir galaksiye dönüşecek.',
+    pec: { label: 'Etkileşen galaksi', body: 0.2, tails: [{ phase: 0, sweep: 12, r0: 0.12, r1: 1.25, lift: 0.12, w0: 0.045, w1: 0.11, light: 0.22, young: 0.6, knots: 0.4 }] },
+  },
+  {
+    name: 'Fareler (NGC 4676B)', ra: 191.5467, dec: 30.7228, distMpc: 93.6, type: 'SB', diameterKpc: 80, absMag: -21.3, pa: 0, inc: 45,
+    desc: 'Farelerin güneydeki üyesi: çubuklu sarmalından kopan yıldızlar kıvrık bir kuyruk çiziyor. Samanyolu ile Andromeda\'nın karşılaşması da bir gün buna benzeyecek.',
+    pec: { label: 'Etkileşen galaksi', body: 0.25, tails: [{ phase: 185, sweep: -70, r0: 0.15, r1: 1.2, lift: -0.1, w0: 0.06, w1: 0.13, light: 0.2, young: 0.6, knots: 0.5 }] },
+  },
+  {
+    name: 'Antenler (NGC 4039)', ra: 180.4729, dec: -18.8861, distMpc: 22, type: 'S', diameterKpc: 100, absMag: -21.0, pa: 0, inc: 30,
+    desc: 'Antenlerin güneydeki üyesi. Kuzeydeki komşusuyla birkaç yüz milyon yıl içinde tek bir eliptik galaksiye dönüşecek; Samanyolu ile Andromeda\'nın geleceği de böyle görünecek.',
+    pec: { label: 'Birleşen galaksi', body: 0.16, tails: [{ phase: 160, sweep: -45, r0: 0.12, r1: 1.15, lift: -0.15, w0: 0.035, w1: 0.075, light: 0.14, young: 0.45, knots: 0.6 }] },
+  },
+  {
+    name: 'İribaş (UGC 10214)', ra: 241.5169, dec: 55.4253, distMpc: 134.3, type: 'SB', diameterKpc: 170, absMag: -22.0, pa: 0, inc: 35,
+    desc: 'Yanından geçen küçük bir galaksinin kütle çekimi, diskinden yaklaşık 280 bin ışık yılı uzunluğunda bir yıldız ve gaz kuyruğu çekip çıkarmış. Kuyruk boyunca parlak, mavi yıldız kümeleri doğuyor; bunlar zamanla bağımsız cüce galaksilere dönüşebilir.',
+    pec: { label: 'Etkileşen galaksi', body: 0.17, tails: [{ phase: 95, sweep: 18, r0: 0.12, r1: 1.25, lift: 0.08, w0: 0.045, w1: 0.09, light: 0.25, young: 0.85, knots: 0.9 }] },
+  },
+  {
+    name: 'Gül (Arp 273, UGC 1810)', ra: 35.3696, dec: 39.3757, distMpc: 106.4, type: 'S', diameterKpc: 66, absMag: -22.2, pa: 0, inc: 35,
+    desc: 'Arp 273 çiftinin büyük üyesi. Küçük komşusu diskinin içinden geçmiş olabilir; kolları bu yüzden kaymış ve halkaya benzer bir biçim almış; çift uzaktan bir gülü andırıyor. Kolların ucundaki mavi düğümler, karşılaşmanın tetiklediği yıldız oluşumu.',
+    pec: { label: 'Etkileşen galaksi', body: 0.72, rings: [{ r: 0.82, w: 0.06, h: 0.03, ox: 0.06, oz: -0.08, arc: 0.25, arcPhase: 140, light: 0.25, young: 0.95, knots: 0.9, dust: 0.4 }] },
+  },
+  {
+    name: 'Arp 273 (UGC 1813)', ra: 35.3858, dec: 39.3568, distMpc: 106.4, type: 'S', diameterKpc: 40, absMag: -21.0, pa: 0, inc: 82,
+    desc: 'Arp 273\'ün kenardan görülen küçük üyesi; büyük komşusunun diskinin içinden geçtiği düşünülüyor.',
+  },
+  {
+    name: 'NGC 2207', ra: 94.0921, dec: -21.3727, distMpc: 39.3, type: 'S', diameterKpc: 50, absMag: -21.9, pa: 0, inc: 35,
+    desc: 'IC 2163 ile iç içe geçmiş gibi duran dev sarmal. Kütle çekimleri birbirlerinin kollarını çekiştiriyor; birkaç milyar yıl içinde birleşmeleri bekleniyor.',
+    pec: { label: 'Etkileşen galaksi', body: 0.9, tails: [{ phase: 300, sweep: 35, r0: 0.7, r1: 1.2, lift: 0.08, w0: 0.05, w1: 0.09, light: 0.06, young: 0.8, knots: 0.7 }] },
+  },
+  {
+    name: 'IC 2163', ra: 94.1167, dec: -21.3758, distMpc: 39.3, type: 'SB', diameterKpc: 56, absMag: -21.5, pa: 0, inc: 55,
+    desc: 'NGC 2207\'nin yanından geçerken kolları gelgit kuvvetiyle göz kapağı biçiminde sıkışmış ve doğuya doğru uzun bir kuyruğa savrulmuş galaksi.',
+    pec: {
+      label: 'Etkileşen galaksi', body: 0.4,
+      rings: [{ r: 0.4, w: 0.045, h: 0.03, arc: 0.15, arcPhase: 90, light: 0.15, young: 0.8, knots: 0.6, dust: 0.8 }],
+      tails: [{ phase: 80, sweep: 25, r0: 0.3, r1: 1.25, lift: 0.08, w0: 0.06, w1: 0.12, light: 0.22, young: 0.75, knots: 0.6 }],
+    },
+  },
+  {
+    name: 'Penguen (NGC 2936)', ra: 144.4339, dec: 2.7609, distMpc: 98.4, type: 'S', diameterKpc: 70, absMag: -22.0, pa: 0, inc: 40,
+    desc: 'Bir zamanlar sıradan bir sarmaldı; yanındaki eliptik galaksinin kütle çekimi diskini bükerek bir penguen silueti çizdi: parlak çekirdek gözü, kıvrılan kollar gövdeyi ve gagayı oluşturuyor.',
+    pec: {
+      label: 'Etkileşen galaksi', body: 0.3,
+      tails: [
+        { phase: 20, sweep: 160, r0: 0.25, r1: 1.0, lift: 0.05, w0: 0.08, w1: 0.13, light: 0.33, young: 0.8, knots: 0.8 },
+        { phase: 200, sweep: 60, r0: 0.25, r1: 0.8, lift: -0.05, w0: 0.06, w1: 0.1, light: 0.12, young: 0.7, knots: 0.6 },
+      ],
+    },
+  },
+  {
+    name: 'Yumurta (NGC 2937)', ra: 144.4377, dec: 2.7474, distMpc: 98.4, type: 'E', diameterKpc: 28, absMag: -21.4, axis: 0.7,
+    desc: 'Penguenin yanındaki "yumurta": yıldız oluşumu çoktan durmuş, pürüzsüz bir eliptik galaksi. Penguenin biçimini bozan onun kütle çekimi.',
+  },
+  {
+    name: 'Barış İçin Atomlar (NGC 7252)', ra: 335.1865, dec: -24.6783, distMpc: 68.5, type: 'E', diameterKpc: 150, absMag: -21.9, pa: 0, inc: 30, axis: 0.85,
+    desc: 'Yaklaşık bir milyar yıl önce iki sarmal galaksinin birleşmesinden kalan genç bir eliptik galaksi. Çekirdeğin çevresindeki ilmekler elektron yörüngeli atom çizimlerini andırdığı için adını Eisenhower\'ın 1953\'teki "Barış İçin Atomlar" konuşmasından alır; iki uzun kuyruk çarpışmanın izi.',
+    pec: {
+      label: 'Birleşme kalıntısı', body: 0.14,
+      rings: [{ r: 0.2, w: 0.022, h: 0.04, arc: 0.3, arcPhase: 45, light: 0.06, young: 0.2, knots: 0.2, dust: 0.1 }],
+      tails: [
+        { phase: 340, sweep: 70, r0: 0.1, r1: 1.2, lift: 0.15, w0: 0.035, w1: 0.09, light: 0.12, young: 0.4, knots: 0.5 },
+        { phase: 160, sweep: 70, r0: 0.1, r1: 1.15, lift: -0.12, w0: 0.035, w1: 0.09, light: 0.11, young: 0.4, knots: 0.5 },
+      ],
+    },
+  },
+  {
+    name: 'İntegral İşareti (UGC 3697)', ra: 107.8439, dec: 71.8364, distMpc: 44.8, type: 'S', diameterKpc: 50, absMag: -20.2, pa: 0, inc: 88,
+    desc: 'Kenardan gördüğümüz ince diskinin iki ucu zıt yönlere kıvrılmış; bu yüzden ∫ (integral) işaretine benziyor. Bükülmenin yakındaki küçük bir komşunun kütle çekiminden kaynaklandığı düşünülüyor.',
+    pec: { label: 'Bükülmüş disk', body: 0.85, bend: 0.12 },
+  },
+];
+
+/** every hand-made galaxy: the catalogue and the peculiar ones (static site, name lookups) */
+export const HANDMADE: CatalogGalaxy[] = [...CATALOG, ...PECULIAR_CATALOG];
 
 export const TYPE_CODE: Record<GalaxyType, number> = { E: 0, S0: 1, S: 2, SB: 3, Irr: 4 };
 /** guest slots for far-cluster member galaxies the camera is close to (see GalaxyIndex.adopt) */
@@ -120,8 +266,23 @@ export interface GalaxySource {
   /** spiral arm count / pitch angle (deg) — absent for unresolved aggregate tiers */
   readonly arms?: Float32Array;
   readonly pitch?: Float32Array;
+  /** hand-made peculiar galaxies [peculiarStart, peculiarEnd) (after the survey), labelled too */
+  readonly peculiarStart?: number;
+  readonly peculiarEnd?: number;
+  /** the sprite's parameters of the peculiar galaxies (see Peculiar.spriteTexels) */
+  peculiarSprites?(): PeculiarSprites;
   name(i: number): string;
 }
+
+export interface PeculiarSprites {
+  /** PEC_TEXELS RGBA texels per peculiar galaxy */
+  texels: Float32Array;
+  /** the galaxy of each row */
+  index: number[];
+}
+
+/** survey row also drawn by hand among the peculiar galaxies: kept (indices stay put) but parked */
+const SURVEY_PARKED = 16;
 
 function fract(x: number): number { return x - Math.floor(x); }
 
@@ -155,8 +316,14 @@ export class GalaxyIndex {
   /** real survey galaxies (UNGC, 2MRS) occupy [surveyStart, surveyEnd), after the generated ones */
   readonly surveyStart: number;
   readonly surveyEnd: number;
+  /** hand-made peculiar galaxies occupy [peculiarStart, peculiarEnd), after the survey */
+  readonly peculiarStart: number;
+  readonly peculiarEnd: number;
   private readonly surveyNames: string[] = [];
-  /** per survey galaxy: source row code (0 UNGC, 1 2MRS Hubble-law, 2 2MRS cluster) + 8 when the type is a guess */
+  /**
+   * per survey galaxy: source row code (0 UNGC, 1 2MRS Hubble-law, 2 2MRS cluster) + 8 when the
+   * type is a guess + SURVEY_PARKED
+   */
   private readonly surveyFlags: Uint8Array;
   readonly surveyCredits: Record<string, string>;
   readonly surveyH0: number;
@@ -189,8 +356,8 @@ export class GalaxyIndex {
 
   constructor(proceduralCount = 110_000, survey: SurveyGalaxies | null = null) {
     const surveyRows = survey?.rows ?? [];
-    const N = 1 + CATALOG.length + proceduralCount + surveyRows.length + GUEST_SLOTS;
-    // the generated population stops here; then the survey galaxies, then the guest slots
+    const N = 1 + CATALOG.length + proceduralCount + surveyRows.length + PECULIAR_CATALOG.length + GUEST_SLOTS;
+    // the generated population stops here; then the survey galaxies, the peculiar ones, the guest slots
     const LIMIT = 1 + CATALOG.length + proceduralCount;
     this.surveyFlags = new Uint8Array(surveyRows.length);
     this.surveyCredits = survey?.sources ?? {};
@@ -224,8 +391,7 @@ export class GalaxyIndex {
 
     // Real galaxies
     const dir = new Vector3();
-    CATALOG.forEach((g, k) => {
-      const i = 1 + k;
+    const placeHandmade = (g: CatalogGalaxy, i: number) => {
       raDecToScene(g.ra, g.dec, dir);
       const d = g.distMpc * MPC;
       this.positions[i * 3] = dir.x * d; this.positions[i * 3 + 1] = dir.y * d; this.positions[i * 3 + 2] = dir.z * d;
@@ -235,7 +401,8 @@ export class GalaxyIndex {
       this.seed[i] = hashSeed(i, 0x6a1a);
       this.axisRatio[i] = g.axis ?? (g.type === 'E' ? 0.75 : 0.12);
       setBasis(i, galaxyBasisFromSky(dir, g.pa ?? 0, g.inc ?? (g.type === 'E' ? 40 : 45), basis));
-    });
+    };
+    CATALOG.forEach((g, k) => placeHandmade(g, 1 + k));
 
     // Procedural cosmic web: cluster nodes, filaments between neighbouring nodes, and a sparse
     // field population. `env` (0 field … 1 cluster core) biases luminosity and Hubble type.
@@ -364,6 +531,7 @@ export class GalaxyIndex {
     // real survey galaxies (the hand-made catalogue keeps the ones it already has)
     this.surveyStart = i;
     const handDirs = CATALOG.map((g) => raDecToScene(g.ra, g.dec, new Vector3()));
+    const pecDirs = PECULIAR_CATALOG.map((g) => raDecToScene(g.ra, g.dec, new Vector3()));
     for (const [ra, dec, dMpc, rKpc, M, code, q, name, src] of surveyRows) {
       raDecToScene(ra, dec, dir);
       const dup = CATALOG.some((g, k) => {
@@ -372,6 +540,12 @@ export class GalaxyIndex {
         return sepRad < Math.max(0.06 * Math.PI / 180, 0.25 * angR) && Math.abs(g.absMag - M) < 1.5;
       });
       if (dup) continue;
+      // pair members sit close together: only the row at the hand-drawn galaxy's own centre is it
+      const parked = PECULIAR_CATALOG.some((g, k) => {
+        const sepRad = Math.acos(Math.min(1, dir.dot(pecDirs[k])));
+        const angR = (g.diameterKpc / 2) / (g.distMpc * 1000);
+        return sepRad < Math.max(0.4 / 60 * Math.PI / 180, 0.1 * angR) && Math.abs(g.absMag - M) < 1.5;
+      });
       const t = TYPE_BY_CODE[code & 7];
       const d = dMpc * MPC;
       this.positions[i * 3] = dir.x * d; this.positions[i * 3 + 1] = dir.y * d; this.positions[i * 3 + 2] = dir.z * d;
@@ -385,14 +559,18 @@ export class GalaxyIndex {
       const inc = elliptical ? 40 : Math.acos(Math.sqrt(Math.max(0, (q * q - 0.04) / 0.96))) * 180 / Math.PI;
       setBasis(i, galaxyBasisFromSky(dir, this.seed[i] % 180, inc, basis));
       this.surveyNames.push(name);
-      this.surveyFlags[i - this.surveyStart] = src + (code & 8);
+      this.surveyFlags[i - this.surveyStart] = src + (code & 8) + (parked ? SURVEY_PARKED : 0);
+      if (parked) this.park(i);
       i++;
     }
     this.surveyEnd = i;
+    this.peculiarStart = i;
+    for (const g of PECULIAR_CATALOG) placeHandmade(g, i++);
+    this.peculiarEnd = i;
     this.count = i;
     this.guestBase = i;
     // free guest slots sit far away with no size, so no distance search ever lands on one
-    for (let k = 0; k < GUEST_SLOTS; k++) this.parkGuest(this.guestBase + k);
+    for (let k = 0; k < GUEST_SLOTS; k++) this.park(this.guestBase + k);
 
     // spiral geometry, derived from the seed exactly as the GalaxyModel always did
     this.arms = new Float32Array(N);
@@ -405,7 +583,8 @@ export class GalaxyIndex {
     }
   }
 
-  private parkGuest(slot: number): void {
+  /** far away with no size: no distance search lands on it, no sprite shows it */
+  private park(slot: number): void {
     this.positions[slot * 3] = 1e13; this.positions[slot * 3 + 1] = 0; this.positions[slot * 3 + 2] = 0;
     this.radius[slot] = 1e-3;
     this.absMag[slot] = 0;
@@ -465,17 +644,53 @@ export class GalaxyIndex {
     this.guestKey[k] = null;
     this.guestName.delete(slot);
     this.models.delete(slot);
-    this.parkGuest(slot);
+    this.park(slot);
   }
 
   /** a real galaxy: the Milky Way, the hand-made catalogue or the surveys */
   isReal(i: number): boolean {
-    return i < this.catalogCount || (i >= this.surveyStart && i < this.surveyEnd);
+    return i < this.catalogCount || (i >= this.surveyStart && i < this.peculiarEnd);
+  }
+
+  /** catalogue entry of a hand-made galaxy (not the Milky Way), or null */
+  handmade(i: number): CatalogGalaxy | null {
+    if (i >= 1 && i < this.catalogCount) return CATALOG[i - 1];
+    if (i >= this.peculiarStart && i < this.peculiarEnd) return PECULIAR_CATALOG[i - this.peculiarStart];
+    return null;
+  }
+
+  /** the first hand-made galaxy whose (source) name contains `ref`, or -1 */
+  findHandmade(ref: string): number {
+    for (let i = 1; i < this.catalogCount; i++) if (CATALOG[i - 1].name.includes(ref)) return i;
+    for (let i = this.peculiarStart; i < this.peculiarEnd; i++) if (PECULIAR_CATALOG[i - this.peculiarStart].name.includes(ref)) return i;
+    return -1;
+  }
+
+  /** what kind of galaxy it is, untranslated: the Hubble type, or a peculiar galaxy's kind */
+  typeLabel(i: number): string {
+    return this.handmade(i)?.pec?.label ?? GALAXY_TYPE_LABEL[this.typeOf(i)];
+  }
+
+  /** the sprite's parameters of the hand-drawn rings and tails */
+  peculiarSprites(): PeculiarSprites {
+    const index: number[] = [];
+    for (let i = 1; i < this.peculiarEnd; i++) {
+      if (i === this.catalogCount) i = this.peculiarStart;
+      if (this.handmade(i)?.pec) index.push(i);
+    }
+    const texels = new Float32Array(Math.max(1, index.length) * PEC_TEXELS * 4);
+    const major = new Vector3(), normal = new Vector3();
+    index.forEach((i, row) => {
+      major.fromArray(this.major, i * 3);
+      normal.fromArray(this.normal, i * 3);
+      new Peculiar(this.handmade(i)!.pec!).spriteTexels(major, normal, texels, row * PEC_TEXELS * 4);
+    });
+    return { texels, index };
   }
 
   sourceOf(i: number): GalaxySourceKind {
     if (i === 0) return 'milkyway';
-    if (i < this.catalogCount) return 'handmade';
+    if (this.handmade(i)) return 'handmade';
     if (i >= this.surveyStart && i < this.surveyEnd) return (['ungc', '2mrs', '2mrs-cluster'] as const)[this.surveyFlags[i - this.surveyStart] & 7];
     return this.isGuest(i) ? 'guest' : 'procedural';
   }
@@ -489,17 +704,19 @@ export class GalaxyIndex {
   rawName(i: number): string {
     if (this.guestName.has(i)) return this.guestName.get(i)!;
     if (i === 0) return 'Samanyolu';
-    if (i < this.catalogCount) return CATALOG[i - 1].name;
+    const h = this.handmade(i);
+    if (h) return h.name;
     if (i >= this.surveyStart && i < this.surveyEnd) return this.surveyNames[i - this.surveyStart];
     return `Galaksi YE-${(this.seed[i] % 0xffffff).toString(16).toUpperCase().padStart(6, '0')}`;
   }
 
   name(i: number): string {
     if (this.guestName.has(i)) return this.guestName.get(i)!;
-    if (i >= this.surveyStart && i < this.surveyEnd) return this.surveyNames[i - this.surveyStart];
-    if (i >= this.catalogCount) return _('Galaksi YE-{code}', { code: (this.seed[i] % 0xffffff).toString(16).toUpperCase().padStart(6, '0') });
     if (i === 0) return _('Samanyolu');
-    return _(this.rawName(i));
+    const h = this.handmade(i);
+    if (h) return _(h.name);
+    if (i >= this.surveyStart && i < this.surveyEnd) return this.surveyNames[i - this.surveyStart];
+    return _('Galaksi YE-{code}', { code: (this.seed[i] % 0xffffff).toString(16).toUpperCase().padStart(6, '0') });
   }
 
   typeOf(i: number): GalaxyType { return TYPE_BY_CODE[this.type[i]]; }
@@ -521,6 +738,7 @@ export class GalaxyIndex {
     const normal = new Vector3(this.normal[i * 3], this.normal[i * 3 + 1], this.normal[i * 3 + 2]);
     const z = new Vector3().crossVectors(major, normal).normalize();
     const basis = new Matrix3().set(major.x, normal.x, z.x, major.y, normal.y, z.y, major.z, normal.z, z.z);
+    const hand = this.handmade(i);
     const params: GalaxyParams = {
       id: `g${i}`,
       name: this.name(i),
@@ -535,12 +753,13 @@ export class GalaxyIndex {
       axisRatio: this.axisRatio[i],
       description: i === 0
         ? _('Ev galaksimiz: ~13 milyar yıllık, 100–400 milyar yıldızlı çubuklu sarmal. Güneş, merkezden ~8.2 kpc uzakta Orion Kolu\'nda yer alır.')
-        : i < this.catalogCount ? (CATALOG[i - 1].desc ? _(CATALOG[i - 1].desc!) : undefined)
+        : hand ? (hand.desc ? _(hand.desc) : undefined)
           : this.isReal(i) ? this.surveyDescription(i)
           : this.isGuest(i) ? _('Uzak bir galaksi kümesinin üyesi; parlaklığı ve Hubble tipi kümenin morfoloji–yoğunluk ilişkisinden, yapısı tipinden türetildi.')
           : _('Prosedürel olarak üretilmiş galaksi; konumu kozmik ağ yoğunluk modelinden, yapısı Hubble tipinden türetildi.'),
       catalog: this.isReal(i),
       distancePc: this.distancePc(i),
+      peculiar: hand?.pec,
     };
     m = new GalaxyModel(params);
     if (this.models.size > 12) {
@@ -593,12 +812,14 @@ export class GalaxyIndex {
     const q = query.trim().toLowerCase();
     if (!q) return [];
     const hits: number[] = [];
-    for (let i = 0; i < this.catalogCount; i++) {
+    for (let i = 0; i < this.peculiarEnd; i++) {
+      if (i === this.catalogCount) i = this.peculiarStart;
       if (this.name(i).toLowerCase().includes(q) || this.rawName(i).toLowerCase().includes(q)) hits.push(i);
     }
     // survey galaxies: exact designations first, then prefixes ("NGC 1" must not list NGC 1000–1999 first)
     const exact: number[] = [], prefix: number[] = [];
     for (let i = this.surveyStart; i < this.surveyEnd; i++) {
+      if (this.surveyFlags[i - this.surveyStart] & SURVEY_PARKED) continue;
       const n = this.surveyNames[i - this.surveyStart].toLowerCase();
       if (n === q) exact.push(i);
       else if (prefix.length < limit && (n.startsWith(q) || (q.length >= 4 && n.includes(q)))) prefix.push(i);

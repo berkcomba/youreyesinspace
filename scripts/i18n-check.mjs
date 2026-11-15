@@ -130,7 +130,7 @@ function looksLikeText(s) {
 // (Academy lesson content in src/data/lessons.ts is English-only and deliberately not translated)
 const DATA_FILE = /\/src\/(data\/(?!lessons\.ts)|galaxy\/galaxies\.ts|ui\/places\.ts|ui\/UI\.ts|gen\/SystemGenerator\.ts|gen\/RealSystem\.ts|astro\/stellar\.ts|ui\/format\.ts|ui\/MissionPanel\.ts)/;
 const FIELD_RE = /(?:^|[\s,{(])(name|summary|description|desc|tagline|label|title|note|group|credit|hyperLabel|hostName|text|big|kicker)\s*:\s*$/;
-const TABLE_NAMES = ['TYPE_LABELS', 'CLASS_LABEL', 'LUM_CLASS_DESC', 'LANDMARK_KIND_LABEL', 'GALAXY_TYPE_LABEL', 'LETTERS_TR', 'KIND_LABELS', 'STATUS_LABELS', 'REAL_LABEL', 'EXO_FACTS', 'DS_FACTS', 'COMPANION_LABEL', 'SNR_TYPE', 'HII_STATUS', 'CLASS_NOTE', 'SUDARSKY_LABEL'];
+const TABLE_NAMES = ['TYPE_LABELS', 'CLASS_LABEL', 'LUM_CLASS_DESC', 'LANDMARK_KIND_LABEL', 'GALAXY_TYPE_LABEL', 'LETTERS_TR', 'KIND_LABELS', 'STATUS_LABELS', 'REAL_LABEL', 'EXO_FACTS', 'DS_FACTS', 'COMPANION_LABEL', 'SNR_TYPE', 'HII_STATUS', 'CLASS_NOTE', 'SUDARSKY_LABEL', 'EMOTE_LABELS', 'MODE_LABELS', 'MODE_HINTS', 'HUNT_LABELS'];
 
 const keys = new Map(); // key -> Set(files)
 const add = (k, file, force = false) => {

@@ -948,9 +948,8 @@ export class TourPlayer {
 
   private resolveGalaxy(ref: string): number | null {
     if (ref.startsWith('#')) return parseInt(ref.slice(1), 10);
-    const g = this.host.universe.galaxies;
-    for (let i = 1; i < g.catalogCount; i++) if (g.rawName(i).includes(ref)) return i;
-    return null;
+    const i = this.host.universe.galaxies.findHandmade(ref);
+    return i < 0 ? null : i;
   }
 
   private navigate(t: TourTarget): void {

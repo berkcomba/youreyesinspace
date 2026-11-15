@@ -53,6 +53,9 @@ uniform vec3 uGasBright;     // the brightest of its colours (companion clouds)
 uniform vec4 uGasPolar;      // the polar hoods' colour, strength (a)
 uniform vec4 uGasStorm[3];   // ovals: latitude, longitude, half-height (rad), tone (0 none, > 0 coloured, < 0 a dark spot)
 uniform vec3 uGasStormCol;
+uniform vec4 uGasFest;       // hot spots and festoons: the equatorial zone's edge (lat, rad), how many round, strength (0 none), phase
+uniform vec4 uGasPearls;     // a string of white ovals: latitude (rad), how many round, half-height (rad), strength (0 none)
+uniform vec4 uGasPoleCyc;    // circumpolar cyclones: north ring count, south ring count, ring colatitude, radius (rad; 0 none)
 
 // Everything the geology lays on one point, taken once: the bake's two passes and the ground's
 // height, water and colour all read it (each landform inlined once more would cost seconds of
@@ -359,6 +362,64 @@ void geoColor(vec3 p, Geo g, inout vec4 c) {
     col = mix(col, uGasPolar.rgb * (0.92 + 0.16 * fbm(p * 9.0 + uGeoSeed, 3)), hood * uGasPolar.a);
   }
   float lat = asin(clamp(p.y, -1.0, 1.0)), lon = atan(p.z, p.x);
+  // the equatorial zone's edge: dark hot spots where the deck opens, each trailing a blue-grey
+  // festoon that curves down across the zone (Jupiter's at 7° N)
+  if (uGasFest.z > 0.0) {
+    float e = uGasFest.x;
+    float t = (lat - e) / -e;  // 0 on the edge, 1 on the equator
+    if (t > -0.6 && t < 1.5) {
+      float u = lon / 6.2831853 * uGasFest.y + uGasFest.w * uGasFest.y;
+      float id = floor(u);
+      float cw = 6.2831853 / uGasFest.y * cos(e);  // one spot's share of the edge (rad)
+      float x = (fract(u) - 0.5) * cw + 0.02 * snoise(vec3(lon * 12.0, lat * 40.0, uGeoSeed));
+      float on = step(hash13(vec3(id, uGeoSeed, 3.0)), 0.8);
+      float onE = step(hash13(vec3(id + 1.0, uGeoSeed, 3.0)), 0.8);
+      float tt = clamp(t, 0.0, 1.4);
+      // a plume leaves its spot's west end; the one passing here may be the next spot's
+      float xc = -cw * (0.2 + 0.22 * tt * tt), w = cw * (0.05 + 0.03 * tt);
+      float plume = max(on * exp(-pow((x - xc) / w, 2.0)), onE * exp(-pow((x - cw - xc) / w, 2.0)));
+      plume *= step(0.0, t) * smoothstep(1.4, 0.6, t);
+      float spot = on * smoothstep(1.0, 0.55, length(vec2(x / (cw * 0.22), (lat - e) / 0.022)));
+      col = mix(col, col * vec3(0.62, 0.66, 0.74), plume * uGasFest.z * 0.8);
+      col = mix(col, col * vec3(0.4, 0.44, 0.52), spot * uGasFest.z);
+    }
+  }
+  // a string of small white ovals at one latitude, a dark collar round each
+  if (uGasPearls.w > 0.0) {
+    float dl = (lat - uGasPearls.x) / uGasPearls.z;
+    if (abs(dl) < 2.5) {
+      float u = lon / 6.2831853 * uGasPearls.y + uGeoSeed;
+      vec3 h = hash33(vec3(floor(u), uGeoSeed, 5.0));
+      float x = (fract(u) - 0.5 + (h.x - 0.5) * 0.3) * 6.2831853 / uGasPearls.y * cos(uGasPearls.x) / (uGasPearls.z * 1.5);
+      float r = length(vec2(x, dl + (h.y - 0.5) * 0.4)) * (0.85 + 0.3 * h.z);
+      float on = step(h.z, 0.75) * uGasPearls.w;
+      col *= 1.0 - 0.18 * smoothstep(1.6, 1.0, r) * smoothstep(0.7, 1.0, r) * on;
+      col = mix(col, mix(uGasBright, vec3(0.96, 0.95, 0.92), 0.5), smoothstep(1.0, 0.6, r) * on * 0.85);
+    }
+  }
+  // the poles: a ring of cyclones round one on the pole itself, their spiral arms cream on grey (Juno)
+  if (uGasPoleCyc.w > 0.0) {
+    float sgn = p.y >= 0.0 ? 1.0 : -1.0;
+    float n = sgn > 0.0 ? uGasPoleCyc.x : uGasPoleCyc.y;
+    float colat = acos(clamp(abs(p.y), 0.0, 1.0));
+    if (n > 0.0 && colat < uGasPoleCyc.z + 2.0 * uGasPoleCyc.w) {
+      vec2 xy = colat * vec2(cos(lon), sin(lon));
+      float sp = 6.2831853 / n;
+      float ph = fract(uGeoSeed * 0.37 + sgn * 0.21) * sp;
+      float a = ph + floor((lon - ph) / sp + 0.5) * sp;
+      vec2 dv = xy - uGasPoleCyc.z * vec2(cos(a), sin(a));
+      float d = length(dv) / uGasPoleCyc.w;
+      float dp = colat / (uGasPoleCyc.w * 0.9);
+      if (dp < d) { dv = xy; d = dp; }
+      if (d < 1.4) {
+        float arms = 0.5 + 0.5 * sin(atan(dv.y, dv.x) * 3.0 + sgn * log(max(d, 0.04)) * 7.0 + 1.5 * snoise(vec3(dv * 60.0, uGeoSeed)));
+        float m = smoothstep(1.05, 0.55, d + 0.12 * (arms - 0.5));
+        vec3 cyc = mix(col * 0.62, mix(uGasBright, col, 0.35) * 1.05, arms);
+        col *= 1.0 - 0.15 * smoothstep(1.4, 1.0, d) * (1.0 - m);
+        col = mix(col, cyc, m * 0.85);
+      }
+    }
+  }
   for (int k = 0; k < 3; k++) {
     vec4 st = uGasStorm[k];
     if (st.w == 0.0) continue;

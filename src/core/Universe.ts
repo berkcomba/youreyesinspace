@@ -142,8 +142,8 @@ export class Universe {
     this.procLandmarks = new ProcLandmarks(this.galaxies);
     this.clusterStars = new ClusterStars((id) => this.landmark(id));
     const findGalaxy = (q: string): number | null => {
-      for (let i = 1; i < this.galaxies.catalogCount; i++) if (this.galaxies.rawName(i).includes(q)) return i;
-      return null;
+      const i = this.galaxies.findHandmade(q);
+      return i < 0 ? null : i;
     };
     const ctx = {
       milkyWayCenterPc: () => milkyWayCenterPc(),

@@ -12,9 +12,27 @@ export interface Release {
   items: Array<{ text: string }>;
 }
 
-export const CURRENT_VERSION = '0.9.3';
+export const CURRENT_VERSION = '0.9.4';
 
 export const CHANGELOG: Release[] = [
+  {
+    version: '0.9.4', date: '2026-11-15', title: 'Çok oyunculu evren, tuhaf galaksiler ve halkalı dünyalar',
+    items: [
+      { text: 'Çok oyunculu: arkadaşlarınla aynı evrende birlikte gez; açık oda listesi, şifreli odalar, oda kodu ve davet bağlantısı; bir odada 16 kişiye kadar' },
+      { text: 'Astronotlar: sekiz karakterden birini seç (kurbağa Finn, arı Barbara, flamingo Fernando, Nova, kızıl panda Rae ve robot zırhlı sürümleri); sırt roketiyle uçuyor, adını taşıyor, el sallıyor ve zıplıyor' },
+      { text: 'Birlikte keşif: sohbet, ekran görüntüsüyle keşif paylaşma, birini takip etme ya da yanına ışınlanma, herkesi bulunduğun yere çağırmak için oylama; odadaki herkes aynı saati paylaşıyor' },
+      { text: 'Oyun modları: Serbest, Hazine avı (herkese aynı hedef, ilk bulan puanı alır) ve Saklambaç (biri saklanır, diğerleri sıcak/soğuk ipuçlarıyla arar)' },
+      { text: 'Tuhaf galaksiler elle çizildi: Hoag Nesnesi, Araba Tekerleği, Lindsay-Shapley, Arp 147, NGC 922, kutup halkalı NGC 4650A ve NGC 660, Fareler, Antenler, İribaş, Gül (Arp 273), NGC 2207 ve IC 2163, Penguen ve Yumurta, Barış İçin Atomlar ve İntegral İşareti. Halkalar, gelgit kuyrukları ve bükülmüş diskler uzaktan da yakından da aynı' },
+      { text: 'Hoag Nesnesi\'nin halkası sıkı sarılmış mavi ipliklerden ve yıldız oluşum düğümlerinden oluşuyor; boşlukta soluk, kırmızımsı bir iç halka var' },
+      { text: 'Halkalar her tür gezegende: dev gezegenler, buz devleri, alt-Neptünler, kayalık dünyaların enkaz halkaları ve buzlu cücelerin halkaları; Haumea ile Quaoar\'ın gerçek halkaları. Tozlu halkalar Güneş\'e karşı bakınca parlıyor' },
+      { text: 'Gaz devlerinde daha ince hava olayları: ekvator kuşağının kenarında sıcak noktalar ve sarkan bulut perdeleri, beyaz oval dizileri, kutupların çevresinde siklon kümeleri' },
+      { text: 'Üretilmiş bulutsuların rengi fiziğe dayanıyor: uyarılma, metal bolluğu, toz saçılması, yıldız türü ve kalıntı sınıfı; adındaki renk de tonuna uyuyor' },
+      { text: 'Sistem şeridi: sağ kenarda sistemin yıldızları, gezegenleri ve uyduları küçük simgelerle' },
+      { text: 'Cisim boyutu ayarı: gezegenler, uydular, asteroitler ve kuşak parçacıkları 10 kata kadar büyütülebiliyor; serbest gezintiye girince ayarı gösteren bir ipucu çıkıyor' },
+      { text: 'Topluluk: Hakkında kartında ve karşılamanın son sayfasında Discord, YouTube ve Reddit' },
+      { text: 'Düzeltmeler: kümelerdeki galaksiler yaklaşınca artık kaybolmuyor; bazı tarayıcılarda kuru dünyalar siyah görünmüyor; bir cismin etrafında dönerken yıldızlar iz bırakmıyor' },
+    ],
+  },
   {
     version: '0.9.3', date: '2026-11-11', title: 'Dönen kara delik diskleri, teleskop görünümü ve yeni dünyalar',
     items: [

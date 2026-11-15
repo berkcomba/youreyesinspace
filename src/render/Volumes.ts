@@ -46,6 +46,8 @@ const ADAPT_TAU_S = 0.08;
 /** Visible-light dust opacity of a Milky-Way-like disc at the solar circle (per pc; with the lane / filament factors ≈0.5 mag/kpc mean) */
 const DUST_PER_PC = 0.0028;
 const DUST_BY_TYPE: Record<string, number> = { E: 0, S0: 0.25, S: 1, SB: 1, Irr: 0.5 };
+/** a peculiar galaxy's ring / tail dust per galaxy radius at its crest (a face-on ring ≈0.5 τ, edge-on a dark lane) */
+const PEC_DUST = 6;
 const TYPE_CODE: Record<string, number> = { E: 0, S0: 1, S: 2, SB: 3, Irr: 4 };
 
 /** Nebula Engine 2.0: emission calibration per morphology (peak column ≈ the sprite's brightness) */
@@ -234,21 +236,25 @@ export class Volumes {
   galaxy(model: GalaxyModel, gain: number, pointShare: number): Volume {
     const p = model.p;
     const R = model.radius;
+    // the host's shape in its own radius (the whole galaxy's unless it is peculiar)
+    const Rb = model.bodyRadius;
     const t = p.type;
+    const pec = model.pec;
     const blobs = Array.from({ length: 6 }, (_, i) => {
       const b = model.blobs[i];
-      return b ? new Vector4(b.c.x / R, b.c.y / R, b.c.z / R, b.s / R) : new Vector4(0, 0, 0, 1);
+      return b ? new Vector4(b.c.x / Rb, b.c.y / Rb, b.c.z / Rb, b.s / Rb) : new Vector4(0, 0, 0, 1);
     });
     const mat = this.material(Shaders.volumeGalaxyFrag, {
       uType: { value: TYPE_CODE[t] }, uArms: { value: Math.max(1, p.arms) },
       uTanPitch: { value: Math.tan((p.pitchDeg * Math.PI) / 180) },
-      uR0: { value: Math.max(model.barLength, model.bulgeRadius * 0.8) / R },
+      uR0: { value: Math.max(model.barLength, model.bulgeRadius * 0.8) / Rb },
       uPhase0: { value: model.armPhase[0] ?? 0 },
       uMinorOdd: { value: t === 'SB' && p.arms > 2 ? 1 : 0 },
-      uBar: { value: model.barLength / R }, uBulge: { value: model.bulgeRadius / R },
-      uHs: { value: model.scaleLength / R }, uHz: { value: model.scaleHeight / R }, uAxis: { value: p.axisRatio },
+      uBar: { value: model.barLength / Rb }, uBulge: { value: model.bulgeRadius / Rb },
+      uHs: { value: model.scaleLength / Rb }, uHz: { value: model.scaleHeight / Rb }, uAxis: { value: p.axisRatio },
+      // opacity per unit of the march (galaxy radii), wherever the host's shape is evaluated
       uDust: { value: DUST_PER_PC * R * (DUST_BY_TYPE[t] ?? 0) },
-      uNear: { value: 0.07 }, uCoreFade: { value: 1 },
+      uNear: { value: 0.07 * (Rb / R) }, uCoreFade: { value: 1 },
       // individuality: lopsided / warped arms, flocculent (patchy) discs, inner rings of barred spirals
       uWarp: { value: 0.1 + 0.5 * hash01(p.seed, 1) },
       uFloc: { value: t === 'S' && hash01(p.seed, 2) < 0.35 ? 0.5 + 0.5 * hash01(p.seed, 3) : 0.15 * hash01(p.seed, 3) },
@@ -256,14 +262,24 @@ export class Volumes {
       uBlobs: { value: blobs },
       uBlobW: { value: Array.from({ length: 6 }, (_, i) => model.blobs[i]?.w ?? 0) },
       uNBlobs: { value: Math.min(6, model.blobs.length) },
+      uPec: { value: pec ? 1 : 0 }, uBody: { value: Rb / R }, uBend: { value: pec?.bend ?? 0 },
+      uPecFlat: { value: 0 }, uPecH: { value: 0 }, uDustR: { value: PEC_DUST },
+      ...(pec ? pec.volumeUniforms() : {}),
     });
+    if (pec) {
+      // components close to the host's plane keep the samples bunched around it
+      const lift = pec.tails.reduce((m, g) => Math.max(m, Math.abs(g.lift) + g.w1), 0);
+      mat.uniforms.uPecFlat.value = pec.rings.every((g) => Math.abs(g.sT) < 1e-3) && lift < 0.3 ? 1 : 0;
+      mat.uniforms.uPecH.value = Math.max(...pec.rings.map((g) => g.h), ...pec.tails.map((g) => g.w0), pec.bend * 0.5, 0);
+    }
     // column luminosity → pixel value with the sprites' calibration (0.16·π·gain per L☉/pc²)
     mat.uniforms.uEmit.value = 0.5 * gain * model.luminosity * R / model.densityIntegral() * (1 - pointShare);
     mat.uniforms.uSeed.value = (p.seed % 997) * 0.37;
     (mat.uniforms.uToLocal.value as Matrix3).copy(model.basis).transpose();
     const bulgeH = (model.bulgeRadius * 6 * 0.7) / R;
     const box = mat.uniforms.uBox.value as Vector3;
-    if (t === 'E') box.set(1.4, 1.4 * Math.max(0.3, p.axisRatio), 1.4);
+    if (pec) box.set(1.4, 1.4, 1.4);
+    else if (t === 'E') box.set(1.4, 1.4 * Math.max(0.3, p.axisRatio), 1.4);
     else if (t === 'Irr') box.set(1.4, 0.6, 1.4);
     else box.set(1.4, Math.min(1.4, Math.max((model.scaleHeight * 10) / R, bulgeH)), 1.4);
     const v = new Volume('galaxy', mat, this.geo);

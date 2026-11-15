@@ -5,6 +5,7 @@ import { TimeSystem } from './core/TimeSystem';
 import { Universe, catalogIndexOf, type Landmark, type StarId } from './core/Universe';
 import { exoBodyId } from './gen/RealSystem';
 import type { StarSystem } from './core/StarSystem';
+import type { PartyHooks } from './party';
 import { CelestialBody } from './core/CelestialBody';
 import { StarCatalog } from './data/StarCatalog';
 import { ExoplanetCatalog } from './data/Exoplanets';
@@ -175,6 +176,10 @@ class App implements UIHost {
   private followOffsetValid = false;
   uiVisible = true;
   private wantScreenshot = false;
+  /** multiplayer: drawn into the scene each frame (other players), set while in a room */
+  party: PartyHooks | null = null;
+  /** frame grabs waiting for the next render (the drawing buffer is only readable right after it) */
+  private captures: Array<{ maxW: number; resolve: (b: Blob | null) => void }> = [];
   private last = performance.now();
   private readonly camPosTmp = new Vector3();
   private readonly camPc = new Vector3();
@@ -729,6 +734,27 @@ class App implements UIHost {
     return cam.surface && (cam.mode === 'surface' || cam.autopilot?.kind === 'land') ? cam.surface.body : null;
   }
 
+  /** Where the visitor stands: the body and the site's latitude / east longitude (deg) */
+  landedSite(): { body: string; lat: number; lon: number } | null {
+    const st = this.camera.surface;
+    if (!st || this.camera.mode !== 'surface') return null;
+    const g = geodetic(st.body, st.sitePos);
+    return { body: st.body.id, lat: g.lat, lon: g.lon };
+  }
+
+  /** Land on a body of the current system at a given site (another player's) */
+  landAt(bodyId: string, lat: number, lon: number): void {
+    const b = this.universe.get(bodyId);
+    if (b && this.canLand(b)) this.land(b, { lat, lon });
+  }
+
+  /** The nebula / cluster the camera is in or next to */
+  landmarkHere(): { kind: string; name: string } | null {
+    const i = this.landmarkAround();
+    const l = i >= 0 ? this.universe.landmarks[i] : null;
+    return l ? { kind: l.def.kind, name: l.def.name } : null;
+  }
+
   /**
    * Land on `b` (the selection by default): where the view meets its surface — or straight below
    * the camera — the ground is generated and the camera descends to stand on it. From there the
@@ -1278,9 +1304,8 @@ class App implements UIHost {
   /** Galaxy by catalogue name fragment, or `#i` (`#0` = the Milky Way). */
   private galaxyNamed(ref: string): number | null {
     if (ref.startsWith('#')) return parseInt(ref.slice(1), 10);
-    const g = this.universe.galaxies;
-    for (let i = 1; i < g.catalogCount; i++) if (g.rawName(i).includes(ref)) return i;
-    return null;
+    const i = this.universe.galaxies.findHandmade(ref);
+    return i < 0 ? null : i;
   }
 
   hasGalaxy(ref: string): boolean {
@@ -2445,6 +2470,64 @@ class App implements UIHost {
     this.wantScreenshot = true;
   }
 
+  /** The next rendered frame as a JPEG, at most `maxW` pixels wide (null if the canvas cannot be read) */
+  captureFrame(maxW = 1280): Promise<Blob | null> {
+    return new Promise((resolve) => this.captures.push({ maxW, resolve }));
+  }
+
+  private grabFrame(list: Array<{ maxW: number; resolve: (b: Blob | null) => void }>): void {
+    const src = this.engine.renderer.domElement;
+    for (const { maxW, resolve } of list) {
+      try {
+        const k = Math.min(1, maxW / src.width);
+        const c = document.createElement('canvas');
+        c.width = Math.round(src.width * k);
+        c.height = Math.round(src.height * k);
+        c.getContext('2d')!.drawImage(src, 0, 0, c.width, c.height);
+        c.toBlob((b) => resolve(b), 'image/jpeg', 0.86);
+      } catch {
+        resolve(null);
+      }
+    }
+  }
+
+  /**
+   * Jump to where another player is (or a shared place): into that system's frame, `pos` km from
+   * body `bodyId` (or the system's origin), looking along `quat`. Without the system (a catalogue
+   * tier this browser has not loaded) the parsec position is used and free flight takes over.
+   */
+  teleportTo(starId: StarId, bodyId: string | null, pos: Vector3, pc: Vector3, quat: Quaternion): void {
+    const u = this.universe, cam = this.camera;
+    if (this.tours.active) this.tours.stop();
+    cam.surface = null;
+    this.backdrop = false;
+    this.backdropPending = false;
+    let inFrame = starId === u.current.starId;
+    if (!inFrame) {
+      try {
+        const delta = u.switchTo(starId, this.time.jd, this.time.t);
+        cam.shiftFrame(delta, u.star);
+        inFrame = true;
+      } catch (err) {
+        console.warn('teleport: no such system here', starId, err);
+      }
+    }
+    const body = inFrame && bodyId ? u.get(bodyId) ?? null : null;
+    // an offset from a body this system does not have would land at its star: the parsecs are right to ~km
+    if (inFrame && (body || !bodyId)) cam.position.copy(pos).add(body ? body.position : _zero);
+    else cam.position.copy(pc).multiplyScalar(PARSEC_KM).sub(u.current.origin);
+    cam.quaternion.copy(quat);
+    cam.autopilot = null;
+    cam.autoOrbit = 0;
+    cam.autoDolly = 0;
+    cam.target = null;
+    cam.anchor = null;
+    cam.mode = 'free';
+    cam.setReference(body);
+    this.select(null);
+    this.selectStar(null);
+  }
+
   /** Streamer Mode: only body labels over the sky, without saving over the visitor's settings */
   streamView(): void {
     this.persistSettings = false;
@@ -2462,6 +2545,7 @@ class App implements UIHost {
   private onClick(x: number, y: number, dbl: boolean): void {
     // fingers are less precise than a mouse pointer
     const tol = this.input.coarse ? 2 : 1;
+    if (this.party?.pick(x, y, dbl)) return;
     if (this.overlay.hitSun(x, y)) { this.faceSun(dbl); return; }
     const b = this.overlay.pick(x, y, 22 * tol);
     if (b) {
@@ -3162,6 +3246,7 @@ class App implements UIHost {
     // Camera
     const eng = this.engine;
     const fovRad = eng.camera.fov * DEG;
+    this.party?.beforeCamera(dt);
     this.camera.update(dt, this.input, eng.width, eng.height, fovRad);
     // on foot the wheel zooms the view like binoculars
     {
@@ -3311,6 +3396,7 @@ class App implements UIHost {
     this.ephemLines.update(camPos, this.time.jd, this.universe.current.get, (table) => (inScene ? tracksOn : orbitsOn && table === selTable));
     this.belts.update(this.time.t, camPos, eng.pixelRatio, s.belts, stood ? 1 : daylight);
     this.cometTails.update(this.bodies.views.map((v) => v.body), this.time.jd, camPos, pxPerRad, eng.pixelRatio, Math.min(eng.width, eng.height), s.minorBodies, daylight);
+    this.party?.update(dt, camPos, pxPerRad);
 
     // Render
     this.shadersPending = this.warmingUp && !this.shadersReady();
@@ -3324,6 +3410,7 @@ class App implements UIHost {
       this.wantScreenshot = false;
       this.saveScreenshot();
     }
+    if (this.captures.length && !this.shadersPending) this.grabFrame(this.captures.splice(0));
 
     // Overlay & UI
     let starSel: StarSelectionScreen | null = null;
@@ -3665,10 +3752,14 @@ async function boot(): Promise<void> {
       app.streamView();
       startCockpit(app);
     }
+    // Multiplayer: the top bar's button, or a shared room link (?party=CODE)
+    const partyCode = stream || launch.embed ? null : new URLSearchParams(location.search).get('party');
+    const openParty = async (code: string): Promise<void> => (await import('./party')).openParty(app, code);
+    document.getElementById('brand-party')?.addEventListener('click', () => void openParty(''));
     // first visit, plain entry (no deep link, embed or stream): the introduction. Its shots are
     // visited once behind the loading screen first, so shaders compile and planets bake unseen
     // instead of stuttering the flights.
-    const intro = !stream && !launch.embed && !launch.event && !launch.target && !launch.open && Welcome.due;
+    const intro = !stream && partyCode === null && !launch.embed && !launch.event && !launch.target && !launch.open && Welcome.due;
     if (intro) {
       if (loaderText) loaderText.textContent = _('Sahneler hazırlanıyor…');
       // the browser may refuse sound before a click: then the loader ends on a button, and the
@@ -3681,6 +3772,7 @@ async function boot(): Promise<void> {
     }
     app.ready();
     if (intro) app.welcome.start();
+    if (partyCode !== null) void openParty(partyCode);
   } catch (err) {
     console.error(err);
     if (loaderText) loaderText.textContent = `${_('Yükleme hatası')}: ${(err as Error).message}`;

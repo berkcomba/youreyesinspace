@@ -5,7 +5,7 @@ import { KIND_LABELS, STATUS_LABELS, type SkyEvent } from '../../src/data/events
 import { LANDMARK_KIND_LABEL } from '../../src/data/landmarks';
 import type { BodyData } from '../../src/data/types';
 import { GALAXY_TYPE_LABEL } from '../../src/galaxy/GalaxyModel';
-import { CATALOG } from '../../src/galaxy/galaxies';
+import { HANDMADE } from '../../src/galaxy/galaxies';
 import { SOLAR_SYSTEM } from '../../src/data/solarSystem';
 import { blackHoleTarget, galaxyTarget, landmarkTarget, solarTarget, starTarget } from '../../src/scope/targets';
 import type { ScopeTarget } from '../../src/scope/types';
@@ -370,7 +370,8 @@ export function dsoPage(d: DsoEntry, site: Site): Page {
 
 export function galaxyPage(g: GalaxyEntry, site: Site): Page {
   const name = t(g.name);
-  const type = t(GALAXY_TYPE_LABEL[g.type]);
+  const hand = g.source === 'curated' ? HANDMADE.find((c) => c.name === g.name) : undefined;
+  const type = t(hand?.pec?.label ?? GALAXY_TYPE_LABEL[g.type]);
   const dPc = g.distMpc * 1e6;
   const lyDist = dPc * PC_LY;
   const appMag = g.absMag + 5 * Math.log10(dPc / 10);
@@ -387,10 +388,10 @@ export function galaxyPage(g: GalaxyEntry, site: Site): Page {
       [w('Görünür parlaklık'), esc(w('{m} kadir', { m: mag(appMag) }))],
       [w('Işıma gücü'), esc(w('Samanyolu\'nun {n} katı', { n: sig(lum, 2) }))],
       ...coordRows(g.ra, g.dec),
-      [w('Kaynak'), esc(g.source === 'curated' ? w('Derlenmiş katalog (NED, yaklaşık değerler)') : g.source === 'ungc' ? 'Updated Nearby Galaxy Catalog (Karachentsev et al. 2013)' : '2MASS Redshift Survey (Huchra et al. 2012)')],
+      [w('Kaynak'), esc(hand?.pec ? w('Yayımlanmış görüntülere göre elle çizildi (yaklaşık)') : g.source === 'curated' ? w('Derlenmiş katalog (NED, yaklaşık değerler)') : g.source === 'ungc' ? 'Updated Nearby Galaxy Catalog (Karachentsev et al. 2013)' : '2MASS Redshift Survey (Huchra et al. 2012)')],
     ]),
     section(w('Gökyüzünde'), locator({ ra: g.ra, dec: g.dec, ly: lyDist, mag: appMag, con: g.con, name }) + skyParagraph(g.ra, g.dec, appMag)),
-    scopeSection(galaxyTarget({ ...CATALOG.find((c) => c.name === g.name), ...g }, name)),
+    scopeSection(galaxyTarget({ ...hand, ...g }, name)),
     section(w('Işığın yolculuğu'), lightParagraph(lyDist, +site.buildDate.slice(0, 4))),
     openButton(appUrl({ open: `galaxy:${g.name}` })),
   ].join('\n');

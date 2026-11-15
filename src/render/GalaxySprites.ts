@@ -1,8 +1,10 @@
 import {
-  AdditiveBlending, BufferAttribute, BufferGeometry, Points, Scene, ShaderMaterial, Vector2, Vector3, Vector4, type PerspectiveCamera,
+  AdditiveBlending, BufferAttribute, BufferGeometry, DataTexture, FloatType, NearestFilter, Points, RGBAFormat, Scene, ShaderMaterial, Vector2, Vector3, Vector4,
+  type PerspectiveCamera,
 } from 'three';
 import { PARSEC_KM, SKY_RADIUS_KM } from '../core/constants';
 import type { GalaxySource } from '../galaxy/galaxies';
+import { PEC_TEXELS } from '../galaxy/peculiar';
 import type { NamedStarScreen } from './StarPoints';
 import { GalaxyCloud } from './GalaxyCloud';
 import { PROCEDURAL_TINT } from './ProcStarPoints';
@@ -23,6 +25,7 @@ export class GalaxySprites {
   readonly points: Points;
   readonly named: NamedStarScreen[] = [];
   private readonly mat: ShaderMaterial;
+  private readonly pecTex: DataTexture;
   private readonly camPc = new Vector3();
 
   /** @param boostMag magnitude offset of the boosted-visibility scale (0 for individual galaxies) */
@@ -43,8 +46,17 @@ export class GalaxySprites {
       // barred spirals with > 2 arms: odd arms are minor (GalaxyModel.armWeight)
       spiral[i * 3 + 2] = galaxies.type[i] === 3 && arms > 2 ? 0.4 : 1;
     }
+    // hand-drawn rings and tails: a texture row of parameters per peculiar galaxy
+    const pec = new Float32Array(n);
+    const sprites = galaxies.peculiarSprites?.();
+    sprites?.index.forEach((i, row) => { if (i < n) pec[i] = row + 1; });
+    const rows = Math.max(1, sprites?.index.length ?? 0);
+    this.pecTex = new DataTexture(sprites?.texels ?? new Float32Array(PEC_TEXELS * 4), PEC_TEXELS, rows, RGBAFormat, FloatType);
+    this.pecTex.minFilter = this.pecTex.magFilter = NearestFilter;
+    this.pecTex.needsUpdate = true;
     const geo = new BufferGeometry();
     geo.setAttribute('spiral', new BufferAttribute(spiral, 3));
+    geo.setAttribute('pec', new BufferAttribute(pec, 1));
     geo.setAttribute('position', new BufferAttribute(galaxies.positions.subarray(0, n * 3), 3));
     geo.setAttribute('radius', new BufferAttribute(galaxies.radius.subarray(0, n), 1));
     geo.setAttribute('absMag', new BufferAttribute(galaxies.absMag.subarray(0, n), 1));
@@ -71,7 +83,9 @@ export class GalaxySprites {
         uCloudIdx: { value: new Vector3(-1, -1, -1) },
         uBoostMag: { value: boostMag },
         uCatalogCount: { value: galaxies.catalogCount },
-        uSurvey: { value: new Vector2(galaxies.surveyStart ?? 0, galaxies.surveyEnd ?? 0) },
+        // real survey galaxies and, right after them, the peculiar ones
+        uSurvey: { value: new Vector2(galaxies.surveyStart ?? 0, galaxies.peculiarEnd ?? galaxies.surveyEnd ?? 0) },
+        uPec: { value: this.pecTex },
         uShowProc: { value: 1 },
         uTint: { value: new Vector4(...PROCEDURAL_TINT, 0) },
       },
@@ -99,7 +113,7 @@ export class GalaxySprites {
 
   private isProcedural(i: number): boolean {
     const g = this.galaxies;
-    return i >= g.catalogCount && !(i >= (g.surveyStart ?? 0) && i < (g.surveyEnd ?? 0));
+    return i >= g.catalogCount && !(i >= (g.surveyStart ?? 0) && i < (g.peculiarEnd ?? g.surveyEnd ?? 0));
   }
 
   /** Keep the sprite when the camera is close (no point cloud takes over, e.g. far-cluster members) */
@@ -184,7 +198,8 @@ export class GalaxySprites {
     const cx = camPc.x, cy = camPc.y, cz = camPc.z;
     const magLimit = this.magLimit(boost < 0.5 ? 6.5 : 14), magLimit11 = this.magLimit(11);
     const pxLimit = boost < 0.5 ? 12 : 3;
-    for (let i = 0; i < g.catalogCount; i++) {
+    const handmade: Array<[number, number]> = [[0, g.catalogCount], [g.peculiarStart ?? 0, g.peculiarEnd ?? 0]];
+    for (const [i0, i1] of handmade) for (let i = i0; i < i1; i++) {
       if (i === hideIndex) continue;
       const dx = P[i * 3] - cx, dy = P[i * 3 + 1] - cy, dz = P[i * 3 + 2] - cz;
       const d2 = dx * dx + dy * dy + dz * dz;

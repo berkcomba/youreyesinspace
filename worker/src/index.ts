@@ -18,10 +18,17 @@
  */
 import { DurableObject } from 'cloudflare:workers';
 import { Ledger, isTrustedPid, type CrewEvent, type CrewRecord, type LedgerCmd, type MeMsg } from '../../src/expedition/engine';
+import { Lobby, Party, partyRoute } from './party';
+
+export { Lobby, Party };
 
 export interface Env {
   ROOM: DurableObjectNamespace<Room>;
   SHARD: DurableObjectNamespace<Shard>;
+  LOBBY: DurableObjectNamespace<Lobby>;
+  PARTY: DurableObjectNamespace<Party>;
+  /** multiplayer screenshots (kept after the room closes; a bucket lifecycle rule ages them out) */
+  SHOTS: R2Bucket;
   CREW_SECRET: string;
   /** optional: without it new players are not challenged (local development, forks) */
   TURNSTILE_SECRET?: string;
@@ -49,17 +56,17 @@ function shardOf(pid: string): number {
   return (h >>> 0) % SHARDS;
 }
 
-const hex = (b: ArrayBuffer | Uint8Array): string => Array.from(new Uint8Array(b), (x) => x.toString(16).padStart(2, '0')).join('');
+export const hex = (b: ArrayBuffer | Uint8Array): string => Array.from(new Uint8Array(b), (x) => x.toString(16).padStart(2, '0')).join('');
 const b64url = (b: ArrayBuffer): string => btoa(String.fromCharCode(...new Uint8Array(b))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 
-function sameString(a: string, b: string): boolean {
+export function sameString(a: string, b: string): boolean {
   if (a.length !== b.length) return false;
   let d = 0;
   for (let i = 0; i < a.length; i++) d |= a.charCodeAt(i) ^ b.charCodeAt(i);
   return d === 0;
 }
 
-async function sha256(text: string): Promise<string> {
+export async function sha256(text: string): Promise<string> {
   return hex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)));
 }
 
@@ -74,13 +81,13 @@ function hmacKey(secret: string): Promise<CryptoKey> {
   return keyCache.key;
 }
 
-async function signPid(env: Env, pid: string): Promise<string> {
+export async function signPid(env: Env, pid: string): Promise<string> {
   const mac = await crypto.subtle.sign('HMAC', await hmacKey(env.CREW_SECRET), new TextEncoder().encode(`crew:${pid}`));
   return b64url(mac.slice(0, 16));
 }
 
 /** A valid `pid.signature` token keeps its id; a fresh one needs a solved challenge. */
-async function identify(env: Env, token: string | null, challenge: string | null, ip: string): Promise<{ pid: string; token: string } | null> {
+export async function identify(env: Env, token: string | null, challenge: string | null, ip: string): Promise<{ pid: string; token: string } | null> {
   const m = token?.match(/^([a-f0-9]{24})\.([A-Za-z0-9_-]{22})$/);
   if (m && sameString(await signPid(env, m[1]), m[2])) return { pid: m[1], token: token! };
   if (env.TURNSTILE_SECRET && !(await turnstileOk(env.TURNSTILE_SECRET, challenge, ip))) return null;
@@ -103,14 +110,14 @@ async function turnstileOk(secret: string, response: string | null, ip: string):
 }
 
 /** Refuse a phone with a reason it can act on: a WebSocket close code (HTTP errors are opaque to browsers). */
-function refuse(code: number, reason: string): Response {
+export function refuse(code: number, reason: string): Response {
   const [client, server] = Object.values(new WebSocketPair());
   server.accept();
   server.close(code, reason);
   return new Response(null, { status: 101, webSocket: client });
 }
 
-function originAllowed(env: Env, origin: string | null): boolean {
+export function originAllowed(env: Env, origin: string | null): boolean {
   if (!origin) return false;
   return env.ALLOWED_ORIGINS.split(',').map((s) => s.trim()).some((p) => (p.endsWith('*') ? origin.startsWith(p.slice(0, -1)) : origin === p));
 }
@@ -129,6 +136,7 @@ export default {
     if (kick) return kickChatroom(env, req, kick[1]);
     if (url.pathname === '/yt/start' || url.pathname === '/yt/poll') return youtubeChat(env, req, url);
     if (url.pathname.startsWith('/trek/')) return trekTile(env, req, url);
+    if (url.pathname.startsWith('/party/')) return partyRoute(env, req, url);
     const m = url.pathname.match(/^\/room\/([A-Za-z0-9]{4,8})\/(host|crew)$/);
     if (!m) return new Response('Not found', { status: 404 });
     if (req.headers.get('Upgrade')?.toLowerCase() !== 'websocket') return new Response('Expected a WebSocket', { status: 426 });

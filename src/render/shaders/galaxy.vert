@@ -11,6 +11,8 @@ attribute float axisRatio;  // thickness (discs) or b/a (ellipticals)
 attribute float seed;
 attribute float gindex;
 attribute vec3 spiral;      // (arm count, tan pitch, minor-arm weight) — same numbers as GalaxyModel
+attribute float pec;        // peculiar galaxies: 1 + their row of uPec; 0 for the others
+uniform sampler2D uPec;     // Peculiar.spriteTexels, one row per peculiar galaxy
 uniform vec3 uCamPc;
 uniform float uPixelRatio;
 uniform float uSkyRadius;
@@ -39,9 +41,16 @@ varying float vPx;          // apparent galaxy radius (px)
 varying vec2 vMajor;        // projected major axis (screen, unit)
 varying vec3 vSpiral;
 varying float vProc;        // highlight strength (procedural galaxies only)
+varying float vPec;
+varying vec4 vAxes;         // projected major axis and in-plane minor axis (screen)
+varying vec2 vNormal;       // projected disc normal
+varying vec4 vRing0;        // rings: projected in-plane axes of their own planes
+varying vec4 vRing1;
+varying vec4 vRingOff;      // and their projected centres
 
 void main() {
   vSpiral = spiral;
+  vPec = pec;
   vec3 rel = position - uCamPc;
   float d = max(length(rel), 1e-3);
   vec3 dir = rel / d;
@@ -88,6 +97,15 @@ void main() {
   vDiscInv = vec4(C.y, -A.y, -C.x, A.x) / sd;
   // the longest projected in-plane direction (for the dust lane of edge-on discs)
   vMajor = normalize(length(A) > length(C) ? A + vec2(1e-6, 0.0) : C + vec2(1e-6, 0.0));
+  vAxes = vec4(A, C);
+  vNormal = n.xy;
+  vRing0 = vec4(0.0); vRing1 = vec4(0.0); vRingOff = vec4(0.0);
+  if (pec > 0.5) {
+    int row = int(pec + 0.5) - 1;
+    vRing0 = vec4((R * texelFetch(uPec, ivec2(1, row), 0).xyz).xy, (R * texelFetch(uPec, ivec2(2, row), 0).xyz).xy);
+    vRing1 = vec4((R * texelFetch(uPec, ivec2(6, row), 0).xyz).xy, (R * texelFetch(uPec, ivec2(7, row), 0).xyz).xy);
+    vRingOff = vec4((R * texelFetch(uPec, ivec2(3, row), 0).xyz).xy, (R * texelFetch(uPec, ivec2(8, row), 0).xyz).xy);
+  }
 
   // unresolved galaxies get a minimum footprint (larger in the boosted intergalactic view)
   float pxDraw = max(px, mix(1.0, 3.5, uBoost));

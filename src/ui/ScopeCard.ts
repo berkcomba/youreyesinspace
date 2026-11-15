@@ -1,7 +1,6 @@
 import type { CelestialBody } from '../core/CelestialBody';
 import { catalogIndexOf, type StarId, type Universe } from '../core/Universe';
 import { SOLAR_SYSTEM } from '../data/solarSystem';
-import { CATALOG } from '../galaxy/galaxies';
 import { _ } from '../i18n';
 import { OBLIQUITY_J2000 } from '../core/constants';
 import { scopeStrings } from '../scope/strings';
@@ -50,7 +49,7 @@ export function scopeTargetFor(s: ScopeSelection): ScopeTarget | null {
   if (s.galaxy !== null) {
     const g = u.galaxies, i = s.galaxy;
     if (i === 0 || !g.isReal(i)) return null;
-    const cat = CATALOG.find((c) => c.name === g.rawName(i));
+    const cat = g.handmade(i);
     const [ra, dec] = cat ? [cat.ra, cat.dec] : sceneToRaDec(g.position(i));
     return galaxyTarget({
       name: g.rawName(i), ra, dec, distMpc: g.distancePc(i) / 1e6, type: g.typeOf(i),
