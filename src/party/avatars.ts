@@ -1,6 +1,6 @@
 import {
-  AdditiveBlending, AnimationMixer, Box3, BoxGeometry, Color, ConeGeometry, CylinderGeometry, Group, LoopOnce, Mesh, MeshBasicMaterial, MeshStandardMaterial,
-  Quaternion, SphereGeometry, Vector3, type AnimationAction, type AnimationClip, type BufferGeometry, type Material, type Object3D, type PerspectiveCamera, type Scene, type SkinnedMesh,
+  AdditiveBlending, AnimationMixer, Box3, BoxGeometry, CanvasTexture, Color, ConeGeometry, CylinderGeometry, Group, LoopOnce, Mesh, MeshBasicMaterial, MeshStandardMaterial,
+  Quaternion, SphereGeometry, Sprite, SpriteMaterial, Vector3, type AnimationAction, type AnimationClip, type BufferGeometry, type Material, type Object3D, type PerspectiveCamera, type Scene, type SkinnedMesh,
 } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { clone as cloneSkinned } from 'three/examples/jsm/utils/SkeletonUtils.js';
@@ -20,6 +20,24 @@ const BASE_CLIPS = ['Jump_Idle', 'Idle_Neutral', 'Idle'];
 const EMOTE_CLIPS: Record<Emote, string[]> = { wave: ['Wave', 'Hello'], yes: ['Yes', 'Interact'], no: ['No', 'HitRecieve'], jump: ['Jump', 'Roll'] };
 /** the bone a jetpack rides on, by preference */
 const PACK_BONES = ['Chest', 'Torso', 'Body'];
+/** the hider's beacon: on-screen size (px) between flashes and at a flash's peak, and its period (s) */
+const BEACON_PX = 9;
+const BEACON_FLASH_PX = 26;
+const BEACON_PERIOD = 1.4;
+
+function glowTexture(): CanvasTexture {
+  const c = document.createElement('canvas');
+  c.width = c.height = 64;
+  const g = c.getContext('2d')!;
+  const grad = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+  grad.addColorStop(0, 'rgba(255,255,255,1)');
+  grad.addColorStop(0.18, 'rgba(255,255,255,0.85)');
+  grad.addColorStop(0.45, 'rgba(255,255,255,0.22)');
+  grad.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = grad;
+  g.fillRect(0, 0, 64, 64);
+  return new CanvasTexture(c);
+}
 
 interface Model {
   scene: Object3D;
@@ -197,16 +215,31 @@ export class Avatars {
   onTagClick: (pid: string, dbl: boolean) => void = () => {};
   /** the player out of sight (hide and seek) */
   hidden: string | null = null;
+  /** hide and seek: the hider's blinking beacon, where the relay says they are (seekers within BEACON_KM only) */
+  private readonly beacon: Sprite;
+  private beaconPose: Pose | null = null;
+  private readonly beaconAt = new Vector3();
+  private beaconPlaced = false;
 
   constructor(private readonly scene: Scene, private readonly universe: Universe, private readonly camera: PerspectiveCamera, private readonly size: () => { w: number; h: number }) {
     this.group.name = 'party-avatars';
     scene.add(this.group);
+    this.beacon = new Sprite(new SpriteMaterial({
+      map: glowTexture(), color: 0xff5a36, blending: AdditiveBlending, transparent: true, depthTest: false, depthWrite: false, sizeAttenuation: false,
+    }));
+    this.beacon.name = 'party-beacon';
+    this.beacon.renderOrder = 999;
+    this.beacon.frustumCulled = false;
+    this.beacon.visible = false;
+    this.group.add(this.beacon);
     this.layer = document.createElement('div');
     this.layer.className = 'party-tags';
     (document.getElementById('ui') ?? document.body).appendChild(this.layer);
   }
 
   dispose(): void {
+    this.beacon.material.map?.dispose();
+    this.beacon.material.dispose();
     this.scene.remove(this.group);
     this.layer.remove();
     this.players.clear();
@@ -286,6 +319,16 @@ export class Avatars {
     p.bubble.textContent = text.length > 60 ? `${text.slice(0, 58)}…` : text;
     p.bubble.hidden = false;
     p.bubbleUntil = performance.now() + 6000;
+  }
+
+  /** hide and seek: where the hider's beacon is (null: none in sight) */
+  setBeacon(pose: Pose | null): void {
+    this.beaconPose = pose;
+    if (!pose) this.beaconPlaced = false;
+  }
+
+  get beaconShown(): boolean {
+    return this.beaconPose !== null;
   }
 
   /** a player's last pose (null before their first) */
@@ -393,6 +436,26 @@ export class Avatars {
       p.dist.textContent = d < 1e8 ? fmtDistance(d) : fmtScaleDistance(d);
       if (p.bubbleUntil && now > p.bubbleUntil) { p.bubble.hidden = true; p.bubbleUntil = 0; }
     }
+    this.updateBeacon(camPos, blend, now, proj[5], h, visible);
+  }
+
+  /** a steady glow with a quick double flash, the same size on screen at any distance */
+  private updateBeacon(camPos: Vector3, blend: number, now: number, proj5: number, h: number, visible: boolean): void {
+    const pose = this.beaconPose;
+    this.beacon.visible = !!pose && visible;
+    if (!pose || !visible) return;
+    // the relay tells it about once a second: glide between, jump on teleports
+    locate(this.universe, pose, _want);
+    if (!this.beaconPlaced || this.beaconAt.distanceTo(_want) > 0.3 * _want.distanceTo(camPos)) { this.beaconAt.copy(_want); this.beaconPlaced = true; }
+    else this.beaconAt.lerp(_want, blend * 0.5);
+    _rel.copy(this.beaconAt).sub(camPos);
+    const d = _rel.length();
+    this.beacon.position.copy(_rel).multiplyScalar(Math.min(1, FAR_KM / Math.max(d, 1e-9)));
+    const t = (now / 1000) % BEACON_PERIOD;
+    const flash = Math.min(1, Math.exp(-((t / 0.07) ** 2)) + 0.75 * Math.exp(-(((t - 0.3) / 0.07) ** 2)));
+    const px = BEACON_PX + (BEACON_FLASH_PX - BEACON_PX) * flash;
+    this.beacon.scale.setScalar((2 * px) / (proj5 * h));
+    this.beacon.material.opacity = 0.45 + 0.55 * flash;
   }
 
   /** thrust from their speed, a lean into the way they fly, flames to match */

@@ -1592,6 +1592,8 @@
   "{nick} oyuncusunu bul: {km} yakınına gelmen yeterli.": "Encuentra a {nick}: basta con acercarte a menos de {km}.",
   "{nick} saklanıyor… Arama başlayınca uzaklık göstergesi açılır.": "{nick} se está escondiendo… El medidor de distancia se activa cuando empieza la búsqueda.",
   "Arama başladı! Uzaklık göstergesi ve ipuçlarıyla {nick} oyuncusunu bul.": "¡Empieza la búsqueda! Encuentra a {nick} con el medidor de distancia y las pistas.",
+  "Saklanan oyuncunun yanıp sönen işaret ışığı 10 ışık yılı içinden görünür.": "La baliza intermitente del jugador escondido se ve desde menos de 10 años luz.",
+  "{nick} oyuncusunun işaret ışığı görünüyor!": "¡La baliza de {nick} está a la vista!",
   "Başka bir galaksi": "Otra galaxia",
   "Bir beyaz cüce": "Una enana blanca",
   "Bir bulutsunun içi": "Dentro de una nebulosa",

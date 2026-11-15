@@ -1592,6 +1592,8 @@
   "{nick} oyuncusunu bul: {km} yakınına gelmen yeterli.": "Find {nick}: getting within {km} is enough.",
   "{nick} saklanıyor… Arama başlayınca uzaklık göstergesi açılır.": "{nick} is hiding… The distance meter turns on when the search starts.",
   "Arama başladı! Uzaklık göstergesi ve ipuçlarıyla {nick} oyuncusunu bul.": "The search is on! Find {nick} with the distance meter and the hints.",
+  "Saklanan oyuncunun yanıp sönen işaret ışığı 10 ışık yılı içinden görünür.": "The hiding player's blinking beacon can be seen from within 10 light-years.",
+  "{nick} oyuncusunun işaret ışığı görünüyor!": "{nick}'s beacon is in sight!",
   "Başka bir galaksi": "Another galaxy",
   "Bir beyaz cüce": "A white dwarf",
   "Bir bulutsunun içi": "Inside a nebula",

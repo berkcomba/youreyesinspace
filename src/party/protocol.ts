@@ -66,6 +66,8 @@ export const HIDE_MS = 60_000;
 export const SEEK_MS = 8 * 60_000;
 /** a seeker this close to the hider (km) has found them */
 export const CATCH_KM = 200_000;
+/** and from this close (km, 10 light-years) sees the hider's blinking beacon */
+export const BEACON_KM = 10 * 9.4607304725808e12;
 export type HidePhase = 'idle' | 'hide' | 'seek' | 'over';
 /** distance from the Sun (ly), direction from the Sun (unit), the star's spectral type, then the star itself */
 export interface HideHint { at: number; kind: 'ly' | 'dir' | 'spectral' | 'star'; s?: string; v?: number[] }
@@ -102,7 +104,8 @@ export type ServerMsg =
   | { t: 'hunt'; hunt: Hunt }
   | { t: 'hide'; hide: Hide }
   /** hide and seek: how far the hider is from you (km) */
-  | { t: 'heat'; km: number }
+  /** a seeker's distance to the hider, and within BEACON_KM where the hider's beacon is */
+  | { t: 'heat'; km: number; at?: Pose }
   | { t: 'chat'; line: ChatLine }
   | { t: 'shot'; shot: Shot }
   | { t: 'vote'; vote: Vote }
@@ -136,8 +139,9 @@ export function validPose(x: unknown): Pose | null {
   const p = x as Record<string, unknown>;
   if (typeof p.s !== 'string' || !STAR_RE.test(p.s)) return null;
   if (p.b !== null && (typeof p.b !== 'string' || !BODY_RE.test(p.b))) return null;
-  // km inside a system (a few light-years at most), parsecs out to the edge of the observable universe
-  const o = vec(p.o, 3, 1e15), g = vec(p.g, 3, 2e10), q = vec(p.q, 4, 1.01);
+  // km from the frame's system: the frame stays put until a star is within a few parsecs, so
+  // inside a nebula or out between the galaxies this is as far as anywhere (2e10 pc ≈ 6e23 km)
+  const o = vec(p.o, 3, 1e24), g = vec(p.g, 3, 2e10), q = vec(p.q, 4, 1.01);
   if (!o || !g || !q) return null;
   const pose: Pose = { s: p.s, b: p.b as string | null, o: o as Vec3, g: g as Vec3, q: q as Quat };
   const l = p.l;

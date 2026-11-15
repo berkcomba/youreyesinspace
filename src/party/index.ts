@@ -543,6 +543,7 @@ class Session {
   /* the games */
   hunt: Hunt | null = null;
   private huntSent = 0;
+  private huntSentAt = 0;
   private huntCheckAt = 0;
   hide: Hide | null = null;
   /** hide and seek: this seeker's distance to the hider (km), and the one before */
@@ -662,15 +663,20 @@ class Session {
 
   /* ---- the games ---- */
 
-  /** treasure hunt: is the camera at the round's target? (twice a second; the server takes the first report) */
+  /**
+   * Treasure hunt: is the camera at the round's target? (twice a second; the server takes the
+   * first report). A report the server has not answered within a few seconds is sent again.
+   */
   private huntTick(now: number): void {
     const h = this.hunt;
-    if (!h?.target || this.serverNow >= h.ends || this.huntSent === h.round || h.found.some((f) => f.pid === this.me) || now - this.huntCheckAt < 500) return;
+    if (!h?.target || this.serverNow >= h.ends || h.found.some((f) => f.pid === this.me) || now - this.huntCheckAt < 500) return;
+    if (this.huntSent === h.round && now - this.huntSentAt < 4000) return;
     this.huntCheckAt = now;
     const u = this.app.universe, cam = this.app.camera;
     const name = huntCheck(h.target, { universe: u, cam: cam.position, pc: u.toParsecs(cam.position, _hp), landed: this.app.landedOn, landmark: this.app.landmarkHere() });
     if (!name) return;
     this.huntSent = h.round;
+    this.huntSentAt = now;
     this.sock.send({ t: 'found', round: h.round, place: { ...this.here(), name } });
   }
 
@@ -834,10 +840,17 @@ class Session {
       case 'hide':
         this.setHide(m.hide, true);
         break;
-      case 'heat':
+      case 'heat': {
         this.prevHeat = this.heat;
         this.heat = m.km;
+        const seen = this.avatars.beaconShown;
+        this.avatars.setBeacon(m.at && this.hide?.phase === 'seek' ? m.at : null);
+        if (!seen && this.avatars.beaconShown) {
+          const nick = (this.hide?.hider && this.members.get(this.hide.hider)?.nick) || '?';
+          this.app.ui.showToast(_('{nick} oyuncusunun işaret ışığı görünüyor!', { nick }), 3500);
+        }
         break;
+      }
       case 'chat':
         this.chat = [...this.chat.slice(-80), m.line];
         if (m.line.pid !== this.me) this.avatars.say(m.line.pid, m.line.text);
@@ -889,6 +902,7 @@ class Session {
     this.avatars.hidden = hider;
     if (hider && this.following === hider) this.follow(null);
     if (hider && this.picked === hider) this.select(null);
+    if (h?.phase !== 'seek') this.avatars.setBeacon(null);
     if (h && (h.round !== old?.round || h.phase !== old?.phase)) {
       this.heat = this.prevHeat = null;
       const nick = (pid: string | null): string => (pid && this.members.get(pid)?.nick) || '?';
@@ -897,6 +911,7 @@ class Session {
         this.system(_('Saklambaç, tur {n}: {nick} saklanıyor. Arama {s} saniye sonra başlıyor.', { n: h.round, nick: nick(h.hider), s: Math.round((h.ends - this.serverNow) / 1000) }));
       } else if (news && h.phase === 'seek') {
         this.system(_('Arama başladı! Uzaklık göstergesi ve ipuçlarıyla {nick} oyuncusunu bul.', { nick: nick(h.hider) }));
+        this.system(_('Saklanan oyuncunun yanıp sönen işaret ışığı 10 ışık yılı içinden görünür.'));
       } else if (news && h.phase === 'over' && old) {
         this.system(h.caught
           ? _('{catcher}, {nick} oyuncusunu buldu! (+3)', { catcher: nick(h.caught), nick: nick(h.hider) })

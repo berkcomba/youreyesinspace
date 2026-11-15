@@ -13,7 +13,7 @@
  */
 import { DurableObject } from 'cloudflare:workers';
 import {
-  CATCH_KM, CHAT_KEEP, CLOSE, EMOTES, HIDE_MS, HUNT_MS, HUNT_TARGETS, MAX_CHAT, MAX_MSG, MAX_ROOM_NAME, MAX_SHOT_BYTES, MAX_TITLE, PARTY_COLORS, PARTY_MAX, SEEK_MS, SHOTS_KEEP, VOTE_MS,
+  BEACON_KM, CATCH_KM, CHAT_KEEP, CLOSE, EMOTES, HIDE_MS, HUNT_MS, HUNT_TARGETS, MAX_CHAT, MAX_MSG, MAX_ROOM_NAME, MAX_SHOT_BYTES, MAX_TITLE, PARTY_COLORS, PARTY_MAX, SEEK_MS, SHOTS_KEEP, VOTE_MS,
   cleanText, isAvatar, isMode, maskBad, validPlace, validPose,
   type AvatarId, type ChatLine, type Clock, type Emote, type Hide, type HideHint, type Hunt, type Member, type Mode, type Pose, type RoomInfo, type ServerMsg, type Shot, type Vote,
 } from '../../src/party/protocol';
@@ -629,7 +629,7 @@ export class Party extends DurableObject<Env> {
         this.broadcast({ t: 'hide', hide: h });
         return;
       }
-      if (tell) { this.send(ws, { t: 'heat', km }); this.heatAt = now; }
+      if (tell) { this.send(ws, km < BEACON_KM ? { t: 'heat', km, at: hp } : { t: 'heat', km }); this.heatAt = now; }
     }
   }
 

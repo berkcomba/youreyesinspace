@@ -748,11 +748,16 @@ class App implements UIHost {
     if (b && this.canLand(b)) this.land(b, { lat, lon });
   }
 
-  /** The nebula / cluster the camera is in or next to */
+  /** The nebula / cluster the camera is in or next to (small planetary nebulae count from a fraction of a parsec) */
   landmarkHere(): { kind: string; name: string } | null {
-    const i = this.landmarkAround();
-    const l = i >= 0 ? this.universe.landmarks[i] : null;
-    return l ? { kind: l.def.kind, name: l.def.name } : null;
+    const u = this.universe;
+    let best: Landmark | null = null, bestRatio = 1;
+    for (const l of u.landmarks) {
+      if (l.def.kind === 'star' || l.def.kind === 'pulsar') continue;
+      const ratio = l.positionPc.distanceTo(this.camPc) / Math.max(l.def.radiusPc * 1.6, 0.3);
+      if (ratio < bestRatio) { bestRatio = ratio; best = l; }
+    }
+    return best ? { kind: best.def.kind, name: best.def.name } : null;
   }
 
   /**
