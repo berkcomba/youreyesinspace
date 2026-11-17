@@ -6,7 +6,7 @@ import { realSystem } from '../gen/RealSystem';
 import type { ExoplanetCatalog } from '../data/Exoplanets';
 import { brownDwarf, type BrownDwarf, type BrownDwarfData } from '../data/BrownDwarfs';
 import { measuredMultiple, type BinaryData } from '../data/Binaries';
-import { BLACK_HOLES, type BlackHoleEntry, type HostStarOverride } from '../data/blackholes';
+import { BLACK_HOLES, galaxyNucleus, syntheticInfo, type BlackHoleEntry, type HostStarOverride } from '../data/blackholes';
 import { SUN_MASS_KG, SUN_RADIUS_KM } from '../astro/stellar';
 import { toBarycentric } from '../astro/binary';
 import { LANDMARKS, isSystemLandmark, landmarkStarBodies, landmarkStarInfo, type LandmarkDef } from '../data/landmarks';
@@ -18,6 +18,8 @@ import { GalaxyIndex, type SurveyGalaxies } from '../galaxy/galaxies';
 import { milkyWayCenterPc } from '../galaxy/frames';
 import { ProcStars } from '../galaxy/ProcStars';
 import { J2000_JD, PARSEC_KM } from './constants';
+
+const DEG_RAD = Math.PI / 180;
 import { _ } from '../i18n';
 import type { CelestialBody } from './CelestialBody';
 import { StarSystem } from './StarSystem';
@@ -293,14 +295,21 @@ export class Universe {
 
   /** Landmarks whose name/summary matches */
   searchLandmarks(query: string, limit = 5): number[] {
-    const q = query.toLowerCase();
-    const out: number[] = [];
-    for (let i = 0; i < this.landmarks.length && out.length < limit; i++) {
+    const q = normalizeQuery(query);
+    if (!q) return [];
+    // designations are typed with or without their spaces ("NGC2632", "Collinder 69", "IC 434")
+    const tight = q.replace(/[\s_\-.]+/g, '');
+    const exact: number[] = [], prefix: number[] = [], inner: number[] = [];
+    for (let i = 0; i < this.landmarks.length; i++) {
       const d = this.landmarks[i].def;
-      // catalogue entries share a handful of summaries ("Açık yıldız kümesi"): matched by name only
-      if (d.name.toLowerCase().includes(q) || (!d.catalog && d.summary.toLowerCase().includes(q))) out.push(i);
+      const name = normalizeQuery(d.name), nt = name.replace(/[\s_\-.]+/g, '');
+      if (name === q || nt === tight) exact.push(i);
+      else if (name.startsWith(q) || (tight.length >= 3 && nt.startsWith(tight))) { if (prefix.length < limit) prefix.push(i); }
+      else if (inner.length < limit && (name.includes(q) || (tight.length >= 4 && nt.includes(tight))
+        // catalogue entries share a handful of summaries ("Açık yıldız kümesi"): matched by name only
+        || (!d.catalog && normalizeQuery(d.summary).includes(q)))) inner.push(i);
     }
-    return out;
+    return [...exact, ...prefix, ...inner].slice(0, limit);
   }
 
   /** Direction & distance (km) from a local position to landmark i */
@@ -331,9 +340,50 @@ export class Universe {
     return out;
   }
 
-  /** Black hole by universal id (`b0`, `cygx1`, …) */
+  /** Black hole by universal id (`b0`, `cygx1`, …; `bg{galaxy}` for a galaxy's nucleus, built on demand) */
   blackHole(id: string): BlackHole | undefined {
+    const m = /^bg(\d+)$/.exec(id);
+    if (m) return this.galaxyCore(Number(m[1]));
     return this.blackHoles.find((b) => b.entry.id === id);
+  }
+
+  /**
+   * The supermassive black hole at the centre of galaxy i: the hand-made one where the galaxy has
+   * it (Sgr A*, M87*, M31*, …), else one built from the galaxy (`bg{i}`, registered on first use).
+   * A guest slot is reused by other far-cluster galaxies, so a nucleus is rebuilt when its slot's
+   * galaxy has changed.
+   */
+  galaxyCore(i: number): BlackHole | undefined {
+    const g = this.galaxies;
+    if (i < 0 || i >= g.count) return undefined;
+    const real = this.blackHoles.find((b) => b.galaxy === i && b.info?.spectral === 'SMBH' && !b.entry.id.startsWith('bg'));
+    if (real) return real;
+    const id = `bg${i}`;
+    const galaxyName = g.name(i);
+    const name = _('{name} merkez kara deliği', { name: galaxyName });
+    const k = this.blackHoles.findIndex((b) => b.entry.id === id);
+    if (k >= 0) {
+      if (this.blackHoles[k].entry.name === name) return this.blackHoles[k];
+      if (this.current?.starId === id) return this.blackHoles[k];   // never pull the frame we are in
+      this.blackHoles.splice(k, 1);
+      this.extraSystems.delete(id);
+      this.cache.delete(id);
+    }
+    const pos = g.position(i);
+    const n = new Vector3(g.normal[i * 3], g.normal[i * 3 + 1], g.normal[i * 3 + 2]).normalize();
+    const pole = {
+      ra: (Math.atan2(n.dot(raDecToScene(90, 0)), n.dot(raDecToScene(0, 0))) / DEG_RAD + 360) % 360,
+      dec: Math.asin(Math.max(-1, Math.min(1, n.dot(raDecToScene(0, 90))))) / DEG_RAD,
+    };
+    const raw = galaxyNucleus({
+      id, name, galaxyName, type: g.typeOf(i), luminosity: Math.pow(10, (4.83 - g.absMag[i]) / 2.5), seed: g.seed[i] ^ i, pole,
+    });
+    const entry: BlackHoleEntry = { ...raw, summary: _(raw.summary) };
+    const info = syntheticInfo(name, pos, entry.massSolar, 0, 1, 1e-4, 'SMBH');
+    const bh: BlackHole = { entry, systemStarId: id, positionPc: pos, galaxy: i, info };
+    this.blackHoles.push(bh);
+    this.extraSystems.set(id, { id, name, positionPc: pos, galaxy: i, info, bodies: entry.bodies! });
+    return bh;
   }
 
   /** Black holes whose name matches the query */

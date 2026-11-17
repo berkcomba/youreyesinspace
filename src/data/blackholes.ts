@@ -221,6 +221,37 @@ function galaxyCore(o: { id: string; name: string; galaxy: string; massSolar: nu
   };
 }
 
+/**
+ * The supermassive black hole of any other galaxy (procedural, survey or a far cluster's member),
+ * built on demand. Its mass follows the black hole–bulge relation (M• ≈ 0.1–0.5 % of the bulge's
+ * stellar mass, Kormendy & Ho 2013): a giant elliptical holds billions of suns, a bulgeless disc a
+ * few hundred thousand to a million, a dwarf irregular perhaps an intermediate-mass hole. Whether
+ * it is feeding (an AGN with a bright, hot disc) or quiet like Sgr A* is drawn from the seed.
+ */
+export function galaxyNucleus(o: { id: string; name: string; galaxyName: string; type: 'E' | 'S0' | 'S' | 'SB' | 'Irr'; luminosity: number; seed: number; pole: PoleRaDec }): BlackHoleEntry {
+  const u = (k: number) => ((Math.imul(o.seed ^ (k * 0x9e3779b1), 0x85ebca6b) >>> 0) % 100_003) / 100_003;
+  const bulge = { E: 1, S0: 0.6, SB: 0.3, S: 0.25, Irr: 0.03 }[o.type];
+  const massSolar = Math.max(1e5, 2 * o.luminosity * bulge * 0.002 * Math.pow(10, 0.6 * (u(1) - 0.5)));
+  const active = u(2) < (o.type === 'E' || o.type === 'S0' ? 0.2 : 0.1);
+  const disk = active
+    ? { inner: 3, outer: Math.round(12 + 10 * u(3)), temperature: 15_000 + 25_000 * u(4), brightness: 0.85 + 0.15 * u(5) }
+    : { inner: 3, outer: Math.round(10 + 8 * u(3)), temperature: 6000 + 6000 * u(4), brightness: 0.35 + 0.3 * u(5) };
+  const diskAbsMag = active ? -12 - 6 * u(6) : 2 - 3 * u(6);
+  const m = massSolar.toExponential(1).replace('e+', '×10^');
+  const description = active
+    ? _('{g} galaksisinin merkezindeki süper kütleli kara delik: yaklaşık {m} güneş kütlesi. Şu an etkin bir galaksi çekirdeği (AGN): üzerine düşen gaz milyonlarca kelvine ısınıyor ve diski bütün galaksinin yıldızları kadar parlıyor.', { g: o.galaxyName, m })
+    : _('{g} galaksisinin merkezindeki süper kütleli kara delik: yaklaşık {m} güneş kütlesi. Sagittarius A* gibi sakin; çevresindeki soluk sıcak gaz ancak yakından görünüyor.', { g: o.galaxyName, m });
+  return {
+    id: o.id, name: o.name, massSolar, bodyId: o.id,
+    host: { kind: 'system', positionPc: () => new Vector3() },
+    summary: 'Galaksinin merkezindeki süper kütleli kara delik',
+    bodies: () => [blackHoleBody({
+      id: o.id, name: o.name, massSolar, pole: o.pole, disk, diskAbsMag, description,
+      facts: { 'Kütle': `~${m} M☉`, 'Olay ufku yarıçapı': `${fmtNum(Math.round(schwarzschildKm(massSolar)))} km`, 'Durum': active ? _('Etkin çekirdek (AGN)') : _('Sakin'), 'Kaynak': _('Prosedürel (kara delik–şişkin bölge ilişkisi)') },
+    })],
+  };
+}
+
 export const BLACK_HOLES: BlackHoleEntry[] = [
   {
     id: 'b0', name: 'Sagittarius A*', massSolar: 4.297e6, bodyId: 'sgra',

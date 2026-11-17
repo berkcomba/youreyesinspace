@@ -7,7 +7,7 @@ import { fmtLightYears } from '../ui/format';
 import type { GalaxyIndex } from './galaxies';
 import type { GalaxyModel } from './GalaxyModel';
 import { MAX_GLOBULAR, MAX_OPEN } from './ClusterStars';
-import { lightPositionPc, resolveNebulaProfile } from '../render/nebula/NebulaProfile';
+import { chromaRgb, lightPositionPc, nebulaChroma, resolveNebulaProfile } from '../render/nebula/NebulaProfile';
 
 /**
  * Procedural deep-sky objects: every galaxy is seeded with nebulae, clusters, remnants and a few
@@ -34,7 +34,7 @@ const CELL_ORDER: Array<[number, number, number, number]> = [];
 for (let i = -REACH; i <= REACH; i++) for (let j = -REACH; j <= REACH; j++) for (let k = -REACH; k <= REACH; k++) CELL_ORDER.push([i, j, k, Math.max(Math.abs(i), Math.abs(j), Math.abs(k))]);
 CELL_ORDER.sort((a, b) => a[3] - b[3] || (a[0] * a[0] + a[1] * a[1] + a[2] * a[2]) - (b[0] * b[0] + b[1] * b[1] + b[2] * b[2]));
 const MAX_GLOBULARS = 320;
-export type ProcKind = 'hii' | 'reflection' | 'planetary' | 'open' | 'globular' | 'snr' | 'bubble' | 'hypergiant' | 'wr' | 'magnetar';
+export type ProcKind = 'hii' | 'reflection' | 'planetary' | 'open' | 'globular' | 'snr' | 'bubble' | 'hypergiant' | 'wr' | 'magnetar' | 'dark';
 
 /**
  * Coverage policy (Milky Way only): inside the radius where the real catalogues are reasonably
@@ -56,20 +56,25 @@ export const COVERAGE_POLICY_VERSION = 2;
 const COVERAGE_EXCLUDE_PC: Record<ProcKind, number> = {
   hii: 2700, reflection: 1200, planetary: 2700, open: 2000, globular: 2700,
   snr: 2700, bubble: 1500, hypergiant: 2700, wr: 2700, magnetar: 2700,
+  // no dark-cloud catalogue is loaded: only the immediate neighbourhood is left empty
+  dark: 400,
 };
 
 /** Visual landmark kind of each generated class */
 const KIND_OF: Record<ProcKind, LandmarkKind> = {
   hii: 'nebula', reflection: 'nebula', planetary: 'planetary', open: 'cluster', globular: 'globular',
   snr: 'remnant', bubble: 'remnant', hypergiant: 'star', wr: 'star', magnetar: 'pulsar',
+  dark: 'nebula',
 };
 
 /** Expected objects per cell at unit density: [base, young-weighted] */
 const RATE: Record<ProcKind, [number, number]> = {
   hii: [0, 1.2], reflection: [0, 0.8], planetary: [1.0, 0], open: [0.6, 1.0], globular: [0, 0],
   snr: [0.15, 0.4], bubble: [0, 0.3], hypergiant: [0, 0.14], wr: [0, 0.12], magnetar: [0.05, 0.03],
+  dark: [0.15, 1.0],
 };
-const ORDER: ProcKind[] = ['hii', 'reflection', 'planetary', 'open', 'globular', 'snr', 'bubble', 'hypergiant', 'wr', 'magnetar'];
+// (appended only: `q` counts across the kinds of a cell, so a kind put in front would rename every later object)
+const ORDER: ProcKind[] = ['hii', 'reflection', 'planetary', 'open', 'globular', 'snr', 'bubble', 'hypergiant', 'wr', 'magnetar', 'dark'];
 
 /* ---------------- naming ---------------- */
 
@@ -99,6 +104,7 @@ const NAME_TEMPLATE: Record<ProcKind, string> = {
   hii: '{adj} {noun} Bulutsusu', reflection: '{adj} {noun} Bulutsusu', planetary: '{adj} {noun} Bulutsusu',
   open: '{adj} {noun} Kümesi', globular: '{adj} {noun} Küresel Kümesi', snr: '{adj} {noun} Kalıntısı', bubble: '{adj} {noun} Kabarcığı',
   hypergiant: 'Hiperdev YE-H {code}', wr: 'Wolf–Rayet YE-WR {code}', magnetar: 'Magnetar YE-M {code}',
+  dark: '{adj} {noun} Karanlık Bulutsusu',
 };
 
 /* ---------------- colours ---------------- */
@@ -332,7 +338,10 @@ export class ProcLandmarks {
     const noun = _(NOUN[rng.int(0, NOUN.length - 1)]);
     const distKm = positionPc.length() * PARSEC_KM;
     const def = this.describe(rng, kind, id, '', distKm);
-    const adj = _(COLOUR_ADJ.includes(adjKey) ? colourAdjective(def.color) : adjKey);
+    // glowing clouds and shells: their own procedural colour cast (the volume takes the same one)
+    const vk = KIND_OF[kind];
+    if (kind !== 'dark' && (vk === 'nebula' || vk === 'planetary' || vk === 'remnant')) def.color = chromaRgb(def.color, nebulaChroma(def));
+    const adj = _(kind === 'dark' && (COLOUR_ADJ.includes(adjKey) || adjKey === 'Parlak') ? 'Gölge' : COLOUR_ADJ.includes(adjKey) ? colourAdjective(def.color) : adjKey);
     def.name = _(NAME_TEMPLATE[kind], { adj, noun, code });
     return { def, positionPc, galaxy: g, procKind: kind };
   }
@@ -370,6 +379,38 @@ export class ProcLandmarks {
         const count = Math.min(MAX_OPEN, stars * 12);
         def.cluster = { ageMyr: age, count, centrePc: [centre.x, centre.y, centre.z], radiusPc: R * profile.cavityScale * 0.6 };
         def.facts['Seçilebilen üye'] = fmtNum(count);
+        return def;
+      }
+      case 'dark': {
+        // a cold molecular cloud (10–20 K), opaque in visible light: a hole in the star field
+        // (Barnard 68, the Coalsack, the Pipe), its edge lit faintly by a nearby star or a dense
+        // core already collapsing into protostars
+        const R = rng.logRange(0.3, 18);
+        const mass = Math.round(R * R * R * rng.range(20, 90) / 10) * 10 + 5;
+        const T = Math.round(rng.range(8, 22));
+        const Av = rng.range(5, 35);
+        const cores = R > 2 ? rng.int(1, 12) : rng.int(0, 2);
+        const yso = Math.max(3, Math.round(R * rng.range(4, 12)));
+        const absMag = -1.5 - 5 * Math.log10(R / 2) + rng.range(-0.5, 0.5);
+        const variant = rng.int(0, 2);
+        const def: LandmarkDef = {
+          ...base, kind: 'nebula', radiusPc: R, absMag, color: [0.11, 0.085, 0.07],
+          // the dust scatters the light of the young stars inside it (scatter → reflection sheen)
+          gas: { excitation: 0.1, lowIon: 0.9, scatter: rng.range(0.75, 1) },
+          summary: _('Arkasındaki yıldızların ışığını kesen soğuk, yoğun toz ve molekül bulutu'),
+          description: [
+            _('Karanlık bir bulutsu: {d} genişliğinde, yalnızca {T} K sıcaklığında bir toz ve moleküler hidrojen bulutu. Kendi ışığı yok; arkasındaki yıldız alanında kapkara bir delik gibi görünüyor.', { d: ly(R * 2), T }),
+            _('Yıldız alanını oyan bir toz bulutu: içinden geçen görünür ışık {a} kadir sönükleşiyor. İçindeki {n} yoğun çekirdek kendi kütleçekimiyle çökmekte; birkaç yüz bin yıl içinde bunlar yeni yıldızlar olacak.', { a: fixed(Av, 0), n: cores }),
+            _('Soğuk, karanlık bir moleküler bulut (Bok küreciği türünden ya da daha büyük bir bulutun parçası). Kenarları yakındaki bir yıldızın ışığıyla soluk bir sarımsı parıltı alıyor; içi kızılötesinde bakılmadıkça görünmez.'),
+          ][variant],
+          facts: { 'Uzaklık': dist, 'Çap': ly(R * 2), 'Tür': _('Karanlık bulutsu'), 'Sıcaklık': `${T} K`, 'Kütle': `~${fmtNum(mass)} M☉`, 'Sönükleştirme (A_V)': _('{n} kadir', { n: fixed(Av, 0) }), 'Çöken çekirdek': `${cores}`, 'Gömülü genç yıldız': `${yso}`, 'Kaynak': _('Prosedürel (keşif)') },
+        };
+        // the young stars embedded in it: real, selectable members round the primary light, a
+        // million years old or so, in the pocket they have blown into the dust
+        const profile = resolveNebulaProfile(def, 'dark');
+        const centre = lightPositionPc(profile, 0);
+        def.cluster = { ageMyr: rng.range(0.5, 2), count: yso, centrePc: [centre.x, centre.y, centre.z], radiusPc: R * profile.cavityScale * 1.2 };
+        def.facts['Seçilebilen üye'] = fmtNum(yso);
         return def;
       }
       case 'reflection': {

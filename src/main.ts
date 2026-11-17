@@ -193,6 +193,9 @@ class App implements UIHost {
   private starLuminosity = 1;
   /** the current system has more than one star (per-body host lighting) */
   private multiple = false;
+  /** stars in extreme ultraviolet (X): the target, and the 0..1 cross-fade the shaders see */
+  euv = false;
+  private euvMix = 0;
 
   /** Luminosity (solar units) of a star body of the current system */
   private hostLuminosity(star: CelestialBody): number {
@@ -226,6 +229,8 @@ class App implements UIHost {
     this.nebulaClouds = new NebulaClouds(this.universe.landmarks, scene, this.maxPointPx);
     this.nebulaClouds.onReady = () => this.landmarkSprites.setCloudHandover(true);
     this.volumes = new Volumes(scene);
+    // ?nebshadow=0: nebulae without shadowed starlight (comparison)
+    this.volumes.shadows = new URLSearchParams(location.search).get('nebshadow') !== '0';
     this.volumes.warm(this.engine.renderer);
     this.procClouds = new ProcClouds(this.universe.landmarks, scene, this.maxPointPx, this.volumes);
     this.clusterPoints = new ClusterStarPoints(this.universe.landmarks, this.universe.clusterStars, scene);
@@ -707,6 +712,21 @@ class App implements UIHost {
     this.camera.goToPoint(centre, arrive, fromCam, { radius: R * 0.3, name: _(l.def.name) });
     const dist = new Vector3().copy(centre).sub(this.camera.position).length();
     this.ui.showToast(_('{name} hedefine uçuluyor… ({dist})', { name: l.def.name, dist: fmtLightYears(dist) }), 2600);
+  }
+
+  /** Turn toward a sky direction (search by coordinates) */
+  lookToward(dir: Vector3): void {
+    this.camera.centerOnDirection(dir.clone().normalize());
+  }
+
+  /** Fly to a point given in parsecs from the Sun (search by coordinates and distance) */
+  goToSkyPoint(positionPc: Vector3, label: string): void {
+    const centre = positionPc.clone().multiplyScalar(PARSEC_KM).sub(this.universe.current.origin);
+    const fromCam = new Vector3().copy(this.camera.position).sub(centre).normalize();
+    // arrive a parsec off (a few light years: the neighbourhood of the point is in view)
+    this.camera.goToPoint(centre, PARSEC_KM, fromCam, { radius: PARSEC_KM * 0.05, name: label });
+    const dist = centre.clone().sub(this.camera.position).length();
+    this.ui.showToast(_('{name} hedefine uçuluyor… ({dist})', { name: label, dist: fmtLightYears(dist) }), 2600);
   }
 
   centerLandmark(i: number): void {
@@ -2471,6 +2491,11 @@ class App implements UIHost {
     this.universe.procStars.setRealCoverage(bubble, mag);
   }
 
+  toggleEUV(): void {
+    this.euv = !this.euv;
+    this.ui.showToast(this.euv ? _('Aşırı morötesi görünüm (SDO 304 Å): yıldızın kromosferi') : _('Görünür ışık'));
+  }
+
   screenshot(): void {
     this.wantScreenshot = true;
   }
@@ -2727,6 +2752,7 @@ class App implements UIHost {
       case 'Quote': s.equatorialGrid = !s.equatorialGrid; this.applySettings(); break;
       case 'KeyB': s.bloom = !s.bloom; this.applySettings(); break;
       case 'KeyP': this.screenshot(); break;
+      case 'KeyX': this.toggleEUV(); break;
       case 'Tab': e.preventDefault(); this.toggleUI(); break;
       case 'F1': e.preventDefault(); this.ui.toggleHelp(); break;
       case 'Slash': e.preventDefault(); (document.getElementById('search-input') as HTMLInputElement).focus(); break;
@@ -3308,6 +3334,7 @@ class App implements UIHost {
     if (this.pulse?.active) this.pulse.update(dt, camPos, pxPerRad);
     if (this.meteors?.active) this.meteors.update(dt, camPos, pxPerRad);
     this.updateFill(dt);
+    this.euvMix = this.euv ? Math.min(1, this.euvMix + dt / 0.6) : Math.max(0, this.euvMix - dt / 0.6);
     this.applyBodyFilter();
     const g = this.ghost;
     this.bodies.ahead = [this.camera.autopilot?.target, this.selected, ...this.tourAhead];
@@ -3315,6 +3342,7 @@ class App implements UIHost {
       atmospheres: s.atmospheres, clouds: ov.clouds ?? s.clouds, rings: s.rings, ringParticles: s.ringParticles, shadows: s.shadows, imagery: s.imagery,
       fill: this.fillOut.size ? this.fillOut : null,
       ghost: g ? { id: g.body.id, alpha: g.alpha * g.alpha * (3 - 2 * g.alpha) } : null,
+      euv: this.euvMix * this.euvMix * (3 - 2 * this.euvMix),
     }, this.multiple ? (b) => b.hostStar : undefined);
     this.updateLensing(fovRad, dt);
     this.updateLensFlare(camPos, dt);

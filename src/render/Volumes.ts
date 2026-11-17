@@ -1,6 +1,7 @@
 import {
   BufferAttribute, BufferGeometry, CubeCamera, CustomBlending, HalfFloatType, LinearFilter, LinearMipmapLinearFilter, Matrix3, Matrix4, Mesh, OneFactor,
   OrthographicCamera, Scene, ShaderMaterial, SrcAlphaFactor, Vector2, Vector3, Vector4, WebGLCoordinateSystem, WebGLCubeRenderTarget, WebGLRenderTarget, ZeroFactor,
+  ClampToEdgeWrapping, Data3DTexture, RGBAFormat, UnsignedByteType, WebGL3DRenderTarget,
   type IUniform, PerspectiveCamera, type WebGLRenderer,
 } from 'three';
 import type { GalaxyModel } from '../galaxy/GalaxyModel';
@@ -16,6 +17,40 @@ const MAX_GALAXIES = 2;
  * all of them go to the buffer in one draw list
  */
 const MAX_NEBULAE = 112;
+
+/**
+ * Shadowed starlight: the nebulae largest on screen get a grid of how much of each star's light
+ * reaches every point through the dust (nebula_shadow.frag). Its march toward every star reads the
+ * medium from a baked grid (a texel instead of a dozen noise octaves per sample), which makes the
+ * fine light grid affordable. The view itself stays procedural: from a few radii away a pixel is
+ * ~0.003 radii, a 128³ voxel 0.02, and a raymarch of the baked medium looked blurred.
+ * RGBA8: 128³ = 8 MB, 96³ = 3.4 MB. Touch devices get smaller grids.
+ */
+const LOW_MEM = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
+const DENSITY_GRID = LOW_MEM ? 80 : 128;
+const SHADOW_GRID = LOW_MEM ? 56 : 96;
+const SHADOW_MAX = LOW_MEM ? 3 : 5;
+/** apparent radius (px) from which a nebula is worth a bake */
+const SHADOW_MIN_PX = 60;
+/** voxels baked per frame (all bakes together): a 128³ density grid takes ~8 frames, a 96³ shadow grid ~20 */
+const BAKE_DENSITY_SLICES = 16;
+const BAKE_SHADOW_SLICES = 5;
+/** samples along each star → voxel segment */
+const SHADOW_STEPS = 48;
+/** fade-in of a finished bake (s) */
+const SHADOW_FADE_S = 0.8;
+/** a bake no longer among the wanted ones is kept this long (s) before its memory is freed */
+const SHADOW_KEEP_S = 4;
+
+interface Grid { rt: WebGL3DRenderTarget; mat: ShaderMaterial; layer: number; done: boolean }
+interface ShadowBake { density: Grid; light: Grid | null; seen: number }
+
+/** stand-in for a grid not baked yet (fully lit) */
+const NO_SHADOW = (() => {
+  const t = new Data3DTexture(new Uint8Array([255, 255, 255, 255]), 1, 1, 1);
+  t.needsUpdate = true;
+  return t;
+})();
 /** inside this many radii a galaxy is the backdrop, cached in a cube map */
 const CUBE_RATIO = 1.4;
 /** leaving a galaxy, its whole-sky mean fades out of the eye adaptation between CUBE_RATIO and this (galaxy radii) */
@@ -82,6 +117,8 @@ export class Volume {
     this.mesh.visible = false;
   }
   get u(): Record<string, IUniform> { return this.mat.uniforms; }
+  /** baked light transmittance (nebulae largest on screen) */
+  shadow: ShadowBake | null = null;
   /** radius (local units) of the sphere the shader actually marches: the screen rect it is drawn in */
   get bound(): number { return this.kind === 'nebula' ? 1.3 : (this.u.uBox.value as Vector3).length(); }
   /** camera (scene pc) → object-local origin; `toLocal` is the scene → local rotation */
@@ -208,6 +245,20 @@ export class Volumes {
       mesh.frustumCulled = false;
       scene.add(mesh);
     }
+    const bake = new ShaderMaterial({
+      vertexShader: Shaders.volumeVert, fragmentShader: Shaders.nebulaShadowFrag, depthTest: false, depthWrite: false,
+      uniforms: { ...this.material(Shaders.volumeNebula2Frag, profileUniforms()).uniforms, uLayer: { value: 0 }, uGrid: { value: SHADOW_GRID }, uBakeSteps: { value: SHADOW_STEPS } },
+    });
+    const bakeD = new ShaderMaterial({
+      vertexShader: Shaders.volumeVert, fragmentShader: Shaders.nebulaBakeDensityFrag, depthTest: false, depthWrite: false,
+      uniforms: { ...this.material(Shaders.volumeNebula2Frag, profileUniforms()).uniforms, uLayer: { value: 0 }, uGrid: { value: DENSITY_GRID } },
+    });
+    for (const m of [bake, bakeD]) {
+      this.warmMats.push(m);
+      const bakeMesh = new Mesh(this.geo, m);
+      bakeMesh.frustumCulled = false;
+      scene.add(bakeMesh);
+    }
     const prev = renderer.getRenderTarget();
     // same target type as the real passes: the program cache key depends on it
     renderer.setRenderTarget(this.rt);
@@ -298,6 +349,7 @@ export class Volumes {
     extra.uPalette.value = PALETTE_CODE[profile.paletteId];
     (extra.uTint.value as Vector3).set(profile.tint[0], profile.tint[1], profile.tint[2]);
     (extra.uLines.value as Vector4).set(profile.lines[0], profile.lines[1], profile.lines[2], profile.lines[3]);
+    (extra.uChroma.value as Vector2).set(profile.chroma[0], profile.chroma[1]);
     extra.uEmission.value = profile.emissionScale;
     extra.uExtinction.value = profile.extinctionScale;
     extra.uTurb.value = profile.turbulence;
@@ -336,13 +388,106 @@ export class Volumes {
     const i = this.list.indexOf(v);
     if (i >= 0) this.list.splice(i, 1);
     this.scene.remove(v.mesh);
+    this.freeShadow(v);
     v.mat.dispose();
+  }
+
+  /** shadowed starlight on (the bake runs only on the nebulae largest on screen) */
+  shadows = true;
+  private readonly bakeScene = new Scene();
+  private bakeMesh: Mesh | null = null;
+
+  private freeShadow(v: Volume): void {
+    if (!v.shadow) return;
+    for (const g of [v.shadow.density, v.shadow.light]) { if (g) { g.rt.dispose(); g.mat.dispose(); } }
+    v.shadow = null;
+    if (v.u.uShadow) { v.u.uShadow.value = NO_SHADOW; v.u.uShadowOn.value = 0; v.u.uDensity.value = NO_SHADOW; v.u.uDensityOn.value = 0; }
+  }
+
+  /**
+   * Bake the grids of the nebulae largest on screen — the medium first, then the light reaching
+   * through it (which reads the baked medium) — a few slices a frame, and fade the finished ones
+   * in. Grids of nebulae that dropped out are freed after a while.
+   */
+  private bakeShadows(renderer: WebGLRenderer, nebulae: Volume[], now: number, dt: number): void {
+    const want = this.shadows
+      ? nebulae.filter((v) => v.u.uShadow && v.px >= SHADOW_MIN_PX && (v.u.uNLights.value as number) > 0).sort((a, b) => b.px - a.px).slice(0, SHADOW_MAX)
+      : [];
+    for (const v of want) if (v.shadow) v.shadow.seen = now;
+    for (const v of this.list) {
+      const b = v.shadow;
+      if (!b) continue;
+      if (now - b.seen > SHADOW_KEEP_S * 1000 || !this.shadows) { this.freeShadow(v); continue; }
+      if (b.light?.done) v.u.uShadowOn.value = Math.min(1, (v.u.uShadowOn.value as number) + dt / SHADOW_FADE_S);
+    }
+    let live = this.list.reduce((n, v) => n + (v.shadow ? 1 : 0), 0);
+    let dBudget = BAKE_DENSITY_SLICES, sBudget = BAKE_SHADOW_SLICES;
+    for (const v of want) {
+      let b = v.shadow;
+      if (!b) {
+        if (live >= SHADOW_MAX) continue;
+        b = v.shadow = { density: this.newGrid(v, Shaders.nebulaBakeDensityFrag, DENSITY_GRID, {}), light: null, seen: now };
+        live++;
+      }
+      if (!b.density.done) {
+        if (dBudget <= 0) continue;
+        dBudget = this.bakeSlices(renderer, b.density, dBudget);
+        if (b.density.done) { v.u.uDensity.value = b.density.rt.texture; v.u.uDensityOn.value = 1; }
+        continue;
+      }
+      // the light grid reads the baked medium through the volume's own (shared) uniforms
+      if (sBudget <= 0) continue;
+      b.light ??= this.newGrid(v, Shaders.nebulaShadowFrag, SHADOW_GRID, { uBakeSteps: { value: SHADOW_STEPS } }, true);
+      if (b.light.done) continue;
+      sBudget = this.bakeSlices(renderer, b.light, sBudget);
+      if (b.light.done) v.u.uShadow.value = b.light.rt.texture;
+    }
+  }
+
+  private bakeSlices(renderer: WebGLRenderer, g: Grid, budget: number): number {
+    this.bakeMesh!.material = g.mat;
+    const n = g.rt.depth;
+    while (budget > 0 && g.layer < n) {
+      g.mat.uniforms.uLayer.value = g.layer;
+      renderer.setRenderTarget(g.rt, g.layer);
+      renderer.render(this.bakeScene, this.cam);
+      g.layer++;
+      budget--;
+    }
+    g.done = g.layer >= n;
+    return budget;
+  }
+
+  /**
+   * A grid of `size`³ over the nebula's cube, written by `frag` one z slice at a time. The medium's
+   * uniforms are the volume's own (shared objects); `readsDensity`: the bake may read the volume's
+   * baked medium (the light grid), else it sees the procedural one (the density grid itself).
+   */
+  private newGrid(v: Volume, frag: string, size: number, extra: Record<string, IUniform>, readsDensity = false): Grid {
+    if (!this.bakeMesh) {
+      this.bakeMesh = new Mesh(this.geo);
+      this.bakeMesh.frustumCulled = false;
+      this.bakeScene.add(this.bakeMesh);
+    }
+    const rt = new WebGL3DRenderTarget(size, size, size, { format: RGBAFormat, type: UnsignedByteType, depthBuffer: false });
+    const tex = rt.texture;
+    tex.minFilter = LinearFilter; tex.magFilter = LinearFilter; tex.generateMipmaps = false;
+    tex.wrapS = tex.wrapT = tex.wrapR = ClampToEdgeWrapping;
+    const uniforms: Record<string, IUniform> = {
+      ...v.u,
+      uShadow: { value: NO_SHADOW }, uShadowOn: { value: 0 }, uDebug: { value: 0 },
+      ...(readsDensity ? {} : { uDensity: { value: NO_SHADOW }, uDensityOn: { value: 0 } }),
+      uLayer: { value: 0 }, uGrid: { value: size },
+      ...extra,
+    };
+    const mat = new ShaderMaterial({ vertexShader: Shaders.volumeVert, fragmentShader: frag, uniforms, depthTest: false, depthWrite: false });
+    return { rt, mat, layer: 0, done: false };
   }
 
   /** Raymarch the active volumes into the buffer; call right before the main render */
   render(renderer: WebGLRenderer, camera: PerspectiveCamera): void {
     const pick = (kind: 'galaxy' | 'nebula', max: number) => this.list
-      .filter((v) => v.kind === kind && v.active && (v.u.uFade.value as number) > 0.003)
+      .filter((v) => v.kind === kind && v.active && Math.max(v.u.uFade.value as number, (v.u.uAbsorb?.value as number | undefined) ?? 0) > 0.003)
       .sort((a, b) => b.px - a.px).slice(0, max);
     const galaxies = this.enabled ? pick('galaxy', MAX_GALAXIES).sort((a, b) => b.ratio - a.ratio) : [];
     const nebulae = this.enabled ? pick('nebula', MAX_NEBULAE).sort((a, b) => b.ratio - a.ratio) : [];
@@ -364,6 +509,7 @@ export class Volumes {
     const now = performance.now();
     const dt = this.lastFrameMs ? Math.min(0.1, (now - this.lastFrameMs) / 1000) : 1 / 60;
     this.lastFrameMs = now;
+    this.bakeShadows(renderer, nebulae, now, dt);
     const ownerBefore = this.cubeOwner;
     const useCube = inside !== null && !this.forceDirect && this.backdropCube(renderer, inside);
     // the cube and the direct raymarch differ a little (resolution, steps): cross-fade between
@@ -610,7 +756,9 @@ function profileUniforms(): Record<string, IUniform> {
     uLights: { value: Array.from({ length: 4 }, () => new Vector4(0, 0, 0, 0)) },
     uLightCol: { value: Array.from({ length: 4 }, () => new Vector3(1, 1, 1)) },
     uNLights: { value: 1 },
-    uPalette: { value: 0 }, uTint: { value: new Vector3(1, 1, 1) }, uLines: { value: new Vector4(0.5, 0.5, 0, 0) }, uEmission: { value: 1 }, uExtinction: { value: 1 },
+    uPalette: { value: 0 }, uTint: { value: new Vector3(1, 1, 1) }, uChroma: { value: new Vector2(0, 1) }, uLines: { value: new Vector4(0.5, 0.5, 0, 0) }, uEmission: { value: 1 }, uExtinction: { value: 1 },
+    uShadow: { value: NO_SHADOW }, uShadowOn: { value: 0 }, uDensity: { value: NO_SHADOW }, uDensityOn: { value: 0 },
+    uAbsorb: { value: -1 },
     uDebug: { value: 0 },
   };
 }

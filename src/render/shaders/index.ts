@@ -66,6 +66,8 @@ import volumeGalaxyFrag from './volume_galaxy.frag?raw';
 import nebulaDensity from './nebula_density.glsl?raw';
 import nebulaLighting from './nebula_lighting.glsl?raw';
 import volumeNebula2Frag from './volume_nebula2.frag?raw';
+import nebulaShadowFrag from './nebula_shadow.frag?raw';
+import nebulaBakeDensityFrag from './nebula_bake_density.frag?raw';
 import volumeCompositeFrag from './volume_composite.frag?raw';
 import volumeAdaptFrag from './volume_adapt.frag?raw';
 import exposureMeterFrag from './exposure_meter.frag?raw';
@@ -108,6 +110,8 @@ export const Shaders = {
   volumeVert,
   volumeGalaxyFrag: common + '\n' + volumeCommon + '\n' + volumeGalaxyFrag,
   volumeNebula2Frag: common + '\n' + volumeCommon + '\n' + nebulaDensity + '\n' + nebulaLighting + '\n' + volumeNebula2Frag,
+  nebulaBakeDensityFrag: common + '\n' + volumeCommon + '\n' + nebulaDensity + '\n' + nebulaLighting + '\n' + nebulaBakeDensityFrag,
+  nebulaShadowFrag: common + '\n' + volumeCommon + '\n' + nebulaDensity + '\n' + nebulaLighting + '\n' + nebulaShadowFrag,
   volumeCompositeFrag,
   volumeAdaptFrag,
   exposureMeterFrag,

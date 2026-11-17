@@ -72,6 +72,8 @@ export interface NebulaProfile {
   tint: [number, number, number];
   /** line mix: excitation, low-ionisation share, remnant class code (REMNANT_CODE), dust scattering share */
   lines: [number, number, number, number];
+  /** procedural colour of this object: hue turn (radians) and saturation gain of its gas and dust light */
+  chroma: [number, number];
   /** 1 … 4 local lights, brightest first */
   lights: NebulaLight[];
   /** second concentric shell (planetaries) / the denser side of the ISM (remnants): a unit axis */
@@ -119,6 +121,7 @@ function family(def: LandmarkDef, procKind: ProcKind | undefined, shape: Rng): N
     case 'planetary': return shape.chance(0.45) ? 'planetary-bipolar' : 'planetary-shell';
     case 'snr': return 'snr-filaments';
     case 'bubble': return 'wind-bubble';
+    case 'dark': return 'molecular-dark';
     default: return 'hii-cavity';
   }
 }
@@ -132,6 +135,8 @@ function ballPoint(rng: Rng, out = new Vector3()): Vector3 {
 
 /** blackbody-ish star colours in linear RGB by rough spectral class */
 const STAR_O = new Vector3(0.62, 0.72, 1.0), STAR_B = new Vector3(0.72, 0.8, 1.0), STAR_A = new Vector3(0.9, 0.93, 1.0), STAR_WD = new Vector3(0.75, 0.85, 1.0);
+/** a young F / G star still wrapped in its cloud (T Tauri), warmer than the B and A stars */
+const STAR_F = new Vector3(1.0, 0.88, 0.7);
 
 /**
  * Resolve the profile of a nebula landmark. Deterministic: the same (id, class, algorithm version)
@@ -170,12 +175,23 @@ export function resolveNebulaProfile(def: LandmarkDef, procKind?: ProcKind): Neb
       extinctionScale = dust.range(0.7, 1.4) * (morphology === 'hii-pillars' ? 1.3 : 1);
       break;
     }
-    case 'molecular-dark':
-      lights.push({ position: ballPoint(lightsRng).multiplyScalar(0.9), color: STAR_B.clone(), intensity: 1 });
+    case 'molecular-dark': {
+      // young stars still embedded in the cloud: the primary (the selectable members gather round
+      // it) has blown a small cavity whose walls scatter its light, a few fainter ones glow in
+      // their own pockets of dust (NGC 1333, the Serpens core); the cloud's bulk stays black
+      // (near the surface: the ones we see in reflection are those whose light breaks out of the cloud)
+      lights.push({ position: ballPoint(lightsRng).normalize().multiplyScalar(lightsRng.range(0.5, 0.72)), color: STAR_B.clone(), intensity: 1 });
+      const n = lightsRng.int(1, 3);
+      for (let i = 0; i < n; i++) {
+        lights.push({ position: ballPoint(lightsRng).normalize().multiplyScalar(lightsRng.range(0.5, 0.8)), color: (lightsRng.chance(0.5) ? STAR_A : STAR_F).clone(), intensity: lightsRng.range(0.25, 0.6) });
+      }
+      cavityScale = shape.range(0.14, 0.24);
       paletteId = 'halpha-sii';
-      emissionScale = 0.15;
+      // (it scales the scattered starlight too, which is nearly all a dark cloud gives off)
+      emissionScale = micro.range(3.4, 4.4);
       extinctionScale = dust.range(1.8, 2.6);
       break;
+    }
     case 'reflection-wisps': {
       const n = lightsRng.int(1, 3);
       for (let i = 0; i < n; i++) lights.push({ position: ballPoint(lightsRng).multiplyScalar(i === 0 ? 0.3 : 0.7), color: (i === 0 ? STAR_B : STAR_A).clone(), intensity: i === 0 ? 1 : lightsRng.range(0.2, 0.5) });
@@ -220,8 +236,35 @@ export function resolveNebulaProfile(def: LandmarkDef, procKind?: ProcKind): Neb
     orientation, emissionScale, extinctionScale, turbulence, filamentScale, cavityScale, paletteId,
     tint: [def.color[0], def.color[1], def.color[2]],
     lines: [def.gas?.excitation ?? 0.5, def.gas?.lowIon ?? 0.5, REMNANT_CODE[def.gas?.remnant ?? 'radiative'], def.gas?.scatter ?? 0],
+    chroma: nebulaChroma(def),
     lights, axis, doubleShell,
   };
+}
+
+/**
+ * A generated nebula's own colour cast, from its id: a saturation gain (1.25–1.85) and a hue
+ * turn — modest for most (the line ratios still read), wide for about one in five (false-colour
+ * vivid: violet H II, green remnants, gold planetaries). Catalogue objects keep their real colours.
+ */
+export function nebulaChroma(def: Pick<LandmarkDef, 'id' | 'procedural'>): [number, number] {
+  if (!def.procedural) return [0, 1];
+  const h = hashId(def.id);
+  const u = (salt: number) => (mixSeed(h, salt) >>> 0) / 4294967296;
+  const wide = u(0xc401) < 0.2;
+  return [(u(0xc402) - 0.5) * (wide ? 2 * Math.PI : 1.1), 1.25 + 0.6 * u(0xc403)];
+}
+
+/** the same turn and gain on an RGB colour (the sprite's tint), luminance kept */
+export function chromaRgb(c: readonly number[], chroma: [number, number]): [number, number, number] {
+  const [turn, sat] = chroma;
+  const m = (c[0] + c[1] + c[2]) / 3;
+  const x = (c[0] - c[1]) / Math.SQRT2, y = (c[0] + c[1] - 2 * c[2]) / Math.sqrt(6);
+  const cs = Math.cos(turn) * sat, sn = Math.sin(turn) * sat;
+  const X = x * cs - y * sn, Y = x * sn + y * cs;
+  const out = [m + X / Math.SQRT2 + Y / Math.sqrt(6), m - X / Math.SQRT2 + Y / Math.sqrt(6), m - 2 * Y / Math.sqrt(6)];
+  const L0 = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2], L1 = 0.2126 * out[0] + 0.7152 * out[1] + 0.0722 * out[2];
+  const k = L1 > 1e-4 ? L0 / L1 : 1;
+  return out.map((v) => Math.min(1, Math.max(0, v * k))) as [number, number, number];
 }
 
 /** Position of one of the profile's lights relative to the object centre, in parsecs, scene frame */

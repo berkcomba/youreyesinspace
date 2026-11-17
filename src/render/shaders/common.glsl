@@ -199,3 +199,13 @@ vec3 blackbody(float T) {
   }
   return c;
 }
+
+// SDO/AIA 304 Å colour table (He II, ~50 000 K chromosphere): black → deep red-brown → orange →
+// yellow → white, as in the mission's standard images
+vec3 aia304(float I) {
+  float x = max(I, 0.0);
+  vec3 c = mix(vec3(0.0), vec3(0.42, 0.06, 0.0), smoothstep(0.0, 0.2, x));
+  c = mix(c, vec3(0.95, 0.36, 0.04), smoothstep(0.2, 0.45, x));
+  c = mix(c, vec3(1.0, 0.72, 0.28), smoothstep(0.45, 0.78, x));
+  return mix(c, vec3(1.0, 0.95, 0.82), smoothstep(0.78, 1.15, x));
+}

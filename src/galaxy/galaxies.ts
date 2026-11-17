@@ -825,7 +825,7 @@ export class GalaxyIndex {
       else if (prefix.length < limit && (n.startsWith(q) || (q.length >= 4 && n.includes(q)))) prefix.push(i);
     }
     hits.push(...exact, ...prefix);
-    const m = /^ye-([0-9a-f]{6})$/i.exec(q);
+    const m = /^(?:galaksi\s+|galaxy\s+|galaxie\s+|galaxia\s+)?ye-([0-9a-f]{6})$/i.exec(q);
     if (m) {
       const code = parseInt(m[1], 16);
       for (let i = this.catalogCount; i < this.count; i++) if (this.seed[i] % 0xffffff === code) { hits.push(i); break; }

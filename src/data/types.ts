@@ -274,6 +274,8 @@ export interface Rings {
   inner: number; // km
   outer: number; // km
   color: [number, number, number];
+  /** second material the bands alternate with (another ice, dust or organic); `color` alone when absent */
+  color2?: [number, number, number];
   opacity: number;
   seed: number;
   /** Named gaps as [radiusKm, widthKm] */

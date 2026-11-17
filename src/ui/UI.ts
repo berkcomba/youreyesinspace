@@ -38,6 +38,8 @@ import { PLACES } from './places';
 import { exoBodyId } from '../gen/RealSystem';
 import type { Music } from '../audio/Music';
 import { CHANGELOG, CURRENT_VERSION } from '../data/changelog';
+import { Vector3 } from 'three';
+import { fmtGalactic, fmtRaDec, parseSkyQuery, sceneToGalactic, sceneToRaDec } from './coords';
 
 /** body types that act as the light source / primary of a system */
 function isPrimaryType(t: string): boolean {
@@ -111,6 +113,10 @@ export interface UIHost extends MissionPanelHost {
   /** fly to a black hole by universal id (`b0`, `cygx1`, …), switching frames if needed */
   goToBlackHole(id: string): void;
   centerBlackHole(id: string): void;
+  /** turn the camera toward a sky direction (scene frame, unit) */
+  lookToward(dir: Vector3): void;
+  /** fly to a point given in parsecs from the Sun (scene frame) */
+  goToSkyPoint(positionPc: Vector3, label: string): void;
   /** free roam: pointer-locked mouse look + WASD flight */
   toggleFreeRoam(): void;
   /** play an event scene (Events tab) */
@@ -129,6 +135,22 @@ export interface UIHost extends MissionPanelHost {
   applySettings(byUser?: boolean): void;
   screenshot(): void;
   toggleUI(): void;
+  /** stars shown in extreme ultraviolet (SDO/AIA 304 Å) */
+  readonly euv: boolean;
+  toggleEUV(): void;
+}
+
+/** RA/Dec, galactic l/b and (for generated objects) the id to search for, of a position in parsecs from the Sun */
+function coordRows(posPc: Vector3, id: string | null): Array<[string, string]> {
+  if (posPc.lengthSq() === 0) return [];
+  const [ra, dec] = sceneToRaDec(posPc), [l, b] = sceneToGalactic(posPc);
+  const rows: Array<[string, string]> = [['Koordinat (J2000)', fmtRaDec(ra, dec)], ['Galaktik koordinat', fmtGalactic(l, b)]];
+  if (id) rows.push(['Kimlik (aranabilir)', id]);
+  return rows;
+}
+
+function escapeHtml(s: string): string {
+  return s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
 }
 
 function $<T extends HTMLElement>(id: string): T {
@@ -228,6 +250,8 @@ export class UI {
   private readonly followBtn = $<HTMLButtonElement>('act-follow');
   private readonly landBtn = $<HTMLButtonElement>('act-land');
   private readonly shareBtn = $<HTMLButtonElement>('act-share');
+  private readonly euvBtn = $<HTMLButtonElement>('info-euv');
+  private readonly coreBtn = $<HTMLButtonElement>('info-core');
   private readonly brandSub = $('brand-sub');
   private readonly pauseBtn = $<HTMLButtonElement>('t-pause');
   private readonly roamBtn = $<HTMLButtonElement>('btn-roam');
@@ -392,6 +416,12 @@ export class UI {
       else if (h.selectedLandmark !== null) h.goToLandmark(h.selectedLandmark);
       else if (h.selectedFar !== null) h.goToFar(h.selectedFar);
     });
+    this.euvBtn.addEventListener('click', () => this.host.toggleEUV());
+    this.coreBtn.addEventListener('click', () => {
+      const g = this.host.selectedGalaxy;
+      const bh = g !== null ? this.host.universe.galaxyCore(g) : undefined;
+      if (bh) this.host.goToBlackHole(bh.entry.id);
+    });
     $('act-share').addEventListener('click', () => {
       const b = this.host.selected;
       if (!b) return;
@@ -526,6 +556,13 @@ export class UI {
       const norm = (s: string) => s.toLowerCase().replace(/ı/g, 'i').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
       const nq = norm(q);
       const u = this.host.universe;
+      const add = (name: string, tag: string, onClick: () => void) => {
+        const li = document.createElement('li');
+        li.innerHTML = `<span>${escapeHtml(name)}</span><span class="t">${escapeHtml(tag)}</span>`;
+        li.addEventListener('click', onClick);
+        list.appendChild(li);
+      };
+      const extra = this.searchIdsAndCoords(input.value.trim(), add);
       const hits = u.bodies
         .filter((b) => norm(b.name).includes(nq) || norm(b.data.name).includes(nq) || b.id.includes(nq) || norm(typeLabel(b.data.type)).includes(nq) || (TYPE_LABELS[b.data.type] ?? '').toLowerCase().includes(q))
         .slice(0, 8);
@@ -581,7 +618,7 @@ export class UI {
         list.appendChild(li);
       }
       // Deep-sky landmarks
-      const lms = u.searchLandmarks(q, 5);
+      const lms = u.searchLandmarks(q, 8);
       for (const i of lms) {
         const l = u.landmarks[i];
         const li = document.createElement('li');
@@ -599,7 +636,7 @@ export class UI {
         li.addEventListener('click', () => { this.host.selectGalaxy(i); this.host.goToGalaxy(i); this.closeSearch(); });
         list.appendChild(li);
       }
-      list.hidden = hits.length + small.length + foreign.length + exo.length + stars.length + bhs.length + lms.length + gals.length === 0;
+      list.hidden = extra + hits.length + small.length + foreign.length + exo.length + stars.length + bhs.length + lms.length + gals.length === 0;
     };
     input.addEventListener('input', render);
     input.addEventListener('focus', render);
@@ -628,6 +665,69 @@ export class UI {
     this.host.select(b);
     this.host.goTo(b);
     this.closeSearch();
+  }
+
+  /**
+   * Generated objects by id (`q…` nebulae and clusters, `p…` stars, `bg…` galactic nuclei, `c…`
+   * catalogue stars) and sky positions (RA/Dec, galactic l/b, optionally a distance): what lies in
+   * that direction, a "look there" and, with a distance, a "fly there". Returns the rows added.
+   */
+  private searchIdsAndCoords(raw: string, add: (name: string, tag: string, onClick: () => void) => void): number {
+    const u = this.host.universe;
+    let n = 0;
+    const id = raw.replace(/\s+/g, '');
+    if (/^q(g?)\d+:-?\d+:-?\d+:-?\d+:\d+$/i.test(id)) {
+      const l = u.landmark(id.toLowerCase());
+      const i = l ? u.landmarks.indexOf(l) : -1;
+      if (l && i >= 0) { add(l.def.name, `${_(LANDMARK_KIND_LABEL[l.def.kind]).split(' /')[0]} · ${id}`, () => { this.host.goToLandmark(i); this.closeSearch(); }); n++; }
+    } else if (/^bg\d+$/i.test(id)) {
+      const bh = u.blackHole(id.toLowerCase());
+      if (bh) { add(bh.entry.name, `${_('Kara Delik')} · ${fmtSolarMass(bh.entry.massSolar)}`, () => { this.host.goToBlackHole(bh.entry.id); this.closeSearch(); }); n++; }
+    } else if (/^(p\d+(:-?\d+){5}|c\d+)$/i.test(id)) {
+      try {
+        const sid = id.toLowerCase() as StarId;
+        const info = u.starInfo(sid);
+        if (info && Number.isFinite(info.distancePc)) { add(info.name, `${_('Yıldız')} · ${info.spectral} · ${fmtLightYears(info.distancePc * PARSEC_KM)}`, () => this.pickStar(sid)); n++; }
+      } catch { /* not a star id after all */ }
+    }
+    const sky = parseSkyQuery(raw);
+    if (!sky) return n;
+    const where = `${fmtRaDec(sky.ra, sky.dec)} · ${fmtGalactic(sky.l, sky.b)}`;
+    add(_('Bu yöne bak'), where, () => { this.host.lookToward(sky.dir.clone()); this.closeSearch(); }); n++;
+    if (sky.distPc !== null) {
+      const p = sky.dir.clone().multiplyScalar(sky.distPc);
+      add(_('Bu noktaya uç'), `${fmtLightYears(sky.distPc * PARSEC_KM)} · ${where}`, () => { this.host.goToSkyPoint(p, _('Koordinat')); this.closeSearch(); }); n++;
+    }
+    // what lies along that sightline: deep-sky objects (real and the generated neighbourhood),
+    // black holes and galaxies, nearest in angle first (and in distance, when one was given)
+    type Hit = { score: number; name: string; tag: string; go: () => void };
+    const found: Hit[] = [];
+    const tol = 1.5 * Math.PI / 180;
+    const consider = (pos: Vector3, radiusPc: number, name: string, tag: string, go: () => void) => {
+      const d = pos.length();
+      if (d <= 0) return;
+      const sep = Math.acos(Math.max(-1, Math.min(1, pos.dot(sky.dir) / d)));
+      const reach = Math.max(tol, Math.atan(radiusPc / d));
+      if (sep > reach) return;
+      let score = sep / reach;
+      if (sky.distPc !== null) score += Math.abs(Math.log(d / sky.distPc)) * 2;
+      found.push({ score, name, tag, go });
+    };
+    for (let i = 0; i < u.landmarks.length; i++) {
+      const l = u.landmarks[i];
+      consider(l.positionPc, l.def.radiusPc, l.def.name, `${_(LANDMARK_KIND_LABEL[l.def.kind]).split(' /')[0]} · ${fmtLightYears(l.positionPc.length() * PARSEC_KM)}`, () => { this.host.goToLandmark(i); this.closeSearch(); });
+    }
+    for (const b of u.blackHoles) {
+      consider(b.positionPc, 0, b.entry.name, `${_('Kara Delik')} · ${fmtLightYears(b.positionPc.length() * PARSEC_KM)}`, () => { this.host.goToBlackHole(b.entry.id); this.closeSearch(); });
+    }
+    const g = u.galaxies, gp = new Vector3();
+    for (let i = 1; i < g.count; i++) {
+      g.position(i, gp);
+      consider(gp.clone(), g.radius[i], g.name(i), `${_('Galaksi')} · ${fmtLightYears(g.distancePc(i) * PARSEC_KM)}`, () => { this.host.selectGalaxy(i); this.host.goToGalaxy(i); this.closeSearch(); });
+    }
+    found.sort((a, b) => a.score - b.score);
+    for (const h of found.slice(0, 8)) { add(h.name, h.tag, h.go); n++; }
+    return n;
   }
 
   private pickStar(id: StarId): void {
@@ -990,6 +1090,16 @@ export class UI {
     if (this.brandSub.textContent !== label) this.brandSub.textContent = label;
 
     this.shareBtn.hidden = !(selected && sys.catalogIndex === 0);
+    const isStar = selected?.data.type === 'star';
+    if (this.euvBtn.hidden !== !isStar) this.euvBtn.hidden = !isStar;
+    if (isStar && this.euvBtn.classList.contains('active') !== this.host.euv) {
+      this.euvBtn.classList.toggle('active', this.host.euv);
+      this.euvBtn.textContent = this.host.euv ? _('Görünür ışığa dön') : _('Aşırı morötesinde bak (SDO)');
+    } else if (isStar && !this.euvBtn.textContent) {
+      this.euvBtn.textContent = _('Aşırı morötesinde bak (SDO)');
+    }
+    const galaxyOnly = !selected && this.host.selectedStar === null && this.host.selectedGalaxy !== null;
+    if (this.coreBtn.hidden !== !galaxyOnly) this.coreBtn.hidden = !galaxyOnly;
     if (selected) {
       this.info.hidden = false;
       if (now - this.lastInfoUpdate > 120) {
@@ -1058,6 +1168,9 @@ export class UI {
   private renderGalaxyInfo(i: number): void {
     const u = this.host.universe;
     const g = u.galaxies;
+    const core = u.galaxyCore(i);
+    const coreLabel = core ? _('Merkezdeki kara deliğe uç: {name}', { name: core.entry.name }) : '';
+    if (this.coreBtn.textContent !== coreLabel) this.coreBtn.textContent = coreLabel;
     const type = g.typeOf(i);
     this.infoName.textContent = g.name(i);
     this.infoType.textContent = `${_('Galaksi')} · ${_(g.typeLabel(i))}`;
@@ -1077,11 +1190,13 @@ export class UI {
     rows.push(['Görünür yarıçap', fmtDeg(this.host.galaxySprites.apparent(i).angRad * RAD, 2)]);
     rows.push('sep');
     rows.push(['Güneş\'e uzaklık', `${fmtLightYears(distSunKm)} (${fixed((g.distancePc(i) / 1e6), 3)} Mpc)`]);
+    if (i !== 0) rows.push(...coordRows(g.position(i), null));
     rows.push(['Hubble tipi', g.typeGuessed(i) ? `${_(GALAXY_TYPE_LABEL[type])} (${_('tahmini')})` : _(GALAXY_TYPE_LABEL[type])]);
     rows.push(['Çap', `${fixed(((R * 2) / 1000), 1)} kpc (${fmtLightYears(R * 2 * PARSEC_KM)})`]);
     rows.push(['Mutlak kadir', fixed(absMag, 1)]);
     rows.push(['Parlaklık', `${lum.toExponential(2)} L☉`]);
     rows.push(['Yıldız sayısı (tahmini)', `~${(lum * 3).toExponential(1).replace('e+', '×10^')}`]);
+    if (core) rows.push(['Merkez kara delik', `~${core.entry.massSolar.toExponential(1).replace('e+', '×10^')} M☉`]);
     if (peculiar) rows.push(['Kaynak', 'Yayımlanmış görüntülere göre elle çizildi (yaklaşık)']);
     else if (source === 'handmade') rows.push(['Kaynak', 'Messier / NGC (yaklaşık parametreler)']);
     else if (source === 'ungc') rows.push(['Kaynak', 'Updated Nearby Galaxy Catalog (Karachentsev+ 2013)']);
@@ -1140,6 +1255,7 @@ export class UI {
     rows.push(['Kadir (buradan)', fixed(appMag, 1)]);
     rows.push('sep');
     rows.push(['Güneş\'e uzaklık', fmtLightYears(l.positionPc.length() * PARSEC_KM)]);
+    rows.push(...coordRows(l.positionPc, d.procedural ? d.id : null));
     rows.push(['Yarıçap (görsel)', fmtLightYears(d.radiusPc * PARSEC_KM)]);
     rows.push(['Mutlak kadir', fixed(d.absMag, 1)]);
     rows.push('sep');
@@ -1177,6 +1293,7 @@ export class UI {
     rows.push(['Kadir (buradan)', fixed(appMag, 2)]);
     rows.push('sep');
     rows.push(['Güneş\'e uzaklık', isProc ? fmtLightYears(s.distancePc * PARSEC_KM) : `${fixed((s.distancePc * PARSEC_KM / LIGHT_YEAR_KM), 2)} ly (${fixed(s.distancePc, 2)} pc)`]);
+    if (s.distancePc > 0) rows.push(...coordRows(u.starPositionPc(id), isProc || isBH ? id : null));
     rows.push(['Spektral sınıf', s.catalogSpectral || s.spectral]);
     if (!isProc) rows.push(['Kadir (Dünya\'dan)', fixed(s.mag, 2)]);
     rows.push(['Mutlak kadir', fixed(s.absMag, 2)]);

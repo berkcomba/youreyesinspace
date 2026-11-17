@@ -340,6 +340,8 @@ input[type=range] { width: 120px; accent-color: var(--accent); }
 }
 .info-scope-btn:hover { color: var(--text); border-color: var(--border-strong); }
 .info-scope-btn.active { color: var(--accent); border-color: var(--accent); }
+.info-euv { display: block; margin: 0 0 12px; }
+.info-euv[hidden] { display: none; }
 #info-scope-view:not(:empty) { margin-top: 10px; border: 1px solid var(--border); background: var(--bg); }
 .scope-stage { position: relative; background: #000; cursor: zoom-in; }
 .scope-stage.close { cursor: zoom-out; }

@@ -54,6 +54,51 @@ Medium sampleMedium(vec3 p) {
 
   if (uMorph < 2.5) {
     // ----- H II region / dark molecular cloud -----
+    if (uMorph > 1.5) {
+      // ----- dark molecular cloud -----
+      // An opaque core (A_V of tens of magnitudes) frayed outward into lobes, tendrils and thin
+      // strands, through which the stars behind show dimmed (Barnard 68's soft edge, the Pipe's
+      // streamers, the Coalsack's ragged outline). The outline is warped hard: no ball.
+      vec3 w = nebWarp(p, 0.4 + 0.4 * uTurb, 1.25);
+      float envD = nebEnvelope(w, 1.15);
+      // strands reach a little past the envelope
+      float halo = 1.0 - smoothstep(0.75, 1.25, length(w));
+      if (envD < 1e-3 && halo < 1e-3) return m;
+      vec3 q = nebWarp(w * uFilScale, uTurb * 0.6, 1.6);
+      float dn = fbm(q * 2.3 + vec3(7.0, 2.0, 5.0), 3);        // clumps and lanes of the body
+      float fil = ridged(nebWarp(q * 2.4, 0.35, 2.3) + uSeed * 0.13, 3);   // sharp strands
+      float core = smoothstep(0.45, 0.95, envD);
+      float body = smoothstep(-0.4, 0.45, dn);
+      float strands = fil * fil * fil;
+      float dust = envD * (core * (0.65 + 1.2 * body) + (1.0 - core) * (3.6 * strands + 0.25 * body))
+        + (1.0 - envD) * halo * 2.2 * strands * strands;
+      vec3 c0 = uLights[0].xyz;
+      vec3 toC = p - c0;
+      float d0 = length(toC);
+      // each embedded star has blown a pocket into the dust; the pocket's wall is denser (swept up)
+      float pocket = 1.0;
+      for (int i = 0; i < 4; i++) {
+        if (i >= uNLights) break;
+        float dl = length(p - uLights[i].xyz);
+        float rc = uCavity * (i == 0 ? 1.0 : 0.55 * sqrt(uLights[i].w));
+        pocket *= mix(0.04, 1.0, smoothstep(rc * 0.45, rc, dl)) + 0.9 * exp(-sq((dl - rc) / (0.3 * rc)));
+      }
+      // the primary's bipolar outflow has bored two cones out to the cloud's surface: through them
+      // its light escapes and lights their walls (a fan of reflection nebulosity, NGC 1999, HH 46/47)
+      // (the outflow leaves along the shortest way out: from the star toward the surface)
+      vec3 ax = normalize(c0 + uAxis * 0.35);
+      float t = dot(toC, ax);
+      float rad = length(toC - ax * t);
+      float open = uCavity * 0.6 + 0.42 * abs(t);
+      float cone = smoothstep(open * 0.6, open, rad);
+      pocket *= mix(0.03, 1.0, cone) + 1.1 * exp(-sq((rad - open) / (0.25 * open))) * smoothstep(1.3, 0.3, abs(t));
+      m.dust = dust * pocket;
+      // only a faint Hα skin where the stars' light reaches the gas round their pockets
+      m.gas = envD * exp(-sq((d0 - uCavity) / (0.35 * uCavity))) * 0.2 + envD * strands * 0.004;
+      // (hot: how far out in the fringe the sample is — the ambient glow of the surface, nebula_lighting)
+      m.hot = 1.0 - 0.85 * core;
+      return m;
+    }
     float env = nebEnvelope(p, 1.45);
     if (env < 1e-3) return m;
     // large wisps first (low-frequency warp), detail on top
@@ -82,11 +127,6 @@ Medium sampleMedium(vec3 p) {
     // ionisation fronts: the gas evaporating off the lane edges that face the stars glows brightest
     float rim = (1.0 - smoothstep(0.0, 0.07, abs(dn - 0.17))) * outer * cav * (1.0 - 0.5 * smoothstep(-0.4, 0.4, n));
     gas += env * rim * 2.5;
-    if (uMorph > 1.5) {
-      // dark cloud: everything is dust, with the faintest glow at the lit surface
-      dust = env * (smoothstep(-0.15, 0.4, dn) * 1.6 + pillars * 0.5);
-      gas = env * rim * 0.4 + env * clumps * 0.08;
-    }
     m.gas = gas; m.dust = dust;
     m.hot = clamp(wall * 0.9 + rim * 1.2, 0.0, 1.0);
     return m;
@@ -207,4 +247,39 @@ Medium sampleMedium(vec3 p) {
   m.dust = layer * c2 * 0.4 * edge;
   m.hot = clamp((skin * 0.25 + layer * 1.2) / max(skin + layer * 1.2, 1e-3), 0.0, 1.0);
   return m;
+}
+
+// ----- baked medium (NebulaBakes in Volumes.ts) -----
+uniform sampler3D uDensity;  // the medium baked on a grid over [-1.3, 1.3]³ (nebula_bake_density.frag)
+uniform float uDensityOn;    // 0 … 1: share of the baked medium (the light bake reads it; the view stays procedural)
+
+Medium bakedMedium(vec3 p) {
+  vec4 e = texture(uDensity, clamp(p / 2.6 + 0.5, 0.0, 1.0));
+  Medium m;
+  m.gas = 4.0 * e.r * e.r; m.dust = 4.0 * e.g * e.g; m.hot = e.b;
+  return m;
+}
+
+// The medium the raymarch and the shadow bake read: baked where a grid exists. `detail` adds what
+// the grid cannot hold (a voxel is ≈ 0.02 radii): two octaves of noise that erode the edges of the
+// gas and dust into finer wisps and knots.
+Medium mediumAt(vec3 p, bool detail) {
+  if (uDensityOn <= 0.0) return sampleMedium(p);
+  Medium b;
+  b.gas = 0.0; b.dust = 0.0; b.hot = 0.0;
+  if (dot(p, p) < 1.69) {
+    b = bakedMedium(p);
+    if (detail && b.gas + b.dust > 2e-4) {
+      float n = fbm(p * (16.0 * uFilScale) + uSeed * 0.7, 2);
+      float k = max(0.0, 1.0 + 0.85 * n);
+      b.gas *= k;
+      b.dust *= mix(k, 1.0, 0.35);
+    }
+  }
+  if (uDensityOn >= 1.0) return b;
+  Medium s = sampleMedium(p);
+  s.gas = mix(s.gas, b.gas, uDensityOn);
+  s.dust = mix(s.dust, b.dust, uDensityOn);
+  s.hot = mix(s.hot, b.hot, uDensityOn);
+  return s;
 }

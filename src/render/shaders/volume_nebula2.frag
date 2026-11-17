@@ -5,7 +5,8 @@ void main() {
   vec3 d = viewRay();
   // sampleMedium is empty beyond r = 1.3: march the sphere's chord, not the box's (half the samples)
   vec2 hit = sphereHit(uOrigin, d, 1.3);
-  if (hit.y <= hit.x || uFade <= 0.0) { gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0); return; }
+  float absorb = uAbsorb < 0.0 ? uFade : uAbsorb;
+  if (hit.y <= hit.x || (uFade <= 0.0 && absorb <= 0.0)) { gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0); return; }
   // uSteps is the budget of the full diameter: a constant step length, so the short chords
   // (the limb, and every ray once the camera is inside) take only the samples they need
   float t0 = hit.x, t1 = hit.y;
@@ -15,7 +16,7 @@ void main() {
   float T = 1.0;
   float ds = (t1 - t0) / float(N);
   float dbg = 0.0;
-  for (int i = 0; i < 160; i++) {
+  for (int i = 0; i < 320; i++) {
     if (i >= N) break;
     float t = t0 + (float(i) + jit) * ds;
     vec3 p = uOrigin + d * t;
@@ -39,5 +40,6 @@ void main() {
     gl_FragColor = uDebug < 3.5 ? vec4(c * dbg * 0.6, 1.0 - min(dbg * 0.3, 0.9)) : vec4(c * (1.0 - T), T);
     return;
   }
-  gl_FragColor = vec4(L * uEmit * uFade, mix(1.0, T, uFade));
+  // what the medium hides follows its own fade (uAbsorb): a dark cloud is faint but still opaque
+  gl_FragColor = vec4(L * uEmit * uFade, mix(1.0, T, absorb));
 }

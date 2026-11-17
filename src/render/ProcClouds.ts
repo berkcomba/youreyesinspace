@@ -124,7 +124,8 @@ export class ProcClouds {
         // the survey catalogues hold thousands of nebulae that are a few pixels across from half
         // the Galaxy away and next to invisible (a star-like brightness until they are resolved):
         // those wait as sprites, and the dim ones rank behind the ones that show
-        const bright = sprites.brightness(i, px, ratio, d);
+        // a dark cloud gives off next to nothing: it is wanted for what it hides, not for its light
+        const bright = l.procKind === 'dark' ? FULL_RANK_BRIGHTNESS : sprites.brightness(i, px, ratio, d);
         if (bright < MIN_BRIGHTNESS) continue;
         cands.push({ i, rank: px * Math.min(1, bright / FULL_RANK_BRIGHTNESS) });
       }
@@ -175,7 +176,11 @@ export class ProcClouds {
       if (cloud.volume) {
         const v = cloud.volume;
         v.place(camPc, cloud.center, cloud.radiusPc, v.u.uToLocal.value, pxPerRad);
-        v.u.uFade.value = u.uFade.value;
+        // a dark cloud: its faint surface light is a surface brightness (no distance falloff), and what
+        // it hides does not depend on how faint it is — both follow the handover share alone
+        const dark = l.procKind === 'dark';
+        v.u.uFade.value = dark ? share : u.uFade.value;
+        if (v.u.uAbsorb) v.u.uAbsorb.value = dark ? share : u.uFade.value;
         v.stepScale = Math.min(1, Math.max(0.35, px / FULL_STEPS_PX));
         v.active = true;
       }

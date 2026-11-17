@@ -452,6 +452,7 @@ function populateHost(rng: Rng, star: StarInfo, host: Host, sysId: string, bodie
     const id = `${idStem}-p${k}`;
     const name = `${host.name} ${LETTERS[k]}`;
     const res = makePlanet(rng, host, id, name, host.id, a, frostAU, gmStar, bodies);
+    if (res.cls !== 'hotjupiter') binaryPlanet(res.data, res.cls, host, bodies);
     planets.push({ id, aAU: a, cls: res.cls, data: res.data });
     planetIds.push(id);
     a *= rng.range(1.4, 2.15);
@@ -524,7 +525,7 @@ function populateHost(rng: Rng, star: StarInfo, host: Host, sysId: string, bodie
         facts: { 'Sınıf': 'Cüce gezegen', 'Kaynak': 'Prosedürel (tahmini)' },
       };
       varyRocky(data.appearance, data.atmosphere, id, false);
-      data.rings = dwarfRing(id, radius);
+      data.rings = dwarfRing(id, radius) ?? topUpRing(id, radius, T, 0.34, false);
       if (data.rings) data.description += ` ${_('Dar, buzlu halkaları var: Haumea, Quaoar ve Chariklo gibi küçük buzlu cisimlerde de yıldız örtülmeleriyle keşfedilen türden.')}`;
       bodies.push(data);
       if (rng.chance(0.5)) makeMoons(rng, data, true, 1, bodies, 'rocky');
@@ -623,7 +624,7 @@ function makePlanet(
       tilt, orbit: orbit(rng, aKm, gmStar, cls === 'hotjupiter' ? 0.05 : 0.09, 2.5, 'parentEquator'),
       appearance: gasAppearance(rng, T, false, id),
       atmosphere: { color: sud >= 4 ? [0.6, 0.55, 0.7] : sud === 3 ? rng.tint([0.5, 0.65, 1.0]) : sud === 2 ? rng.tint([0.9, 0.92, 1.0]) : rng.tint([0.95, 0.88, 0.75]), height: 0.012, density: 0.45 },
-      rings: varyRings(rings, id, radius, T, true), temperature: T,
+      rings: varyRings(rings, id, radius, T, true) ?? (cls === 'hotjupiter' ? undefined : topUpRing(id, radius, T, 0.5, true)), temperature: T,
       facts: { 'Sınıf': label, 'Kaynak': 'Prosedürel (tahmini)' },
     };
     const notes = CLASS_NOTE[cls] ? [_(CLASS_NOTE[cls]!)] : [];
@@ -643,7 +644,7 @@ function makePlanet(
       tilt, orbit: orbit(rng, aKm, gmStar, 0.08, 3, 'parentEquator'),
       appearance: gasAppearance(rng, T, true, id),
       atmosphere: { color: rng.tint([0.55, 0.75, 1.0]), height: 0.02, density: 0.5 },
-      rings: varyRings(rng.chance(0.8) ? makeRings(rng, radius, rng.chance(0.6) ? 'narrow' : 'dusty') : undefined, id, radius, T, true),
+      rings: varyRings(rng.chance(0.8) ? makeRings(rng, radius, rng.chance(0.6) ? 'narrow' : 'dusty') : undefined, id, radius, T, true) ?? topUpRing(id, radius, T, 0.5, true),
       temperature: T,
       description: `${_(CLASS_LABEL[cls])}. ${_('{m} Dünya kütlesinde, metan katkılı hidrojen-helyum atmosferi', { m: fixed(massE, 1) })}; ${describeTemp(T)}.`,
       facts: { 'Sınıf': CLASS_LABEL[cls], 'Kaynak': 'Prosedürel (tahmini)' },
@@ -667,7 +668,7 @@ function makePlanet(
       appearance: subLook(subNeptuneAppearance(rng, T, id), cls, T, id),
       atmosphere: cls === 'superpuff' ? { color: rng.tint([0.95, 0.82, 0.84], 0.08), height: 0.07, density: 0.9 }
         : { color: T > 700 ? rng.tint([0.85, 0.75, 0.65]) : rng.tint([0.6, 0.75, 1.0], 0.08), height: 0.035, density: 0.7 },
-      rings: varyRings(rng.chance(0.12) ? makeRings(rng, radius, 'dusty') : undefined, id, radius, T, false),
+      rings: varyRings(rng.chance(0.12) ? makeRings(rng, radius, 'dusty') : undefined, id, radius, T, false) ?? topUpRing(id, radius, T, 0.45, false),
       temperature: T,
       description: `${_(CLASS_LABEL[cls])}. ${_('{m} Dünya kütlesinde', { m: fixed(massE, 1) })}; ${describeTemp(T)}${tidallyLocked ? `; ${_('yıldızına gelgitle kilitli')}` : ''}. ${_(CLASS_NOTE[cls]!)}`,
       facts: { 'Sınıf': CLASS_LABEL[cls], 'Kaynak': 'Prosedürel (tahmini)' },
@@ -733,7 +734,7 @@ function makePlanet(
     };
     // a few more the debris of a shattered moon
     if (!data.rings) {
-      data.rings = debrisRing(id, radius, T);
+      data.rings = debrisRing(id, radius, T) ?? topUpRing(id, radius, T, 0.48, false);
       if (data.rings) notes.push(_('Halkası, Roche sınırının içine düşüp parçalanmış bir uydunun enkazı; böyle halkalar jeolojik ölçekte kısa ömürlüdür.'));
     }
     data.description = `${_(CLASS_LABEL[cls])}. ${_('{m} Dünya kütlesinde', { m: fixed(massE, 2) })}; ${describeTemp(T)}${tidallyLocked && cls !== 'eyeball' && cls !== 'magmaeye' ? `; ${_('yıldızına gelgitle kilitli')}` : ''}.${notes.length ? ` ${notes.join(' ')}` : ''}`;
@@ -849,10 +850,41 @@ function thermalGlow(T: number): RGB {
   return [0.035 + 0.25 * t, 0.004 + 0.09 * t * t, 0.001 + 0.025 * t * t * t];
 }
 
-/** one shade of a deck's colours per world: lightness, and a lean toward warm or cool */
+/** one shade of a deck's colours per world: lightness, a lean toward warm or cool, its own hue and saturation */
 function shade(bands: RGB[], seed: number): RGB[] {
   const l = 0.9 + 0.2 * hashUnit(seed, 0x9a2), w = (hashUnit(seed, 0x9a3) - 0.5) * 0.08;
-  return bands.map((c) => [clamp01(c[0] * l + w), clamp01(c[1] * l), clamp01(c[2] * l - w)]);
+  const v = vividness(seed, 0x9b0);
+  return bands.map((c) => vivid([clamp01(c[0] * l + w), clamp01(c[1] * l), clamp01(c[2] * l - w)], v.turn, v.sat));
+}
+
+/**
+ * How far a world's colours stray from its palette, from its id: a saturation gain (1.2–1.9) and
+ * a hue turn (radians) that is small for most and, for about one in six, large (an unusual
+ * chromophore: sulphur, phosphine, organics, exotic hazes, oddly coloured minerals).
+ */
+function vividness(seed: number, salt: number): { turn: number; sat: number; cast: number } {
+  const u = hashUnit(seed, salt);
+  const turn = (hashUnit(seed, salt + 1) - 0.5) * (u < 0.17 ? 2 * Math.PI : 1.0);
+  return { turn, sat: 1.2 + 0.7 * hashUnit(seed, salt + 2), cast: 0.02 + 0.06 * hashUnit(seed, salt + 3) };
+}
+
+/**
+ * Turn a colour's hue about the grey axis and scale its saturation, keeping its luminance; `cast`
+ * adds a little chroma of the turned hue so that even a grey crust takes a tint.
+ */
+export function vivid(c: RGB, turn: number, sat: number, cast = 0): RGB {
+  const Y = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+  // chroma in an orthonormal plane perpendicular to grey
+  const x = (c[0] - c[1]) / Math.SQRT2, y = (c[0] + c[1] - 2 * c[2]) / Math.sqrt(6);
+  const cs = Math.cos(turn) * sat, sn = Math.sin(turn) * sat;
+  const m0 = (c[0] + c[1] + c[2]) / 3;
+  const X = x * cs - y * sn + cast * m0 * Math.cos(turn + 0.6), Yp = x * sn + y * cs + cast * m0 * Math.sin(turn + 0.6);
+  const m = (c[0] + c[1] + c[2]) / 3;
+  let r = m + X / Math.SQRT2 + Yp / Math.sqrt(6), g = m - X / Math.SQRT2 + Yp / Math.sqrt(6), b = m - 2 * Yp / Math.sqrt(6);
+  // restore luminance (a turn moves it), then clip
+  const Y2 = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  if (Y2 > 1e-4) { const k = Y / Y2; r *= k; g *= k; b *= k; }
+  return [clamp01(r), clamp01(g), clamp01(b)];
 }
 
 /**
@@ -866,7 +898,8 @@ function varyGas(a: Appearance, T: number, iceGiant: boolean, id: string): void 
   const sud = sudarskyClass(T);
   const pal = weighted(iceGiant ? ICE_GIANT_PALETTES : GAS_PALETTES[sud], hashUnit(seed, 0x9a1));
   a.bands = shade(pal.bands, seed);
-  if (a.storm) a.storm = [a.storm[0], a.storm[1], a.storm[2], ...pal.storm];
+  const v = vividness(seed, 0x9b0);
+  if (a.storm) a.storm = [a.storm[0], a.storm[1], a.storm[2], ...vivid(pal.storm, v.turn, v.sat)];
   if (!iceGiant && hashUnit(seed, 0x9a5) < (sud >= 3 ? 0.4 : 0.12)) a.skin = 'gas-swirl';
   if (T > 1000) a.glow = thermalGlow(T);
 }
@@ -1147,7 +1180,8 @@ export function varyRocky(appearance: Appearance, atmosphere: Atmosphere | undef
     const p = weighted(pals, hashUnit(seed, 0xc01));
     // a lightness jitter keeps two worlds of one palette apart
     const l = 0.85 + 0.3 * hashUnit(seed, 0xc02);
-    const j = (c: RGB): RGB => [clamp01(c[0] * l), clamp01(c[1] * l), clamp01(c[2] * l)];
+    const v = vividness(seed, 0xc10);
+    const j = (c: RGB): RGB => vivid([clamp01(c[0] * l), clamp01(c[1] * l), clamp01(c[2] * l)], v.turn, v.sat, v.cast * 3);
     appearance.landLow = j(p.low);
     appearance.landMid = j(p.mid);
     appearance.landHigh = j(p.high);
@@ -1350,18 +1384,65 @@ function varyRings(rings: Rings | undefined, id: string, radius: number, T: numb
   }
   // a very few wear a ring system out of all proportion (J1407 b's spans tens of millions of km):
   // the disc of a moon system still forming, its gaps swept by the moons inside it
-  if (giant && hashUnit(seed, 0x62a) < 0.05) {
+  if (giant && hashUnit(seed, 0x62a) < 0.12) {
     rings.inner = radius * (1.3 + 0.3 * hashUnit(seed, 0x62b));
     rings.outer = radius * (4.5 + 3.5 * hashUnit(seed, 0x62c));
     rings.opacity = 0.7 + 0.2 * hashUnit(seed, 0x62d);
     const span = rings.outer - rings.inner;
     rings.gaps = [0.2, 0.42, 0.63, 0.82].map((f, k) => [rings.inner + span * (f + 0.06 * (hashUnit(seed, 0x630 + k) - 0.5)), span * (0.02 + 0.04 * hashUnit(seed, 0x634 + k))]);
   }
-  const base = weighted(T < 170 ? ICY_RING : ROCKY_RING, hashUnit(seed, 0x61f)).c;
-  const mix = rings.opacity >= 0.6 ? 0.8 : 0.45;
+  widenRings(rings, seed, radius, giant);
+  const pal = T < 170 ? ICY_RING : ROCKY_RING;
+  const base = weighted(pal, hashUnit(seed, 0x61f)).c;
+  const mix = rings.opacity >= 0.6 ? 0.85 : 0.6;
   rings.color = rings.color.map((v, k) => v * (1 - mix) + base[k] * mix) as [number, number, number];
+  rings.color2 = ringPartner(pal, seed, rings.color);
   if (T >= 170 && rings.opacity >= 0.6) rings.opacity *= 0.8;
   return rings;
+}
+
+/**
+ * Spread a ring system outward from its inner edge (gaps move with it): most real systems
+ * reach well past the classical Roche limit as faint outer sheets (Saturn's E and Phoebe rings,
+ * Jupiter's gossamer rings), here drawn as part of the main sheet.
+ */
+function widenRings(rings: Rings, seed: number, radius: number, giant: boolean): void {
+  const span = rings.outer - rings.inner;
+  const k = (giant ? 1.5 : 1.6) + (giant ? 1.3 : 1.6) * hashUnit(seed, 0x66a);
+  const outer = Math.min(rings.inner + span * k, radius * (giant ? 9 : 5.5));
+  if (outer <= rings.outer) return;
+  const f = (outer - rings.inner) / span;
+  rings.gaps = rings.gaps?.map(([r, w]) => [rings.inner + (r - rings.inner) * f, w * f] as [number, number]);
+  rings.outer = outer;
+}
+
+/** the second material of the bands: another entry of the same palette, never the same colour */
+function ringPartner(pal: typeof ICY_RING, seed: number, c: [number, number, number]): [number, number, number] {
+  for (let t = 0; t < 4; t++) {
+    const o = weighted(pal, hashUnit(seed, 0x67a + t)).c;
+    if (Math.abs(o[0] - c[0]) + Math.abs(o[1] - c[1]) + Math.abs(o[2] - c[2]) > 0.12) return [o[0], o[1], o[2]];
+  }
+  return [c[0] * 0.75, c[1] * 0.8, c[2] * 0.9];
+}
+
+/**
+ * A ring for a world that drew none from the generator's stream, from the id alone (so no
+ * later orbit moves): `odds` is the chance it gets one. Rocky worlds wear the debris of a
+ * broken moon, cold ones ice; up to ~1200 K, where silicate dust still survives.
+ */
+function topUpRing(id: string, radius: number, T: number, odds: number, giant: boolean): Rings | undefined {
+  const seed = idSeed(id);
+  if (T > 1200 || hashUnit(seed, 0x690) >= odds) return undefined;
+  const h = (k: number) => hashUnit(seed, 0x691 + k);
+  const inner = radius * (1.2 + 0.5 * h(0));
+  const outer = inner + radius * (0.5 + 1.6 * h(1));
+  const span = outer - inner;
+  const gaps: Array<[number, number]> = [];
+  const n = Math.floor(h(2) * 5);
+  for (let i = 0; i < n; i++) gaps.push([inner + span * (0.1 + 0.8 * h(3 + i)), span * (0.01 + 0.05 * h(8 + i))]);
+  const c = weighted(T < 170 ? ICY_RING : ROCKY_RING, h(13)).c;
+  const rings: Rings = { inner, outer, color: [c[0], c[1], c[2]], opacity: 0.3 + 0.55 * h(14), seed: 1 + Math.floor(h(15) * 998), gaps };
+  return varyRings(rings, id + '/r', radius, T, giant);
 }
 
 const ICY_RING: Array<{ w: number; c: [number, number, number] }> = [
@@ -1370,6 +1451,11 @@ const ICY_RING: Array<{ w: number; c: [number, number, number] }> = [
   { w: 1.5, c: [0.8, 0.68, 0.54] }, // tan, dirtier ice
   { w: 1, c: [0.72, 0.56, 0.46] },  // reddish organics
   { w: 1, c: [0.8, 0.87, 1.0] },    // fresh frost from a geyser moon (Saturn's E ring)
+  { w: 1.2, c: [0.62, 0.78, 1.0] }, // methane and nitrogen frost, blue
+  { w: 1, c: [0.95, 0.62, 0.4] },   // tholin-orange (irradiated methane)
+  { w: 0.8, c: [0.92, 0.55, 0.62] }, // rose: tholins thinned in clean ice
+  { w: 0.7, c: [0.6, 0.95, 0.88] }, // ammonia-hydrate frost, cyan-green
+  { w: 0.6, c: [0.78, 0.62, 0.98] }, // violet: ice grains of a size that scatters blue and red
 ];
 const ROCKY_RING: Array<{ w: number; c: [number, number, number] }> = [
   { w: 3, c: [0.42, 0.4, 0.38] },   // dark silicate dust
@@ -1377,6 +1463,11 @@ const ROCKY_RING: Array<{ w: number; c: [number, number, number] }> = [
   { w: 1, c: [0.36, 0.36, 0.4] },   // carbonaceous grey
   { w: 1.5, c: [0.58, 0.38, 0.27] }, // iron oxides, rust red
   { w: 1, c: [0.24, 0.23, 0.24] },  // soot-dark carbon (Uranus' rings)
+  { w: 1, c: [0.95, 0.82, 0.3] },   // sulfur yellow, fallout of a volcanic moon (Io's torus)
+  { w: 1, c: [0.82, 0.32, 0.18] },  // hematite red
+  { w: 0.8, c: [0.45, 0.66, 0.36] }, // olivine green
+  { w: 0.6, c: [0.32, 0.5, 0.78] }, // blue: sub-micron dust scattering blue (Saturn's E ring, Uranus' μ ring)
+  { w: 0.6, c: [0.9, 0.58, 0.28] }, // ochre, hydrated iron oxides
 ];
 
 /**
@@ -1391,14 +1482,14 @@ function debrisRing(id: string, radius: number, T: number): Rings | undefined {
   const h = (k: number) => hashUnit(seed, 0x641 + k);
   // inside the Roche limit of a rocky moon (1.3–2.4 planet radii, rigid to fluid)
   const inner = radius * (1.25 + 0.45 * h(0));
-  const outer = Math.min(radius * 2.45, inner + radius * (0.2 + 0.6 * h(1)));
+  const outer = Math.min(radius * 3.2, inner + radius * (0.4 + 1.1 * h(1)));
   const span = outer - inner;
   const gaps: Array<[number, number]> = [];
   const n = Math.floor(h(2) * 4);
   for (let i = 0; i < n; i++) gaps.push([inner + span * (0.15 + 0.7 * h(3 + i)), span * (0.02 + 0.06 * h(7 + i))]);
   // a far, cold world's moon may have been half ice
   const c = weighted(T < 150 && h(11) < 0.4 ? ICY_RING : ROCKY_RING, h(12)).c;
-  return { inner, outer, color: [c[0], c[1], c[2]], opacity: 0.45 + 0.4 * h(13), seed: 1 + Math.floor(h(14) * 998), gaps };
+  return { inner, outer, color: [c[0], c[1], c[2]], color2: ringPartner(ROCKY_RING, seed, c), opacity: 0.45 + 0.4 * h(13), seed: 1 + Math.floor(h(14) * 998), gaps };
 }
 
 /**
@@ -1416,11 +1507,11 @@ function dwarfRing(id: string, radius: number): Rings | undefined {
   if (style < 0.55) { r1 = radius * (2.0 + 1.4 * h(1)); r2 = r1; }                       // Haumea
   else if (style < 0.8) { r1 = radius * (2.6 + 0.8 * h(1)); r2 = r1 * (1.04 + 0.04 * h(2)); } // Chariklo
   else { r1 = radius * (6.8 + 0.8 * h(1)); r2 = r1; }                                      // Quaoar's outer ring
-  const w = radius * (0.03 + 0.05 * h(3));
+  const w = radius * (0.08 + 0.3 * h(3));
   const inner = r1 - w, outer = r2 + w;
   const gaps: Array<[number, number]> = r2 > r1 ? [[(r1 + r2) / 2, r2 - r1]] : [];
   const c = weighted(ICY_RING, h(4)).c;
-  return { inner, outer, color: [c[0] * 0.8, c[1] * 0.8, c[2] * 0.8], opacity: 0.35 + 0.35 * h(5), seed: 1 + Math.floor(h(6) * 998), gaps };
+  return { inner, outer, color: [c[0] * 0.85, c[1] * 0.85, c[2] * 0.85], color2: ringPartner(ICY_RING, seed, c), opacity: 0.35 + 0.35 * h(5), seed: 1 + Math.floor(h(6) * 998), gaps };
 }
 
 function makeRings(rng: Rng, radius: number, style: 'bright' | 'dusty' | 'narrow'): Rings {
@@ -1452,6 +1543,72 @@ function makeRings(rng: Rng, radius: number, style: 'bright' | 'dusty' | 'narrow
 }
 
 /* ------------------------------------------------------------------ */
+/*  Binary planets                                                     */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Now and then a planet has a partner of comparable mass (a double planet: Pluto–Charon writ
+ * large; giant impacts and gravitational capture in a crowded disc can both leave one). The pair
+ * circles a barycentre that sits between them, outside either body, and that point follows the
+ * planet's old orbit round the star. Decided and built from the id alone, so the generator's
+ * stream — every later orbit — is untouched. The partner is a sibling of the same class in its own
+ * colours; moons too far out for a single planet's Hill sphere circle the pair instead.
+ */
+const BINARY_ODDS = 0.13;
+function binaryPlanet(data: BodyData, cls: PlanetClass, host: Host, bodies: BodyData[]): void {
+  const seed = idSeed(data.id);
+  if (hashUnit(seed, 0x700) >= BINARY_ODDS || !data.orbit || data.orbit.kind !== 'simple') return;
+  const h = (k: number) => hashUnit(seed, 0x701 + k);
+  const o = data.orbit;
+  const q = 0.45 + 0.55 * h(0);                         // mass ratio m₂/m₁
+  const m1 = data.mass, m2 = m1 * q, M = m1 + m2;
+  const r1 = data.radius, r2 = r1 * Math.pow(q, data.mass > 50 * 5.97e24 ? 0.1 : 0.3);
+  // separation: clear of the rings and well outside the Roche limit, deep inside the pair's Hill sphere
+  const hill = o.a * Math.cbrt(M / (3 * host.gm * 1e9 / G));
+  let d = Math.max((r1 + r2) * (3.5 + 10 * h(1) * h(1)), (data.rings?.outer ?? 0) * 3.4);
+  if (d > 0.25 * hill) return;
+  const gm = (G * M) / 1e9;
+  const period = (2 * Math.PI * Math.sqrt((d * d * d) / gm)) / DAY_S;
+  const node = 360 * h(2), M0 = 360 * h(3), incl = 4 * h(4);
+  const baryId = `${data.id}-bary`;
+  const bary: BodyData = {
+    id: baryId, name: _('{name} kütle merkezi', { name: data.name }), type: 'barycenter', parent: data.parent,
+    radius: 0, mass: M, orbit: { ...o }, appearance: { kind: 'none', seed: 0 },
+  };
+  const around = (a: number, argPeri: number): SimpleElements => ({
+    kind: 'simple', a, e: 0.01 * h(5), i: incl, node, argPeri, M0, epoch: J2000_JD, period, frame: 'parentEquator',
+  });
+  data.parent = baryId;
+  data.orbit = around(d * (m2 / M), 0);
+  if (data.rotationPeriod !== undefined && Math.abs(Number(data.rotationPeriod)) > period * 24) data.rotationPeriod = 'sync';
+  const id2 = `${data.id}-x`;
+  const appearance = structuredClone(data.appearance);
+  if (appearance.kind === 'terrestrial') { appearance.seed = (appearance.seed + 4111) % 10_000; varyRocky(appearance, data.atmosphere, id2); }
+  else if (appearance.kind === 'gas') varyGas(appearance, data.temperature ?? 150, cls === 'icegiant', id2);
+  const twin: BodyData = {
+    ...structuredClone(data), id: id2, name: `${data.name}′`, radius: r2, mass: m2,
+    orbit: around(d * (m1 / M), 180), appearance, rings: undefined, activity: undefined,
+    rotationPeriod: 'sync', tilt: 0,
+    description: `${_('{name} ile birlikte bir çift gezegen oluşturur: kütleleri birbirine yakın, ortak kütle merkezlerinin çevresinde dolanırlar.', { name: data.name })} ${_('Kütle oranı {q}, aralarındaki uzaklık {d}; birbirlerinin çevresinde {p} günde bir dolanırlar.', { q: fixed(q, 2), d: fmtDistance(d), p: fixed(period, 1) })}`,
+    facts: { ...data.facts, 'Çift gezegen': data.name },
+  };
+  data.facts = { ...data.facts, 'Çift gezegen': twin.name };
+  data.description += ` ${_('Çift gezegen: eşi {name} ({q} kütle oranıyla) onunla ortak bir kütle merkezinin çevresinde {p} günde bir dolanıyor.', { name: twin.name, q: fixed(q, 2), p: fixed(period, 1) })}`;
+  // the barycentre goes in before the planet (parents before children), the partner after it
+  const at = bodies.indexOf(data);
+  bodies.splice(at, 0, bary);
+  bodies.splice(at + 2, 0, twin);
+  // moons: close ones stay with their planet; wide ones would cross the partner and circle the pair
+  for (const m of bodies) {
+    if (m.parent !== data.id || m.type !== 'moon' || !m.orbit || m.orbit.kind !== 'simple') continue;
+    if (m.orbit.a < 0.3 * d) continue;
+    const a = Math.max(m.orbit.a, 2.6 * d);
+    m.parent = baryId;
+    m.orbit = { ...m.orbit, a, period: (2 * Math.PI * Math.sqrt((a * a * a) / gm)) / DAY_S };
+  }
+}
+
+/* ------------------------------------------------------------------ */
 /*  Moons                                                              */
 /* ------------------------------------------------------------------ */
 
@@ -1461,6 +1618,8 @@ function makeMoons(
   const gm = (G * planet.mass) / 1e9;
   const R = planet.radius;
   let a = kind === 'giant' ? R * rng.range(2.6, 5) : R * rng.range(8, 30);
+  // the first moon clears the outer edge of the rings (a moon inside them would sweep a gap)
+  if (planet.rings) a = Math.max(a, planet.rings.outer * 1.25);
   const maxA = kind === 'giant' ? R * 60 : R * 90;
   for (let j = 0; j < count && a < maxA; j++) {
     const id = `${planet.id}-m${j}`;

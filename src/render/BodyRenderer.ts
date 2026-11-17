@@ -36,6 +36,8 @@ export interface RenderSettings {
   fill?: ReadonlyMap<string, number> | null;
   /** tour comparison body fading in / out (brightness 0..1) */
   ghost?: { id: string; alpha: number } | null;
+  /** stars seen in extreme ultraviolet, as SDO/AIA 304 Å (0 visible light … 1) */
+  euv?: number;
 }
 
 const _v = new Vector3();
@@ -249,7 +251,7 @@ export class BodyView {
         fragmentShader: Shaders.starFrag,
         uniforms: {
           ...baseUniforms, uRealTime: { value: 0 }, uTemperature: { value: T }, uIntensity: { value: a.kind === 'pulsar' ? 1.8 : 0.9 },
-          uTint: { value: tint ? new Vector3(...tint) : new Vector3() }, uTinted: { value: tint ? 1 : 0 },
+          uTint: { value: tint ? new Vector3(...tint) : new Vector3() }, uTinted: { value: tint ? 1 : 0 }, uEUV: { value: 0 },
         },
       });
       // Corona billboard, tinted by the photosphere temperature
@@ -272,6 +274,7 @@ export class BodyView {
           uProminence: { value: a.kind === 'pulsar' ? 0 : 1 - 0.8 * hotness },
           uIntensity: { value: 1.0 },
           uCoreRadius: { value: 1 / 7 },
+          uEUV: { value: 0 },
         },
         transparent: true,
         blending: AdditiveBlending,
@@ -433,6 +436,7 @@ export class BodyView {
         uniforms: {
           ...lit,
           uColor: { value: vec3(d.rings.color) },
+          uColor2: { value: vec3(d.rings.color2 ?? d.rings.color) },
           uOpacity: { value: d.rings.opacity },
           uSeed: { value: d.rings.seed },
           uInner: { value: d.rings.inner },
@@ -858,6 +862,7 @@ export class BodyView {
     if (this.surfaceMat) {
       this.surfaceMat.uniforms.uTime.value = wrapped;
       if (this.surfaceMat.uniforms.uRealTime) this.surfaceMat.uniforms.uRealTime.value = realTime;
+      if (this.surfaceMat.uniforms.uEUV) this.surfaceMat.uniforms.uEUV.value = settings.euv ?? 0;
       if (this.bakeKind) {
         const now = performance.now();
         const dtReal = this.bakeLast ? Math.min(0.1, (now - this.bakeLast) / 1000) : 0;
@@ -868,7 +873,10 @@ export class BodyView {
         this.surfaceMat.uniforms.uBaked.value = this.bakeFade;
       }
     }
-    if (this.coronaMat) this.coronaMat.uniforms.uRealTime.value = realTime;
+    if (this.coronaMat) {
+      this.coronaMat.uniforms.uRealTime.value = realTime;
+      this.coronaMat.uniforms.uEUV.value = settings.euv ?? 0;
+    }
     if (this.cloudsMat && b.data.clouds) {
       this.cloudsMat.uniforms.uTime.value = wrapped;
       // ground-scale detail under and just above the deck
@@ -994,7 +1002,10 @@ export class BodyView {
       this.corona.scale.setScalar(size);
       this.corona.visible = t < 0.999;
       this.coronaMat.uniforms.uTime.value = time;
-      this.coronaMat.uniforms.uCoreRadius.value = Math.min(0.5, (b.radius / size) * 0.98);
+      // up close the limb we see lies short of the great circle: on the billboard's plane through
+      // the centre the silhouette is R / √(1 − R²/d²) across, so the rim starts there
+      const sinA = Math.min(0.95, b.radius / dist);
+      this.coronaMat.uniforms.uCoreRadius.value = Math.min(0.5, (b.radius / Math.sqrt(1 - sinA * sinA) / size) * 0.98);
       // Near the star the disc dominates; far away the glow reads as a bright star
       const far = Math.min(1, Math.max(0, (dist / b.radius - 20) / 400));
       this.coronaMat.uniforms.uIntensity.value = (0.55 + 1.2 * far) * Math.pow(1 - t, 1.5) * (1 + 1.5 * pulse);

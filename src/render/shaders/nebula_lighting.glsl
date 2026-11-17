@@ -10,6 +10,10 @@ uniform vec3 uTint;        // catalogue tint, blended lightly into the palette
 uniform vec4 uLines;       // excitation 0…1, low-ionisation share 0…1, remnant class (REMNANT_CODE), dust scattering 0…1; 0.5, 0.5, 0, 0 = reference mix
 uniform float uEmission;   // profile emissionScale
 uniform float uExtinction; // profile extinctionScale
+uniform vec2 uChroma;      // procedural colour: hue turn (rad) about the grey axis, saturation gain (0, 1 = as is)
+uniform sampler3D uShadow; // baked transmittance star → sample (rgba: lights 0–3), NebulaShadows
+uniform float uShadowOn;   // 0 … 1: how much of it applies (fades in once the bake is complete)
+uniform float uAbsorb;     // (< 0: uFade) share of the medium's extinction applied (uFade for glowing nebulae; the visibility alone for dark clouds)
 uniform float uDebug;      // 0 off, 1 gas, 2 dust, 3 ionisation, 4 transmittance
 
 // emission-line colours (linear RGB)
@@ -29,12 +33,18 @@ const float DUST_ALBEDO = 0.55;
 float ionisation(vec3 p, out vec3 starlight) {
   float U = 0.0;
   starlight = vec3(0.0);
+  // the dust between each star and p (a baked grid; 1 where there is none)
+  vec4 sh = vec4(1.0);
+  if (uShadowOn > 0.0) sh = mix(vec4(1.0), texture(uShadow, clamp(p / 2.6 + 0.5, 0.0, 1.0)), uShadowOn);
   for (int i = 0; i < 4; i++) {
     if (i >= uNLights) break;
     vec3 d = p - uLights[i].xyz;
     float inv = uLights[i].w / (dot(d, d) + 0.004);
-    U += inv;
-    starlight += uLightCol[i] * inv;
+    float t = i == 0 ? sh.x : i == 1 ? sh.y : i == 2 ? sh.z : sh.w;
+    // ionising photons (λ < 91 nm) are stopped by dust several times more readily than visible
+    // light, and by the neutral gas on top: the ionisation shadow is far deeper than the visible one
+    U += inv * t * sqrt(t);
+    starlight += uLightCol[i] * inv * t;
   }
   return U * sq(max(uCavity, 0.08));
 }
@@ -103,6 +113,18 @@ vec3 gasColor(float U, float hot) {
   return mix(col, uTint, 0.12);
 }
 
+// turn a colour's hue about the grey axis and scale its saturation, luminance kept
+vec3 chroma(vec3 c) {
+  if (uChroma.y <= 0.0 || (uChroma.y == 1.0 && uChroma.x == 0.0)) return c;   // (0, 0): a material without the uniform
+  float m = (c.r + c.g + c.b) / 3.0;
+  vec2 xy = vec2((c.r - c.g) * 0.70710678, (c.r + c.g - 2.0 * c.b) * 0.40824829);
+  float cs = cos(uChroma.x), sn = sin(uChroma.x);
+  xy = vec2(xy.x * cs - xy.y * sn, xy.x * sn + xy.y * cs) * uChroma.y;
+  vec3 o = vec3(m + xy.x * 0.70710678 + xy.y * 0.40824829, m - xy.x * 0.70710678 + xy.y * 0.40824829, m - xy.y * 0.81649658);
+  float l0 = dot(c, vec3(0.2126, 0.7152, 0.0722)), l1 = dot(o, vec3(0.2126, 0.7152, 0.0722));
+  return max(o * (l1 > 1e-5 ? l0 / l1 : 1.0), 0.0);
+}
+
 // radiance emitted per unit length at the sample
 vec3 nebulaSource(vec3 p, Medium m) {
   vec3 starlight;
@@ -110,7 +132,9 @@ vec3 nebulaSource(vec3 p, Medium m) {
   vec3 src = vec3(0.0);
   if (m.gas > 1e-4) {
     // recombination ∝ n², and only the ionised share glows: the gas deep in the shadow is dark
-    float ion = uPalette > 3.5 ? 1.0 : (0.3 + 0.7 * U / (U + 0.4));
+    // (the floor stands for the diffuse ionising field; with the shadows baked, the gas they hide goes darker)
+    float floorIon = mix(0.3, 0.2, uShadowOn);
+    float ion = uPalette > 3.5 ? 1.0 : (floorIon + (1.0 - floorIon) * U / (U + 0.4));
     // a pulsar's synchrotron nebula fills the interior a shell remnant leaves dark
     // (the interior is the thin gas inside the shell, ≤ 0.012; the shock front is denser)
     float fill = uPalette > 3.5 && abs(uLines.z - 3.0) < 0.5 ? mix(1.0, 10.0, step(0.999, m.hot) * step(m.gas, 0.013)) : 1.0;
@@ -129,8 +153,11 @@ vec3 nebulaSource(vec3 p, Medium m) {
     // the rest of a reflection nebula's cloud is not black: the galaxy's own starlight gives the
     // dust the faint brown glow deep photographs show around the blue core
     if (refl) src += vec3(0.42, 0.33, 0.26) * m.dust * 0.012 * uEmission;
+    // a dark cloud's surface catches the Galaxy's own starlight (deep images show it faintly
+    // brown, the integrated flux nebulae); the inside, shielded on all sides, stays black
+    if (uMorph > 1.5 && uMorph < 2.5) src += vec3(0.4, 0.31, 0.24) * m.dust * m.hot * m.hot * 0.012 * uEmission;
   }
-  return src;
+  return chroma(src);
 }
 
 float nebulaExtinction(Medium m) {

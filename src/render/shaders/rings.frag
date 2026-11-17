@@ -1,6 +1,7 @@
 #include <logdepthbuf_pars_fragment>
 
 uniform vec3 uColor;
+uniform vec3 uColor2;
 uniform float uOpacity;
 uniform float uSeed;
 uniform float uInner;
@@ -53,7 +54,9 @@ void main() {
   float g = 0.7;
   float fwd = dusty * 0.3 * (1.0 - g * g) / pow(1.0 + g * g - 2.0 * g * dot(-L, V), 1.5);
   // colour variation with radius (icy vs dusty)
-  vec3 tint = uColor * (0.85 + 0.3 * snoise(vec3(r01 * 12.0, uSeed * 2.0, 3.0)));
+  // two materials in alternating bands (clean ice against tholin-stained, rock against frost)
+  float band = smoothstep(-0.25, 0.35, snoise(vec3(r01 * 7.0, uSeed * 1.7, 5.0)) + 0.5 * snoise(vec3(r01 * 23.0, uSeed, 7.0)));
+  vec3 tint = mix(uColor, uColor2, band) * (0.85 + 0.3 * snoise(vec3(r01 * 12.0, uSeed * 2.0, 3.0)));
   tint = mix(tint, tint * vec3(0.9, 0.8, 0.7), smoothstep(0.0, 0.2, r01) * (1.0 - smoothstep(0.2, 0.4, r01)) * 0.5);
 
   vec3 col = (tint * fillLit((direct + back + fwd) * shadow) + tint * 0.003) * uSunColor;
