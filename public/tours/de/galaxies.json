@@ -1,286 +1,296 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
  "locale": "de",
  "steps": {
   "andromeda": {
    "hash": "f1f6f77bda33",
-   "duration": 43.99,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 44.4,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 2.98,
+     "start": 0,
+     "end": 3.44,
      "text": "Andromeda, unsere nächste große Nachbarin."
     },
     {
-     "start": 2.98,
-     "end": 30.13,
+     "start": 3.44,
+     "end": 30.56,
      "text": "Sie ist 2,5 Millionen Lichtjahre entfernt und das fernste Objekt, das mit bloßem Auge sichtbar ist; das Licht, das Sie heute sehen, machte sich auf den Weg, als es auf der Erde noch keine Menschen gab. 1923 bewies Edwin Hubble, indem er hier einen Cepheiden vermaß, dass sie kein Teil der Milchstraße ist, sondern eine völlig andere Galaxie; über Nacht wurde das Universum millionenfach größer."
     },
     {
-     "start": 30.13,
-     "end": 36.27,
+     "start": 30.56,
+     "end": 36.64,
      "text": "Sie enthält eine Billion Sterne und nähert sich uns mit 110 Kilometern pro Sekunde."
     },
     {
-     "start": 36.27,
-     "end": 43.99,
+     "start": 36.64,
+     "end": 44.4,
      "text": "In etwa 4,5 Milliarden Jahren wird sie mit der Milchstraße verschmelzen und eine riesige elliptische Galaxie bilden."
     }
    ]
   },
   "antennae": {
    "hash": "bdb174776fe2",
-   "duration": 71.03,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 73.28,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 5,
+     "start": 0,
+     "end": 4.72,
      "text": "An unserem letzten Halt werden wir sehen, dass auch Galaxien kollidieren können."
     },
     {
-     "start": 5,
-     "end": 13.78,
+     "start": 4.72,
+     "end": 13.28,
      "text": "Die Antennengalaxien sind zwei Spiralgalaxien in 45 Millionen Lichtjahren Entfernung, die gerade durcheinander hindurchgehen."
     },
     {
-     "start": 13.78,
-     "end": 17.32,
+     "start": 13.28,
+     "end": 16.8,
      "text": "Die Begegnung begann vor etwa 600 Millionen Jahren."
     },
     {
-     "start": 17.32,
-     "end": 25,
+     "start": 16.8,
+     "end": 24.64,
      "text": "Die Schwerkraft schleuderte zwei lange Schweife aus Sternen ins All; das sind die Insektenantennen, die ihnen den Namen geben."
     },
     {
-     "start": 25,
-     "end": 35.55,
+     "start": 24.64,
+     "end": 35.28,
      "text": "Die Sterne stoßen nicht zusammen, die Abstände zwischen ihnen sind sehr groß; aber die Gaswolken kollidieren, werden zusammengedrückt und gebären Milliarden neuer Sterne."
     },
     {
-     "start": 35.55,
-     "end": 41.41,
+     "start": 35.28,
+     "end": 41.52,
      "text": "In ein paar hundert Millionen Jahren werden sich die beiden in eine einzige elliptische Galaxie verwandeln."
     },
     {
-     "start": 41.41,
-     "end": 45.73,
+     "start": 41.52,
+     "end": 45.76,
      "text": "Auch die Zukunft der Milchstraße und Andromedas wird genauso aussehen."
     },
     {
-     "start": 45.73,
-     "end": 52.83,
+     "start": 45.76,
+     "end": 53.04,
      "text": "Diese Kollision werden höchstwahrscheinlich nicht wir beobachten; die Erde wird bis dahin längst unbewohnbar geworden sein."
     },
     {
-     "start": 52.83,
-     "end": 63.25,
+     "start": 53.04,
+     "end": 64.24,
      "text": "Vorerst sind wir neugierige Geschöpfe, die in einem ruhigen Arm einer von Hunderten Milliarden Galaxien einen gewöhnlichen Stern umkreisen und versuchen, all das zu verstehen."
     },
     {
-     "start": 63.25,
-     "end": 68.95,
+     "start": 64.24,
+     "end": 70.72,
      "text": "Die Weite des Universums macht uns nicht klein; dass wir sie begreifen können, macht uns groß."
     },
     {
-     "start": 68.95,
-     "end": 71.03,
+     "start": 70.72,
+     "end": 73.28,
      "text": "Unsere Galaxientour ist zu Ende."
     }
    ]
   },
   "lmc": {
    "hash": "0c778a109d13",
-   "duration": 40.15,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 43.12,
    "sentences": [
     {
      "start": 0,
-     "end": 5.201,
+     "end": 5.585,
      "text": "Die Große Magellansche Wolke, die größte Satellitengalaxie der Milchstraße."
     },
     {
-     "start": 5.201,
-     "end": 14.562,
+     "start": 5.585,
+     "end": 15.639,
      "text": "Sie ist 160. 000 Lichtjahre entfernt und erscheint von der Südhalbkugel aus mit bloßem Auge am Himmel wie ein abgerissenes Stück Wolke."
     },
     {
-     "start": 14.562,
-     "end": 17.891,
+     "start": 15.639,
+     "end": 19.214,
      "text": "Ihre Masse beträgt etwa ein Prozent der unseren."
     },
     {
-     "start": 17.891,
-     "end": 27.946,
+     "start": 19.214,
+     "end": 30.013,
      "text": "In ihr befinden sich der Tarantelnebel, die größte Sternkinderstube der Lokalen Gruppe, und R 136 a 1, einer der massereichsten bekannten Sterne."
     },
     {
-     "start": 27.946,
-     "end": 35.435,
+     "start": 30.013,
+     "end": 38.056,
      "text": "Die Supernova, die hier 1987 explodierte, war die erste seit 400 Jahren mit bloßem Auge sichtbare Supernova."
     },
     {
-     "start": 35.435,
-     "end": 40.15,
+     "start": 38.056,
+     "end": 43.12,
      "text": "In ein paar Milliarden Jahren wird die Milchstraße sie verschlingen."
     }
-   ]
+   ],
+   "estimated": true
   },
   "m87": {
    "hash": "e7a06d94a98a",
-   "duration": 40.64,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 42.32,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 8.12,
+     "start": 0,
+     "end": 7.84,
      "text": "Jetzt verlassen wir die Lokale Gruppe und begeben uns ins Herz des Virgo-Haufens, 55 Millionen Lichtjahre weit."
     },
     {
-     "start": 8.12,
-     "end": 12.27,
+     "start": 7.84,
+     "end": 12.32,
      "text": "M 87, eine riesige elliptische Galaxie."
     },
     {
-     "start": 12.27,
-     "end": 25.63,
+     "start": 12.32,
+     "end": 26.88,
      "text": "Sie hat keine Spiralarme; sie ist eine gewaltige Kugel aus Billionen alter, gelber Sterne, und um sie kreisen mehr als 12. 000 Kugelsternhaufen; in der Milchstraße gibt es davon nur 150."
     },
     {
-     "start": 25.63,
-     "end": 32.67,
+     "start": 26.88,
+     "end": 34.24,
      "text": "In ihrem Zentrum befindet sich das erste fotografierte Schwarze Loch, mit 6,5 Milliarden Sonnenmassen."
     },
     {
-     "start": 32.67,
-     "end": 40.64,
+     "start": 34.24,
+     "end": 42.32,
      "text": "Der Jet, der aus diesem Schwarzen Loch herausschießt, erstreckt sich über 5. 000 Lichtjahre und ist seit 1918 bekannt."
     }
    ]
   },
   "milkyway": {
    "hash": "03ad055513a8",
-   "duration": 56.31,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 59.84,
    "sentences": [
     {
      "start": 0,
-     "end": 5.83,
+     "end": 6.195,
      "text": "Vor etwa hundert Jahren hielten viele Astronomen die Milchstraße für das gesamte Universum."
     },
     {
-     "start": 5.83,
-     "end": 19.347,
+     "start": 6.195,
+     "end": 20.559,
      "text": "Dann zeigte sich, dass die blassen Spiralnebel am Himmel in Wahrheit andere Galaxien sind; heute wissen wir, dass das beobachtbare Universum Hunderte Milliarden Galaxien enthält, jede mit Milliarden von Sternen."
     },
     {
-     "start": 19.347,
-     "end": 21.14,
+     "start": 20.559,
+     "end": 22.466,
      "text": "Willkommen zur Galaxientour."
     },
     {
-     "start": 21.14,
-     "end": 24.471,
+     "start": 22.466,
+     "end": 26.006,
      "text": "Schauen wir uns zunächst unser Zuhause von außen an."
     },
     {
-     "start": 24.471,
-     "end": 33.76,
+     "start": 26.006,
+     "end": 35.877,
      "text": "Die Milchstraße ist eine 100. 000 Lichtjahre breite Spiralgalaxie mit einem Balken im Zentrum und enthält zwischen 200 und 400 Milliarden Sterne."
     },
     {
-     "start": 33.76,
-     "end": 44.651,
+     "start": 35.877,
+     "end": 47.45,
      "text": "Die Sonne liegt 26. 000 Lichtjahre vom Zentrum entfernt in einem kleinen Arm, dem sogenannten Orionarm, und vollendet in 230 Millionen Jahren einen Umlauf um die Galaxie."
     },
     {
-     "start": 44.651,
-     "end": 50.673,
+     "start": 47.45,
+     "end": 53.849,
      "text": "Seit dem Aussterben der Dinosaurier hat die Sonne nur ein Viertel dieses Umlaufs zurückgelegt."
     },
     {
-     "start": 50.673,
-     "end": 56.31,
+     "start": 53.849,
+     "end": 59.84,
      "text": "Im hellen zentralen Wulst verbirgt sich ein Schwarzes Loch von 4 Millionen Sonnenmassen."
     }
-   ]
+   ],
+   "estimated": true
   },
   "smc": {
    "hash": "8a2eb329bf88",
-   "duration": 37.34,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 38.64,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 6.1,
+     "start": 0,
+     "end": 6.64,
      "text": "Die Kleine Magellansche Wolke, ihre kleinere Schwester in 200. 000 Lichtjahren Entfernung."
     },
     {
-     "start": 6.1,
-     "end": 15.47,
+     "start": 6.64,
+     "end": 16.64,
      "text": "Sie ist eine irreguläre Galaxie; wahrscheinlich hat die Schwerkraft der Großen Magellanschen Wolke und der Milchstraße sie in diese formlose Gestalt gebracht."
     },
     {
-     "start": 15.47,
-     "end": 31.4,
+     "start": 16.64,
+     "end": 32.48,
      "text": "Eine Brücke aus Wasserstoff, die sich zwischen den beiden erstreckt, ist die Spur einer nahen Begegnung. 1912 entdeckte Henrietta Leavitt hier die Perioden-Leuchtkraft-Beziehung der Cepheiden, indem sie Tausende veränderliche Sterne untersuchte."
     },
     {
-     "start": 31.4,
-     "end": 37.34,
+     "start": 32.48,
+     "end": 38.64,
      "text": "Diese Entdeckung wurde zum ersten kosmischen Lineal, mit dem wir Entfernungen im Universum messen können."
     }
    ]
   },
   "sombrero": {
    "hash": "2f1ef3edcfc1",
-   "duration": 38.24,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 38.4,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 9.62,
+     "start": 0,
+     "end": 9.32,
      "text": "Die Sombrerogalaxie verdient ihren Namen: Diese Galaxie in 29 Millionen Lichtjahren Entfernung sehen wir fast genau von der Kante."
     },
     {
-     "start": 9.62,
-     "end": 18.73,
+     "start": 9.32,
+     "end": 18.64,
      "text": "Ihr außerordentlich großer und heller zentraler Wulst ist von einem scharfen Staubband umgeben; genau wie ein mexikanischer Hut mit breiter Krempe."
     },
     {
-     "start": 18.73,
-     "end": 26.61,
+     "start": 18.64,
+     "end": 26.52,
      "text": "Sie beherbergt etwa 2. 000 Kugelsternhaufen und in ihrem Zentrum ein Schwarzes Loch von einer Milliarde Sonnenmassen."
     },
     {
-     "start": 26.61,
-     "end": 38.24,
+     "start": 26.52,
+     "end": 38.4,
      "text": "Lange wurde diskutiert, ob sie eine Spiralgalaxie oder eine elliptische Galaxie ist; Infrarotbeobachtungen zeigten, dass sie eine Scheibe ist, die in eine elliptische Galaxie eingebettet ist."
     }
    ]
   },
   "triangulum": {
    "hash": "3cfabbd81b7c",
-   "duration": 38.22,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 39.44,
    "sentences": [
     {
-     "start": 0.04,
-     "end": 4.5,
+     "start": 0,
+     "end": 4.72,
      "text": "Die Dreiecksgalaxie, das drittgrößte Mitglied der Lokalen Gruppe."
     },
     {
-     "start": 4.5,
-     "end": 13.29,
+     "start": 4.72,
+     "end": 13.52,
      "text": "Sie ist 2,7 Millionen Lichtjahre entfernt und mit 40 Milliarden Sternen die kleine Schwester von Andromeda und der Milchstraße."
     },
     {
-     "start": 13.29,
-     "end": 22.33,
+     "start": 13.52,
+     "end": 22.56,
      "text": "In ihrem Zentrum gibt es weder einen ausgeprägten Wulst noch ein supermassereiches Schwarzes Loch; ihre Arme sehen wir nahezu von oben."
     },
     {
-     "start": 22.33,
-     "end": 33.66,
+     "start": 22.56,
+     "end": 34.56,
      "text": "In ihr befindet sich NGC 604, ein riesiges Sternentstehungsgebiet von 1. 500 Lichtjahren Breite; es ist hundertmal größer als der Orionnebel."
     },
     {
-     "start": 33.66,
-     "end": 38.22,
+     "start": 34.56,
+     "end": 39.44,
      "text": "Wahrscheinlich ist sie ein Satellit Andromedas und wird sich ihr eines Tages anschließen."
     }
    ]

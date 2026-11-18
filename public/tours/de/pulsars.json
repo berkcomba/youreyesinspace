@@ -1,245 +1,252 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
  "locale": "de",
  "steps": {
   "b1919": {
    "hash": "6f9e515b3057",
-   "duration": 54.07,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 56.72,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 8.02,
+     "start": 0,
+     "end": 7.88,
      "text": "Wenn ein massereicher Stern stirbt, hinterlässt er manchmal ein Herz von der Größe einer Stadt, aber schwerer als die Sonne."
     },
     {
-     "start": 8.02,
-     "end": 17.72,
+     "start": 7.88,
+     "end": 17.6,
      "text": "Dieses Herz dreht sich Dutzende, ja Hunderte Male pro Sekunde und tickt Millionen Jahre lang weiter, als eine der genauesten Uhren des Universums."
     },
     {
-     "start": 17.72,
-     "end": 19.82,
+     "start": 17.6,
+     "end": 20.32,
      "text": "Willkommen zur Pulsar-Tour."
     },
     {
-     "start": 19.82,
-     "end": 31.57,
+     "start": 20.32,
+     "end": 32.4,
      "text": "Alles begann 1967, als die Doktorandin Jocelyn Bell in Cambridge in den Radiodaten ein seltsames Signal bemerkte, das sich alle 1,3 Sekunden wiederholte."
     },
     {
-     "start": 31.57,
-     "end": 40.11,
+     "start": 32.4,
+     "end": 42,
      "text": "Das Signal war so regelmäßig, dass ihr Team ihm halb im Scherz den Namen LGM Eins gab, was Kleine Grüne Männchen bedeutet."
     },
     {
-     "start": 40.11,
-     "end": 46.53,
+     "start": 42,
+     "end": 49.04,
      "text": "Vor Ihnen: PSR B 1919 plus 21, eben jener erste Pulsar."
     },
     {
-     "start": 46.53,
-     "end": 54.07,
+     "start": 49.04,
+     "end": 56.72,
      "text": "In Wirklichkeit war es ein Neutronenstern, der sich wie ein Leuchtturm drehte und bei jeder Umdrehung seinen Strahl auf uns richtete."
     }
    ]
   },
   "crab": {
    "hash": "3303f7f19770",
-   "duration": 38.32,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 38.48,
    "sentences": [
     {
-     "start": 0.04,
-     "end": 7.18,
+     "start": 0,
+     "end": 7.12,
      "text": "Der Krebs-Pulsar, der Neutronenstern, den die Supernova des Jahres 1054 hinterlassen hat."
     },
     {
-     "start": 7.18,
-     "end": 13.31,
+     "start": 7.12,
+     "end": 13.04,
      "text": "Er dreht sich 30-mal pro Sekunde und beleuchtet mit seiner Energie den gesamten Krebsnebel."
     },
     {
-     "start": 13.31,
-     "end": 23.89,
+     "start": 13.04,
+     "end": 23.6,
      "text": "Er misst nur 20 Kilometer im Durchmesser, ist aber schwerer als die Sonne; ein Stück seiner Materie von der Größe eines Zuckerwürfels wiegt so viel wie ein Berg."
     },
     {
-     "start": 23.89,
-     "end": 28.5,
+     "start": 23.6,
+     "end": 28.48,
      "text": "Er pulsiert bei jeder Wellenlänge, von Radiowellen bis zu Gammastrahlen."
     },
     {
-     "start": 28.5,
-     "end": 38.32,
+     "start": 28.48,
+     "end": 38.48,
      "text": "Er ist der erste Pulsar, der eindeutig einer beobachtbaren Supernova zugeordnet wurde, und hat bewiesen, dass Pulsare aus explodierenden Sternen geboren werden."
     }
    ]
   },
   "hulsetaylor": {
    "hash": "7bff9c78d202",
-   "duration": 44.16,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 44.48,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 5.88,
+     "start": 0,
+     "end": 5.76,
      "text": "Das Hulse-Taylor-Paar wurde zum Schauplatz eines der wichtigsten Experimente der Physik."
     },
     {
-     "start": 5.88,
-     "end": 18.59,
+     "start": 5.76,
+     "end": 18,
      "text": "In diesem 1974 entdeckten System umkreisen ein Pulsar und ein weiterer Neutronenstern alle 7 Stunden und 45 Minuten ihren gemeinsamen Massenschwerpunkt."
     },
     {
-     "start": 18.59,
-     "end": 22.55,
+     "start": 18,
+     "end": 22.24,
      "text": "Ihre Umlaufbahnen schrumpfen jedes Jahr um einige Millimeter."
     },
     {
-     "start": 22.55,
-     "end": 33.25,
+     "start": 22.24,
+     "end": 33.28,
      "text": "Das entspricht genau dem Energieverlust durch Gravitationswellen, den Einstein vorhergesagt hat: der erste indirekte Beweis der allgemeinen Relativitätstheorie."
     },
     {
-     "start": 33.25,
-     "end": 40.51,
+     "start": 33.28,
+     "end": 40.48,
      "text": "Russell Hulse und Joseph Taylor erhielten für diese Entdeckung 1993 den Nobelpreis für Physik."
     },
     {
-     "start": 40.51,
-     "end": 44.16,
+     "start": 40.48,
+     "end": 44.48,
      "text": "Die beiden Sterne werden in 300 Millionen Jahren verschmelzen."
     }
    ]
   },
   "j1748": {
    "hash": "db99031c40dc",
-   "duration": 44.08,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 42.48,
    "sentences": [
     {
-     "start": 0.04,
-     "end": 12.36,
+     "start": 0,
+     "end": 11.6,
      "text": "PSR J 1748 minus 24 46 A D, der am schnellsten rotierende bekannte Pulsar: 716 Umdrehungen pro Sekunde."
     },
     {
-     "start": 12.36,
-     "end": 21.25,
+     "start": 11.6,
+     "end": 20.24,
      "text": "Die Geschwindigkeit an seinem Äquator nähert sich einem Viertel der Lichtgeschwindigkeit; drehte er sich nur etwas schneller, würde er auseinanderbrechen."
     },
     {
-     "start": 21.25,
-     "end": 29.71,
+     "start": 20.24,
+     "end": 28.48,
      "text": "Diese Geschwindigkeit erreichte er, indem er sich über Millionen von Jahren mit Materie beschleunigte, die er von seinem Begleitstern anzog."
     },
     {
-     "start": 29.71,
-     "end": 35.01,
+     "start": 28.48,
+     "end": 33.52,
      "text": "Er lebt im dichten Kugelsternhaufen namens Terzan 5 im Sternbild Schütze."
     },
     {
-     "start": 35.01,
-     "end": 44.08,
+     "start": 33.52,
+     "end": 42.48,
      "text": "Sein Begleiter ist durch die heftige Strahlung des Pulsars aufgebläht und verdeckt ihn auf etwa 40 Prozent der Umlaufbahn, sodass sein Signal abbricht."
     }
    ]
   },
   "lich": {
    "hash": "94bb8b8299a2",
-   "duration": 44.47,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 42.88,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 20.08,
+     "start": 0,
+     "end": 18.96,
      "text": "Die ersten Exoplaneten wurden nicht um einen sonnenähnlichen Stern gefunden, sondern um einen toten Stern. 1992 leiteten Aleksander Wolszczan und Dale Frail aus den Verzögerungen von Millisekunden im Puls dieses Pulsars namens Lich die Planeten ab, die ihn umkreisen."
     },
     {
-     "start": 20.08,
-     "end": 30.03,
+     "start": 18.96,
+     "end": 28.24,
      "text": "Diese drei Planeten namens Draugr, Poltergeist und Phobetor entstanden wahrscheinlich neu aus den Trümmern, die von der Supernova übrig blieben."
     },
     {
-     "start": 30.03,
-     "end": 36.43,
+     "start": 28.24,
+     "end": 34.4,
      "text": "Draugr ist der Exoplanet mit der kleinsten bekannten Masse; er wiegt nur doppelt so viel wie der Mond."
     },
     {
-     "start": 36.43,
-     "end": 44.47,
+     "start": 34.4,
+     "end": 42.88,
      "text": "Unter der tödlichen Strahlung des Pulsars ist Leben nicht einmal denkbar; ihre Namen wurden deshalb Geistern und lebenden Toten entlehnt."
     }
    ]
   },
   "sgr1806": {
    "hash": "02c4ee98a8b8",
-   "duration": 65.91,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 71.36,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 6.26,
+     "start": 0,
+     "end": 6.52,
      "text": "Unser letzter Halt ist ein Magnetar: SGR 1806 minus 20."
     },
     {
-     "start": 6.26,
-     "end": 19.4,
+     "start": 6.52,
+     "end": 20.32,
      "text": "Magnetare sind Neutronensterne mit den stärksten Magnetfeldern im Universum; dieses Feld ist eine Billiarde Mal stärker als das der Erde und löscht aus tausend Kilometern Entfernung eine Kreditkarte. Am 27."
     },
     {
-     "start": 19.4,
-     "end": 28.58,
+     "start": 20.32,
+     "end": 30.32,
      "text": "Dezember 2004 riss seine Kruste und schleuderte in einer Zehntelsekunde so viel Energie hinaus, wie die Sonne in hunderttausend Jahren abstrahlt."
     },
     {
-     "start": 28.58,
-     "end": 38.07,
+     "start": 30.32,
+     "end": 40.08,
      "text": "Diese Explosion aus fünfzigtausend Lichtjahren Entfernung ionisierte die obere Atmosphäre der Erde messbar und machte die Detektoren der Satelliten blind."
     },
     {
-     "start": 38.07,
-     "end": 43.31,
+     "start": 40.08,
+     "end": 46.24,
      "text": "Es ist bis heute das hellste Ereignis, das von außerhalb des Sonnensystems beobachtet wurde."
     },
     {
-     "start": 43.31,
-     "end": 55.51,
+     "start": 46.24,
+     "end": 59.68,
      "text": "Von einem winzigen Zucken, das eine Studentin auf Papierstreifen bemerkte, sind wir einen Weg gegangen, der zu Gravitationswellen, zu den ersten Exoplaneten und zu den extremsten Zuständen der Materie führte."
     },
     {
-     "start": 55.51,
-     "end": 64.03,
+     "start": 59.68,
+     "end": 69.04,
      "text": "In unserer Galaxie drehen sich noch Zehntausende kosmischer Leuchttürme, die wir noch nicht gehört haben; um sie zu hören, müssen wir nur weiter lauschen."
     },
     {
-     "start": 64.03,
-     "end": 65.91,
+     "start": 69.04,
+     "end": 71.36,
      "text": "Unsere Pulsar-Tour ist zu Ende."
     }
    ]
   },
   "vela": {
    "hash": "2890e89189ae",
-   "duration": 36.88,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 36.8,
    "sentences": [
     {
-     "start": 0.06,
+     "start": 0,
      "end": 6,
      "text": "Der Vela-Pulsar, einer der hellsten Radiopulsare in tausend Lichtjahren Entfernung."
     },
     {
      "start": 6,
-     "end": 13.23,
+     "end": 13.12,
      "text": "Er ist der Überrest eines Sterns, der vor elftausend Jahren explodierte, und dreht sich 11-mal pro Sekunde."
     },
     {
-     "start": 13.23,
-     "end": 18.25,
+     "start": 13.12,
+     "end": 18.32,
      "text": "Von Zeit zu Zeit wird er plötzlich schneller; diese Ereignisse nennt man Glitches."
     },
     {
-     "start": 18.25,
-     "end": 27.87,
+     "start": 18.32,
+     "end": 27.92,
      "text": "Sie sind die Folge von Beben in der festen Kruste des Sterns oder davon, dass die suprafluiden Neutronen im Inneren Energie an die Kruste abgeben."
     },
     {
-     "start": 27.87,
-     "end": 36.88,
+     "start": 27.92,
+     "end": 36.8,
      "text": "Indem wir also diesen kleinen Stern untersuchen, lernen wir, wie sich Materie bei Dichten verhält, die in keinem Labor auf der Erde erzeugt werden können."
     }
    ]

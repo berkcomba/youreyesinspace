@@ -1,224 +1,230 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
  "locale": "en",
  "steps": {
   "alphacen": {
    "hash": "d8720e0025b8",
-   "duration": 33.83,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 33.6,
    "sentences": [
     {
-     "start": 0.02,
-     "end": 4.18,
+     "start": 0,
+     "end": 3.84,
      "text": "Proxima is actually a distant member of a large family."
     },
     {
-     "start": 4.18,
-     "end": 12.26,
+     "start": 3.84,
+     "end": 11.68,
      "text": "Alpha Centauri A and B are two stars 4. 4 light-years away that orbit each other once every 80 years."
     },
     {
-     "start": 12.26,
-     "end": 17.29,
+     "start": 11.68,
+     "end": 16.72,
      "text": "A is surprisingly similar to the Sun: a little larger, a little brighter."
     },
     {
-     "start": 17.29,
-     "end": 20.21,
+     "start": 16.72,
+     "end": 19.68,
      "text": "B, though, is a little smaller and orange."
     },
     {
-     "start": 20.21,
-     "end": 23.65,
+     "start": 19.68,
+     "end": 23.52,
      "text": "Together they appear as the third-brightest star in the sky."
     },
     {
-     "start": 23.65,
-     "end": 33.83,
+     "start": 23.52,
+     "end": 33.6,
      "text": "The Breakthrough Starshot project dreams of sending laser-propelled, postage-stamp-sized probes here at one-fifth the speed of light, and of arriving in 20 years."
     }
    ]
   },
   "antares": {
    "hash": "2287986d9042",
-   "duration": 36.72,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 35.52,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 3.86,
+     "start": 0,
+     "end": 3.84,
      "text": "Antares, the heart of the constellation Scorpius."
     },
     {
-     "start": 3.86,
-     "end": 11.85,
+     "start": 3.84,
+     "end": 11.6,
      "text": "Its name means the rival of Mars in Greek, because with its red color and brightness it used to be likened to the planet."
     },
     {
-     "start": 11.85,
-     "end": 24.13,
+     "start": 11.6,
+     "end": 23.44,
      "text": "This red supergiant, 550 light-years away, has a diameter about 700 times that of the Sun; if you put it in the Sun's place, it would swallow the orbit of Mars."
     },
     {
-     "start": 24.13,
-     "end": 27.41,
+     "start": 23.44,
+     "end": 26.48,
      "text": "Its density, though, is even lower than air."
     },
     {
-     "start": 27.41,
-     "end": 36.72,
+     "start": 26.48,
+     "end": 35.52,
      "text": "Antares is 12 times as heavy as the Sun and is about to exhaust its fuel; within the next 1 million years it will explode as a supernova."
     }
    ]
   },
   "deneb": {
    "hash": "40f2e999f42a",
-   "duration": 50.55,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 55.92,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 9.24,
+     "start": 0,
+     "end": 9.76,
      "text": "Our last stop is Deneb, the tail of the constellation Cygnus and the most distant star on this tour: about 2,600 light-years."
     },
     {
-     "start": 9.24,
-     "end": 19.26,
+     "start": 9.76,
+     "end": 20.32,
      "text": "Even so, it is one of the 20 brightest stars in the sky, because it is one of the brightest stars known, giving off about 200,000 times more light than the Sun."
     },
     {
-     "start": 19.26,
-     "end": 23.58,
+     "start": 20.32,
+     "end": 25.2,
      "text": "The light you see today set out in the era when the Roman Republic was founded."
     },
     {
-     "start": 23.58,
-     "end": 31.23,
+     "start": 25.2,
+     "end": 33.76,
      "text": "Deneb is a blue-white supergiant, and within a few million years it will either become a supernova or turn into a red supergiant."
     },
     {
-     "start": 31.23,
-     "end": 40.85,
+     "start": 33.76,
+     "end": 44.24,
      "text": "If you step outside tonight and look at Vega, you will see light that set out twenty-five years ago; look at Deneb, and you will see light that set out when Rome was still a kingdom."
     },
     {
-     "start": 40.85,
-     "end": 48.23,
+     "start": 44.24,
+     "end": 53.28,
      "text": "The sky is not a photograph of a single moment; it is a collage of time, where letters from different ages meet on the same night."
     },
     {
-     "start": 48.23,
-     "end": 50.55,
+     "start": 53.28,
+     "end": 55.92,
      "text": "Our Nearby Stars tour has come to an end."
     }
    ]
   },
   "polaris": {
    "hash": "6c4e94de749b",
-   "duration": 36.24,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 36.72,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 2.12,
+     "start": 0,
+     "end": 2.48,
      "text": "Polaris, the North Star."
     },
     {
-     "start": 2.12,
-     "end": 14.17,
+     "start": 2.48,
+     "end": 14.32,
      "text": "It is not the brightest star in the sky, but it is one of the most important: it stands less than 1 degree from the extension of Earth's rotation axis, so the whole sky appears to turn around it."
     },
     {
-     "start": 14.17,
-     "end": 16.87,
+     "start": 14.32,
+     "end": 17.28,
      "text": "For centuries it showed sailors the north."
     },
     {
-     "start": 16.87,
-     "end": 27.73,
+     "start": 17.28,
+     "end": 28.16,
      "text": "In fact it is a yellow supergiant 430 light-years away, 2,000 times brighter than the Sun, and with two small companions it forms a triple system."
     },
     {
-     "start": 27.73,
-     "end": 36.24,
+     "start": 28.16,
+     "end": 36.72,
      "text": "It is also a Cepheid variable: by brightening and dimming rhythmically once every 4 days, it teaches us to measure cosmic distances."
     }
    ]
   },
   "proxima": {
    "hash": "6cdaebd77381",
-   "duration": 53.43,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 58.24,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 10.36,
+     "start": 0,
+     "end": 11.6,
      "text": "Almost every star you can see with the naked eye in the night sky is a neighbor of the Sun, within a few thousand light-years; the rest of the galaxy blends into a shared haze."
     },
     {
-     "start": 10.36,
-     "end": 18.04,
+     "start": 11.6,
+     "end": 20.32,
      "text": "Each one is a sun, some have worlds circling them, and their light reaches us after journeys lasting years, even centuries."
     },
     {
-     "start": 18.04,
-     "end": 20.32,
+     "start": 20.32,
+     "end": 22.96,
      "text": "Welcome to the Nearby Stars tour."
     },
     {
-     "start": 20.32,
-     "end": 26.75,
+     "start": 22.96,
+     "end": 29.36,
      "text": "Our first stop is the closest star to the Sun: Proxima Centauri, 4. 2 light-years away."
     },
     {
-     "start": 26.75,
-     "end": 34.07,
+     "start": 29.36,
+     "end": 37.36,
      "text": "It is a small, cool red dwarf; it has only 12 percent of the Sun's mass and is too faint to be seen with the naked eye."
     },
     {
-     "start": 34.07,
-     "end": 37.95,
+     "start": 37.36,
+     "end": 42,
      "text": "But with sudden flares it spews violent radiation from its surface."
     },
     {
-     "start": 37.95,
-     "end": 49.07,
+     "start": 42,
+     "end": 53.44,
      "text": "In 2016, a planet the size of Earth was discovered around it: Proxima b orbits in the habitable zone, that is, at a distance where liquid water could be found on its surface."
     },
     {
-     "start": 49.07,
-     "end": 53.43,
+     "start": 53.44,
+     "end": 58.24,
      "text": "With our fastest vehicles today, it would take 70,000 years to get there."
     }
    ]
   },
   "vega": {
    "hash": "f44d7b36f266",
-   "duration": 37.11,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 35.84,
    "sentences": [
     {
-     "start": 0.14,
-     "end": 4.64,
+     "start": 0,
+     "end": 4.56,
      "text": "Vega is the bright blue-white star 25 light-years away."
     },
     {
-     "start": 4.64,
+     "start": 4.56,
      "end": 8.8,
      "text": "It has twice the mass of the Sun and 40 times its brightness."
     },
     {
      "start": 8.8,
-     "end": 18.81,
+     "end": 18.48,
      "text": "It spins so fast that its equator is noticeably bulging compared with its poles; what's more, we are looking at it almost exactly from its pole."
     },
     {
-     "start": 18.81,
-     "end": 24.01,
+     "start": 18.48,
+     "end": 23.44,
      "text": "Around it, a dust disk was found that may be a remnant of planet formation."
     },
     {
-     "start": 24.01,
-     "end": 32.83,
+     "start": 23.44,
+     "end": 31.52,
      "text": "Because Earth's axis slowly wobbles, Vega was the North Star 12,000 years ago and will be again in 12,000 years."
     },
     {
-     "start": 32.83,
-     "end": 37.11,
+     "start": 31.52,
+     "end": 35.84,
      "text": "For centuries, astronomers used it as the zero point of the brightness scale."
     }
    ]

@@ -1,34 +1,35 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
  "locale": "de",
  "steps": {
   "bepimoi": {
    "hash": "8b6fb6b9770a",
-   "duration": 42.23,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 45.92,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 5.6,
+     "start": 0,
+     "end": 5.84,
      "text": "Nach sieben Jahren und neun Planetenvorbeiflügen hat BepiColombo den Merkur erreicht."
     },
     {
-     "start": 5.6,
-     "end": 17.22,
+     "start": 5.84,
+     "end": 18.24,
      "text": "Das Einfangen geschieht nicht mit einer einzigen großen Triebwerkszündung, sondern durch eine wochenlange, langsame Annäherung: Die Sonde gleitet förmlich in das schwache Schwerefeld des Merkur hinein."
     },
     {
-     "start": 17.22,
-     "end": 24.21,
+     "start": 18.24,
+     "end": 26.48,
      "text": "Heute Abend zieht sie zum ersten Mal nur wenige hundert Kilometer über die Oberfläche; sie ist nun ein Mond des Merkur."
     },
     {
-     "start": 24.21,
-     "end": 34.95,
+     "start": 26.48,
+     "end": 38.08,
      "text": "In den kommenden Wochen wird sich die Bahn mit jedem Umlauf ein wenig verengen; im Dezember trennen sich Europas MPO und Japans Mio und beziehen ihre eigenen Wissenschaftsbahnen."
     },
     {
-     "start": 34.95,
-     "end": 42.23,
+     "start": 38.08,
+     "end": 45.92,
      "text": "Der Weg, den Sie sehen, ist die geplante Bahn, die die ESA an JPL Horizons übermittelt hat; es ist keine Live-Telemetrie."
     }
    ]

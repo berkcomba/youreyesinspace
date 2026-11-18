@@ -1,34 +1,35 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
  "locale": "tr",
  "steps": {
   "hera": {
    "hash": "b309318b7962",
-   "duration": 44.47,
+   "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
+   "duration": 45.84,
    "sentences": [
     {
-     "start": 0.08,
+     "start": 0,
      "end": 6.48,
      "text": "ESA'nın Hera sondası, iki yıllık yolculuğun ardından Didymos ikili asteroitine varıyor."
     },
     {
      "start": 6.48,
-     "end": 17.56,
+     "end": 17.36,
      "text": "Hedefi, NASA'nın DART aracının 2022'de bilerek çarptığı küçük uydu Dimorphos: çarpma, uydunun yörünge periyodunu otuz üç dakika kısaltmıştı."
     },
     {
-     "start": 17.56,
-     "end": 25.15,
+     "start": 17.36,
+     "end": 25.44,
      "text": "Hera şu anda ikiliye yavaşça yaklaşıyor ve önümüzdeki haftalarda onlarca kilometre mesafeden yörüngeye yerleşecek."
     },
     {
-     "start": 25.15,
-     "end": 34.65,
+     "start": 25.44,
+     "end": 35.44,
      "text": "Yanında taşıdığı Milani ve Juventas küp uyduları, Dimorphos'un kütlesini ve iç yapısını ölçecek; ilk yakın görüntüler Kasım sonunda bekleniyor."
     },
     {
-     "start": 34.65,
-     "end": 44.47,
+     "start": 35.44,
+     "end": 45.84,
      "text": "İzlediğiniz yaklaşma yolu, ESA'nın JPL Horizons'a verdiği planlanmış yörüngedir ve 4 Kasım'a kadar yayımlanmıştır; sonrası henüz ilan edilmedi."
     }
    ]

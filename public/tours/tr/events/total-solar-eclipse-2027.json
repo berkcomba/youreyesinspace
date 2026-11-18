@@ -1,34 +1,35 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
  "locale": "tr",
  "steps": {
   "total2027": {
    "hash": "35706905176a",
-   "duration": 47.67,
+   "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
+   "duration": 52.64,
    "sentences": [
     {
      "start": 0,
-     "end": 8.68,
+     "end": 9.04,
      "text": "2 Ağustos 2027'de Ay, Güneş ile Dünya arasından tam olarak geçiyor ve bu kez Güneş'i bütünüyle örtüyor."
     },
     {
-     "start": 8.68,
-     "end": 17.98,
+     "start": 9.04,
+     "end": 19.52,
      "text": "Ay yörüngesinin Dünya'ya yakın kısmında olduğundan gökyüzünde Güneş'ten yüzde sekiz daha büyük görünür ve tam gölgesi geniş bir kuşak çizer."
     },
     {
-     "start": 17.98,
-     "end": 30.81,
+     "start": 19.52,
+     "end": 34.08,
      "text": "Dünya'ya dönüp bakalım: Ay'ın gölgesi gündüz tarafında koyu bir leke olarak Atlantik'ten Cebelitarık Boğazı'na, Kuzey Afrika boyunca Mısır'a, oradan Kızıldeniz'i aşıp Arabistan'a ve Somali'ye yol alır."
     },
     {
-     "start": 30.81,
-     "end": 41.27,
+     "start": 34.08,
+     "end": 45.2,
      "text": "En uzun tam evre Luksor yakınında: altı dakika yirmi üç saniye boyunca gündüz gökyüzü kararır ve Güneş'in tacı, korona, çıplak gözle görünür."
     },
     {
-     "start": 41.27,
-     "end": 47.67,
+     "start": 45.2,
+     "end": 52.64,
      "text": "Avrupa, Orta Doğu ve Türkiye'den parçalı olarak izlenir; tutulma gözlüğü olmadan Güneş'e asla bakmayın."
     }
    ]

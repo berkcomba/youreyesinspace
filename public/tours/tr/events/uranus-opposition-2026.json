@@ -1,34 +1,35 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
  "locale": "tr",
  "steps": {
   "uranusopp": {
    "hash": "669041c0b41c",
-   "duration": 42.55,
+   "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
+   "duration": 44.32,
    "sentences": [
     {
      "start": 0,
-     "end": 10.06,
+     "end": 10.24,
      "text": "25 Kasım'da Uranüs karşı konumda: Güneş, Dünya ve Uranüs bir doğru üzerinde diziliyor ve gezegen gece boyunca gökyüzünde kalıyor."
     },
     {
-     "start": 10.06,
-     "end": 19.6,
+     "start": 10.24,
+     "end": 20.72,
      "text": "Karşı konum, bir dış gezegenin Dünya'ya en yakın ve en parlak olduğu andır; Uranüs şu anda bizden iki virgül altı milyar kilometre uzakta."
     },
     {
-     "start": 19.6,
-     "end": 31.23,
+     "start": 20.72,
+     "end": 32.8,
      "text": "Dünya'dan bakınca Koç takımyıldızında, kadir beş virgül altı ile karanlık bir gökyüzünde çıplak gözle zar zor, dürbünle kolayca seçilen mavi-yeşil bir noktadır."
     },
     {
-     "start": 31.23,
-     "end": 35.71,
+     "start": 32.8,
+     "end": 37.68,
      "text": "Rengi, atmosferindeki metanın kırmızı ışığı soğurmasından gelir."
     },
     {
-     "start": 35.71,
-     "end": 42.55,
+     "start": 37.68,
+     "end": 44.32,
      "text": "Yana yatmış ekseniyle Uranüs, Güneş etrafındaki seksen dört yıllık turunu adeta yuvarlanarak tamamlar."
     }
    ]

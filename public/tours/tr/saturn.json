@@ -1,204 +1,210 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
  "locale": "tr",
  "steps": {
   "enceladus": {
    "hash": "6e7abaa73cfc",
-   "duration": 37.11,
+   "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
+   "duration": 38.56,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 7.16,
+     "start": 0,
+     "end": 7.52,
      "text": "Enceladus yalnızca beş yüz kilometre çapında ama Güneş Sistemi'nin en ilgi çekici dünyalarından biri."
     },
     {
-     "start": 7.16,
-     "end": 15.82,
+     "start": 7.52,
+     "end": 16.32,
      "text": "Güney kutbundaki kaplan çizgisi denilen dört çatlaktan yüzlerce gayzer, su buharı ve buz kristallerini uzaya püskürtür."
     },
     {
-     "start": 15.82,
-     "end": 24.75,
+     "start": 16.32,
+     "end": 25.52,
      "text": "Cassini bu fıskiyelerin içinden uçtu ve tuz, organik moleküller ve hidrojen buldu; tam da yaşam için gereken malzemeler."
     },
     {
-     "start": 24.75,
-     "end": 31.99,
+     "start": 25.52,
+     "end": 33.12,
      "text": "Bu buz taneleri Satürn'ün E halkasını besler; Enceladus, Satürn'ün etrafını otuz üç saatte dolaşır."
     },
     {
-     "start": 31.99,
-     "end": 37.11,
+     "start": 33.12,
+     "end": 38.56,
      "text": "Yüzeyi taze kar gibi bembeyazdır ve Güneş ışığının neredeyse tamamını yansıtır."
     }
    ]
   },
   "iapetus": {
    "hash": "6da85004e579",
-   "duration": 56.95,
+   "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
+   "duration": 61.36,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 9.5,
+     "start": 0,
+     "end": 10,
      "text": "Son durağımız Iapetus, Güneş Sistemi'nin en tuhaf aylarından biri: bir yarısı kar kadar beyaz, diğer yarısı kömür kadar kara."
     },
     {
-     "start": 9.5,
-     "end": 19.3,
+     "start": 10,
+     "end": 20.24,
      "text": "Yörüngesinde hep aynı yüzü öne baktığı için dış halkalardan gelen koyu tozu süpürür; ısınan koyu bölgelerden buz buharlaşıp parlak tarafa yağar."
     },
     {
-     "start": 19.3,
-     "end": 28.4,
+     "start": 20.24,
+     "end": 30.24,
      "text": "Ekvatorunun tam ortasında on üç kilometre yüksekliğinde, bin üç yüz kilometre uzunluğunda bir dağ sırtı uzanır; bu da ona ceviz görünümü verir."
     },
     {
-     "start": 28.4,
-     "end": 36.63,
+     "start": 30.24,
+     "end": 39.2,
      "text": "Satürn'den üç buçuk milyon kilometre uzakta, yetmiş dokuz günde bir tur atar; halkaları yukarıdan görebilen tek büyük ay odur."
     },
     {
-     "start": 36.63,
-     "end": 45.27,
+     "start": 39.2,
+     "end": 48.8,
      "text": "İki bin on üçte Cassini, Satürn'ün gölgesinden geriye dönüp bakmış ve halkaların altında soluk mavi bir nokta yakalamıştı: Dünya."
     },
     {
-     "start": 45.27,
-     "end": 55.45,
+     "start": 48.8,
+     "end": 59.52,
      "text": "O gün, fotoğrafın çekileceğini bilen dünyanın dört bir yanındaki insanlar dışarı çıkıp bir buçuk milyar kilometre öteden kendilerine bakan bir makineye el salladı."
     },
     {
-     "start": 55.45,
-     "end": 56.95,
+     "start": 59.52,
+     "end": 61.36,
      "text": "Satürn turumuz sona erdi."
     }
    ]
   },
   "mimas": {
    "hash": "c1055dd01da6",
-   "duration": 28.87,
+   "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
+   "duration": 30.08,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 7.74,
+     "start": 0,
+     "end": 8.16,
      "text": "Mimas'ı gördüğünüz anda tanırsınız: dev Herschel Krateri ona Yıldız Savaşları'ndaki Ölüm Yıldızı'nın görünümünü verir."
     },
     {
-     "start": 7.74,
-     "end": 12.8,
+     "start": 8.16,
+     "end": 13.6,
      "text": "Krater yüz otuz kilometre genişliğindedir; yani ayın çapının üçte biri."
     },
     {
-     "start": 12.8,
-     "end": 17.53,
+     "start": 13.6,
+     "end": 18.64,
      "text": "Bu çarpışma biraz daha şiddetli olsaydı Mimas paramparça olurdu."
     },
     {
-     "start": 17.53,
-     "end": 28.87,
+     "start": 18.64,
+     "end": 30.08,
      "text": "İki bin yirmi dörtte yörüngesindeki küçük sallantılar incelendiğinde şaşırtıcı bir sonuç çıktı: bu donmuş görünen küçük ayın buz kabuğunun altında genç bir okyanus olabilir."
     }
    ]
   },
   "rings": {
    "hash": "f0677d62198e",
-   "duration": 35.83,
+   "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
+   "duration": 37.68,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 10.34,
+     "start": 0,
+     "end": 11.2,
      "text": "Şimdi halkalara daha yakından bakalım: bu dev disk aslında tek bir yapı değil, mikroskobik tozdan ev büyüklüğüne kadar milyarlarca buz parçasından oluşur."
     },
     {
-     "start": 10.34,
-     "end": 19.07,
+     "start": 11.2,
+     "end": 20.64,
      "text": "Genişliği iki yüz seksen bin kilometreyi aşar ama kenarından bakınca neredeyse yok olur: kalınlığı çoğu yerde on metreden azdır."
     },
     {
-     "start": 19.07,
-     "end": 21.99,
+     "start": 20.64,
+     "end": 23.44,
      "text": "Ölçekli bir kâğıt yaprağından bile incedir."
     },
     {
-     "start": 21.99,
-     "end": 27.63,
+     "start": 23.44,
+     "end": 29.12,
      "text": "Aradaki en büyük boşluk olan Cassini Bölümü'nü küçük ay Mimas'ın kütle çekimi açar."
     },
     {
-     "start": 27.63,
-     "end": 35.83,
+     "start": 29.12,
+     "end": 37.68,
      "text": "Halkalar muhtemelen yalnızca birkaç yüz milyon yaşında ve yavaş yavaş gezegene yağıyorlar; yüz milyon yıl içinde kaybolabilirler."
     }
    ]
   },
   "saturn": {
    "hash": "51b4888f827f",
-   "duration": 51.19,
+   "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
+   "duration": 56.64,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 9.68,
+     "start": 0,
+     "end": 10.72,
      "text": "Bin altı yüz onda Galileo teleskobunu Satürn'e çevirdiğinde, gezegenin iki yanında anlam veremediği tuhaf çıkıntılar gördü ve onlara kulak dedi."
     },
     {
-     "start": 9.68,
-     "end": 18.06,
+     "start": 10.72,
+     "end": 20.56,
      "text": "Bunların bir halka olduğunu anlamamız yarım yüzyıl sürdü; bugün bile Güneş Sistemi'nin en zarif manzarası olarak nefesimizi kesiyorlar."
     },
     {
-     "start": 18.06,
-     "end": 25.42,
+     "start": 20.56,
+     "end": 29.04,
      "text": "Satürn turuna hoş geldiniz: Güneş'ten altıncı gezegen, çapıyla Dünya'nın dokuz katı büyüklüğünde bir gaz devi."
     },
     {
-     "start": 25.42,
-     "end": 31.49,
+     "start": 29.04,
+     "end": 35.52,
      "text": "Yanına gerçek ölçekli bir Dünya koyduğumuzda, halkaların bile ne kadar geniş olduğu ortaya çıkar."
     },
     {
-     "start": 31.49,
-     "end": 36.13,
+     "start": 35.52,
+     "end": 40.48,
      "text": "Yoğunluğu sudan düşüktür; bu, bir gezegen için benzersizdir."
     },
     {
-     "start": 36.13,
-     "end": 42.71,
+     "start": 40.48,
+     "end": 47.52,
      "text": "Ekvatorunda rüzgârlar saatte bin sekiz yüz kilometreye ulaşır ve günü yalnızca on buçuk saat sürer."
     },
     {
-     "start": 42.71,
-     "end": 51.19,
+     "start": 47.52,
+     "end": 56.64,
      "text": "Cassini aracı iki bin dörtten iki bin on yediye kadar on üç yıl boyunca bu sistemi inceledi ve görevini gezegenin atmosferine dalarak tamamladı."
     }
    ]
   },
   "titan": {
    "hash": "22bd15ec1f65",
-   "duration": 38.07,
+   "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
+   "duration": 41.84,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 5.92,
+     "start": 0,
+     "end": 6.64,
      "text": "Titan, Satürn'ün en büyük ayı ve Güneş Sistemi'nde kalın bir atmosferi olan tek ay."
     },
     {
-     "start": 5.92,
-     "end": 14.8,
+     "start": 6.64,
+     "end": 16.56,
      "text": "Ay'ımızdan bir buçuk kat büyüktür; azot ağırlıklı atmosferi Dünya'nınkinden yüzde elli daha yoğundur ve turuncu bir pusla yüzeyi gizler."
     },
     {
-     "start": 14.8,
-     "end": 24.47,
+     "start": 16.56,
+     "end": 27.6,
      "text": "Pusun altına bakalım: yüzeyinde sıvı metan ve etandan göller, nehirler ve yağmurlar vardır; eksi yüz seksen derecede su kaya kadar serttir."
     },
     {
-     "start": 24.47,
-     "end": 30.89,
+     "start": 27.6,
+     "end": 34.4,
      "text": "İki bin beşte Huygens sondası yüzeyine indi ve buz çakıllarıyla kaplı bir nehir yatağı fotoğrafladı."
     },
     {
-     "start": 30.89,
-     "end": 38.07,
+     "start": 34.4,
+     "end": 41.84,
      "text": "NASA'nın Dragonfly adlı nükleer enerjili dronu iki bin otuz dörtte buraya ulaşıp kum tepelerinin üzerinde uçacak."
     }
    ]

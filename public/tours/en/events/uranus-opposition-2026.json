@@ -1,34 +1,35 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
  "locale": "en",
  "steps": {
   "uranusopp": {
    "hash": "7ec8fb96abf5",
-   "duration": 37.43,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 37.6,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 8.92,
+     "start": 0,
+     "end": 8.56,
      "text": "On 25 November Uranus is at opposition: Sun, Earth and Uranus line up, and the planet stays in the sky all night."
     },
     {
-     "start": 8.92,
-     "end": 17.4,
+     "start": 8.56,
+     "end": 17.56,
      "text": "Opposition is the moment an outer planet is closest to Earth and at its brightest; Uranus is now two point six billion kilometres from us."
     },
     {
-     "start": 17.4,
-     "end": 27.39,
+     "start": 17.56,
+     "end": 27.6,
      "text": "Seen from Earth it sits in Aries, a blue-green point at magnitude five point six, barely visible to the naked eye under a dark sky and easy in binoculars."
     },
     {
-     "start": 27.39,
-     "end": 31.37,
+     "start": 27.6,
+     "end": 31.6,
      "text": "Its colour comes from methane in its atmosphere absorbing red light."
     },
     {
-     "start": 31.37,
-     "end": 37.43,
+     "start": 31.6,
+     "end": 37.6,
      "text": "With its axis tipped on its side, Uranus all but rolls along its eighty-four-year journey around the Sun."
     }
    ]

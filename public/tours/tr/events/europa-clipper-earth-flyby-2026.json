@@ -1,34 +1,35 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
  "locale": "tr",
  "steps": {
   "clipperflyby": {
    "hash": "58314090d3b0",
-   "duration": 44.47,
+   "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
+   "duration": 47.44,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 8.04,
+     "start": 0,
+     "end": 8.48,
      "text": "Europa Clipper, Jüpiter yolunda son kez eve uğruyor: Dünya'nın yanından geçerek gezegenin yerçekiminden hız çalıyor."
     },
     {
-     "start": 8.04,
-     "end": 19.3,
+     "start": 8.48,
+     "end": 19.92,
      "text": "Araç Dünya'ya göre saniyede on iki kilometreden hızlı ilerliyor ve yüzeye üç bin iki yüz kilometreye kadar yaklaşacak; bu, pek çok iletişim uydusundan daha alçak."
     },
     {
-     "start": 19.3,
-     "end": 28.39,
+     "start": 19.92,
+     "end": 29.44,
      "text": "En yakın nokta evrensel saatle yirmi on beşte; geçiş, aracın Güneş etrafındaki yörüngesini Jüpiter'e ulaşacak biçimde genişletiyor."
     },
     {
-     "start": 28.39,
-     "end": 37.17,
+     "start": 29.44,
+     "end": 38.48,
      "text": "Clipper, Jüpiter'e 2030 Nisan'ında varacak ve Europa'nın buz kabuğu altındaki okyanusu kırk dokuz yakın geçişle inceleyecek."
     },
     {
-     "start": 37.17,
-     "end": 44.47,
+     "start": 38.48,
+     "end": 47.44,
      "text": "Yörünge verisi NASA/JPL Horizons'tan alınmış, en yakın geçiş çevresinde dakika çözünürlüğünde örneklenmiştir."
     }
    ]

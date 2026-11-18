@@ -1,39 +1,40 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
  "locale": "de",
  "steps": {
   "uranusopp": {
    "hash": "221a59ae9d80",
-   "duration": 43.83,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 44.4,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 1.22,
+     "start": 0,
+     "end": 1.12,
      "text": "Am 25."
     },
     {
-     "start": 1.22,
-     "end": 10.64,
+     "start": 1.12,
+     "end": 10.68,
      "text": "November steht Uranus in Opposition: Sonne, Erde und Uranus reihen sich auf einer Linie auf, und der Planet bleibt die ganze Nacht am Himmel."
     },
     {
-     "start": 10.64,
-     "end": 21.28,
+     "start": 10.68,
+     "end": 21.68,
      "text": "Die Opposition ist der Moment, in dem ein äußerer Planet der Erde am nächsten und am hellsten ist; Uranus ist jetzt zwei Komma sechs Milliarden Kilometer von uns entfernt."
     },
     {
-     "start": 21.28,
-     "end": 32.37,
+     "start": 21.68,
+     "end": 32.88,
      "text": "Von der Erde aus steht er im Widder, ein blaugrüner Punkt der Größenklasse fünf Komma sechs, unter dunklem Himmel mit bloßem Auge gerade noch, im Fernglas leicht zu erkennen."
     },
     {
-     "start": 32.37,
-     "end": 37.65,
+     "start": 32.88,
+     "end": 37.76,
      "text": "Seine Farbe stammt vom Methan in seiner Atmosphäre, das rotes Licht absorbiert."
     },
     {
-     "start": 37.65,
-     "end": 43.83,
+     "start": 37.76,
+     "end": 44.4,
      "text": "Mit seiner auf die Seite gekippten Achse rollt Uranus gleichsam durch seine vierundachtzigjährige Runde um die Sonne."
     }
    ]

@@ -1,209 +1,215 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
  "locale": "tr",
  "steps": {
   "callisto": {
    "hash": "3e5e60cc6c60",
-   "duration": 25.27,
+   "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
+   "duration": 28.72,
    "sentences": [
     {
-     "start": 0.04,
-     "end": 4.6,
+     "start": 0,
+     "end": 5.28,
      "text": "Callisto, dört Galileo ayının en dıştakisi ve en sessizi."
     },
     {
-     "start": 4.6,
-     "end": 11.38,
+     "start": 5.28,
+     "end": 13.04,
      "text": "Yüzeyi Güneş Sistemi'ndeki en yoğun kraterli yüzeydir; dört milyar yıldır neredeyse hiç değişmemiştir."
     },
     {
-     "start": 11.38,
-     "end": 17.77,
+     "start": 13.04,
+     "end": 20,
      "text": "Jüpiter'den uzak olduğu için gelgit ısınmasından etkilenmez ve radyasyon kuşaklarının dışında kalır."
     },
     {
-     "start": 17.77,
-     "end": 25.27,
+     "start": 20,
+     "end": 28.72,
      "text": "Bu da onu gelecekte insanlı bir üs için en güvenli aday yapar; altında da bir okyanus bulunabileceğine dair ipuçları var."
     }
    ]
   },
   "europa": {
    "hash": "b9106a595aa7",
-   "duration": 30.39,
+   "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
+   "duration": 32.24,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 3.98,
+     "start": 0,
+     "end": 4.24,
      "text": "Europa, yaşam arayışının en umut verici adresi."
     },
     {
-     "start": 3.98,
-     "end": 14.58,
+     "start": 4.24,
+     "end": 15.52,
      "text": "Ay'ımızdan biraz küçüktür; ama pürüzsüz buz kabuğunun altında, Dünya'daki tüm okyanusların iki katı kadar su barındıran küresel bir okyanus bulunduğu düşünülüyor."
     },
     {
-     "start": 14.58,
-     "end": 20.55,
+     "start": 15.52,
+     "end": 21.6,
      "text": "Yüzeydeki kahverengi çizgiler, buzun çatlayıp alttaki suyun yukarı sızdığı yerlerdir."
     },
     {
-     "start": 20.55,
-     "end": 30.39,
+     "start": 21.6,
+     "end": 32.24,
      "text": "NASA'nın Europa Clipper aracı iki bin yirmi dörtte fırlatıldı ve iki bin otuzda yaklaşık elli yakın geçişle bu okyanusun yaşanabilir olup olmadığını araştıracak."
     }
    ]
   },
   "ganymede": {
    "hash": "3b199d711641",
-   "duration": 33.91,
+   "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
+   "duration": 34.72,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 3.4,
+     "start": 0,
+     "end": 3.6,
      "text": "Ganymede, Güneş Sistemi'nin en büyük ayı."
     },
     {
-     "start": 3.4,
-     "end": 8.7,
+     "start": 3.6,
+     "end": 8.56,
      "text": "Merkür gezegeninden bile büyüktür; yan yana koyduğumuzda bunu görebilirsiniz."
     },
     {
-     "start": 8.7,
-     "end": 18.37,
+     "start": 8.56,
+     "end": 18.64,
      "text": "Kendi manyetik alanına sahip bilinen tek aydır; bu alan Jüpiter'inkinin içinde küçük bir kabarcık oluşturur ve kutuplarında auroralar yaratır."
     },
     {
-     "start": 18.37,
-     "end": 25.79,
+     "start": 18.64,
+     "end": 26.96,
      "text": "Yüzeyi iki farklı yaştadır: koyu, kraterli eski bölgeler ve açık renkli, oluklu daha genç bölgeler."
     },
     {
-     "start": 25.79,
-     "end": 33.91,
+     "start": 26.96,
+     "end": 34.72,
      "text": "Buz kabuğunun altında onun da bir okyanusu var; Avrupa Uzay Ajansı'nın JUICE aracı iki bin otuz birde yörüngesine girecek."
     }
    ]
   },
   "io": {
    "hash": "0c7b01a3677d",
-   "duration": 32.95,
+   "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
+   "duration": 35.12,
    "sentences": [
     {
-     "start": 0.2,
-     "end": 3.74,
+     "start": 0,
+     "end": 4.24,
      "text": "Io, Güneş Sistemi'nin en volkanik dünyası."
     },
     {
-     "start": 3.74,
-     "end": 11.28,
+     "start": 4.24,
+     "end": 12.12,
      "text": "Jüpiter ile diğer ayların kütle çekimi arasında sürekli ezilip gerilir; bu gelgit ısınması iç kısmını eritir."
     },
     {
-     "start": 11.28,
-     "end": 23.27,
+     "start": 12.12,
+     "end": 24.72,
      "text": "Yüzeyinde dört yüzden fazla aktif yanardağ vardır ve bazıları lavı yüzlerce kilometre yükseğe fırlatır; en büyüğü Loki Patera, iki yüz kilometre genişliğinde bir lav gölüdür."
     },
     {
-     "start": 23.27,
-     "end": 28.03,
+     "start": 24.72,
+     "end": 29.92,
      "text": "Sarı, turuncu ve kırmızı renkler kükürt ve kükürt bileşiklerinden gelir."
     },
     {
-     "start": 28.03,
-     "end": 32.95,
+     "start": 29.92,
+     "end": 35.12,
      "text": "Yüzeyi o kadar hızlı yenilenir ki üzerinde neredeyse hiç çarpma krateri yoktur."
     }
    ]
   },
   "juno": {
    "hash": "b68e288c642d",
-   "duration": 52.47,
+   "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
+   "duration": 60.16,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 6.96,
+     "start": 0,
+     "end": 7.36,
      "text": "Son olarak Juno'ya bakalım: bu NASA aracı iki bin on altı Temmuz'unda Jüpiter'in yörüngesine girdi."
     },
     {
-     "start": 6.96,
-     "end": 14.9,
+     "start": 7.36,
+     "end": 16.32,
      "text": "Güneş'ten bu kadar uzakta güneş enerjisiyle çalışan ilk araçtır; üç dev paneli bir basketbol sahası kadar yer kaplar."
     },
     {
-     "start": 14.9,
-     "end": 22.66,
+     "start": 16.32,
+     "end": 25.36,
      "text": "Radyasyondan korunmak için kutuplar üzerinden geçen uzun, eliptik bir yörüngede döner; işte o yörünge, hızlandırılmış."
     },
     {
-     "start": 22.66,
-     "end": 29.73,
+     "start": 25.36,
+     "end": 33.36,
      "text": "Her geçişte bulutların birkaç bin kilometre üzerinden geçer ve Jüpiter'in kutuplarında dev siklonlar keşfetti."
     },
     {
-     "start": 29.73,
-     "end": 33.79,
+     "start": 33.36,
+     "end": 38.16,
      "text": "Çekirdeğinin sanıldığından daha büyük ve dağınık olduğunu gösterdi."
     },
     {
-     "start": 33.79,
-     "end": 40.81,
+     "start": 38.16,
+     "end": 45.84,
      "text": "Galileo'nun dört küçük ışık noktasından, buzun altında okyanuslar saklayan dünyalara uzanan bir yolculuktu bu."
     },
     {
-     "start": 40.81,
-     "end": 50.47,
+     "start": 45.84,
+     "end": 57.68,
      "text": "Belki de Güneş Sistemi'nde yaşamı aramamız gereken yer, ısıtan bir güneşin yakını değil; bir devin kütle çekiminin yoğurduğu bu soğuk, karanlık aylardır."
     },
     {
-     "start": 50.47,
-     "end": 52.47,
+     "start": 57.68,
+     "end": 60.16,
      "text": "Jüpiter turumuz burada sona eriyor."
     }
    ]
   },
   "jupiter": {
    "hash": "df44fae67efb",
-   "duration": 65.27,
+   "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
+   "duration": 71.04,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 7.26,
+     "start": 0,
+     "end": 7.8,
      "text": "Gece gökyüzünde parlak, titremeyen bir ışık: çıplak gözle bakınca sıradan bir yıldızdan farkı yok."
     },
     {
-     "start": 7.26,
-     "end": 21.7,
+     "start": 7.8,
+     "end": 23.68,
      "text": "Oysa o ışığın sahibi, diğer bütün gezegenlerin toplamından iki buçuk kat ağır bir dev; kütle çekimiyle kuyruklu yıldızların yollarını büken ve Güneş Sistemi'nin düzenini milyarlarca yıldır şekillendiren bir mimar."
     },
     {
-     "start": 21.7,
-     "end": 27.4,
+     "start": 23.68,
+     "end": 29.84,
      "text": "Jüpiter sistemine hoş geldiniz; bu dev, neredeyse küçük bir güneş sistemi gibidir."
     },
     {
-     "start": 27.4,
-     "end": 33.29,
+     "start": 29.84,
+     "end": 36.24,
      "text": "Etrafında doksan beşten fazla ay döner; dört büyüğünün yörüngelerini yukarıdan izleyelim."
     },
     {
-     "start": 33.29,
-     "end": 47.17,
+     "start": 36.24,
+     "end": 51.44,
      "text": "Io iki günde, Europa üç buçuk günde, Ganymede yedi günde, Callisto ise on yedi günde bir tur atar; iç üçü birbirine kilitlidir, Io dört tur attığında Europa iki, Ganymede bir tur atar."
     },
     {
-     "start": 47.17,
-     "end": 54.73,
+     "start": 51.44,
+     "end": 59.68,
      "text": "Gezegen o kadar büyüktür ki içine bin üç yüz Dünya sığar ve manyetik alanı Güneş Sistemi'ndeki en büyük yapıdır."
     },
     {
-     "start": 54.73,
-     "end": 62.71,
+     "start": 59.68,
+     "end": 68.16,
      "text": "Bin altı yüz onda Galileo bu dört ayı küçük teleskobuyla keşfetti; her şeyin Dünya'nın etrafında dönmediğinin ilk kanıtıydı."
     },
     {
-     "start": 62.71,
-     "end": 65.27,
+     "start": 68.16,
+     "end": 71.04,
      "text": "Şimdi o dört ayı sırayla ziyaret edeceğiz."
     }
    ]

@@ -1,34 +1,35 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
  "locale": "tr",
  "steps": {
   "solstice": {
    "hash": "52383f371d2e",
-   "duration": 39.99,
+   "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
+   "duration": 41.2,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 7.76,
+     "start": 0,
+     "end": 7.92,
      "text": "Dünya'nın dönme ekseni yörünge düzlemine göre yirmi üç buçuk derece eğiktir ve yıl boyunca aynı yöne bakar."
     },
     {
-     "start": 7.76,
-     "end": 17.46,
+     "start": 7.92,
+     "end": 18.16,
      "text": "Aralık gündönümünde Güney Kutbu Güneş'e doğru, Kuzey Kutbu ise ondan uzağa eğilmiştir: gece-gündüz sınırı Dünya'yı en eğik açıyla keser."
     },
     {
-     "start": 17.46,
-     "end": 25.05,
+     "start": 18.16,
+     "end": 26,
      "text": "Kuzey Kutup Dairesi'nin ötesinde Güneş hiç doğmaz; güneyde ise Antarktika gece yarısı güneşiyle aydınlıktır."
     },
     {
-     "start": 25.05,
-     "end": 32.79,
+     "start": 26,
+     "end": 33.68,
      "text": "Yörüngeden bakınca Dünya, Güneş çevresindeki turunun bu noktasına her yıl 21–22 Aralık'ta ulaşır."
     },
     {
-     "start": 32.79,
-     "end": 39.99,
+     "start": 33.68,
+     "end": 41.2,
      "text": "Mevsimleri yapan uzaklık değil bu eğimdir: Dünya aslında Güneş'e en yakın noktasından Ocak başında geçer."
     }
    ]

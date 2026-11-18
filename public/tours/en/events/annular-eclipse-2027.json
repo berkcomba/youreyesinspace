@@ -1,34 +1,35 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
  "locale": "en",
  "steps": {
   "annular": {
    "hash": "7de9d4e59b77",
-   "duration": 39.35,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 42.8,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 6.56,
+     "start": 0,
+     "end": 7.04,
      "text": "In a solar eclipse the Moon passes exactly between the Sun and Earth and its shadow falls on Earth."
     },
     {
-     "start": 6.56,
-     "end": 16.58,
+     "start": 7.04,
+     "end": 17.6,
      "text": "This time the Moon is in the far half of its orbit, so it looks slightly smaller than the Sun in the sky: it cannot cover it fully and a bright ring of fire remains."
     },
     {
-     "start": 16.58,
-     "end": 21.91,
+     "start": 17.6,
+     "end": 23.76,
      "text": "Let us look from the centre of the shadow: the Moon's dark disc settles onto the middle of the Sun."
     },
     {
-     "start": 21.91,
-     "end": 32.25,
+     "start": 23.76,
+     "end": 34.72,
      "text": "The path of annularity runs from the South Pacific across Chile and Argentina to the Atlantic; a partial eclipse is seen across wide areas of South America and Africa."
     },
     {
-     "start": 32.25,
-     "end": 39.35,
+     "start": 34.72,
+     "end": 42.8,
      "text": "The next great eclipse comes on 2 August 2027: a six-minute total eclipse crossing Egypt and Saudi Arabia."
     }
    ]

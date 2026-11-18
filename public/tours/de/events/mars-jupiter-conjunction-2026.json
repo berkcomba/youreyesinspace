@@ -1,39 +1,40 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
  "locale": "de",
  "steps": {
   "marsjup": {
    "hash": "582779e77aee",
-   "duration": 37.75,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 39.68,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 1.26,
+     "start": 0,
+     "end": 1.56,
      "text": "Am Morgen des 16."
     },
     {
-     "start": 1.26,
-     "end": 6.52,
+     "start": 1.56,
+     "end": 7,
      "text": "November leuchten Mars und Jupiter vor Sonnenaufgang nebeneinander am Osthorizont."
     },
     {
-     "start": 6.52,
-     "end": 13.56,
+     "start": 7,
+     "end": 14.24,
      "text": "Die beiden Planeten kommen sich am Himmel bis auf nur ein Komma zwei Grad nahe, etwa zweieinhalb Vollmondbreiten."
     },
     {
-     "start": 13.56,
-     "end": 21.93,
+     "start": 14.24,
+     "end": 22.96,
      "text": "Natürlich stehen sie nicht wirklich nebeneinander: Mars ist etwa dreihundert Millionen Kilometer von uns entfernt, Jupiter neunhundert Millionen."
     },
     {
-     "start": 21.93,
-     "end": 30.09,
+     "start": 22.96,
+     "end": 31.76,
      "text": "Von oben betrachtet wird klar, was geschieht: Erde, Mars und Jupiter reihen sich auf ihren Bahnen um die Sonne in derselben Richtung auf."
     },
     {
-     "start": 30.09,
-     "end": 37.75,
+     "start": 31.76,
+     "end": 39.68,
      "text": "Eine Konjunktion ist nur ein Spiel der Perspektive, aber eines der am leichtesten mit bloßem Auge zu beobachtenden Himmelsereignisse."
     }
    ]

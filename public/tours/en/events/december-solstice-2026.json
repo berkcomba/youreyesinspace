@@ -1,34 +1,35 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
  "locale": "en",
  "steps": {
   "solstice": {
    "hash": "2009986234c4",
-   "duration": 35.51,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 38.64,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 7.28,
+     "start": 0,
+     "end": 7.72,
      "text": "Earth's rotation axis is tilted twenty-three and a half degrees to its orbital plane and points the same way all year."
     },
     {
-     "start": 7.28,
-     "end": 16.16,
+     "start": 7.72,
+     "end": 17.2,
      "text": "At the December solstice the South Pole leans toward the Sun and the North Pole away from it: the day-night line cuts across Earth at its steepest angle."
     },
     {
-     "start": 16.16,
-     "end": 22.33,
+     "start": 17.2,
+     "end": 24.24,
      "text": "Beyond the Arctic Circle the Sun never rises; in the south, Antarctica is lit by the midnight sun."
     },
     {
-     "start": 22.33,
-     "end": 28.67,
+     "start": 24.24,
+     "end": 31.52,
      "text": "Seen from orbit, Earth reaches this point of its journey around the Sun every year on 21–22 December."
     },
     {
-     "start": 28.67,
-     "end": 35.51,
+     "start": 31.52,
+     "end": 38.64,
      "text": "It is this tilt, not distance, that makes the seasons: Earth actually passes closest to the Sun in early January."
     }
    ]

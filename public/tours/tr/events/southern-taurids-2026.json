@@ -1,34 +1,35 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
  "locale": "tr",
  "steps": {
   "staurids": {
    "hash": "db58ff2d4530",
-   "duration": 35.83,
+   "voice": "elevenlabs:eleven_v4:DpEiQMnL9WxMsymCsjPY",
+   "duration": 40.32,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 8.24,
+     "start": 0,
+     "end": 9.04,
      "text": "Güney Tauridler, bilinen en kısa periyotlu kuyruklu yıldız olan Encke'nin yüzyıllar içinde saçtığı geniş bir toz akımından gelir."
     },
     {
-     "start": 8.24,
-     "end": 14.58,
+     "start": 9.04,
+     "end": 16.32,
      "text": "Encke, Güneş'i yalnızca üç virgül üç yılda bir dolaşır; şu anda yörüngesinin dış yarısında."
     },
     {
-     "start": 14.58,
-     "end": 22.53,
+     "start": 16.32,
+     "end": 25.44,
      "text": "Dünya bu geniş akımın içinden haftalarca geçer; parçacıklar atmosfere saniyede yirmi sekiz kilometre gibi görece yavaş girer."
     },
     {
-     "start": 22.53,
-     "end": 29.07,
+     "start": 25.44,
+     "end": 33.28,
      "text": "Bu yüzden Tauridler az sayıda ama uzun süren, çoğu zaman ateş topu kadar parlak meteorlar üretir."
     },
     {
-     "start": 29.07,
-     "end": 35.83,
+     "start": 33.28,
+     "end": 40.32,
      "text": "Radyan Boğa takımyıldızındadır; bu yıl Ay'ın geç doğması gece yarısına kadar karanlık bir gökyüzü sağlar."
     }
    ]

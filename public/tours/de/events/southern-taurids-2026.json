@@ -1,34 +1,35 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
  "locale": "de",
  "steps": {
   "staurids": {
    "hash": "1301a4f988db",
-   "duration": 41.59,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 40.56,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 10.32,
+     "start": 0,
+     "end": 9.6,
      "text": "Die Südlichen Tauriden stammen aus einem breiten Staubstrom, den Encke, der Komet mit der kürzesten bekannten Umlaufzeit, über Jahrhunderte verstreut hat."
     },
     {
-     "start": 10.32,
-     "end": 17.66,
+     "start": 9.6,
+     "end": 16.48,
      "text": "Encke umrundet die Sonne in nur drei Komma drei Jahren; er befindet sich derzeit in der äußeren Hälfte seiner Bahn."
     },
     {
-     "start": 17.66,
-     "end": 28.29,
+     "start": 16.48,
+     "end": 26.88,
      "text": "Die Erde braucht Wochen, um diesen breiten Strom zu durchqueren; die Teilchen treten mit achtundzwanzig Kilometern pro Sekunde vergleichsweise langsam in die Atmosphäre ein."
     },
     {
-     "start": 28.29,
-     "end": 35.17,
+     "start": 26.88,
+     "end": 34,
      "text": "Deshalb erzeugen die Tauriden wenige, aber lang anhaltende Meteore, oft so hell wie Feuerkugeln."
     },
     {
-     "start": 35.17,
-     "end": 41.59,
+     "start": 34,
+     "end": 40.56,
      "text": "Der Radiant liegt im Stier; der späte Mondaufgang sorgt dieses Jahr bis Mitternacht für einen dunklen Himmel."
     }
    ]

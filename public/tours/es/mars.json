@@ -1,224 +1,230 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:5egO01tkUjEzu7xSSE8M",
  "locale": "es",
  "steps": {
   "curiosity": {
    "hash": "42e8d291cf25",
-   "duration": 35.83,
+   "voice": "elevenlabs:eleven_v4:5egO01tkUjEzu7xSSE8M",
+   "duration": 38.88,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 8.08,
+     "start": 0,
+     "end": 8.88,
      "text": "Ahora descendemos a la superficie: aquí tenéis a Curiosity, un robot de una tonelada de peso y del tamaño de un coche."
     },
     {
-     "start": 8.08,
-     "end": 14.26,
+     "start": 8.88,
+     "end": 15.36,
      "text": "En agosto de dos mil doce descendió al cráter Gale suspendido de cables mediante una grúa aérea."
     },
     {
-     "start": 14.26,
-     "end": 20.17,
+     "start": 15.36,
+     "end": 21.36,
      "text": "Genera su energía a partir del calor del plutonio, por eso no le afectan las tormentas de polvo."
     },
     {
-     "start": 20.17,
-     "end": 29.01,
+     "start": 21.36,
+     "end": 30.88,
      "text": "Demostró que en el fondo del cráter hubo en el pasado un lago que duró millones de años, y encontró los componentes químicos necesarios para la vida."
     },
     {
-     "start": 29.01,
-     "end": 35.83,
+     "start": 30.88,
+     "end": 38.88,
      "text": "Desde hace más de diez años asciende por las laderas del monte Sharp, leyendo capa a capa la historia climática de Marte."
     }
    ]
   },
   "deimos": {
    "hash": "e67aa936f31b",
-   "duration": 33.27,
+   "voice": "elevenlabs:eleven_v4:5egO01tkUjEzu7xSSE8M",
+   "duration": 37.92,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 6.5,
+     "start": 0,
+     "end": 7.44,
      "text": "Deimos, la luna más pequeña y más lejana de Marte: su diámetro es de unos doce kilómetros."
     },
     {
-     "start": 6.5,
-     "end": 13.86,
+     "start": 7.44,
+     "end": 16.08,
      "text": "Da una vuelta al planeta en treinta horas; vista desde la superficie de Marte, es indistinguible de una estrella brillante."
     },
     {
-     "start": 13.86,
-     "end": 20.21,
+     "start": 16.08,
+     "end": 23.28,
      "text": "Su superficie es más lisa que la de Fobos, porque sus cráteres están rellenos de una gruesa capa de polvo."
     },
     {
-     "start": 20.21,
-     "end": 26.47,
+     "start": 23.28,
+     "end": 30.24,
      "text": "Todavía se debate si las dos lunas son asteroides capturados o los restos de una colisión gigante."
     },
     {
-     "start": 26.47,
-     "end": 33.27,
+     "start": 30.24,
+     "end": 37.92,
      "text": "La misión MMX de Japón tomará una muestra de Fobos y la traerá a la Tierra para responder a esa pregunta."
     }
    ]
   },
   "finale": {
    "hash": "049824ae6a43",
-   "duration": 48.95,
+   "voice": "elevenlabs:eleven_v4:5egO01tkUjEzu7xSSE8M",
+   "duration": 57.84,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 3.98,
+     "start": 0,
+     "end": 4.48,
      "text": "Antes de partir de Marte, miremos atrás una vez más."
     },
     {
-     "start": 3.98,
-     "end": 9.46,
+     "start": 4.48,
+     "end": 10.4,
      "text": "Hoy operan cerca de una docena de vehículos activos en su órbita y en su superficie."
     },
     {
-     "start": 9.46,
-     "end": 16.4,
+     "start": 10.4,
+     "end": 18.88,
      "text": "Los hallazgos son coherentes: Marte fue en otro tiempo un mundo tibio, húmedo y quizá habitable."
     },
     {
-     "start": 16.4,
-     "end": 24.77,
+     "start": 18.88,
+     "end": 28.32,
      "text": "Cuando perdió su campo magnético, el viento solar barrió su atmósfera hacia el espacio y el planeta se convirtió en un desierto frío."
     },
     {
-     "start": 24.77,
-     "end": 31.23,
+     "start": 28.32,
+     "end": 35.76,
      "text": "Aun así, lo más probable es que este sea el primer planeta en el que la humanidad ponga el pie algún día."
     },
     {
-     "start": 31.23,
-     "end": 41.47,
+     "start": 35.76,
+     "end": 48.64,
      "text": "Ese día, la primera persona que pise una llanura polvorienta de Marte verá en el cielo del atardecer una estrella brillante y azulada: el planeta en el que nació."
     },
     {
-     "start": 41.47,
-     "end": 46.49,
+     "start": 48.64,
+     "end": 54.96,
      "text": "Quizá ese sea el momento en que empecemos a escribir juntos la historia de dos mundos."
     },
     {
-     "start": 46.49,
-     "end": 48.95,
+     "start": 54.96,
+     "end": 57.84,
      "text": "Nuestro recorrido por Marte ha terminado."
     }
    ]
   },
   "mars": {
    "hash": "42ef13aa2295",
-   "duration": 66.55,
+   "voice": "elevenlabs:eleven_v4:5egO01tkUjEzu7xSSE8M",
+   "duration": 76.88,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 9.14,
+     "start": 0,
+     "end": 10.16,
      "text": "Durante miles de años, la gente observó una luz roja que vagaba entre las estrellas del cielo nocturno y le dio el nombre del dios de la guerra."
     },
     {
-     "start": 9.14,
-     "end": 19,
+     "start": 10.16,
+     "end": 22.08,
      "text": "Los telescopios convirtieron esa luz en un disco, y las naves espaciales la convirtieron en un mundo real, con cañones, volcanes y tormentas de polvo."
     },
     {
-     "start": 19,
-     "end": 25.8,
+     "start": 22.08,
+     "end": 30.24,
      "text": "Bienvenidos al recorrido por Marte; el Planeta Rojo, el mundo al que la humanidad ha enviado más vehículos."
     },
     {
-     "start": 25.8,
-     "end": 34.37,
+     "start": 30.24,
+     "end": 39.92,
      "text": "Su día es muy parecido al de la Tierra, veinticuatro horas y treinta y siete minutos; ahora mismo estáis viendo un día de Marte acelerado."
     },
     {
-     "start": 34.37,
-     "end": 42.31,
+     "start": 39.92,
+     "end": 49.28,
      "text": "Su atmósfera es muy tenue y se compone casi por completo de dióxido de carbono; la temperatura media es de menos sesenta grados."
     },
     {
-     "start": 42.31,
-     "end": 51.47,
+     "start": 49.28,
+     "end": 59.28,
      "text": "La cuenca de Hellas, en el hemisferio sur, es la mayor huella de impacto, con dos mil trescientos kilómetros de anchura y nueve kilómetros de profundidad."
     },
     {
-     "start": 51.47,
-     "end": 59.17,
+     "start": 59.28,
+     "end": 68.4,
      "text": "En sus polos hay casquetes de hielo de agua y de hielo seco; en invierno, una cuarta parte de la atmósfera se congela en el polo."
     },
     {
-     "start": 59.17,
-     "end": 66.55,
+     "start": 68.4,
+     "end": 76.88,
      "text": "Los lechos secos de los ríos y los antiguos fondos de lagos de su superficie susurran que Marte fue en otro tiempo muy diferente."
     }
    ]
   },
   "perseverance": {
    "hash": "fdd20ce7209c",
-   "duration": 42.23,
+   "voice": "elevenlabs:eleven_v4:5egO01tkUjEzu7xSSE8M",
+   "duration": 45.92,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 7.66,
+     "start": 0,
+     "end": 8.12,
      "text": "Y Perseverance, el robot más avanzado de Marte; aterrizó en el cráter Jezero en febrero de dos mil veintiuno."
     },
     {
-     "start": 7.66,
-     "end": 14.58,
+     "start": 8.12,
+     "end": 16.08,
      "text": "Este lugar es un antiguo delta donde, hace tres mil quinientos millones de años, un río desembocaba en un lago."
     },
     {
-     "start": 14.58,
-     "end": 24.77,
+     "start": 16.08,
+     "end": 27.44,
      "text": "Su misión es buscar rastros de vida microbiana pasada y, llenando tubos de titanio con muestras de roca, dejarlas para que una futura misión las traiga a la Tierra."
     },
     {
-     "start": 24.77,
-     "end": 34.83,
+     "start": 27.44,
+     "end": 38.24,
      "text": "El pequeño helicóptero Ingenuity que trajo consigo fue el primer vehículo que voló en otro planeta, y realizó setenta y dos vuelos en lugar de los cinco previstos."
     },
     {
-     "start": 34.83,
-     "end": 42.23,
+     "start": 38.24,
+     "end": 45.92,
      "text": "El experimento MOXIE, por su parte, abrió el camino a los futuros astronautas al producir oxígeno a partir del aire de Marte."
     }
    ]
   },
   "phobos": {
    "hash": "8cd0732dd852",
-   "duration": 43.51,
+   "voice": "elevenlabs:eleven_v4:5egO01tkUjEzu7xSSE8M",
+   "duration": 45.84,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 8.1,
+     "start": 0,
+     "end": 8.48,
      "text": "Fobos, la mayor de las dos pequeñas lunas de Marte: una roca con forma de patata de apenas veintidós kilómetros de anchura."
     },
     {
-     "start": 8.1,
-     "end": 14.52,
+     "start": 8.48,
+     "end": 15.04,
      "text": "Orbita a seis mil kilómetros del planeta; esta es la órbita lunar más cercana del Sistema Solar."
     },
     {
-     "start": 14.52,
-     "end": 22.63,
+     "start": 15.04,
+     "end": 23.76,
      "text": "Es tan rápida que da una vuelta a Marte en siete horas y treinta y nueve minutos; aquí está esa vuelta, desde arriba y acelerada."
     },
     {
-     "start": 22.63,
-     "end": 28.67,
+     "start": 23.76,
+     "end": 29.92,
      "text": "Vista desde la superficie de Marte, sale por el oeste y se pone por el este cuatro horas después."
     },
     {
-     "start": 28.67,
-     "end": 37.97,
+     "start": 29.92,
+     "end": 39.92,
      "text": "Desciende dos metros cada siglo; dentro de unos cincuenta millones de años, o chocará contra Marte, o se fragmentará y se convertirá en un anillo."
     },
     {
-     "start": 37.97,
-     "end": 43.51,
+     "start": 39.92,
+     "end": 45.84,
      "text": "El gigantesco cráter Stickney, con nueve kilómetros de anchura, cubre casi la mitad de la luna."
     }
    ]

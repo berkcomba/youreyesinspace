@@ -1,220 +1,228 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
  "locale": "de",
  "steps": {
   "hubble": {
    "hash": "cdd2e8e0f4d2",
-   "duration": 36.87,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 36.88,
    "sentences": [
     {
-     "start": 0.04,
-     "end": 6.26,
+     "start": 0,
+     "end": 6,
      "text": "Das Hubble-Weltraumteleskop verändert seit 1990 unseren Blick auf das Universum."
     },
     {
-     "start": 6.26,
-     "end": 16.71,
+     "start": 6,
+     "end": 16.08,
      "text": "Es kreist in 540 Kilometern Höhe und nimmt mit seinem 2,4 Meter großen Spiegel Bilder auf, die frei von der Unschärfe der Atmosphäre sind."
     },
     {
-     "start": 16.71,
-     "end": 25.77,
+     "start": 16.08,
+     "end": 25.44,
      "text": "Die ersten Bilder waren unscharf; ein kleiner Fehler in seinem Spiegel wurde 1993 von Astronauten in der Umlaufbahn korrigiert."
     },
     {
-     "start": 25.77,
-     "end": 36.87,
+     "start": 25.44,
+     "end": 36.88,
      "text": "Es maß das Alter des Universums, trug zur Entdeckung der dunklen Energie bei und zeigte mit den Deep-Field-Aufnahmen Tausende Galaxien an einem scheinbar leeren Punkt des Himmels."
     }
    ]
   },
   "iss": {
    "hash": "9171943f1595",
-   "duration": 55.67,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 58.48,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 7.12,
+     "start": 0,
+     "end": 7.28,
      "text": "Unsere Vorfahren saßen am Feuer, blickten zu den Sternen hinauf und dachten, sie würden sie niemals erreichen."
     },
     {
-     "start": 7.12,
-     "end": 21.86,
+     "start": 7.28,
+     "end": 22.32,
      "text": "Im Jahr 1957 begann Sputnik, die Erde zu umkreisen; seitdem schicken wir Maschinen, die unsere Augen, unsere Ohren und unsere Neugier tragen, in jeden Winkel des Sonnensystems und sogar darüber hinaus."
     },
     {
-     "start": 21.86,
-     "end": 30.21,
+     "start": 22.32,
+     "end": 31.12,
      "text": "Wir beginnen diese Tour zu den Botschaftern der Menschheit im Weltraum in der Erdumlaufbahn: Vor Ihnen die Internationale Raumstation."
     },
     {
-     "start": 30.21,
-     "end": 40.43,
+     "start": 31.12,
+     "end": 41.92,
      "text": "In vierhundert Kilometern Höhe kreist sie mit achtundzwanzigtausend Kilometern pro Stunde und umrundet die Erde in neunzig Minuten; hier ist diese Umrundung, beschleunigt."
     },
     {
-     "start": 40.43,
-     "end": 43.75,
+     "start": 41.92,
+     "end": 45.48,
      "text": "Die Astronauten sehen sechzehn Sonnenaufgänge am Tag."
     },
     {
-     "start": 43.75,
-     "end": 48.25,
+     "start": 45.48,
+     "end": 50.4,
      "text": "Sie ist so groß wie ein Fußballfeld und vierhundertzwanzig Tonnen schwer."
     },
     {
-     "start": 48.25,
-     "end": 55.67,
+     "start": 50.4,
+     "end": 58.48,
      "text": "Seit November zweitausend leben ununterbrochen Menschen an Bord; das ist die längste kontinuierliche Präsenz der Menschheit im Weltraum."
     }
    ]
   },
   "jwst": {
    "hash": "75e55da1aae2",
-   "duration": 39.83,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 40.24,
    "sentences": [
     {
-     "start": 0.02,
-     "end": 9.94,
+     "start": 0,
+     "end": 9.76,
      "text": "Das James-Webb-Weltraumteleskop kreist eineinhalb Millionen Kilometer von der Erde entfernt um den Lagrange-Punkt 2 auf der sonnenabgewandten Seite."
     },
     {
-     "start": 9.94,
-     "end": 21.69,
+     "start": 9.76,
+     "end": 21.6,
      "text": "Sein sechseinhalb Meter großer, goldbeschichteter Spiegel besteht aus 18 sechseckigen Segmenten und war an Weihnachten 2021, als er gestartet wurde, zusammengefaltet."
     },
     {
-     "start": 21.69,
-     "end": 30.83,
+     "start": 21.6,
+     "end": 30.96,
      "text": "Weil es im Infrarotlicht sieht, wird es mit einem Sonnenschutzschild von der Größe eines Tennisplatzes auf minus 233 Grad gekühlt."
     },
     {
-     "start": 30.83,
-     "end": 39.83,
+     "start": 30.96,
+     "end": 40.24,
      "text": "Es untersucht die ersten Galaxien des Universums, das Innere der Staubwolken, in denen Sterne geboren werden, und die Atmosphären von Exoplaneten."
     }
    ]
   },
   "newhorizons": {
    "hash": "93f345450fd7",
-   "duration": 35.43,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 35.04,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 9.24,
+     "start": 0,
+     "end": 8.88,
      "text": "New Horizons war das schnellste Raumfahrzeug, das 2006 die Erde verließ; es legte die Entfernung zum Mond in 9 Stunden zurück."
     },
     {
-     "start": 9.24,
-     "end": 31.37,
+     "start": 8.88,
+     "end": 30.88,
      "text": "Nach einer Reise von neuneinhalb Jahren flog es im Juli 2015 an Pluto vorbei und verwandelte einen verschwommenen Punkt in eine echte Welt mit Bergen, Gletschern und seinem Herzen. 2019 besuchte es dann im Kuipergürtel den schneemannförmigen Arrokoth; das ist das fernste Objekt, das ein Raumfahrzeug untersucht hat."
     },
     {
-     "start": 31.37,
-     "end": 35.43,
+     "start": 30.88,
+     "end": 35.04,
      "text": "Es arbeitet noch immer und misst die äußeren Grenzen des Sonnensystems."
     }
    ]
   },
   "parker": {
    "hash": "814e67298ab8",
-   "duration": 43.51,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 46,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 4.66,
+     "start": 0,
+     "end": 5.093,
      "text": "Die Parker Solar Probe ist das erste Raumfahrzeug, das die Sonne berührt."
     },
     {
-     "start": 4.66,
-     "end": 14.52,
+     "start": 5.093,
+     "end": 15.12,
      "text": "Zweitausendachtzehn wurde sie gestartet und verengte ihre Umlaufbahn Schritt für Schritt mithilfe der Schwerkraft der Venus; verfolgen wir ihre Umlaufbahn von oben."
     },
     {
-     "start": 14.52,
-     "end": 28.65,
+     "start": 15.12,
+     "end": 29.92,
      "text": "Im Dezember zweitausendvierundzwanzig näherte sie sich der Sonnenoberfläche bis auf sechs Millionen neunhunderttausend Kilometer; dabei wurde sie mit sechshundertneunzigtausend Kilometern pro Stunde zum schnellsten menschengemachten Objekt."
     },
     {
-     "start": 28.65,
-     "end": 36.85,
+     "start": 29.92,
+     "end": 38.56,
      "text": "Während ihr elf Zentimeter dicker Kohlenstoffschild eintausendvierhundert Grad standhält, bleiben die Instrumente dahinter auf Raumtemperatur."
     },
     {
-     "start": 36.85,
-     "end": 43.51,
+     "start": 38.56,
+     "end": 46,
      "text": "Ihr Ziel ist es, zu klären, warum die äußere Atmosphäre der Sonne hunderte Male heißer ist als die Sonnenoberfläche."
     }
-   ]
+   ],
+   "estimated": true
   },
   "voyager1": {
    "hash": "dd9c4b961786",
-   "duration": 40.32,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 38.96,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 4.26,
+     "start": 0,
+     "end": 4.08,
      "text": "Voyager 1 ist das fernste von Menschen geschaffene Objekt."
     },
     {
-     "start": 4.26,
-     "end": 21.93,
+     "start": 4.08,
+     "end": 20.72,
      "text": "Sie wurde 1977 gestartet; sie besuchte Jupiter und Saturn und verzichtete auf Pluto, um sich Titan zu nähern. 2012 überschritt sie die Grenze des Sonnenwinds und wurde das erste Raumfahrzeug, das in den interstellaren Raum vorstieß."
     },
     {
-     "start": 21.93,
-     "end": 30.93,
+     "start": 20.72,
+     "end": 29.12,
      "text": "Heute ist sie mehr als 25 Milliarden Kilometer entfernt; ihre Signale brauchen mehr als 22 Stunden, um uns zu erreichen."
     },
     {
-     "start": 30.93,
-     "end": 40.32,
+     "start": 29.12,
+     "end": 38.96,
      "text": "An Bord befindet sich eine goldene Schallplatte mit Grüßen in 55 Sprachen und den Klängen der Erde: für jene, die sie vielleicht eines Tages finden."
     }
    ]
   },
   "voyager2": {
    "hash": "6b6e12fbd8b1",
-   "duration": 57.27,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 61.2,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 5.88,
+     "start": 0,
+     "end": 6,
      "text": "Und Voyager Zwei ist das einzige Raumfahrzeug, das alle vier äußeren Planeten besucht hat."
     },
     {
-     "start": 5.88,
-     "end": 14.9,
+     "start": 6,
+     "end": 15.6,
      "text": "Sie wurde sechzehn Tage vor ihrer Schwestersonde gestartet, flog aber auf einer langsameren Route an Jupiter, Saturn, Uranus und Neptun vorbei."
     },
     {
-     "start": 14.9,
-     "end": 23.14,
+     "start": 15.6,
+     "end": 24.12,
      "text": "Das meiste, was wir über Uranus und Neptun wissen, stammt noch immer von ihren Vorbeiflügen tausendneunhundertsechsundachtzig und neunundachtzig."
     },
     {
-     "start": 23.14,
-     "end": 26.66,
+     "start": 24.12,
+     "end": 28,
      "text": "Zweitausendachtzehn erreichte sie den interstellaren Raum."
     },
     {
-     "start": 26.66,
-     "end": 37.31,
+     "start": 28,
+     "end": 38.96,
      "text": "Die Plutoniumbatterien beider Voyager werden schwächer; in den zweitausenddreißiger Jahren werden sie verstummen, doch sie werden noch Milliarden Jahre lang zwischen den Sternen weitergleiten."
     },
     {
-     "start": 37.31,
-     "end": 44.29,
+     "start": 38.96,
+     "end": 46.88,
      "text": "Selbst wenn die Berge der Erde abgetragen und die Kontinente gewandert sind, werden die goldenen Schallplatten noch dort draußen sein."
     },
     {
-     "start": 44.29,
-     "end": 55.75,
+     "start": 46.88,
+     "end": 59.44,
      "text": "Wie eine Flaschenpost im kosmischen Ozean werden sie nur eines sagen: Einst lebte hier, auf dem dritten Planeten eines Sterns namens Sonne, eine Art, die sich über die Sterne wunderte."
     },
     {
-     "start": 55.75,
-     "end": 57.27,
+     "start": 59.44,
+     "end": 61.2,
      "text": "Hier endet unsere Tour."
     }
    ]

@@ -1,34 +1,35 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
  "locale": "en",
  "steps": {
   "v1lightday": {
    "hash": "ad3770099531",
-   "duration": 33.91,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 37.28,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 8.84,
+     "start": 0,
+     "end": 9.68,
      "text": "Voyager 1 has been travelling since 1977 and today it crosses a new threshold: it is exactly one light-day from Earth."
     },
     {
-     "start": 8.84,
-     "end": 15.6,
+     "start": 9.68,
+     "end": 16.48,
      "text": "A radio signal sent from it now, though it travels at the speed of light, reaches us only twenty-four hours later."
     },
     {
-     "start": 15.6,
-     "end": 22.99,
+     "start": 16.48,
+     "end": 24.8,
      "text": "The distance is twenty-five point nine billion kilometres; from the Sun it is one hundred seventy-three times farther than Earth."
     },
     {
-     "start": 22.99,
-     "end": 27.97,
+     "start": 24.8,
+     "end": 30.24,
      "text": "Let us pull back and look: even Neptune's orbit is a small ring at this scale."
     },
     {
-     "start": 27.97,
-     "end": 33.91,
+     "start": 30.24,
+     "end": 37.28,
      "text": "This is the farthest any human-made object has ever reached, and it grows by seventeen kilometres every second."
     }
    ]

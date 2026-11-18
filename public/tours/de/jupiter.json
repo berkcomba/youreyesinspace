@@ -1,209 +1,215 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
  "locale": "de",
  "steps": {
   "callisto": {
    "hash": "1bc4dc44495c",
-   "duration": 28.47,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 29.04,
    "sentences": [
     {
-     "start": 0.04,
-     "end": 4.52,
+     "start": 0,
+     "end": 4.64,
      "text": "Kallisto, der äußerste und ruhigste der vier Galileischen Monde."
     },
     {
-     "start": 4.52,
-     "end": 12,
+     "start": 4.64,
+     "end": 12.64,
      "text": "Ihre Oberfläche ist die am dichtesten verkraterte im Sonnensystem; seit vier Milliarden Jahren hat sie sich fast nicht verändert."
     },
     {
-     "start": 12,
-     "end": 19.57,
+     "start": 12.64,
+     "end": 19.92,
      "text": "Weil sie weit von Jupiter entfernt ist, wird sie von der Gezeitenheizung nicht beeinflusst und bleibt außerhalb der Strahlungsgürtel."
     },
     {
-     "start": 19.57,
-     "end": 28.47,
+     "start": 19.92,
+     "end": 29.04,
      "text": "Das macht sie zum sichersten Kandidaten für eine bemannte Basis in der Zukunft; es gibt auch Hinweise darauf, dass sich unter ihr ein Ozean befinden könnte."
     }
    ]
   },
   "europa": {
    "hash": "670085c79ec1",
-   "duration": 34.23,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 36.96,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 4.28,
+     "start": 0,
+     "end": 4.8,
      "text": "Europa, die vielversprechendste Adresse auf der Suche nach Leben."
     },
     {
-     "start": 4.28,
-     "end": 14.6,
+     "start": 4.8,
+     "end": 16.4,
      "text": "Sie ist etwas kleiner als unser Mond; doch unter ihrer glatten Eiskruste vermutet man einen globalen Ozean, der doppelt so viel Wasser enthält wie alle Ozeane der Erde."
     },
     {
-     "start": 14.6,
-     "end": 22.47,
+     "start": 16.4,
+     "end": 24.4,
      "text": "Die braunen Linien auf der Oberfläche sind Stellen, an denen das Eis aufgebrochen ist und das Wasser darunter nach oben gesickert ist."
     },
     {
-     "start": 22.47,
-     "end": 34.23,
+     "start": 24.4,
+     "end": 36.96,
      "text": "Die Raumsonde Europa Clipper der NASA wurde zweitausendvierundzwanzig gestartet und wird zweitausenddreißig mit etwa fünfzig nahen Vorbeiflügen untersuchen, ob dieser Ozean bewohnbar ist."
     }
    ]
   },
   "ganymede": {
    "hash": "1788025f8428",
-   "duration": 39.35,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 39.04,
    "sentences": [
     {
-     "start": 0.08,
+     "start": 0,
      "end": 3.44,
      "text": "Ganymed, der größte Mond des Sonnensystems."
     },
     {
      "start": 3.44,
-     "end": 9.36,
+     "end": 8.88,
      "text": "Er ist sogar größer als der Planet Merkur; wenn wir sie nebeneinanderstellen, können Sie das sehen."
     },
     {
-     "start": 9.36,
-     "end": 20.97,
+     "start": 8.88,
+     "end": 20.4,
      "text": "Er ist der einzige bekannte Mond mit einem eigenen Magnetfeld; dieses Feld bildet eine kleine Blase innerhalb des Magnetfelds von Jupiter und erzeugt an seinen Polen Polarlichter."
     },
     {
-     "start": 20.97,
-     "end": 29.25,
+     "start": 20.4,
+     "end": 28.72,
      "text": "Seine Oberfläche hat zwei verschiedene Alter: dunkle, kraterreiche alte Gebiete und helle, gefurchte jüngere Gebiete."
     },
     {
-     "start": 29.25,
-     "end": 39.35,
+     "start": 28.72,
+     "end": 39.04,
      "text": "Auch unter seiner Eiskruste gibt es einen Ozean; die Sonde JUICE der Europäischen Weltraumorganisation wird zweitausendeinunddreißig in eine Umlaufbahn um ihn eintreten."
     }
    ]
   },
   "io": {
    "hash": "b6ee4bdbb202",
-   "duration": 35.19,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 36.56,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 3.46,
+     "start": 0,
+     "end": 3.6,
      "text": "Io, die vulkanischste Welt des Sonnensystems."
     },
     {
-     "start": 3.46,
-     "end": 11.62,
+     "start": 3.6,
+     "end": 12.24,
      "text": "Sie wird ständig zwischen der Schwerkraft Jupiters und der anderen Monde gequetscht und gedehnt; diese Gezeitenheizung schmilzt ihr Inneres."
     },
     {
-     "start": 11.62,
-     "end": 24.77,
+     "start": 12.24,
+     "end": 25.76,
      "text": "Auf ihrer Oberfläche gibt es mehr als vierhundert aktive Vulkane, und einige schleudern Lava Hunderte von Kilometern hoch; der größte, Loki Patera, ist ein Lavasee von zweihundert Kilometern Breite."
     },
     {
-     "start": 24.77,
-     "end": 30.19,
+     "start": 25.76,
+     "end": 31.36,
      "text": "Die gelben, orangefarbenen und roten Farben stammen von Schwefel und Schwefelverbindungen."
     },
     {
-     "start": 30.19,
-     "end": 35.19,
+     "start": 31.36,
+     "end": 36.56,
      "text": "Ihre Oberfläche erneuert sich so schnell, dass es auf ihr fast keine Einschlagskrater gibt."
     }
    ]
   },
   "juno": {
    "hash": "bd1c1eaab92d",
-   "duration": 54.71,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 60.08,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 7.82,
+     "start": 0,
+     "end": 7.84,
      "text": "Schauen wir uns zum Schluss Juno an: Diese NASA-Sonde trat im Juli zweitausendsechzehn in die Umlaufbahn um Jupiter ein."
     },
     {
-     "start": 7.82,
-     "end": 17.74,
+     "start": 7.84,
+     "end": 18.72,
      "text": "Sie ist das erste Raumfahrzeug, das so weit von der Sonne entfernt mit Sonnenenergie arbeitet; ihre drei riesigen Paneele nehmen so viel Platz ein wie ein Basketballfeld."
     },
     {
-     "start": 17.74,
-     "end": 24.7,
+     "start": 18.72,
+     "end": 26.24,
      "text": "Zum Schutz vor der Strahlung kreist sie auf einer langen, elliptischen Bahn über die Pole; hier ist diese Bahn, beschleunigt."
     },
     {
-     "start": 24.7,
-     "end": 32.19,
+     "start": 26.24,
+     "end": 34.4,
      "text": "Bei jedem Vorbeiflug fliegt sie einige tausend Kilometer über den Wolken und entdeckte an Jupiters Polen riesige Zyklone."
     },
     {
-     "start": 32.19,
-     "end": 36.01,
+     "start": 34.4,
+     "end": 39.04,
      "text": "Sie zeigte, dass sein Kern größer und diffuser ist als angenommen."
     },
     {
-     "start": 36.01,
-     "end": 42.65,
+     "start": 39.04,
+     "end": 46.48,
      "text": "Es war eine Reise von Galileis vier winzigen Lichtpunkten zu Welten, die unter ihrem Eis Ozeane verbergen."
     },
     {
-     "start": 42.65,
-     "end": 52.91,
+     "start": 46.48,
+     "end": 57.84,
      "text": "Vielleicht sollten wir Leben im Sonnensystem nicht in der Nähe einer wärmenden Sonne suchen, sondern auf diesen kalten, dunklen Monden, die von der Schwerkraft eines Riesen geknetet werden."
     },
     {
-     "start": 52.91,
-     "end": 54.71,
+     "start": 57.84,
+     "end": 60.08,
      "text": "Unsere Jupitertour endet hier."
     }
    ]
   },
   "jupiter": {
    "hash": "82c99a8e0aa1",
-   "duration": 71.35,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 74.16,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 6.9,
+     "start": 0,
+     "end": 6.96,
      "text": "Ein helles, ruhiges Licht am Nachthimmel: mit bloßem Auge kaum von einem gewöhnlichen Stern zu unterscheiden."
     },
     {
-     "start": 6.9,
-     "end": 21.58,
+     "start": 6.96,
+     "end": 22.08,
      "text": "Doch dieses Licht gehört einem Riesen, der zweieinhalbmal so schwer ist wie alle anderen Planeten zusammen; einem Baumeister, der mit seiner Schwerkraft die Bahnen von Kometen beugt und seit Milliarden Jahren die Ordnung des Sonnensystems formt."
     },
     {
-     "start": 21.58,
-     "end": 27.06,
+     "start": 22.08,
+     "end": 28.32,
      "text": "Willkommen im Jupitersystem; dieser Riese ist beinahe wie ein kleines Sonnensystem."
     },
     {
-     "start": 27.06,
-     "end": 33.38,
+     "start": 28.32,
+     "end": 34.64,
      "text": "Mehr als fünfundneunzig Monde kreisen um ihn; schauen wir uns die Bahnen der vier größten von oben an."
     },
     {
-     "start": 33.38,
-     "end": 49.75,
+     "start": 34.64,
+     "end": 51.68,
      "text": "Io umrundet ihn in zwei Tagen, Europa in dreieinhalb Tagen, Ganymed in sieben Tagen und Kallisto in siebzehn Tagen; die inneren drei sind miteinander gekoppelt, und wenn Io vier Umläufe vollendet, vollendet Europa zwei und Ganymed einen."
     },
     {
-     "start": 49.75,
-     "end": 58.25,
+     "start": 51.68,
+     "end": 60.64,
      "text": "Der Planet ist so groß, dass eintausenddreihundert Erden in ihn hineinpassen, und sein Magnetfeld ist die größte Struktur im Sonnensystem."
     },
     {
-     "start": 58.25,
-     "end": 68.43,
+     "start": 60.64,
+     "end": 71,
      "text": "Im Jahr eintausendsechshundertzehn entdeckte Galileo diese vier Monde mit seinem kleinen Teleskop; es war der erste Beweis dafür, dass sich nicht alles um die Erde dreht."
     },
     {
-     "start": 68.43,
-     "end": 71.35,
+     "start": 71,
+     "end": 74.16,
      "text": "Jetzt werden wir diese vier Monde der Reihe nach besuchen."
     }
    ]

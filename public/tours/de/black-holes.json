@@ -1,188 +1,193 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
  "locale": "de",
  "steps": {
   "cygx1": {
    "hash": "87130a0ae587",
-   "duration": 67.83,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 67.2,
    "sentences": [
     {
-     "start": 0.12,
-     "end": 11.94,
+     "start": 0,
+     "end": 11.92,
      "text": "Im Jahr 1783 stellte ein englischer Geistlicher, John Michell, eine kühne Frage: Kann ein Stern so schwer sein, dass nicht einmal Licht ihm entkommt?"
     },
     {
-     "start": 11.94,
-     "end": 23.42,
+     "start": 11.92,
+     "end": 23.36,
      "text": "Zweihundert Jahre lang blieb die Idee eine Kuriosität auf dem Papier; selbst Einsteins Gleichungen konnten die Physiker lange nicht davon überzeugen, dass es solche Objekte wirklich gibt."
     },
     {
-     "start": 23.42,
-     "end": 26.06,
+     "start": 23.36,
+     "end": 26.64,
      "text": "Willkommen zur Tour der schwarzen Löcher."
     },
     {
-     "start": 26.06,
-     "end": 30.44,
+     "start": 26.64,
+     "end": 30.88,
      "text": "Unser Ausgangspunkt ist ein Klassiker: Cygnus X-1."
     },
     {
-     "start": 30.44,
-     "end": 41.35,
+     "start": 30.88,
+     "end": 41.6,
      "text": "Diese Röntgenquelle, die 1964 mit einer Rakete entdeckt wurde, war 1971 das erste Objekt, das als schwarzes Loch identifiziert wurde."
     },
     {
-     "start": 41.35,
-     "end": 54.17,
+     "start": 41.6,
+     "end": 53.24,
      "text": "Sie hat 21 Sonnenmassen und umkreist mit ihrem blauen Überriesen-Begleiter HDE 226868 alle fünfeinhalb Tage den gemeinsamen Massenschwerpunkt."
     },
     {
-     "start": 54.17,
-     "end": 60.43,
+     "start": 53.24,
+     "end": 59.56,
      "text": "Das Gas, das sie ihrem Begleiter entzieht, erhitzt sich in einer hellen Scheibe auf Millionen von Grad."
     },
     {
-     "start": 60.43,
-     "end": 67.83,
+     "start": 59.56,
+     "end": 67.2,
      "text": "Stephen Hawking hatte gewettet, dass dieses Objekt kein schwarzes Loch sei; 1990 gab er seine Niederlage zu."
     }
    ]
   },
   "gaiabh1": {
    "hash": "eeed20938645",
-   "duration": 42.95,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 43.28,
    "sentences": [
     {
-     "start": 0.04,
-     "end": 7.72,
+     "start": 0,
+     "end": 7.84,
      "text": "Gaia BH1, das uns nächstgelegene bekannte schwarze Loch: 1. 560 Lichtjahre."
     },
     {
-     "start": 7.72,
-     "end": 13.36,
+     "start": 7.84,
+     "end": 13.68,
      "text": "Weder hat es eine Scheibe, noch sendet es Röntgenstrahlung aus; es ist völlig still."
     },
     {
-     "start": 13.36,
-     "end": 29.69,
+     "start": 13.68,
+     "end": 30.16,
      "text": "Seine Existenz wurde allein daran erkannt, dass ein sonnenähnlicher Stern alle 186 Tage um einen unsichtbaren Begleiter schwankt. 2022 deckten die präzisen Positionsmessungen des Gaia-Satelliten diese Schwankung auf."
     },
     {
-     "start": 29.69,
-     "end": 37.27,
+     "start": 30.16,
+     "end": 37.68,
      "text": "Es hat 9,6 Sonnenmassen, und der Durchmesser seines Ereignishorizonts beträgt nur 56 km."
     },
     {
-     "start": 37.27,
-     "end": 42.95,
+     "start": 37.68,
+     "end": 43.28,
      "text": "Hier können Sie es nur durch den Gravitationslinseneffekt sehen, der die Sterne im Hintergrund verbiegt."
     }
    ]
   },
   "m87": {
    "hash": "c1e242082ef4",
-   "duration": 56.95,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 61.04,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 6.58,
+     "start": 0,
+     "end": 6.88,
      "text": "Unsere letzte Station, das erste schwarze Loch, das fotografiert wurde: M87 star."
     },
     {
-     "start": 6.58,
-     "end": 13.4,
+     "start": 6.88,
+     "end": 14,
      "text": "Es sitzt im Zentrum der riesigen elliptischen Galaxie Virgo A, 55 Millionen Lichtjahre entfernt."
     },
     {
-     "start": 13.4,
-     "end": 20.24,
+     "start": 14,
+     "end": 21.44,
      "text": "Es hat sechseinhalb Milliarden Sonnenmassen; sein Ereignishorizont ist sechsmal so breit wie Plutos Umlaufbahn."
     },
     {
-     "start": 20.24,
-     "end": 28.73,
+     "start": 21.44,
+     "end": 30.24,
      "text": "Das berühmte Bild des orangefarbenen Rings, das 2019 veröffentlicht wurde, ist das Licht des heißen Gases, das seinen Schatten umgibt."
     },
     {
-     "start": 28.73,
-     "end": 34.97,
+     "start": 30.24,
+     "end": 37.12,
      "text": "Von hier schießt ein Jet mit nahezu Lichtgeschwindigkeit heraus und erstreckt sich über 5. 000 Lichtjahre."
     },
     {
-     "start": 34.97,
-     "end": 45.11,
+     "start": 37.12,
+     "end": 48.24,
      "text": "Mehr als zweihundertdreißig Jahre nach Michells dunklen Sternen auf dem Papier bauten wir ein Teleskop von der Größe der Erde und fotografierten den Schatten eines solchen Objekts."
     },
     {
-     "start": 45.11,
-     "end": 54.41,
+     "start": 48.24,
+     "end": 58.32,
      "text": "Die dunkelsten Objekte des Universums entzünden zugleich seine hellsten Feuer: Quasare, Jets und die Winde, die Galaxien formen, sind ihr Werk."
     },
     {
-     "start": 54.41,
-     "end": 56.95,
+     "start": 58.32,
+     "end": 61.04,
      "text": "Unsere Tour der schwarzen Löcher ist zu Ende."
     }
    ]
   },
   "sgra": {
    "hash": "d73694ac6c56",
-   "duration": 38.55,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 40,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 5.42,
+     "start": 0,
+     "end": 5.6,
      "text": "Jetzt reisen wir ins Herz unserer Galaxie, 26. 000 Lichtjahre weit."
     },
     {
-     "start": 5.42,
-     "end": 13.8,
+     "start": 5.6,
+     "end": 14.32,
      "text": "Sagittarius A star, das supermassereiche schwarze Loch im Zentrum der Milchstraße: 4,3 Millionen Sonnenmassen."
     },
     {
-     "start": 13.8,
-     "end": 24.97,
+     "start": 14.32,
+     "end": 25.44,
      "text": "Die Sterne um es herum ermöglichten uns, seine Masse zu messen; der Stern namens S 2 kommt ihm alle 16 Jahre so nahe, dass er 3 Prozent der Lichtgeschwindigkeit erreicht."
     },
     {
-     "start": 24.97,
-     "end": 34.57,
+     "start": 25.44,
+     "end": 35.6,
      "text": "Diese Beobachtungen brachten 2020 den Nobelpreis für Physik. 2022 bildete das Ereignishorizontteleskop seinen Schatten ab."
     },
     {
-     "start": 34.57,
-     "end": 38.55,
+     "start": 35.6,
+     "end": 40,
      "text": "Im Moment ist es ziemlich still; es verschlingt fast gar keine Materie."
     }
    ]
   },
   "v404": {
    "hash": "7dc7c8715dae",
-   "duration": 46.23,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 44.48,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 5.22,
+     "start": 0,
+     "end": 3.84,
      "text": "V 404 Cygni, eine Röntgennova."
     },
     {
-     "start": 5.22,
-     "end": 16.15,
+     "start": 3.84,
+     "end": 15.44,
      "text": "Meist ist sie still, aber wenn das Gas, das sich von ihrem Begleiter ansammelt, eine Schwelle überschreitet, bricht sie innerhalb weniger Tage aus und wird zur hellsten Röntgenquelle am Himmel."
     },
     {
-     "start": 16.15,
-     "end": 24.17,
+     "start": 15.44,
+     "end": 23.2,
      "text": "Diese Ausbrüche wurden 1938, 56, 89 und 2015 beobachtet."
     },
     {
-     "start": 24.17,
-     "end": 36.71,
+     "start": 23.2,
+     "end": 35.84,
      "text": "Beim Ausbruch 2015 sah man, dass ihre Jets innerhalb von Sekunden die Richtung wechselten; die Drehung des schwarzen Lochs schleppte die Raumzeit mit und ließ die Scheibe wie ein Kreisel taumeln."
     },
     {
-     "start": 36.71,
-     "end": 46.23,
+     "start": 35.84,
+     "end": 44.48,
      "text": "Mit 9 Sonnenmassen ist V 404 Cygni das erste schwarze Loch, dessen Entfernung direkt durch Radioparallaxe gemessen wurde."
     }
    ]

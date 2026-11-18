@@ -1,301 +1,309 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
  "locale": "en",
  "steps": {
   "betelgeuse": {
    "hash": "f19e1f046910",
-   "duration": 34.31,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 35.36,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 4.22,
+     "start": 0,
+     "end": 4.24,
      "text": "Betelgeuse shows what a star nearing the end of its life looks like."
     },
     {
-     "start": 4.22,
-     "end": 13.42,
+     "start": 4.24,
+     "end": 13.84,
      "text": "When the hydrogen in its core ran out, it swelled into a red supergiant; if it were in the Sun's place, it would extend as far as Jupiter's orbit."
     },
     {
-     "start": 13.42,
-     "end": 21.77,
+     "start": 13.84,
+     "end": 22.32,
      "text": "It is only 10 million years old, but because it is about 15 times as massive as the Sun, it used up its fuel very quickly."
     },
     {
-     "start": 21.77,
-     "end": 28.27,
+     "start": 22.32,
+     "end": 29.04,
      "text": "In 2019 it suddenly dimmed; a giant dust cloud that broke away from its surface had veiled it."
     },
     {
-     "start": 28.27,
-     "end": 34.31,
+     "start": 29.04,
+     "end": 35.36,
      "text": "Within the next 100,000 years it will explode as a supernova and be visible even in daylight."
     }
    ]
   },
   "crab": {
    "hash": "26e3e7bfd678",
-   "duration": 40.7,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 40.72,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 4.12,
+     "start": 0,
+     "end": 4.08,
      "text": "Massive stars, on the other hand, die much more noisily."
     },
     {
-     "start": 4.12,
-     "end": 11.71,
+     "start": 4.08,
+     "end": 11.36,
      "text": "The Crab Nebula is the remnant of a supernova recorded by Chinese and Arab astronomers in 1054."
     },
     {
-     "start": 11.71,
-     "end": 15.73,
+     "start": 11.36,
+     "end": 15.6,
      "text": "That explosion was visible even in daylight for three weeks."
     },
     {
-     "start": 15.73,
-     "end": 24.07,
+     "start": 15.6,
+     "end": 24,
      "text": "Today this filamentary cloud, 6 light-years across, continues to expand at 1,500 kilometers per second."
     },
     {
-     "start": 24.07,
-     "end": 31.72,
+     "start": 24,
+     "end": 31.52,
      "text": "At its center is the neutron star left over from the explosion: the Crab Pulsar, spinning 30 times a second."
     },
     {
-     "start": 31.72,
-     "end": 40.7,
+     "start": 31.52,
+     "end": 40.72,
      "text": "The iron, gold, and other heavy elements in the star are scattered into space by explosions like this; the calcium in your body was once inside a star."
     }
    ]
   },
   "cygx1": {
    "hash": "cdb6ce0f0da3",
-   "duration": 48.63,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 52.4,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 4.72,
+     "start": 0,
+     "end": 5.12,
      "text": "And for the most massive stars, the final stop: a black hole."
     },
     {
-     "start": 4.72,
-     "end": 8.2,
+     "start": 5.12,
+     "end": 8.72,
      "text": "Cygnus X-1 is the first black hole to be discovered."
     },
     {
-     "start": 8.2,
-     "end": 18.02,
+     "start": 8.72,
+     "end": 19.04,
      "text": "This object of 21 solar masses draws gas from its blue supergiant companion; the gas heats to millions of degrees in the accretion disk and emits X-rays."
     },
     {
-     "start": 18.02,
-     "end": 22.52,
+     "start": 19.04,
+     "end": 23.68,
      "text": "The two orbit their common center of mass once every 5. 5 days."
     },
     {
-     "start": 22.52,
-     "end": 25.77,
+     "start": 23.68,
+     "end": 27.12,
      "text": "Not even light can escape from inside the event horizon."
     },
     {
-     "start": 25.77,
-     "end": 30.63,
+     "start": 27.12,
+     "end": 33.04,
      "text": "A journey that begins in a gas cloud ends in a hole opened in spacetime itself."
     },
     {
-     "start": 30.63,
-     "end": 39.41,
+     "start": 33.04,
+     "end": 42.16,
      "text": "But the story does not end there: the gas scattered by dying stars mixes into new clouds and one day gives birth to new stars and new planets."
     },
     {
-     "start": 39.41,
-     "end": 46.63,
+     "start": 42.16,
+     "end": 50.08,
      "text": "The Sun is one of these later-generation stars; we too are part of that cycle, a way for the universe to know itself."
     },
     {
-     "start": 46.63,
-     "end": 48.63,
+     "start": 50.08,
+     "end": 52.4,
      "text": "The life of stars tour ends here."
     }
    ]
   },
   "orion": {
    "hash": "c099e3fb9ef6",
-   "duration": 45.75,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 49.6,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 8.98,
+     "start": 0,
+     "end": 9.84,
      "text": "The iron in your blood, the calcium in your bones, the oxygen you are breathing right now: none of it existed in the first moments of the universe."
     },
     {
-     "start": 8.98,
-     "end": 13.92,
+     "start": 9.84,
+     "end": 14.96,
      "text": "All of it was cooked inside stars and scattered into space as those stars died."
     },
     {
-     "start": 13.92,
-     "end": 17.48,
+     "start": 14.96,
+     "end": 19.36,
      "text": "We are made of star stuff, and that is not a metaphor."
     },
     {
-     "start": 17.48,
-     "end": 22.44,
+     "start": 19.36,
+     "end": 24.72,
      "text": "On this tour we will follow the life story of a star, from its birth to its death."
     },
     {
-     "start": 22.44,
-     "end": 30.79,
+     "start": 24.72,
+     "end": 33.84,
      "text": "The story begins in places like this: the Orion Nebula, a giant star factory 1,350 light-years away from us."
     },
     {
-     "start": 30.79,
-     "end": 35.69,
+     "start": 33.84,
+     "end": 38.96,
      "text": "Cold gas and dust collapse under their own weight, forming hundreds of new stars."
     },
     {
-     "start": 35.69,
-     "end": 41.75,
+     "start": 38.96,
+     "end": 45.08,
      "text": "The four bright Trapezium stars at the center illuminate the nebula from within with their ultraviolet light."
     },
     {
-     "start": 41.75,
-     "end": 45.75,
+     "start": 45.08,
+     "end": 49.6,
      "text": "In the sky it is seen with the naked eye as the fuzzy patch in Orion's sword."
     }
    ]
   },
   "pleiades": {
    "hash": "e2181d89a05a",
-   "duration": 34.87,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 35.84,
    "sentences": [
     {
-     "start": 0.1,
-     "end": 4.68,
+     "start": 0,
+     "end": 4.8,
      "text": "Stars are not born alone; they are born together with their siblings."
     },
     {
-     "start": 4.68,
-     "end": 7.9,
+     "start": 4.8,
+     "end": 8,
      "text": "The Pleiades is a young family just like this."
     },
     {
-     "start": 7.9,
-     "end": 13.34,
+     "start": 8,
+     "end": 13.76,
      "text": "It is about 100 million years old; compared with the Sun, it counts as a baby."
     },
     {
-     "start": 13.34,
-     "end": 23.83,
+     "start": 13.76,
+     "end": 24.56,
      "text": "It contains more than 1,000 stars, but with the naked eye usually six or seven of them are seen; that is why, in many cultures, it is known as the Seven Sisters."
     },
     {
-     "start": 23.83,
-     "end": 30.15,
+     "start": 24.56,
+     "end": 30.56,
      "text": "The haze around its bright blue stars is the reflection of a dust cloud that the cluster is passing through."
     },
     {
-     "start": 30.15,
-     "end": 34.87,
+     "start": 30.56,
+     "end": 35.84,
      "text": "Within a few hundred million years these siblings will disperse and mix into the galaxy."
     }
    ]
   },
   "ring": {
    "hash": "163a2b7a5a64",
-   "duration": 34.87,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 35.2,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 6.76,
+     "start": 0,
+     "end": 7.04,
      "text": "Medium-mass stars like the Sun do not explode; they gently blow their outer layers into space."
     },
     {
-     "start": 6.76,
-     "end": 10.36,
+     "start": 7.04,
+     "end": 10.56,
      "text": "The Ring Nebula is the most beautiful example of this."
     },
     {
-     "start": 10.36,
-     "end": 19.21,
+     "start": 10.56,
+     "end": 19.6,
      "text": "This colorful shell, 2,500 light-years away, is the outer layers cast off a few thousand years ago by a dying star."
     },
     {
-     "start": 19.21,
-     "end": 29.61,
+     "start": 19.6,
+     "end": 29.84,
      "text": "The tiny white dot remaining at the center is its core, at a temperature of 120,000 degrees, and it makes the gas shine with its ultraviolet light."
     },
     {
-     "start": 29.61,
-     "end": 34.87,
+     "start": 29.84,
+     "end": 35.2,
      "text": "In about 7 billion years the Sun, too, will become a planetary nebula like this."
     }
    ]
   },
   "sirius": {
    "hash": "8f50d1c57bc1",
-   "duration": 30.87,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 31.12,
    "sentences": [
     {
-     "start": 0.14,
-     "end": 6.04,
+     "start": 0,
+     "end": 6.08,
      "text": "Sirius is the brightest star in the sky; it is only 8. 6 light-years away from us."
     },
     {
-     "start": 6.04,
-     "end": 13.08,
+     "start": 6.08,
+     "end": 13.16,
      "text": "But what really interests us is its small companion Sirius B, which remains in the shadow of its brightness."
     },
     {
-     "start": 13.08,
-     "end": 17.53,
+     "start": 13.16,
+     "end": 17.72,
      "text": "This is a white dwarf: the core left behind by a dead star."
     },
     {
-     "start": 17.53,
-     "end": 23.45,
+     "start": 17.72,
+     "end": 23.6,
      "text": "It has the mass of the Sun and the size of the Earth; a teaspoon of its matter weighs a ton."
     },
     {
-     "start": 23.45,
-     "end": 28.67,
+     "start": 23.6,
+     "end": 28.72,
      "text": "It no longer produces energy, and only cools slowly over billions of years."
     },
     {
-     "start": 28.67,
-     "end": 30.87,
+     "start": 28.72,
+     "end": 31.12,
      "text": "This is the Sun's ultimate fate as well."
     }
    ]
   },
   "sun": {
    "hash": "b77befb576e7",
-   "duration": 32.87,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 31.68,
    "sentences": [
     {
-     "start": 0.02,
-     "end": 5.74,
+     "start": 0,
+     "end": 5.28,
      "text": "The longest and calmest period of a star's life is the main-sequence phase."
     },
     {
-     "start": 5.74,
-     "end": 18.55,
+     "start": 5.28,
+     "end": 17.52,
      "text": "The Sun is in exactly this phase: for 4. 5 billion years it has been converting hydrogen into helium in its core, and it will continue to do so for about 5 billion years more."
     },
     {
-     "start": 18.55,
-     "end": 22.77,
+     "start": 17.52,
+     "end": 21.92,
      "text": "Every second it burns 600 million tons of hydrogen."
     },
     {
-     "start": 22.77,
-     "end": 29.59,
+     "start": 21.92,
+     "end": 28.48,
      "text": "This delicate balance between the pressure pushing outward and the gravity pulling inward keeps the star stable."
     },
     {
-     "start": 29.59,
-     "end": 32.87,
+     "start": 28.48,
+     "end": 31.68,
      "text": "When this balance breaks down, old age begins."
     }
    ]

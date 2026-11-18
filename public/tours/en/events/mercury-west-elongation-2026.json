@@ -1,34 +1,35 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
  "locale": "en",
  "steps": {
   "mercelong": {
    "hash": "ef5cc4ed7377",
-   "duration": 33.91,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 35.84,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 6.28,
+     "start": 0,
+     "end": 6.56,
      "text": "Mercury orbits so close to the Sun that we can only see it in twilight, low near the horizon."
     },
     {
-     "start": 6.28,
-     "end": 15.52,
+     "start": 6.56,
+     "end": 16.08,
      "text": "This morning it stands nineteen and a half degrees west of the Sun, at its greatest angular distance: it appears on the eastern horizon before sunrise."
     },
     {
-     "start": 15.52,
-     "end": 20.41,
+     "start": 16.08,
+     "end": 21.28,
      "text": "Elongation is the moment we look at the inner planet's orbit tangentially from Earth."
     },
     {
-     "start": 20.41,
-     "end": 27.05,
+     "start": 21.28,
+     "end": 28.72,
      "text": "Seen from above the geometry is clear: the Sun–Mercury line falls perpendicular to the line of sight from Earth."
     },
     {
-     "start": 27.05,
-     "end": 33.91,
+     "start": 28.72,
+     "end": 35.84,
      "text": "Mercury repeats this cycle roughly every one hundred sixteen days; the next evening elongation comes in January."
     }
    ]

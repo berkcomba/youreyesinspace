@@ -1,193 +1,198 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
  "locale": "en",
  "steps": {
   "cygx1": {
    "hash": "e97e2e281986",
-   "duration": 55.35,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 58.8,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 9.6,
+     "start": 0,
+     "end": 10.72,
      "text": "In 1783 an English clergyman, John Michell, asked a bold question: could a star be so heavy that not even light could escape from it?"
     },
     {
-     "start": 9.6,
-     "end": 18.92,
+     "start": 10.72,
+     "end": 21.12,
      "text": "For two hundred years the idea remained a curiosity on paper; even Einstein's equations long failed to convince physicists that such objects really exist."
     },
     {
-     "start": 18.92,
-     "end": 20.94,
+     "start": 21.12,
+     "end": 23.2,
      "text": "Welcome to the black holes tour."
     },
     {
-     "start": 20.94,
-     "end": 24.54,
+     "start": 23.2,
+     "end": 26.8,
      "text": "Our starting point is a classic: Cygnus X-1."
     },
     {
-     "start": 24.54,
-     "end": 32.91,
+     "start": 26.8,
+     "end": 35.32,
      "text": "This X-ray source, discovered with a rocket in 1964, became the first object identified as a black hole in 1971."
     },
     {
-     "start": 32.91,
-     "end": 44.33,
+     "start": 35.32,
+     "end": 47.2,
      "text": "It is 21 solar masses, and once every five and a half days it orbits their common center of mass together with its blue supergiant companion HDE 226868."
     },
     {
-     "start": 44.33,
-     "end": 48.79,
+     "start": 47.2,
+     "end": 52.24,
      "text": "Gas drawn from its companion heats to millions of degrees in a bright disk."
     },
     {
-     "start": 48.79,
-     "end": 55.35,
+     "start": 52.24,
+     "end": 58.8,
      "text": "Stephen Hawking had bet that this object was not a black hole; in 1990 he conceded his defeat."
     }
    ]
   },
   "gaiabh1": {
    "hash": "9c3309d84e06",
-   "duration": 38.55,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 37.76,
    "sentences": [
     {
-     "start": 0.04,
-     "end": 7.14,
+     "start": 0,
+     "end": 7.04,
      "text": "Gaia BH1, the closest known black hole to us: 1,560 light-years."
     },
     {
-     "start": 7.14,
-     "end": 12.12,
+     "start": 7.04,
+     "end": 12.48,
      "text": "It has neither a disk nor does it emit X-rays; it is completely silent."
     },
     {
-     "start": 12.12,
-     "end": 20.49,
+     "start": 12.48,
+     "end": 20.56,
      "text": "Its existence was understood only from a Sun-like star wobbling around an invisible companion once every 186 days."
     },
     {
-     "start": 20.49,
-     "end": 33.75,
+     "start": 20.56,
+     "end": 32.8,
      "text": "This wobble was revealed in 2022 by the precise position measurements of the Gaia satellite. It is 9. 6 solar masses, and the diameter of its event horizon is only 56 kilometers."
     },
     {
-     "start": 33.75,
-     "end": 38.55,
+     "start": 32.8,
+     "end": 37.76,
      "text": "Here you can see it only by the gravitational lensing that bends the stars in the background."
     }
    ]
   },
   "m87": {
    "hash": "740a9430da51",
-   "duration": 48.63,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 52.32,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 5.62,
+     "start": 0,
+     "end": 5.68,
      "text": "Our last stop, the first black hole to be photographed: M87 star."
     },
     {
-     "start": 5.62,
-     "end": 11.88,
+     "start": 5.68,
+     "end": 12.52,
      "text": "It sits at the center of the giant elliptical galaxy Virgo A, 55 million light-years away."
     },
     {
-     "start": 11.88,
-     "end": 18.18,
+     "start": 12.52,
+     "end": 19.68,
      "text": "It is six and a half billion solar masses; its event horizon is six times wider than Pluto's orbit."
     },
     {
-     "start": 18.18,
-     "end": 24.75,
+     "start": 19.68,
+     "end": 26.2,
      "text": "The famous orange ring image published in 2019 is the light of the hot gas surrounding its shadow."
     },
     {
-     "start": 24.75,
-     "end": 30.35,
+     "start": 26.2,
+     "end": 32.56,
      "text": "From here a jet shoots out at nearly the speed of light and extends for 5,000 light-years."
     },
     {
-     "start": 30.35,
-     "end": 38.53,
+     "start": 32.56,
+     "end": 41.36,
      "text": "More than two hundred and thirty years after Michell's dark stars on paper, we built a telescope the size of the Earth and photographed the shadow of one."
     },
     {
-     "start": 38.53,
-     "end": 46.39,
+     "start": 41.36,
+     "end": 50,
      "text": "The darkest objects in the universe also light its brightest fires: quasars, jets and the winds that shape galaxies are their work."
     },
     {
-     "start": 46.39,
-     "end": 48.63,
+     "start": 50,
+     "end": 52.32,
      "text": "Our black holes tour has come to an end."
     }
    ]
   },
   "sgra": {
    "hash": "49a9c55bfd47",
-   "duration": 38.87,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 37.44,
    "sentences": [
     {
-     "start": 0.2,
-     "end": 5.4,
+     "start": 0,
+     "end": 5.28,
      "text": "Now we're going to the heart of our galaxy, 26,000 light-years away."
     },
     {
-     "start": 5.4,
-     "end": 13.86,
+     "start": 5.28,
+     "end": 13.76,
      "text": "Sagittarius A star, the supermassive black hole at the center of the Milky Way: 4. 3 million solar masses."
     },
     {
-     "start": 13.86,
-     "end": 25.57,
+     "start": 13.76,
+     "end": 24.56,
      "text": "The stars around it allowed us to measure its mass; the star named S2 approaches it so closely once every 16 years that it reaches 3 percent of the speed of light."
     },
     {
-     "start": 25.57,
-     "end": 29.83,
+     "start": 24.56,
+     "end": 28.48,
      "text": "These observations brought the Nobel Prize in Physics in 2020."
     },
     {
-     "start": 29.83,
-     "end": 34.73,
+     "start": 28.48,
+     "end": 33.04,
      "text": "In 2022 the Event Horizon Telescope imaged its shadow."
     },
     {
-     "start": 34.73,
-     "end": 38.87,
+     "start": 33.04,
+     "end": 37.44,
      "text": "Right now it is quite quiet; it is swallowing almost no matter."
     }
    ]
   },
   "v404": {
    "hash": "75fffd8dd637",
-   "duration": 41.43,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 38.48,
    "sentences": [
     {
-     "start": 0.18,
-     "end": 4.24,
+     "start": 0,
+     "end": 2.84,
      "text": "V404 Cygni, an X-ray nova."
     },
     {
-     "start": 4.24,
-     "end": 15.4,
+     "start": 2.84,
+     "end": 14.24,
      "text": "It is silent most of the time, but when gas accumulated from its companion crosses a threshold, it erupts within a few days and becomes the brightest X-ray source in the sky."
     },
     {
-     "start": 15.4,
-     "end": 22.95,
+     "start": 14.24,
+     "end": 21,
      "text": "These outbursts were observed in 1938, 1956, 1989, and 2015."
     },
     {
-     "start": 22.95,
-     "end": 34.49,
+     "start": 21,
+     "end": 31.68,
      "text": "During the 2015 outburst, its jets were seen to change direction within seconds; the black hole's spin was dragging spacetime and wobbling the disk like a spinning top."
     },
     {
-     "start": 34.49,
-     "end": 41.43,
+     "start": 31.68,
+     "end": 38.48,
      "text": "It is 9 solar masses, and it is the first black hole whose distance was measured directly by radio parallax."
     }
    ]

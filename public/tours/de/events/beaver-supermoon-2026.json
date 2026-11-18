@@ -1,39 +1,40 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
  "locale": "de",
  "steps": {
   "supermoon": {
    "hash": "390e4d20c340",
-   "duration": 39.35,
+   "voice": "elevenlabs:eleven_v4:kkJxCnlRCckmfFvzDW5Q",
+   "duration": 41.2,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 1.72,
+     "start": 0,
+     "end": 1.76,
      "text": "Der Vollmond am 24."
     },
     {
-     "start": 1.72,
-     "end": 8.82,
+     "start": 1.76,
+     "end": 8.88,
      "text": "November ist der größte des Jahres: Der Mond wird nur wenige Stunden nach dem erdnächsten Punkt seiner Bahn voll."
     },
     {
-     "start": 8.82,
-     "end": 18.1,
+     "start": 8.88,
+     "end": 18.16,
      "text": "Die Mondbahn ist kein Kreis, sondern eine Ellipse; die Entfernung schwankt zwischen dreihundertsechsundfünfzigtausend und vierhundertsechstausend Kilometern."
     },
     {
-     "start": 18.1,
-     "end": 25.49,
+     "start": 18.16,
+     "end": 25.92,
      "text": "Ein Vollmond nahe dem Perigäum erscheint vierzehn Prozent größer und dreißig Prozent heller als einer im Apogäum."
     },
     {
-     "start": 25.49,
-     "end": 33.37,
+     "start": 25.92,
+     "end": 34.56,
      "text": "In der nordamerikanischen Tradition heißt der November-Vollmond Bibermond: die Zeit, in der Biber ihre Burgen für den Winter bauen."
     },
     {
-     "start": 33.37,
-     "end": 39.35,
+     "start": 34.56,
+     "end": 41.2,
      "text": "Schauen wir jetzt von der Erde aus: die Sonne direkt hinter uns, vor uns der voll beleuchtete Mond."
     }
    ]

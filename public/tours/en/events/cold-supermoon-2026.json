@@ -1,34 +1,35 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
  "locale": "en",
  "steps": {
   "coldmoon": {
    "hash": "8c245fe2c37c",
-   "duration": 31.03,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 32.16,
    "sentences": [
     {
-     "start": 0.04,
-     "end": 7.76,
+     "start": 0,
+     "end": 7.92,
      "text": "December's full moon also falls near perigee: slightly smaller than November's, but still one of the largest of the year."
     },
     {
-     "start": 7.76,
-     "end": 12.2,
+     "start": 7.92,
+     "end": 12.56,
      "text": "The Moon is now less than three hundred sixty thousand kilometres from Earth."
     },
     {
-     "start": 12.2,
-     "end": 20.97,
+     "start": 12.56,
+     "end": 21.44,
      "text": "The winter full moon is the one that climbs highest in the northern sky; in the days when the Sun stays low, the Moon opposite it rides high."
     },
     {
-     "start": 20.97,
-     "end": 26.47,
+     "start": 21.44,
+     "end": 27.44,
      "text": "The December full moon is called the Cold Moon; it marks the start of the long winter nights."
     },
     {
-     "start": 26.47,
-     "end": 31.03,
+     "start": 27.44,
+     "end": 32.16,
      "text": "Seen from Earth it shines in Gemini, right beside the radiant of the Geminids."
     }
    ]

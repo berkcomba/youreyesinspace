@@ -1,225 +1,232 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
  "locale": "en",
  "steps": {
   "hubble": {
    "hash": "2232aa075744",
-   "duration": 34.15,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 32.88,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 5.78,
+     "start": 0,
+     "end": 5.36,
      "text": "The Hubble Space Telescope has been changing our view of the universe since 1990."
     },
     {
-     "start": 5.78,
-     "end": 15.44,
+     "start": 5.36,
+     "end": 14.72,
      "text": "It orbits at an altitude of 540 kilometers and, with its 2. 4-meter mirror, captures images free of the atmosphere's blur."
     },
     {
-     "start": 15.44,
-     "end": 23.69,
+     "start": 14.72,
+     "end": 22.08,
      "text": "Its first images were blurry; a small flaw in its mirror was corrected in orbit by astronauts in 1993."
     },
     {
-     "start": 23.69,
-     "end": 34.15,
+     "start": 22.08,
+     "end": 32.88,
      "text": "It measured the age of the universe, contributed to the discovery of dark energy, and with its Deep Field images showed thousands of galaxies in a spot of sky that appeared empty."
     }
    ]
   },
   "iss": {
    "hash": "e70ead7e3cdd",
-   "duration": 51.19,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 54.4,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 5.6,
+     "start": 0,
+     "end": 6.08,
      "text": "Our ancestors sat around the fire, looked up at the stars and thought they could never reach them."
     },
     {
-     "start": 5.6,
-     "end": 18.66,
+     "start": 6.08,
+     "end": 19.44,
      "text": "In 1957 Sputnik began to circle the Earth; ever since, we have been sending machines that carry our eyes, our ears and our curiosity to every corner of the Solar System, and even beyond it."
     },
     {
-     "start": 18.66,
-     "end": 27.21,
+     "start": 19.44,
+     "end": 28.4,
      "text": "We begin this tour, on which we will visit humanity's ambassadors in space, from Earth orbit: before you is the International Space Station."
     },
     {
-     "start": 27.21,
-     "end": 37.43,
+     "start": 28.4,
+     "end": 38.8,
      "text": "At an altitude of four hundred kilometers, it orbits at twenty-eight thousand kilometers an hour and completes a circuit of Earth in ninety minutes; here is that circuit, sped up."
     },
     {
-     "start": 37.43,
-     "end": 40.21,
+     "start": 38.8,
+     "end": 42.16,
      "text": "Astronauts see sixteen sunrises a day."
     },
     {
-     "start": 40.21,
-     "end": 44.43,
+     "start": 42.16,
+     "end": 46.72,
      "text": "It is the size of a football field and weighs four hundred and twenty tons."
     },
     {
-     "start": 44.43,
-     "end": 51.19,
+     "start": 46.72,
+     "end": 54.4,
      "text": "Humans have lived aboard it continuously since November two thousand; this is humanity's longest continuous presence in space."
     }
    ]
   },
   "jwst": {
    "hash": "5a0af0a0e3a4",
-   "duration": 35.12,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 35.04,
    "sentences": [
     {
      "start": 0,
-     "end": 17.944,
+     "end": 18.64,
      "text": "The James Webb Space Telescope orbits around Lagrange point 2, 1. 5 million kilometers from Earth on the side opposite the Sun. Its 6. 5-meter gold-coated mirror is made of 18 hexagonal segments, and it was folded up on Christmas 2021, when it was launched."
     },
     {
-     "start": 17.944,
-     "end": 25.694,
+     "start": 18.64,
+     "end": 26.72,
      "text": "Because it sees in infrared light, it is cooled to minus 233 degrees by a sunshield the size of a tennis court."
     },
     {
-     "start": 25.694,
-     "end": 35.12,
+     "start": 26.72,
+     "end": 35.04,
      "text": "It is studying the universe's first galaxies, the interiors of the dust clouds where stars are born, and the atmospheres of exoplanets."
     }
    ]
   },
   "newhorizons": {
    "hash": "3eb76c332d9a",
-   "duration": 32.01,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 32.24,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 8.06,
+     "start": 0,
+     "end": 8.08,
      "text": "New Horizons was the fastest spacecraft to leave Earth in 2006; it crossed the Moon's distance in 9 hours."
     },
     {
-     "start": 8.06,
-     "end": 19.48,
+     "start": 8.08,
+     "end": 20,
      "text": "After a journey of 9. 5 years, it flew past Pluto in July 2015 and turned a blurry dot into a real world, with its mountains, glaciers, and heart."
     },
     {
-     "start": 19.48,
-     "end": 28.56,
+     "start": 20,
+     "end": 28.52,
      "text": "Then in 2019 it visited snowman-shaped Arrokoth in the Kuiper Belt; this is the most distant object a spacecraft has studied."
     },
     {
-     "start": 28.56,
-     "end": 32.01,
+     "start": 28.52,
+     "end": 32.24,
      "text": "It is still working and measuring the outer limits of the Solar System."
     }
    ]
   },
   "parker": {
    "hash": "148251dd5f80",
-   "duration": 38.07,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 40.64,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 4.04,
+     "start": 0,
+     "end": 4.32,
      "text": "The Parker Solar Probe is the first spacecraft to touch the Sun."
     },
     {
-     "start": 4.04,
-     "end": 12.72,
+     "start": 4.32,
+     "end": 13.12,
      "text": "It was launched in two thousand eighteen and, using Venus's gravity, tightened its orbit step by step; let's watch its orbit from above."
     },
     {
-     "start": 12.72,
-     "end": 25.43,
+     "start": 13.12,
+     "end": 26.8,
      "text": "In December two thousand twenty-four it came within six million nine hundred thousand kilometers of the Sun's surface; at that moment, at six hundred and ninety thousand kilometers an hour, it became the fastest human-made object."
     },
     {
-     "start": 25.43,
-     "end": 32.87,
+     "start": 26.8,
+     "end": 34.56,
      "text": "Its eleven-centimeter carbon shield withstands one thousand four hundred degrees, while the instruments behind it stay at room temperature."
     },
     {
-     "start": 32.87,
-     "end": 38.07,
+     "start": 34.56,
+     "end": 40.64,
      "text": "Its purpose is to figure out why the Sun's outer atmosphere is hundreds of times hotter than its surface."
     }
    ]
   },
   "voyager1": {
    "hash": "b0ce764d33d0",
-   "duration": 33.75,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 34.16,
    "sentences": [
     {
-     "start": 0.14,
-     "end": 3.84,
+     "start": 0,
+     "end": 3.76,
      "text": "Voyager 1 is the most distant human-made object."
     },
     {
-     "start": 3.84,
-     "end": 11.6,
+     "start": 3.76,
+     "end": 11.44,
      "text": "It was launched in 1977; it visited Jupiter and Saturn, and gave up Pluto in order to approach Titan."
     },
     {
-     "start": 11.6,
-     "end": 19.17,
+     "start": 11.44,
+     "end": 18.88,
      "text": "In 2012, by crossing the boundary of the solar wind, it became the first spacecraft to enter interstellar space."
     },
     {
-     "start": 19.17,
-     "end": 26.05,
+     "start": 18.88,
+     "end": 25.92,
      "text": "Today it is 25 billion kilometers away; its signals take more than 22 hours to reach us."
     },
     {
-     "start": 26.05,
-     "end": 33.75,
+     "start": 25.92,
+     "end": 34.16,
      "text": "Aboard it is a golden record carrying greetings in 55 languages and the sounds of Earth: for someone who may find it one day."
     }
    ]
   },
   "voyager2": {
    "hash": "1ac54ac59ea7",
-   "duration": 50.87,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 55.36,
    "sentences": [
     {
-     "start": 0.08,
-     "end": 4.94,
+     "start": 0,
+     "end": 5.16,
      "text": "And Voyager Two is the only spacecraft to visit all four outer planets."
     },
     {
-     "start": 4.94,
-     "end": 12.98,
+     "start": 5.16,
+     "end": 13.32,
      "text": "It was launched sixteen days before its sibling, but on a slower route it flew past Jupiter, Saturn, Uranus, and Neptune."
     },
     {
-     "start": 12.98,
-     "end": 18.98,
+     "start": 13.32,
+     "end": 19.52,
      "text": "Most of what we know about Uranus and Neptune still comes from its flybys in nineteen eighty-six and eighty-nine."
     },
     {
-     "start": 18.98,
-     "end": 22.18,
+     "start": 19.52,
+     "end": 23.28,
      "text": "In two thousand eighteen it reached interstellar space."
     },
     {
-     "start": 22.18,
-     "end": 31.55,
+     "start": 23.28,
+     "end": 33.6,
      "text": "The plutonium batteries of both Voyagers are weakening; in the twenty-thirties they will fall silent, but for billions of years they will continue to glide among the stars."
     },
     {
-     "start": 31.55,
-     "end": 37.69,
+     "start": 33.6,
+     "end": 40.64,
      "text": "Even when the mountains of Earth have worn away and the continents have drifted, the golden records will still be out there."
     },
     {
-     "start": 37.69,
-     "end": 49.41,
+     "start": 40.64,
+     "end": 53.68,
      "text": "Like a message in a bottle cast into the cosmic ocean, they will say one thing: once, here, on the third planet of a star called the Sun, there lived a species that wondered about the stars."
     },
     {
-     "start": 49.41,
-     "end": 50.87,
+     "start": 53.68,
+     "end": 55.36,
      "text": "Our tour ends here."
     }
    ]

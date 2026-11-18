@@ -1,34 +1,35 @@
 {
- "voice": "altair",
+ "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
  "locale": "en",
  "steps": {
   "staurids": {
    "hash": "8b3a118f616e",
-   "duration": 32.63,
+   "voice": "elevenlabs:eleven_v4:bspuYFxLiTNbJCeVTjFX",
+   "duration": 34.64,
    "sentences": [
     {
-     "start": 0.06,
-     "end": 7.58,
+     "start": 0,
+     "end": 7.76,
      "text": "The Southern Taurids come from a broad dust stream shed over centuries by Encke, the comet with the shortest known period."
     },
     {
-     "start": 7.58,
-     "end": 13.42,
+     "start": 7.76,
+     "end": 14.08,
      "text": "Encke circles the Sun in only three point three years; it is now in the outer half of its orbit."
     },
     {
-     "start": 13.42,
-     "end": 21.59,
+     "start": 14.08,
+     "end": 22.48,
      "text": "Earth takes weeks to pass through this wide stream; the particles enter the atmosphere relatively slowly, at twenty-eight kilometres a second."
     },
     {
-     "start": 21.59,
-     "end": 27.31,
+     "start": 22.48,
+     "end": 28.8,
      "text": "That is why the Taurids produce few but long-lasting meteors, often as bright as fireballs."
     },
     {
-     "start": 27.31,
-     "end": 32.63,
+     "start": 28.8,
+     "end": 34.64,
      "text": "The radiant lies in Taurus; this year the late moonrise keeps the sky dark until midnight."
     }
    ]
