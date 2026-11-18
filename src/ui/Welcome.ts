@@ -202,6 +202,9 @@ export class Welcome {
     this.driftTimer = window.setTimeout(() => { if (this.page === page && this.open) h.camera.autoOrbit = DRIFT; }, seconds * 1000 + 200);
   }
 
+  /** called once the welcome has closed (the next one-time card may follow) */
+  onFinish: (() => void) | null = null;
+
   /** Close for good: the flag is set, the app is handed back on the circling backdrop. */
   finish(): void {
     if (this.root.hidden) return;
@@ -220,5 +223,8 @@ export class Welcome {
     // the last page already pulled back to the system; from any other page, fly there now
     if (this.pages[this.page]?.dataset.shot !== 'system') h.showBackdrop(true);
     this.page = -1;
+    const next = this.onFinish;
+    this.onFinish = null;
+    next?.();
   }
 }

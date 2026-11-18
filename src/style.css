@@ -1360,3 +1360,91 @@ mtext { font-family: var(--font); }
   .ac-title { font-size: 20px; }
   .lw-readout { grid-template-columns: 1fr; }
 }
+
+/* ---------- Voyager 1 one light-day celebration (VoyagerCelebration.ts) ---------- */
+.v1day {
+  position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 16px;
+  background: radial-gradient(ellipse at 50% 40%, rgba(9, 11, 15, 0.55), rgba(9, 11, 15, 0.88));
+  animation: fade-in 0.4s ease both;
+}
+.v1day.leaving { opacity: 0; transition: opacity 0.25s ease; }
+.v1day-confetti { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: auto; }
+.v1day-card {
+  position: relative; width: min(720px, 100%); max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior: contain;
+  background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55); color: var(--text-2);
+  animation: v1day-in 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes v1day-in { from { opacity: 0; transform: translateY(18px) scale(0.985); } to { opacity: 1; transform: none; } }
+.v1day-close {
+  position: absolute; top: 10px; right: 12px; z-index: 2; width: 30px; height: 30px; padding: 0; line-height: 1;
+  font-size: 20px; background: rgba(9, 11, 15, 0.55); border: 1px solid transparent; color: var(--text);
+}
+.v1day-close:hover { border-color: var(--accent); }
+.v1day-hero { position: relative; display: flex; flex-direction: column; background: radial-gradient(ellipse at 80% 0%, rgba(189, 155, 108, 0.14), transparent 60%); }
+/* Earth ← signal ← Voyager 1: a pulse leaves the probe and takes the whole loop to arrive */
+.v1day-signal { display: block; width: calc(100% - 64px); margin: 30px 32px 0; height: auto; overflow: visible; }
+.v1day-signal text { fill: var(--text-3); font: 12px var(--font); }
+.v1day-signal .v1day-lt { fill: var(--accent); font: italic 15px var(--serif); }
+.v1day-path { stroke: var(--border-strong); stroke-width: 1; stroke-dasharray: 2 5; }
+.v1day-earth { fill: #6f9fd8; }
+.v1day-probe circle { fill: var(--text); }
+.v1day-probe .v1day-ring { fill: none; stroke: var(--accent); stroke-width: 1; opacity: 0.6; }
+.v1day-pulse { fill: var(--accent); filter: drop-shadow(0 0 5px var(--accent)); animation: v1day-signal 3.6s cubic-bezier(0.45, 0, 0.55, 1) infinite; }
+@keyframes v1day-signal { 0% { transform: translateX(0); opacity: 0; } 8% { opacity: 1; } 92% { opacity: 1; } 100% { transform: translateX(-520px); opacity: 0; } }
+.v1day-hero-row { display: grid; grid-template-columns: 1fr 220px; align-items: center; gap: 8px; padding-right: 18px; }
+.v1day-hero-text { position: relative; z-index: 1; padding: 18px 0 6px 32px; }
+/* the probe itself (ModelSpin): turns slowly, drag to turn it */
+.v1day-model { position: relative; width: 220px; height: 220px; cursor: grab; touch-action: none; opacity: 0; transition: opacity 0.6s ease; }
+.v1day-model.ready { opacity: 1; }
+.v1day-model:active { cursor: grabbing; }
+.v1day-model canvas { width: 100%; height: 100%; display: block; }
+.v1day-model::after { content: ''; position: absolute; inset: 18%; z-index: -1; border-radius: 50%; background: radial-gradient(circle, rgba(189, 155, 108, 0.12), transparent 70%); }
+.v1day-kicker { font-family: var(--serif); font-style: italic; font-size: 14px; color: var(--accent); margin-bottom: 8px; }
+.v1day-hero h2 {
+  margin: 0 0 12px; font-family: var(--serif); font-weight: 400; color: var(--text);
+  font-size: clamp(28px, 4.6vw, 42px); line-height: 1.06; text-wrap: balance;
+}
+.v1day-hero p { margin: 0; font-family: var(--serif); font-size: 16px; line-height: 1.5; max-width: 52ch; }
+.v1day-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px 24px; margin: 18px 32px 6px; padding: 16px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.v1day-stats dt { font-family: var(--serif); font-size: 26px; line-height: 1.05; color: var(--text); }
+.v1day-stats dd { margin: 4px 0 0; font-size: 12px; color: var(--text-3); }
+.v1day-record { display: grid; grid-template-columns: 132px 1fr; gap: 20px; margin: 22px 32px; align-items: start; }
+.v1day-record > img { width: 132px; height: 132px; object-fit: cover; border-radius: 50%; border: 1px solid var(--border-strong); box-shadow: 0 0 0 6px var(--accent-soft); }
+.v1day-record h3 { margin: 0 0 6px; font-family: var(--serif); font-weight: 400; font-size: 20px; color: var(--text); }
+.v1day-record-note { margin: 0 0 14px; font-size: 13px; color: var(--text-3); }
+.v1day-player { display: flex; gap: 14px; align-items: center; }
+.v1day-play { flex: none; width: 48px; height: 48px; border-radius: 50%; padding: 0; display: grid; place-items: center; border: 1px solid var(--accent); background: var(--accent-soft); }
+.v1day-play:hover { background: rgba(189, 155, 108, 0.28); }
+.v1day-play-icon { width: 0; height: 0; margin-left: 4px; border-left: 14px solid var(--text); border-top: 9px solid transparent; border-bottom: 9px solid transparent; }
+.v1day-play.playing .v1day-play-icon { margin-left: 0; width: 14px; height: 16px; border: 0; border-left: 4px solid var(--text); border-right: 4px solid var(--text); }
+.v1day-play.playing { animation: v1day-pulse 1.6s ease-in-out infinite; }
+@keyframes v1day-pulse { 50% { box-shadow: 0 0 0 8px rgba(189, 155, 108, 0.12); } }
+.v1day-quote { margin: 0; font-family: var(--serif); font-style: italic; font-size: 18px; line-height: 1.35; color: var(--text); }
+.v1day-speaker { margin-top: 4px; font-size: 12px; color: var(--text-3); }
+.v1day-langs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.v1day-langs button { height: 26px; padding: 0 10px; font-size: 12px; }
+.v1day-story { list-style: none; margin: 4px 32px 0; padding: 0; position: relative; }
+.v1day-story::before { content: ''; position: absolute; left: 6px; top: 8px; bottom: 8px; width: 1px; background: var(--border-strong); }
+.v1day-story li { position: relative; display: grid; grid-template-columns: 128px 1fr; gap: 2px 16px; padding: 8px 0 8px 24px; font-size: 13px; }
+.v1day-story li::before { content: ''; position: absolute; left: 2px; top: 13px; width: 9px; height: 9px; border-radius: 50%; background: var(--surface); border: 1px solid var(--text-3); }
+.v1day-story li.now::before { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+.v1day-story time { grid-row: span 2; font-family: var(--mono); font-size: 11.5px; color: var(--text-3); padding-top: 2px; }
+.v1day-story b { font-weight: 600; color: var(--text); }
+.v1day-story li.now b, .v1day-story li.now time { color: var(--accent); }
+.v1day-actions { display: flex; gap: 10px; margin: 22px 32px 0; flex-wrap: wrap; }
+.v1day-actions button { height: 34px; padding: 0 16px; }
+.v1day-credit { margin: 14px 32px 22px; font-size: 11px; color: var(--text-3); }
+@media (max-width: 600px) {
+  .v1day-hero-row { grid-template-columns: 1fr; padding-right: 0; }
+  .v1day-model { order: -1; width: 100%; height: 170px; margin-top: 4px; }
+  .v1day-hero-text { padding: 4px 18px 4px; }
+  .v1day-signal { width: calc(100% - 36px); margin: 26px 18px 0; }
+  .v1day-stats, .v1day-record, .v1day-story, .v1day-actions, .v1day-credit { margin-left: 18px; margin-right: 18px; }
+  .v1day-stats { grid-template-columns: 1fr 1fr; }
+  .v1day-record { grid-template-columns: 1fr; }
+  .v1day-record > img { width: 96px; height: 96px; }
+  .v1day-story li { grid-template-columns: 1fr; }
+  .v1day-story time { grid-row: auto; }
+}
+@media (prefers-reduced-motion: reduce) { .v1day, .v1day-card, .v1day-play.playing, .v1day-pulse { animation: none; } }

@@ -69,6 +69,7 @@ import { SmallBodyCatalog } from './data/SmallBodies';
 import { applyEventMeta, beacon, eventUrl, parseLaunch, type LaunchParams } from './app/share';
 import { EmbedUI } from './ui/EmbedUI';
 import { Welcome } from './ui/Welcome';
+import { VoyagerCelebration } from './ui/VoyagerCelebration';
 import { Music } from './audio/Music';
 import { TOURS } from './data/tours';
 import { C_KM_S } from './core/constants';
@@ -2320,6 +2321,12 @@ class App implements UIHost {
   }
 
   /** The current event scene again from the start (embed "replay") */
+  /** Play an Events-tab scene by id (the one-time cards' "watch" buttons) */
+  playEventById(id: string): void {
+    const e = eventById(id);
+    if (e) this.playEvent(e);
+  }
+
   replayEvent(): void {
     const e = this.currentEvent ?? this.lastEvent;
     if (e) this.playEvent(e);
@@ -3805,6 +3812,13 @@ async function boot(): Promise<void> {
     }
     app.ready();
     if (intro) app.welcome.start();
+    // Voyager 1 one light-day from Earth: a one-time card until 23 November (after the welcome, if any)
+    // (not over the milestone's own scene: a link straight to it is already the celebration)
+    if (!stream && partyCode === null && !launch.embed && launch.event !== 'voyager1-light-day-2026' && VoyagerCelebration.due) {
+      const card = new VoyagerCelebration(app);
+      if (intro) app.welcome.onFinish = () => window.setTimeout(() => card.show(), 1500);
+      else window.setTimeout(() => card.show(), 1800);
+    }
     if (partyCode !== null) void openParty(partyCode);
   } catch (err) {
     console.error(err);
