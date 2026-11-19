@@ -107,10 +107,18 @@ export interface TourCard {
 
 /** Per-step timing produced by scripts/tts-tours.mjs */
 interface StepTiming {
-  /** hash of the narrated text — doubles as the cache-buster of the clip */
+  /** hash of the narrated text — with the voice, the cache-buster of the clip */
   hash?: string;
+  /** engine/voice that spoke the clip; a re-voiced clip keeps its text hash, so this is in the URL too */
+  voice?: string;
   duration: number;
   sentences: { start: number; end: number; text: string }[];
+}
+/** the clip URL's cache-buster: text hash plus the voice's id (the last part of "engine:model:voice") */
+function clipVersion(t: StepTiming | null | undefined): string | undefined {
+  if (!t?.hash) return undefined;
+  const v = t.voice?.split(':').pop();
+  return v ? `${t.hash}-${v.slice(0, 8)}` : t.hash;
 }
 interface TourManifest {
   steps: Record<string, StepTiming>;
@@ -530,7 +538,7 @@ export class TourPlayer {
     void this.ready.then(() => {
       if (myToken !== this.token) return;
       if (this.state.silent || !step.text) { this.audioFailed = true; return; }
-      this.audio.src = this.audioUrl(this.audioLocale, tour.audio ?? tour.id, step.id, this.timing(step)?.hash);
+      this.audio.src = this.audioUrl(this.audioLocale, tour.audio ?? tour.id, step.id, clipVersion(this.timing(step)));
       this.audio.currentTime = 0;
       if (this.leadLeft <= 0) void this.audio.play().catch(() => { if (myToken === this.token) this.audioFailed = true; });
     });
@@ -856,7 +864,8 @@ export class TourPlayer {
     const want = currentLocale();
     for (const loc of want === 'en' ? ['en'] : [want, 'en']) {
       try {
-        const r = await fetch(this.manifestUrl(loc, tour.audio ?? tour.id));
+        // revalidated every time: a stale manifest would point at stale (cached) clips
+        const r = await fetch(this.manifestUrl(loc, tour.audio ?? tour.id), { cache: 'no-cache' });
         if (!r.ok || !(r.headers.get('content-type') ?? '').includes('json')) continue;
         const m = (await r.json()) as TourManifest;
         if (this.state.tour !== tour) return;
