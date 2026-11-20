@@ -161,6 +161,9 @@ export class LessonPlayer {
     this.onNarration?.(n);
   }
 
+  /** the visitor finished the last section of a chapter */
+  onChapterEnd: ((chapter: Chapter) => void) | null = null;
+
   get active(): boolean { return this.section !== null; }
   get step(): Step | null { return this.section?.steps[this.stepIndex] ?? null; }
   get resume(): Stored['last'] { return this.last; }
@@ -232,6 +235,9 @@ export class LessonPlayer {
     else {
       // end of section: continue into the next one when there is one
       const nxt = this.nextSection();
+      // the last section of a chapter is behind us (the next one opens another chapter, or none)
+      const ch = this.findSection(this.section.id)?.chapter;
+      if (ch && (!nxt || this.findSection(nxt.id)?.chapter !== ch)) this.onChapterEnd?.(ch);
       if (nxt) this.open(nxt.id, 0);
     }
   }

@@ -71,6 +71,7 @@ import { applyEventMeta, beacon, eventUrl, parseLaunch, type LaunchParams } from
 import { EmbedUI } from './ui/EmbedUI';
 import { Welcome } from './ui/Welcome';
 import { VoyagerCelebration } from './ui/VoyagerCelebration';
+import { SupportAsk } from './ui/SupportAsk';
 import { Music } from './audio/Music';
 import { TOURS } from './data/tours';
 import { C_KM_S } from './core/constants';
@@ -133,6 +134,8 @@ class App implements UIHost {
   selectedGalaxy: number | null = null;
   /** selected far-universe knot / member galaxy when nothing else is selected */
   selectedFar: FarRef | null = null;
+  /** the donation card (null in stream mode, party rooms and embeds) */
+  supportAsk: SupportAsk | null = null;
   /** the far-universe knot the camera is close to, resolved into its member galaxies */
   private farCluster: FarCluster | null = null;
   private farClusterSprites: GalaxySprites | null = null;
@@ -279,15 +282,9 @@ class App implements UIHost {
       const wasEvent = this.currentEvent !== null;
       if (wasEvent) this.endEvent();
       if (why === 'finished' && !wasEvent) {
-        // the support nudge is shown at most once a week per browser; the rest of the time it's a plain toast
-        const KEY = 'yeits.supportNudge';
-        const last = Number(localStorage.getItem(KEY) ?? 0);
-        if (Date.now() - last > 7 * 86400_000) {
-          localStorage.setItem(KEY, String(Date.now()));
-          this.ui.showToast(_('Tur tamamlandı'), 7000, { label: _('Beğendiyseniz projeyi destekleyin'), href: 'https://github.com/sponsors/berkcomba', action: () => this.ui.toggleSponsor(true) });
-        } else {
-          this.ui.showToast(_('Tur tamamlandı'), 2400);
-        }
+        this.ui.showToast(_('Tur tamamlandı'), 2400);
+        // the second finished tour (then every third) brings the donation card
+        this.supportAsk?.noteTourFinished();
       } else {
         this.ui.showToast(why === 'finished' ? _('Sahne tamamlandı') : _('Tur bitirildi'), 2400);
       }
@@ -3876,6 +3873,14 @@ async function boot(): Promise<void> {
       const card = new VoyagerCelebration(app);
       if (intro) app.welcome.onFinish = () => window.setTimeout(() => card.show(), 1500);
       else window.setTimeout(() => card.show(), 1800);
+    }
+    // the donation card: at the end of every Academy chapter, after the second finished tour, and
+    // on the fifth visit (not over the welcome or the Voyager card: a minute in, when the view is free)
+    if (!stream && partyCode === null && !launch.embed) {
+      const ask = new SupportAsk({ get busy() { return app.tours.state.tour !== null || app.lessons.active || app.currentEvent !== null || document.querySelector('.v1day, .welcome:not([hidden])') !== null; } });
+      app.supportAsk = ask;
+      app.lessons.onChapterEnd = () => ask.noteChapterFinished();
+      ask.noteVisit(intro ? 90_000 : 45_000);
     }
     if (partyCode !== null) void openParty(partyCode);
   } catch (err) {

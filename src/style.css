@@ -1448,3 +1448,65 @@ mtext { font-family: var(--font); }
   .v1day-story time { grid-row: auto; }
 }
 @media (prefers-reduced-motion: reduce) { .v1day, .v1day-card, .v1day-play.playing, .v1day-pulse { animation: none; } }
+
+/* ---------- Donation card (SupportAsk.ts): a quiet corner card, nothing behind it is blocked ---------- */
+.sask {
+  position: fixed; right: 16px; bottom: 16px; z-index: 55; width: min(392px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px); overflow-y: auto; overscroll-behavior: contain;
+  background: var(--surface); border: 1px solid var(--border); border-radius: calc(var(--radius) + 2px);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.55);
+  animation: sask-in 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.sask.leaving { animation: sask-out 0.3s ease both; }
+@keyframes sask-in { from { opacity: 0; transform: translateY(28px) scale(0.97); } to { opacity: 1; transform: none; } }
+@keyframes sask-out { to { opacity: 0; transform: translateY(18px); } }
+.sask-close { position: absolute; top: 8px; right: 8px; z-index: 1; background: rgba(9, 11, 15, 0.55); }
+.sask-hero { display: block; width: 100%; height: 120px; border-radius: calc(var(--radius) + 1px) calc(var(--radius) + 1px) 0 0; }
+.sask-stars circle { animation: sask-twinkle 3s ease-in-out infinite; animation-delay: var(--d); }
+@keyframes sask-twinkle { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+.sask-meteor { opacity: 0; stroke-dasharray: 52; stroke-dashoffset: 52; animation: sask-meteor 7s ease-in 1.2s infinite; }
+@keyframes sask-meteor { 0% { opacity: 0; stroke-dashoffset: 52; } 4% { opacity: 1; } 10% { opacity: 0; stroke-dashoffset: -52; } 100% { opacity: 0; stroke-dashoffset: -52; } }
+.sask-body { padding: 14px 18px 16px; }
+.sask-kicker { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
+.sask-title { font-family: var(--serif); font-weight: 400; font-size: 22px; line-height: 1.2; margin: 0 0 8px; color: var(--text); }
+.sask-lead, .sask-why, .sask-ask { font-size: 13px; line-height: 1.55; color: var(--text-2); margin: 0 0 9px; }
+.sask-reach { color: var(--text); font-variant-numeric: tabular-nums; }
+.sask-costs { list-style: none; margin: 4px 0 12px; padding: 0; display: grid; gap: 8px; }
+.sask-costs li {
+  display: grid; grid-template-columns: 26px 1fr; gap: 10px; align-items: start; font-size: 12.5px; line-height: 1.45; color: var(--text-2);
+  opacity: 0; animation: sask-item 0.45s ease both; animation-delay: calc(0.35s + var(--i) * 0.12s);
+}
+@keyframes sask-item { from { opacity: 0; transform: translateX(-8px); } to { opacity: 1; transform: none; } }
+.sask-costs svg { width: 22px; height: 22px; fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; margin-top: 1px; }
+.sask-costs b { display: block; color: var(--text); font-weight: 500; }
+.sask-actions { display: grid; gap: 8px; margin-top: 4px; }
+.sask-give {
+  display: flex; align-items: center; justify-content: center; gap: 9px; padding: 10px 14px; font-size: 13.5px;
+  color: var(--text); text-decoration: none; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg);
+  transition: border-color 0.15s, background 0.15s, transform 0.15s;
+}
+.sask-give:hover, .sask-give:focus-visible { border-color: var(--accent); background: var(--surface-2); outline: none; transform: translateY(-1px); }
+.sask-give svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.sask-primary { background: var(--accent); border-color: var(--accent); color: #12100c; font-weight: 500; }
+.sask-primary:hover, .sask-primary:focus-visible { background: var(--accent); filter: brightness(1.08); }
+.sask-heart { fill: #e5484d !important; stroke: none !important; animation: sask-beat 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes sask-beat { 0%, 100% { transform: scale(1); } 14% { transform: scale(1.22); } 28% { transform: scale(1); } 42% { transform: scale(1.14); } 56% { transform: scale(1); } }
+.sask-foot { display: flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 11.5px; color: var(--text-3); }
+.sask-later { background: none; border: none; padding: 0; color: var(--text-2); font: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; white-space: nowrap; }
+.sask-later:hover { color: var(--text); }
+.sask.thanked .sask-ask { color: var(--accent); }
+@media (max-width: 560px) {
+  .sask { right: 8px; left: 8px; bottom: 8px; width: auto; max-height: 78vh; }
+  .sask-hero { height: 84px; }
+  .sask-body { padding: 12px 14px 14px; }
+  .sask-title { font-size: 19px; }
+  /* a phone keeps the four reasons as titles in two columns */
+  .sask-costs { grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+  .sask-costs li { grid-template-columns: 20px 1fr; gap: 6px; align-items: center; }
+  .sask-costs svg { width: 18px; height: 18px; }
+  .sask-costs span { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sask, .sask.leaving, .sask-costs li { animation: none; opacity: 1; }
+  .sask-stars circle, .sask-meteor, .sask-heart { animation: none; }
+}
