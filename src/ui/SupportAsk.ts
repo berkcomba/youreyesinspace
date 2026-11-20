@@ -10,7 +10,7 @@ import { _, fmtNum } from '../i18n';
  * Everything is kept in this browser only (localStorage), nothing is sent anywhere.
  */
 
-export type SupportReason = 'visit' | 'tour' | 'chapter';
+export type SupportReason = 'visit' | 'tour' | 'chapter' | 'manual';
 
 const KEY = 'yeits.supportAsk';
 /** no two cards within this time (any reason) */
@@ -118,8 +118,8 @@ export class SupportAsk {
   show(reason: SupportReason, force = false): boolean {
     if (!force && !this.allowed()) return false;
     if (this.root) return false;
-    this.state.lastShown = Date.now();
-    this.save();
+    // opened by hand (the heart in the top bar): no cooldown is spent on it
+    if (!force) { this.state.lastShown = Date.now(); this.save(); }
     this.build(reason);
     return true;
   }
@@ -130,7 +130,8 @@ export class SupportAsk {
     root.setAttribute('role', 'dialog');
     root.setAttribute('aria-modal', 'false');
     root.setAttribute('aria-labelledby', 'sask-title');
-    const kicker = reason === 'tour' ? _('Turları sevdin gibi görünüyor')
+    const kicker = reason === 'manual' ? _('Projeyi destekle')
+      : reason === 'tour' ? _('Turları sevdin gibi görünüyor')
       : reason === 'chapter' ? _('Bir bölümü daha bitirdin')
         : _('Yine hoş geldin');
     root.innerHTML = `
@@ -202,6 +203,14 @@ export class SupportAsk {
       requestAnimationFrame(step);
     } catch { /* offline: the card reads fine without the number */ }
   }
+
+  /** the top bar's heart: open the card, or close it when it is open */
+  toggle(): void {
+    if (this.root) this.close();
+    else this.show('manual', true);
+  }
+
+  get open(): boolean { return this.root !== null; }
 
   close(): void {
     const root = this.root;

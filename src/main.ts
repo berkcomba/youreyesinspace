@@ -3876,6 +3876,11 @@ async function boot(): Promise<void> {
     }
     // the donation card: at the end of every Academy chapter, after the second finished tour, and
     // on the fifth visit (not over the welcome or the Voyager card: a minute in, when the view is free)
+    // the heart in the top bar opens the card any time (in stream mode / rooms / embeds: the plain support dialog)
+    document.getElementById('btn-give')?.addEventListener('click', () => {
+      if (app.supportAsk) app.supportAsk.toggle();
+      else app.ui.toggleSponsor(true);
+    });
     if (!stream && partyCode === null && !launch.embed) {
       const ask = new SupportAsk({ get busy() { return app.tours.state.tour !== null || app.lessons.active || app.currentEvent !== null || document.querySelector('.v1day, .welcome:not([hidden])') !== null; } });
       app.supportAsk = ask;

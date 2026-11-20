@@ -136,6 +136,8 @@ button:disabled:hover { color: var(--text-2); background: var(--surface); border
 button:focus-visible, input:focus-visible, select:focus-visible { outline: 1px solid var(--accent); outline-offset: 1px; }
 .icon-btn { width: 30px; height: 30px; padding: 0; display: inline-grid; place-items: center; font-size: 13px; }
 .icon-btn svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.4; stroke-linecap: square; }
+.btn-give svg { stroke-linejoin: round; transition: fill 0.15s, stroke 0.15s, transform 0.15s; }
+.btn-give:hover svg, .btn-give:focus-visible svg, .btn-give.active svg { fill: #e5484d; stroke: #e5484d; transform: scale(1.12); }
 .icon-btn.small { width: 22px; height: 22px; font-size: 11px; }
 .text-btn { height: 30px; padding: 0 11px; white-space: nowrap; display: inline-flex; align-items: center; }
 .text-btn .caret { width: 10px; height: 10px; margin-left: 6px; stroke: currentColor; fill: none; stroke-width: 1.2; }
@@ -231,7 +233,8 @@ input[type=range] { width: 120px; accent-color: var(--accent); }
 @media (max-width: 900px) {
   .brand-name, .brand-version, .brand-stream { display: none; }
 }
-@media (max-width: 640px) {
+/* (free roam stays on its V key: the strip needs the room for the heart below ~860 px) */
+@media (max-width: 860px) {
   #btn-roam { display: none; }
 }
 /* One tool strip: items are separated by hairlines, the open one is marked with a brass baseline */
