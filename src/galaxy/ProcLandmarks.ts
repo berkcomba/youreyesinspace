@@ -81,6 +81,9 @@ const ORDER: ProcKind[] = ['hii', 'reflection', 'planetary', 'open', 'globular',
 const ADJ = [
   'Kızıl', 'Mavi', 'Zümrüt', 'Kehribar', 'Gümüş', 'Altın', 'Uyuyan', 'Yitik', 'Fısıldayan', 'Donmuş', 'Kırık', 'Sessiz',
   'Yalnız', 'Çifte', 'Ters', 'Gölge', 'Yanık', 'Soluk', 'Parlak', 'Gizli', 'Uzak', 'Dönen', 'Ağlayan', 'Kör', 'Uyanan', 'Yırtık',
+  'Yanan', 'Şakıyan', 'Süzülen', 'Kanayan', 'Uluyan', 'Titreyen', 'Kaçan', 'Unutulmuş', 'Kadim', 'Yaralı', 'Zincirli', 'Kanatlı',
+  'Taçlı', 'Hayalet', 'Kükreyen', 'Uykusuz', 'Sonsuz', 'Yorgun', 'Kıvrılan', 'Gözleyen', 'Utangaç', 'Vahşi', 'Dalgın', 'Paslı',
+  'Billur', 'Fırtınalı', 'Tutsak', 'Gülen', 'Yüzen', 'Asi', 'Lanetli', 'Sisli', 'Çılgın',
 ];
 /** adjectives that name a colour: a drawn one is swapped for the one matching the object's actual tint */
 const COLOUR_ADJ = ['Kızıl', 'Mavi', 'Zümrüt', 'Kehribar', 'Gümüş', 'Altın'];
@@ -98,6 +101,10 @@ function colourAdjective(c: readonly number[] | undefined): string {
 const NOUN = [
   'Kelebek', 'Göz', 'Taç', 'Yelken', 'Fener', 'Çan', 'Kalp', 'Kuğu', 'Yılan', 'Kılıç', 'Kapı', 'Ayna', 'Kanat', 'Çiçek', 'Kum Saati',
   'Örümcek', 'Halka', 'Mızrak', 'Deniz Kabuğu', 'Ejderha', 'Kule', 'Balina', 'Köpük', 'Mum', 'Pusula', 'Köprü', 'Tilki', 'Baykuş', 'Nar', 'Lamba',
+  'Anka Kuşu', 'Kurt', 'Gül', 'Yusufçuk', 'Denizanası', 'Ahtapot', 'Aygır', 'Fırtına', 'Şimşek', 'Arp', 'Hançer', 'Çelenk',
+  'Zambak', 'Pençe', 'Boynuz', 'Tüy', 'Mağara', 'Şelale', 'Kraliçe', 'Bekçi', 'Gezgin', 'Kehanet', 'Ruh', 'Rüya', 'Labirent',
+  'Yanardağ', 'Kaplan', 'Mercan', 'İnci', 'Yaprak', 'Tohum', 'Çapa', 'Kale', 'Taht', 'Maske', 'Fısıltı', 'Yankı', 'Şafak',
+  'Gözyaşı', 'Asa',
 ];
 
 const NAME_TEMPLATE: Record<ProcKind, string> = {

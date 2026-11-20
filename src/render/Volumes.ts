@@ -1,7 +1,7 @@
 import {
   BufferAttribute, BufferGeometry, CubeCamera, CustomBlending, HalfFloatType, LinearFilter, LinearMipmapLinearFilter, Matrix3, Matrix4, Mesh, OneFactor,
   OrthographicCamera, Scene, ShaderMaterial, SrcAlphaFactor, Vector2, Vector3, Vector4, WebGLCoordinateSystem, WebGLCubeRenderTarget, WebGLRenderTarget, ZeroFactor,
-  ClampToEdgeWrapping, Data3DTexture, RGBAFormat, UnsignedByteType, WebGL3DRenderTarget,
+  ClampToEdgeWrapping, Data3DTexture, RGBAFormat, UnsignedByteType, WebGL3DRenderTarget, FloatType, NearestFilter,
   type IUniform, PerspectiveCamera, type WebGLRenderer,
 } from 'three';
 import type { GalaxyModel } from '../galaxy/GalaxyModel';
@@ -236,6 +236,7 @@ export class Volumes {
    * stay alive so the cached programs are not released.
    */
   warm(renderer: WebGLRenderer): void {
+    this.renderer = renderer;
     if (this.warmMats.length) return;
     const scene = new Scene();
     for (const frag of [Shaders.volumeGalaxyFrag, Shaders.volumeNebula2Frag]) {
@@ -344,6 +345,13 @@ export class Volumes {
    * so the same id always renders the same nebula.
    */
   nebulaProfile(profile: NebulaProfile): Volume {
+    const v = new Volume('nebula', this.profileMaterial(profile), this.quad);
+    this.add(v);
+    return v;
+  }
+
+  /** the raymarch material of a profile (its uniforms are what the bakes read) */
+  private profileMaterial(profile: NebulaProfile): ShaderMaterial {
     const extra = profileUniforms();
     extra.uMorph.value = MORPHOLOGY_CODE[profile.morphology];
     extra.uPalette.value = PALETTE_CODE[profile.paletteId];
@@ -374,9 +382,55 @@ export class Volumes {
     mat.uniforms.uBox.value.set(1.3, 1.3, 1.3);
     const q = new Matrix4().makeRotationFromQuaternion(profile.orientation);
     (mat.uniforms.uToLocal.value as Matrix3).setFromMatrix4(q);
-    const v = new Volume('nebula', mat, this.quad);
-    this.add(v);
-    return v;
+    return mat;
+  }
+
+  private renderer: WebGLRenderer | null = null;
+  private sourceRt: WebGLRenderTarget | null = null;
+  /**
+   * The profile's medium sampled on a `size`³ grid over its cube [-1.3, 1.3]³ (object radii, in
+   * the object's own frame: scene = uToLocalᵀ · p · R): per voxel the emitted radiance (rgb) and
+   * the extinction (a), per unit length, ×uEmit — what the raymarch integrates. For the point
+   * clouds that stand in for the volumes when the volumetrics are off. Null when the GPU cannot
+   * render to a float target or no renderer is known yet.
+   */
+  sampleNebula(profile: NebulaProfile, size: number): { data: Float32Array; toLocal: Matrix3 } | null {
+    const r = this.renderer;
+    if (!r || !r.extensions.has('EXT_color_buffer_float')) return null;
+    if (!this.sourceRt || this.sourceRt.width !== size * size || this.sourceRt.height !== size) {
+      this.sourceRt?.dispose();
+      this.sourceRt = new WebGLRenderTarget(size * size, size, { type: FloatType, format: RGBAFormat, depthBuffer: false, generateMipmaps: false, minFilter: NearestFilter, magFilter: NearestFilter });
+    }
+    const pm = this.profileMaterial(profile);
+    const mat = new ShaderMaterial({
+      vertexShader: Shaders.volumeVert, fragmentShader: Shaders.nebulaBakeSourceFrag, depthTest: false, depthWrite: false,
+      uniforms: {
+        ...pm.uniforms,
+        uShadow: { value: NO_SHADOW }, uShadowOn: { value: 0 }, uDensity: { value: NO_SHADOW }, uDensityOn: { value: 0 }, uDebug: { value: 0 },
+        uGrid: { value: size },
+      },
+    });
+    if (!this.bakeMesh) {
+      this.bakeMesh = new Mesh(this.geo);
+      this.bakeMesh.frustumCulled = false;
+      this.bakeScene.add(this.bakeMesh);
+    }
+    this.bakeMesh.material = mat;
+    const prev = r.getRenderTarget();
+    const data = new Float32Array(size * size * size * 4);
+    try {
+      r.setRenderTarget(this.sourceRt);
+      r.render(this.bakeScene, this.cam);
+      r.readRenderTargetPixels(this.sourceRt, 0, 0, size * size, size, data);
+    } finally {
+      r.setRenderTarget(prev);
+    }
+    const emit = pm.uniforms.uEmit.value as number;
+    for (let i = 0; i < data.length; i++) data[i] *= (i & 3) === 3 ? 1 : emit;
+    const toLocal = (pm.uniforms.uToLocal.value as Matrix3).clone();
+    mat.dispose();
+    pm.dispose();
+    return { data, toLocal };
   }
 
   private add(v: Volume): void {

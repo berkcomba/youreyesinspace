@@ -340,8 +340,10 @@ export class BodyView {
         },
       });
       this.bakeKind = 'terrestrial';
-      // a potato keeps the procedural regolith: a planet's map would not fit its shape
-      if (a.skin && !irregular) this.skinState = 'idle';
+      // a potato keeps the procedural regolith: a planet's map would not fit its shape. Generated
+      // rocky worlds keep their noise surface too (every one its own); only the real global maps
+      // (`map:…`, Pluto, Triton, the famous exoplanets) dress a solid globe
+      if (a.skin?.startsWith('map:') && !irregular) this.skinState = 'idle';
       const img = IMAGERY[d.id];
       if (img) {
         this.tiles = new TileGlobe(body, img, lit, {

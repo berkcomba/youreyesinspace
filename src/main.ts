@@ -10,7 +10,8 @@ import { CelestialBody } from './core/CelestialBody';
 import { StarCatalog } from './data/StarCatalog';
 import { ExoplanetCatalog } from './data/Exoplanets';
 import { deepSkyLandmarks, loadDeepSky, type DeepSkyData } from './data/DeepSky';
-import { loadSurveyGalaxies, type SurveyGalaxies } from './galaxy/galaxies';
+import { TYPE_BY_CODE, loadSurveyGalaxies, type SurveyGalaxies } from './galaxy/galaxies';
+import { nucleusMass } from './data/blackholes';
 import { loadBrownDwarfs, type BrownDwarfData } from './data/BrownDwarfs';
 import { loadBinaries, type BinaryData } from './data/Binaries';
 import { LightPulse } from './render/TourEffects';
@@ -86,6 +87,8 @@ const DISCOVERY_KIND: Partial<Record<LandmarkKind, string>> = {
 const TOUR_HOP_S = 2.8;
 /** Closer than this many body radii, the night side is lit (see `updateFill`) */
 const NEAR_LIGHT_RADII = 9;
+/** night-side light of a world circling two suns (the companion's share; see `updateFill`) */
+const CIRCUMBINARY_FILL = 0.55;
 /** auto-orbit speed (rad/s) of the opening backdrop */
 const BACKDROP_ORBIT = 0.03;
 /** camera distance from the Sun (pc, ≈ 200 AU: beyond the planets) from which the Sun is marked with its distance */
@@ -562,7 +565,37 @@ class App implements UIHost {
   }
 
   /** Numbers for the info panel */
-  farInfo(ref: FarRef): { name: string; kind: string; distKm: number; distSunPc: number; radiusPc: number; absMag: number; luminosity: number; massSolar: number; richness: number; typeCode: number | null; resolved: boolean; apparentMag: number } {
+  /**
+   * Far-universe objects by what their card shows: the id (`f{tier}:{index}`, `#{member}` for a
+   * member galaxy) or the code of the name ("YE-1A2B3C" a cluster, "YE-1A2B3C-4D5E" one of its galaxies)
+   */
+  findFar(query: string, limit = 4): FarRef[] {
+    const q = query.trim();
+    const tiers = this.farUniverse.tiers;
+    const out: FarRef[] = [];
+    const id = /^f(\d+):(\d+)(?:#(\d+))?$/i.exec(q.replace(/\s+/g, ''));
+    if (id) {
+      const tier = +id[1], index = +id[2], member = id[3] !== undefined ? +id[3] : -1;
+      if (tier < tiers.length && index < tiers[tier].count && (member < 0 || member < this.farClusterOf({ tier, index, member: -1 }).count)) out.push({ tier, index, member });
+      return out;
+    }
+    const m = /(?:^|\s)ye-([0-9a-f]{6})(?:-([0-9a-f]{4}))?$/i.exec(q);
+    if (!m) return out;
+    const code = parseInt(m[1], 16);
+    for (let k = 0; k < tiers.length && out.length < limit; k++) {
+      const t = tiers[k];
+      for (let i = 0; i < t.count; i++) {
+        if (t.seed[i] % 0xffffff !== code) continue;
+        if (m[2] === undefined) { out.push({ tier: k, index: i, member: -1 }); continue; }
+        const c = this.farClusterOf({ tier: k, index: i, member: -1 });
+        const mc = parseInt(m[2], 16);
+        for (let j = 0; j < c.count; j++) if (c.seed[j] % 0xffff === mc) { out.push({ tier: k, index: i, member: j }); break; }
+      }
+    }
+    return out.slice(0, limit);
+  }
+
+  farInfo(ref: FarRef): { name: string; kind: string; distKm: number; distSunPc: number; radiusPc: number; absMag: number; luminosity: number; massSolar: number; richness: number; typeCode: number | null; resolved: boolean; apparentMag: number; coreMassSolar: number } {
     const tier = this.farUniverse.tiers[ref.tier];
     const pos = this.farPositionPc(ref);
     const distKm = this.farRelative(ref, this.camera.position).length();
@@ -571,17 +604,23 @@ class App implements UIHost {
     if (ref.member >= 0) {
       const m = Math.min(ref.member, c.count - 1);
       const absMag = c.absMag[m];
+      const luminosity = Math.pow(10, (4.83 - absMag) / 2.5);
       return {
         name: c.name(m), kind: _('Küme üyesi galaksi'), distKm, distSunPc: pos.length(), radiusPc: c.radius[m], absMag,
-        luminosity: Math.pow(10, (4.83 - absMag) / 2.5), massSolar: 0, richness: 0, typeCode: c.type[m], resolved: live,
+        luminosity, massSolar: 0, richness: 0, typeCode: c.type[m], resolved: live,
         apparentMag: absMag + 5 * Math.log10(Math.max(distKm / PARSEC_KM, 1e-3)) - 5,
+        coreMassSolar: nucleusMass(TYPE_BY_CODE[c.type[m]], luminosity, c.seed[m]),
       };
     }
     const absMag = tier.absMag[ref.index];
+    // the cluster's: the black hole of its brightest galaxy (the central cD of a rich one)
+    let top = 0;
+    for (let j = 1; j < c.count; j++) if (c.absMag[j] < c.absMag[top]) top = j;
     return {
       name: tier.name(ref.index), kind: farKindLabel(tier), distKm, distSunPc: pos.length(), radiusPc: tier.radius[ref.index], absMag,
       luminosity: c.luminosity, massSolar: c.massSolar, richness: c.richness, typeCode: null, resolved: live,
       apparentMag: absMag + 5 * Math.log10(Math.max(distKm / PARSEC_KM, 1e-3)) - 5,
+      coreMassSolar: c.count ? nucleusMass(TYPE_BY_CODE[c.type[top]], Math.pow(10, (4.83 - c.absMag[top]) / 2.5), c.seed[top]) : 0,
     };
   }
 
@@ -1914,6 +1953,7 @@ class App implements UIHost {
       if (b === star || b === skip || b.data.type === 'star' || b.data.type === 'barycenter' || b.data.type === 'blackhole') continue;
       // spacecraft and small rocks: a floor on the reach so a few hundred metres count as close
       if (cam.position.distanceTo(b.position) < Math.max(b.radius * NEAR_LIGHT_RADII, 5)) want.add(b.id);
+      else if (this.circumbinary(b)) want.add(b.id);
     }
     this.fillFull.clear();
     if (touring) {
@@ -1938,10 +1978,28 @@ class App implements UIHost {
     }
     this.fillOut.clear();
     for (const [id, v] of this.fill) {
-      const strength = this.fillFull.has(id) ? 1 : near;
+      const b = this.universe.current.get(id);
+      // a world circling a pair of suns is never wholly dark: the second star lights its night side
+      const strength = this.fillFull.has(id) ? 1 : b && this.circumbinary(b) ? Math.max(near, CIRCUMBINARY_FILL) : near;
       if (strength > 0) this.fillOut.set(id, v * v * (3 - 2 * v) * strength);
     }
   }
+  /** whether `b` (or the planet it circles) orbits a pair of stars: its lighting star is not one of its ancestors */
+  private circumbinary(b: CelestialBody): boolean {
+    let v = this.cbCache.get(b);
+    if (v === undefined) {
+      const host = this.universe.hostStar(b);
+      v = false;
+      if (host !== b && b.data.type !== 'star' && b.data.type !== 'pulsar') {
+        let p = b.parent;
+        while (p && p !== host) p = p.parent;
+        v = !p;
+      }
+      this.cbCache.set(b, v);
+    }
+    return v;
+  }
+  private readonly cbCache = new WeakMap<CelestialBody, boolean>();
   private readonly fill = new Map<string, number>();
   private readonly fillWant = new Set<string>();
   private readonly fillFull = new Set<string>();

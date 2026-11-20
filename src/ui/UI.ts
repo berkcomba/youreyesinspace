@@ -27,7 +27,7 @@ import { colouredDwarf } from '../data/colouredDwarfs';
 import { AU_KM, LIGHT_YEAR_KM, PARSEC_KM, RAD } from '../core/constants';
 import { LUM_CLASS_DESC, SUN_MASS_KG } from '../astro/stellar';
 import { GALAXY_TYPE_LABEL } from '../galaxy/GalaxyModel';
-import type { FarRef } from '../galaxy/FarClusters';
+import { farKey, type FarRef } from '../galaxy/FarClusters';
 import { TYPE_BY_CODE } from '../galaxy/galaxies';
 import { catalogIndexOf, type StarId } from '../core/Universe';
 import { GRAPHICS_PRESET_ORDER, GRAPHICS_PRESETS, matchPreset, type GraphicsPreset, type Settings } from './Settings';
@@ -81,7 +81,10 @@ export interface UIHost extends MissionPanelHost {
   readonly selectedFar: FarRef | null;
   goToFar(ref: FarRef): void;
   centerFar(ref: FarRef): void;
-  farInfo(ref: FarRef): { name: string; kind: string; distKm: number; distSunPc: number; radiusPc: number; absMag: number; luminosity: number; massSolar: number; richness: number; typeCode: number | null; resolved: boolean; apparentMag: number };
+  farInfo(ref: FarRef): { name: string; kind: string; distKm: number; distSunPc: number; radiusPc: number; absMag: number; luminosity: number; massSolar: number; richness: number; typeCode: number | null; resolved: boolean; apparentMag: number; coreMassSolar: number };
+  /** far-universe clusters / member galaxies by id (`f…`) or name code (`YE-…`) */
+  findFar(query: string, limit?: number): FarRef[];
+  farPositionPc(ref: FarRef, out?: Vector3): Vector3;
   select(b: CelestialBody | null): void;
   selectStar(id: StarId | null): void;
   selectGalaxy(i: number | null): void;
@@ -672,6 +675,19 @@ export class UI {
    * catalogue stars) and sky positions (RA/Dec, galactic l/b, optionally a distance): what lies in
    * that direction, a "look there" and, with a distance, a "fly there". Returns the rows added.
    */
+  /**
+   * Fly to a landmark by id, resolved when clicked: the generated neighbourhood is rebuilt as the
+   * camera moves, and an object restored from its id (another galaxy's) drops out of the list
+   * again unless it is selected, so an index taken while the list was drawn may be stale.
+   */
+  private goLandmarkById(id: string): void {
+    const u = this.host.universe;
+    const l = u.landmark(id);
+    const i = l ? u.landmarks.indexOf(l) : -1;
+    if (i >= 0) { this.host.selectLandmark(i); this.host.goToLandmark(i); }
+    this.closeSearch();
+  }
+
   private searchIdsAndCoords(raw: string, add: (name: string, tag: string, onClick: () => void) => void): number {
     const u = this.host.universe;
     let n = 0;
@@ -679,7 +695,7 @@ export class UI {
     if (/^q(g?)\d+:-?\d+:-?\d+:-?\d+:\d+$/i.test(id)) {
       const l = u.landmark(id.toLowerCase());
       const i = l ? u.landmarks.indexOf(l) : -1;
-      if (l && i >= 0) { add(l.def.name, `${_(LANDMARK_KIND_LABEL[l.def.kind]).split(' /')[0]} · ${id}`, () => { this.host.goToLandmark(i); this.closeSearch(); }); n++; }
+      if (l && i >= 0) { add(l.def.name, `${_(LANDMARK_KIND_LABEL[l.def.kind]).split(' /')[0]} · ${id}`, () => this.goLandmarkById(l.def.id)); n++; }
     } else if (/^bg\d+$/i.test(id)) {
       const bh = u.blackHole(id.toLowerCase());
       if (bh) { add(bh.entry.name, `${_('Kara Delik')} · ${fmtSolarMass(bh.entry.massSolar)}`, () => { this.host.goToBlackHole(bh.entry.id); this.closeSearch(); }); n++; }
@@ -689,6 +705,21 @@ export class UI {
         const info = u.starInfo(sid);
         if (info && Number.isFinite(info.distancePc)) { add(info.name, `${_('Yıldız')} · ${info.spectral} · ${fmtLightYears(info.distancePc * PARSEC_KM)}`, () => this.pickStar(sid)); n++; }
       } catch { /* not a star id after all */ }
+    }
+    // a world of another system: `{star id}/{body id}`, as its card shows it
+    const path = /^(.+)\/([a-z0-9:_-]+)$/i.exec(id);
+    if (path) {
+      const sid = path[1].toLowerCase() as StarId, bid = path[2];
+      try {
+        const info = u.starInfo(sid);
+        if (info) { add(bid, `${info.name} · ${sid}`, () => { this.host.goToSystemBody(sid, bid); this.closeSearch(); }); n++; }
+      } catch { /* not a system id */ }
+    }
+    // the far universe: galaxy clusters and their member galaxies
+    for (const ref of this.host.findFar(raw)) {
+      const f = this.host.farInfo(ref);
+      add(f.name, `${f.kind} · ${fmtLightYears(f.distSunPc * PARSEC_KM)} · ${farKey(ref)}`, () => { this.host.goToFar(ref); this.closeSearch(); });
+      n++;
     }
     const sky = parseSkyQuery(raw);
     if (!sky) return n;
@@ -715,7 +746,7 @@ export class UI {
     };
     for (let i = 0; i < u.landmarks.length; i++) {
       const l = u.landmarks[i];
-      consider(l.positionPc, l.def.radiusPc, l.def.name, `${_(LANDMARK_KIND_LABEL[l.def.kind]).split(' /')[0]} · ${fmtLightYears(l.positionPc.length() * PARSEC_KM)}`, () => { this.host.goToLandmark(i); this.closeSearch(); });
+      consider(l.positionPc, l.def.radiusPc, l.def.name, `${_(LANDMARK_KIND_LABEL[l.def.kind]).split(' /')[0]} · ${fmtLightYears(l.positionPc.length() * PARSEC_KM)}`, () => this.goLandmarkById(l.def.id));
     }
     for (const b of u.blackHoles) {
       consider(b.positionPc, 0, b.entry.name, `${_('Kara Delik')} · ${fmtLightYears(b.positionPc.length() * PARSEC_KM)}`, () => { this.host.goToBlackHole(b.entry.id); this.closeSearch(); });
@@ -1219,6 +1250,8 @@ export class UI {
     rows.push(['Görünür yarıçap', fmtDeg((f.radiusPc * PARSEC_KM / Math.max(f.distKm, 1)) * RAD, 2)]);
     rows.push('sep');
     rows.push(['Güneş\'e uzaklık', `${fmtLightYears(f.distSunPc * PARSEC_KM)} (${fixed(f.distSunPc / 1e6, 1)} Mpc)`]);
+    rows.push(...coordRows(this.host.farPositionPc(ref), farKey(ref)));
+    if (f.coreMassSolar > 0) rows.push([member ? 'Merkez kara delik' : 'En parlak üyenin kara deliği', `~${f.coreMassSolar.toExponential(1).replace('e+', '×10^')} M☉`]);
     if (member) {
       rows.push(['Hubble tipi', f.typeCode !== null ? _(GALAXY_TYPE_LABEL[TYPE_BY_CODE[f.typeCode]]) : '—']);
       rows.push(['Çap', `${fixed((f.radiusPc * 2) / 1000, 1)} kpc (${fmtLightYears(f.radiusPc * 2 * PARSEC_KM)})`]);
@@ -1370,6 +1403,12 @@ export class UI {
     rows.push(['Kameraya uzaklık', fmtDistance(camDist)]);
     rows.push(['Yüzeye uzaklık', fmtDistance(this.host.landedOn === b ? this.host.camera.altitude : Math.max(0, camDist - b.radius))]);
     rows.push('sep');
+    // beyond the Solar System: where the world is on the sky, and its id (`star/body`, searchable)
+    if (u.current.starId !== 'c0') {
+      const posPc = new Vector3().copy(u.current.origin).add(b.position).multiplyScalar(1 / PARSEC_KM);
+      const coords = coordRows(posPc, `${u.current.starId}/${b.id}`);
+      if (coords.length) rows.push(...coords, 'sep');
+    }
     rows.push(['Ortalama yarıçap', fmtRadius(b.radius, b.data.type !== 'star')]);
     if (b.data.flattening) rows.push(['Basıklık', fixed(b.data.flattening, 4)]);
     rows.push(['Kütle', fmtMass(b.data.mass)]);

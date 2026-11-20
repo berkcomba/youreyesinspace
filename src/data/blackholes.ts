@@ -228,10 +228,19 @@ function galaxyCore(o: { id: string; name: string; galaxy: string; massSolar: nu
  * few hundred thousand to a million, a dwarf irregular perhaps an intermediate-mass hole. Whether
  * it is feeding (an AGN with a bright, hot disc) or quiet like Sgr A* is drawn from the seed.
  */
+/**
+ * Mass (M☉) of a galaxy's central black hole from the black hole–bulge relation (~0.2 % of the
+ * bulge's stellar mass, bulge share by Hubble type, a factor-of-two scatter drawn from `seed`)
+ */
+export function nucleusMass(type: 'E' | 'S0' | 'S' | 'SB' | 'Irr', luminosity: number, seed: number): number {
+  const u = ((Math.imul(seed ^ 0x9e3779b1, 0x85ebca6b) >>> 0) % 100_003) / 100_003;
+  const bulge = { E: 1, S0: 0.6, SB: 0.3, S: 0.25, Irr: 0.03 }[type];
+  return Math.max(1e5, 2 * luminosity * bulge * 0.002 * Math.pow(10, 0.6 * (u - 0.5)));
+}
+
 export function galaxyNucleus(o: { id: string; name: string; galaxyName: string; type: 'E' | 'S0' | 'S' | 'SB' | 'Irr'; luminosity: number; seed: number; pole: PoleRaDec }): BlackHoleEntry {
   const u = (k: number) => ((Math.imul(o.seed ^ (k * 0x9e3779b1), 0x85ebca6b) >>> 0) % 100_003) / 100_003;
-  const bulge = { E: 1, S0: 0.6, SB: 0.3, S: 0.25, Irr: 0.03 }[o.type];
-  const massSolar = Math.max(1e5, 2 * o.luminosity * bulge * 0.002 * Math.pow(10, 0.6 * (u(1) - 0.5)));
+  const massSolar = nucleusMass(o.type, o.luminosity, o.seed);
   const active = u(2) < (o.type === 'E' || o.type === 'S0' ? 0.2 : 0.1);
   const disk = active
     ? { inner: 3, outer: Math.round(12 + 10 * u(3)), temperature: 15_000 + 25_000 * u(4), brightness: 0.85 + 0.15 * u(5) }

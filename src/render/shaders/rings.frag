@@ -17,9 +17,10 @@ void main() {
   #include <logdepthbuf_fragment>
 
   float r01 = (vRadius - uInner) / (uOuter - uInner);
-  float dens = ringDensity(r01, uSeed, uGaps);
-  // very fine azimuth-independent grooves
-  dens *= 0.85 + 0.15 * snoise(vec3(r01 * 1800.0, uSeed, 1.0));
+  float px = fwidth(r01);
+  float dens = ringDensityAA(r01, uSeed, uGaps, px);
+  // very fine azimuth-independent grooves (faded out where they would be finer than a pixel)
+  dens *= 0.85 + 0.15 * snoise(vec3(r01 * 1800.0, uSeed, 1.0)) * ringBand(1800.0, px);
   float alpha = dens * uOpacity;
   if (alpha < 0.003) discard;
 
@@ -55,8 +56,8 @@ void main() {
   float fwd = dusty * 0.3 * (1.0 - g * g) / pow(1.0 + g * g - 2.0 * g * dot(-L, V), 1.5);
   // colour variation with radius (icy vs dusty)
   // two materials in alternating bands (clean ice against tholin-stained, rock against frost)
-  float band = smoothstep(-0.25, 0.35, snoise(vec3(r01 * 7.0, uSeed * 1.7, 5.0)) + 0.5 * snoise(vec3(r01 * 23.0, uSeed, 7.0)));
-  vec3 tint = mix(uColor, uColor2, band) * (0.85 + 0.3 * snoise(vec3(r01 * 12.0, uSeed * 2.0, 3.0)));
+  float band = smoothstep(-0.25, 0.35, snoise(vec3(r01 * 7.0, uSeed * 1.7, 5.0)) + 0.5 * snoise(vec3(r01 * 23.0, uSeed, 7.0)) * ringBand(23.0, px));
+  vec3 tint = mix(uColor, uColor2, band) * (0.85 + 0.3 * snoise(vec3(r01 * 12.0, uSeed * 2.0, 3.0)) * ringBand(12.0, px));
   tint = mix(tint, tint * vec3(0.9, 0.8, 0.7), smoothstep(0.0, 0.2, r01) * (1.0 - smoothstep(0.2, 0.4, r01)) * 0.5);
 
   vec3 col = (tint * fillLit((direct + back + fwd) * shadow) + tint * 0.003) * uSunColor;

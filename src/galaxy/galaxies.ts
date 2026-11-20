@@ -559,6 +559,7 @@ export class GalaxyIndex {
       const inc = elliptical ? 40 : Math.acos(Math.sqrt(Math.max(0, (q * q - 0.04) / 0.96))) * 180 / Math.PI;
       setBasis(i, galaxyBasisFromSky(dir, this.seed[i] % 180, inc, basis));
       this.surveyNames.push(name);
+      this.tightNames = null;
       this.surveyFlags[i - this.surveyStart] = src + (code & 8) + (parked ? SURVEY_PARKED : 0);
       if (parked) this.park(i);
       i++;
@@ -808,21 +809,28 @@ export class GalaxyIndex {
     return parts.join(' ');
   }
 
+  private tightNames: string[] | null = null;
   search(query: string, limit = 6): number[] {
     const q = query.trim().toLowerCase();
     if (!q) return [];
+    // designations are typed with or without their spaces ("NGC1365", "PGC 13179", "ESO 358-17")
+    const tight = (t: string) => t.replace(/[\s_.]+/g, '');
+    const qt = tight(q);
     const hits: number[] = [];
     for (let i = 0; i < this.peculiarEnd; i++) {
       if (i === this.catalogCount) i = this.peculiarStart;
-      if (this.name(i).toLowerCase().includes(q) || this.rawName(i).toLowerCase().includes(q)) hits.push(i);
+      const a = this.name(i).toLowerCase(), b = this.rawName(i).toLowerCase();
+      if (a.includes(q) || b.includes(q) || (qt.length >= 3 && (tight(a).includes(qt) || tight(b).includes(qt)))) hits.push(i);
     }
     // survey galaxies: exact designations first, then prefixes ("NGC 1" must not list NGC 1000–1999 first)
     const exact: number[] = [], prefix: number[] = [];
     for (let i = this.surveyStart; i < this.surveyEnd; i++) {
       if (this.surveyFlags[i - this.surveyStart] & SURVEY_PARKED) continue;
       const n = this.surveyNames[i - this.surveyStart].toLowerCase();
-      if (n === q) exact.push(i);
-      else if (prefix.length < limit && (n.startsWith(q) || (q.length >= 4 && n.includes(q)))) prefix.push(i);
+      // the spaceless forms, made once (the survey holds tens of thousands of names)
+      const nt = (this.tightNames ??= this.surveyNames.map((x) => tight(x.toLowerCase())))[i - this.surveyStart];
+      if (n === q || nt === qt) exact.push(i);
+      else if (prefix.length < limit && (n.startsWith(q) || (qt.length >= 3 && nt.startsWith(qt)) || (q.length >= 4 && n.includes(q)))) prefix.push(i);
     }
     hits.push(...exact, ...prefix);
     const m = /^(?:galaksi\s+|galaxy\s+|galaxie\s+|galaxia\s+)?ye-([0-9a-f]{6})$/i.exec(q);

@@ -1,5 +1,5 @@
 import {
-  AdditiveBlending, BufferAttribute, BufferGeometry, Matrix3, Points, Scene, ShaderMaterial, Vector3, Vector4,
+  AdditiveBlending, BufferAttribute, BufferGeometry, CustomBlending, Matrix3, OneMinusSrcAlphaFactor, Points, Scene, ShaderMaterial, Vector3, Vector4, ZeroFactor,
 } from 'three';
 import { SKY_RADIUS_KM } from '../core/constants';
 import type { Landmark } from '../core/Universe';
@@ -38,6 +38,16 @@ const FULL_RANK_BRIGHTNESS = 0.12;
 const SLOT_FADE_S = 0.6;
 /** how often the landmark list is scanned for resolved objects (ms) */
 const SCAN_INTERVAL_MS = 40;
+/** point-cloud mode: the raymarched medium is sampled on this grid (voxels per side) */
+const FIELD_GRID = 40;
+/** at most this many gas / dust points per cloud */
+const FIELD_GAS_MAX = 14000;
+const FIELD_DUST_MAX = 9000;
+/** blob radii (voxels) of the gas and dust points, the gas points' peak alpha, the least optical depth of a voxel given a dust point */
+const FIELD_GAS_BLOB = 1.3;
+const FIELD_DUST_BLOB = 1.5;
+const FIELD_ALPHA = 0.09;
+const FIELD_DUST_TAU = 0.01;
 
 interface Cloud {
   id: string;
@@ -54,6 +64,9 @@ interface Cloud {
   blend: number;
   /** index into `landmarks` as of the last update (−1 when the object is gone) */
   index: number;
+  /** point-cloud mode: the medium's dust, dimming what lies behind it (null: none, or raymarched) */
+  dust: { points: Points; mat: ShaderMaterial } | null;
+  dark: boolean;
 }
 
 /**
@@ -72,7 +85,10 @@ export class ProcClouds {
 
   setDaylight(d: number): void {
     this.daylight = Math.min(1, d * 1.5);
-    for (const c of this.clouds.values()) c.mat.uniforms.uDaylight.value = this.daylight;
+    for (const c of this.clouds.values()) {
+      c.mat.uniforms.uDaylight.value = this.daylight;
+      if (c.dust) c.dust.mat.uniforms.uDaylight.value = this.daylight;
+    }
   }
 
   private lastTime = 0;
@@ -157,6 +173,7 @@ export class ProcClouds {
       cloud.blend = dt > 0 ? Math.max(0, Math.min(1, cloud.blend + (target ? dt : -dt) / SLOT_FADE_S)) : target;
       if (cloud.blend <= 0 || i < 0) {
         cloud.points.visible = false;
+        if (cloud.dust) cloud.dust.points.visible = false;
         if (cloud.volume) cloud.volume.active = false;
         if (!target && this.clouds.size > slots + CACHE_EXTRA) { this.destroy(cloud); this.clouds.delete(id); }
         continue;
@@ -167,12 +184,23 @@ export class ProcClouds {
       const u = cloud.mat.uniforms;
       (u.uCenterRel.value as Vector3).copy(cloud.center).sub(camPc);
       const share = (cloud.volume ? smoothstep(VOLUME_PX, VOLUME_FULL_PX, px) : NebulaClouds.handover(px)) * cloud.blend;
-      if (!visible || share <= 0) { cloud.points.visible = false; if (cloud.volume) cloud.volume.active = false; continue; }
+      if (!visible || share <= 0) { cloud.points.visible = false; if (cloud.dust) cloud.dust.points.visible = false; if (cloud.volume) cloud.volume.active = false; continue; }
       // the sprite's own law: what the cloud takes over is exactly what the sprite gives up
       u.uFade.value = sprites.brightness(i, px, d / cloud.radiusPc, d) * share;
       u.uPxPerRad.value = pxPerRad;
       u.uPixelRatio.value = pixelRatio;
       cloud.points.visible = cloud.volume === null || px >= STARS_PX;
+      if (cloud.dust) {
+        // as in the raymarch: a dark cloud hides by its visibility alone, a glowing one by its fade
+        const du = cloud.dust.mat.uniforms;
+        (du.uCenterRel.value as Vector3).copy(u.uCenterRel.value as Vector3);
+        du.uFade.value = cloud.dark ? share : u.uFade.value;
+        du.uPxPerRad.value = pxPerRad;
+        du.uPixelRatio.value = pixelRatio;
+        cloud.dust.points.visible = true;
+      }
+      // a dark cloud's faint light is a surface brightness, as in the raymarch (no distance falloff)
+      if (cloud.dark && !cloud.volume) u.uFade.value = share;
       if (cloud.volume) {
         const v = cloud.volume;
         v.place(camPc, cloud.center, cloud.radiusPc, v.u.uToLocal.value, pxPerRad);
@@ -193,6 +221,7 @@ export class ProcClouds {
     if (c.volume) this.volumes!.remove(c.volume);
     this.scene.remove(c.points);
     c.points.geometry.dispose();
+    if (c.dust) { this.scene.remove(c.dust.points); c.dust.points.geometry.dispose(); c.dust.mat.dispose(); }
     c.mat.dispose();
   }
 
@@ -215,16 +244,28 @@ export class ProcClouds {
     // fake stars that look clickable but are not
     const members = l.def.cluster !== undefined;
     if (members && l.def.cluster!.centrePc) core = new Vector3(...l.def.cluster!.centrePc);
+    // the look follows the object's identity (its profile), the same on every visit
+    const profile = resolveNebulaProfile(l.def, l.procKind);
+    const dark = l.procKind === 'dark';
+    let field: ReturnType<typeof fieldPoints> | null = null;
     if (vol) {
-      // the look follows the object's identity (its profile), the same on every visit
-      const profile = resolveNebulaProfile(l.def, l.procKind);
       volume = this.volumes!.nebulaProfile(profile);
       // the ionised core sits where the profile's primary light is (object-local → scene)
       core ??= lightPositionPc(profile, 0);
+    } else {
+      // volumetrics off: the points are laid out from the raymarched medium itself (its shape,
+      // colours and dust), sampled once on the GPU; the old hand-made clouds only if that fails
+      const sample = this.volumes?.sampleNebula(profile, FIELD_GRID);
+      if (sample) {
+        core ??= lightPositionPc(profile, 0);
+        field = fieldPoints(sample.data, sample.toLocal, FIELD_GRID, R, new Rng(hashStr(l.def.id) ^ 0x5f1e1d));
+      }
     }
-    if (kind === 'planetary') g = planetary(rng, R, col, !vol);
-    else if (kind === 'remnant') g = remnant(rng, R, col, !vol);
-    else g = nebula(rng, R, col, !vol, core, !members);
+    const gas = !vol && !field;
+    if (kind === 'planetary') g = planetary(rng, R, col, gas);
+    else if (kind === 'remnant') g = remnant(rng, R, col, gas);
+    else g = nebula(rng, R, col, gas, core, !members);
+    if (field) g = mergeGenerated(field.gas, g);
 
     const geo = presetBounds(new BufferGeometry());
     geo.setAttribute('position', new BufferAttribute(g.pos, 3));
@@ -257,7 +298,35 @@ export class ProcClouds {
     points.renderOrder = -11;
     points.visible = false;
     this.scene.add(points);
-    return { id: l.def.id, points, mat, center: l.positionPc.clone(), radiusPc: R, volume, blend: 0, index: -1 };
+    let dust: Cloud['dust'] = null;
+    if (field && field.dust.n > 0) {
+      const d = field.dust.done(field.dustBlob, 1);
+      const dgeo = presetBounds(new BufferGeometry());
+      dgeo.setAttribute('position', new BufferAttribute(d.pos, 3));
+      dgeo.setAttribute('color', new BufferAttribute(d.col, 3));
+      dgeo.setAttribute('weight', new BufferAttribute(d.w, 1));
+      dgeo.setAttribute('size', new BufferAttribute(d.size, 1));
+      const dmat = new ShaderMaterial({
+        vertexShader: Shaders.nebulaCloudVert,
+        fragmentShader: Shaders.nebulaDustFrag,
+        uniforms: {
+          uBasis: { value: new Matrix3() }, uCenterRel: { value: new Vector3() }, uPixelRatio: { value: 1 },
+          uSkyRadius: { value: SKY_RADIUS_KM * 0.985 }, uPxPerRad: { value: 1000 }, uBlobRadius: { value: d.blob },
+          uAlpha: { value: 1 }, uFade: { value: 0 }, uDaylight: { value: this.daylight }, uMaxPx: { value: this.maxPointPx },
+        },
+        transparent: true, depthWrite: false,
+        // dst · (1 − a): it only takes light away
+        blending: CustomBlending, blendSrc: ZeroFactor, blendDst: OneMinusSrcAlphaFactor,
+      });
+      const dp = new Points(dgeo, dmat);
+      dp.frustumCulled = false;
+      // after the gas it shadows, before the stars (drawn on top, as with the raymarched clouds)
+      dp.renderOrder = -10.95;
+      dp.visible = false;
+      this.scene.add(dp);
+      dust = { points: dp, mat: dmat };
+    }
+    return { id: l.def.id, points, mat, center: l.positionPc.clone(), radiusPc: R, volume, blend: 0, index: -1, dust, dark };
   }
 }
 
@@ -438,6 +507,74 @@ function remnant(rng: Rng, R: number, color: RGB, gas = true): Generated {
   }
   const blob = (1.7 * 2 * R) / Math.sqrt(N);
   return g.done(blob, 0.14);
+}
+
+/** `b`'s points appended to `a`, re-expressed in `a`'s blob and alpha */
+function mergeGenerated(a: Generated, b: Generated): Generated {
+  if (!b.w.length) return a;
+  const n = a.w.length + b.w.length;
+  const pos = new Float32Array(n * 3), col = new Float32Array(n * 3), w = new Float32Array(n), size = new Float32Array(n);
+  pos.set(a.pos); col.set(a.col); w.set(a.w); size.set(a.size);
+  pos.set(b.pos, a.pos.length); col.set(b.col, a.col.length);
+  // same light: alpha·w; same blob size: blob·size
+  const kw = b.alpha / a.alpha, ks = b.blob / a.blob;
+  for (let i = 0; i < b.w.length; i++) { w[a.w.length + i] = b.w[i] * kw; size[a.w.length + i] = b.size[i] * ks; }
+  return { pos, col, w, size, blob: a.blob, alpha: a.alpha };
+}
+
+/**
+ * Points standing in for the raymarched medium (volumetrics off): a gas point per glowing voxel,
+ * coloured by its emission, and a dust point per opaque voxel. Both are calibrated to what the
+ * raymarch integrates: a gas point carries its voxel's emitted light (L·h³ over the object's
+ * radius², in the cloud shader's units), a dust blob the voxel's optical depth spread over its
+ * footprint, so the cloud is as bright, and as dark, as the volume it replaces.
+ */
+function fieldPoints(data: Float32Array, toLocal: Matrix3, n: number, R: number, rng: Rng) {
+  const h = 2.6 / n;                  // voxel edge (object radii)
+  const toScene = toLocal.clone().transpose();
+  const cells = n * n * n;
+  const lum = new Float32Array(cells);
+  let peak = 0;
+  for (let i = 0; i < cells; i++) {
+    const L = 0.2126 * data[4 * i] + 0.7152 * data[4 * i + 1] + 0.0722 * data[4 * i + 2];
+    lum[i] = L;
+    if (L > peak) peak = L;
+  }
+  // voxels below a small share of the brightest carry next to no light: skipped
+  const floor = peak * 0.003;
+  let count = 0, dcount = 0;
+  for (let i = 0; i < cells; i++) {
+    if (lum[i] > floor) count++;
+    if (data[4 * i + 3] * h > FIELD_DUST_TAU) dcount++;
+  }
+  const keepGas = Math.min(1, FIELD_GAS_MAX / Math.max(1, count));
+  const keepDust = Math.min(1, FIELD_DUST_MAX / Math.max(1, dcount));
+  // light of one voxel in the shader's units: flux = alpha·w·0.515·(blob px)² (points.frag's
+  // soft profile integrates to 0.515 over its disc) against L·h³·(R px)² for the volume
+  const gasK = h / (FIELD_ALPHA * 0.515 * FIELD_GAS_BLOB * FIELD_GAS_BLOB);
+  // a dust blob's profile (nebuladust.frag) covers 0.716·r² of area: the voxel's column depth τ·h² spread over it
+  const dustArea = 0.716 * FIELD_DUST_BLOB * FIELD_DUST_BLOB;
+  const gas = new Gen(), dust = new Gen();
+  const p = new Vector3();
+  const place = (x: number, y: number, z: number) => p.set(
+    ((x + rng.next()) / n - 0.5) * 2.6, ((y + rng.next()) / n - 0.5) * 2.6, ((z + rng.next()) / n - 0.5) * 2.6,
+  ).applyMatrix3(toScene).multiplyScalar(R);
+  for (let z = 0; z < n; z++) for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+    const i = (z * n + y) * n + x;
+    const L = lum[i], tau = data[4 * i + 3] * h;
+    if (L > floor && rng.next() < keepGas) {
+      const r = data[4 * i], g = data[4 * i + 1], b = data[4 * i + 2];
+      const m = Math.max(r, g, b, 1e-9);
+      const lc = (0.2126 * r + 0.7152 * g + 0.0722 * b) / m;
+      place(x, y, z);
+      gas.add(p.x, p.y, p.z, [r / m, g / m, b / m], (L / keepGas) * gasK / lc, rng.range(0.8, 1.25));
+    }
+    if (tau > FIELD_DUST_TAU && rng.next() < keepDust) {
+      place(x, y, z);
+      dust.add(p.x, p.y, p.z, [0, 0, 0], Math.min(0.97, 1 - Math.exp(-tau / keepDust / dustArea)), 1);
+    }
+  }
+  return { gas: gas.done(R * h * FIELD_GAS_BLOB, FIELD_ALPHA), dust, dustBlob: R * h * FIELD_DUST_BLOB };
 }
 
 function hashStr(s: string): number {

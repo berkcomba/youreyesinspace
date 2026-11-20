@@ -163,13 +163,15 @@ float sphereShadow(vec3 P, vec3 L, vec3 occPos, float occR, float sunAng) {
   return smoothstep(occAng - sunAng, occAng + sunAng, sepAng);
 }
 
-// Ring density profile along normalised radius r01
-float ringDensity(float r01, float seed, vec4 gaps[4]) {
+// Ring density profile along normalised radius r01. `px` is the width of one pixel in r01
+// (fwidth): detail finer than a couple of pixels is faded to its mean, else it shimmers as static.
+float ringBand(float freq, float px) { return 1.0 - smoothstep(0.12, 0.45, px * freq); }
+float ringDensityAA(float r01, float seed, vec4 gaps[4], float px) {
   if (r01 < 0.0 || r01 > 1.0) return 0.0;
   float n1 = snoise(vec3(r01 * 38.0, seed, 0.0));
   float n2 = snoise(vec3(r01 * 140.0, seed * 1.3, 2.0));
   float n3 = snoise(vec3(r01 * 520.0, seed * 0.7, 4.0));
-  float d = 0.55 + 0.30 * n1 + 0.18 * n2 + 0.08 * n3;
+  float d = 0.55 + 0.30 * n1 * ringBand(38.0, px) + 0.18 * n2 * ringBand(140.0, px) + 0.08 * n3 * ringBand(520.0, px);
   // broad structure: inner C-ring translucent, B bright, A medium
   d *= 0.35 + 0.65 * smoothstep(0.0, 0.25, r01);
   d *= 1.0 - 0.35 * smoothstep(0.62, 0.75, r01);
@@ -179,10 +181,13 @@ float ringDensity(float r01, float seed, vec4 gaps[4]) {
     float hw = gaps[i].y;
     if (hw <= 0.0) continue;
     float dist = abs(r01 - gc);
-    d *= smoothstep(hw * 0.5, hw, dist);
+    // a gap narrower than a pixel is drawn as a shallower, pixel-wide dip instead of flickering
+    float depth = hw / max(hw, px);
+    d *= 1.0 - depth * (1.0 - smoothstep(hw * 0.5, hw + px, dist));
   }
   return clamp(d, 0.0, 1.0);
 }
+float ringDensity(float r01, float seed, vec4 gaps[4]) { return ringDensityAA(r01, seed, gaps, 0.0); }
 
 // Blackbody-ish colour from temperature (K)
 vec3 blackbody(float T) {
